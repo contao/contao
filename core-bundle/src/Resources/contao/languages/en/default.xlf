@@ -2069,6 +2069,15 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.draft">
+        <source>Draft</source>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

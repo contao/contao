@@ -128,6 +128,12 @@ class BackendPreviewSwitchController
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             $frontendUsername = $request->request->get('user');
+
+            // Logout the current logged-in user if an empty user is submitted
+            if ('' === $frontendUsername && null !== $this->tokenChecker->getFrontendUsername()) {
+                $this->previewAuthenticator->removeFrontendAuthentication();
+                $frontendUsername = null;
+            }
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');

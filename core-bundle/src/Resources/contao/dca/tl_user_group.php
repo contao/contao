@@ -116,7 +116,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'name' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -125,7 +124,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'modules' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['modules'],
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getModules'),
@@ -136,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'themes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['themes'],
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
@@ -147,7 +144,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'elements' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['elements'],
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getContentElements'),
@@ -158,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'fields' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['fields'],
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
@@ -169,7 +164,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'pagemounts' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['pagemounts'],
-			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
 			'sql'                     => "blob NULL"
@@ -178,7 +172,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['alpty'],
 			'default'                 => array('regular', 'redirect', 'forward'),
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
@@ -187,7 +180,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'filemounts' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['filemounts'],
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
 			'sql'                     => "blob NULL"
@@ -195,7 +187,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'fop' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['FOP']['fop'],
-			'exclude'                 => true,
 			'default'                 => array('f1', 'f2', 'f3'),
 			'inputType'               => 'checkbox',
 			'options'                 => array('f1', 'f2', 'f3', 'f4', 'f5', 'f6'),
@@ -206,7 +197,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'imageSizes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -220,7 +210,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'forms' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['forms'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
 			'eval'                    => array('multiple'=>true),
@@ -229,7 +218,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'formp' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['formp'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('create', 'delete'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -239,7 +227,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'amg' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['amg'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
@@ -247,7 +234,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'alexf' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
@@ -256,7 +242,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'disable' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -264,14 +249,12 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'start' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
@@ -448,7 +431,7 @@ class tl_user_group extends Backend
 						continue;
 					}
 
-					if (($vv['exclude'] ?? null) || ($vv['orig_exclude'] ?? null))
+					if (DataContainer::isFieldExcluded($k, $kk))
 					{
 						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}

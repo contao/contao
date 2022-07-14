@@ -717,34 +717,12 @@ services:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:
             - !tagged_iterator security.voter
-            - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
-
-    contao.security.authentication_entry_point:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
-        arguments:
-            - '@router'
-            - '@uri_signer'
-            - '@contao.routing.scope_matcher'
+            - '@contao.security.priority_strategy'
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
             - '@?logger'
-
-    contao.security.authentication_provider:
-        class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
-        abstract: true
-        arguments:
-            - ~
-            - ~
-            - ~
-            - '@security.password_hasher_factory'
-            - '@contao.framework'
-            - ~
-            - '@scheb_two_factor.authenticated_token_handler'
-            - '@scheb_two_factor.authentication_context_factory'
-            - '@request_stack'
-            - '@contao.security.two_factor.trusted_device_manager'
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
@@ -767,30 +745,24 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
+    contao.security.data_container.table_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: security.voter, priority: 100 }
+
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
-
-    contao.security.expiring_token_based_remember_me_services:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
-        abstract: true
-        arguments:
-            - '@contao.repository.remember_me'
-            - ~
-            - ~
-            - ~
-            - ~
-            - '@?logger'
-        tags:
-            - { name: monolog.logger, channel: security }
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         public: true
         arguments:
             - '@security.helper'
-            - '@session'
+            - '@request_stack'
             - '@contao.security.frontend_user_provider'
             - '@?logger'
 
@@ -800,36 +772,46 @@ services:
             - '@contao.framework'
             - Contao\FrontendUser
 
-    contao.security.login_authentication_listener:
-        class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener
+    contao.security.login_authenticator:
+        class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
         arguments:
-            - '@security.token_storage'
-            - '@security.authentication.manager'
-            - '@security.authentication.session_strategy'
-            - '@security.http_utils'
             - ~
-            - '@contao.security.authentication_success_handler'
-            - '@contao.security.authentication_failure_handler'
-            - []
-            - '@?logger'
-            - '@?event_dispatcher'
-        tags:
-            - { name: monolog.logger, channel: security }
-
-    contao.security.logout_handler:
-        class: Contao\CoreBundle\Security\Logout\LogoutHandler
-        arguments:
-            - '@contao.framework'
-            - '@?logger'
-
-    contao.security.logout_success_handler:
-        class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
-        arguments:
-            - '@security.http_utils'
+            - ~
+            - ~
             - '@contao.routing.scope_matcher'
+            - '@router.default'
+            - '@uri_signer'
+            - '@contao.framework'
+            - '@security.token_storage'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
+            - '@request_stack'
+            - ~
+            - ~
 
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
+
+    contao.security.persistent_remember_me_handler:
+        class: Symfony\Component\Security\Http\RememberMe\PersistentRememberMeHandler
+        arguments:
+            - '@contao.security.remember_me_token_provider'
+            - '%kernel.secret%'
+            - '@contao.security.frontend_user_provider'
+            - '@request_stack'
+            - []
+            - '@?logger'
+            - ~
+        tags:
+            - { name: monolog.logger, channel: security }
+
+    contao.security.priority_strategy:
+        class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
+
+    contao.security.remember_me_token_provider:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
+        arguments:
+            - '@contao.repository.remember_me'
 
     contao.security.token_checker:
         public: true
@@ -838,7 +820,6 @@ services:
             - '@request_stack'
             - '@security.firewall.map'
             - '@security.token_storage'
-            - '@session'
             - '@security.authentication.trust_resolver'
             - ~
 

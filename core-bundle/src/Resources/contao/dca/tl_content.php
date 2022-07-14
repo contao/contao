@@ -192,7 +192,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'type' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_content', 'getContentElements'),
@@ -202,7 +201,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'headline' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
@@ -211,7 +209,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'text' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
@@ -220,34 +217,29 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'addImage' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'showPreview' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class' => 'clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'inline' => array(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'overwriteMeta' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'singleSRC' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'mandatory'=>true, 'tl_class'=>'clr'),
 			'load_callback' => array
@@ -258,7 +250,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'alt' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -266,7 +257,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'imageTitle' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -275,7 +265,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'size' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
-			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
@@ -283,7 +272,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'imageUrl' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
@@ -291,14 +279,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'fullsize' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'caption' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
@@ -306,7 +292,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'floating' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
@@ -315,7 +300,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'html' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
@@ -324,7 +308,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'unfilteredHtml' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
@@ -333,7 +316,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'listtype' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ordered', 'unordered'),
 			'eval'                    => array('tl_class'=>'w50'),
@@ -342,7 +324,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'listitems' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'listWizard',
 			'eval'                    => array('allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
@@ -353,7 +334,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'tableitems' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'tableWizard',
 			'eval'                    => array('allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
 			'xlabel' => array
@@ -364,7 +344,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'summary' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -372,42 +351,36 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'thead' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tfoot' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tleft' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'sortable' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'sortIndex' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sortOrder' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -416,21 +389,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'mooHeadline' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'mooStyle' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'mooClasses' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'alnum', 'tl_class'=>'w50'),
@@ -438,7 +408,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'highlight' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -446,7 +415,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'markdownSource' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('sourceText', 'sourceFile'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['markdownSource'],
@@ -455,7 +423,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'code' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'decodeEntities'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
@@ -469,7 +436,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'url' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
@@ -478,7 +444,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'target' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -486,14 +451,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'overwriteLink' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'titleText' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -501,7 +464,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'linkTitle' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -509,14 +471,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'embed' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rel' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
@@ -524,14 +484,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'useImage' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'multiSRC' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'isSortable' => true, 'files'=>true),
 			'sql'                     => "blob NULL",
@@ -542,14 +500,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'useHomeDir' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'perRow' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
 			'eval'                    => array('tl_class'=>'w50'),
@@ -557,7 +513,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'perPage' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
@@ -565,14 +520,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'numberOfItems' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['numberOfItems'],
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sortBy' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc', 'random'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
@@ -581,14 +534,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'metaIgnore' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'galleryTpl' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
@@ -599,21 +550,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'customTpl' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerSRC' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'files'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'youtube' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -625,7 +573,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'vimeo' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -637,21 +584,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'posterSRC' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'playerSize' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerOptions' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('player_autoplay', 'player_nocontrols', 'player_loop', 'player_playsinline', 'player_muted'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
@@ -660,28 +604,24 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'playerStart' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerStop' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerCaption' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'playerAspect' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
@@ -690,14 +630,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'splashImage' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'playerPreload' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('auto', 'metadata', 'none'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_preload'],
@@ -706,7 +644,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'playerColor' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50 wizard'),
@@ -715,7 +652,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'youtubeOptions' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_nocookie', 'youtube_loop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
@@ -725,7 +661,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'vimeoOptions' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('vimeo_autoplay', 'vimeo_loop', 'vimeo_portrait', 'vimeo_title', 'vimeo_byline', 'vimeo_dnt'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
@@ -734,7 +669,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'sliderDelay' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -742,7 +676,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'sliderSpeed' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -750,27 +683,23 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'sliderStartSlide' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sliderContinuous' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'keyValueWizard',
 			'sql'                     => "text NULL"
 		),
 		'cteAlias' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
 			'save_callback' => array
@@ -782,7 +711,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'articleAlias' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
@@ -795,7 +723,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'article' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
@@ -804,7 +731,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'form' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_content', 'getForms'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
@@ -816,7 +742,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'module' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_content', 'getModules'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
@@ -828,7 +753,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'protected' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -836,7 +760,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'groups' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
@@ -846,14 +769,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'cssID' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'invisible' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -861,14 +782,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'start' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'stop' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"

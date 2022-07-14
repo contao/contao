@@ -145,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
@@ -155,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		'author' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
@@ -164,21 +162,18 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'folders' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
 			'sql'                     => "blob NULL"
 		),
 		'screenshot' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>'%contao.image.valid_extensions%'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'templates' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),

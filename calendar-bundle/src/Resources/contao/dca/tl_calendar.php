@@ -155,7 +155,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'title' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -163,7 +162,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'jumpTo' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr'),
@@ -172,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'protected' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -180,7 +177,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'groups' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
@@ -189,7 +185,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'allowComments' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -197,7 +192,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'notify' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
 			'eval'                    => array('tl_class'=>'w50'),
@@ -206,7 +200,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'sortOrder' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -215,35 +208,30 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'perPage' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'moderate' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'bbcode' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'requireLogin' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'disableCaptcha' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)

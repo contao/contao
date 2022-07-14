@@ -13,7 +13,6 @@ namespace Contao;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * Provide methods to handle a logout page.
@@ -48,7 +47,7 @@ class PageLogout extends Frontend
 		$token = $container->get('security.helper')->getToken();
 
 		// Redirect immediately if there is no logged-in user (see #2388)
-		if ($token === null || $token instanceof AnonymousToken)
+		if ($token === null)
 		{
 			return new RedirectResponse($strRedirect);
 		}

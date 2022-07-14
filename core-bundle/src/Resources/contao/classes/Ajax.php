@@ -158,8 +158,6 @@ class Ajax extends Backend
 	 */
 	public function executePostActions(DataContainer $dc)
 	{
-		header('Content-Type: text/html; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{
@@ -314,7 +312,7 @@ class Ajax extends Backend
 				$this->import(BackendUser::class, 'User');
 
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] ?? null) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
+				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (DataContainer::isFieldExcluded($dc->table, Input::post('field')) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
 				{
 					System::getContainer()->get('monolog.logger.contao.error')->error('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)');
 

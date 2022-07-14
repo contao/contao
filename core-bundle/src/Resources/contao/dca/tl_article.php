@@ -181,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'title' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -189,7 +188,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'alias' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'search'                  => true,
 			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
@@ -202,7 +200,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'author' => array
 		(
 			'default'                 => BackendUser::getInstance()->id,
-			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -213,7 +210,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'inColumn' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
@@ -223,21 +219,18 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'showTeaser' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'teaser' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'search'                  => true,
 			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
@@ -245,7 +238,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'printable' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('print', 'facebook', 'twitter'),
 			'eval'                    => array('multiple'=>true),
@@ -254,7 +246,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'customTpl' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
@@ -265,7 +256,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'protected' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -273,7 +263,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'groups' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
@@ -283,14 +272,12 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'cssID' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'published' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -299,14 +286,12 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'start' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"

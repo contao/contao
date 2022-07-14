@@ -146,7 +146,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'question' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -156,7 +155,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'alias' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -169,7 +167,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'author' => array
 		(
 			'default'                 => BackendUser::getInstance()->id,
-			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
@@ -182,7 +179,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'answer' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
@@ -191,7 +187,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'pageTitle' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -199,7 +194,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'robots' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
@@ -208,7 +202,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'description' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
@@ -217,14 +210,12 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'serpPreview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
-			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('url_callback'=>array('tl_faq', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
 			'sql'                     => null
 		),
 		'addImage' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -233,7 +224,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'overwriteMeta' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -241,7 +231,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
@@ -249,7 +238,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'alt' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['alt'],
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -258,7 +246,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'imageTitle' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -267,7 +254,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'size' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
-			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
@@ -280,7 +266,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'imageUrl' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageUrl'],
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
@@ -289,7 +274,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'fullsize' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -297,7 +281,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'caption' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['caption'],
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
@@ -306,7 +289,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
-			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
@@ -315,7 +297,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'addEnclosure' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -323,21 +304,18 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'enclosure' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'noComments' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'published' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,

@@ -136,14 +136,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'title' => array
 		(
 			'search'                  => true,
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'jumpTo' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
@@ -152,7 +150,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'template' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
@@ -163,7 +160,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'mailerTransport' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
@@ -171,7 +167,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'sender' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
@@ -180,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'senderName' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,

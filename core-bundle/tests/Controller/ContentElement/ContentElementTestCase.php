@@ -140,6 +140,7 @@ class ContentElementTestCase extends TestCase
 
         $controller->setFragmentOptions([
             'template' => $template ?? "content_element/{$modelData['type']}",
+            'type' => $modelData['type'],
         ]);
 
         $response = $controller(new Request(), $model, 'main');
