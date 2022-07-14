@@ -1095,15 +1095,19 @@ table.tl_listing {
 	background:none;
 }
 .cte_type {
-	margin:2px 0 6px;
+	margin:0 0 4px;
 	font-size:.75rem;
 	color:#808080;
+	line-height:16px;
 }
 .cte_type.published,.cte_type.published a {
 	color:#589b0e;
 }
 .cte_type.unpublished,.cte_type.unpublished a {
 	color:#c33;
+}
+.cte_type .visibility {
+	color:#999;
 }
 .limit_height {
 	overflow:hidden;

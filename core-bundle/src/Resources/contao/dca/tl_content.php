@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\Date;
 use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
@@ -1243,6 +1244,19 @@ class tl_content extends Backend
 		if (!Config::get('doNotCollapse'))
 		{
 			$class .=  ' h40';
+		}
+
+		if ($arrRow['start'] && $arrRow['stop'])
+		{
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFromTo'], Date::parse(Config::get('datimFormat'), $arrRow['start']), Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
+		}
+		elseif ($arrRow['start'])
+		{
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFrom'], Date::parse(Config::get('datimFormat'), $arrRow['start'])) . ')</span>';
+		}
+		elseif ($arrRow['stop'])
+		{
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showTo'], Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
 		}
 
 		$objModel = new ContentModel();
