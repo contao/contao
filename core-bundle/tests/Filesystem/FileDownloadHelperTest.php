@@ -35,7 +35,6 @@ class FileDownloadHelperTest extends TestCase
     public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
-
         $url = $helper->generateInlineUrl('my_route', 'my_file.txt', $context);
 
         $this->assertSame($expectedUrl, $url);
@@ -61,11 +60,13 @@ class FileDownloadHelperTest extends TestCase
     {
         yield 'without context' => [
             null,
-            'https://example.com/?_hash=EJ5W%2FRitv01mjcHnPITlKLKolvtEm2O%2BEa3Dq2jekXk%3D&p=my_file.txt', ];
+            'https://example.com/?_hash=EJ5W%2FRitv01mjcHnPITlKLKolvtEm2O%2BEa3Dq2jekXk%3D&p=my_file.txt',
+        ];
 
         yield 'with context' => [
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=eHSjRLDzC%2BNi9w%2BnpBMHNNy1Hfg3XNNz0SvzMNUEO6k%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&p=my_file.txt', ];
+            'https://example.com/?_hash=eHSjRLDzC%2BNi9w%2BnpBMHNNy1Hfg3XNNz0SvzMNUEO6k%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&p=my_file.txt',
+        ];
     }
 
     /**
@@ -74,7 +75,6 @@ class FileDownloadHelperTest extends TestCase
     public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
-
         $url = $helper->generateDownloadUrl('my_route', 'my_file.txt', $fileName, $context);
 
         $this->assertSame($expectedUrl, $url);
@@ -91,11 +91,7 @@ class FileDownloadHelperTest extends TestCase
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('text/plain', $response->headers->get('Content-Type'));
-        $this->assertSame(
-            'attachment; filename='.($fileName ?? 'my_file.txt'),
-            $response->headers->get('Content-Disposition')
-        );
-
+        $this->assertSame('attachment; filename='.($fileName ?? 'my_file.txt'), $response->headers->get('Content-Disposition'));
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
@@ -116,12 +112,14 @@ class FileDownloadHelperTest extends TestCase
         yield 'with context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt', ];
+            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
+        ];
 
         yield 'with filename and context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt', ];
+            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
+        ];
     }
 
     private function getStorage(): VirtualFilesystem
@@ -132,10 +130,7 @@ class FileDownloadHelperTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
 
-        return new VirtualFilesystem(
-            $mountManager,
-            $this->createMock(DbafsManager::class)
-        );
+        return new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
     }
 
     private function getResponseContent(Response $response): string

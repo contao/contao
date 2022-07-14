@@ -72,9 +72,7 @@ class DownloadsController extends AbstractContentElementController
                 // TODO: What's needed here in terms of permissions?
                 if (
                     null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
-                    !$this->getFilesystemItems($model)->any(
-                        static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath()
-                    )
+                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
                 ) {
                     return new Response('The resource can not be accessed.', Response::HTTP_FORBIDDEN);
                 }
@@ -98,14 +96,14 @@ class DownloadsController extends AbstractContentElementController
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = (int) $model->numberOfItems) > 0 && !$randomize) {
+        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
             $filesystemItems = $filesystemItems->limit($limit);
         }
 
         $template->set('limit', $limit > 0 && $randomize ? $limit : null);
 
         // Compile list of downloads
-        $showPreviews = (bool) $model->showPreview;
+        $showPreviews = $model->showPreview;
 
         $downloads = array_map(
             fn (FilesystemItem $filesystemItem): array => [
@@ -181,7 +179,7 @@ class DownloadsController extends AbstractContentElementController
     private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model): string
     {
         $path = $filesystemItem->getPath();
-        $inline = (bool) $model->inline;
+        $inline = $model->inline;
 
         if (!$inline && null !== ($publicUri = $this->filesStorage->generatePublicUri($path))) {
             return (string) $publicUri;
@@ -189,9 +187,9 @@ class DownloadsController extends AbstractContentElementController
 
         $context = ['id' => $model->id];
 
-        return $inline ?
-            $this->fileDownloadHelper->generateInlineUrl(self::DOWNLOAD_ROUTE_NAME, $path, $context) :
-            $this->fileDownloadHelper->generateDownloadUrl(self::DOWNLOAD_ROUTE_NAME, $path, $filesystemItem->getName(), $context);
+        return $inline
+            ? $this->fileDownloadHelper->generateInlineUrl(self::DOWNLOAD_ROUTE_NAME, $path, $context)
+            : $this->fileDownloadHelper->generateDownloadUrl(self::DOWNLOAD_ROUTE_NAME, $path, $filesystemItem->getName(), $context);
     }
 
     /**
@@ -206,7 +204,7 @@ class DownloadsController extends AbstractContentElementController
         $figureBuilder = $this->studio
             ->createFigureBuilder()
             ->setSize($size = $model->size)
-            ->enableLightbox($fullsize = (bool) $model->fullsize)
+            ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
             ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($path)))
         ;
@@ -232,7 +230,7 @@ class DownloadsController extends AbstractContentElementController
                 // TODO: As soon as our image libraries support this case, read from the public path instead.
                 Path::join($this->projectDir, $this->filesStorage->getPrefix(), $path),
                 $previewSize,
-                (int) $model->numberOfItems ?: PHP_INT_MAX
+                $model->numberOfItems ?: PHP_INT_MAX
             );
 
             foreach ($previews as $image) {

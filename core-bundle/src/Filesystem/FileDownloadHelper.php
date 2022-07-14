@@ -163,7 +163,6 @@ class FileDownloadHelper
 
         $fileName = $request->query->get(self::PARAM_FILE_NAME, basename($file->getPath()));
         $fileNameFallback = mb_convert_encoding($fileName, 'UTF-8', 'ASCII');
-
         $disposition = HeaderUtils::makeDisposition($dispositionType, $fileName, $fileNameFallback);
 
         $response->headers->set('Content-Disposition', $disposition);
