@@ -121,7 +121,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.security.token_checker');
 
-        $this->assertEquals(new Reference('security.access.role_hierarchy_voter'), $definition->getArgument(5));
+        $this->assertEquals(new Reference('security.access.role_hierarchy_voter'), $definition->getArgument(4));
     }
 
     public function testRegistersThePredefinedImageSizes(): void

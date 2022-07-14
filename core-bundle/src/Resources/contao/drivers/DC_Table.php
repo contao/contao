@@ -3995,7 +3995,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$blnDraft = (string) $objRow->tstamp === '0';
+		$blnDraft = (string) ($currentRecord['tstamp'] ?? null) === '0';
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ($blnDraft ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		if ($blnDraft)
@@ -4559,7 +4559,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$blnDraft = (string) $row[$i]['tstamp'] === '0';
+				$blnDraft = (string) ($row[$i]['tstamp'] ?? null) === '0';
 				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
 				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
 				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
@@ -5012,7 +5012,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
     ';
 
 				$colspan = 1;
-				$label = ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $label;
+
+				if ($blnDraft && !\is_array($label))
+				{
+					$label = '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' . $label;
+				}
 
 				// Handle strings and arrays
 				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))

@@ -761,7 +761,7 @@ services:
         public: true
         arguments:
             - '@security.helper'
-            - '@session'
+            - '@request_stack'
             - '@contao.security.frontend_user_provider'
             - '@?logger'
 
@@ -819,7 +819,6 @@ services:
             - '@request_stack'
             - '@security.firewall.map'
             - '@security.token_storage'
-            - '@session'
             - '@security.authentication.trust_resolver'
             - ~
 
