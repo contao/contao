@@ -176,14 +176,14 @@
             "Contao\\CoreBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao/"
+            "contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config/",
-            "src/Resources/contao/dca/",
-            "src/Resources/contao/languages/",
-            "src/Resources/contao/templates/",
-            "src/Resources/contao/themes/"
+            "contao/config/",
+            "contao/dca/",
+            "contao/languages/",
+            "contao/templates/",
+            "contao/themes/"
         ]
     },
     "autoload-dev": {

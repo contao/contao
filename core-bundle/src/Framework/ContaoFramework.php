@@ -181,7 +181,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         foreach ($basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
+                require_once __DIR__.'/../../contao/library/Contao/'.$class.'.php';
             }
         }
     }

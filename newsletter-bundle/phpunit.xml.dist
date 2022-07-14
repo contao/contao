@@ -4,9 +4,6 @@
     <include>
       <directory>./src</directory>
     </include>
-    <exclude>
-      <directory>./src/Resources</directory>
-    </exclude>
   </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>

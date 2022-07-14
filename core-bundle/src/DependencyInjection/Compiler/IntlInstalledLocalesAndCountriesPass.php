@@ -47,7 +47,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         $projectDir = $container->getParameter('kernel.project_dir');
         $defaultLocale = $container->getParameter('kernel.default_locale');
 
-        $dirs = [__DIR__.'/../../Resources/contao/languages'];
+        $dirs = [__DIR__.'/../../../contao/languages'];
 
         if (is_dir($path = Path::join($projectDir, 'contao/languages'))) {
             $dirs[] = $path;
