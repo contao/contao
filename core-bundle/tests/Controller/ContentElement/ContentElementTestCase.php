@@ -199,7 +199,7 @@ class ContentElementTestCase extends TestCase
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
     {
-        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../src/Resources');
+        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
         $templateLocator = new TemplateLocator(
             '',

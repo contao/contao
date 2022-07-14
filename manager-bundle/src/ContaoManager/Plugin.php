@@ -120,9 +120,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load(
             static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yaml');
+                    $loader->load('@ContaoManagerBundle/skeleton/config/config_dev.yaml');
                 } else {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yaml');
+                    $loader->load('@ContaoManagerBundle/skeleton/config/config_prod.yaml');
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);

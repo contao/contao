@@ -137,4 +137,9 @@ class ContaoCoreBundle extends Bundle
 
         return $version;
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

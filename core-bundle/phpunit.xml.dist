@@ -5,7 +5,6 @@
       <directory>./src</directory>
     </include>
     <exclude>
-      <directory>./src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./src/Entity</directory>
       <directory>./src/Migration/Version*</directory>
