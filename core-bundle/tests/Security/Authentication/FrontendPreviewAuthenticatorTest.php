@@ -16,6 +16,8 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -212,10 +214,16 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ;
         }
 
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $security ??= $this->createMock(Security::class);
         $userProvider ??= $this->createMock(UserProviderInterface::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
+        return new FrontendPreviewAuthenticator($security, $requestStack, $userProvider, $logger);
     }
 }
