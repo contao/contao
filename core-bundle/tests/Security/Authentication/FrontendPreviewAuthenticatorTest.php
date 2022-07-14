@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -41,7 +40,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $user = $this->createMock(FrontendUser::class);
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -74,7 +73,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->method('isGranted')
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->expects($this->once())
             ->method('loadUserByIdentifier')
@@ -109,7 +108,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -214,7 +213,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         }
 
         $security ??= $this->createMock(Security::class);
-        $userProvider ??= $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider ??= $this->createMock(UserProviderInterface::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
         return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
