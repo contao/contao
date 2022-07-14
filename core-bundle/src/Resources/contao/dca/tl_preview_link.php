@@ -102,6 +102,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'url' => array
 		(
+			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
@@ -109,6 +110,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'expiresInDays' => array
 		(
+			'exclude'                 => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('1', '7', '30'),
@@ -118,6 +120,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'showUnpublished' => array
 		(
+			'exclude'                 => false,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -125,6 +128,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'createdAt' => array
 		(
+			'exclude'                 => false,
 			'default'                 => time(),
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
@@ -134,6 +138,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'expiresAt' => array
 		(
+			'exclude'                 => false,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
