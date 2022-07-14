@@ -180,7 +180,8 @@ services:
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
-            - { name: contao.hook, hook: loadDataContainer }
+            # The priority must be lower than 0 (see #3255)
+            - { name: contao.hook, hook: loadDataContainer, priority: -16 }
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
@@ -364,7 +365,6 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
-            - '@security.helper'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
@@ -439,12 +439,11 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.security.logout_success:
-        class: Contao\CoreBundle\EventListener\Security\LogoutSuccessListener
+    contao.listener.security.logout:
+        class: Contao\CoreBundle\EventListener\Security\LogoutListener
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
-            - '@contao.framework'
             - '@security.helper'
             - '@logger'
         tags:

@@ -1784,7 +1784,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!isset($key, self::$arrCurrentRecordCache))
+		if (!isset(self::$arrCurrentRecordCache[$key]))
 		{
 			return null;
 		}

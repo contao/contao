@@ -7,6 +7,26 @@
 The `exclude` property on DCA fields is no longer initialized when loading a back end module. Make sure to check for
 `ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE` to know if a field should be available to a user.
 
+### checkCredentials hook
+
+The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.
+
+### postLogin hook
+
+The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### importUser hook
+
+The `importUser` hook has been removed. Implement a custom `UserProvider` service instead.
+
+### postAuthenticate hook
+
+The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### postLogout hook
+
+The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
+
 ### Contao 4 migrations
 
 Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
@@ -191,6 +211,8 @@ The following content element types have been rewritten as fragment controllers 
  - `toplink` (`ce_toplink` → `content_element/toplink`)
  - `image` (`ce_image` → `content_element/image`)
  - `gallery` (`ce_gallery` → `content_element/gallery`)
+ - `youtube` (`ce_youtube` → `content_element/youtube`)
+ - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
 use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
@@ -208,6 +230,8 @@ $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
+$GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
+$GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
 ```
 
 ### Show to guests only

@@ -145,10 +145,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $attributes['fieldType'] = $fieldType;
         }
 
-        if ($source = $config->getExtra('source')) {
-            $attributes['preserveRecord'] = $source;
-        }
-
         if ($value = $config->getValue()) {
             $attributes['value'] = array_map('\intval', explode(',', $value));
         }

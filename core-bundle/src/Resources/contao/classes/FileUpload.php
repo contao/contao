@@ -286,6 +286,12 @@ class FileUpload extends Backend
 
 		$arrImageSize = $objFile->imageSize;
 
+		// Image size could not be determined
+		if (!isset($arrImageSize[0], $arrImageSize[1]))
+		{
+			return false;
+		}
+
 		$blnResize = false;
 
 		// The image exceeds the maximum image width
