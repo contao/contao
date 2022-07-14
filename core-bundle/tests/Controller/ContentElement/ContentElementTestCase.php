@@ -359,13 +359,6 @@ class ContentElementTestCase extends TestCase
     protected function getDefaultInsertTagParser(): InsertTagParser
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);
-
-        $replaceDemo = static fn (string $input): string => str_replace(
-            ['{{demo}}', '{{br}}'],
-            ['demo', '<br>'],
-            $input
-        );
-
         $insertTagParser
             ->method('replace')
             ->willReturnCallback($replaceDemo)
