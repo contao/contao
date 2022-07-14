@@ -1119,7 +1119,9 @@ class Input
 				return $arrPost[$strKey];
 			}
 
-			return $request->request->get($strKey);
+			// Since we don't know whether the value will be an array or a string,
+			// we can neither use ->get($strKey) nor ->all($strKey) in Symfony 6.
+			return $request->request->all()[$strKey] ?? null;
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
