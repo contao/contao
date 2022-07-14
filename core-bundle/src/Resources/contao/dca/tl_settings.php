@@ -174,12 +174,14 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
-		'defaultUser' => array(
+		'defaultUser' => array
+		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.username',
 			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
 		),
-		'defaultGroup' => array(
+		'defaultGroup' => array
+		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user_group.name',
 			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')

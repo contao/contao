@@ -281,23 +281,6 @@ abstract class Backend extends Controller
 			System::loadLanguageFile($strTable);
 			$this->loadDataContainer($strTable);
 
-			// Include all excluded fields which are allowed for the current user
-			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
-				{
-					if (($v['exclude'] ?? null) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
-					{
-						if ($strTable == 'tl_user_group')
-						{
-							$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['orig_exclude'] = $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'];
-						}
-
-						$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
-					}
-				}
-			}
-
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{

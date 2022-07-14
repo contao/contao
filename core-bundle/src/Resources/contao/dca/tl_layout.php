@@ -135,7 +135,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
@@ -144,7 +143,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'rows' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('1rw', '2rwh', '2rwf', '3rw'),
 			'eval'                    => array('helpwizard'=>true, 'cols'=>4, 'submitOnChange'=>true),
@@ -153,7 +151,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'headerHeight' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
@@ -161,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'footerHeight' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
@@ -169,7 +165,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'cols' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('1cl', '2cll', '2clr', '3cl'),
 			'eval'                    => array('helpwizard'=>true, 'cols'=>4, 'submitOnChange'=>true),
@@ -178,7 +173,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'widthLeft' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
@@ -186,7 +180,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'widthRight' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
@@ -194,14 +187,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'sections' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'sectionWizard',
 			'sql'                     => "blob NULL"
 		),
 		'framework' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkboxWizard',
 			'options'                 => array('layout.css', 'responsive.css', 'grid.css', 'reset.css', 'form.css', 'icons.css'),
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
@@ -214,14 +205,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'external' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'combineScripts' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
@@ -229,13 +218,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'modules' => array
 		(
 			'default'                 => array(array('mod'=>0, 'col'=>'main', 'enable'=>1)),
-			'exclude'                 => true,
 			'inputType'               => 'moduleWizard',
 			'sql'                     => "blob NULL"
 		),
 		'template' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -250,14 +237,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'minifyMarkup' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'lightboxSize' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
@@ -267,13 +252,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'viewport' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -281,7 +264,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'titleTag' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'placeholder'=>'{{page::pageTitle}} - {{page::rootPageTitle}}', 'tl_class'=>'w50'),
@@ -289,7 +271,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'cssClass' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -297,7 +278,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'onload' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -305,7 +285,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'head' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
@@ -313,14 +292,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'addJQuery' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jquery' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -333,14 +310,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'addMooTools' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mootools' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -353,7 +328,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'analytics' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
@@ -365,14 +339,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'externalJs' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'scripts' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function ()
@@ -384,7 +356,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'script' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:120px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
@@ -392,14 +363,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'static' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'width' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
@@ -407,7 +376,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'align' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('left', 'center', 'right'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],

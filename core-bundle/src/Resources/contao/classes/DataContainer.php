@@ -357,7 +357,7 @@ abstract class DataContainer extends Backend
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Check if the field is excluded
-		if ($arrData['exclude'] ?? null)
+		if (self::isFieldExcluded($this->strTable, $this->strField) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" is excluded from being edited.');
 		}
@@ -1557,6 +1557,29 @@ abstract class DataContainer extends Backend
 	public static function getDriverForTable(string $table): string|null
 	{
 		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
+	}
+
+	/**
+	 * Return whether a DCA field is excluded.
+	 *
+	 * @param string $table
+	 * @param string $field
+	 *
+	 * @return bool
+	 */
+	public static function isFieldExcluded(string $table, string $field): bool
+	{
+		if (DC_File::class === self::getDriverForTable($table))
+		{
+			return false;
+		}
+
+		if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude']))
+		{
+			return (bool) $GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude'];
+		}
+
+		return !empty($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType']) || !empty($GLOBALS['TL_DCA'][$table]['fields'][$field]['input_field_callback']);
 	}
 
 	/**

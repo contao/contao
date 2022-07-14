@@ -137,6 +137,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	(
 		'name' => array
 		(
+			'exclude'                 => false,
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
 			'load_callback' => array

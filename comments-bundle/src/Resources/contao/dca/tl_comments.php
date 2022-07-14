@@ -163,7 +163,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'name' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
@@ -171,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'email' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -179,7 +177,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'website' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -187,7 +184,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'member' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
 			'eval'                    => array('chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -196,7 +192,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'comment' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE'),
@@ -204,7 +199,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'addReply' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -213,7 +207,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'author' => array
 		(
 			'default'                 => BackendUser::getInstance()->id,
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -222,7 +215,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'reply' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
@@ -230,7 +222,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'published' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

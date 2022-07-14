@@ -20,7 +20,6 @@ PaletteManipulator::create()
 // Extend fields
 $GLOBALS['TL_DCA']['tl_layout']['fields']['newsfeeds'] = array
 (
-	'exclude'         => true,
 	'inputType'       => 'checkbox',
 	'foreignKey'      => 'tl_news_feed.title',
 	'eval'            => array('multiple'=>true),

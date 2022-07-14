@@ -138,7 +138,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'title' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -146,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'alias' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -157,7 +155,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'jumpTo' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
@@ -166,7 +163,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'sendViaEmail' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -174,14 +170,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'mailerTransport' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'recipient' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>1022, 'rgxp'=>'emails', 'tl_class'=>'w50 clr'),
@@ -189,7 +183,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'subject' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -197,7 +190,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'format' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('raw', 'xml', 'csv', 'csv_excel', 'email'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form'],
@@ -206,7 +198,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'skipEmpty' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -214,7 +205,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'storeValues' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -222,7 +212,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'targetTable' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getAllTables'),
@@ -231,7 +220,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'customTpl' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
@@ -242,7 +230,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'method' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('POST', 'GET'),
@@ -251,21 +238,18 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'novalidate' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'attributes' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'formID' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
@@ -273,7 +257,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'allowTags' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),

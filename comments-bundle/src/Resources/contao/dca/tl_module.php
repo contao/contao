@@ -20,7 +20,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['comments'] = '{title_legend},name,h
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_order'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_order'],
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -31,7 +30,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_order'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_moderate'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_moderate'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -40,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_moderate'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_bbcode'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_bbcode'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -49,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_bbcode'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_requireLogin'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_requireLogin'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -58,7 +54,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_requireLogin'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_disableCaptcha'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_disableCaptcha'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -67,7 +62,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_disableCaptcha'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_template'],
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{

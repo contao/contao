@@ -169,7 +169,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'type' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form_field', 'getFields'),
@@ -179,7 +178,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'label' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -187,7 +185,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'name' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'fieldname', 'spaceToUnderscore'=>true, 'maxlength'=>64, 'tl_class'=>'w50 clr'),
@@ -195,7 +192,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'text' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true),
@@ -204,7 +200,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'html' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html'),
@@ -212,7 +207,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'options' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'optionWizard',
 			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true),
 			'xlabel' => array
@@ -223,14 +217,12 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'mandatory' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'rgxp' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('digit', 'alpha', 'alnum', 'extnd', 'date', 'time', 'datim', 'phone', 'email', 'url', HttpUrlListener::RGXP_NAME, CustomRgxpListener::RGXP_NAME),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form_field'],
@@ -239,7 +231,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'placeholder' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -247,14 +238,12 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'customRgxp' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'mandatory'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'errorMsg' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -262,77 +251,66 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'minlength' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxlength' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxImageWidth' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxImageHeight' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'minval' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'maxval' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'step' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'size' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;i:4;i:1;i:40;}'"
 		),
 		'multiple' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mSize' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'extensions' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -343,35 +321,30 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'storeFile' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'uploadFolder' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'useHomeDir' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'doNotOverwrite' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'class' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -379,7 +352,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'value' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -387,7 +359,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'accesskey' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
@@ -395,14 +366,12 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'fSize' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'customTpl' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form_field', 'getFormFieldTemplates'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -410,28 +379,24 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'slabel' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'imageSubmit' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'singleSRC' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'invisible' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

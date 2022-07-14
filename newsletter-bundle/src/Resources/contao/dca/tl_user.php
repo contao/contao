@@ -21,7 +21,6 @@ PaletteManipulator::create()
 // Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
@@ -30,7 +29,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsletterp'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
