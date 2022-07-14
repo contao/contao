@@ -50,6 +50,7 @@ class RssToFeedReaderMigration extends AbstractMigration
         $tableQuoted = $this->connection->quoteIdentifier('tl_module');
         $fromQuoted = $this->connection->quoteIdentifier($from);
         $toQuoted = $this->connection->quoteIdentifier($to);
+
         $this->connection->executeQuery("ALTER TABLE $tableQuoted CHANGE $fromQuoted $toQuoted $type");
     }
 }

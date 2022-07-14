@@ -91,8 +91,8 @@ class FeedReaderControllerTest extends TestCase
         $requestStack->push($request);
 
         $controller = $this->getController($feedIo, $cache, $requestStack);
-
         $response = $controller($request, $model, 'main');
+
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
@@ -129,8 +129,8 @@ class FeedReaderControllerTest extends TestCase
         $requestStack->push($request);
 
         $controller = $this->getController($feedIo, $cache, $requestStack);
-
         $response = $controller($request, $model, 'main');
+
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
@@ -168,8 +168,8 @@ class FeedReaderControllerTest extends TestCase
         ;
 
         $controller = $this->getController($feedIo, $cache, $requestStack, $logger);
-
         $response = $controller($request, $model, 'main');
+
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
@@ -210,14 +210,14 @@ class FeedReaderControllerTest extends TestCase
             return true;
         };
 
-        $container = $this->mockContainer(null, $assertTwigContext);
-
         $finder = new ResourceFinder(__DIR__.'/../../../src/Resources/contao');
+
+        $container = $this->mockContainer(null, $assertTwigContext);
         $container->set('contao.resource_finder', $finder);
 
         $controller = $this->getController($feedIo, $cache, $requestStack, null, $container);
-
         $response = $controller($request, $model, 'main');
+
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
@@ -282,9 +282,7 @@ class FeedReaderControllerTest extends TestCase
         $logger = $logger ?? $this->createMock(LoggerInterface::class);
 
         $controller = new FeedReaderController($feedIo, $logger, $cache);
-        $controller->setFragmentOptions([
-            'template' => 'frontend_module/feed_reader',
-        ]);
+        $controller->setFragmentOptions(['template' => 'frontend_module/feed_reader']);
         $controller->setContainer($container ?? $this->mockContainer($requestStack));
 
         return $controller;
@@ -304,10 +302,7 @@ class FeedReaderControllerTest extends TestCase
         if ($assertTwigContext) {
             $twig
                 ->method('render')
-                ->with(
-                    '@Contao/frontend_module/feed_reader.html.twig',
-                    $this->callback($assertTwigContext)
-                )
+                ->with('@Contao/frontend_module/feed_reader.html.twig', $this->callback($assertTwigContext))
                 ->willReturn('rendered frontend_module/feed_reader')
             ;
         } else {
@@ -328,6 +323,7 @@ class FeedReaderControllerTest extends TestCase
             ->with('maxPaginationLinks')
             ->willReturn(7)
         ;
+
         $environmentAdapter = $this->mockAdapter(['get']);
         $environmentAdapter
             ->method('get')
@@ -336,6 +332,7 @@ class FeedReaderControllerTest extends TestCase
                 ['queryString', ''],
             ])
         ;
+
         $framework = $this->mockContaoFramework([Config::class => $configAdapter, Environment::class => $environmentAdapter, Input::class => $this->mockAdapter(['get'])]);
 
         $this->container->set('contao.framework', $framework);
