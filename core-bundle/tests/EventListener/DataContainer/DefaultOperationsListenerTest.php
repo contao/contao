@@ -17,13 +17,10 @@ use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    private Security|MockObject $security;
-    private Connection|MockObject $connection;
     private DefaultOperationsListener $listener;
 
     protected function setUp(): void
@@ -32,9 +29,10 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
-        $this->security = $this->createMock(Security::class);
-        $this->connection = $this->createMock(Connection::class);
-        $this->listener = new DefaultOperationsListener($this->security, $this->connection);
+        $security = $this->createMock(Security::class);
+        $connection = $this->createMock(Connection::class);
+
+        $this->listener = new DefaultOperationsListener($security, $connection);
     }
 
     protected function tearDown(): void

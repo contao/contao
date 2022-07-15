@@ -49,6 +49,7 @@ class DataContainerOperation implements \ArrayAccess
         } else {
             $attributes = ' class="'.$name.'" '.$attributes;
         }
+
         $operation['attributes'] = $attributes;
 
         $this->operation = $operation;
