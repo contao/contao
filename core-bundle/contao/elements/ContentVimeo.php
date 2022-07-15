@@ -104,7 +104,7 @@ class ContentVimeo extends ContentElement
 
 		if ($this->playerStart > 0)
 		{
-			$url .= '#t=' . (int) $this->playerStart . 's';
+			$url .= '#t=' . $this->playerStart . 's';
 		}
 
 		// Add a splash image

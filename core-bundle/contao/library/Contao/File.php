@@ -328,8 +328,8 @@ class File extends System
 
 							$this->arrImageViewSize = array
 							(
-								(int) $dimensions->getSize()->getWidth(),
-								(int) $dimensions->getSize()->getHeight()
+								$dimensions->getSize()->getWidth(),
+								$dimensions->getSize()->getHeight()
 							);
 
 							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1] || $dimensions->isUndefined())

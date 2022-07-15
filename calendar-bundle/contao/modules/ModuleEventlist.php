@@ -382,7 +382,7 @@ class ModuleEventlist extends Events
 					->from($event['singleSRC'])
 					->setSize($imgSize)
 					->setMetadata($eventModel->getOverwriteMetadata())
-					->enableLightbox((bool) $eventModel->fullsize)
+					->enableLightbox($eventModel->fullsize)
 					->buildIfResourceExists();
 
 				if (null !== $figure)

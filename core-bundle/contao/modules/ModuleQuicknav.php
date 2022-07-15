@@ -115,7 +115,6 @@ class ModuleQuicknav extends Module
 		++$level;
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		foreach ($objSubpages as $objSubpage)
 		{

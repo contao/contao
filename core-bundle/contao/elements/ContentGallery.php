@@ -210,7 +210,7 @@ class ContentGallery extends ContentElement
 			->createFigureBuilder()
 			->setSize($this->size)
 			->setLightboxGroupIdentifier('lb' . $this->id)
-			->enableLightbox((bool) $this->fullsize);
+			->enableLightbox($this->fullsize);
 
 		// Rows
 		for ($i=$offset; $i<$limit; $i+=$this->perRow)

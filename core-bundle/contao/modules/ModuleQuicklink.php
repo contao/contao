@@ -82,7 +82,6 @@ class ModuleQuicklink extends Module
 		$items = array();
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)

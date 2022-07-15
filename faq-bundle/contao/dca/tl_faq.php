@@ -527,7 +527,7 @@ class tl_faq extends Backend
 			throw new Exception('Invalid FAQ category');
 		}
 
-		$jumpTo = (int) $objCategory->jumpTo;
+		$jumpTo = $objCategory->jumpTo;
 
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
 		if ($jumpTo < 1)

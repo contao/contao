@@ -872,7 +872,7 @@ class PageModel extends Model
 		}
 
 		// Set some default values
-		$this->protected = (bool) $this->protected;
+		$this->protected = $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
 		$this->layout = $this->includeLayout ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
@@ -995,7 +995,7 @@ class PageModel extends Model
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
-			$this->rootIsFallback = (bool) $objParentPage->fallback;
+			$this->rootIsFallback = $objParentPage->fallback;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
 

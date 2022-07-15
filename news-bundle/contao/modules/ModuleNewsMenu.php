@@ -128,8 +128,6 @@ class ModuleNewsMenu extends ModuleNews
 		($this->news_order == 'order_date_asc') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
-		$count = 0;
-		$limit = \count($arrData);
 
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -147,7 +145,7 @@ class ModuleNewsMenu extends ModuleNews
 
 		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = (bool) $this->news_showQuantity;
+		$this->Template->showQuantity = $this->news_showQuantity;
 	}
 
 	/**
@@ -182,9 +180,6 @@ class ModuleNewsMenu extends ModuleNews
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$arrMonth)
 		{
-			$count = 0;
-			$limit = \count($arrMonth);
-
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
@@ -202,7 +197,7 @@ class ModuleNewsMenu extends ModuleNews
 		}
 
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = (bool) $this->news_showQuantity;
+		$this->Template->showQuantity = $this->news_showQuantity;
 		$this->Template->url = $this->strUrl . '?';
 		$this->Template->activeYear = Input::get('year');
 	}
@@ -284,7 +279,7 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->daily = true;
 		$this->Template->days = $this->compileDays();
 		$this->Template->weeks = $this->compileWeeks($arrData);
-		$this->Template->showQuantity = (bool) $this->news_showQuantity;
+		$this->Template->showQuantity = $this->news_showQuantity;
 	}
 
 	/**

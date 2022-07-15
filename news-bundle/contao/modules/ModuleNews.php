@@ -183,7 +183,7 @@ abstract class ModuleNews extends Module
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objArticle->getOverwriteMetadata())
-				->enableLightbox((bool) $objArticle->fullsize);
+				->enableLightbox($objArticle->fullsize);
 
 			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
 			if ('external' === $objTemplate->source && $objTemplate->target)

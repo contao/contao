@@ -110,12 +110,12 @@ class ContentYouTube extends ContentElement
 
 		if ($this->playerStart > 0)
 		{
-			$params[] = 'start=' . (int) $this->playerStart;
+			$params[] = 'start=' . $this->playerStart;
 		}
 
 		if ($this->playerStop > 0)
 		{
-			$params[] = 'end=' . (int) $this->playerStop;
+			$params[] = 'end=' . $this->playerStop;
 		}
 
 		$url = $domain . '/embed/' . $this->youtube;

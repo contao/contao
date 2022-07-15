@@ -46,7 +46,7 @@ class ContentText extends ContentElement
 				->from($this->singleSRC)
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())
-				->enableLightbox((bool) $this->fullsize)
+				->enableLightbox($this->fullsize)
 				->buildIfResourceExists();
 
 			if (null !== $figure)

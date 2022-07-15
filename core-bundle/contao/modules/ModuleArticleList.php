@@ -91,7 +91,7 @@ class ModuleArticleList extends Module
 		while ($objArticles->next())
 		{
 			// Skip first article
-			if (++$intCount <= (int) $this->skipFirst)
+			if (++$intCount <= $this->skipFirst)
 			{
 				continue;
 			}
