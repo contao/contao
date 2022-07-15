@@ -84,11 +84,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_faq_category', 'editHeader')
 			),
-			'children' => array
-			(
-				'href'                => 'table=tl_faq',
-				'icon'                => 'children.svg'
-			),
+			'children',
 			'copy' => array
 			(
 				'href'                => 'act=copy',
@@ -102,11 +98,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_faq_category', 'deleteCategory')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

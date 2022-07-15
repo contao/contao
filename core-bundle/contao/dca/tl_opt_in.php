@@ -65,11 +65,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 				'icon'                => 'resend.svg',
 				'button_callback'     => array('tl_opt_in', 'resendButton')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

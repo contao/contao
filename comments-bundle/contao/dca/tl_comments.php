@@ -108,11 +108,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 				'icon'                => 'visible.svg',
 				'button_callback'     => array('tl_comments', 'toggleIcon')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

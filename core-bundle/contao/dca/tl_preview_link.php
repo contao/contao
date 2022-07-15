@@ -55,27 +55,10 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=published',
-				'icon'                => 'visible.svg',
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'edit',
+			'delete',
+			'toggle',
+			'show',
 			'share' => array
 			(
 				'icon'                => 'share.svg'

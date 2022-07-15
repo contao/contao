@@ -63,6 +63,12 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.default_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+
     contao.listener.data_container.disable_app_configured_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener
         arguments:

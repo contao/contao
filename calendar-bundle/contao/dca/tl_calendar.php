@@ -102,11 +102,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_calendar', 'editHeader')
 			),
-			'children' => array
-			(
-				'href'                => 'table=tl_calendar_events',
-				'icon'                => 'children.svg'
-			),
+			'children',
 			'copy' => array
 			(
 				'href'                => 'act=copy',
@@ -120,11 +116,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'deleteCalendar')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

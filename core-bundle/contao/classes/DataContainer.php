@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -853,108 +854,112 @@ abstract class DataContainer extends Backend
 		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
 		{
 			$v = \is_array($v) ? $v : array($v);
-			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
-			$label = $title = $k;
 
-			if (isset($v['label']))
-			{
-				if (\is_array($v['label']))
-				{
-					$label = $v['label'][0] ?? null;
-					$title = sprintf($v['label'][1] ?? '', $id);
-				}
-				else
-				{
-					$label = $title = sprintf($v['label'], $id);
-				}
-			}
-
-			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
-
-			// Add the key as CSS class
-			if (strpos($attributes, 'class="') !== false)
-			{
-				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
-			}
-			else
-			{
-				$attributes = ' class="' . $k . '"' . $attributes;
-			}
+			$config = new DataContainerOperation($k, $v, $arrRow, $this);
 
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-				continue;
-			}
 
-			if (\is_callable($v['button_callback'] ?? null))
-			{
-				$return .= $v['button_callback']($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-				continue;
-			}
+				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
 
-			if ($k == 'show')
-			{
-				if (!empty($v['route']))
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
-					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
+					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
 				}
 				else
 				{
-					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
+					$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					continue;
+				}
+			}
+			elseif (\is_callable($v['button_callback'] ?? null))
+			{
+				$ref = new \ReflectionFunction($v['button_callback']);
+
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
+				{
+					$v['button_callback']($config);
+				}
+				else
+				{
+					$return .= $v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					continue;
+				}
+			}
+
+			if (($html = $config->getHtml()) !== null)
+			{
+				$return .= $html;
+				continue;
+			}
+
+			$isPopup = $k == 'show';
+			$href = null;
+
+			if (!empty($config['route']))
+			{
+				$params = array('id' => $arrRow['id']);
+
+				if ($isPopup)
+				{
+					$params['popup'] = '1';
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				$href = System::getContainer()->get('router')->generate($config['route'], $params);
+			}
+			elseif (isset($config['href']))
+			{
+				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+			}
+
+			parse_str(StringUtil::decodeEntities($config['href'] ?? ''), $params);
+
+			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+			{
+				// Hide the toggle icon if the user does not have access to the field
+				if ((($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+				{
+					continue;
+				}
+
+				$icon = $config['icon'];
+				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
+
+				if (false !== strpos($config['icon'], '/'))
+				{
+					$_icon = \dirname($config['icon']) . '/' . $_icon;
+				}
+
+				if ($icon == 'visible.svg')
+				{
+					$_icon = 'invisible.svg';
+				}
+
+				$state = $arrRow[$params['field']] ? 1 : 0;
+
+				if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false))
+				{
+					$state = $arrRow[$params['field']] ? 0 : 1;
+				}
+
+				if ($href === null)
+				{
+					$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
+				}
+				else
+				{
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				}
+			}
+			elseif ($href === null)
+			{
+				$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
 			}
 			else
 			{
-				if (!empty($v['route']))
-				{
-					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
-				}
-				else
-				{
-					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
-				}
-
-				parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
-
-				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
-				{
-					// Hide the toggle icon if the user does not have access to the field
-					if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
-					{
-						continue;
-					}
-
-					$icon = $v['icon'];
-					$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
-
-					if (false !== strpos($v['icon'], '/'))
-					{
-						$_icon = \dirname($v['icon']) . '/' . $_icon;
-					}
-
-					if ($icon == 'visible.svg')
-					{
-						$_icon = 'invisible.svg';
-					}
-
-					$state = $arrRow[$params['field']] ? 1 : 0;
-
-					if ($v['reverse'] ?? false)
-					{
-						$state = $arrRow[$params['field']] ? 0 : 1;
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
-				}
-				else
-				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
-				}
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $config['label'])) . '\',\'url\':this.href});return false"' : '') . $config['attributes'] . '>' . Image::getHtml($config['icon'], $config['label']) . '</a> ';
 			}
 		}
 
@@ -1123,66 +1128,59 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			if ($k == 'show')
+			$isPopup = $k == 'show';
+
+			if (!empty($v['route']))
 			{
-				if (!empty($v['route']))
+				$params = array('id' => $arrRow['id']);
+
+				if ($isPopup)
 				{
-					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
-				}
-				else
-				{
-					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
+					$params['popup'] = '1';
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show'] ?? null) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : ($GLOBALS['TL_LANG'][$strPtable]['show'] ?? ''), $arrRow['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				$href = System::getContainer()->get('router')->generate($v['route'], $params);
 			}
 			else
 			{
-				if (!empty($v['route']))
+				$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+			}
+
+			parse_str(StringUtil::decodeEntities($v['href']), $params);
+
+			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+			{
+				// Hide the toggle icon if the user does not have access to the field
+				if ((($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
 				{
-					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
+					continue;
 				}
-				else
+
+				$icon = $v['icon'];
+				$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+
+				if (false !== strpos($v['icon'], '/'))
 				{
-					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
+					$_icon = \dirname($v['icon']) . '/' . $_icon;
 				}
 
-				parse_str(StringUtil::decodeEntities($v['href']), $params);
-
-				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+				if ($icon == 'visible.svg')
 				{
-					// Hide the toggle icon if the user does not have access to the field
-					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
-					{
-						continue;
-					}
-
-					$icon = $v['icon'];
-					$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
-
-					if (false !== strpos($v['icon'], '/'))
-					{
-						$_icon = \dirname($v['icon']) . '/' . $_icon;
-					}
-
-					if ($icon == 'visible.svg')
-					{
-						$_icon = 'invisible.svg';
-					}
-
-					$state = $arrRow[$params['field']] ? 1 : 0;
-
-					if ($v['reverse'] ?? false)
-					{
-						$state = $arrRow[$params['field']] ? 0 : 1;
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+					$_icon = 'invisible.svg';
 				}
-				else
+
+				$state = $arrRow[$params['field']] ? 1 : 0;
+
+				if (($v['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false))
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
+
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+			}
+			else
+			{
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show'] ?? null) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : ($GLOBALS['TL_LANG'][$strPtable]['show'] ?? ''), $arrRow['id']))) . '\',\'url\':this.href});return false"' : '') . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 			}
 		}
 

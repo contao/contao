@@ -85,11 +85,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_form', 'editHeader')
 			),
-			'children' => array
-			(
-				'href'                => 'table=tl_form_field',
-				'icon'                => 'children.svg'
-			),
+			'children',
 			'copy' => array
 			(
 				'href'                => 'act=copy',
@@ -103,11 +99,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_form', 'deleteForm')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

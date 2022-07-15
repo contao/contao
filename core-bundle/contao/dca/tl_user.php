@@ -107,11 +107,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 				'reverse'             => true,
 				'button_callback'     => array('tl_user', 'toggleIcon')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'show',
 			'su' => array
 			(
 				'href'                => 'key=su',
@@ -363,7 +359,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'disable' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',

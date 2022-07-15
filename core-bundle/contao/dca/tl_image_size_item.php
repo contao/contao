@@ -59,43 +59,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=invisible',
-				'icon'                => 'visible.svg',
-				'reverse'             => true,
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
 		)
 	),
 

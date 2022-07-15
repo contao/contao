@@ -94,32 +94,11 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'children' => array
-			(
-				'href'                => 'table=tl_content',
-				'icon'                => 'children.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
+			'edit',
+			'children',
+			'copy',
+			'cut',
+			'delete',
 			'toggle' => array
 			(
 				'href'                => 'act=toggle&amp;field=published',
@@ -131,11 +110,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 				'href'                => 'act=toggle&amp;field=featured',
 				'icon'                => 'featured.svg',
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

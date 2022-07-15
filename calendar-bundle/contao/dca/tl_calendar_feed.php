@@ -87,11 +87,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
+			'edit',
 			'copy' => array
 			(
 				'href'                => 'act=copy',
@@ -105,11 +101,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 
