@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @FrontendModule(category="miscellaneous")
- */
+#[AsFrontendModule(category: "miscellaneous")]
 class UnfilteredHtmlController extends AbstractFrontendModuleController
 {
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response

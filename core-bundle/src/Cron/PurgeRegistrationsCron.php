@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\MemberModel;
 use Psr\Log\LoggerInterface;
 
-/**
- * @CronJob("daily")
- */
+#[AsCronJob("daily")]
 class PurgeRegistrationsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)

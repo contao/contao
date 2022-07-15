@@ -13,23 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
 
-/**
- * @ContentElement("image", category="media")
- * @ContentElement("gallery", category="media")
- */
+#[AsContentElement("image", category: "media")]
+#[AsContentElement("gallery", category: "media")]
 class ImagesController extends AbstractContentElementController
 {
     public function __construct(

@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Cron;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\News;
 
-/**
- * @CronJob("daily")
- */
+#[AsCronJob("daily")]
 class GenerateFeedsCron
 {
     public function __construct(private ContaoFramework $framework)

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
@@ -28,9 +28,7 @@ class RecordPreviewListener
     {
     }
 
-    /**
-     * @Hook("loadDataContainer")
-     */
+    #[AsHook("loadDataContainer")]
     public function registerDeleteCallbacks(string $table): void
     {
         if ($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false) {

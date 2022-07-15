@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Psr\Log\LoggerInterface;
 
-/**
- * @CronJob("daily")
- */
+#[AsCronJob("daily")]
 class PurgeOptInTokensCron
 {
     public function __construct(private OptIn $optIn, private LoggerInterface|null $logger)
