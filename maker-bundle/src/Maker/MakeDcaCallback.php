@@ -24,7 +24,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -41,7 +40,6 @@ class MakeDcaCallback extends AbstractMaker
         private ResourceFinder $resourceFinder,
         private SignatureGenerator $signatureGenerator,
         private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil,
     ) {
     }
 
@@ -110,7 +108,6 @@ class MakeDcaCallback extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
