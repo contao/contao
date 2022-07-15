@@ -1693,7 +1693,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							continue;
 						}
 
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$v, new DeleteAction($v, $currentRecord));
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
 					}
 					catch (AccessDeniedException)
 					{
@@ -2345,7 +2345,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							continue;
 						}
 
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new UpdateAction($this->strTable, $currentRecord));
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));
 					}
 					catch (AccessDeniedException)
 					{
