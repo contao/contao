@@ -32,7 +32,7 @@ class PageSearchListener
      */
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->alias) {
+        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
             return $value;
         }
 
@@ -46,7 +46,7 @@ class PageSearchListener
      */
     public function onSaveNoSearch(string $value, DataContainer $dc): string
     {
-        if (!$value || $value === $dc->activeRecord->noSearch) {
+        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
             return $value;
         }
 
@@ -60,7 +60,7 @@ class PageSearchListener
      */
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->robots || !str_starts_with($value, 'noindex')) {
+        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
             return $value;
         }
 

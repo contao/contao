@@ -9,9 +9,9 @@ tl_page:
       type: root
       language: en
       dns: root-without-fallback-language.local
-      includeLayout: '1'
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -20,4 +20,4 @@ tl_page:
       title: English
       alias: index
       type: regular
-      published: '1'
+      published: 1

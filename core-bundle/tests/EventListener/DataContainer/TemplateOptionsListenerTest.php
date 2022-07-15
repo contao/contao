@@ -19,7 +19,6 @@ use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -174,13 +173,16 @@ class TemplateOptionsListenerTest extends TestCase
     /**
      * @return DataContainer&MockObject
      */
-    private function mockDataContainer(string $table, array $activeRecord = []): DataContainer
+    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer
     {
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;
 
-        if (!empty($activeRecord)) {
-            $dc->activeRecord = $this->mockClassWithProperties(Result::class, $activeRecord);
+        if (!empty($currentRecord)) {
+            $dc
+                ->method('getCurrentRecord')
+                ->willReturn($currentRecord)
+            ;
         }
 
         return $dc;

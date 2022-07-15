@@ -150,7 +150,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
             if ($authenticator->validateCode($user, $request->request->get('verify'))) {
                 // Enable 2FA
-                $user->useTwoFactor = '1';
+                $user->useTwoFactor = true;
                 $user->save();
 
                 return new RedirectResponse($return);
@@ -180,7 +180,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $user->secret = null;
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
         $user->backupCodes = null;
         $user->save();
 

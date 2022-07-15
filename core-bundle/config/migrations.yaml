@@ -1,0 +1,47 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao.migration.collection:
+        class: Contao\CoreBundle\Migration\MigrationCollection
+        arguments:
+            - ~
+
+    contao.migration.command_compiler:
+        class: Contao\CoreBundle\Migration\CommandCompiler
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'
+
+    contao.migration.version_500.basic_entities:
+        class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_500.boolean_fields:
+        class: Contao\CoreBundle\Migration\Version500\BooleanFieldsMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
+    contao.migration.version_500.empty_ptable:
+        class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_500.guests:
+        class: Contao\CoreBundle\Migration\Version500\GuestsMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_500.member_country_uppercase:
+        class: Contao\CoreBundle\Migration\Version500\MemberCountryUppercaseMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_500.order_field:
+        class: Contao\CoreBundle\Migration\Version500\OrderFieldMigration
+        arguments:
+            - '@database_connection'

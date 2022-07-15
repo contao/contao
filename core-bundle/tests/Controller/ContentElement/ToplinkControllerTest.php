@@ -79,6 +79,6 @@ class ToplinkControllerTest extends ContentElementTestCase
             $responseContextData
         );
 
-        $this->assertEmpty($responseContextData[DocumentLocation::endOfBody->value]);
+        $this->assertEmpty($responseContextData);
     }
 }

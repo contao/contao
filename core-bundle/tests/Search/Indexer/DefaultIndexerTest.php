@@ -109,7 +109,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
-                'protected' => '',
+                'protected' => false,
                 'groups' => [],
                 'pid' => 2,
                 'title' => 'undefined',
@@ -133,7 +133,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>Foo title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'Foo title',
@@ -159,7 +159,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>HTML page title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'JSON-LD page title',
@@ -186,7 +186,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>HTML page title</title><link rel="canonical" href="https://example.com/valid" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'JSON-LD page title',

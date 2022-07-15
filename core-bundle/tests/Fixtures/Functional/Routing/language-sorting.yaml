@@ -9,10 +9,10 @@ tl_page:
       type: root
       language: zh
       dns: root-zh.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -21,7 +21,7 @@ tl_page:
       title: Main-zh
       alias: main
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 0
@@ -33,10 +33,10 @@ tl_page:
       type: root
       language: fr
       dns: root-fr.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 4
       pid: 3
@@ -45,7 +45,7 @@ tl_page:
       title: Main-fr
       alias: main
       type: regular
-      published: '1'
+      published: 1
 
     - id: 5
       pid: 4
@@ -54,7 +54,7 @@ tl_page:
       title: Sub-fr
       alias: main/sub-fr
       type: regular
-      published: '1'
+      published: 1
 
     - id: 6
       pid: 2
@@ -63,4 +63,4 @@ tl_page:
       title: Sub-zh
       alias: main/sub-zh
       type: regular
-      published: '1'
+      published: 1

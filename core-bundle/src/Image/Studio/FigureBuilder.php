@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -28,6 +31,7 @@ use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Use the FigureBuilder class to create Figure result objects. The class
@@ -263,6 +267,34 @@ class FigureBuilder
         }
 
         return $this->fromPath($identifier);
+    }
+
+    /**
+     * Sets the image resource from a path inside a VFS storage.
+     */
+    public function fromStorage(VirtualFilesystemInterface $storage, string|Uuid $location): self
+    {
+        try {
+            $stream = $storage->readStream($location);
+        } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {
+            $this->lastException = new InvalidResourceException(sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
+
+            return $this;
+        }
+
+        // TODO: After stream support is added to contao/image, remove this
+        // workaround and type restriction and directly pass on the stream to
+        // the resizer.
+        $metadata = stream_get_meta_data($stream);
+        $uri = $metadata['uri'];
+
+        if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type'] || !Path::isAbsolute($uri)) {
+            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
+
+            return $this;
+        }
+
+        return $this->fromPath($uri);
     }
 
     /**

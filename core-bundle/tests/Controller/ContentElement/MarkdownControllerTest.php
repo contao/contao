@@ -16,7 +16,6 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
@@ -26,7 +25,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownControllerTest extends TestCase
+class MarkdownControllerTest extends ContentElementTestCase
 {
     protected function tearDown(): void
     {
@@ -151,5 +150,28 @@ class MarkdownControllerTest extends TestCase
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         return $container;
+    }
+
+    public function testOutputsMarkdownAsHtml(): void
+    {
+        $response = $this->renderWithModelData(
+            new MarkdownController(),
+            [
+                'type' => 'markdown',
+                'code' => "## Headline\n * my\n * list",
+            ]
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content_element/markdown">
+                <h2>Headline</h2>
+                    <ul>
+                        <li>my</li>
+                        <li>list</li>
+                    </ul>
+                </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 }

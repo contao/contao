@@ -83,12 +83,14 @@ class ContaoExtensionTest extends TestCase
         $expectedFunctions = [
             'include' => ['all'],
             'attrs' => [],
+            'figure' => [],
             'contao_figure' => ['html'],
             'picture_config' => [],
             'insert_tag' => [],
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
+            'prefix_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -166,7 +168,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -345,7 +351,6 @@ class ContaoExtensionTest extends TestCase
         yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
         yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
         yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
-        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**

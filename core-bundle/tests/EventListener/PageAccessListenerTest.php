@@ -174,7 +174,7 @@ class PageAccessListenerTest extends TestCase
             PageModel::class,
             [
                 'id' => 42,
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [1, 2, 3],
             ]
         );
@@ -212,7 +212,7 @@ class PageAccessListenerTest extends TestCase
             PageModel::class,
             [
                 'id' => 42,
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [1, 2, 3],
             ]
         );
@@ -250,7 +250,7 @@ class PageAccessListenerTest extends TestCase
             PageModel::class,
             [
                 'id' => 42,
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [-1, 1],
             ]
         );
@@ -288,7 +288,7 @@ class PageAccessListenerTest extends TestCase
             PageModel::class,
             [
                 'id' => 42,
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [1, 2, 3],
             ]
         );
@@ -323,7 +323,7 @@ class PageAccessListenerTest extends TestCase
             PageModel::class,
             [
                 'id' => 42,
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [-1, 1],
             ]
         );

@@ -9,9 +9,9 @@ tl_page:
       type: root
       language: en
       dns: root-with-folder-urls.local
-      includeLayout: '1'
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     # Fake page to test if page ID 3 with longer alias is sorted correctly before ID 2
     - id: 2
@@ -21,7 +21,7 @@ tl_page:
       title: Wrong Home
       alias: folder/url
       type: regular
-      published: '1'
+      published: 1
 
     - id: 8
       pid: 1
@@ -30,4 +30,4 @@ tl_page:
       title: Home
       alias: folder/url/home
       type: regular
-      published: '1'
+      published: 1

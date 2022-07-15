@@ -88,7 +88,7 @@ class DefaultIndexer implements IndexerInterface
             $search->indexPage([
                 'url' => (string) $document->getUri(),
                 'content' => $document->getBody(),
-                'protected' => $meta['protected'] ? '1' : '',
+                'protected' => (bool) $meta['protected'],
                 'groups' => $meta['groups'],
                 'pid' => $meta['pageId'],
                 'title' => $meta['title'],

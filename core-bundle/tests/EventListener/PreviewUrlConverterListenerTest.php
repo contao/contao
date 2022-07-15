@@ -183,7 +183,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->willThrowException(new RouteNotFoundException())
         ;
 
-        $subRequest = new Request();
+        $subRequest = $this->createMock(Request::class);
         $route = new PageRoute($pageModel);
 
         $request = $this->createMock(Request::class);

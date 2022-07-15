@@ -43,9 +43,9 @@ class CodeControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
 
         $expectedHeadCode = <<<'HTML'
-            <link rel="preload" href="vendor/scrivo/highlight_php/styles/foundation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+            <link rel="preload" href="/foundation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
             <noscript>
-                <link rel="stylesheet" href="vendor/scrivo/highlight_php/styles/foundation.css">
+                <link rel="stylesheet" href="/foundation.css">
             </noscript>
             HTML;
 
@@ -79,6 +79,6 @@ class CodeControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertEmpty($responseContextData[DocumentLocation::head->value]);
+        $this->assertEmpty($responseContextData);
     }
 }

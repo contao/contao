@@ -6,4 +6,4 @@ tl_page:
       title: Test Page
       alias: test
       type: foobar
-      published: '1'
+      published: 1

@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -70,7 +70,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
     public function testReturnsIfTheTokenIsNotSupported(): void
     {
-        $token = $this->createMock(AnonymousToken::class);
+        $token = $this->createMock(NullToken::class);
         $event = $this->getRequestEvent($this->getRequest());
 
         $listener = new TwoFactorFrontendListener(
@@ -122,10 +122,10 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testThrowsAPageNotFoundExceptionIfThereIsNoTwoFactorPage(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 0;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
@@ -154,11 +154,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTwoFactorAuthenticationIsEnforcedAndThePageIsTheTwoFactorPage(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 1;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
@@ -186,11 +186,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTwoFactorPageIfTwoFactorAuthenticationIsEnforced(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 2;
 
         $twoFactorPageModel = $this->mockClassWithProperties(PageModel::class);
@@ -232,7 +232,7 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheUserIsAlreadyAuthenticated(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
@@ -261,15 +261,15 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTargetPathIfThe401PageHasNoRedirect(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
         $pageModel->twoFactorJumpTo = 1;
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
-        $page401->autoforward = '';
+        $page401->autoforward = true;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -312,15 +312,15 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheCurrentPageIsThe401AutoforwardTarget(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
         $pageModel->twoFactorJumpTo = 1;
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
-        $page401->autoforward = '1';
+        $page401->autoforward = true;
         $page401->jumpTo = 1;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
@@ -349,11 +349,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testThrowsAnUnauthorizedHttpException(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -381,11 +381,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheCurrentPageIsTheTargetPath(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -424,11 +424,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTargetPath(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $session = $this->createMock(SessionInterface::class);
         $session

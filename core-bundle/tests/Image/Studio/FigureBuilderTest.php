@@ -16,6 +16,9 @@ use Contao\Config;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
@@ -34,6 +37,9 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use League\Flysystem\Config as FlysystemConfig;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -336,6 +342,74 @@ class FigureBuilderTest extends TestCase
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame('The defined resource is "null".', $exception->getMessage());
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
+    }
+
+    public function testFromStorage(): void
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/files');
+        $absoluteFilePath = Path::join($basePath, 'public/foo.jpg');
+
+        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model->type = 'file';
+        $model->path = 'files/public/foo.jpg';
+
+        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter
+            ->method('findByPath')
+            ->with($absoluteFilePath)
+            ->willReturn($model)
+        ;
+
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
+
+        $mountManager = new MountManager();
+        $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
+
+        $this->getFigureBuilder($studio, $framework)->fromStorage($storage, 'public/foo.jpg')->build();
+    }
+
+    public function testFromStorageFailsWithUnsupportedStreamType(): void
+    {
+        $inMemoryAdapter = new InMemoryFilesystemAdapter();
+        $inMemoryAdapter->write('foo.jpg', 'image-data', new FlysystemConfig());
+
+        $mountManager = new MountManager();
+        $mountManager->mount($inMemoryAdapter);
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+
+        $figureBuilder = $this->getFigureBuilder()->fromStorage($storage, 'foo.jpg');
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "TEMP/PHP" with URI "php://temp".', $exception->getMessage());
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
+    }
+
+    public function testFromStorageFailsWithUnreadableResource(): void
+    {
+        $mountManager = new MountManager();
+        $mountManager->mount(new InMemoryFilesystemAdapter());
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+
+        $figureBuilder = $this->getFigureBuilder()->fromStorage($storage, 'invalid/resource.jpg');
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame('Could not read resource from storage: Unable to read from "invalid/resource.jpg".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);

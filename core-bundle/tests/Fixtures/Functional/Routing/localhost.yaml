@@ -9,10 +9,10 @@ tl_page:
       type: root
       language: en
       dns: 127.0.0.1
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -21,4 +21,4 @@ tl_page:
       title: Home
       alias: index
       type: regular
-      published: '1'
+      published: 1

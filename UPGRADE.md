@@ -2,10 +2,91 @@
 
 ## Version 4.* to 5.0
 
+### app.php
+
+The old `app.php` entry point has been removed. Adjust your server configuration to use `index.php` instead.
+
+### DCA "exclude" fields
+
+The `exclude` property on DCA fields is no longer initialized when loading a back end module. Make sure to check for
+`ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE` to know if a field should be available to a user.
+
+### checkCredentials hook
+
+The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.
+
+### postLogin hook
+
+The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### importUser hook
+
+The `importUser` hook has been removed. Implement a custom `UserProvider` service instead.
+
+### postAuthenticate hook
+
+The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### postLogout hook
+
+The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
+
+### Contao 4 migrations
+
+Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
+
+### Install tool
+
+The install tool has been removed. Use the `contao:setup`, `contao:migrate` and `contao:user:create` commands or the
+Contao Manager instead.
+
+### DataContainer callbacks
+
+DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
+after the existing callbacks instead of before.
+
+### Insert tag flag uncached
+
+The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
+
+### Unknown insert tags
+
+Unknown insert tags are no longer removed from the resulting text. Instead, they are now kept unchanged and are visible
+in the front end.
+
+### Insert tag hooks
+
+The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
+passed instead.
+
+### Figure
+
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it back to
+an array representation. If you are just using array access, nothing needs to be changed.
+
+The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
+returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
+usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
+
+```twig
+{# before #}
+{{ contao_figure('image.jpg', [800, 600]) }}
+
+{# after #}
+{% include "@Contao/component/_figure.html.twig" with {
+    figure: figure('image.jpg', [800, 600])
+} %}
+```
+
+### sqlCompileCommands hook
+
+The `sqlCompileCommands` hook has been removed. Use the Doctrine DBAL `postGenerateSchema` event instead.
+
 ### CURRENT_ID
 
-The `CURRENT_ID` constant and session variable have been removed. Use
-`DataContainer::$currentPid` instead to determine the ID of the current parent record.
+The `CURRENT_ID` constant and session variable have been removed. Use `DataContainer::$currentPid` instead to determine
+the ID of the current parent record.
 
 ```php
 $intCurrentParentRecordId = $dc->currentPid;
@@ -17,13 +98,12 @@ The deprecated logout module has been removed. Use the logout page instead.
 
 ### RequestToken class
 
-The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
-settings have been removed.
+The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist` settings have been removed.
 
 ### FORM_FIELDS
 
-It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
-submitted. Make sure to always submit at least an empty string in your widget:
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been submitted. Make
+sure to always submit at least an empty string in your widget:
 
 ```html
 <!-- Wrong: the input will only be submitted if checked -->
@@ -35,8 +115,8 @@ submitted. Make sure to always submit at least an empty string in your widget:
 
 ### Constants
 
-The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
-`TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE` and `REQUEST_TOKEN`  have been removed.
+The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE`
+and `REQUEST_TOKEN`  have been removed.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -44,8 +124,8 @@ Use the `kernel.project_dir` instead of `TL_ROOT`:
 $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 ```
 
-`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
-token checker service to check the separate cases instead:
+`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the token checker
+service to check the separate cases instead:
 
 ```php
 $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
@@ -105,8 +185,7 @@ class Test {
 }
 ```
 
-Use the `contao.csrf.token_manager` service or the `requestToken` variable in your
-template instead of `REQUEST_TOKEN`:
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in your template instead of `REQUEST_TOKEN`:
 
 ```php
 $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
@@ -118,27 +197,30 @@ $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDef
 
 ### TL_CRON
 
-Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
-instead (you can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer
-documentation for more details.
+Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob` instead (you
+can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer documentation for more
+details.
 
 ### Content elements
 
-The following content element types have been rewritten as fragment controllers with
-Twig-only templates:
+The following content element types have been rewritten as fragment controllers with Twig-only templates:
 
  - `code` (`ce_code` → `content_element/code`)
  - `headline` (`ce_headline` → `content_element/headline`)
  - `html` (`ce_html` → `content_element/html`)
  - `list` (`ce_list` → `content_element/list`)
+ - `text` (`ce_text` → `content_element/text`)
+ - `table` (`ce_table` → `content_element/table`)
  - `hyperlink` (`ce_hyperlink` → `content_element/hyperlink`)
  - `toplink` (`ce_toplink` → `content_element/toplink`)
  - `image` (`ce_image` → `content_element/image`)
  - `gallery` (`ce_gallery` → `content_element/gallery`)
+ - `youtube` (`ce_youtube` → `content_element/youtube`)
+ - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
 
-The legacy content elements and their templates are still around and will only be dropped in Contao 6.
-If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
-respective lines to your `contao/config/config.php`:
+The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
+use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
+`contao/config/config.php`:
 
 ```php
 // Restore legacy content elements
@@ -146,10 +228,14 @@ $GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
 $GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
 $GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
 $GLOBALS['TL_CTE']['texts']['list'] = \Contao\ContentList::class;
+$GLOBALS['TL_CTE']['texts']['text'] = \Contao\ContentText::class;
+$GLOBALS['TL_CTE']['texts']['table'] = \Contao\ContentTable::class;
 $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
+$GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
+$GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
 ```
 
 ### Show to guests only
@@ -158,13 +244,12 @@ The "show to guests only" function has been removed. Use the "protect page" func
 
 ### tl_content.ptable
 
-Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make
-sure to always set the `ptable` column.
+Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make sure to always
+set the `ptable` column.
 
 ### disableInsertTags
 
-The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
-parameter instead.
+The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags` parameter instead.
 
 ### runonce.php
 
@@ -180,30 +265,29 @@ The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.
 
 ### Backend::addFileMetaInformationToRequest
 
-`Backend::addFileMetaInformationToRequest()` and the corresponding `addFileMetaInformationToRequest` hook
-have been removed. Use the image handling services and the `FileMetadataEvent` instead.
+`Backend::addFileMetaInformationToRequest()` and the corresponding `addFileMetaInformationToRequest` hook have been
+removed. Use the image handling services and the `FileMetadataEvent` instead.
 
 ### FormTextarea->value
 
-The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in
-your custom `form_textarea` templates instead.
+The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in your custom
+`form_textarea` templates instead.
 
 ### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
 
-The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been
-removed. Use or decorate the `contao.intl.locales` service instead.
+The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been removed. Use
+or decorate the `contao.intl.locales` service instead.
 
-To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales
-configuration. `$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to
-retrieve language names.
+To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales` configuration.
+`$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to retrieve language names.
 
 ### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
 
-The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been
-removed. Use or decorate the `contao.intl.countries` service instead.
+The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been removed. Use
+or decorate the `contao.intl.countries` service instead.
 
-To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']`
-can still be used for overwriting translations, but no longer to retrieve country names.
+To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']` can
+still be used for overwriting translations, but no longer to retrieve country names.
 
 ### UnresolvableDependenciesException
 
@@ -240,13 +324,13 @@ The following resources have been renamed:
 
 ### CSS classes "first", "last", "even" and "odd"
 
-The CSS classes `first`, `last`, `even`, `odd`, `row_*` and `col_*` are no longer applied anywhere.
-Use CSS selectors instead.
+The CSS classes `first`, `last`, `even`, `odd`, `row_*` and `col_*` are no longer applied anywhere. Use CSS selectors
+instead.
 
 ### Template changes
 
-The items in the `ce_list` and `ce_table` templates no longer consist of an associative array
-containing the item's CSS class and content. Instead, it will only be the content.
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item‘s CSS
+class and content. Instead, it will only be the content.
 
 ```php
 <!-- OLD -->
@@ -309,34 +393,32 @@ The following global functions have been removed:
  - `utf8_str_split()`
  - `nl2br_callback()`
 
-Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
-the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
+Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as the
+`mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
 
 ### eval->orderField in PageTree and Picker widgets
 
-Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
-stores the order in the same database column.
+Support for a separate database `orderField` column has been removed. Use `isSortable` instead which stores the order in
+the same database column.
 
 ### Removed {{post::*}} insert tag
 
-The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the
-new `{{form_session_data::*}}` insert tag instead.
+The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the new
+`{{form_session_data::*}}` insert tag instead.
 
 ### $_SESSION access no longer mapped to Symfony Session
 
-The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage
-back ends hard. In Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony session.
-This has been removed. Use `$request->getSession()` directly instead.
+The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage back ends hard. In
+Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony session. This has been removed. Use
+`$request->getSession()` directly instead.
 
 ### database.sql files
 
-Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema
-listeners instead.
+Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema listeners instead.
 
 ### Simple Token Parser
 
-Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are no longer supported by the
-Simple Token Parser.
+Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are no longer supported by the Simple Token Parser.
 
 ### $GLOBALS['TL_KEYWORDS']
 
@@ -344,13 +426,13 @@ Keyword support in articles, and as such also `$GLOBALS['TL_KEYWORDS']`, has bee
 
 ### Legacy routing
 
-The legacy routing has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl` hooks do
-not exist anymore. Use Symfony routing instead.
+The legacy routing has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl` hooks do not exist
+anymore. Use Symfony routing instead.
 
 ### Custom entry points
 
-The `initialize.php` file has been removed, so custom entry points will no longer work. Register your
-entry points as controllers instead.
+The `initialize.php` file has been removed, so custom entry points will no longer work. Register your entry points as
+controllers instead.
 
 ### ClassLoader
 
@@ -358,13 +440,13 @@ The `Contao\ClassLoader` has been removed. Use Composer autoloading instead.
 
 ### Encryption
 
-The `Contao\Encryption` class and the `eval->encrypt` DCA flag have been removed. Use `save_callback`
-and `load_callback` and libraries such as `phpseclib/phpseclib` instead.
+The `Contao\Encryption` class and the `eval->encrypt` DCA flag have been removed. Use `save_callback` and
+`load_callback` and libraries such as `phpseclib/phpseclib` instead.
 
 ### Internal CSS editor
 
-The internal CSS editor has been removed. Export your existing CSS files, import them in the file manager
-and then add them as external CSS files to the page layout.
+The internal CSS editor has been removed. Export your existing CSS files, import them in the file manager and then add
+them as external CSS files to the page layout.
 
 ### log_message()
 
@@ -384,9 +466,3 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
-
-### Figure
-
-The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
-`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
-back to an array representation. If you are just using array access, nothing needs to be changed.

@@ -124,7 +124,7 @@ class PreviewLinkListener
         }
 
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = $input->get('showUnpublished') ? '1' : '';
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = time();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;

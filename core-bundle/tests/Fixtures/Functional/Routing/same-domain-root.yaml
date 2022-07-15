@@ -9,10 +9,10 @@ tl_page:
       type: root
       language: en
       dns: same-domain-root.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -21,7 +21,7 @@ tl_page:
       title: English site
       alias: english-site
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 0
@@ -33,9 +33,9 @@ tl_page:
       type: root
       language: de
       dns: same-domain-root.local
-      includeLayout: '1'
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 4
       pid: 3
@@ -44,4 +44,4 @@ tl_page:
       title: German site
       alias: german-site
       type: regular
-      published: '1'
+      published: 1

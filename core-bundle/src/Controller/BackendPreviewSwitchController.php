@@ -96,7 +96,7 @@ class BackendPreviewSwitchController
                 [
                     'do' => 'preview_link',
                     'act' => 'create',
-                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'showUnpublished' => $showUnpublished,
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
                     'nb' => '1', // Do not show the "Save & Close" button
                 ]
@@ -128,6 +128,12 @@ class BackendPreviewSwitchController
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             $frontendUsername = $request->request->get('user');
+
+            // Logout the current logged-in user if an empty user is submitted
+            if ('' === $frontendUsername && null !== $this->tokenChecker->getFrontendUsername()) {
+                $this->previewAuthenticator->removeFrontendAuthentication();
+                $frontendUsername = null;
+            }
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
@@ -168,8 +174,8 @@ class BackendPreviewSwitchController
                 tl_member
             WHERE
                 username LIKE ? $andWhereGroups
-                AND login='1'
-                AND disable!='1'
+                AND login=1
+                AND disable=0
                 AND (start='' OR start<='$time')
                 AND (stop='' OR stop>'$time')
             ORDER BY

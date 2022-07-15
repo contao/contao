@@ -6,7 +6,7 @@ tl_article:
       title: Home
       author: 1
       inColumn: main
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 8
@@ -15,7 +15,7 @@ tl_article:
       title: Home
       author: 1
       inColumn: main
-      published: '1'
+      published: 1
 
 tl_content:
     - id: 1
@@ -47,7 +47,7 @@ tl_module:
       news_template: news_latest
       news_format: news_month
       news_order: order_date_desc
-      news_showQuantity: ''
+      news_showQuantity: 0
 
     - id: 2
       pid: 1
@@ -60,7 +60,7 @@ tl_module:
       news_template: news_latest
       news_format: news_month
       news_order: order_date_desc
-      news_showQuantity: ''
+      news_showQuantity: 0
 
 tl_news:
     - id: 1
@@ -72,7 +72,7 @@ tl_news:
       date: 1539616560
       time: 1539616560
       source: default
-      published: '1'
+      published: 1
 
 tl_news_archive:
     - id: 1
@@ -88,5 +88,5 @@ tl_page:
       title: News reader
       alias: news-reader
       type: regular
-      published: '1'
-      requireItem: '1'
+      published: 1
+      requireItem: 1

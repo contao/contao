@@ -505,7 +505,23 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    public function assetVersion($path, $packageName = null): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
     public function param($strKey): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function prefixUrl($strKey): never
     {
         self::throwOnAccess();
     }

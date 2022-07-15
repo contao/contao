@@ -136,11 +136,11 @@ class ContaoContextTest extends TestCase
         $this->assertSame('https://example.com/foo/', $context->getStaticUrl());
     }
 
-    public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
+    public function testReturnsASlashIfTheBasePathIsEmpty(): void
     {
         $context = new ContaoContext(new RequestStack(), 'staticPlugins');
 
-        $this->assertSame('', $context->getStaticUrl());
+        $this->assertSame('/', $context->getStaticUrl());
     }
 
     public function testReadsTheSslConfigurationFromThePage(): void
@@ -207,7 +207,7 @@ class ContaoContextTest extends TestCase
 
         $page = new PageModel();
         $page->type = 'root';
-        $page->fallback = '1';
+        $page->fallback = true;
         $page->staticPlugins = '';
 
         return $page->loadDetails();

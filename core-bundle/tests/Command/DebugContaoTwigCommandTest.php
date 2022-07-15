@@ -15,12 +15,15 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\Inspector;
+use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Path;
+use Twig\Source;
 
 class DebugContaoTwigCommandTest extends TestCase
 {
@@ -98,18 +101,43 @@ class DebugContaoTwigCommandTest extends TestCase
             [],
             <<<'OUTPUT'
 
-                Template hierarchy
-                ==================
-                 ------------ ------------------------ ----------------------
-                  Identifier   Effective logical name   Path
-                 ------------ ------------------------ ----------------------
-                  foo          @A/foo.html.twig         /path1/foo.html.twig
-                               @B/foo.html5             /path2/foo.html5
-                 ------------ ------------------------ ----------------------
-                  bar          @C/bar.html.twig         /path/bar.html.twig
-                 ------------ ------------------------ ----------------------
-                  baz          @D/baz.html5             /path/baz.html5
-                 ------------ ------------------------ ----------------------
+                foo
+                ===
+                 --------------- --------------------------------------------------
+                  Attribute       Value
+                 --------------- --------------------------------------------------
+                  Original name   @A/foo.html.twig
+                  @Contao name    @Contao/foo.html.twig
+                  Path            /path1/foo.html.twig
+                  Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Preview         … code of @A/foo.html.twig …
+                 --------------- --------------------------------------------------
+                  Original name   @B/foo.html5
+                  @Contao name    @Contao/foo.html.twig
+                  Path            /path2/foo.html5
+                  Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                 --------------- --------------------------------------------------
+                bar
+                ===
+                 --------------- --------------------------------------------------
+                  Attribute       Value
+                 --------------- --------------------------------------------------
+                  Original name   @C/bar.html.twig
+                  @Contao name    @Contao/bar.html.twig
+                  Path            /path/bar.html.twig
+                  Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Preview         … code of @C/bar.html.twig …
+                 --------------- --------------------------------------------------
+                baz
+                ===
+                 --------------- ------------------------------------------
+                  Attribute       Value
+                 --------------- ------------------------------------------
+                  Original name   @D/baz.html5
+                  @Contao name    @Contao/baz.html.twig
+                  Path            /path/baz.html5
+                  Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                 --------------- ------------------------------------------
 
                 OUTPUT,
         ];
@@ -118,14 +146,22 @@ class DebugContaoTwigCommandTest extends TestCase
             ['filter' => 'foo'],
             <<<'OUTPUT'
 
-                Template hierarchy
-                ==================
-                 ------------ ------------------------ ----------------------
-                  Identifier   Effective logical name   Path
-                 ------------ ------------------------ ----------------------
-                  foo          @A/foo.html.twig         /path1/foo.html.twig
-                               @B/foo.html5             /path2/foo.html5
-                 ------------ ------------------------ ----------------------
+                foo
+                ===
+                 --------------- --------------------------------------------------
+                  Attribute       Value
+                 --------------- --------------------------------------------------
+                  Original name   @A/foo.html.twig
+                  @Contao name    @Contao/foo.html.twig
+                  Path            /path1/foo.html.twig
+                  Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Preview         … code of @A/foo.html.twig …
+                 --------------- --------------------------------------------------
+                  Original name   @B/foo.html5
+                  @Contao name    @Contao/foo.html.twig
+                  Path            /path2/foo.html5
+                  Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                 --------------- --------------------------------------------------
 
                 OUTPUT,
         ];
@@ -134,15 +170,27 @@ class DebugContaoTwigCommandTest extends TestCase
             ['filter' => 'ba'],
             <<<'OUTPUT'
 
-                Template hierarchy
-                ==================
-                 ------------ ------------------------ ---------------------
-                  Identifier   Effective logical name   Path
-                 ------------ ------------------------ ---------------------
-                  bar          @C/bar.html.twig         /path/bar.html.twig
-                 ------------ ------------------------ ---------------------
-                  baz          @D/baz.html5             /path/baz.html5
-                 ------------ ------------------------ ---------------------
+                bar
+                ===
+                 --------------- --------------------------------------------------
+                  Attribute       Value
+                 --------------- --------------------------------------------------
+                  Original name   @C/bar.html.twig
+                  @Contao name    @Contao/bar.html.twig
+                  Path            /path/bar.html.twig
+                  Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Preview         … code of @C/bar.html.twig …
+                 --------------- --------------------------------------------------
+                baz
+                ===
+                 --------------- ------------------------------------------
+                  Attribute       Value
+                 --------------- ------------------------------------------
+                  Original name   @D/baz.html5
+                  @Contao name    @Contao/baz.html.twig
+                  Path            /path/baz.html5
+                  Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                 --------------- ------------------------------------------
 
                 OUTPUT,
         ];
@@ -194,11 +242,23 @@ class DebugContaoTwigCommandTest extends TestCase
 
     private function getCommand(TemplateHierarchyInterface $hierarchy = null, ContaoFilesystemLoaderWarmer $cacheWarmer = null): DebugContaoTwigCommand
     {
+        $inspector = $this->createMock(Inspector::class);
+        $inspector
+            ->method('inspectTemplate')
+            ->willReturnCallback(
+                static fn (string $name): TemplateInformation => new TemplateInformation(
+                    new Source("… code of $name …", $name),
+                    ["{$name}_block1", "{$name}_block2"]
+                )
+            )
+        ;
+
         return new DebugContaoTwigCommand(
             $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
             $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
             new ThemeNamespace(),
-            Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance')
+            Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
+            $inspector
         );
     }
 }

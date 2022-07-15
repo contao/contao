@@ -8,7 +8,7 @@ tl_page:
       urlSuffix: .html
       type: root
       language: en
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1

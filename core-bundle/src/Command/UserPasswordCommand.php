@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -99,9 +100,10 @@ class UserPasswordCommand extends Command
                 'password' => $hash,
                 'locked' => 0,
                 'loginAttempts' => 0,
-                'pwChange' => $input->getOption('require-change') ? '1' : '',
+                'pwChange' => (bool) $input->getOption('require-change'),
             ],
-            ['username' => $input->getArgument('username')]
+            ['username' => $input->getArgument('username')],
+            ['pwChange' => ParameterType::BOOLEAN],
         );
 
         if (0 === $affected) {

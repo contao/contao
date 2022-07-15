@@ -60,31 +60,31 @@ class ControllerTest extends TestCase
 
         System::setContainer($container);
 
-        $this->assertSame('', Controller::addToUrl(''));
-        $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page'));
-        $this->assertSame('?do=page&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo'));
-        $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar'));
-        $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&id=2'));
-        $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2'));
-        $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
+        $this->assertSame('/', Controller::addToUrl(''));
+        $this->assertSame('/?do=page&amp;ref=cri', Controller::addToUrl('do=page'));
+        $this->assertSame('/?do=page&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo'));
+        $this->assertSame('/?do=page&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar'));
+        $this->assertSame('/?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2'));
+        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
 
-        $this->assertSame('', Controller::addToUrl('', false));
-        $this->assertSame('?do=page', Controller::addToUrl('do=page', false));
-        $this->assertSame('?do=page&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('?do=page&amp;ref=bar', Controller::addToUrl('do=page&amp;ref=bar', false));
-        $this->assertSame('?act=edit&amp;id=2', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&amp;ref=bar', Controller::addToUrl('do=page&amp;ref=bar', false));
+        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2', false));
+        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
 
         $request->query->set('ref', 'ref');
 
-        $this->assertSame('?ref=cri', Controller::addToUrl('', false));
-        $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page', false));
-        $this->assertSame('?do=page&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar', false));
-        $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/?ref=cri', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page&amp;ref=cri', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar', false));
+        $this->assertSame('/?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
+        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
     }
 
     public function testAddToUrlWithQueryString(): void
@@ -98,34 +98,34 @@ class ControllerTest extends TestCase
 
         System::setContainer($container);
 
-        $this->assertSame('?do=page&amp;id=4', Controller::addToUrl(''));
-        $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page'));
-        $this->assertSame('?do=page&amp;id=4&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo'));
-        $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar'));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&id=2'));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2'));
-        $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
-        $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
+        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl(''));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page'));
+        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo'));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar'));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2'));
+        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
+        $this->assertSame('/?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
 
-        $this->assertSame('?do=page&amp;id=4', Controller::addToUrl('', false));
-        $this->assertSame('?do=page&amp;id=4', Controller::addToUrl('do=page', false));
-        $this->assertSame('?do=page&amp;id=4&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('?do=page&amp;id=4&amp;ref=bar', Controller::addToUrl('do=page&amp;ref=bar', false));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
-        $this->assertSame('?do=page&amp;key=foo', Controller::addToUrl('key=foo', false, ['id']));
+        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=bar', Controller::addToUrl('do=page&amp;ref=bar', false));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&amp;id=2', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/?do=page&amp;key=foo', Controller::addToUrl('key=foo', false, ['id']));
 
         $request->query->set('ref', 'ref');
 
-        $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('', false));
-        $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page', false));
-        $this->assertSame('?do=page&amp;id=4&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar', false));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
-        $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page&amp;ref=bar', false));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
+        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
     }
 
     /**
@@ -134,7 +134,7 @@ class ControllerTest extends TestCase
     public function testPageStatusIcon(PageModel $pageModel, string $expected): void
     {
         $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
-        $this->assertFileExists(__DIR__.'/../../src/Resources/contao/themes/flexible/icons/'.$expected);
+        $this->assertFileExists(__DIR__.'/../../contao/themes/flexible/icons/'.$expected);
     }
 
     public function pageStatusIconProvider(): \Generator
@@ -142,11 +142,11 @@ class ControllerTest extends TestCase
         yield 'Published' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'regular.svg',
         ];
@@ -154,11 +154,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'regular_1.svg',
         ];
@@ -166,11 +166,11 @@ class ControllerTest extends TestCase
         yield 'Hidden in menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => true,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'regular_2.svg',
         ];
@@ -178,11 +178,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and hidden from menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => true,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'regular_3.svg',
         ];
@@ -190,11 +190,11 @@ class ControllerTest extends TestCase
         yield 'Protected' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => false,
+                'protected' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'regular_4.svg',
         ];
@@ -202,11 +202,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and protected' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => false,
+                'protected' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'regular_5.svg',
         ];
@@ -214,11 +214,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and protected and hidden from menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '1',
+                'hide' => true,
+                'protected' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'regular_7.svg',
         ];
@@ -226,11 +226,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished by stop date' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '100',
-                'published' => '1',
+                'published' => true,
             ]),
             'regular_1.svg',
         ];
@@ -238,11 +238,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished by start date' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => PHP_INT_MAX,
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'regular_1.svg',
         ];
@@ -250,11 +250,11 @@ class ControllerTest extends TestCase
         yield 'Root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'root.svg',
         ];
@@ -262,11 +262,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'root_1.svg',
         ];
@@ -274,11 +274,11 @@ class ControllerTest extends TestCase
         yield 'Hidden root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => true,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'root.svg',
         ];
@@ -286,11 +286,11 @@ class ControllerTest extends TestCase
         yield 'Protected root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => false,
+                'protected' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'root.svg',
         ];
@@ -298,12 +298,12 @@ class ControllerTest extends TestCase
         yield 'Root in maintenance mode' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
-                'maintenanceMode' => '1',
+                'hide' => false,
+                'protected' => false,
+                'maintenanceMode' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => true,
             ]),
             'root_2.svg',
         ];
@@ -311,12 +311,12 @@ class ControllerTest extends TestCase
         yield 'Unpublished root in maintenance mode' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
-                'maintenanceMode' => '1',
+                'hide' => false,
+                'protected' => true,
+                'maintenanceMode' => true,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => false,
             ]),
             'root_1.svg',
         ];

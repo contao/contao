@@ -184,7 +184,7 @@ class UserPasswordCommandTest extends TestCase
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
                     'locked' => 0,
                     'loginAttempts' => 0,
-                    'pwChange' => '',
+                    'pwChange' => 0,
                 ],
                 ['username' => $username]
             )
@@ -222,7 +222,7 @@ class UserPasswordCommandTest extends TestCase
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
                     'locked' => 0,
                     'loginAttempts' => 0,
-                    'pwChange' => '1',
+                    'pwChange' => 1,
                 ],
                 ['username' => $username]
             )

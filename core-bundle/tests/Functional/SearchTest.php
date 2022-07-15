@@ -85,7 +85,7 @@ class SearchTest extends FunctionalTestCase
         Search::indexPage([
             'url' => "https://contao.wip/$url",
             'content' => '<head><meta name="description" content=""><meta name="keywords" content=""></head><body>'.$content,
-            'protected' => '',
+            'protected' => false,
             'groups' => '',
             'pid' => '1',
             'title' => '',

@@ -114,7 +114,7 @@ class PreviewLinkListenerTest extends TestCase
             'config' => ['notCreatable' => true],
             'fields' => [
                 'url' => ['default' => ''],
-                'showUnpublished' => ['default' => ''],
+                'showUnpublished' => ['default' => false],
                 'createdAt' => ['default' => 0],
                 'expiresAt' => ['default' => 0],
                 'createdBy' => ['default' => 0],
@@ -141,7 +141,7 @@ class PreviewLinkListenerTest extends TestCase
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
-        $this->assertSame($showUnpublished ? '1' : '', $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
+        $this->assertSame($showUnpublished, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
         $this->assertSame($now, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
         $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);

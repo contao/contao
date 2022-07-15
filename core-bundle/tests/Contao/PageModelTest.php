@@ -347,7 +347,7 @@ class PageModelTest extends TestCase
         yield 'no parent with an inheritable layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => 1, 'subpageLayout' => 2]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 0, 'layout' => 1, 'subpageLayout' => 2]],
                 [['id' => '3', 'pid' => '0']],
             ],
             0,
@@ -356,7 +356,7 @@ class PageModelTest extends TestCase
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 1, 'subpageLayout' => 0]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 1, 'subpageLayout' => 0]],
                 [['id' => '3', 'pid' => '0']],
             ],
             1,
@@ -365,7 +365,7 @@ class PageModelTest extends TestCase
         yield 'inherit subpages layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 1, 'subpageLayout' => 2]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 1, 'subpageLayout' => 2]],
                 [['id' => '3', 'pid' => '0']],
             ],
             2,
@@ -373,9 +373,9 @@ class PageModelTest extends TestCase
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => 1, 'subpageLayout' => 1]],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 2, 'subpageLayout' => 3]],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => 4, 'subpageLayout' => 0]],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => 0, 'layout' => 1, 'subpageLayout' => 1]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 2, 'subpageLayout' => 3]],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => 1, 'layout' => 4, 'subpageLayout' => 0]],
             ],
             3,
         ];

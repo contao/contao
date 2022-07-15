@@ -75,7 +75,7 @@ class StoreRefererListener
         }
 
         // Set new current referer
-        $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
+        $referers[$refererId]['current'] = $request->getRequestUri();
 
         $session->set($key, $referers);
     }
@@ -110,13 +110,5 @@ class StoreRefererListener
         }
 
         return $referers;
-    }
-
-    /**
-     * Returns the current request URI relative to the base path.
-     */
-    private function getRelativeRequestUri(Request $request): string
-    {
-        return substr($request->getRequestUri(), \strlen($request->getBasePath()) + 1);
     }
 }

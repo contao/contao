@@ -43,7 +43,15 @@ class AddTokenParserTest extends TestCase
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
+
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
         $environment->render('template.html.twig');

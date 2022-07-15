@@ -21,7 +21,7 @@ tl_user:
       email: k.jones@example.com
       language: de
       password: $argon2id$v=19$m=65536,t=4,p=1$Qz+phxHnVCqYnMd3xZWmbQ$86GiZ3h9sDmXrbvzwXwjxgXNf1jwSitZr4fsbEkp7/U
-      admin: '1'
+      admin: 1
       dateAdded: 1539598726
       lastLogin: 1539686648
       currentLogin: 1539694637

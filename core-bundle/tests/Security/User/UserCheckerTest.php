@@ -31,10 +31,10 @@ class UserCheckerTest extends TestCase
         $user = $this->createMock(BackendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->disable = '';
-        $user->login = '1';
-        $user->start = 0;
-        $user->stop = 0;
+        $user->disable = false;
+        $user->login = true;
+        $user->start = '';
+        $user->stop = '';
 
         $userChecker = new UserChecker($framework);
         $userChecker->checkPreAuth($user);
@@ -74,7 +74,7 @@ class UserCheckerTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->disable = '1';
+        $user->disable = true;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
@@ -89,8 +89,8 @@ class UserCheckerTest extends TestCase
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->disable = '';
-        $user->login = '';
+        $user->disable = false;
+        $user->login = false;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
@@ -107,9 +107,9 @@ class UserCheckerTest extends TestCase
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->disable = '';
-        $user->login = '1';
-        $user->start = $time;
+        $user->disable = false;
+        $user->login = true;
+        $user->start = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
@@ -127,10 +127,10 @@ class UserCheckerTest extends TestCase
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->disable = '';
-        $user->login = '1';
-        $user->start = 0;
-        $user->stop = $time;
+        $user->disable = false;
+        $user->login = true;
+        $user->start = '';
+        $user->stop = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));

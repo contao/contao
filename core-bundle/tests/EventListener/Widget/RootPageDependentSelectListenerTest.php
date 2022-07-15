@@ -125,10 +125,14 @@ class RootPageDependentSelectListenerTest extends TestCase
         $this->populateGlobalsArray([]);
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-        $dataContainer->activeRecord = new \stdClass();
-        $dataContainer->activeRecord->pid = 1;
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 1])
+        ;
 
         $connection = $this->mockGetModules();
 
@@ -165,10 +169,14 @@ class RootPageDependentSelectListenerTest extends TestCase
         ]);
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-        $dataContainer->activeRecord = new \stdClass();
-        $dataContainer->activeRecord->pid = 1;
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 1])
+        ;
 
         $connection = $this->mockGetModules();
 

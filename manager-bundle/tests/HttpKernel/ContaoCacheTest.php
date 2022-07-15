@@ -20,6 +20,9 @@ use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\Events;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCacheTest extends ContaoTestCase
@@ -60,13 +63,6 @@ class ContaoCacheTest extends ContaoTestCase
         unset($_SERVER['COOKIE_ALLOW_LIST']);
     }
 
-    public function testCreatesTheCacheStore(): void
-    {
-        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
-
-        $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
-    }
-
     public function cookieAllowListProvider(): \Generator
     {
         yield [
@@ -83,5 +79,45 @@ class ContaoCacheTest extends ContaoTestCase
             'PHPSESSID,^my-regex$,another_cookie',
             ['PHPSESSID', '^my-regex$', 'another_cookie'],
         ];
+    }
+
+    public function testCreatesTheCacheStore(): void
+    {
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+
+        $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
+    }
+
+    public function testDoesNotDispatchTerminateEventOnCacheHit(): void
+    {
+        $response = (new Response())->setSharedMaxAge(500);
+
+        $kernel = $this->createMock(ContaoKernel::class);
+        $kernel
+            ->expects($this->once())
+            ->method('getContainer')
+            ->willReturn(new Container())
+        ;
+
+        $kernel
+            ->expects($this->once()) // Second is coming from the cache
+            ->method('handle')
+            ->willReturnOnConsecutiveCalls($response, $response)
+        ;
+
+        $kernel
+            ->expects($this->once()) // Second is coming from the cache
+            ->method('terminate')
+            ->willReturnOnConsecutiveCalls($response, $response)
+        ;
+
+        $cache = new ContaoCache($kernel, $this->getTempDir());
+        $request = Request::create('/foobar');
+
+        $cache->handle($request);
+        $cache->terminate($request, $response);
+
+        $cache->handle($request);
+        $cache->terminate($request, $response);
     }
 }

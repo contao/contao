@@ -108,9 +108,9 @@ class CoreResponseContextFactory
             ->set(
                 new ContaoPageSchema(
                     $title ?: '',
-                    (int) $pageModel->id,
-                    (bool) $pageModel->noSearch,
-                    (bool) $pageModel->protected,
+                    $pageModel->id,
+                    $pageModel->noSearch,
+                    $pageModel->protected,
                     array_map('intval', array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode()
                 )
