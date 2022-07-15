@@ -63,36 +63,36 @@ class StartStopValidationListenerTest extends TestCase
     public function valueProvider(): \Generator
     {
         yield 'Start and stop is not submitted' => [
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         ];
 
         yield 'Start is empty' => [
-            ['start' => '', 'stop' => time()]
+            ['start' => '', 'stop' => time()],
         ];
 
         yield 'Stop is empty' => [
-            ['start' => time(), 'stop' => '']
+            ['start' => time(), 'stop' => ''],
         ];
 
         yield 'Start is later than stop' => [
-            ['start' => time(), 'stop' => time() + 1]
+            ['start' => time(), 'stop' => time() + 1],
         ];
 
         yield 'Throws exception if stop is before start' => [
             ['start' => time() + 1, 'stop' => time()],
             null,
-            true
+            true,
         ];
 
         yield 'Uses start from DataContainer' => [
             ['stop' => time() + 1],
-            ['start' => time()]
+            ['start' => time()],
         ];
 
         yield 'Uses stop from DataContainer' => [
             ['start' => time() + 1],
             ['stop' => time()],
-            true
+            true,
         ];
     }
 }
