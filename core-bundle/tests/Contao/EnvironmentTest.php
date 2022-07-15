@@ -45,7 +45,7 @@ class EnvironmentTest extends TestCase
 
         System::setContainer($container);
 
-        require __DIR__.'/../../src/Resources/contao/config/default.php';
+        require __DIR__.'/../../contao/config/default.php';
     }
 
     protected function tearDown(): void

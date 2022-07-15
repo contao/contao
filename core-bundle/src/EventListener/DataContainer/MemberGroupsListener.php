@@ -12,16 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Callback(table="tl_article", target="fields.groups.options")
- * @Callback(table="tl_content", target="fields.groups.options")
- * @Callback(table="tl_module", target="fields.groups.options")
- * @Callback(table="tl_page", target="fields.groups.options")
- */
+#[AsCallback(table: 'tl_article', target: 'fields.groups.options')]
+#[AsCallback(table: 'tl_content', target: 'fields.groups.options')]
+#[AsCallback(table: 'tl_module', target: 'fields.groups.options')]
+#[AsCallback(table: 'tl_page', target: 'fields.groups.options')]
 class MemberGroupsListener
 {
     public function __construct(private Connection $connection, private TranslatorInterface $translator)

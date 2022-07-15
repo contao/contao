@@ -23,19 +23,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use webignition\RobotsTxt\File\Parser;
 
 /**
- * @Route(defaults={"_scope" = "frontend"})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend'])]
 class RobotsTxtController
 {
     public function __construct(private ContaoFramework $framework, private EventDispatcherInterface $eventDispatcher)
     {
     }
 
-    /**
-     * @Route("/robots.txt")
-     */
+    #[Route('/robots.txt')]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();

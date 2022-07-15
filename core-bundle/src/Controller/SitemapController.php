@@ -23,19 +23,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(defaults={"_scope" = "frontend"})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
     public function __construct(private PageRegistry $pageRegistry)
     {
     }
 
-    /**
-     * @Route("/sitemap.xml")
-     */
+    #[Route('/sitemap.xml')]
     public function __invoke(Request $request): Response
     {
         $this->initializeContaoFramework();

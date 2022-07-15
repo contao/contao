@@ -17,6 +17,9 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
+    /**
+     * @param mixed $user
+     */
     public function isBackupCode($user, string $code): bool
     {
         if (!$user instanceof User) {
@@ -42,6 +45,9 @@ class BackupCodeManager implements BackupCodeManagerInterface
         return false;
     }
 
+    /**
+     * @param mixed $user
+     */
     public function invalidateBackupCode($user, string $code): void
     {
         if (!$user instanceof User) {
@@ -86,7 +92,8 @@ class BackupCodeManager implements BackupCodeManagerInterface
             array_map(
                 static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
                 $backupCodes
-            )
+            ),
+            JSON_THROW_ON_ERROR
         );
 
         $user->save();

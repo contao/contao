@@ -4,9 +4,6 @@
     <include>
       <directory>./src</directory>
     </include>
-    <exclude>
-      <directory>./src/Resources</directory>
-    </exclude>
   </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>
@@ -21,7 +18,4 @@
   <listeners>
     <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
   </listeners>
-  <extensions>
-    <extension class="Contao\ManagerBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
-  </extensions>
 </phpunit>

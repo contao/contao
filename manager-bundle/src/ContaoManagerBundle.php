@@ -24,4 +24,9 @@ class ContaoManagerBundle extends Bundle
 
         $container->addCompilerPass(new ContaoManagerPass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }
