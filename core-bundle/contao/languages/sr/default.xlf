@@ -1,9 +1,12 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="sr">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="sr">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
         <target>Десила се грешка!</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -186,12 +189,14 @@
         <target>Нумерички алиаси нису подржани!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
-        <target>Префикс URL &quot;%s&quot; се већ користи у некој другој root страници са истим доменским именом.</target>
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Страница са URL &quot;%s&quot; већ постоји!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -270,8 +275,7 @@
         <target>Странице са највишим нивоом у хијерархији морају бити root странице сајта.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>Постоје странице у структури сајта које се налазе на највишем хијерархијском нивоу али нису root странице сајта.</target>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -296,10 +300,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
         <target>Није пронађен запис у бази података за %s. Синхронизујте фајл систем.</target>
-      </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Овде можете унети  ID Google+ профила или екранско име.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -349,6 +349,15 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Путања шаблона &quot;%s&quot; не сме да садржи следеће знакове: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Који је резултат сабирања бројева %d and %d?</target>
@@ -392,6 +401,12 @@
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
         <target>Омогућавање властитог HTML кода.</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -750,16 +765,14 @@
         <target>Интерно преусмеравање</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Ова врста странице аутоматски преусмерава посетиоце на другу страницу у оквиру сајта.</target>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
         <target> Root сајта</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>Ова врста странице означава стартну тачку новог сајта у оквиру структуре сајта.</target>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -798,8 +811,7 @@
         <target>503 Сервис је недоступан.</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
-        <target>Када је коренска страница у моду одржавања, страница 503 се приказује за све захтеве.</target>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1318,8 +1330,7 @@
         <target>Заглавље</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Лиценца</target>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1341,9 +1352,11 @@
         <source>Predefined dimensions</source>
         <target>Предефинисане димензије</target>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
-        <target>Релативне димензије</target>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1361,21 +1374,11 @@
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
         <target>Краћа страница слике је прилагођена наведеним димензијама и величина слике је промењена пропорционално.</target>
       </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-        <target>Тачне димензије</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>Величина слике биће промењена на дате димензије. Ако је потребно, биће кропована.</target>
-      </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
-        <target>Важан део</target>
+        <source>Crop (important part)</source>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Важан део слике биће сачуван по спецификацији у менаџеру фајлова.</target>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1582,8 +1585,7 @@
         <target>Пречице на тастатури у БекЕнду</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1754,8 +1756,7 @@
         <target>Сачувај и затвори</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
-        <target>Сачувај и уреди</target>
+        <source>Save and edit child elements</source>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1965,10 +1966,6 @@
         <source>Contao version %s is available.</source>
         <target>Доступна је верзија Contao %s.</target>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-        <target>Преламање речи</target>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
         <target>ПАЖЊА! Изгубићете све промене које нисте сачували. Да ли желите да наставите?</target>
@@ -2032,22 +2029,6 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
         <target>Чланци</target>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-        <target>Управљање фајловима</target>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-        <target>Структура сајта</target>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-        <target>Назад на одабир фајла</target>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
-        <target>Назад на одабир странице</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2550,8 +2531,7 @@
         <target>Преузимање  %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
-        <target>Да бисте чували мета податке о фајлу, у структуру сајта морате додати root страницу.</target>
+        <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2673,6 +2653,12 @@
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
         <target>Постоји барем једна корисничка група са одобрењем приступа Фронт Енд модулу &quot;Листинг&quot; и припадајућим пољима &quot;list_*&quot;. С обзиром да та поља могу да садрже арбитрарне SQL корисници ових група имплицитно имају приступ систему!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Омогући</target>
@@ -2680,10 +2666,6 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Онемогући</target>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Интерни CSS уређивач је застарио и биће уклоњен у верзији Contao 5.0! Размотрите извоз ваших постојећих стилова и додавање у распоред странице у форми вањских стилова.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2755,6 +2737,24 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+      </trans-unit>
+      <trans-unit id="MSC.draft">
+        <source>Draft</source>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2924,13 +2924,8 @@
         <source>Drag element ID %s</source>
         <target>Превуци елемент са ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-        <target>Уреди подешавања елемента</target>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
-        <target>Уреди подешавања елемента са ID %s</target>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2965,8 +2960,7 @@
         <target>Успешно је индексирано %dURI. За %d индексирање је било неуспешно.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%dURI је прескочен (ако вам нешто недостаје, проверите лог за debug).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

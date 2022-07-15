@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
@@ -70,8 +70,7 @@
         <target>Referenční stránka</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
-        <source>Please choose the reference page from the site structure.</source>
-        <target>Zvolte prosím stránku ze struktury stránek.</target>
+        <source>Please choose the reference page.</source>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -94,8 +93,7 @@
         <target>Stránky</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.1">
-        <source>Please choose one or more pages from the site structure.</source>
-        <target>Vyberte prosím jednu nebo více stránek ze struktury stránek.</target>
+        <source>Please choose one or more pages.</source>
       </trans-unit>
       <trans-unit id="tl_module.showHidden.0">
         <source>Show hidden items</source>
@@ -111,6 +109,7 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Zde můžete zadat vlastní označení pro rozbalovací menu nebo odkaz ke stránce s přehledem.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -130,9 +129,11 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Stránka přehledu</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Vyberte stránku přehledu, abyste přidali do předlohy příslušný odkaz.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -302,14 +303,6 @@
         <source>Please select a file from the files directory.</source>
         <target>Vyberte soubor z adresáře</target>
       </trans-unit>
-      <trans-unit id="tl_module.url.0">
-        <source>URL</source>
-        <target>Internetová adresa</target>
-      </trans-unit>
-      <trans-unit id="tl_module.url.1">
-        <source>Please enter the URL (http://…) of the Flash movie.</source>
-        <target>Zadejte prosím internetovou adresu (http://...) daného flashového videa.</target>
-      </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
         <target>Zobrazit v plné velikost v lightboxu/nové okno</target>
@@ -341,6 +334,14 @@
       <trans-unit id="tl_module.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Seznam povolených znaků HTML můžete upravit v nastaveních systému.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>Kód HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Dávejte si pozor na to, jaké věci přidáváte, pokud jim nerozumíte. To by mohlo umožnit napadaní vaší identity nebo převzetí kontroly nad celým systémem.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
@@ -381,14 +382,6 @@
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
         <target>Zvolená skupina bude smět vidět daný modul.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.0">
-        <source>Show to guests only</source>
-        <target>Ukázat pouze hostům</target>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.1">
-        <source>Hide the module if a member is logged in.</source>
-        <target>Skrýt modul, pokud je přihlášený alespoň jeden z členů.</target>
       </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>
@@ -507,10 +500,11 @@
         <target>Moduly</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
-        <source>Please select a module for every root page.</source>
+        <source>Please select a module for every website root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>Vybrat modul pro &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

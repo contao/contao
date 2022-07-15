@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" target-language="pt">
+  <file datatype="php" original="contao/languages/en/tl_news_archive.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
@@ -14,8 +14,7 @@
         <target>Redirecionar página</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
-        <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Favor selecionar a página para a qual os visitantes serão redirecionados quando clicarem em um artigo.</target>
+        <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
@@ -71,9 +70,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Permitir apenas aos membros autenticados a criação de comentários.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Desactivar a protecção contra spam</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -155,13 +156,8 @@
         <source>Edit news archive ID %s</source>
         <target>Editar o arquivo de noticias com ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.editheader">
-        <source>Edit the settings of news archive ID %s</source>
-        <target>Editar as configurações do arquivo de noticias com ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.editmeta">
-        <source>Edit the news archive settings</source>
-        <target>Editar as configurações do arquivo de noticias</target>
+      <trans-unit id="tl_news_archive.children">
+        <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>

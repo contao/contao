@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
@@ -93,14 +93,6 @@
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
         <target>Het toestaan van &lt;code&gt;*&lt;/code&gt; attributen kan worden misbruikt voor XSS-aanvallen. Doe dit alleen als alle backend-gebruikers vertrouwd zijn!</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.0">
-        <source>Disable request tokens</source>
-        <target>Uitschakelen request tokens</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted (insecure!).</source>
-        <target>Request token niet controleren wanneer een formulier wordt ingediend (onveilig!)</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
         <target>Geldige download bestandstypes</target>
@@ -108,22 +100,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Geef een door komma's gescheiden lijst op van extensies van downloadbare bestandstypes.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.0">
-        <source>Maximum GD image width</source>
-        <target>Maximale GD afbeelding breedte</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.1">
-        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-        <target>Hier kunt u de maximale afbeelding breedte invoeren die de GD library zal proberen te hanteren.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.0">
-        <source>Maximum GD image height</source>
-        <target>Maximale GD afbeelding hoogte</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.1">
-        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-        <target>Hier kunt u de maximale afbeelding hoogte invoeren die de GD library zal proberen te hanteren.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>

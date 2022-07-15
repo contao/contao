@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_newsletter.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_newsletter.subject.0">
         <source>Subject</source>
@@ -7,31 +7,31 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.subject.1">
         <source>Please enter the newsletter subject.</source>
-        <target>Lütfen haber abonelik konusunu giriniz.</target>
+        <target>Lütfen haber bülteninin konusunu yazın.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.0">
         <source>Newsletter alias</source>
-        <target>Haber abonelik lakabı</target>
+        <target>Haber bülteni kısaltması</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.1">
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
-        <target>Haber abonelik lakabı sayısal ID'nin yanısıra haber aboneliğine yönlendirmek için kullanılan benzeri olmayan bir referanstır.</target>
+        <target>Haber bülteni kısaltması haberin sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
-        <target>HTML içerik</target>
+        <target>HTML içeriği</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
         <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Buraya haber aboneliğinin HTML içeriğini girebilirsiniz. &lt;em&gt;##email##&lt;/em&gt; wildcard'ını kullanarak alıcının e-posta adresini ekleyebilirsiniz.</target>
+        <target>Buraya haber bülteninin HTML içeriğini yazabilirsiniz. &lt;em&gt;##email##&lt;/em&gt; kodunu kullanarak alıcının e-posta adresini ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
         <source>Text content</source>
-        <target>Yazı içeriği</target>
+        <target>Düz metin içeriği</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
         <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Buraya haber aboneliğinin yazı içeriğini girebilirsiniz. &lt;em&gt;##email##&lt;/em&gt; wildcard'ını kullanarak alıcının e-posta adresini ekleyebilirsiniz.</target>
+        <target>Buraya haber bülteninin düz metin içeriğini yazabilirsiniz. &lt;em&gt;##email##&lt;/em&gt; kodunu kullanarak alıcının e-posta adresini ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">
         <source>Add attachments</source>
@@ -39,95 +39,95 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.1">
         <source>Attach one or more files to the newsletter.</source>
-        <target>Haber aboneliğine bir yada birden fazla dosya ekle.</target>
+        <target>Haber bültenine bir ya da birkaç dosya ekle.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.0">
         <source>Attachments</source>
-        <target>Dosyalar</target>
+        <target>Ek dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.1">
         <source>Please choose the files to be attached from the files directory.</source>
-        <target>Lütfen eklemek istediğiniz dosyaları dosya dizininden seçiniz.</target>
+        <target>Lütfen files klasöründen eklemek istediğiniz dosyaları seçin.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>E-mail template</source>
-        <target>E-posta şablonu</target>
+        <target>E-posta kalıbı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
-        <target>Buradan kanalın e-posta şablonunu geçersiz kılabilirsiniz.</target>
+        <target>Buradan kanalın e-posta kalıbını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
-        <target>Sade yazı olarak gönder</target>
+        <target>Düz metin olarak gönderilsin</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.1">
         <source>Send the newsletter as plain text e-mail without the HTML content.</source>
-        <target>Haber aboneliğini HTML içerik olmadan sade yazı olarak gönder.</target>
+        <target>Bu seçenek etkinleştirildiğinde, haber bülteni HTML içerik olmadan düz metin olarak gönderilir.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.0">
         <source>External images</source>
-        <target>Harici resimler</target>
+        <target>Dış görseller</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.1">
         <source>Do not embed images in HTML newsletters.</source>
-        <target>Resimler HTML haber aboneliklerine gömülmesin.</target>
+        <target>Görseller HTML haber bültenlerine gömülmesin.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
-        <target>Posta taşımacılığı</target>
+        <target>E-posta aktarıcı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
-        <target>Buradan kanalın varsayılan posta gönderimini geçersiz kılabilirsiniz.</target>
+        <target>Buradan kanalın varsayılan e-posta aktarıcısını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
-        <target>Kişisel gönderen e-posta adresi</target>
+        <target>Özel gönderici e-posta adresi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
-        <target>Burada kanalın varsayılan gönderen e-posta adresini geçersiz kılabilirsiniz.</target>
+        <target>Buradan kanalın varsayılan gönderici e-posta adresini değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
-        <target>Kişisel gönderen adı</target>
+        <target>Özel gönderici adı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
-        <target>Burada kanalın varsayılan gönderici ismini geçersiz kılabilirsiniz.</target>
+        <target>Buradan kanalın varsayılan gönderici adını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
-        <target>Döngü başına posta</target>
+        <target>Bir pakette gönderilecek e-posta sayısı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.1">
         <source>The sending process is split into several cycles to prevent the script from timing out.</source>
-        <target>Gönderme süreci scriptin zaman aşımına uğramaması için bir kaç döngüye bölünerek uygulanır.</target>
+        <target>Gönderme işlemi betiğin zaman aşımına uğramaması için bir kaç pakate bölünerek yapılır.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>
-        <target>Zaman aşımı, saniye olarak</target>
+        <target>Saniye olarak zaman aşımı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.1">
         <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
-        <target>Burada döngülerin arasındaki bekleme süresini değiştirerek, dakikada gönderilen e-posta sayısını kontrol edebilirsiniz.</target>
+        <target>Buradan paketler arasındaki bekleme süresini değiştirerek, bir dakikada gönderilecek e-posta sayısını denetleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
-        <target>Aralık/Mesafe</target>
+        <target>Aralık</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Gönderme işlemi kesilirse, belirli bir alıcıdan başlayarak sürdürmek için buraya sayısal bir başlangıç değeri yazabilirsiniz. &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; kategorisini seçerek gönderilmiş e-posta sayısını görebilirsiniz. Örneğin 120 kayıt varsa , 121. alıcıdan sürdürmek için &quot;120&quot; yazın (sayım 0 değerinden başlar).</target>
+        <target>Gönderme işlemi kesintiye uğrarsa, işlemi belirli bir alıcıdan yeniden başlayarak sürdürmek için buraya sayısal bir başlangıç değeri yazabilirsiniz. &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; kategorisini seçerek gönderilmiş e-posta sayısını görebilirsiniz. Örneğin 120 kayıt varsa , 121. alıcıdan sürdürmek için &quot;120&quot; yazın (sayım 0 değerinden başlar).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
-        <target>Önizlemeyi gönder</target>
+        <target>Ön izleme gönderim adresi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.1">
         <source>Send the preview of the newsletter to this e-mail address.</source>
-        <target>Haber aboneliğinin önizlenimini bu e-posta adresine gönderir.</target>
+        <target>Haber bülteninin ön izlemesi belirtilen e-posta adresine gönderilir.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.title_legend">
         <source>Title and subject</source>
@@ -135,15 +135,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.html_legend">
         <source>HTML content</source>
-        <target>HTML içerik</target>
+        <target>HTML içeriği</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text_legend">
         <source>Text content</source>
-        <target>Yazı içeriği</target>
+        <target>Düz metin içeriği</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachment_legend">
         <source>Attachments</source>
-        <target>Eklenen dosyalar</target>
+        <target>Ek dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>
-        <target>Gelişmiş ayarlar</target>
+        <target>Uzman ayarları</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sent">
         <source>Sent</source>
@@ -163,54 +163,55 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
         <source>Sent on %s</source>
-        <target>Gönder %s</target>
+        <target>%s zamanında gönder</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>
-        <target>Şimdi gönderme</target>
+        <target>Henüz gönderilmemiş</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailingDate">
         <source>Mailing date</source>
-        <target>Postalama tarihi</target>
+        <target>Gönderilme tarihi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.confirm">
         <source>The newsletter has been sent to %s recipients.</source>
-        <target>Haber aboneliği %s alıcıya gönderildi.</target>
+        <target>Haber bülteni %s alıcıya gönderildi.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s geçersiz e-posta adresi hizmet dışı bırakıldı (system log bölümüne bakınız).</target>
+        <target>%s geçersiz e-posta adresi devre dışı bırakıldı sistem günlüğü bölümüne bakın).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s e-posta adresi atlandı.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
-        <target>Kanala aktif bir abone yok.</target>
+        <target>Kanalın etkin bir abonesi yok.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.from">
         <source>From</source>
-        <target>Gönderen</target>
+        <target>Gönderici</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachments">
         <source>Attachments</source>
-        <target>Eklenen dosyalar</target>
+        <target>Ek dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.preview">
         <source>Send preview</source>
-        <target>Önizlemeyi gönder</target>
+        <target>Ön izleme gönderilsin</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendConfirm">
         <source>Do you really want to send the newsletter?</source>
-        <target>Haber aboneliğini gerçekten göndermek istiyor musun?</target>
+        <target>Haber bültenini göndermek istediğinize emin misiniz?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
-        <target>Haber aboneliğini gönder</target>
+        <target>Haber bültenini gönder</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
-        <target>Haber aboneliği ID %s gönder</target>
+        <target>%s kodlu haber bültenini gönder</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
@@ -218,27 +219,27 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
-        <target>Yeni haber aboneliği oluştur</target>
+        <target>Yeni bir haber bülteni ekle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
-        <target>Haber aboneliği ID %s ayrıntılarını göster</target>
+        <target>%s kodlu haber bülteninin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
-        <target>Haber aboneliği ID %s düzenle</target>
+        <target>%s kodlu haber bültenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
-        <target>Haber aboneliği ID %s çoğalt</target>
+        <target>%s kodlu haber bültenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
-        <target>Haber aboneliği ID %s taşı</target>
+        <target>%s kodlu haber bültenini taşı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
-        <target>Haber aboneliği ID %s sil</target>
+        <target>%s kodlu haber bültenini sil</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

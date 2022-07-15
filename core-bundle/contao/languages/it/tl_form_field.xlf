@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/tl_form_field.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.datim.0">
         <source>Date and time</source>
-        <target>Data e ora</target>
+        <target>Data e tempo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.datim.1">
         <source>Checks whether the input matches the global date and time format.</source>
@@ -329,14 +329,6 @@
         <source>A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
         <target>Una Access key è un carattere singolo il quale può essere assegnato ad un campo del form. Se un visitatore preme simultaneamente il tasto [ALT] e l'Acces key, il campo corrispondente verrà selezionato.</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.0">
-        <source>Tab index</source>
-        <target>&quot;Ordinamento tab&quot; degli elementi</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.1">
-        <source>The position of the form field in the tabbing order.</source>
-        <target>La posizione del campo form ordinata con i tab.</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
         <target>Dimensione campo</target>
@@ -456,10 +448,6 @@
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
         <target>Elimina campo modulo ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader">
-        <source>Edit the form settings</source>
-        <target>Modifica l'intestazione di questo form</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>

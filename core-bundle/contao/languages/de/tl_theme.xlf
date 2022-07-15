@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en" target-language="de">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_theme.name.0">
         <source>Theme title</source>
@@ -41,21 +41,13 @@
         <source>Here you can choose a screenshot of the theme.</source>
         <target>Hier können Sie ein Bildschirmfoto des Theme auswählen.</target>
       </trans-unit>
-      <trans-unit id="tl_theme.vars.0">
-        <source>Global variables</source>
-        <target>Globale Variablen</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars.1">
-        <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Hier können Sie globale Variablen für die Stylesheets des Theme definieren (z. B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Quelldateien</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto files to be imported.</source>
-        <target>Hier können Sie eine oder mehrere .cto-Dateien für den Import hochladen.</target>
+        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <target>Hier können Sie eine oder mehrere .cto- oder .sql-Dateien für den Import hochladen.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -72,10 +64,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Konfiguration</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars_legend">
-        <source>Global variables</source>
-        <target>Globale Variablen</target>
       </trans-unit>
       <trans-unit id="tl_theme.theme_imported">
         <source>Theme &quot;%s&quot; has been imported.</source>
@@ -128,6 +116,34 @@
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>
         <target>Ein Theme importieren</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Beispiel-Website importieren</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Hier können Sie eine &lt;code&gt;.sql&lt;/code&gt;-Datei importieren. Dabei werden alle bestehenden Daten gelöscht! Wenn Sie stattdessen lediglich ein Theme importieren wollen, wählen Sie hier keine Datei aus.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Art des Imports</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Hier können Sie die Art des Imports auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Vollständiger SQL-Import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Nur Daten</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Nur Daten ohne die Tabellen zu leeren</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>
