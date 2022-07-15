@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: "tl_form_field", target: "fields.customRgxp.save")]
+#[AsCallback(table: 'tl_form_field', target: 'fields.customRgxp.save')]
 class ValidateCustomRgxpListener
 {
     public function __construct(private TranslatorInterface $translator)

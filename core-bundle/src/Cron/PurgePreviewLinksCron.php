@@ -21,7 +21,7 @@ use Doctrine\DBAL\Connection;
  *
  * @internal
  */
-#[AsCronJob("daily")]
+#[AsCronJob('daily')]
 class PurgePreviewLinksCron
 {
     public function __construct(private Connection $connection)

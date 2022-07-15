@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\MemberModel;
 use Psr\Log\LoggerInterface;
 
-#[AsCronJob("daily")]
+#[AsCronJob('daily')]
 class PurgeRegistrationsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)

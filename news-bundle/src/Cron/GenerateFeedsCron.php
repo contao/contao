@@ -16,7 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 
-#[AsCronJob("daily")]
+#[AsCronJob('daily')]
 class GenerateFeedsCron
 {
     public function __construct(private ContaoFramework $framework)

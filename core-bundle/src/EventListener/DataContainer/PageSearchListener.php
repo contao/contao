@@ -27,7 +27,7 @@ class PageSearchListener
     {
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.alias.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
         if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
@@ -39,7 +39,7 @@ class PageSearchListener
         return $value;
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.noSearch.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.noSearch.save')]
     public function onSaveNoSearch(string $value, DataContainer $dc): string
     {
         if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
@@ -51,7 +51,7 @@ class PageSearchListener
         return $value;
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.robots.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
         if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
@@ -63,7 +63,7 @@ class PageSearchListener
         return $value;
     }
 
-    #[AsCallback(table: "tl_page", target: "config.ondelete", priority: 16)]
+    #[AsCallback(table: 'tl_page', target: 'config.ondelete', priority: 16)]
     public function onDelete(DataContainer $dc): void
     {
         if (!$dc->id) {

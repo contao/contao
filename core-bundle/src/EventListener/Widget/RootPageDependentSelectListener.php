@@ -34,7 +34,7 @@ class RootPageDependentSelectListener
     ) {
     }
 
-    #[AsCallback(table: "tl_module", target: "fields.rootPageDependentModules.options")]
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.options')]
     public function optionsCallback(DataContainer $dc): array
     {
         $options = [];
@@ -65,7 +65,7 @@ class RootPageDependentSelectListener
         return $options;
     }
 
-    #[AsCallback(table: "tl_module", target: "fields.rootPageDependentModules.save")]
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
     public function saveCallback(mixed $value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
@@ -84,7 +84,7 @@ class RootPageDependentSelectListener
         return serialize($newValues);
     }
 
-    #[AsCallback(table: "tl_module", target: "fields.rootPageDependentModules.wizard")]
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.wizard')]
     public function wizardCallback(DataContainer $dc): string
     {
         $wizards = [];

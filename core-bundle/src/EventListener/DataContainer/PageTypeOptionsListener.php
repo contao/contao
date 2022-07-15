@@ -20,9 +20,9 @@ use Contao\DataContainer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
 
-#[AsCallback(table: "tl_page", target: "fields.type.options")]
-#[AsCallback(table: "tl_user", target: "fields.alpty.options")]
-#[AsCallback(table: "tl_user_group", target: "fields.alpty.options")]
+#[AsCallback(table: 'tl_page', target: 'fields.type.options')]
+#[AsCallback(table: 'tl_user', target: 'fields.alpty.options')]
+#[AsCallback(table: 'tl_user_group', target: 'fields.alpty.options')]
 class PageTypeOptionsListener
 {
     public function __construct(private PageRegistry $pageRegistry, private Security $security, private EventDispatcherInterface|null $eventDispatcher = null)

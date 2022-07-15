@@ -44,8 +44,8 @@ class AvailableTransports
      *
      * @return array<string, string>
      */
-    #[AsCallback(table: "tl_page", target: "fields.mailerTransport.options")]
-    #[AsCallback(table: "tl_form", target: "fields.mailerTransport.options")]
+    #[AsCallback(table: 'tl_page', target: 'fields.mailerTransport.options')]
+    #[AsCallback(table: 'tl_form', target: 'fields.mailerTransport.options')]
     public function getTransportOptions(): array
     {
         $options = [];

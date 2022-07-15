@@ -19,7 +19,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: "texts")]
+#[AsContentElement(category: 'texts')]
 class TextController extends AbstractContentElementController
 {
     public function __construct(private readonly Studio $studio)

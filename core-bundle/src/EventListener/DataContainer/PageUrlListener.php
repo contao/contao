@@ -46,7 +46,7 @@ class PageUrlListener
     ) {
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.alias.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -96,7 +96,7 @@ class PageUrlListener
         return $value;
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.urlPrefix.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.urlPrefix.save')]
     public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
         $currentRecord = $dc->getCurrentRecord();
@@ -137,7 +137,7 @@ class PageUrlListener
         return $value;
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.urlSuffix.save")]
+    #[AsCallback(table: 'tl_page', target: 'fields.urlSuffix.save')]
     public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
         $currentRecord = $dc->getCurrentRecord();

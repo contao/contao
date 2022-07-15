@@ -18,7 +18,7 @@ use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: "tl_settings", target: "config.onload")]
+#[AsCallback(table: 'tl_settings', target: 'config.onload')]
 class DisableAppConfiguredSettingsListener
 {
     public function __construct(private TranslatorInterface $translator, private ContaoFramework $framework, private array $localConfig)

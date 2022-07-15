@@ -28,7 +28,7 @@ class PageRoutingListener
     {
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.routePath.input_field")]
+    #[AsCallback(table: 'tl_page', target: 'fields.routePath.input_field')]
     public function generateRoutePath(DataContainer $dc): string
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
@@ -45,7 +45,7 @@ class PageRoutingListener
         );
     }
 
-    #[AsCallback(table: "tl_page", target: "fields.routeConflicts.input_field")]
+    #[AsCallback(table: 'tl_page', target: 'fields.routeConflicts.input_field')]
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);

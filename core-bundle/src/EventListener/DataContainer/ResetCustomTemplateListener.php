@@ -19,8 +19,8 @@ use Doctrine\DBAL\Connection;
 /**
  * @internal
  */
-#[AsCallback(table: "tl_content", target: "fields.type.save")]
-#[AsCallback(table: "tl_module", target: "fields.type.save")]
+#[AsCallback(table: 'tl_content', target: 'fields.type.save')]
+#[AsCallback(table: 'tl_module', target: 'fields.type.save')]
 class ResetCustomTemplateListener
 {
     public function __construct(private Connection $connection)

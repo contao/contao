@@ -17,7 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Psr\Log\LoggerInterface;
 
-#[AsCronJob("daily")]
+#[AsCronJob('daily')]
 class PurgeSubscriptionsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)

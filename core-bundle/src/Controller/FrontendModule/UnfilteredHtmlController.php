@@ -18,7 +18,7 @@ use Contao\ModuleModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(category: "miscellaneous")]
+#[AsFrontendModule(category: 'miscellaneous')]
 class UnfilteredHtmlController extends AbstractFrontendModuleController
 {
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response

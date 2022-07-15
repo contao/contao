@@ -46,7 +46,7 @@ class PreviewLinkListener
     ) {
     }
 
-    #[AsHook("initializeSystem")]
+    #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
         if (empty($this->previewScript)) {
@@ -54,7 +54,7 @@ class PreviewLinkListener
         }
     }
 
-    #[AsHook("loadDataContainer")]
+    #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
         if ('tl_preview_link' === $table && empty($this->previewScript)) {
@@ -65,7 +65,7 @@ class PreviewLinkListener
     /**
      * Only allow to create new records if a front end preview URL is given.
      */
-    #[AsCallback(table: "tl_preview_link", target: "config.onload")]
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function createFromUrl(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -128,7 +128,7 @@ class PreviewLinkListener
     /**
      * Adds a hint and modifies the edit view buttons.
      */
-    #[AsCallback(table: "tl_preview_link", target: "config.onload")]
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function adjustEditView(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -162,7 +162,7 @@ class PreviewLinkListener
     /**
      * Updates tl_preview_link.expiresAt based on expiresInDays selection.
      */
-    #[AsCallback(table: "tl_preview_link", target: "config.onsubmit")]
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onsubmit')]
     public function updateExpiresAt(DataContainer $dc): void
     {
         $this->connection->executeStatement(
@@ -171,7 +171,7 @@ class PreviewLinkListener
         );
     }
 
-    #[AsCallback(table: "tl_preview_link", target: "list.label.label")]
+    #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {
         if ($row['expiresAt'] < time()) {
@@ -185,7 +185,7 @@ class PreviewLinkListener
         return $args;
     }
 
-    #[AsCallback(table: "tl_preview_link", target: "list.operations.share.button")]
+    #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {

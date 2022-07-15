@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Security;
 /**
  * @internal
  */
-#[AsHook("loadDataContainer", priority: 200)]
+#[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
     public function __construct(private readonly Security $security, private readonly Connection $connection)

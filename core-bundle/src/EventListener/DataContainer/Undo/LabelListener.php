@@ -24,7 +24,7 @@ use Twig\Environment;
 /**
  * @internal
  */
-#[AsCallback(table: "tl_undo", target: "list.label.label")]
+#[AsCallback(table: 'tl_undo', target: 'list.label.label')]
 class LabelListener
 {
     public function __construct(private ContaoFramework $framework, private Environment $twig)

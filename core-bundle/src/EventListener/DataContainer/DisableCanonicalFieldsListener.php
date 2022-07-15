@@ -20,8 +20,8 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: "tl_page", target: "fields.canonicalLink.load")]
-#[AsCallback(table: "tl_page", target: "fields.canonicalKeepParams.load")]
+#[AsCallback(table: 'tl_page', target: 'fields.canonicalLink.load')]
+#[AsCallback(table: 'tl_page', target: 'fields.canonicalKeepParams.load')]
 class DisableCanonicalFieldsListener
 {
     public function __construct(private ContaoFramework $framework, private TranslatorInterface $translator)

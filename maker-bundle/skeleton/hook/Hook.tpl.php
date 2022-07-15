@@ -9,7 +9,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use <?= $use ?>;
 <?php endforeach; ?>
 
-#[AsHook("<?= $hook ?>")]
+#[AsHook('<?= $hook ?>')]
 class <?= $className."\n" ?>
 {
     <?= $signature."\n" ?>

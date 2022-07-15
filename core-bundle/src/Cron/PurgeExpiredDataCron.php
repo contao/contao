@@ -24,7 +24,7 @@ class PurgeExpiredDataCron
     {
     }
 
-    #[AsCronJob("hourly")]
+    #[AsCronJob('hourly')]
     public function onHourly(): void
     {
         $this->framework->initialize();

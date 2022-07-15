@@ -18,7 +18,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: "tl_theme", target: "fields.templates.save")]
+#[AsCallback(table: 'tl_theme', target: 'fields.templates.save')]
 class ThemeTemplatesListener
 {
     public function __construct(

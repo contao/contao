@@ -25,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
-#[AsCallback(table: "tl_undo", target: "list.operations.jumpToParent.button")]
+#[AsCallback(table: 'tl_undo', target: 'list.operations.jumpToParent.button')]
 class JumpToParentButtonListener
 {
     public function __construct(private ContaoFramework $framework, private Connection $connection, private TranslatorInterface $translator)

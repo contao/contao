@@ -26,8 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
 
-#[AsContentElement("image", category: "media")]
-#[AsContentElement("gallery", category: "media")]
+#[AsContentElement('image', category: 'media')]
+#[AsContentElement('gallery', category: 'media')]
 class ImagesController extends AbstractContentElementController
 {
     public function __construct(

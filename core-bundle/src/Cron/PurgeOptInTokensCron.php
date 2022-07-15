@@ -16,7 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\OptIn\OptIn;
 use Psr\Log\LoggerInterface;
 
-#[AsCronJob("daily")]
+#[AsCronJob('daily')]
 class PurgeOptInTokensCron
 {
     public function __construct(private OptIn $optIn, private LoggerInterface|null $logger)

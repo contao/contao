@@ -9,7 +9,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use <?= $use ?>;
 <?php endforeach; ?>
 
-#[AsCallback(table: "<?= $table ?>", target: "<?= $target ?>")]
+#[AsCallback(table: '<?= $table ?>', target: '<?= $target ?>')]
 class <?= $className."\n" ?>
 {
     <?= $signature."\n" ?>

@@ -32,7 +32,7 @@ class FaviconController
     {
     }
 
-    #[Route("/favicon.ico")]
+    #[Route('/favicon.ico')]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();

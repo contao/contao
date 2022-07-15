@@ -16,8 +16,8 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Service\ResetInterface;
 
-#[AsCallback(table: "tl_page", target: "fields.layout.options")]
-#[AsCallback(table: "tl_page", target: "fields.subpageLayout.options")]
+#[AsCallback(table: 'tl_page', target: 'fields.layout.options')]
+#[AsCallback(table: 'tl_page', target: 'fields.subpageLayout.options')]
 class LayoutOptionsListener implements ResetInterface
 {
     private array|null $options = null;

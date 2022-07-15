@@ -9,7 +9,7 @@ use <?= $use ?>;
 <?php endforeach; ?>
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
-#[AsEventListener("<?= $event ?>")]
+#[AsEventListener('<?= $event ?>')]
 class <?= $className."\n" ?>
 {
     <?= $signature."\n" ?>

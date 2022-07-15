@@ -17,7 +17,7 @@ use Contao\Validator;
 use Contao\Widget;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsHook("addCustomRegexp")]
+#[AsHook('addCustomRegexp')]
 class HttpUrlListener
 {
     final public const RGXP_NAME = 'httpurl';

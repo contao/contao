@@ -19,8 +19,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsCallback(table: "tl_content", target: "fields.customTpl.options")]
-#[AsCallback(table: "tl_module", target: "fields.customTpl.options")]
+#[AsCallback(table: 'tl_content', target: 'fields.customTpl.options')]
+#[AsCallback(table: 'tl_module', target: 'fields.customTpl.options')]
 class TemplateOptionsListener
 {
     private array $customTemplates = [];

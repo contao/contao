@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: "links")]
+#[AsContentElement(category: 'links')]
 class HyperlinkController extends AbstractContentElementController
 {
     public function __construct(

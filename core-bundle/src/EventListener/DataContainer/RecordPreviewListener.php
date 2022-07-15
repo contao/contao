@@ -28,7 +28,7 @@ class RecordPreviewListener
     {
     }
 
-    #[AsHook("loadDataContainer")]
+    #[AsHook('loadDataContainer')]
     public function registerDeleteCallbacks(string $table): void
     {
         if ($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false) {

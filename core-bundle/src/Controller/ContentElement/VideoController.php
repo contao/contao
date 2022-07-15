@@ -31,8 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
  *      url: string
  *  }
  */
-#[AsContentElement("vimeo", category: "media")]
-#[AsContentElement("youtube", category: "media")]
+#[AsContentElement('vimeo', category: 'media')]
+#[AsContentElement('youtube', category: 'media')]
 class VideoController extends AbstractContentElementController
 {
     public function __construct(private readonly Studio $studio)

@@ -56,7 +56,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @internal
  */
-#[AsHook("replaceInsertTags")]
+#[AsHook('replaceInsertTags')]
 class DateListener
 {
     public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)

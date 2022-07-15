@@ -54,7 +54,7 @@ class ContentCompositionListener
         $this->backend = $this->framework->getAdapter(Backend::class);
     }
 
-    #[AsCallback(table: "tl_page", target: "list.operations.articles.button")]
+    #[AsCallback(table: 'tl_page', target: 'list.operations.articles.button')]
     public function renderPageArticlesOperation(array $row, string|null $href, string $label, string $title, string|null $icon): string
     {
         if ((null === $href && null === $icon) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
@@ -80,7 +80,7 @@ class ContentCompositionListener
     /**
      * Automatically creates an article in the main column of a new page.
      */
-    #[AsCallback(table: "tl_page", target: "config.onsubmit", priority: -16)]
+    #[AsCallback(table: 'tl_page', target: 'config.onsubmit', priority: -16)]
     public function generateArticleForPage(DataContainer $dc): void
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -140,7 +140,7 @@ class ContentCompositionListener
         $this->connection->insert('tl_article', $article);
     }
 
-    #[AsCallback(table: "tl_article", target: "list.sorting.paste_button")]
+    #[AsCallback(table: 'tl_article', target: 'list.sorting.paste_button')]
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
         if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
