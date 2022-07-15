@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -23,15 +24,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Runs Contao automator tasks on the command line.
- *
  * @internal
  */
+#[AsCommand(
+    name: 'contao:automator',
+    description: 'Runs automator tasks on the command line.'
+)]
 class AutomatorCommand extends Command
 {
-    protected static $defaultName = 'contao:automator';
-    protected static $defaultDescription = 'Runs automator tasks on the command line.';
-
     private array $commands = [];
 
     public function __construct(private ContaoFramework $framework)

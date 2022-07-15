@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,16 +29,12 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Symlinks the public resources into the web directory.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:symlinks',
+    description: 'Symlinks the public resources into the public directory.'
+)]
 class SymlinksCommand extends Command
 {
-    protected static $defaultName = 'contao:symlinks';
-    protected static $defaultDescription = 'Symlinks the public resources into the public directory.';
-
     private array $rows = [];
     private string|null $webDir = null;
     private int $statusCode = Command::SUCCESS;
