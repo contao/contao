@@ -28,6 +28,7 @@ class StartStopValidationListenerTest extends TestCase
 
         if ($expectException) {
             $this->expectException(\RuntimeException::class);
+
             $translator
                 ->expects($this->once())
                 ->method('trans')
@@ -67,31 +68,31 @@ class StartStopValidationListenerTest extends TestCase
         ];
 
         yield 'Start is empty' => [
-            ['start' => '', 'stop' => time()],
+            ['start' => '', 'stop' => 1],
         ];
 
         yield 'Stop is empty' => [
-            ['start' => time(), 'stop' => ''],
+            ['start' => 1, 'stop' => ''],
         ];
 
         yield 'Start is later than stop' => [
-            ['start' => time(), 'stop' => time() + 1],
+            ['start' => 1, 'stop' => 2],
         ];
 
         yield 'Throws exception if stop is before start' => [
-            ['start' => time() + 1, 'stop' => time()],
+            ['start' => 2, 'stop' => 1],
             null,
             true,
         ];
 
         yield 'Uses start from DataContainer' => [
-            ['stop' => time() + 1],
-            ['start' => time()],
+            ['stop' => 2],
+            ['start' => 1],
         ];
 
         yield 'Uses stop from DataContainer' => [
-            ['start' => time() + 1],
-            ['stop' => time()],
+            ['start' => 2],
+            ['stop' => 1],
             true,
         ];
     }
