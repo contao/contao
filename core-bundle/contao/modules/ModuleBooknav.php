@@ -192,7 +192,6 @@ class ModuleBooknav extends Module
 		}
 
 		$security = System::getContainer()->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))

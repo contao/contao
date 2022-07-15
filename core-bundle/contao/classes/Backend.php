@@ -267,7 +267,6 @@ abstract class Backend extends Controller
 		}
 
 		$dc = null;
-		$security = System::getContainer()->get('security.helper');
 
 		// Create the data container object
 		if ($strTable)

@@ -196,7 +196,7 @@ class InsertTags extends Controller
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
-							array('clientCache' => (int) ($objPage->clientCache ?? 0), 'pageId' => ($objPage->id ?? null), 'request' => Environment::get('requestUri'))
+							array('clientCache' => $objPage->clientCache ?? 0, 'pageId' => $objPage->id ?? null, 'request' => Environment::get('requestUri'))
 						),
 						'esi',
 						array('ignore_errors'=>false) // see #48

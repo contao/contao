@@ -248,7 +248,7 @@ class BackendUser extends User
 		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = Date::floorToMinute();
 
-		foreach ((array) $this->groups as $id)
+		foreach ($this->groups as $id)
 		{
 			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')")
 									   ->limit(1)
@@ -438,7 +438,7 @@ class BackendUser extends User
 			return false;
 		}
 
-		if ((bool) $this->admin !== (bool) $user->admin)
+		if ($this->admin !== $user->admin)
 		{
 			return false;
 		}

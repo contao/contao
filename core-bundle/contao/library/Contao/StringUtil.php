@@ -1059,7 +1059,7 @@ class StringUtil
 			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
-		return (string) substr($path, $length + 1);
+		return substr($path, $length + 1);
 	}
 
 	/**

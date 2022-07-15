@@ -75,7 +75,7 @@ class ContentDownloads extends ContentDownload
 			{
 				if ($file == $this->objFiles->path || \dirname($file) == $this->objFiles->path)
 				{
-					Controller::sendFileToBrowser($file, (bool) $this->inline);
+					Controller::sendFileToBrowser($file, $this->inline);
 				}
 			}
 

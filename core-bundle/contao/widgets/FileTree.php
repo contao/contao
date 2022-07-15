@@ -365,22 +365,22 @@ class FileTree extends Widget
 
 		if ($this->files)
 		{
-			$extras['files'] = (bool) $this->files;
+			$extras['files'] = $this->files;
 		}
 
 		if ($this->filesOnly)
 		{
-			$extras['filesOnly'] = (bool) $this->filesOnly;
+			$extras['filesOnly'] = $this->filesOnly;
 		}
 
 		if ($this->path)
 		{
-			$extras['path'] = (string) $this->path;
+			$extras['path'] = $this->path;
 		}
 
 		if ($this->extensions)
 		{
-			$extras['extensions'] = (string) $this->extensions;
+			$extras['extensions'] = $this->extensions;
 		}
 
 		return $extras;

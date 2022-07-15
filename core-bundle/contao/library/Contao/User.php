@@ -434,7 +434,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		if ((bool) $this->disable !== (bool) $user->disable)
+		if ($this->disable !== $user->disable)
 		{
 			return false;
 		}

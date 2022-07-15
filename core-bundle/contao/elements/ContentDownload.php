@@ -65,7 +65,7 @@ class ContentDownload extends ContentElement
 		{
 			if ($file == $objFile->path)
 			{
-				Controller::sendFileToBrowser($file, (bool) $this->inline);
+				Controller::sendFileToBrowser($file, $this->inline);
 			}
 
 			if (Input::get('cid') !== null)
@@ -155,7 +155,7 @@ class ContentDownload extends ContentElement
 		$factory = $container->get('contao.image.preview_factory');
 		$sourcePath = $container->getParameter('kernel.project_dir') . '/' . $path;
 		$builder = $container->get('contao.image.studio')->createFigureBuilder()->setSize($this->size);
-		$numberOfItems = (int) $this->numberOfItems;
+		$numberOfItems = $this->numberOfItems;
 		$lightboxSize = null;
 
 		if ($this->fullsize)

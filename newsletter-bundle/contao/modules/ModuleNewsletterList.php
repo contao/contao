@@ -90,7 +90,7 @@ class ModuleNewsletterList extends Module
 					continue;
 				}
 
-				$jumpTo = (int) $objTarget->jumpTo;
+				$jumpTo = $objTarget->jumpTo;
 
 				// Skip channels without a jumpTo page (see #6521 and #494)
 				if ($jumpTo < 1)

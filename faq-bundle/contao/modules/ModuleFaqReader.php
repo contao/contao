@@ -131,7 +131,7 @@ class ModuleFaqReader extends Module
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
 				->setMetadata($objFaq->getOverwriteMetadata())
-				->enableLightbox((bool) $objFaq->fullsize)
+				->enableLightbox($objFaq->fullsize)
 				->buildIfResourceExists();
 
 			if (null !== $figure)

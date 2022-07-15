@@ -48,7 +48,7 @@ class Statement
 
 	/**
 	 * Query string
-	 * @var string
+	 * @var string|null
 	 */
 	protected $strQuery;
 

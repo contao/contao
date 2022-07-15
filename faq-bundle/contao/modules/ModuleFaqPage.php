@@ -102,7 +102,7 @@ class ModuleFaqPage extends Module
 					->setSize($objFaq->size)
 					->setMetadata($objFaq->getOverwriteMetadata())
 					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
-					->enableLightbox((bool) $objFaq->fullsize)
+					->enableLightbox($objFaq->fullsize)
 					->buildIfResourceExists();
 
 				if (null !== $figure)

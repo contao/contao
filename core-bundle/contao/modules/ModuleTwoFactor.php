@@ -80,7 +80,7 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
-		$this->Template->isEnabled = (bool) $user->useTwoFactor;
+		$this->Template->isEnabled = $user->useTwoFactor;
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 	}
 

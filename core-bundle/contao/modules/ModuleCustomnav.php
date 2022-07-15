@@ -85,7 +85,6 @@ class ModuleCustomnav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
