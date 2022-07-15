@@ -13,17 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @ContentElement("vimeo", category="media")
- * @ContentElement("youtube", category="media")
- *
  * @phpstan-type VideoSourceParameters array{
  *      provider: 'vimeo'|'youtube',
  *      video_id: string,
@@ -33,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
  *      url: string
  *  }
  */
+#[AsContentElement('vimeo', category: 'media')]
+#[AsContentElement('youtube', category: 'media')]
 class VideoController extends AbstractContentElementController
 {
     public function __construct(private readonly Studio $studio)

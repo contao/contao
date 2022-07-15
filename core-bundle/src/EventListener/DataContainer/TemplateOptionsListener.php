@@ -13,16 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @Callback(table="tl_content", target="fields.customTpl.options")
- * @Callback(table="tl_module", target="fields.customTpl.options")
- */
+#[AsCallback(table: 'tl_content', target: 'fields.customTpl.options')]
+#[AsCallback(table: 'tl_module', target: 'fields.customTpl.options')]
 class TemplateOptionsListener
 {
     private array $customTemplates = [];

@@ -11,7 +11,7 @@ use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(category: "<?= $category ?>")]
+#[AsFrontendModule(category: '<?= $category ?>')]
 class <?= $className ?> extends AbstractFrontendModuleController
 {
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response

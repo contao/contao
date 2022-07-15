@@ -13,20 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
- *
- * @Hook("loadDataContainer", priority=200)
  */
+#[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
     public function __construct(private readonly Security $security, private readonly Connection $connection)
