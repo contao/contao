@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,18 +28,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
         parent::tearDown();
-    }
-
-    public function testAnnotatedCallbacks(): void
-    {
-        $listener = $this->createListener();
-        $annotationReader = new AnnotationReader();
-
-        /** @var Callback $annotation */
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
-
-        $this->assertSame('tl_settings', $annotation->table);
-        $this->assertSame('config.onload', $annotation->target);
     }
 
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
