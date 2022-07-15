@@ -12,6 +12,13 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_calendar.listener.data_container.start_stop_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
+        arguments:
+            - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_calendar_events, target: config.onbeforesubmit }
+
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:

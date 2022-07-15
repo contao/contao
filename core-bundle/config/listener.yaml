@@ -158,6 +158,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.start_stop_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
