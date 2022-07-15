@@ -273,7 +273,7 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="ERR.startStop">
-        <source>The start time must not be after the stop time.</source>
+        <source>The end time must be later than the start time.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

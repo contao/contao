@@ -162,14 +162,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
             - '@translator'
-        tags:
-            - { name: contao.callback, table: tl_article, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_content, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_page, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_member, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_member_group, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_user, target: config.onbeforesubmit }
-            - { name: contao.callback, table: tl_user_group, target: config.onbeforesubmit }
 
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
