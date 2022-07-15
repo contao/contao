@@ -274,7 +274,7 @@ class PluginTest extends ContaoTestCase
         $collection = $plugin->getRouteCollection($resolver, $kernel);
         $routes = array_values($collection->all());
 
-        $this->assertCount(3, $routes);
+        $this->assertCount(2, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
     }

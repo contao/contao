@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        autoconfigure: true
-
-    contao_newsletter.migration.version_410.deny_list:
-        class: Contao\NewsletterBundle\Migration\Version410\DenyListMigration
-        arguments:
-            - '@database_connection'

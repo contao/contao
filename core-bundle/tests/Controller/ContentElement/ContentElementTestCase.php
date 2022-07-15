@@ -140,6 +140,7 @@ class ContentElementTestCase extends TestCase
 
         $controller->setFragmentOptions([
             'template' => $template ?? "content_element/{$modelData['type']}",
+            'type' => $modelData['type'],
         ]);
 
         $response = $controller(new Request(), $model, 'main');
@@ -198,7 +199,7 @@ class ContentElementTestCase extends TestCase
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
     {
-        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../src/Resources');
+        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
         $templateLocator = new TemplateLocator(
             '',

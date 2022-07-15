@@ -28,6 +28,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     {
     }
 
+    /**
+     * @param mixed $user
+     */
     public function addTrustedDevice($user, string $firewallName): void
     {
         if (!$user instanceof User) {
@@ -39,7 +42,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
@@ -54,13 +57,16 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
+    /**
+     * @param mixed $user
+     */
     public function isTrustedDevice($user, string $firewallName): bool
     {
         if (!($user instanceof User)) {
             return false;
         }
 
-        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
     }
 
     public function clearTrustedDevices(User $user): void
@@ -95,6 +101,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         ;
     }
 
+    /**
+     * @param mixed $user
+     */
     public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
     {
         return true;

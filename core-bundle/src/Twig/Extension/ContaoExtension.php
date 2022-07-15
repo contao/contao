@@ -66,7 +66,7 @@ final class ContaoExtension extends AbstractExtension
         // namespaces, as well as the existing bundle templates we're already
         // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
-        $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
+        $this->addContaoEscaperRule('%^@ContaoCore/%');
 
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);

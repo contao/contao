@@ -142,7 +142,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $this->assertSame(
             '[output 1][output 2][output 3][output 4][output 5][output 6][output 7]'.
-            'Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.'.PHP_EOL,
+            'Done! Please run the contao:migrate command to make sure the database is up-to-date.'.PHP_EOL,
             $commandTester->getDisplay()
         );
     }

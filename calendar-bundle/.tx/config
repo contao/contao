@@ -3,46 +3,46 @@ host = https://www.transifex.com
 type = XLIFF
 
 [calendar-bundle.v5_0-default]
-source_file = src/Resources/contao/languages/en/default.xlf
+source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
+file_filter = contao/languages/<lang>/default.xlf
 
 [calendar-bundle.v5_0-modules]
-source_file = src/Resources/contao/languages/en/modules.xlf
+source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
+file_filter = contao/languages/<lang>/modules.xlf
 
 [calendar-bundle.v5_0-tl_calendar]
-source_file = src/Resources/contao/languages/en/tl_calendar.xlf
+source_file = contao/languages/en/tl_calendar.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_calendar.xlf
+file_filter = contao/languages/<lang>/tl_calendar.xlf
 
 [calendar-bundle.v5_0-tl_calendar_events]
-source_file = src/Resources/contao/languages/en/tl_calendar_events.xlf
+source_file = contao/languages/en/tl_calendar_events.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_calendar_events.xlf
+file_filter = contao/languages/<lang>/tl_calendar_events.xlf
 
 [calendar-bundle.v5_0-tl_calendar_feed]
-source_file = src/Resources/contao/languages/en/tl_calendar_feed.xlf
+source_file = contao/languages/en/tl_calendar_feed.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_calendar_feed.xlf
+file_filter = contao/languages/<lang>/tl_calendar_feed.xlf
 
 [calendar-bundle.v5_0-tl_layout]
-source_file = src/Resources/contao/languages/en/tl_layout.xlf
+source_file = contao/languages/en/tl_layout.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_layout.xlf
+file_filter = contao/languages/<lang>/tl_layout.xlf
 
 [calendar-bundle.v5_0-tl_module]
-source_file = src/Resources/contao/languages/en/tl_module.xlf
+source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
+file_filter = contao/languages/<lang>/tl_module.xlf
 
 [calendar-bundle.v5_0-tl_user]
-source_file = src/Resources/contao/languages/en/tl_user.xlf
+source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
+file_filter = contao/languages/<lang>/tl_user.xlf
 
 [calendar-bundle.v5_0-tl_user_group]
-source_file = src/Resources/contao/languages/en/tl_user_group.xlf
+source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
+file_filter = contao/languages/<lang>/tl_user_group.xlf

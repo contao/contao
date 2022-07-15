@@ -351,7 +351,6 @@ class ContaoExtensionTest extends TestCase
         yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
         yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
         yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
-        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**
