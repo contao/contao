@@ -210,8 +210,6 @@ services:
             - '@request_stack'
             - ce_
             - Contao\ContentProxy
-        tags:
-            - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
@@ -338,8 +336,6 @@ services:
             - '@request_stack'
             - mod_
             - Contao\ModuleProxy
-        tags:
-            - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
