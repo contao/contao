@@ -193,8 +193,6 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $response = new Response();
-
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
         ];
