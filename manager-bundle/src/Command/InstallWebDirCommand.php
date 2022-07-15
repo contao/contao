@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,14 +23,12 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:install-web-dir',
+    description: 'Installs the files in the public directory.'
+)]
 class InstallWebDirCommand extends Command
 {
-    protected static $defaultName = 'contao:install-web-dir';
-    protected static $defaultDescription = 'Installs the files in the public directory.';
-
     private Filesystem|null $fs = null;
     private SymfonyStyle|null $io = null;
 
