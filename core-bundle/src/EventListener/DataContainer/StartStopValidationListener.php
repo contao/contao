@@ -33,8 +33,16 @@ class StartStopValidationListener
 
     public function __invoke(array $values, DataContainer $dc): array
     {
-        $start = (string) (\array_key_exists('start', $values) ? $values['start'] : $dc->activeRecord->start);
-        $stop = (string) (\array_key_exists('stop', $values) ? $values['stop'] : $dc->activeRecord->stop);
+        $hasStart = \array_key_exists('start', $values);
+        $hasStop = \array_key_exists('stop', $values);
+
+        // Both fields were not submitted, do not validate since the user cannot change it anyway
+        if (!$hasStart && !$hasStop) {
+            return $values;
+        }
+
+        $start = (string) ($hasStart ? $values['start'] : $dc->getCurrentRecord()['start']);
+        $stop = (string) ($hasStop ? $values['stop'] : $dc->getCurrentRecord()['stop']);
 
         if ('' !== $start && '' !== $stop && $stop < $start) {
             throw new \RuntimeException($this->translator->trans('ERR.startStop', [], 'contao_default'));
