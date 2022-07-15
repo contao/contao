@@ -280,7 +280,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return null;
 		}
 
-		$currentRecord = $this->getCurrentRecord($id, null, false);
+		$currentRecord = $this->getCurrentRecord($id);
 
 		if (!empty($currentRecord['pid']))
 		{
@@ -740,8 +740,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
-		// Load current record before calculating new position etc. in case the user does not have read access
-		$currentRecord = $this->getCurrentRecord();
+		try
+		{
+			// Load current record before calculating new position etc. in case the user does not have read access
+			$currentRecord = $this->getCurrentRecord();
+		}
+		catch (AccessDeniedException)
+		{
+			$currentRecord = null;
+		}
 
 		if ($currentRecord === null)
 		{
@@ -1398,7 +1405,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// ID is set (insert after the current record)
 			if ($this->intId)
 			{
-				$currentRecord = $this->getCurrentRecord(null, null, false);
+				try
+				{
+					$currentRecord = $this->getCurrentRecord();
+				}
+				catch (AccessDeniedException)
+				{
+					$currentRecord = null;
+				}
 
 				// Select current record
 				if (null !== $currentRecord)
@@ -1676,15 +1690,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($rows as $row)
 				{
-					$currentRecord = $this->getCurrentRecord($row['id'], $v, false);
-
-					if ($currentRecord === null)
-					{
-						continue;
-					}
-
 					try
 					{
+						$currentRecord = $this->getCurrentRecord($row['id'], $v);
+
+						if ($currentRecord === null)
+						{
+							continue;
+						}
+
 						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$v, new DeleteAction($v, $currentRecord));
 					}
 					catch (AccessDeniedException)
@@ -2311,15 +2325,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Walk through each record
 				foreach ($ids as $id)
 				{
-					$currentRecord = $this->getCurrentRecord($id, null, false);
-
-					if (null === $currentRecord)
-					{
-						continue;
-					}
-
 					try
 					{
+						$currentRecord = $this->getCurrentRecord($id);
+
+						if (null === $currentRecord)
+						{
+							continue;
+						}
+
 						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new UpdateAction($this->strTable, $currentRecord));
 					}
 					catch (AccessDeniedException)
@@ -2769,9 +2783,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					foreach ($ids as $id)
 					{
-						$currentRecord = $this->getCurrentRecord(null, null, false);
+						try
+						{
+							$currentRecord = $this->getCurrentRecord(null, null);
 
-						if ($currentRecord === null)
+							if ($currentRecord === null)
+							{
+								continue;
+							}
+						}
+						catch (AccessDeniedException)
 						{
 							continue;
 						}
@@ -3295,7 +3316,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$sValues = array();
 			$subpalettes = array();
 
-			$currentRow = $this->getCurrentRecord(null, null, false);
+			try
+			{
+				$currentRow = $this->getCurrentRecord();
+			}
+			catch (AccessDeniedException)
+			{
+				$currentRow = null;
+			}
 
 			// Get selector values from DB
 			if (null !== $currentRow)
@@ -3449,10 +3477,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($ids as $id)
 				{
-					// Get the current record
-					$currentRecord = $this->getCurrentRecord($id, null, false);
+					try
+					{
+						// Get the current record
+						$currentRecord = $this->getCurrentRecord($id);
 
-					if ($currentRecord === null)
+						if ($currentRecord === null)
+						{
+							continue;
+						}
+					}
+					catch (AccessDeniedException)
 					{
 						continue;
 					}
@@ -4005,7 +4040,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		$currentRecord = $this->getCurrentRecord($id, $table, false);
+		try
+		{
+			$currentRecord = $this->getCurrentRecord($id, $table);
+		}
+		catch (AccessDeniedException)
+		{
+			$currentRecord = null;
+		}
 
 		// Return if there is no result
 		if (null === $currentRecord)
