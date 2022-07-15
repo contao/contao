@@ -2803,7 +2803,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						try
 						{
-							$currentRecord = $this->getCurrentRecord(null, null);
+							$currentRecord = $this->getCurrentRecord();
 
 							if ($currentRecord === null)
 							{
@@ -3508,7 +3508,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->activeRecord = $origActiveRecord;
 
 					$objStmt = $this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
-						->execute((int) $intId);
+											  ->execute((int) $intId);
 
 					if ($objStmt->affectedRows > 0)
 					{
