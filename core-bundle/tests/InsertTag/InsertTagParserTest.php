@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\InsertTag;
 
 use Contao\Config;
+use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -24,6 +25,7 @@ use Monolog\Logger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class InsertTagParserTest extends TestCase
 {
@@ -90,5 +92,24 @@ class InsertTagParserTest extends TestCase
         $this->expectDeprecation('%sInsert tags with uppercase letters%s');
 
         $this->assertSame('<br>', $parser->render('bR'));
+    }
+
+    public function testReplaceFragment(): void
+    {
+        $handler = $this->createMock(FragmentHandler::class);
+        $handler
+            ->method('render')
+            ->willReturnCallback(static fn (ControllerReference $reference) => '<esi '.$reference->attributes['insertTag'].'>')
+        ;
+
+        System::getContainer()->set('fragment.handler', $handler);
+
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $this->assertSame('<esi {{fragment::{{br}}}}>', $parser->replace('{{fragment::{{br}}}}'));
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<esi {{fragment::{{br}}}}>']], iterator_to_array($parser->replaceChunked('{{fragment::{{br}}}}')));
+
+        $this->assertSame('<br>', $parser->replaceInline('{{fragment::{{br}}}}'));
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
     }
 }

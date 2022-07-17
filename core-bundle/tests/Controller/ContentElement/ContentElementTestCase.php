@@ -21,6 +21,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -41,6 +42,7 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
+use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -102,6 +104,7 @@ class ContentElementTestCase extends TestCase
         $container->set('contao.twig.filesystem_loader', $loader);
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $environment);
+        $container->set('contao.framework', $this->getDefaultFramework());
 
         $controller->setContainer($container);
         System::setContainer($container);
@@ -137,6 +140,7 @@ class ContentElementTestCase extends TestCase
 
         $controller->setFragmentOptions([
             'template' => $template ?? "content_element/{$modelData['type']}",
+            'type' => $modelData['type'],
         ]);
 
         $response = $controller(new Request(), $model, 'main');
@@ -195,7 +199,7 @@ class ContentElementTestCase extends TestCase
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
     {
-        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../src/Resources');
+        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
         $templateLocator = new TemplateLocator(
             '',
@@ -356,5 +360,33 @@ class ContentElementTestCase extends TestCase
         ;
 
         return $insertTagParser;
+    }
+
+    protected function getDefaultFramework(): ContaoFramework
+    {
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->method('get')
+            ->willReturnCallback(
+                static fn (string $key) => [
+                    'allowedTags' => '<a><b><i>',
+                    'allowedAttributes' => serialize([
+                        ['key' => '*', 'value' => 'data-*,id,class'],
+                        ['key' => 'a', 'value' => 'href,rel,target'],
+                    ]),
+                ][$key] ?? null
+            )
+        ;
+
+        $inputAdapter = $this->mockAdapter(['stripTags']);
+        $inputAdapter
+            ->method('stripTags')
+            ->willReturnArgument(0)
+        ;
+
+        return $this->mockContaoFramework([
+            Config::class => $configAdapter,
+            Input::class => $inputAdapter,
+        ]);
     }
 }

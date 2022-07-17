@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,13 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @internal
- */
+#[AsCommand(name: 'contao:backup:stream-content')]
 class BackupStreamContentCommand extends Command
 {
-    protected static $defaultName = 'contao:backup:stream-content';
-
     public function __construct(protected BackupManager $backupManager)
     {
         parent::__construct();

@@ -14,18 +14,17 @@ namespace Contao\ManagerBundle\Api\Command;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerPlugin\Api\ApiPluginInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'version',
+    description: 'Gets the Contao Manager API version and features.'
+)]
 class VersionCommand extends Command
 {
-    protected static $defaultName = 'version';
-    protected static $defaultDescription = 'Gets the Contao Manager API version and features.';
-
     public function __construct(private Application $application)
     {
         parent::__construct();

@@ -22,7 +22,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +34,6 @@ class MakeEventListener extends AbstractMaker
         private ClassGenerator $classGenerator,
         private SignatureGenerator $signatureGenerator,
         private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil,
     ) {
     }
 
@@ -100,7 +98,6 @@ class MakeEventListener extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
@@ -114,7 +111,7 @@ class MakeEventListener extends AbstractMaker
      */
     private function getAvailableEvents(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/events.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/events.yaml');
         $events = [];
 
         foreach ($yaml['events'] as $key => $config) {

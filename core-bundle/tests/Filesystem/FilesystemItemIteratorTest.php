@@ -170,6 +170,14 @@ class FilesystemItemIteratorTest extends TestCase
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
     }
 
+    public function testIterateMultipleTimesWithGenerator(): void
+    {
+        $iterator = new FilesystemItemIterator($this->generateItems());
+
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+    }
+
     /**
      * @param array<string>         $expected
      * @param array<FilesystemItem> $actual
@@ -177,5 +185,11 @@ class FilesystemItemIteratorTest extends TestCase
     private function assertSameItems(array $expected, array $actual): void
     {
         $this->assertSame($expected, array_map(static fn (FilesystemItem $item): string => $item->getPath(), $actual));
+    }
+
+    private function generateItems(): \Generator
+    {
+        yield new FilesystemItem(true, 'foo');
+        yield new FilesystemItem(true, 'bar');
     }
 }

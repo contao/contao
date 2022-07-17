@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Callback(table="tl_theme", target="fields.templates.save")
- */
+#[AsCallback(table: 'tl_theme', target: 'fields.templates.save')]
 class ThemeTemplatesListener
 {
     public function __construct(

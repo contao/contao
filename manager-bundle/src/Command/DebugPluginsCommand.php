@@ -24,6 +24,7 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,14 +35,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'debug:plugins',
+    description: 'Displays the Contao Manager plugin configurations.'
+)]
 class DebugPluginsCommand extends Command
 {
-    protected static $defaultName = 'debug:plugins';
-    protected static $defaultDescription = 'Displays the Contao Manager plugin configurations.';
-
     private SymfonyStyle|null $io = null;
 
     public function __construct(private ContaoKernel $kernel)

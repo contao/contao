@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
@@ -22,16 +23,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Synchronizes the file system with the database.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:filesync',
+    description: 'Synchronizes the registered DBAFS with the virtual filesystem.'
+)]
 class FilesyncCommand extends Command
 {
-    protected static $defaultName = 'contao:filesync';
-    protected static $defaultDescription = 'Synchronizes the registered DBAFS with the virtual filesystem.';
-
     public function __construct(private DbafsManager $dbafsManager)
     {
         parent::__construct();

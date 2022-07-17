@@ -28,18 +28,6 @@ parameters:
 
     ignoreErrors:
         -
-            # Ignore the forward compatible phpDoc comment of the Symfony token classes
-            message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
-
-        -
-            # Ignore unused properties in the deprecated LogoutHandler
-            message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
-
-        -
             # Ignore the unexpected type hint required for the tagged_locator
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
             path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
