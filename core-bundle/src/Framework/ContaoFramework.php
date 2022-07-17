@@ -99,7 +99,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var bool
      */
-    private $setLoginConstants = false;
+    private $setLoginConstantsOnInit = false;
 
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel)
     {
@@ -182,20 +182,17 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * Allows the login constants to be set during initialize.
-     *
-     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-     */
-    public function setLoginConstantsOnInit(bool $setLoginConstants = true): void
-    {
-        $this->setLoginConstants = $setLoginConstants;
-    }
-
-    /**
      * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
      */
     public function setLoginConstants(Request $request = null): void
     {
+        // If the framework has not been initialized yet, set the login constants on init (#4968)
+        if (!$this->isInitialized()) {
+            $this->setLoginConstantsOnInit = true;
+
+            return;
+        }
+
         if (null !== $request && $this->scopeMatcher->isFrontendRequest($request)) {
             \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
             \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
@@ -225,7 +222,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $request = $this->requestStack->getCurrentRequest();
 
         // Define the login status constants (see #4099, #5279)
-        if ($this->setLoginConstants || null === $request) {
+        if ($this->setLoginConstantsOnInit || null === $request) {
             $this->setLoginConstants($request);
         }
 

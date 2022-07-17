@@ -34,14 +34,6 @@ class LegacyLoginConstantsListener
 
     public function __invoke(RequestEvent $event): void
     {
-        // Set the legacy login constants if the legacy framework was initialized before.
-        // Otherwise allow the framework to set them itself during initialize.
-        if (!$this->framework->isInitialized()) {
-            $this->framework->setLoginConstantsOnInit(true);
-
-            return;
-        }
-
         $this->framework->setLoginConstants($event->getRequest());
     }
 }

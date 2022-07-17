@@ -264,9 +264,12 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
 
-        $framework = $this->mockFramework();
+        $framework = $this->mockFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->setLoginConstantsOnInit(true);
+
+        // Call setLoginConstants before initialize
+        $framework->setLoginConstants($request);
+
         $framework->initialize();
 
         $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
@@ -337,7 +340,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->mockFramework($request, null, $tokenChecker);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->setLoginConstantsOnInit(true);
+        $framework->setLoginConstants($request);
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
