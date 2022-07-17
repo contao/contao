@@ -168,7 +168,7 @@ class FormText extends Widget
 					return 'password';
 				}
 
-				// Use the HTML5 types (see #4138) but not the date, time and datetime types (see #5918)
+				// Use the HTML5 types (see #4138) but not the time and datetime types (see #5918)
 				switch ($this->rgxp)
 				{
 					case 'digit':
@@ -192,6 +192,7 @@ class FormText extends Widget
 					case HttpUrlListener::RGXP_NAME:
 						return 'url';
 
+					// We can use the HTML5 date type as the validation has been adjusted (see #4936)
 					case 'date':
 						return 'date';
 				}
@@ -257,7 +258,7 @@ class FormText extends Widget
 			// Check if date format matches the HTML5 standard
 			if (self::HTML5_DATE_FORMAT !== $targetFormat && preg_match('~^' . Date::getRegexp(self::HTML5_DATE_FORMAT) . '$~i', $varInput))
 			{
-				// Transform to defined date format
+				// Transform to defined date format (see #5918)
 				$date = \DateTimeImmutable::createFromFormat(self::HTML5_DATE_FORMAT, $varInput);
 				$varInput = $date->format($targetFormat);
 			}
