@@ -19,6 +19,7 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -272,6 +273,6 @@ class UserCreateCommand extends Command
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 
-        $this->connection->insert('tl_user', $data);
+        $this->connection->insert('tl_user', $data, ['admin' => Types::BOOLEAN, 'pwChange' => Types::BOOLEAN]);
     }
 }
