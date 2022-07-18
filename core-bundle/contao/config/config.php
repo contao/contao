@@ -31,7 +31,6 @@ use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
 use Contao\FilesModel;
 use Contao\FileTree;
-use Contao\Form;
 use Contao\FormCaptcha;
 use Contao\FormCheckbox;
 use Contao\FormExplanation;
