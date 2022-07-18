@@ -184,7 +184,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
      */
-    public function setLoginConstants(Request $request = null): void
+    public function setLoginConstants(): void
     {
         // If the framework has not been initialized yet, set the login constants on init (#4968)
         if (!$this->isInitialized()) {
@@ -193,7 +193,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        if (null !== $request && $this->scopeMatcher->isFrontendRequest($request)) {
+        if ('FE' === $this->getMode()) {
             \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
             \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
@@ -219,11 +219,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             \define('TL_SCRIPT', $this->getRoute());
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
         // Define the login status constants (see #4099, #5279)
-        if ($this->setLoginConstantsOnInit || null === $request) {
-            $this->setLoginConstants($request);
+        if ($this->setLoginConstantsOnInit || null === $this->requestStack->getCurrentRequest()) {
+            $this->setLoginConstants();
         }
 
         // Define the relative path to the installation (see #5339)

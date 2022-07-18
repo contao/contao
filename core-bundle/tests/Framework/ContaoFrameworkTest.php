@@ -268,7 +268,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         // Call setLoginConstants before initialize
-        $framework->setLoginConstants($request);
+        $framework->setLoginConstants();
 
         $framework->initialize();
 
@@ -340,8 +340,8 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->mockFramework($request, null, $tokenChecker);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->setLoginConstants($request);
         $framework->initialize();
+        $framework->setLoginConstants();
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_START'));

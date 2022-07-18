@@ -34,6 +34,6 @@ class LegacyLoginConstantsListener
 
     public function __invoke(RequestEvent $event): void
     {
-        $this->framework->setLoginConstants($event->getRequest());
+        $this->framework->setLoginConstants();
     }
 }
