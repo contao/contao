@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This helper class makes it easier to generate and handle streamed file
@@ -44,7 +42,7 @@ class FileDownloadHelper
     private const PARAM_DISPOSITION = 'd';
     private const PARAM_FILE_NAME = 'f';
 
-    public function __construct(private readonly RouterInterface $router, private readonly UriSigner $signer)
+    public function __construct(private readonly UriSigner $signer)
     {
     }
 
@@ -54,10 +52,10 @@ class FileDownloadHelper
      * You can optionally provide an array of $context, that will also be
      * incorporated into the URL.
      */
-    public function generateInlineUrl(string $route, string $path, array|null $context = null): string
+    public function generateInlineUrl(string $url, string $path, array|null $context = null): string
     {
         return $this->generate(
-            $route,
+            $url,
             [
                 self::PARAM_PATH => $path,
                 self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
@@ -71,7 +69,7 @@ class FileDownloadHelper
      * You can optionally provide an array of $context, that will also be
      * incorporated into the URL.
      */
-    public function generateDownloadUrl(string $route, string $path, string|null $fileName = null, array|null $context = null): string
+    public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
         if (null !== $fileName) {
             // We're calling makeDisposition() here to check if the file name is valid
@@ -79,7 +77,7 @@ class FileDownloadHelper
         }
 
         return $this->generate(
-            $route,
+            $url,
             [
                 self::PARAM_PATH => $path,
                 self::PARAM_DISPOSITION => HeaderUtils::DISPOSITION_ATTACHMENT,
@@ -132,11 +130,9 @@ class FileDownloadHelper
         return $response;
     }
 
-    private function generate(string $route, array $params): string
+    private function generate(string $url, array $params): string
     {
-        $uri = $this->router->generate($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        return $this->signer->sign($uri.'?'.http_build_query(array_filter($params)));
+        return $this->signer->sign($url.'?'.http_build_query(array_filter($params)));
     }
 
     private function getFile(Request $request, VirtualFilesystemInterface $storage): FilesystemItem|null

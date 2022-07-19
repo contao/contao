@@ -167,12 +167,12 @@ class DownloadsController extends AbstractContentElementController
         // Todo: Use an exclusive route once we have a strategy how to handle
         //       permissions for it. Right now we use the current route and
         //       then throw a ResponseException to initiate the download.
-        $currentRoute = $request->attributes->get('_route');
+        $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
         $context = ['id' => $model->id];
 
         return $inline
-            ? $this->fileDownloadHelper->generateInlineUrl($currentRoute, $path, $context)
-            : $this->fileDownloadHelper->generateDownloadUrl($currentRoute, $path, $filesystemItem->getName(), $context);
+            ? $this->fileDownloadHelper->generateInlineUrl($currentUrl, $path, $context)
+            : $this->fileDownloadHelper->generateDownloadUrl($currentUrl, $path, $filesystemItem->getName(), $context);
     }
 
     /**

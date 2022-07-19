@@ -24,8 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 class FileDownloadHelperTest extends TestCase
 {
@@ -35,7 +33,7 @@ class FileDownloadHelperTest extends TestCase
     public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
-        $url = $helper->generateInlineUrl('my_route', 'my_file.txt', $context);
+        $url = $helper->generateInlineUrl('https://example.com/', 'my_file.txt', $context);
 
         $this->assertSame($expectedUrl, $url);
 
@@ -75,7 +73,7 @@ class FileDownloadHelperTest extends TestCase
     public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
-        $url = $helper->generateDownloadUrl('my_route', 'my_file.txt', $fileName, $context);
+        $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.txt', $fileName, $context);
 
         $this->assertSame($expectedUrl, $url);
 
@@ -144,15 +142,6 @@ class FileDownloadHelperTest extends TestCase
 
     private function getFileDownloadHelper(): FileDownloadHelper
     {
-        $uriSigner = new UriSigner('secret');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('my_route', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://example.com/')
-        ;
-
-        return new FileDownloadHelper($router, $uriSigner);
+        return new FileDownloadHelper(new UriSigner('secret'));
     }
 }

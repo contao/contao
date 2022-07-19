@@ -207,7 +207,6 @@ services:
     contao.filesystem.file_download_helper:
         class: Contao\CoreBundle\Filesystem\FileDownloadHelper
         arguments:
-            - '@router'
             - '@uri_signer'
 
     contao.filesystem.mount_manager:
