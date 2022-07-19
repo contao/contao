@@ -94,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
-		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},feed_urls,numberOfItems,perPage,skipFirst,feed_cache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},feedUrls,numberOfItems,perPage,skipFirst,feedCache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),
@@ -405,7 +405,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'explanation'             => 'insertTags',
 			'sql'                     => "mediumtext NULL"
 		),
-		'feed_cache' => array
+		'feedCache' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400),
@@ -413,7 +413,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
 			'sql'                     => "int(10) unsigned NOT NULL default 3600"
 		),
-		'feed_urls' => array
+		'feedUrls' => array
 		(
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'style'=>'height:60px'),

@@ -32,13 +32,13 @@ class RssToFeedReaderMigration extends AbstractMigration
         }
 
         return \array_key_exists('rss_feed', $columns) && \array_key_exists('rss_cache', $columns)
-            && !\array_key_exists('feed_urls', $columns) && !\array_key_exists('feed_cache', $columns);
+            && !\array_key_exists('feedUrls', $columns) && !\array_key_exists('feedCache', $columns);
     }
 
     public function run(): MigrationResult
     {
-        $this->renameField('rss_feed', 'feed_urls', 'text NULL');
-        $this->renameField('rss_cache', 'feed_cache', 'int(10) unsigned NOT NULL default 3600');
+        $this->renameField('rss_feed', 'feedUrls', 'text NULL');
+        $this->renameField('rss_cache', 'feedCache', 'int(10) unsigned NOT NULL default 3600');
 
         $this->connection->update('tl_module', ['type' => 'feed_reader'], ['type' => 'rssReader']);
 
