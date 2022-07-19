@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
@@ -34,7 +35,7 @@ use Contao\StringUtil;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -43,8 +44,6 @@ use Symfony\Component\Security\Core\Security;
  */
 class DownloadsController extends AbstractContentElementController
 {
-    private const DOWNLOAD_ROUTE_NAME = 'contao_download';
-
     public function __construct(
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
@@ -56,34 +55,13 @@ class DownloadsController extends AbstractContentElementController
     ) {
     }
 
-    /**
-     * This endpoint allows to stream files via PHP. This is for instance
-     * needed if a file has no public URI.
-     */
-    #[Route('/_download', name: self::DOWNLOAD_ROUTE_NAME)]
-    public function downloadAction(Request $request): Response
-    {
-        $this->initializeContaoFramework();
-
-        return $this->fileDownloadHelper->handle(
-            $request,
-            $this->filesStorage,
-            function (FilesystemItem $item, array $context): Response|null {
-                // TODO: What's needed here in terms of permissions?
-                if (
-                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
-                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
-                ) {
-                    return new Response('The resource can not be accessed.', Response::HTTP_FORBIDDEN);
-                }
-
-                return null;
-            }
-        );
-    }
-
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        // Todo: Remove method and move logic into its own action, once we have
+        //       a strategy how to handle permissions for downloads via a real
+        //       route. See #4862 for more details.
+        $this->handleDownload($request);
+
         $filesystemItems = $this->getFilesystemItems($model);
 
         // Sort elements; relay to client-side logic if list should be randomized
@@ -107,7 +85,7 @@ class DownloadsController extends AbstractContentElementController
 
         $downloads = array_map(
             fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model),
+                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
                 'file' => $filesystemItem,
                 'show_file_previews' => $showPreviews,
                 'file_previews' => $this->getPreviews($filesystemItem, $model),
@@ -176,7 +154,7 @@ class DownloadsController extends AbstractContentElementController
      * have a public URI, a URL pointing to this controller's download action
      * will be generated, otherwise the direct download URL will be returned.
      */
-    private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model): string
+    private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
         $path = $filesystemItem->getPath();
         $inline = $model->inline;
@@ -185,11 +163,15 @@ class DownloadsController extends AbstractContentElementController
             return (string) $publicUri;
         }
 
+        // Todo: Use an exclusive route once we have a strategy how to handle
+        //       permissions for it. Right now we use the current route and
+        //       then throw a ResponseException to initiate the download.
+        $currentRoute = $request->attributes->get('_route');
         $context = ['id' => $model->id];
 
         return $inline
-            ? $this->fileDownloadHelper->generateInlineUrl(self::DOWNLOAD_ROUTE_NAME, $path, $context)
-            : $this->fileDownloadHelper->generateDownloadUrl(self::DOWNLOAD_ROUTE_NAME, $path, $filesystemItem->getName(), $context);
+            ? $this->fileDownloadHelper->generateInlineUrl($currentRoute, $path, $context)
+            : $this->fileDownloadHelper->generateDownloadUrl($currentRoute, $path, $filesystemItem->getName(), $context);
     }
 
     /**
@@ -238,6 +220,28 @@ class DownloadsController extends AbstractContentElementController
             }
         } catch (UnableToGeneratePreviewException|MissingPreviewProviderException) {
             // ignore
+        }
+    }
+
+    private function handleDownload(Request $request): void
+    {
+        $response = $this->fileDownloadHelper->handle(
+            $request,
+            $this->filesStorage,
+            function (FilesystemItem $item, array $context): Response|null {
+                if (
+                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
+                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
+                ) {
+                    return new Response('The resource can not be accessed.', Response::HTTP_FORBIDDEN);
+                }
+
+                return null;
+            }
+        );
+
+        if ($response instanceof StreamedResponse) {
+            throw new ResponseException($response);
         }
     }
 }

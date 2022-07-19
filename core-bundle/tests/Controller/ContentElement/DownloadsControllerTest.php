@@ -31,6 +31,7 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'numberOfItems' => '0',
                 'showPreview' => '',
                 'overwriteLink' => '',
+                'inline' => '',
             ],
         );
 
@@ -56,6 +57,7 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'overwriteLink' => '1',
                 'linkTitle' => 'Download the file',
                 'titleText' => 'The file',
+                'inline' => '',
             ],
         );
 
