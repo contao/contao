@@ -31,7 +31,7 @@ class PageListener
      */
     public function onLoad(DataContainer $dc): void
     {
-        $type = $dc->getCurrentRecord()['type'];
+        $type = $dc->getCurrentRecord()['type'] ?? null;
 
         if (!$type || NewsFeedController::TYPE !== $type[0]) {
             return;

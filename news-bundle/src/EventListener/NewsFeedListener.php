@@ -182,6 +182,10 @@ class NewsFeedListener
         while ($files->next()) {
             $file = new File($files->path);
 
+            if (!$file->exists()) {
+                continue;
+            }
+
             $fileUrl = $baseUrl.'/'.$file->path;
             $fileSize = $file->filesize;
 
