@@ -35,7 +35,7 @@ class FeedMigration extends AbstractMigration
     public function run(): MigrationResult
     {
         $schemaManager = $this->connection->createSchemaManager();
-        $columns = array_values($schemaManager->listTableColumns('tl_page'));
+        $columns = array_keys($schemaManager->listTableColumns('tl_page'));
 
         $newFields = [
             'newsArchives' => 'blob NULL',
@@ -47,7 +47,7 @@ class FeedMigration extends AbstractMigration
         ];
 
         foreach ($newFields as $field => $definition) {
-            if (\array_key_exists($field, $columns)) {
+            if (\in_array(strtolower($field), $columns)) {
                 continue;
             }
 
