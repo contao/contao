@@ -25,11 +25,12 @@ class RssToFeedReaderMigration extends AbstractMigration
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
-        $columns = $schemaManager->listTableColumns('tl_module');
 
-        if (!$schemaManager->tablesExist(['tl_news_feed'])) {
+        if (!$schemaManager->tablesExist(['tl_module'])) {
             return false;
         }
+
+        $columns = $schemaManager->listTableColumns('tl_module');
 
         return \array_key_exists('rss_feed', $columns) && \array_key_exists('rss_cache', $columns)
             && !\array_key_exists('feedUrls', $columns) && !\array_key_exists('feedCache', $columns);
