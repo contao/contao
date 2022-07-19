@@ -204,7 +204,7 @@ class FeedReaderControllerTest extends TestCase
         $requestStack->push($request);
 
         $assertTwigContext = function (array $context) {
-            $this->assertCount(1, $context['items']);
+            $this->assertCount(1, $context['elements']);
             $this->assertNotEmpty($context['pagination']);
 
             return true;
