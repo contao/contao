@@ -34,6 +34,8 @@ use Symfony\Component\Routing\RouterInterface;
  *     well as the file's existence in the storage are already verified for
  *     you - if you want to add additional checks, there is a closure you can
  *     hook into.
+ *
+ * @internal
  */
 class FileDownloadHelper
 {
