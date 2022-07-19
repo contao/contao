@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
+use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
 use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
@@ -157,9 +158,9 @@ class DownloadsController extends AbstractContentElementController
     private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
         $path = $filesystemItem->getPath();
-        $inline = $model->inline;
+        $inline = (bool) $model->inline;
 
-        if (!$inline && null !== ($publicUri = $this->filesStorage->generatePublicUri($path))) {
+        if (null !== ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline)))) {
             return (string) $publicUri;
         }
 
