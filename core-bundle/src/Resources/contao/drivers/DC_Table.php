@@ -5004,7 +5004,7 @@ class DC_Table extends DataContainer implements \listable, \editable
     ';
 
 				$colspan = 1;
-				$label = ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $label;
+				$label = $blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : $label;
 
 				// Call the label_callback ($row, $label, $this)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
