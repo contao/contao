@@ -1,0 +1,110 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="XPL.insertTags.0.0">
+        <source>Rich text editor</source>
+        <target>Zengin metin düzenleyici</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.0.1">
+        <source>For more information on TinyMCE, please visit &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
+        <target>TinyMCE hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.1.0">
+        <source>Insert tags</source>
+        <target>Eklenebilecek kod imleri</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.1.1">
+        <source>For more information on insert tags, please visit &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <target>Eklenebilecek kod imleri hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.2.0">
+        <source>Code editor</source>
+        <target>Kod düzenleyici</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.2.1">
+        <source>For more information on Ace, please visit &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
+        <target>Ace hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.0.0">
+        <source>colspan</source>
+        <target>colspan</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.0.1">
+        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>Contao, PHP date() işleviyle işlenebilen tüm tarih ve saat biçimlerini destekler. Ancak, herhangi bir kaydın bir UNIX zaman damgasına dönüştürülebilmesini sağlamak için, yönetim bölümünde yalnızca sayısal tarih ve saat biçimlerini (j, d, m, n, y, Y, g, G, h, H, i, s) kullanabilirsiniz..&lt;br&gt;&lt;br&gt;&lt;strong&gt;Web sitesinin kök sayfalarında farklı ön yüz biçimleri yazabilirsiniz.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Bazı geçerli tarih ve saat biçimi örnekleri şu şekildedir&lt;/em&gt;:</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.1.0">
+        <source>Y-m-d</source>
+        <target>Y-m-d</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.1.1">
+        <source>YYYY-MM-DD, international ISO-8601, e.g. 2005-01-28</source>
+        <target>YYYY-MM-DD, uluslararası ISO-8601, 2005-01-28 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.2.0">
+        <source>m/d/Y</source>
+        <target>m/d/Y</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.2.1">
+        <source>MM/DD/YYYY, English format, e.g. 01/28/2005</source>
+        <target>MM/DD/YYYY, İngiliz biçimi,  01/28/2005 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.3.0">
+        <source>d.m.Y</source>
+        <target>d.m.Y</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.3.1">
+        <source>DD.MM.YYYY, German format, e.g. 28.01.2005</source>
+        <target>DD.MM.YYYY, Alman biçimi, 28.01.2005 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.4.0">
+        <source>y-n-j</source>
+        <target>y-n-j</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.4.1">
+        <source>YY-M-D, without leading zeros, e.g. 05-1-28</source>
+        <target>YY-M-D, baştaki sıfırlar olmadan, 05-1-28 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.5.0">
+        <source>Ymd</source>
+        <target>Ymd</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.5.1">
+        <source>YYYYMMDD, timestamp, e.g. 20050128</source>
+        <target>YYYYMMDD, zaman damgası, 20050128 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.6.0">
+        <source>H:i:s</source>
+        <target>H:i:s</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.6.1">
+        <source>24 hours, minutes and seconds, e.g. 20:36:59</source>
+        <target>24 saat, dakika ve saniye, 20:36:59 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.7.0">
+        <source>g:i</source>
+        <target>g:i</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.7.1">
+        <source>12 hours without leading zeros and minutes, e.g. 8:36</source>
+        <target>12 saat, baştaki sıfırlar olmadan ve dakika, 8:36 gibi</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.0.0">
+        <source>Sizes attribute</source>
+        <target>Sizes özniteliği</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.0.1">
+        <source>The HTML attribute &lt;code&gt;sizes&lt;/code&gt; defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.&lt;br&gt;&lt;br&gt;E.g. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.&lt;br&gt;&lt;br&gt;And &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.&lt;br&gt;&lt;br&gt;The sizes attribute shouldn’t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.&lt;br&gt;&lt;br&gt;For more information about the sizes attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>HTML &lt;code&gt;sizes&lt;/code&gt; özniteliği , isteğe bağlı olarak bir ortam sorgusu ile birlikte görselin amaçlanan düzen genişliğini belirler. Bu öznitelikte herhangi bir CSS uzunluk değeri kullanabilirsiniz.&lt;br&gt;&lt;br&gt;Örneğin, &lt;code&gt;(max-width: 600px) 100vw, 50vwi&lt;/code&gt;, görsel genişliğinin, küçük ekranlar için görünümün %100 oranında ve daha büyük ekranlar için görünümün %50 oranında olacağı anlamına gelir.&lt;br&gt;&lt;br&gt;Ve &lt;code&gt;(max-width: 600px) calc(100vw - 20px) ), 500px&lt;/code&gt;, görsel genişliğinin, küçük ekranlar için görünüm alanından 20 piksel ve daha büyük ekranlar için 500 piksel daha küçük olacağı anlamına gelir.&lt;br&gt;&lt;br&gt;Sizes özniteliği biçem için kullanılmamalıdır. Bunun yerine CSS kullanın. Sizes özniteliğinin CSS içinde belirtildiği gibi gerçek görsel genişliğiyle tam olarak eşleşmesi gerekmez.&lt;br&gt;&lt;br&gt;Sizes özniteliği hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.1.0">
+        <source>Pixel densities/&lt;br&gt;scale factors</source>
+        <target>Piksel yoğunlukları/&lt;br&gt;ölçek faktörleri</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.1.1">
+        <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>Sizes özniteliği tanımlanmamışsa, bu ayar basitçe desteklemek istediğiniz piksel yoğunluklarını belirler. Görsellerin boyutları otomatik olarak ayarlanır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Sizes özniteliği tanımlanmışsa, aynı görsel boyutları oluşturulur ancak srcset özniteliği için genişlik tanımlayıcıları kullanılır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; yoğunluklarına sahip 200 piksel genişliğinde bir görsel şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;srcset özniteliği hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

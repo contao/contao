@@ -1,0 +1,186 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_comments.php" source-language="en" target-language="sq">
+    <body>
+      <trans-unit id="tl_comments.source.0">
+        <source>Origin</source>
+        <target>Origjina</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.source.1">
+        <source>The associated table.</source>
+        <target>Tabela e lidhur.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.parent.0">
+        <source>Parent ID</source>
+        <target>Prind ID</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.parent.1">
+        <source>The associated record.</source>
+        <target>Rreshti i lidhur.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.date.0">
+        <source>Date</source>
+        <target>Data</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.date.1">
+        <source>Please enter the comment date.</source>
+        <target>Epeni datën e komentit.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.name.0">
+        <source>Author</source>
+        <target>Autori</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.name.1">
+        <source>Please enter the author's name.</source>
+        <target>Epeni emrin e vërtetë të autorit.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.email.0">
+        <source>E-mail address</source>
+        <target>Adresa elektronike</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.email.1">
+        <source>The e-mail address will not be published.</source>
+        <target>Epeni adresën elektronike të autorit (nuk publikohet).</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.website.0">
+        <source>Website</source>
+        <target>Uebfaqe</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.website.1">
+        <source>Here you can enter a website address.</source>
+        <target>Epeni adresën e një ueb-faqe.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Anëtar</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Këtu mund të lidheni komentin me një anëtar.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.comment.0">
+        <source>Comment</source>
+        <target>Komenti</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.comment.1">
+        <source>Please enter the comment.</source>
+        <target>Epeni komentin.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.addReply.0">
+        <source>Add a reply</source>
+        <target>Përgjigje</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.addReply.1">
+        <source>Here you can reply to the comment.</source>
+        <target>Këtu mund të përgjigjeni</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.author.0">
+        <source>Author</source>
+        <target>Autori</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.author.1">
+        <source>Here you can change the author of the reply.</source>
+        <target>Këtu mund të ndryshoni autorin e përgjigjes</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.reply.0">
+        <source>Reply</source>
+        <target>Përgjigje</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.reply.1">
+        <source>Here you can enter the reply.</source>
+        <target>Këtu mund të epeni përgjigje.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.published.0">
+        <source>Publish comment</source>
+        <target>Publikuar</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.published.1">
+        <source>Make the comment publicly visible on the website.</source>
+        <target>Vetëm komentet e publikuar paraqiten në ueb-faqe.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.ip.0">
+        <source>IP address</source>
+        <target>IP adresa</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.ip.1">
+        <source>The IP address of the author.</source>
+        <target>IP adresa e autorit</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notified.0">
+        <source>Notified (comment)</source>
+        <target>Njoftim (koment)</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notified.1">
+        <source>The notification of this comment has been sent.</source>
+        <target>Njoftimi për këtë komentar është dërguar.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+        <target>Njoftim (përgjigje)</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
+        <target>Njoftimi i përgjigjes ndaj këtij komenti është dërguar.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.author_legend">
+        <source>Author</source>
+        <target>Autori</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.comment_legend">
+        <source>Comment</source>
+        <target>Komenti</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.reply_legend">
+        <source>Reply</source>
+        <target>Përgjigje</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.publish_legend">
+        <source>Publish settings</source>
+        <target>Publiko cilësit</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.approved">
+        <source>Approved</source>
+        <target>Miratuar</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.pending">
+        <source>Awaiting moderation</source>
+        <target>Pres miratimin</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tl_content">
+        <source>Article</source>
+        <target>ID-ja artikullit</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tl_page">
+        <source>Page</source>
+        <target>Faqe</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tl_news">
+        <source>News item</source>
+        <target>Artikulli</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tl_faq">
+        <source>FAQ</source>
+        <target>FAQ</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tl_calendar_events">
+        <source>Event</source>
+        <target>Ngjarje</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.show">
+        <source>Show the details of comment ID %s</source>
+        <target>Trego detajet e komentit ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.edit">
+        <source>Edit comment ID %s</source>
+        <target>Përpuno komentin ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.delete">
+        <source>Delete comment ID %s</source>
+        <target>Shlyej komentin ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle">
+        <source>Publish/unpublish comment ID %s</source>
+        <target>Publiko/ç'publiko komentin ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

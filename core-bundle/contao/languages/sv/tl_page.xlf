@@ -1,0 +1,713 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_page.title.0">
+        <source>Page name</source>
+        <target>Sidnamn</target>
+      </trans-unit>
+      <trans-unit id="tl_page.title.1">
+        <source>Please enter the page name.</source>
+        <target>Sidans namn så som den visas i navigeringen, ska inte innehålla fler än 65 tecken.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Sidtyp</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Ange en sidtyp beroende på sidans ändamål.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.0">
+        <source>Page alias</source>
+        <target>Sidalias</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.1">
+        <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
+        <target>Sidalias är ett unik referensnamn som kan användas istället för sidans numeriska ID-nummer när man refererar till sidan.&lt;br /&gt;Detta är speciellt användbart om Contao använder statiska URLer.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Kräva ett objekt</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Utlösa ett 404-fel om sidans URL inte innehåller ett objektalias.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Ruttväg</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>En förhandsvisning av den slutliga sökvägen (eventuellt med platshållare) för att matcha den här sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>Ruttens prioritet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Alternativt konfigurera prioriteten för att påverka ordningen på rutter. Standard: 0</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.0">
+        <source>Page title</source>
+        <target>Sidtitel</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.1">
+        <source>Please enter the page title.</source>
+        <target>Sidans titel syns t.ex. i webbsidans TITEL-tagg och i sökresultatet. Den ska inte innehålla mer än 65 tecken. &lt;br /&gt;Om du lämnar detta fält tomt kommer sidnamnet att användas i stället.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.0">
+        <source>Language</source>
+        <target>Språk</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.1">
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
+        <target>Ange sidans språk enligt ISO-639-standarden (t.ex. &quot;en&quot; för engelska eller &quot;en_US&quot; för amerikansk engelska).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.0">
+        <source>Robots tag</source>
+        <target>Robot-tag</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.1">
+        <source>Here you can define how search engines handle the page.</source>
+        <target>Här kan du specificera hur sökmotorer ska hantera sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Underhållsläge</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Visa besökare en sida som den här webbplatsen för närvarande underhålls.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.0">
+        <source>Page description</source>
+        <target>Sidbeskrivning</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.1">
+        <source>Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.</source>
+        <target>Du kan ange en kort beskrivning av sidan som kommer att visas av sökmotorerna. &lt;br /&gt;En sökmotor indexerar vanligtvis mellan 150 och 300 tecken.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.0">
+        <source>Redirect type</source>
+        <target>Omdirigeringstyp</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.1">
+        <source>Please choose the redirect type.</source>
+        <target>Tillfälliga omdirigeringar kommer skicka ett HTTP 302-huvud, permanenta ett HTTP 301-huvud.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Omdirigera till</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
+        <target>Välj den sida som besökare kommer att omdirigeras till. Lämna tomt för att omdirigera till den första ordinarie undersidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Omdirigera till senaste besökta sidan</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Omdiriger medlemmen tillbaka till den senast besökta sidan istället för omdirigeringssidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.0">
+        <source>Language fallback</source>
+        <target>Språkreträtt</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.1">
+        <source>Show this page if there is none that matches the visitor's language.</source>
+        <target>Contao kommer automatiskt att omdirigera en användare till en rotsida på dennes språk eller till språkreträtt-sidan. Om det inte finns någon språkreträtt-sida kommer ett felmeddelande - &lt;em&gt;Ingen sida funnen&lt;/em&gt; - att visas.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>Inaktivera omdirigering av språk</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Omdirigera inte besökare till denna webbplats rot baserat på deras föredragna webbläsarspråk.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+        <target>Favicon</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+        <target>Här kan du välja ett favicon för webbplatsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+        <target>Anpassat robots.txt-innehåll</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Här kan du ange anpassat robots.txt-innehåll. Det kan utvidgas automatiskt med tillägg.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.0">
+        <source>Domain name</source>
+        <target>Domännamn</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.1">
+        <source>Here you can restrict the access to the website to a certain domain name.</source>
+        <target>Om du tilldelar ett domännamn tilll en hemsidas rotsida kommer besökarna att omdirigeras till denna hemsida när de anger dess domännamn (t.ex.. &lt;em&gt;minsida.se&lt;/em&gt; eller &lt;em&gt;subdomän.minsida.se&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>Fil-URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>Fil-URL appliceras på &lt;em&gt;tl_files&lt;/em&gt;-mappen och alla bilders tumnaglar (optimering av sidladdningshastighet).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>Plugin-URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>Plugin-URL appliceras på alla resurser i &lt;em&gt;plugins&lt;/em&gt;-mappen (optimering av sidladdningshastighet).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Posttransport</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Här kan du åsidosätta posttransporten som används för att skicka e-post på denna webbplats.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Gör det möjligt rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Lägg till rel=&quot;canonical&quot;-taggar på webbplatsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>Anpassad URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Här kan du ställa in en anpassad kanonisk URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Query parametrar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Som standard tar Contao bort query-parametrarna i den kanoniska URL:en. Här kan du lägga till en kommaseparerad lista med query-parametrar att bevara. Använd &quot;*&quot; som jokertecken.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.0">
+        <source>E-mail address of the website administrator</source>
+        <target>E-postadress till hemsidans administratör</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.1">
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Denna e-postadress kommer att användas för att skicka och ta emot systemmeddelanden.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.0">
+        <source>Date format</source>
+        <target>Datumformat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>Ange ett datumformat så som det används av PHP-funktionen date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.0">
+        <source>Time format</source>
+        <target>Tidsformat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>Ange ett tidsformat så som det används av PHP-funktionen date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Datum- och tidsformat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>Ange ett datum- och tidsformat så som det används av PHP-funktionen date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Giltiga alias-tecken</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Här kan du välja en anpassad teckenuppsättning för autogenererade alias.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Aktivera folder-URL:er</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Skapa sidalias för mappstil som &lt;em&gt;docs/install/download.html&lt;/em&gt; istället för &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+        <target>URL-prefix</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+        <target>URL suffix</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>URL-suffixet läggs till i URI-strängen för att simulera statiska dokument.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.0">
+        <source>Protocol</source>
+        <target>Protokoll</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.1">
+        <source>Here you can select which protocol to use for the website.</source>
+        <target>Här kan du välja vilket protokoll som ska användas för webbplatsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.0">
+        <source>Forward to another page</source>
+        <target>Omdirigering till en annan sida</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.1">
+        <source>Redirect visitors to another page (e.g. a login page).</source>
+        <target>Om du väljer detta alternativ kommer besökaren att omdirigeras till en annan sida (t.ex. en loginsida eller en välkomstsida).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.0">
+        <source>Protect page</source>
+        <target>Skydda sidan</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.1">
+        <source>Restrict page access to certain member groups.</source>
+        <target>Om du anger detta val kan du styra så att bara vissa medlemsgrupper har åtkomst till sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.0">
+        <source>Allowed member groups</source>
+        <target>Tillåtna medlemsgrupper</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.1">
+        <source>These groups will be able to access the page.</source>
+        <target>Här kan du tilldela åtkomst till en eller flera medlemsgrupper. Om du inte anger någon grupp kommer alla som loggar in i frontend att ha åtkomst till denna sida.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.0">
+        <source>Assign a layout</source>
+        <target>Tilldela en layout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.1">
+        <source>Assign a page layout to the page and its subpages.</source>
+        <target>Som standard använder en sida samma layout som dess föräldrasida. &lt;br /&gt;Om du väljer detta val kan du tilldela en ny layout till den aktuella sidan och dess undersidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.0">
+        <source>Page layout</source>
+        <target>Sidlayout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.1">
+        <source>You can manage page layouts with the &quot;themes&quot; module.</source>
+        <target>Du kan hantera sidlayouter med modulen &quot;Teman&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+        <target>Undersida layout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+        <target>Här kan du välja en annan layout för undersidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.0">
+        <source>Set cache timeouts</source>
+        <target>Ställ in cache-timeouts</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.1">
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Ställ in cache-timeoutvärden för sidan och dess undersidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.0">
+        <source>Shared cache timeout</source>
+        <target>Delad cache-timeout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.1">
+        <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+        <target>Perioden efter vilken sidan inte längre ska betraktas som ny av en delad cache.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.0">
+        <source>Always load from shared cache</source>
+        <target>Ladda alltid från delad cache</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.1">
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>Ladda alltid den här sidan från den delade cachen, även om en medlem är inloggad. Observera att du inte längre kan anpassa sidan för inloggade medlemmar i det här fallet!</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Private cache timeout</source>
+        <target>Privat cache-timeout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>Perioden efter vilken sidan inte längre ska betraktas som ny av en privat cache.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.0">
+        <source>Assign access rights</source>
+        <target>Tilldela behörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.1">
+        <source>Access rights determine what back end users can do with the page.</source>
+        <target>Med behörigheter kan du definiera till vilken gräns en backend-användare kan ändra i en sida och sina artiklar. &lt;br /&gt;Om du inte väljer detta alernativ kommer sidan att ha samma behörigheter som sin förälder.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.0">
+        <source>Owner</source>
+        <target>Ägare</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.1">
+        <source>Please select a user as the owner of the page.</source>
+        <target>Ange en användare som ägare av denna sida.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.0">
+        <source>Group</source>
+        <target>Grupp</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.1">
+        <source>Please select a user group as the owner of the page.</source>
+        <target>Välj en användargrupp som ägare till sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.0">
+        <source>Access rights</source>
+        <target>Användarbehörighet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.1">
+        <source>Please assign the access rights for the page and its subpages.</source>
+        <target>Varje sida har tre behörighetsnivåer: en för Användare, en för Användargrupp och en för Alla. Du kan tilldela olika behörigheter till var och en av dessa nivåer.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.0">
+        <source>Do not search</source>
+        <target>Sök inte på denna sida</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.1">
+        <source>Exclude the page from the search index.</source>
+        <target>Om du väljer detta alternativ kommer denna sida att uteslutas från sökoperationer på hemsidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.0">
+        <source>CSS class</source>
+        <target>Stilmallsklass</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.1">
+        <source>The class(es) will be used in the navigation menu and the &amp;lt;body&amp;gt; tag.</source>
+        <target>Klasser(na) kommer att användas i navigationsmenyn och i &amp;lt;body&amp;gt;-tagg.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.0">
+        <source>Show in HTML sitemap</source>
+        <target>Visa i HTML-webbplatskarta</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.1">
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Här kan du definiera om sidan ska visas i HTML-webbplatskartan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.0">
+        <source>Hide in navigation</source>
+        <target>Dölj i navigering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.1">
+        <source>Hide the page in the navigation menu.</source>
+        <target>Dölj sidan i navigeringsmenyn.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.0">
+        <source>Access key</source>
+        <target>Kortkommando</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.1">
+        <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
+        <target>Ett kortkommando är en kombination av [ALT]-tangenten och ett annat tecken som i detta fall ger ett visst objekt fokus.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.0">
+        <source>Publish page</source>
+        <target>Publicerad</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.1">
+        <source>Make the page publicly visible on the website.</source>
+        <target>Om du markerar detta alternativ kommer sidan att visas för besökarna på din webbplats.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.0">
+        <source>Show from</source>
+        <target>Börja visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.1">
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Om du vill förhindra att sidan visas på webbplatsen före ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.0">
+        <source>Show until</source>
+        <target>Sluta visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.1">
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Om du vill förhindra att sidan visas på webbplatsen efter ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.0">
+        <source>Enforce two-factor authentication</source>
+        <target>Tillämpa tvåfaktorautentisering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.1">
+        <source>Enforce two-factor authentication for all members.</source>
+        <target>Tillämpa tvåfaktorautentisering för alla medlemmar.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
+        <source>Two-factor redirect page</source>
+        <target>Tvåfaktors omdirigeringssida</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Välj den sida till vilken medlemmarna kommer att omdirigeras för att ställa in tvåfaktorautentisering.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.title_legend">
+        <source>Name and type</source>
+        <target>Namn och typ</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>Routing</target>
+      </trans-unit>
+      <trans-unit id="tl_page.meta_legend">
+        <source>Metadata</source>
+        <target>Metadata</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Kanonisk URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.system_legend">
+        <source>System settings</source>
+        <target>Systeminställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Omdirigeringsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
+        <target>URL-inställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>Språkinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
+        <target>Webbplatsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.global_legend">
+        <source>Global settings</source>
+        <target>Globala inställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap_legend">
+        <source>XML sitemap</source>
+        <target>XML-sajtkarta</target>
+      </trans-unit>
+      <trans-unit id="tl_page.forward_legend">
+        <source>Auto-forward</source>
+        <target>Omdirigera automatiskt</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected_legend">
+        <source>Access protection</source>
+        <target>Åtkomstkydd</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_legend">
+        <source>Layout settings</source>
+        <target>Layout-inställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache_legend">
+        <source>Cache settings</source>
+        <target>Cache-inställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod_legend">
+        <source>Access rights</source>
+        <target>Användarbehörighet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.expert_legend">
+        <source>Expert settings</source>
+        <target>Expertinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tabnav_legend">
+        <source>Keyboard navigation</source>
+        <target>Tangentbordsnavigation</target>
+      </trans-unit>
+      <trans-unit id="tl_page.publish_legend">
+        <source>Publish settings</source>
+        <target>Publiceringsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactor_legend">
+        <source>Two-factor authentication</source>
+        <target>Tvåfaktorautentisering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.permanent">
+        <source>301 Permanent redirect</source>
+        <target>301 Permanent omdirigering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.temporary">
+        <source>302 Temporary redirect</source>
+        <target>302 Tillfällig omdirigering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_default">
+        <source>Default</source>
+        <target>Förvalt</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_always">
+        <source>Show always</source>
+        <target>Visa alltid</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_never">
+        <source>Show never</source>
+        <target>Visa aldrig</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+        <target>Ärva sidlayout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.1">
+        <source>Create a new page</source>
+        <target>Skapa en ny sida</target>
+      </trans-unit>
+      <trans-unit id="tl_page.show">
+        <source>Show the details of page ID %s</source>
+        <target>Visa detaljer för sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.edit">
+        <source>Edit page ID %s</source>
+        <target>Redigera sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cut">
+        <source>Move page ID %s</source>
+        <target>Flytta sida med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copy">
+        <source>Duplicate page ID %s</source>
+        <target>Kopiera sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copyChilds">
+        <source>Duplicate page ID %s with its subpages</source>
+        <target>Kopiera sidan med ID %s tillsammans med ev. undersidor</target>
+      </trans-unit>
+      <trans-unit id="tl_page.delete">
+        <source>Delete page ID %s</source>
+        <target>Ta bort sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle">
+        <source>Publish/unpublish page ID %s</source>
+        <target>Publicera / avpublicera sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Klistra in efter rubriken</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Klistra in i sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
+        <target>Klistra in efter sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles">
+        <source>Edit the articles of page ID %s</source>
+        <target>Redigera artiklarna på sidan med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>Ruttkonflikter</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Följande sidor har ett liknande alias som kan komma i konflikt med den här sidan. Om webbadressen inte löses korrekt, försök att ändra prioritet för rutterna.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Aktivera kanoniska webbadresser på webbplatsens rotsida för att aktivera denna konfiguration.</target>
+      </trans-unit>
+      <trans-unit id="CACHE.0">
+        <source>0 (do not cache)</source>
+        <target>0 (Ingen cachning)</target>
+      </trans-unit>
+      <trans-unit id="CACHE.5">
+        <source>5 seconds</source>
+        <target>5 sekunder</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15">
+        <source>15 seconds</source>
+        <target>15 sekunder</target>
+      </trans-unit>
+      <trans-unit id="CACHE.30">
+        <source>30 seconds</source>
+        <target>30 sekunder</target>
+      </trans-unit>
+      <trans-unit id="CACHE.60">
+        <source>60 seconds</source>
+        <target>60 sekunder</target>
+      </trans-unit>
+      <trans-unit id="CACHE.300">
+        <source>5 minutes</source>
+        <target>5 minuter</target>
+      </trans-unit>
+      <trans-unit id="CACHE.900">
+        <source>15 minutes</source>
+        <target>15 minuter</target>
+      </trans-unit>
+      <trans-unit id="CACHE.1800">
+        <source>30 minutes</source>
+        <target>30 minuter</target>
+      </trans-unit>
+      <trans-unit id="CACHE.3600">
+        <source>60 minutes</source>
+        <target>60 minuter</target>
+      </trans-unit>
+      <trans-unit id="CACHE.10800">
+        <source>3 hours</source>
+        <target>3 timmar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.21600">
+        <source>6 hours</source>
+        <target>6 timmar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.43200">
+        <source>12 hours</source>
+        <target>12 timmar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.86400">
+        <source>24 hours</source>
+        <target>24 timmar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.259200">
+        <source>3 days</source>
+        <target>3 dagar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.604800">
+        <source>7 days</source>
+        <target>7 dagar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.2592000">
+        <source>30 days</source>
+        <target>30 dagar</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+        <target>3 månader</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+        <target>6 månader</target>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
+        <target>1 år</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

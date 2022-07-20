@@ -1,0 +1,262 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_files.name.0">
+        <source>Name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="tl_files.name.1">
+        <source>The file or folder name (without extension).</source>
+        <target>Dosya ya da klasör adı (uzantısı olmadan).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>Yol</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>Dosya ya da klasörün göreli yolu.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>Uzantı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>Dosya uzantısı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.0">
+        <source>Public</source>
+        <target>Herkese açık</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.1">
+        <source>Make the folder and its sub-folders accessible via HTTP.</source>
+        <target>Klasör ve alt klasörlerini HTTP üzerinden erişilebilir kılar.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Eşitlenmesin</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Klasör ve alt klasörleri veritabanı ile eşitlenmez.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.0">
+        <source>Important part x coordinate</source>
+        <target>Önemli bölümün x koordinatı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.1">
+        <source>Here you can enter the x coordinate of the important part.</source>
+        <target>Buraya önemli bölümün x koordinatını yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.0">
+        <source>Important part y coordinate</source>
+        <target>Önemli bölümün y koordinatı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.1">
+        <source>Here you can enter the y coordinate of the important part.</source>
+        <target>Buraya önemli bölümün y koordinatını yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.0">
+        <source>Important part width</source>
+        <target>Önemli bölümün genişliği</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.1">
+        <source>Here you can enter the width of the important part.</source>
+        <target>Buraya önemli bölümün genişliğini yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.0">
+        <source>Important part height</source>
+        <target>Önemli bölümün yüksekliği</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.1">
+        <source>Here you can enter the height of the important part.</source>
+        <target>Buraya önemli bölümün yüksekliğini yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.0">
+        <source>Metadata</source>
+        <target>Üst veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.1">
+        <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
+        <target>Buraya dosya üst verilerini yazabilirsiniz. Bir dil eklemek için eşleşen bir web sitesi kök sayfası oluşturun.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>&quot;%s&quot; alanı &quot;%s&quot; dili için &quot;%s&quot; ile eşleşmeli.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>&quot;%s&quot; alanı &quot;%s&quot; dili için geçerli bir adres içermeli.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.0">
+        <source>File upload</source>
+        <target>Dosya yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.1">
+        <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
+        <target>Sunucuya yüklemek istediğiniz dosyaları seçin (en fazla %s x %s piksel).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.0">
+        <source>Source editor</source>
+        <target>Kaynak düzenleyici</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.1">
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Buradan dosya kaynağını düzenleyebilirsiniz (tam ekran kipine geçmek için F11 tuşuna basın).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadNback">
+        <source>Upload files and go back</source>
+        <target>Dosyaları yükleyip geri dön</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFF">
+        <source>Edit a file or folder</source>
+        <target>Bir dosya ya da klasörü düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadFF">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Dosyaları &quot;%s&quot; klasörüne yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFile">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosyasını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Fare imleciyle görselin önemli bölümünü işaretleyin.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.browseFiles">
+        <source>Browse files</source>
+        <target>Dosyalara göz at</target>
+      </trans-unit>
+      <trans-unit id="tl_files.clearList">
+        <source>Clear list</source>
+        <target>Listeyi temizle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.startUpload">
+        <source>Start upload</source>
+        <target>Yüklemeyi başlat</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzone">
+        <source>Click or drop files here to upload</source>
+        <target>Dosyaları yüklemek için tıklayın ya da sürükleyip bırakın</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Dosya çok büyük ({{filesize}} MiB). En büyük dosya boyutu {{maxFilesize}} MiB olabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Bu türdeki dosyalar yüklenemez.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileLocation">
+        <source>Path: %s</source>
+        <target>Yol: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncAdded">
+        <source>Added the file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörü eklendi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncChanged">
+        <source>Updated the hash of the file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünün karması güncellendi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncUnchanged">
+        <source>Found the file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörü bulundu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncMoved">
+        <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörü &quot;%s&quot; üzerinde bulundu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncDeleted">
+        <source>Removed the file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörü silindi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncComplete">
+        <source>The synchronization has been completed</source>
+        <target>Eşitleme tamamlandı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncResult">
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Sonuçlar:&lt;/strong&gt; %s eklendi | %s değiştirildi | %s taşındı | %s silindi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncShowUnchanged">
+        <source>Show unchanged</source>
+        <target>Değiştirilmeyenler görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.0">
+        <source>New folder</source>
+        <target>Yeni klasör</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.1">
+        <source>Create a new folder</source>
+        <target>Yeni bir klasör ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.0">
+        <source>Upload files</source>
+        <target>Dosya yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.1">
+        <source>Upload files to the server</source>
+        <target>Sunucuya dosya yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.0">
+        <source>Synchronize</source>
+        <target>Eşitle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.1">
+        <source>Synchronize the file system and the database</source>
+        <target>Dosya sistemi ile veritabanını eşitle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünün ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü taşı</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü sil</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü sürükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Dosyaları &quot;%s&quot; klasörüne yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; klasörünü koru</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; klasörünün korumasını kaldır</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>Kök klasöre yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; klasörüne yapıştır</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

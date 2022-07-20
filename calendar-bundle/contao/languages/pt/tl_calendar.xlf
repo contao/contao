@@ -1,0 +1,181 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar.php" source-language="en" target-language="pt">
+    <body>
+      <trans-unit id="tl_calendar.title.0">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.title.1">
+        <source>Please enter the calendar title.</source>
+        <target>Favor inserir um título para o calendário.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Redirecionar página</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.jumpTo.1">
+        <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
+        <target>Por favor selecione a página para a qual os visitantes serão redirecionados quando clicarem em um evento.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.allowComments.0">
+        <source>Enable comments</source>
+        <target>Ativar comentários</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.allowComments.1">
+        <source>Allow visitors to comment events.</source>
+        <target>Permitir que os visitantes podem comentar eventos.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.0">
+        <source>Notify</source>
+        <target>Notificar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Por favor escolhe quem vai ser notificado quando os comentários forem adicionados.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.0">
+        <source>Sort order</source>
+        <target>Ordem de classificação</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>Por padrão, os comentários são classificadas ascendente, começando com os mais antigos.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.0">
+        <source>Comments per page</source>
+        <target>Comentários por página</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Número de comentários por página. Defina como 0 para desativar a paginação.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.0">
+        <source>Moderate comments</source>
+        <target>Comentários moderados</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Aprove os comentários antes que ele sejam exibidos no site.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>Permitir BBCode</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Permitir que visitantes utilizem BBCode para formatar os comentários.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Requerem login para comentar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Permitir apenas aos membros autenticados a criação de comentários.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Desactivar a protecção contra spam</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>Use esta opção apenas se você tiver comentários limitada a usuários autenticados.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected.0">
+        <source>Protect calendar</source>
+        <target>Proteger calendário</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected.1">
+        <source>Show events to certain member groups only.</source>
+        <target>Mostrar eventos apenas para grupos de membros selecionados.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.groups.0">
+        <source>Allowed member groups</source>
+        <target>Membros de grupos permitidos</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.groups.1">
+        <source>These groups will be able to see the events in this calendar.</source>
+        <target>Aqui você pode selecionar os grupos de membros que serão autorizados a ver os eventos.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tstamp.0">
+        <source>Revision date</source>
+        <target>Data da última alteração</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data e hora da última alteração</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.title_legend">
+        <source>Title and redirect page</source>
+        <target>Página de título e redirecionamento</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.comments_legend">
+        <source>Comments</source>
+        <target>Comentários</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected_legend">
+        <source>Access protection</source>
+        <target>Proteção de acesso</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feed_legend">
+        <source>RSS/Atom feed</source>
+        <target>RSS/Atom</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_admin">
+        <source>System administrator</source>
+        <target>Administrador de sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_author">
+        <source>Author of the event</source>
+        <target>Autor do evento</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_both">
+        <source>Author and system administrator</source>
+        <target>Autor e administrador de sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.source_teaser">
+        <source>Event teasers</source>
+        <target>Amostra de eventos</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.source_text">
+        <source>Full articles</source>
+        <target>Artigos completos</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feeds.0">
+        <source>Calendar feeds</source>
+        <target>Feeds RSS de calendário</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feeds.1">
+        <source>Manage calendar feeds</source>
+        <target>Gerir feeds de calendário</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Novo</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>Criar um novo calendário</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>Mostrar detalhes do calendário ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>Editar calendário ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.children">
+        <source>Edit the events of calendar ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>Copiar calendário ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>Remover calendário ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

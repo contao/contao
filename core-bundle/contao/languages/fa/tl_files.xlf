@@ -1,0 +1,258 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_files.name.0">
+        <source>Name</source>
+        <target>نام</target>
+      </trans-unit>
+      <trans-unit id="tl_files.name.1">
+        <source>The file or folder name (without extension).</source>
+        <target>نام پرونده یا پوشه (بدون پسوند).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>مسیر نسبی برای پرونده یا پوشه.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>افزونه</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>پسوند پرونده</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.0">
+        <source>Public</source>
+        <target>عمومی</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.1">
+        <source>Make the folder and its sub-folders accessible via HTTP.</source>
+        <target>شاخه و زیرشاخه‌هایش را قابل دسترس از طریق HTTP می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>هنگام‌سازی نکنید</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>پوشه و زیرپوشه‌هایش را با پایگاه داده همگام‌سازی نکنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.0">
+        <source>Important part x coordinate</source>
+        <target>مختصات x بخش مهم</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.1">
+        <source>Here you can enter the x coordinate of the important part.</source>
+        <target>اینجا می‌توانید مختصات x قسمت مهم را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.0">
+        <source>Important part y coordinate</source>
+        <target>مختصات y بخش مهم</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.1">
+        <source>Here you can enter the y coordinate of the important part.</source>
+        <target>اینجا می‌توانید مختصات y قسمت مهم را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.0">
+        <source>Important part width</source>
+        <target>عرض بخش مهم</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.1">
+        <source>Here you can enter the width of the important part.</source>
+        <target>اینجا می‌توانید عرض قسمت مهم را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.0">
+        <source>Important part height</source>
+        <target>ارتفاع بخش مهم</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.1">
+        <source>Here you can enter the height of the important part.</source>
+        <target>اینجا می‌توانید ارتفاع قسمت مهم را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.0">
+        <source>Metadata</source>
+        <target>فراداده</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.1">
+        <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.0">
+        <source>File upload</source>
+        <target>بارگذاری پرونده</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.1">
+        <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
+        <target>پرونده‌هایی را که می‌خواهید در سرور بارگذاری شوند را انتخاب نمایید (بیشترین %s و %s پیکسل).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.0">
+        <source>Source editor</source>
+        <target>ویرایشگر منبع</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.1">
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>اینجا می‌توانید منبع پرونده را ویرایش کنید ( F11 را برای تغییر وضعیت به حالت تمام‌صفحه فشار دهید).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadNback">
+        <source>Upload files and go back</source>
+        <target>بارگذاری پرونده‌ها و بازگشت</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFF">
+        <source>Edit a file or folder</source>
+        <target>ویرایش یک پرونده یا پوشه</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadFF">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>بارگذاری یک یا چند پرونده درون پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFile">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>ویرایش پرونده &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>قسمت مهم تصویر را با نشانگر ماوس مشخص نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.browseFiles">
+        <source>Browse files</source>
+        <target>مرور پرونده‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_files.clearList">
+        <source>Clear list</source>
+        <target>پاک کردن فهرست</target>
+      </trans-unit>
+      <trans-unit id="tl_files.startUpload">
+        <source>Start upload</source>
+        <target>شروع بارگذاری</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzone">
+        <source>Click or drop files here to upload</source>
+        <target>کلیک کنید یا پرونده‌ها را در این قسمت برای بارگذاری بیاندازید</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>پرونده خیلی بزرگ است ({{filesize}} MiB). اندازه بیشینه پرونده {{maxFilesize}} MiB است.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>فایل‌های این نوع نمی‌توانند بارگذاری شوند.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileLocation">
+        <source>Path: %s</source>
+        <target>مسیر:‌%s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncAdded">
+        <source>Added the file or folder &quot;%s&quot;</source>
+        <target>پرونده‌ و پوشه اضافه شده &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncChanged">
+        <source>Updated the hash of the file or folder &quot;%s&quot;</source>
+        <target>هش پرونده یا پوشه &quot;%s&quot; به‌روز شد</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncUnchanged">
+        <source>Found the file or folder &quot;%s&quot;</source>
+        <target>پیدا کردن پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncMoved">
+        <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
+        <target>پیدا کردن پرونده یا پوشه &quot;%s&quot; در &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncDeleted">
+        <source>Removed the file or folder &quot;%s&quot;</source>
+        <target>پرونده یا پوشه «%s» حذف شد</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncComplete">
+        <source>The synchronization has been completed</source>
+        <target>هماهنگ‌سازی کامل شده است</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncResult">
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncShowUnchanged">
+        <source>Show unchanged</source>
+        <target>نمایش تغییر نیافته‌</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.0">
+        <source>New folder</source>
+        <target>پوشه جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.1">
+        <source>Create a new folder</source>
+        <target>ایجاد یک پوشه جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.0">
+        <source>Upload files</source>
+        <target>بارگذاری پرونده‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.1">
+        <source>Upload files to the server</source>
+        <target>بارگذاری پرونده‌ها در سرور</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.0">
+        <source>Synchronize</source>
+        <target>هماهنگ‌سازی</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.1">
+        <source>Synchronize the file system and the database</source>
+        <target>هماهنگ‌سازی سامانه پرونده و پایگاه‌داده</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>نمایش جزئیات پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>جابجایی پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>تکثیر پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>ویرایش پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>حذف پرونده یا پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>کشیدن فایل یا فولدر «%s»</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>ویرایش متن منبع پرونده «%s»</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>بارگذاری یک یا چند پرونده درون پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>حافظت از پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>حذف حافظت پوشه &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>جاگذاری در فولدر ریشه</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>جاگذاری در فولدر «%s»</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

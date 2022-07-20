@@ -2,6 +2,15 @@
 
 ## Version 4.* to 5.0
 
+### app.php
+
+The old `app.php` entry point has been removed. Adjust your server configuration to use `index.php` instead.
+
+### DCA "exclude" fields
+
+The `exclude` property on DCA fields is no longer initialized when loading a back end module. Make sure to check for
+`ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE` to know if a field should be available to a user.
+
 ### checkCredentials hook
 
 The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.

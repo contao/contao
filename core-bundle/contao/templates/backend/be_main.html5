@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="<?= $this->language ?>">
+<head>
+
+  <?php $this->block('head'); ?>
+    <meta charset="<?= $this->charset ?>">
+    <title><?= $this->title ?> | <?= $this->host ?></title>
+
+    <?php $this->block('meta'); ?>
+      <meta name="generator" content="Contao Open Source CMS">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+      <meta name="referrer" content="origin">
+      <meta name="theme-color" content="#fff">
+    <?php $this->endblock(); ?>
+
+    <link rel="stylesheet" href="<?php
+      $objCombiner = new Contao\Combiner();
+      $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+      $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
+      $objCombiner->add('assets/chosen/css/chosen.min.css');
+      $objCombiner->add('assets/simplemodal/css/simplemodal.min.css');
+      $objCombiner->add('assets/datepicker/css/datepicker.min.css');
+      $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+      $objCombiner->add('system/themes/'.$this->theme.'/main.min.css');
+      echo $objCombiner->getCombinedFile();
+    ?>">
+    <?= $this->stylesheets ?>
+
+    <script><?= $this->getLocaleString() ?></script>
+    <script src="<?php
+      $objCombiner = new Contao\Combiner();
+      $objCombiner->add('assets/mootools/js/mootools.min.js');
+      $objCombiner->add('assets/colorpicker/js/mooRainbow.min.js');
+      $objCombiner->add('assets/chosen/js/chosen.min.js');
+      $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
+      $objCombiner->add('assets/datepicker/js/datepicker.min.js');
+      $objCombiner->add('bundles/contaocore/mootao.min.js');
+      $objCombiner->add('bundles/contaocore/metawizard.min.js');
+      $objCombiner->add('bundles/contaocore/core.min.js');
+      $objCombiner->add('bundles/contaocore/autofocus.min.js');
+      $objCombiner->add('bundles/contaocore/limit-height.min.js');
+      $objCombiner->add('bundles/contaocore/tips.min.js');
+      $objCombiner->add('bundles/contaocore/sectionwizard.min.js');
+      $objCombiner->add('bundles/contaocore/modulewizard.min.js');
+      $objCombiner->add('bundles/contaocore/toggle-fieldset.min.js');
+      $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
+      echo $objCombiner->getCombinedFile();
+    ?>"></script>
+    <script><?= $this->getDateString() ?></script>
+    <?= $this->javascripts ?>
+  <?php $this->endblock(); ?>
+
+</head>
+<body id="top"<?php if ($this->isPopup): ?> class="popup"<?php endif; ?><?= $this->attributes ?>>
+
+  <?php $this->block('header'); ?>
+    <?php if (!$this->isPopup): ?>
+      <header id="header">
+        <div class="inner">
+          <h1>
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+              <span class="app-title">Contao</span>
+              <?php if ($this->badgeTitle): ?>
+                <span class="badge-title"><?= $this->badgeTitle ?></span>
+              <?php endif; ?>
+            </a>
+          </h1>
+          <?= $this->headerMenu ?>
+        </div>
+      </header>
+    <?php endif; ?>
+  <?php $this->endblock(); ?>
+
+  <?php $this->block('container'); ?>
+    <div id="container">
+
+      <?php $this->block('left'); ?>
+        <?php if (!$this->isPopup): ?>
+          <aside id="left">
+            <?= $this->menu ?>
+            <div class="version">
+              <?php $this->block('version'); ?>
+                <?= $this->version ?><br><?= $this->learnMore ?>
+              <?php $this->endblock(); ?>
+            </div>
+          </aside>
+        <?php endif; ?>
+      <?php $this->endblock(); ?>
+
+      <?php $this->block('main'); ?>
+        <main id="main" aria-labelledby="main_headline">
+          <h1 id="main_headline"><?= $this->headline ?></h1>
+          <div class="content">
+            <?php if ($this->pickerMenu): ?>
+              <div id="picker-menu">
+                <?= $this->pickerMenu ?>
+              </div>
+            <?php endif; ?>
+            <?php if ($this->error): ?>
+              <p class="tl_gerror"><?= $this->error ?></p>
+            <?php endif; ?>
+            <?php $this->block('main_content'); ?>
+              <?= $this->main ?>
+            <?php $this->endblock(); ?>
+          </div>
+        </main>
+      <?php $this->endblock(); ?>
+
+    </div>
+  <?php $this->endblock(); ?>
+
+  <?php if ($this->isPopup): ?>
+    <script>
+      if (!document.location.search.test('act=select') && $$('.tl_tree_checkbox,.tl_tree_radio').length > 0) {
+        parent.document.getElements('.simple-modal-footer a.primary').removeClass('btn-disabled');
+      } else {
+        parent.document.getElements('.simple-modal-footer a.primary').addClass('btn-disabled');
+      }
+    </script>
+  <?php endif; ?>
+
+  <?= $this->mootools ?>
+
+  <script>Backend.initScrollOffset()</script>
+
+</body>
+</html>

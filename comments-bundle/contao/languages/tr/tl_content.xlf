@@ -1,0 +1,66 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_content.com_order.0">
+        <source>Sort order</source>
+        <target>Sıralama</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_order.1">
+        <source>Please choose the sort order.</source>
+        <target>Lütfen sıralamayı seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_perPage.0">
+        <source>Items per page</source>
+        <target>Bir sayfadaki öge sayısı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_perPage.1">
+        <source>The number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_moderate.0">
+        <source>Moderate</source>
+        <target>Yayın onayı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_bbcode.0">
+        <source>Allow BBCode</source>
+        <target>BBCode kullanılabilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Oturum açmadan yorum yapılamasın</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Bu seçenek etkinleştirildiğinde, yalnızca oturum açmış kullanıcılar yorum yapabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Spam koruması devre dışı bırakılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_disableCaptcha.1">
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Buradan spam korumasını devre dışı bırakabilirsiniz (önerilmez).</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_template.0">
+        <source>Comments template</source>
+        <target>Yorum kalıbı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.com_template.1">
+        <source>Here you can select a comments template.</source>
+        <target>Buradan bir yorum kalıbı seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.comment_legend">
+        <source>Comment settings</source>
+        <target>Yorum ayarları</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

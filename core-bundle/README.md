@@ -56,7 +56,7 @@ the catch-all route does not catch your application routes.
 
 ```yml
 ContaoCoreBundle:
-    resource: "@ContaoCoreBundle/Resources/config/routes.yaml"
+    resource: "@ContaoCoreBundle/config/routes.yaml"
 ```
 
 Edit your `config/security.yaml` file and merge all the `providers`, `encoders`, `firewalls` and `access_control`

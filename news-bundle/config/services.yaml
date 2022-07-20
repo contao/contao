@@ -1,0 +1,71 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - [setFramework, ['@contao.framework']]
+
+    contao_news.cron.generate_feeds:
+        class: Contao\NewsBundle\Cron\GenerateFeedsCron
+        arguments:
+            - '@contao.framework'
+
+    contao_news.listener.data_container.start_stop_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
+        arguments:
+            - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_news, target: config.onbeforesubmit }
+
+    contao_news.listener.generate_page:
+        class: Contao\NewsBundle\EventListener\GeneratePageListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: generatePage }
+
+    contao_news.listener.insert_tags:
+        class: Contao\NewsBundle\EventListener\InsertTagsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
+
+    contao_news.listener.preview_url_convert:
+        class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    contao_news.listener.preview_url_create:
+        class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    contao_news.listener.sitemap:
+        class: Contao\NewsBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    contao_news.picker.news_provider:
+        class: Contao\NewsBundle\Picker\NewsPickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+        tags:
+            - { name: contao.picker_provider, priority: 128 }
+
+    contao_news.security.news_archive_access_voter:
+        class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
+        arguments:
+            - '@security.helper'

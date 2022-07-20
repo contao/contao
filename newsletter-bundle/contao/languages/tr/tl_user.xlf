@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_user.newsletters.0">
+        <source>Allowed channels</source>
+        <target>İzin verilen kanallar</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsletters.1">
+        <source>Here you can grant access to one or more channels.</source>
+        <target>Buradan bir ya da bir kaç kanala izin verilebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsletterp.0">
+        <source>Channel permissions</source>
+        <target>Kanai izinleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsletterp.1">
+        <source>Here you can define the channel permissions.</source>
+        <target>Buradan kanal izinlerini tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsletter_legend">
+        <source>Newsletter permissions</source>
+        <target>Haber bülteni izinleri</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

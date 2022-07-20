@@ -18,16 +18,18 @@ use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\PageModel;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'debug:pages',
+    description: 'Displays the page controller configuration.'
+)]
 class DebugPagesCommand extends Command
 {
-    protected static $defaultName = 'debug:pages';
-    protected static $defaultDescription = 'Displays the page controller configuration.';
-
     /**
      * @var array<RouteConfig>
      */

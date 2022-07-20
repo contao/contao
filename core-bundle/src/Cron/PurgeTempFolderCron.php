@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
-/**
- * @CronJob("daily")
- */
+#[AsCronJob('daily')]
 class PurgeTempFolderCron
 {
     public function __construct(private Filesystem $filesystem, private string $projectDir, private LoggerInterface|null $logger)

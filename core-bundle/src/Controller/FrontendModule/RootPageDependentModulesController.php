@@ -13,16 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Controller;
-use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @FrontendModule(category="miscellaneous")
- */
+#[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response

@@ -1,0 +1,214 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="MSC.comments">
+        <source>Comments</source>
+        <target>دیدگاه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_name">
+        <source>Name</source>
+        <target>نام</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_email">
+        <source>E-mail (not published)</source>
+        <target>ایمیل (منتشر نمی‌شود)</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_website">
+        <source>Website</source>
+        <target>وب‌سایت</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_comment">
+        <source>Comment</source>
+        <target>دیدگاه</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notify">
+        <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>مرا از دیدگاه‌های جدید از طریق ایمیل مطلع کن (می‌توانید اشتراک خود را در هر زمانی لغو کنید)</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_submit">
+        <source>Submit comment</source>
+        <target>ارسال دیدگاه</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_login">
+        <source>You need to be logged in to add comments.</source>
+        <target>شما برای افزودن دیدگاه باید وارد شوید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_by">
+        <source>Comment by</source>
+        <target>دیدگاه توسط</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_reply">
+        <source>Reply by</source>
+        <target>پاسخ</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_quote">
+        <source>%s wrote:</source>
+        <target>%s نوشت:</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_code">
+        <source>Code:</source>
+        <target>کد:</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_subject">
+        <source>New comment on %s</source>
+        <target>دیدگاه جدید در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_message">
+        <source>%s has created a new comment on your website:
+
+---
+
+%s
+
+---
+
+Click here to view the comment:
+
+%s
+
+Click here to edit or answer the comment:
+
+%s
+</source>
+        <target>%s دیدگاه جدید در وب‌سایت شما ایجاد کرده است:
+
+---
+
+%s
+
+---
+
+برای مشاهده‌ی دیدگاه اینجا را کلیک کنید:
+
+%s
+
+برای ویرایش یا پاسخ اینجا را کلیک کنید:
+
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_moderated">
+        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>این دیدگاه در بخش مدیریت منتشر خواهد شد قبل از اینکه در وب‌سایت نمایش داده شود!</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_confirm">
+        <source>Your comment has been added and is now pending for approval.</source>
+        <target>دیدگاه شما اضافه شد و اکنون منتظر تایید می‌باشد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInConfirm">
+        <source>Your subscription has been activated</source>
+        <target>اشتراک شما فعال شده است</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInCancel">
+        <source>Your subscription has been cancelled</source>
+        <target>اشتراک شما لغو شده است</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInSubject">
+        <source>Your subscription on %s</source>
+        <target>اشتراک شما در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInMessage">
+        <source>Hello %s,
+
+please confirm that you want to be notified of new comments by e-mail on this page:
+
+%s
+
+---
+
+Click here to confirm your subscription:
+
+%s
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time by clicking here:
+
+%s
+</source>
+        <target>سلام %s,
+
+لطفا تایید کنید که شما می‌خواهید از دیدگاه‌های جدید در این صفحه آگاه شوید:
+
+%s
+
+---
+
+لینک زیر را برای تایید اشتراک‌تان کلیک کنید:
+
+%s
+
+لینک تایید برای ۲۴ ساعت معتبر است. شما می‌توانید اشتراک خود را در هر زمانی با کلیک لینک زیر لغو کنید:
+
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifySubject">
+        <source>New comment on %s</source>
+        <target>دیدگاه جدید در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyMessage">
+        <source>Hello %s,
+
+a new comment has been added on a page you have subscribed to:
+
+---
+
+%s
+
+---
+
+Click here to cancel your subscription:
+
+%s
+</source>
+        <target>سلام %s,
+
+دیدگاه جدیدی به صفحه‌ای که شما مشترک آن شده بودید اضافه شده است:
+
+---
+
+%s
+
+---
+
+برای لغو اشتراک اینجا را کلیک کنید:
+
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+        <target>پاسخ جدید به یک دیدگاه در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+---
+
+%s
+
+---
+
+Click here to cancel your subscription:
+
+%s
+</source>
+        <target>سلام %s,
+
+پاسخ جدیدی به یک دیدگاه در صفحه‌ای که شما عضو شده‌اید اضافه شده اس:
+
+---
+
+%s
+
+---
+
+اینجا را کلیک کنید تا عضویت شما لغو گردد:
+
+%s
+</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

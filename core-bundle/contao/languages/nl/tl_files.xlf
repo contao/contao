@@ -1,0 +1,261 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="tl_files.name.0">
+        <source>Name</source>
+        <target>Naam</target>
+      </trans-unit>
+      <trans-unit id="tl_files.name.1">
+        <source>The file or folder name (without extension).</source>
+        <target>De bestand of map naam (zonder extensie).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>Pad</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>Relatief pad naar bestand of map.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>Extensie</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>Bestands-extensie</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.0">
+        <source>Public</source>
+        <target>Publiek</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.1">
+        <source>Make the folder and its sub-folders accessible via HTTP.</source>
+        <target>Maak de map en sub-mappen toegankelijk via HTTP.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Niet synchroniseren</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Hoofdmap en zijn submappen niet synchroniseren met de database.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.0">
+        <source>Important part x coordinate</source>
+        <target> Belangrijkste deel x-coördinaten</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.1">
+        <source>Here you can enter the x coordinate of the important part.</source>
+        <target>x-coördinaten van het belangrijkste deel ingeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.0">
+        <source>Important part y coordinate</source>
+        <target>Belangrijkste deel y-coördinaten</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.1">
+        <source>Here you can enter the y coordinate of the important part.</source>
+        <target>y-coördinaten van het belangrijkste deel ingeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.0">
+        <source>Important part width</source>
+        <target>Belangrijkste deel breedte</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.1">
+        <source>Here you can enter the width of the important part.</source>
+        <target>Breedte van het belangrijkste deel ingeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.0">
+        <source>Important part height</source>
+        <target>Belangrijkste deel hoogte</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.1">
+        <source>Here you can enter the height of the important part.</source>
+        <target>Hoogte van het belangrijkste deel ingeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.0">
+        <source>Metadata</source>
+        <target>Meta data</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.1">
+        <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>Veld &quot;%s&quot; voor taal &quot;%s&quot; moet overeenkomen met &quot;%s&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>Veld &quot;%s&quot; voor taal &quot;%s&quot; moet een geldige URL bevatten.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.0">
+        <source>File upload</source>
+        <target>Bestand upload</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.1">
+        <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
+        <target>Selecteer de bestanden welke u wilt uploaden naar de server (maximum %s en %s pixels).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.0">
+        <source>Source editor</source>
+        <target>Bron editor</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.1">
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Hier kunt u het bronbestand bewerken (druk op F11 voor volledig scherm).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadNback">
+        <source>Upload files and go back</source>
+        <target>Ga terug na het uploaden van bestanden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFF">
+        <source>Edit a file or folder</source>
+        <target>Wijzig een bestand of map</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadFF">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Upload een bestand naar map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFile">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>Bewerk de inhoud van bestand &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Markeer het belangrijkste deel van de afbeelding met de muis-cursor.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.browseFiles">
+        <source>Browse files</source>
+        <target>Zoek bestanden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.clearList">
+        <source>Clear list</source>
+        <target>Lijst wissen</target>
+      </trans-unit>
+      <trans-unit id="tl_files.startUpload">
+        <source>Start upload</source>
+        <target>Begin met uploaden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzone">
+        <source>Click or drop files here to upload</source>
+        <target>Hier klikken of bestanden neerzetten om te uploaden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Het bestand is te groot ({{filesize}} MiB). De maximale bestandsgrootte is {{maxFilesize}} MiB.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Bestanden van dit type kunnen niet worden geüpload.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileLocation">
+        <source>Path: %s</source>
+        <target>Pad: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncAdded">
+        <source>Added the file or folder &quot;%s&quot;</source>
+        <target>Bestand of map &quot;%s&quot; toegevoegd</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncChanged">
+        <source>Updated the hash of the file or folder &quot;%s&quot;</source>
+        <target>De Hash van map of bestand &quot;%s&quot; werd bijgewerkt</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncUnchanged">
+        <source>Found the file or folder &quot;%s&quot;</source>
+        <target>Bestand of map &quot;%s&quot; gevonden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncMoved">
+        <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
+        <target>Bestand of Map &quot;%s&quot; gevonden bij &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncDeleted">
+        <source>Removed the file or folder &quot;%s&quot;</source>
+        <target>Bestand of map &quot;%s&quot; verwijderd</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncComplete">
+        <source>The synchronization has been completed</source>
+        <target>Synchronisatie is voltooid</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncResult">
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Resultaat:&lt;/strong&gt; %s toegevoegd | %s gewijzigd | %4$s verplaatst | %5$s verwijderd</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncShowUnchanged">
+        <source>Show unchanged</source>
+        <target>Toon ongewijzigd</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.0">
+        <source>New folder</source>
+        <target>Nieuwe map</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.1">
+        <source>Create a new folder</source>
+        <target>Maak een nieuwe map</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.0">
+        <source>Upload files</source>
+        <target>Bestanden uploaden</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.1">
+        <source>Upload files to the server</source>
+        <target>Bestanden opladen naar de server</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.0">
+        <source>Synchronize</source>
+        <target>Synchroniseer</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.1">
+        <source>Synchronize the file system and the database</source>
+        <target>Synchroniseer het systeembestand en de database</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>Toon de details van bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>Verplaats bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>Kopieer bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>Bewerk bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>Verwijder bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Sleep bestand of map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>Bewerk de brontekst van het bestand &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Upload een bestand naar map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>Beveilig map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>Verwijder bescherming van map &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>Plak in de hoofdmap</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>Plak in de map &quot;%s&quot;</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

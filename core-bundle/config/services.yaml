@@ -1,0 +1,1050 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - [setFramework, ['@contao.framework']]
+
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - [setContainer, ['@service_container']]
+
+    contao.assets.assets_context:
+        class: Contao\CoreBundle\Asset\ContaoContext
+        public: true
+        arguments:
+            - '@request_stack'
+            - staticPlugins
+            - '%kernel.debug%'
+
+    contao.assets.files_context:
+        class: Contao\CoreBundle\Asset\ContaoContext
+        public: true
+        arguments:
+            - '@request_stack'
+            - staticFiles
+            - '%kernel.debug%'
+
+    contao.cache.clearer:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: true
+        arguments:
+            - '@filesystem'
+
+    contao.cache.entity_tags:
+        class: Contao\CoreBundle\Cache\EntityCacheTags
+        public: true
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@?fos_http_cache.cache_manager'
+
+    contao.cache.warmer:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        public: true
+        arguments:
+            - '@filesystem'
+            - '@contao.resource_finder'
+            - '@contao.resource_locator'
+            - '%kernel.project_dir%'
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.intl.locales'
+
+    contao.controller_resolver:
+        class: Contao\CoreBundle\HttpKernel\ControllerResolver
+        decorates: controller_resolver
+        arguments:
+            - '@contao.controller_resolver.inner'
+            - '@contao.fragment.registry'
+
+    contao.cors.website_roots_config_provider:
+        class: Contao\CoreBundle\Cors\WebsiteRootsConfigProvider
+        arguments:
+            - '@database_connection'
+        tags:
+            - nelmio_cors.options_provider
+
+    contao.crawl.escargot.broken_link_checker_subscriber:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        arguments:
+            - '@translator'
+        tags:
+            - contao.escargot_subscriber
+
+    contao.crawl.escargot.factory:
+        class: Contao\CoreBundle\Crawl\Escargot\Factory
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
+    contao.crawl.escargot.search_index_subscriber:
+        class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
+        arguments:
+            - '@contao.search.indexer'
+            - '@translator'
+        tags:
+            - contao.escargot_subscriber
+
+    contao.cron:
+        class: Contao\CoreBundle\Cron\Cron
+        public: true
+        arguments:
+            - !service_closure '@contao.repository.cron_job'
+            - !service_closure '@doctrine.orm.entity_manager'
+            - '@?logger'
+
+    contao.cron.purge_expired_data:
+        class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
+    contao.cron.purge_opt_in_tokens:
+        class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
+        arguments:
+            - '@contao.opt_in'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
+    contao.cron.purge_registrations:
+        class: Contao\CoreBundle\Cron\PurgeRegistrationsCron
+        arguments:
+            - '@contao.framework'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_temp_folder:
+        class: Contao\CoreBundle\Cron\PurgeTempFolderCron
+        arguments:
+            - '@filesystem'
+            - '%kernel.project_dir%'
+            - '@monolog.logger.contao.cron'
+
+    contao.csrf.token_manager:
+        class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
+        public: true
+        arguments:
+            - '@request_stack'
+            - '%contao.csrf_cookie_prefix%'
+            - '@security.csrf.token_generator'
+            - '@contao.csrf.token_storage'
+            - ~
+            - '%contao.csrf_token_name%'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.csrf.token_storage:
+        class: Contao\CoreBundle\Csrf\MemoryTokenStorage
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        arguments:
+            - '@contao.security.token_checker'
+        tags:
+            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
+
+    contao.doctrine.backup.dumper:
+        class: Contao\CoreBundle\Doctrine\Backup\Dumper
+
+    contao.doctrine.backup.retention_policy:
+        class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
+        arguments:
+            - ~
+            - ~
+
+    contao.doctrine.backup_manager:
+        class: Contao\CoreBundle\Doctrine\Backup\BackupManager
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.backup.dumper'
+            - '@contao.filesystem.virtual.backups'
+            - ~
+            - '@contao.doctrine.backup.retention_policy'
+
+    contao.doctrine.dca_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
+        arguments:
+            - '@contao.framework'
+            - '@doctrine'
+
+    contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
+        class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
+        decorates: doctrine.orm.proxy_cache_warmer
+        arguments:
+            - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
+            - '@database_connection'
+
+    contao.doctrine.schema.mysql_innodb_row_size_calculator:
+        class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
+        arguments:
+            - '@database_connection'
+
+    contao.doctrine.schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
+        public: true
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+
+    contao.filesystem.dbafs_factory:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
+        arguments:
+            - '@database_connection'
+            - '@event_dispatcher'
+
+    contao.filesystem.dbafs_manager:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
+
+    contao.filesystem.file_download_helper:
+        class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        arguments:
+            - '@uri_signer'
+
+    contao.filesystem.mount_manager:
+        class: Contao\CoreBundle\Filesystem\MountManager
+        arguments:
+            - !tagged_iterator contao.public_file_uri_provider
+
+    contao.filesystem.public_uri.symlinked_local_files_provider:
+        class: Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider
+        arguments:
+            - '@contao.filesystem.adapter.files'
+            - '%contao.upload_path%'
+            - '@request_stack'
+        tags:
+            - { name: contao.public_file_uri_provider }
+
+    contao.filesystem.virtual_factory:
+        class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
+        arguments:
+            - '@contao.filesystem.mount_manager'
+            - '@contao.filesystem.dbafs_manager'
+
+    contao.fragment.forward_renderer:
+        class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
+        arguments:
+            - '@http_kernel'
+            - '@event_dispatcher'
+        calls:
+            - [setFragmentPath, ['%fragment.path%']]
+        tags:
+            - { name: kernel.fragment_renderer, alias: forward }
+
+    contao.fragment.handler:
+        class: Contao\CoreBundle\Fragment\FragmentHandler
+        decorates: fragment.handler
+        arguments:
+            - !tagged_locator { tag: kernel.fragment_renderer, index_by: alias }
+            - '@contao.fragment.handler.inner'
+            - '@request_stack'
+            - '@contao.fragment.registry'
+            - '@contao.fragment.pre_handlers'
+            - '%kernel.debug%'
+
+    contao.fragment.pre_handlers:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments:
+            - []
+
+    contao.fragment.registry:
+        class: Contao\CoreBundle\Fragment\FragmentRegistry
+
+    contao.framework:
+        class: Contao\CoreBundle\Framework\ContaoFramework
+        public: true
+        arguments:
+            - '@request_stack'
+            - '%kernel.project_dir%'
+            - '%contao.error_level%'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.image.deferred_image_storage:
+        class: Contao\Image\DeferredImageStorageFilesystem
+        arguments:
+            - '%kernel.project_dir%/var/deferred-images'
+            - '@?filesystem'
+
+    contao.image.factory:
+        class: Contao\CoreBundle\Image\ImageFactory
+        public: true
+        arguments:
+            - '@contao.image.resizer'
+            - '@contao.image.imagine'
+            - '@contao.image.imagine_svg'
+            - '@filesystem'
+            - '@contao.framework'
+            - '%contao.image.bypass_cache%'
+            - '%contao.image.imagine_options%'
+            - '%contao.image.valid_extensions%'
+            - '%kernel.project_dir%/%contao.upload_path%'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    contao.image.fallback_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
+        tags:
+            - { name: contao.preview_provider, priority: -1024 }
+
+    contao.image.imagine.gd:
+        class: Imagine\Gd\Imagine
+
+    contao.image.imagine.gmagick:
+        class: Imagine\Gmagick\Imagine
+
+    contao.image.imagine.imagick:
+        class: Imagine\Imagick\Imagine
+
+    contao.image.imagine_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
+        arguments:
+            - '@contao.image.imagine'
+        tags:
+            - { name: contao.preview_provider, priority: 0 }
+
+    contao.image.imagine_svg:
+        class: Contao\ImagineSvg\Imagine
+        public: true
+
+    contao.image.picture_factory:
+        class: Contao\CoreBundle\Image\PictureFactory
+        public: true
+        arguments:
+            - '@contao.image.picture_generator'
+            - '@contao.image.factory'
+            - '@contao.framework'
+            - '%contao.image.bypass_cache%'
+            - '%contao.image.imagine_options%'
+
+    contao.image.picture_generator:
+        class: Contao\Image\PictureGenerator
+        public: true
+        arguments:
+            - '@contao.image.resizer'
+            - '@?contao.image.resize_calculator'
+
+    contao.image.preview_factory:
+        class: Contao\CoreBundle\Image\Preview\PreviewFactory
+        public: true
+        arguments:
+            - !tagged_iterator contao.preview_provider
+            - '@contao.image.factory'
+            - '@contao.image.picture_factory'
+            - '@contao.image.studio'
+            - '@contao.framework'
+            - '%kernel.secret%'
+            - '%contao.image.preview.target_dir%'
+            - '%contao.image.valid_extensions%'
+            - '%contao.image.preview.default_size%'
+            - '%contao.image.preview.max_size%'
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\Resizer
+        public: true
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@contao.image.resize_calculator'
+            - '@filesystem'
+            - '@contao.image.deferred_image_storage'
+
+    contao.image.resize_calculator:
+        class: Contao\Image\ResizeCalculator
+
+    contao.image.sizes:
+        class: Contao\CoreBundle\Image\ImageSizes
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@event_dispatcher'
+            - '@contao.translation.translator'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.image.studio:
+        class: Contao\CoreBundle\Image\Studio\Studio
+        public: true
+        arguments:
+            - !service_locator
+              contao.image.studio: '@contao.image.studio'
+              contao.image.picture_factory: '@contao.image.picture_factory'
+              contao.image.factory: '@contao.image.factory'
+              contao.image.resizer: '@contao.image.resizer'
+              contao.assets.files_context: '@contao.assets.files_context'
+              contao.framework: '@contao.framework'
+              event_dispatcher: '@event_dispatcher'
+            - '%kernel.project_dir%'
+            - '%contao.upload_path%'
+            - '%contao.image.valid_extensions%'
+
+    contao.image.studio.figure_renderer:
+        class: Contao\CoreBundle\Image\Studio\FigureRenderer
+        public: true
+        arguments:
+            - '@contao.image.studio'
+            - '@twig'
+
+    contao.insert_tag.parser:
+        class: Contao\CoreBundle\InsertTag\InsertTagParser
+        public: true
+        arguments:
+            - '@contao.framework'
+
+    contao.intl.countries:
+        class: Contao\CoreBundle\Intl\Countries
+        public: true
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - ~
+            - '%contao.intl.countries%'
+            - '%kernel.default_locale%'
+
+    contao.intl.locales:
+        class: Contao\CoreBundle\Intl\Locales
+        public: true
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - ~
+            - ~
+            - '%contao.intl.locales%'
+            - '%contao.intl.enabled_locales%'
+            - '%kernel.default_locale%'
+
+    contao.mailer:
+        class: Contao\CoreBundle\Mailer\ContaoMailer
+        decorates: mailer.mailer
+        arguments:
+            - '@contao.mailer.inner'
+            - '@contao.mailer.available_transports'
+            - '@request_stack'
+
+    contao.mailer.available_transports:
+        class: Contao\CoreBundle\Mailer\AvailableTransports
+        public: true
+        arguments:
+            - '@?translator'
+
+    contao.menu.backend_builder:
+        class: Contao\CoreBundle\Menu\BackendMenuBuilder
+        public: true
+        arguments:
+            - '@knp_menu.factory'
+            - '@event_dispatcher'
+        tags:
+            - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
+            - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
+
+    contao.menu.matcher:
+        class: Knp\Menu\Matcher\Matcher
+
+    contao.menu.renderer:
+        class: Knp\Menu\Renderer\ListRenderer
+        public: true
+        arguments:
+            - '@contao.menu.matcher'
+
+    contao.model_argument_resolver:
+        class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+        tags:
+            # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
+            - { name: controller.argument_value_resolver, priority: 101 }
+
+    contao.monolog.handler:
+        class: Contao\CoreBundle\Monolog\ContaoTableHandler
+        arguments:
+            - debug
+            - false
+        tags:
+            - { name: monolog.logger, channel: contao }
+
+    contao.monolog.processor:
+        class: Contao\CoreBundle\Monolog\ContaoTableProcessor
+        arguments:
+            - '@request_stack'
+            - '@security.token_storage'
+            - '@contao.routing.scope_matcher'
+
+    contao.opt_in:
+        class: Contao\CoreBundle\OptIn\OptIn
+        public: true
+        arguments:
+            - '@contao.framework'
+
+    contao.picker.article_provider:
+        class: Contao\CoreBundle\Picker\ArticlePickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+
+    contao.picker.builder:
+        class: Contao\CoreBundle\Picker\PickerBuilder
+        public: true
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+
+    contao.picker.file_provider:
+        class: Contao\CoreBundle\Picker\FilePickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@translator'
+            - '@security.helper'
+            - '%contao.upload_path%'
+        tags:
+            - { name: contao.picker_provider, priority: 160 }
+
+    contao.picker.page_provider:
+        class: Contao\CoreBundle\Picker\PagePickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+        tags:
+            - { name: contao.picker_provider, priority: 192 }
+
+    contao.picker.table_provider:
+        class: Contao\CoreBundle\Picker\TablePickerProvider
+        arguments:
+            - '@contao.framework'
+            - '@knp_menu.factory'
+            - '@router'
+            - '@translator'
+            - '@database_connection'
+        tags:
+            - contao.picker_provider
+
+    contao.repository.cron_job:
+        class: Contao\CoreBundle\Repository\CronJobRepository
+        arguments:
+            - '@doctrine'
+
+    contao.repository.remember_me:
+        class: Contao\CoreBundle\Repository\RememberMeRepository
+        arguments:
+            - '@doctrine'
+
+    contao.resource_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        public: true
+        arguments:
+            - '%contao.resources_paths%'
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        public: true
+        arguments:
+            - '%contao.resources_paths%'
+
+    contao.routing.backend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - [matchAttribute, [_scope, backend]]
+
+    contao.routing.frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - [matchAttribute, [_scope, frontend]]
+
+    contao.routing.images_loader:
+        class: Contao\CoreBundle\Routing\ImagesLoader
+        arguments:
+            - '%kernel.project_dir%'
+            - '%contao.image.target_dir%'
+        tags:
+            - routing.loader
+
+    contao.routing.input_enhancer:
+        class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
+        arguments:
+            - '@contao.framework'
+        tags:
+            - contao.page_router_enhancer
+
+    contao.routing.locale_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\LocaleCandidates
+        arguments:
+            - '@contao.routing.page_registry'
+
+    contao.routing.matcher.domain_filter:
+        class: Contao\CoreBundle\Routing\Matcher\DomainFilter
+
+    contao.routing.matcher.language_filter:
+        class: Contao\CoreBundle\Routing\Matcher\LanguageFilter
+
+    contao.routing.matcher.published_filter:
+        class: Contao\CoreBundle\Routing\Matcher\PublishedFilter
+        arguments:
+            - '@contao.security.token_checker'
+
+    contao.routing.nested_404_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        public: true
+        arguments:
+            - '@contao.routing.route_404_provider'
+            - '@contao.routing.url_matcher'
+        calls:
+            - [addRouteFilter, ['@contao.routing.matcher.domain_filter']]
+            - [addRouteFilter, ['@contao.routing.matcher.published_filter']]
+
+    contao.routing.nested_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        public: true
+        arguments:
+            - '@contao.routing.route_provider'
+            - '@contao.routing.url_matcher'
+        calls:
+            - [addRouteFilter, ['@contao.routing.matcher.domain_filter']]
+            - [addRouteFilter, ['@contao.routing.matcher.published_filter']]
+            - [addRouteFilter, ['@contao.routing.matcher.language_filter']]
+
+    contao.routing.page_404_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - '@router.request_context'
+            - '@contao.routing.nested_404_matcher'
+            - '@contao.routing.page_url_generator'
+            - ''
+            - '@event_dispatcher'
+            - '@contao.routing.route_404_provider'
+        tags:
+            - { name: router, priority: -200 }
+
+    contao.routing.page_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
+        arguments:
+            - '@database_connection'
+            - '@contao.routing.page_registry'
+
+    contao.routing.page_registry:
+        class: Contao\CoreBundle\Routing\Page\PageRegistry
+        public: true
+        arguments:
+            - '@database_connection'
+
+    contao.routing.page_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - '@router.request_context'
+            - '@contao.routing.nested_matcher'
+            - '@contao.routing.page_url_generator'
+            - ''
+            - '@event_dispatcher'
+            - '@contao.routing.route_provider'
+        tags:
+            - { name: router, priority: 20 }
+
+    contao.routing.page_url_generator:
+        class: Contao\CoreBundle\Routing\PageUrlGenerator
+        arguments:
+            - '@contao.routing.route_provider'
+            - '@contao.routing.page_registry'
+            - '@?logger'
+
+    contao.routing.response_context_accessor:
+        class: Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor
+        public: true
+        arguments:
+            - '@request_stack'
+
+    contao.routing.response_context_factory:
+        class: Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory
+        public: true
+        arguments:
+            - '@contao.routing.response_context_accessor'
+            - '@event_dispatcher'
+            - '@contao.security.token_checker'
+            - '@contao.string.html_decoder'
+            - '@request_stack'
+            - '@contao.insert_tag.parser'
+
+    contao.routing.route_404_provider:
+        class: Contao\CoreBundle\Routing\Route404Provider
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.locale_candidates'
+            - '@contao.routing.page_registry'
+
+    contao.routing.route_provider:
+        class: Contao\CoreBundle\Routing\RouteProvider
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_candidates'
+            - '@contao.routing.page_registry'
+
+    contao.routing.scope_matcher:
+        class: Contao\CoreBundle\Routing\ScopeMatcher
+        public: true
+        arguments:
+            - '@contao.routing.backend_matcher'
+            - '@contao.routing.frontend_matcher'
+
+    contao.routing.url_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
+
+    contao.search.default_indexer:
+        class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+        tags:
+            - contao.search_indexer
+
+    contao.search.delegating_indexer:
+        class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
+
+    contao.security.access_decision_manager:
+        decorates: security.access.decision_manager
+        class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
+        arguments:
+            - '@.inner'
+            - '@contao.security.access_decision_manager.priority'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+
+    contao.security.access_decision_manager.priority:
+        class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
+        arguments:
+            - !tagged_iterator security.voter
+            - '@contao.security.priority_strategy'
+
+    contao.security.authentication_failure_handler:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
+        arguments:
+            - '@?logger'
+
+    contao.security.authentication_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@security.firewall.map'
+            - '@?logger'
+
+    contao.security.backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.security.backend_user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        arguments:
+            - '@contao.framework'
+            - Contao\BackendUser
+
+    contao.security.data_container.table_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: security.voter, priority: 100 }
+
+    contao.security.default_data_container_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
+        tags:
+            - { name: security.voter, priority: -1024 } # Should always come last
+
+    contao.security.frontend_preview_authenticator:
+        class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
+        public: true
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@contao.security.frontend_user_provider'
+            - '@?logger'
+
+    contao.security.frontend_user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        arguments:
+            - '@contao.framework'
+            - Contao\FrontendUser
+
+    contao.security.login_authenticator:
+        class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
+        arguments:
+            - ~
+            - ~
+            - ~
+            - '@contao.routing.scope_matcher'
+            - '@router.default'
+            - '@uri_signer'
+            - '@contao.framework'
+            - '@security.token_storage'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
+            - '@request_stack'
+            - ~
+            - ~
+
+    contao.security.member_group_voter:
+        class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
+
+    contao.security.persistent_remember_me_handler:
+        class: Symfony\Component\Security\Http\RememberMe\PersistentRememberMeHandler
+        arguments:
+            - '@contao.security.remember_me_token_provider'
+            - '%kernel.secret%'
+            - '@contao.security.frontend_user_provider'
+            - '@request_stack'
+            - []
+            - '@?logger'
+            - ~
+        tags:
+            - { name: monolog.logger, channel: security }
+
+    contao.security.priority_strategy:
+        class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
+
+    contao.security.remember_me_token_provider:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
+        arguments:
+            - '@contao.repository.remember_me'
+
+    contao.security.token_checker:
+        public: true
+        class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
+        arguments:
+            - '@request_stack'
+            - '@security.firewall.map'
+            - '@security.token_storage'
+            - '@security.authentication.trust_resolver'
+            - ~
+
+    contao.security.two_factor.authenticator:
+        class: Contao\CoreBundle\Security\TwoFactor\Authenticator
+        public: true
+
+    contao.security.two_factor.backup_code_manager:
+        class: Contao\CoreBundle\Security\TwoFactor\BackupCodeManager
+        public: true
+
+    contao.security.two_factor.provider:
+        class: Contao\CoreBundle\Security\TwoFactor\Provider
+        arguments:
+            - '@contao.security.two_factor.authenticator'
+        tags:
+            - { name: scheb_two_factor.provider, alias: contao }
+
+    contao.security.two_factor.trusted_device_manager:
+        class: Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager
+        public: true
+        arguments:
+            - '@request_stack'
+            - '@scheb_two_factor.trusted_token_storage'
+            - '@doctrine.orm.entity_manager'
+
+    contao.security.user_checker:
+        class: Contao\CoreBundle\Security\User\UserChecker
+        arguments:
+            - '@contao.framework'
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        arguments:
+            - _contao_be_attributes
+        calls:
+            - [setName, [contao_backend]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        arguments:
+            - _contao_fe_attributes
+        calls:
+            - [setName, [contao_frontend]]
+
+    contao.slug:
+        class: Contao\CoreBundle\Slug\Slug
+        public: true
+        arguments:
+            - '@contao.slug.generator'
+            - '@contao.framework'
+
+    contao.slug.generator:
+        class: Ausi\SlugGenerator\SlugGenerator
+        public: true
+        arguments:
+            - { validChars: 0-9a-z }
+
+    contao.slug.valid_characters:
+        class: Contao\CoreBundle\Slug\ValidCharacters
+        public: true
+        arguments:
+            - '@event_dispatcher'
+            - '@translator'
+
+    contao.string.html_decoder:
+        class: Contao\CoreBundle\String\HtmlDecoder
+        public: true
+        arguments:
+            - '@contao.insert_tag.parser'
+
+    contao.string.simple_token_expression_language:
+        class: Contao\CoreBundle\String\SimpleTokenExpressionLanguage
+        arguments:
+            - ~
+            - !tagged_iterator contao.simple_token_extension
+
+    contao.string.simple_token_parser:
+        class: Contao\CoreBundle\String\SimpleTokenParser
+        public: true
+        arguments:
+            - '@contao.string.simple_token_expression_language'
+
+    contao.token_generator:
+        class: Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator
+        arguments:
+            - 48
+
+    contao.translation.data_collector_translator:
+        class: Contao\CoreBundle\Translation\DataCollectorTranslator
+        autoconfigure: false
+        arguments:
+            - '@contao.translation.data_collector_translator.inner'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.translation.translator:
+        class: Contao\CoreBundle\Translation\Translator
+        decorates: translator
+        arguments:
+            - '@contao.translation.translator.inner'
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
+    contao.twig.extension:
+        class: Contao\CoreBundle\Twig\Extension\ContaoExtension
+        public: true
+        arguments:
+            - '@twig'
+            - '@contao.twig.filesystem_loader'
+            - '@contao.csrf.token_manager'
+
+    contao.twig.fail_tolerant_filesystem_loader:
+        class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
+        arguments:
+            - []
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 1 }
+
+    contao.twig.figure_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FigureRuntime
+        arguments:
+            - '@contao.image.studio.figure_renderer'
+
+    contao.twig.filesystem_loader:
+        class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
+        arguments:
+            - '@cache.system'
+            - '@contao.twig.loader.template_locator'
+            - '@contao.twig.loader.theme_namespace'
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 2 }
+            - { name: kernel.reset, method: reset }
+
+    contao.twig.filesystem_loader_warmer:
+        class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.loader.template_locator'
+            - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
+            - '%kernel.environment%'
+        tags:
+            - { name: kernel.cache_warmer }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.highlighter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
+
+    contao.twig.insert_tag_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime
+        arguments:
+            - '@contao.insert_tag.parser'
+
+    contao.twig.inspector:
+        class: Contao\CoreBundle\Twig\Inspector\Inspector
+        arguments:
+            - '@twig'
+
+    contao.twig.interop.context_factory:
+        class: Contao\CoreBundle\Twig\Interop\ContextFactory
+        public: true
+
+    contao.twig.legacy_template_functions_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
+        arguments:
+            - '@contao.framework'
+
+    contao.twig.loader.template_locator:
+        class: Contao\CoreBundle\Twig\Loader\TemplateLocator
+        arguments:
+            - '%kernel.project_dir%'
+            - '%kernel.bundles%'
+            - '%kernel.bundles_metadata%'
+            - '@contao.twig.loader.theme_namespace'
+            - '@database_connection'
+
+    contao.twig.loader.theme_namespace:
+        class: Contao\CoreBundle\Twig\Loader\ThemeNamespace
+
+    contao.twig.picture_configuration_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
+
+    contao.twig.schema_org_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
+        arguments:
+            - '@contao.routing.response_context_accessor'
+
+    contao.twig.url_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
+        arguments:
+            - '@request_stack'
+
+    # Autowiring aliases
+    Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
+    Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
+    Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
+    Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
+    Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
+    Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'
+    Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag.parser'
+    Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
+    Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
+    Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
+    Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
+    Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
+    Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
+    Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
+    Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
+    Contao\CoreBundle\Security\TwoFactor\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'
+    Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
+    Contao\CoreBundle\Slug\Slug: '@contao.slug'
+    Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
+    Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'

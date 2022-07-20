@@ -30,7 +30,7 @@ gulp.task('minify-public', function (cb) {
 gulp.task('minify-theme-js', function (cb) {
     pump(
         [
-            gulp.src('core-bundle/src/Resources/contao/themes/flexible/*.js'),
+            gulp.src('core-bundle/contao/themes/flexible/*.js'),
             ignore.exclude('*.min.js'),
             uglify({
                 output: {
@@ -40,7 +40,7 @@ gulp.task('minify-theme-js', function (cb) {
             rename({
                 suffix: '.min'
             }),
-            gulp.dest('core-bundle/src/Resources/contao/themes/flexible')
+            gulp.dest('core-bundle/contao/themes/flexible')
         ],
         cb
     );
@@ -49,7 +49,7 @@ gulp.task('minify-theme-js', function (cb) {
 gulp.task('minify-theme-css', function (cb) {
     pump(
         [
-            gulp.src('core-bundle/src/Resources/contao/themes/flexible/*.css'),
+            gulp.src('core-bundle/contao/themes/flexible/*.css'),
             ignore.exclude('*.min.css'),
             csso({
                 comments: false,
@@ -58,7 +58,7 @@ gulp.task('minify-theme-css', function (cb) {
             rename({
                 suffix: '.min'
             }),
-            gulp.dest('core-bundle/src/Resources/contao/themes/flexible')
+            gulp.dest('core-bundle/contao/themes/flexible')
         ],
         cb
     );
@@ -67,9 +67,9 @@ gulp.task('minify-theme-css', function (cb) {
 gulp.task('minify-theme-icons', function (cb) {
     pump(
         [
-            gulp.src('core-bundle/src/Resources/contao/themes/flexible/icons/*.svg'),
+            gulp.src('core-bundle/contao/themes/flexible/icons/*.svg'),
             svgo(),
-            gulp.dest('core-bundle/src/Resources/contao/themes/flexible/icons')
+            gulp.dest('core-bundle/contao/themes/flexible/icons')
         ],
         cb
     );
@@ -86,21 +86,21 @@ gulp.task('watch', function () {
 
     gulp.watch(
         [
-            'core-bundle/src/Resources/contao/themes/flexible/*.js',
-            '!core-bundle/src/Resources/contao/themes/flexible/*.min.js'
+            'core-bundle/contao/themes/flexible/*.js',
+            '!core-bundle/contao/themes/flexible/*.min.js'
         ],
         gulp.series('minify-theme-js')
     );
 
     gulp.watch(
         [
-            'core-bundle/src/Resources/contao/themes/flexible/*.css',
-            '!core-bundle/src/Resources/contao/themes/flexible/*.min.css'
+            'core-bundle/contao/themes/flexible/*.css',
+            '!core-bundle/contao/themes/flexible/*.min.css'
         ],
         gulp.series('minify-theme-css')
     );
 
-    gulp.watch('core-bundle/src/Resources/contao/themes/flexible/icons/*.svg', gulp.series('minify-theme-icons'));
+    gulp.watch('core-bundle/contao/themes/flexible/icons/*.svg', gulp.series('minify-theme-icons'));
 });
 
 gulp.task('default', gulp.parallel('minify-public', 'minify-theme-js', 'minify-theme-css', 'minify-theme-icons'));
