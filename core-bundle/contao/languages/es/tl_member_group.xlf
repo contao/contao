@@ -1,0 +1,94 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_member_group.php" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="tl_member_group.name.0">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Por favor introduce un nombre de grupo único.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.0">
+        <source>Redirect on login</source>
+        <target>Redirección al conectarse</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.1">
+        <source>Redirect group members to a custom page when they log in.</source>
+        <target>Si seleccionas esta opción, los miembros del grupo serán redirigidos a una página concreta cuando se conecten.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Saltar a la página</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.1">
+        <source>Please choose the page to which the group members will be redirected.</source>
+        <target>Por favor selecciona la página a la que los miembros serán redirigidos.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.0">
+        <source>Deactivate</source>
+        <target>Desactivar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Si seleccionas esta opción, se desactivará este grupo. Los permisos de grupo desactivados no se pudran heredar por los miembros del mismo.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.0">
+        <source>Activate on</source>
+        <target>Activar el</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo antes de una fecha / hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Deactivate on</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo después de una determinada fecha / hora, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.title_legend">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect_legend">
+        <source>Auto-redirect</source>
+        <target>Redirigir automáticamente</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
+        <target>Configuración de grupo</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.0">
+        <source>New</source>
+        <target>Nuevo</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.1">
+        <source>Create a new member group</source>
+        <target>Crear un nuevo grupo de miembros</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
+        <target>Mostrar los detalles del ID del grupo de miembros %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
+        <target>Editar ID de grupo de miembros %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
+        <target>Duplicar ID de grupo de miembros %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
+        <target>Eliminar ID de grupo de miembros</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
+        <target>Activar/desactivar ID de grupo de miembros %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

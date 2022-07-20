@@ -3,46 +3,46 @@ host = https://www.transifex.com
 type = XLIFF
 
 [newsletter-bundle.v5_0-default]
-source_file = src/Resources/contao/languages/en/default.xlf
+source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
+file_filter = contao/languages/<lang>/default.xlf
 
 [newsletter-bundle.v5_0-modules]
-source_file = src/Resources/contao/languages/en/modules.xlf
+source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
+file_filter = contao/languages/<lang>/modules.xlf
 
 [newsletter-bundle.v5_0-tl_member]
-source_file = src/Resources/contao/languages/en/tl_member.xlf
+source_file = contao/languages/en/tl_member.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_member.xlf
+file_filter = contao/languages/<lang>/tl_member.xlf
 
 [newsletter-bundle.v5_0-tl_module]
-source_file = src/Resources/contao/languages/en/tl_module.xlf
+source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
+file_filter = contao/languages/<lang>/tl_module.xlf
 
 [newsletter-bundle.v5_0-tl_newsletter]
-source_file = src/Resources/contao/languages/en/tl_newsletter.xlf
+source_file = contao/languages/en/tl_newsletter.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_newsletter.xlf
+file_filter = contao/languages/<lang>/tl_newsletter.xlf
 
 [newsletter-bundle.v5_0-tl_newsletter_channel]
-source_file = src/Resources/contao/languages/en/tl_newsletter_channel.xlf
+source_file = contao/languages/en/tl_newsletter_channel.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_newsletter_channel.xlf
+file_filter = contao/languages/<lang>/tl_newsletter_channel.xlf
 
 [newsletter-bundle.v5_0-tl_newsletter_recipients]
-source_file = src/Resources/contao/languages/en/tl_newsletter_recipients.xlf
+source_file = contao/languages/en/tl_newsletter_recipients.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_newsletter_recipients.xlf
+file_filter = contao/languages/<lang>/tl_newsletter_recipients.xlf
 
 [newsletter-bundle.v5_0-tl_user]
-source_file = src/Resources/contao/languages/en/tl_user.xlf
+source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
+file_filter = contao/languages/<lang>/tl_user.xlf
 
 [newsletter-bundle.v5_0-tl_user_group]
-source_file = src/Resources/contao/languages/en/tl_user_group.xlf
+source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
+file_filter = contao/languages/<lang>/tl_user_group.xlf

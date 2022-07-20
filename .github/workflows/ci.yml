@@ -4,9 +4,9 @@ on:
     pull_request: ~
     push:
         branches:
-            - 5.x
+            - 5.0
         tags:
-            - '*'
+            - 5.0.*
     schedule:
         - cron: 0 13 * * MON,THU
 
@@ -127,8 +127,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
 
     phpstan:
         name: PHPStan

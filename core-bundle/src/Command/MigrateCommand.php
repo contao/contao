@@ -21,6 +21,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Schema\Table;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,11 +29,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'contao:migrate',
+    description: 'Executes migrations and updates the database schema.'
+)]
 class MigrateCommand extends Command
 {
-    protected static $defaultName = 'contao:migrate';
-    protected static $defaultDescription = 'Executes migrations and updates the database schema.';
-
     private SymfonyStyle|null $io = null;
 
     public function __construct(

@@ -1,0 +1,105 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_newsletter_channel.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_newsletter_channel.title.0">
+        <source>Title</source>
+        <target>عنوان</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title.1">
+        <source>Please enter the title of the channel.</source>
+        <target>لطفا عنوان کانال وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.0">
+        <source>Redirect page</source>
+        <target>برگه‌ی تغییر مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.1">
+        <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
+        <target>لطفا برگه خبرنامه خوان را که بازدیدکنندگان با انتخاب خبرنامه بازگردانی خواهند شد را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>قالب ایمیل</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can select an e-mail template.</source>
+        <target>اینجا می‌توانید قالب ایمیل را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Mailer transport</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>اینجا می‌توانید mailer transport‌ای که خبرنامه‌های این کانال را ارسال می‌کند را رونویسی کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
+        <target>آدرس ایمیل فرستنده</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
+        <target>لطفا آدرس ایمیل فرستنده را وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>نام فرستنده</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
+        <target>اینجا می‌توانید نام فرستنده‌ی اختیاری وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.0">
+        <source>Revision date</source>
+        <target>تاریخ بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>تاریخ و ساعت آخرین بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title_legend">
+        <source>Title and redirect</source>
+        <target>عنوان و بازگردانی</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>تنظیمات قالب</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
+        <target>تنظیمات فرستنده</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.0">
+        <source>New</source>
+        <target>جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.1">
+        <source>Create a new channel</source>
+        <target>ایجاد یک کانال جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.show">
+        <source>Show the details of channel ID %s</source>
+        <target>نمایش جزئیات کانال شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.edit">
+        <source>Edit channel ID %s</source>
+        <target>ویرایش کانال شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.children">
+        <source>Edit the newsletters of channel ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.copy">
+        <source>Duplicate channel ID %s</source>
+        <target>تکثیر کانال شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.delete">
+        <source>Delete channel ID %s</source>
+        <target>حذف کانال شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.recipients">
+        <source>Edit the recipients of channel ID %s</source>
+        <target>ویرایش گیرندگان کانال شناسه‌ی %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

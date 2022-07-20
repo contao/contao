@@ -1,0 +1,714 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="tl_page.title.0">
+        <source>Page name</source>
+        <target>Имя страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.title.1">
+        <source>Please enter the page name.</source>
+        <target>Введите имя страницы.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Тип страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Выберите тип страницы.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.0">
+        <source>Page alias</source>
+        <target>Алиас страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.1">
+        <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
+        <target>Алиас страницы является уникальной ссылкой на страницу, которую можно использовать вместо её ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Требовать элемент</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Вызывать ошибку 404 если URL-адрес страницы не содержит алиас элемента.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Путь маршрута</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Предварительный просмотр окончательного пути (возможно, с заполнителями), соответствующего этой странице.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>Приоритет маршрута</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>При необходимости настройте приоритет, чтобы он влиял на порядок маршрутов. По умолчанию: 0</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.0">
+        <source>Page title</source>
+        <target>Название страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.1">
+        <source>Please enter the page title.</source>
+        <target>Введите название страницы.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.0">
+        <source>Language</source>
+        <target>Язык</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.1">
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
+        <target>Введите язык страницы согласно стандарта ISO-639 (напр. &quot;en&quot; для Английского или &quot;en_US&quot; для Американского английского).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.1">
+        <source>Here you can define how search engines handle the page.</source>
+        <target>Вы можете выбрать как поисковым системам следует обрабатывать страницу.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Режим обслуживания</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Показать посетителям страницу, на которой поддерживается этот веб-сайт, в настоящее время.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.0">
+        <source>Page description</source>
+        <target>Описание страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.1">
+        <source>Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.</source>
+        <target>Вы можете ввести краткое описание страницы, которое будет оценено поисковыми системами, такими как Google или Yahoo. Индексируется обычно от 150 до 300 символов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.0">
+        <source>Redirect type</source>
+        <target>Тип перенаправления</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.1">
+        <source>Please choose the redirect type.</source>
+        <target>Выберите тип перенаправления.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Перейти на страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
+        <target>Выберите страницу, к которой будут перенаправлены посетители. Оставьте пустым для перенаправления на первую постоянную подстраницу.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Направление на последнюю посещенную страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Направление участника на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.0">
+        <source>Language fallback</source>
+        <target>Резервный язык</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.1">
+        <source>Show this page if there is none that matches the visitor's language.</source>
+        <target>Показать эту страницу, если нет страницы, которая соответствует языку посетителя.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>Отключить перенаправление языка</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Не перенаправлять посетителей в корень сайта в зависимости от предпочитаемого языка браузера.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+        <target>Favicon</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+        <target>Вы можете выбрать значок сайта.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+        <target>Пользовательский robots.txt</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Вы можете ввести пользовательский контент в robots.txt. Он может быть расширен автоматически с помощью расширений.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.0">
+        <source>Domain name</source>
+        <target>Имя домена</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.1">
+        <source>Here you can restrict the access to the website to a certain domain name.</source>
+        <target>Вы можете ограничить доступ на веб-сайт определенным доменным именем.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL файлов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL файлов применяется к каталогу &lt;em&gt;files&lt;/em&gt; и всем эскизам изображений (оптимизация скорости страниц).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL ресурсов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Почтовый транспорт</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Здесь можно переопределить транспорт почтовой рассылки, используемый для отправки сообщений электронной почты на этом веб-сайте.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Включить rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Добавить rel=&quot;canonical&quot; теги на веб-сайт.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>Пользовательский URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Вы можете установить собственный канонический URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Параметры запроса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>По умолчанию Contao удаляет параметры запроса из канонического URL-адреса. Вы можете добавить разделенный запятыми список параметров запроса для сохранения. Используйте &quot;*&quot; в качестве подстановочного знака.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.0">
+        <source>E-mail address of the website administrator</source>
+        <target>E-mail администратора веб-сайта</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.1">
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Этот адрес электронной почты будет использоваться для отправки и получения системных сообщений.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.0">
+        <source>Date format</source>
+        <target>Формат даты</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>Строка формата даты будет проанализирована функцией PHP date()</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.0">
+        <source>Time format</source>
+        <target>Формат времени</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>Строка формата времени будет проанализирована функцией PHP date()</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Формат даты и времени</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>Строка формата даты и времени будет проанализирована функцией PHP date()</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Допустимые символы алиаса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Вы можете выбрать определенный набор символов для автоматически генерируемых алиасов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Файловый стиль для URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Создание алиасов страниц в стиле отображения иерархии файловой системы напр. &lt;em&gt;docs/install/download.html&lt;/em&gt; вместо &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+        <target>URL-префикс</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>Введите префикс URL (например, язык), который будет добавлен ко всем алиасам страниц под этой корневой страницей.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+        <target>URL-суффикс</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>Суффикс URL будет добавлен в строку URI для моделирования статических документов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.0">
+        <source>Protocol</source>
+        <target>Протокол</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.1">
+        <source>Here you can select which protocol to use for the website.</source>
+        <target>Вы можете выбрать, какой протокол использовать для веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.0">
+        <source>Forward to another page</source>
+        <target>Перенаправить на страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.1">
+        <source>Redirect visitors to another page (e.g. a login page).</source>
+        <target>Перенаправить посетителей на другую страницу (напр. страницу с формой авторизации или на главную).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.0">
+        <source>Protect page</source>
+        <target>Защитить страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.1">
+        <source>Restrict page access to certain member groups.</source>
+        <target>Показывать страницу только для определённой группы участников.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.0">
+        <source>Allowed member groups</source>
+        <target>Разрешенные группы участников</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.1">
+        <source>These groups will be able to access the page.</source>
+        <target>Выбранные группы будут иметь возможность доступа к этой странице.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.0">
+        <source>Assign a layout</source>
+        <target>Назначить макет</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.1">
+        <source>Assign a page layout to the page and its subpages.</source>
+        <target>Назначить макет страницы и всех вложенных подстраниц.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.0">
+        <source>Page layout</source>
+        <target>Макет страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.1">
+        <source>You can manage page layouts with the &quot;themes&quot; module.</source>
+        <target>Вы можете управлять макетами страниц в модуле панели управления 'Темы'.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+        <target>Макет подстраницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+        <target>Вы можете выбрать другой макет для подстраниц.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.0">
+        <source>Set cache timeouts</source>
+        <target>Время кеширования</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.1">
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Установите значение времени кеширования страницы и ее подстраниц.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.0">
+        <source>Shared cache timeout</source>
+        <target>Время кеширования общего кеша</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.1">
+        <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+        <target>Период, после которого страница больше не должна считаться новой в общем кеше.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.0">
+        <source>Always load from shared cache</source>
+        <target>Всегда загружать из общего кеша</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.1">
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>Всегда загружать страницу из общего кеша, даже если участник вошел в систему. Обратите внимание, что в этом случае вы больше не сможете персонализировать страницу для зарегистрированных участников!</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Private cache timeout</source>
+        <target>Время кеширования частного кеша</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>Период, после которого страница больше не должна считаться новой в общем кеше.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.0">
+        <source>Assign access rights</source>
+        <target>Назначить права</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.1">
+        <source>Access rights determine what back end users can do with the page.</source>
+        <target>Назначение прав доступа определяет, кто из пользователей панели управления может модифицировать страницу и статьи.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.0">
+        <source>Owner</source>
+        <target>Владелец</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.1">
+        <source>Please select a user as the owner of the page.</source>
+        <target>Выберите владельца текущей страницы.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.0">
+        <source>Group</source>
+        <target>Группа</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.1">
+        <source>Please select a user group as the owner of the page.</source>
+        <target>Выберите группу пользователей, владельцев текущей страницы.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.0">
+        <source>Access rights</source>
+        <target>Права доступа</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.1">
+        <source>Please assign the access rights for the page and its subpages.</source>
+        <target>Определите права доступа для страницы и ее подстраниц.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.0">
+        <source>Do not search</source>
+        <target>Запретить поиск на странице</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.1">
+        <source>Exclude the page from the search index.</source>
+        <target>Исключить страницу из поискового индекса.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.0">
+        <source>CSS class</source>
+        <target>CSS класс</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.1">
+        <source>The class(es) will be used in the navigation menu and the &amp;lt;body&amp;gt; tag.</source>
+        <target>Класс(ы) будут использованы в меню навигации и теге &amp;lt;body&amp;gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.0">
+        <source>Show in HTML sitemap</source>
+        <target>Показать в HTML-карте веб-сайта</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.1">
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Вы можете определить, будет ли страница отображаться в HTML-карте веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.0">
+        <source>Hide in navigation</source>
+        <target>Скрыть в навигации</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.1">
+        <source>Hide the page in the navigation menu.</source>
+        <target>Скрыть страницу в меню навигации.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.0">
+        <source>Access key</source>
+        <target>Клавиша быстрого доступа</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.1">
+        <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
+        <target>Элемент навигации может быть сфокусирован одновременным нажатием [ALT] или [CTRL] + клавиша быстрого доступа.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.0">
+        <source>Publish page</source>
+        <target>Опубликовать</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.1">
+        <source>Make the page publicly visible on the website.</source>
+        <target>Сделать страницу видимой на веб-сайте.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.0">
+        <source>Show from</source>
+        <target>Публиковать с</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.1">
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.0">
+        <source>Show until</source>
+        <target>Публиковать до</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.1">
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.0">
+        <source>Enforce two-factor authentication</source>
+        <target>Обеспечить двухфакторную авторизацию</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.1">
+        <source>Enforce two-factor authentication for all members.</source>
+        <target>Обеспечить двухфакторную авторизацию для всех участников.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
+        <source>Two-factor redirect page</source>
+        <target>Перейти на страницу двухфакторной авторизации</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Выберите страницу, к которой будут перенаправлены посетители, чтобы настроить двухфакторную аутентификацию.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.title_legend">
+        <source>Name and type</source>
+        <target>Имя и тип</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>Маршрутизация</target>
+      </trans-unit>
+      <trans-unit id="tl_page.meta_legend">
+        <source>Metadata</source>
+        <target>Метаданные</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Канонический URL </target>
+      </trans-unit>
+      <trans-unit id="tl_page.system_legend">
+        <source>System settings</source>
+        <target>Системные настройки</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Настройки перенаправления</target>
+      </trans-unit>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
+        <target>Настройки URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>Настройки языка</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
+        <target>Настройки веб-сайта</target>
+      </trans-unit>
+      <trans-unit id="tl_page.global_legend">
+        <source>Global settings</source>
+        <target>Общие настройки</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap_legend">
+        <source>XML sitemap</source>
+        <target>XML-карта веб-сайта</target>
+      </trans-unit>
+      <trans-unit id="tl_page.forward_legend">
+        <source>Auto-forward</source>
+        <target>Автоматическое перенаправление</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected_legend">
+        <source>Access protection</source>
+        <target>Защита доступа</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_legend">
+        <source>Layout settings</source>
+        <target>Настройки макета</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache_legend">
+        <source>Cache settings</source>
+        <target>Настройки кеша</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod_legend">
+        <source>Access rights</source>
+        <target>Права доступа</target>
+      </trans-unit>
+      <trans-unit id="tl_page.expert_legend">
+        <source>Expert settings</source>
+        <target>Экспертные настройки</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tabnav_legend">
+        <source>Keyboard navigation</source>
+        <target>Клавиши навигации</target>
+      </trans-unit>
+      <trans-unit id="tl_page.publish_legend">
+        <source>Publish settings</source>
+        <target>Настройки публикации</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactor_legend">
+        <source>Two-factor authentication</source>
+        <target>Двухфакторная авторизация</target>
+      </trans-unit>
+      <trans-unit id="tl_page.permanent">
+        <source>301 Permanent redirect</source>
+        <target>301 Постоянное перенаправление</target>
+      </trans-unit>
+      <trans-unit id="tl_page.temporary">
+        <source>302 Temporary redirect</source>
+        <target>302 Временное перенаправление</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_default">
+        <source>Default</source>
+        <target>По умолчанию</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_always">
+        <source>Show always</source>
+        <target>Всегда показывать</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_never">
+        <source>Show never</source>
+        <target>Никогда не показывать</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+        <target>Наследовать макет страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.1">
+        <source>Create a new page</source>
+        <target>Создать новую страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.show">
+        <source>Show the details of page ID %s</source>
+        <target>Показать детали страницы ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.edit">
+        <source>Edit page ID %s</source>
+        <target>Редактировать страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cut">
+        <source>Move page ID %s</source>
+        <target>Переместить страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copy">
+        <source>Duplicate page ID %s</source>
+        <target>Дублировать страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copyChilds">
+        <source>Duplicate page ID %s with its subpages</source>
+        <target>Дублировать страницу ID %s с подстраницами</target>
+      </trans-unit>
+      <trans-unit id="tl_page.delete">
+        <source>Delete page ID %s</source>
+        <target>Удалить страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle">
+        <source>Publish/unpublish page ID %s</source>
+        <target>Опубликовать/изъять страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Вставить в страницу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
+        <target>Вставить после страницы ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles">
+        <source>Edit the articles of page ID %s</source>
+        <target>Редактировать статьи на странице ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>Конфликты маршрутов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Следующие страницы имеют аналогичный алиас, который может конфликтовать с этой страницей. Если URL-адрес разрешен неправильно, попробуйте изменить приоритет маршрутов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Включите канонические URL-адреса в корневой странице веб-сайта, чтобы включить эту конфигурацию.</target>
+      </trans-unit>
+      <trans-unit id="CACHE.0">
+        <source>0 (do not cache)</source>
+        <target>0 (не кешировать)</target>
+      </trans-unit>
+      <trans-unit id="CACHE.5">
+        <source>5 seconds</source>
+        <target>5 секунд</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15">
+        <source>15 seconds</source>
+        <target>15 секунд</target>
+      </trans-unit>
+      <trans-unit id="CACHE.30">
+        <source>30 seconds</source>
+        <target>30 секунд</target>
+      </trans-unit>
+      <trans-unit id="CACHE.60">
+        <source>60 seconds</source>
+        <target>1 минута</target>
+      </trans-unit>
+      <trans-unit id="CACHE.300">
+        <source>5 minutes</source>
+        <target>5 минут</target>
+      </trans-unit>
+      <trans-unit id="CACHE.900">
+        <source>15 minutes</source>
+        <target>15 минут</target>
+      </trans-unit>
+      <trans-unit id="CACHE.1800">
+        <source>30 minutes</source>
+        <target>30 минут</target>
+      </trans-unit>
+      <trans-unit id="CACHE.3600">
+        <source>60 minutes</source>
+        <target>60 минут</target>
+      </trans-unit>
+      <trans-unit id="CACHE.10800">
+        <source>3 hours</source>
+        <target>3 часа</target>
+      </trans-unit>
+      <trans-unit id="CACHE.21600">
+        <source>6 hours</source>
+        <target>6 часов</target>
+      </trans-unit>
+      <trans-unit id="CACHE.43200">
+        <source>12 hours</source>
+        <target>12 часов</target>
+      </trans-unit>
+      <trans-unit id="CACHE.86400">
+        <source>24 hours</source>
+        <target>24 часа</target>
+      </trans-unit>
+      <trans-unit id="CACHE.259200">
+        <source>3 days</source>
+        <target>3 дня</target>
+      </trans-unit>
+      <trans-unit id="CACHE.604800">
+        <source>7 days</source>
+        <target>7 дней</target>
+      </trans-unit>
+      <trans-unit id="CACHE.2592000">
+        <source>30 days</source>
+        <target>30 дней</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+        <target>3 месяца</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+        <target>6 месяцев</target>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
+        <target>1 год</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

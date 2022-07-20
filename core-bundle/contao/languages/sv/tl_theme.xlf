@@ -1,0 +1,194 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_theme.name.0">
+        <source>Theme title</source>
+        <target>Temats titel</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.name.1">
+        <source>Please enter a unique theme title.</source>
+        <target>Ange en unik titel för temat.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.0">
+        <source>Author</source>
+        <target>Namn</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.1">
+        <source>Please enter the name of the theme designer.</source>
+        <target>Ange namnet på temats upphovsman.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.0">
+        <source>Folders</source>
+        <target>Mappar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.1">
+        <source>Please select the folders that belong to the theme from the files directory.</source>
+        <target>Välj de mappar i filarkivet som hör till temat.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.0">
+        <source>Templates folder</source>
+        <target>Mallmapp</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.1">
+        <source>Here you can select a templates folder that will be exported with the theme.</source>
+        <target>Här kan du välja en mapp med mallar som kommer att exporteras tillsammans med temat.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.0">
+        <source>Screenshot</source>
+        <target>Skärmdump</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.1">
+        <source>Here you can choose a screenshot of the theme.</source>
+        <target>Här kan du välja en skärmdump för temat.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.0">
+        <source>Source files</source>
+        <target>Källfiler</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.1">
+        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <target>Här kan du ladda upp en eller flera .cto- eller .sql-filer som ska importeras.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.0">
+        <source>Revision date</source>
+        <target>Ändringsdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum och tid för senaste ändringen.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.title_legend">
+        <source>Title and author</source>
+        <target>Titel och upphovsman</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.config_legend">
+        <source>Configuration</source>
+        <target>Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.theme_imported">
+        <source>Theme &quot;%s&quot; has been imported.</source>
+        <target>Temat &quot;%s&quot; har importerats.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.checking_theme">
+        <source>The theme data is being checked</source>
+        <target>Temats data kontrolleras.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_fields">
+        <source>Tables and fields</source>
+        <target>Tabeller och fält</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_field">
+        <source>The field &lt;strong&gt;%s&lt;/strong&gt; is missing in the database and will not be imported.</source>
+        <target>Fältet &lt;strong&gt;%s&lt;/strong&gt; saknas i databasen och kommer därför inte att importeras.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_ok">
+        <source>The tables have been successfully checked.</source>
+        <target>Tabellen har kontrollerats utan problem.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_xml">
+        <source>Theme &quot;%s&quot; is corrupt and cannot be imported.</source>
+        <target>Temat &quot;%s&quot; är skadat och kan inte importeras.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.custom_templates">
+        <source>Custom templates</source>
+        <target>Egna mallar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.template_exists">
+        <source>The template &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; exists and will be overwritten.</source>
+        <target>Mallen &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; finns redan och kommer skrivas över.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates_ok">
+        <source>No conflicts detected.</source>
+        <target>Inga konflikter har identifierats.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.0">
+        <source>Theme store</source>
+        <target>Temabutik</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.1">
+        <source>Find more themes in the Contao theme store</source>
+        <target>Hitta fler teman i Contao temabutik</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>Import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>Importera ett tema</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Importera en exempelwebbplats</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Här kan du importera en &lt;code&gt;.sql&lt;/code&gt;-fil. All befintlig data kommer att raderas! Om du bara vill importera ett tema, välj inte en fil här.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Importtyp</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Här kan du välja importtyp.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Fullständig SQL-import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Endast data</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Data endast utan trunkering av tabeller</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Redigera temainställningarna</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.1">
+        <source>Create a new theme</source>
+        <target>Skapa ett nytt tema</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.show">
+        <source>Show the details of theme ID %s</source>
+        <target>Visa detaljer för temat med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit">
+        <source>Edit theme ID %s</source>
+        <target>Redigera tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.delete">
+        <source>Delete theme ID %s</source>
+        <target>Ta bort tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.css">
+        <source>Edit the style sheets of theme ID %s</source>
+        <target>Redigera stilmallar för tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules">
+        <source>Edit the front end modules of theme ID %s</source>
+        <target>Redigera frontend-moduler för tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout">
+        <source>Edit the page layouts of theme ID %s</source>
+        <target>Redigera layouter för tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes">
+        <source>Edit the image sizes of theme ID %s</source>
+        <target>Redigera bildstorlekar för tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme">
+        <source>Export theme ID %s</source>
+        <target>Exportera tema med ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,258 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="sr">
+    <body>
+      <trans-unit id="tl_files.name.0">
+        <source>Name</source>
+        <target>Име</target>
+      </trans-unit>
+      <trans-unit id="tl_files.name.1">
+        <source>The file or folder name (without extension).</source>
+        <target>Име фајла или фолдера (без екстензије).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>Путања</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>Релативна путања до фајла или фолдера.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>Екстензија</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>Екстензија фајла</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.0">
+        <source>Public</source>
+        <target>Јавно</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.1">
+        <source>Make the folder and its sub-folders accessible via HTTP.</source>
+        <target>Дозволи приступ фолдеру и његовим подфолдерима преко HTTP.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Немој синхронизовати</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Не ради синхронизацију фолдера и његових подфолдера са базом података.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.0">
+        <source>Important part x coordinate</source>
+        <target>&quot;Х&quot; координата важног дела</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.1">
+        <source>Here you can enter the x coordinate of the important part.</source>
+        <target>Овде можете да дефинишете x координату почетка важног дела.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.0">
+        <source>Important part y coordinate</source>
+        <target>&quot;Y&quot; координата важног дела</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.1">
+        <source>Here you can enter the y coordinate of the important part.</source>
+        <target>Овде можете унети &quot;y&quot; координату почетка важног дела.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.0">
+        <source>Important part width</source>
+        <target>Ширина важног дела</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.1">
+        <source>Here you can enter the width of the important part.</source>
+        <target>Овде можете унети ширину важног дела.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.0">
+        <source>Important part height</source>
+        <target>Висина важног дела</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.1">
+        <source>Here you can enter the height of the important part.</source>
+        <target>Овде можете унести висину важног дела.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.0">
+        <source>Metadata</source>
+        <target>Мета подаци</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.1">
+        <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.0">
+        <source>File upload</source>
+        <target>Постављање фајла на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.1">
+        <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
+        <target>Изаберите фајлове које желите поставити на сервер (максималне димензије %s и %s пиксела).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.0">
+        <source>Source editor</source>
+        <target>Едитор изворног фајла</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.1">
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Овде можете уређивати изворни фајл (притисните тастер F11 за приказ у целом екрану).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadNback">
+        <source>Upload files and go back</source>
+        <target>Постави фајлове на сервер и врати се назад</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFF">
+        <source>Edit a file or folder</source>
+        <target>Уреди фајл или фолдер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadFF">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Копирај фајлове у фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFile">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>Уреди фајл &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Означи важан део слике са курсором миша.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.browseFiles">
+        <source>Browse files</source>
+        <target>Прегледај доступне фајлове</target>
+      </trans-unit>
+      <trans-unit id="tl_files.clearList">
+        <source>Clear list</source>
+        <target>Обриши листу</target>
+      </trans-unit>
+      <trans-unit id="tl_files.startUpload">
+        <source>Start upload</source>
+        <target>Започни копирање на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzone">
+        <source>Click or drop files here to upload</source>
+        <target>Кликни или превуци фајлове ради постављања на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Фајл је превелик ({{filesize}} MiB). Највећа дозвољена величина фајла је  {{maxFilesize}} MiB.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Фајлови овог типа не могу бити постављени на сервер.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileLocation">
+        <source>Path: %s</source>
+        <target>Путања: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncAdded">
+        <source>Added the file or folder &quot;%s&quot;</source>
+        <target>Додати фајлови или фолдери &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncChanged">
+        <source>Updated the hash of the file or folder &quot;%s&quot;</source>
+        <target>Ажурирана &quot;hash&quot; вредност фајла или фолдера &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncUnchanged">
+        <source>Found the file or folder &quot;%s&quot;</source>
+        <target>Пронађен фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncMoved">
+        <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
+        <target>Пронађен фајл или фолдер &quot;%s&quot; у &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncDeleted">
+        <source>Removed the file or folder &quot;%s&quot;</source>
+        <target>Уклоњен фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncComplete">
+        <source>The synchronization has been completed</source>
+        <target>Синхронизација је завршена</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncResult">
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncShowUnchanged">
+        <source>Show unchanged</source>
+        <target>Прикажи неизмењено</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.0">
+        <source>New folder</source>
+        <target>Нови фолдер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.1">
+        <source>Create a new folder</source>
+        <target>Креирај нови фолдер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.0">
+        <source>Upload files</source>
+        <target>Постави фајлове на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.1">
+        <source>Upload files to the server</source>
+        <target>Постави фајл на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.0">
+        <source>Synchronize</source>
+        <target>Синхронизуј</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.1">
+        <source>Synchronize the file system and the database</source>
+        <target>Синхронизуј фајл систем и базу података</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>Прикажи детаље фајла/фолдера &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>Помери фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>Копирај фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>Уреди фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>Обриши фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Превуци фајл или фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>Уреди изворни текст фајла &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Копирај фајлове у фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>Заштити фолдер &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>Уклони заштиту &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>Налепи у root фолдер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>Налепи у фолдер &quot;%s&quot;</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
