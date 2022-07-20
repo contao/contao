@@ -4986,7 +4986,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
     ';
 
 				$colspan = 1;
-				$label = ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $label;
+				$label = $blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : $label;
 
 				// Handle strings and arrays
 				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
