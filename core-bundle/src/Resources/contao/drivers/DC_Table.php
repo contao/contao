@@ -658,6 +658,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
 		{
 			$this->set['tstamp'] = 0;
+			$this->set = array_intersect_key($this->set, array_flip(array_column($this->Database->listFields($this->strTable), 'name')));
 
 			$objInsertStmt = $this->Database->prepare("INSERT INTO " . $this->strTable . " %s")
 											->set($this->set)
