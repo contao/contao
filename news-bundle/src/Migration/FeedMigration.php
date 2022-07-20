@@ -47,7 +47,7 @@ class FeedMigration extends AbstractMigration
         ];
 
         foreach ($newFields as $field => $definition) {
-            if (\in_array(strtolower($field), $columns)) {
+            if (\in_array(strtolower($field), $columns, true)) {
                 continue;
             }
 
