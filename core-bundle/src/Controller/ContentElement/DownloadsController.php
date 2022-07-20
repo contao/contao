@@ -234,7 +234,7 @@ class DownloadsController extends AbstractContentElementController
                     null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
                     !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
                 ) {
-                    return new Response('The resource can not be accessed.', Response::HTTP_FORBIDDEN);
+                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
                 }
 
                 return null;
