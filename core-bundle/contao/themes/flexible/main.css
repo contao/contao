@@ -2249,7 +2249,7 @@ fieldset.collapsed > legend {
 	#header h1 a .badge-title {
 		margin-left:32px;
 	}
-	#tmenu > li > a {
+	#tmenu > li a {
 		width:16px;
 		margin-bottom:-2px;
 		position:relative;
