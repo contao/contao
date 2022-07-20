@@ -994,6 +994,12 @@ table.tl_listing {
 	position:relative;
 	background-color:#fff;
 }
+.tl_content.draft,
+.tl_folder.draft,
+.tl_file.draft,
+.hover-row.draft > td {
+	position: relative;
+}
 .tl_content.draft > *,
 .tl_folder.draft > *,
 .tl_file.draft > *,
