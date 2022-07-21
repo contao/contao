@@ -38,7 +38,7 @@ class RememberMeTokenProviderTest extends TestCase
             ->willReturn($rememberMe)
         ;
 
-        $rememberMeTokenProvider = new RememberMeTokenProvider($rememberMeRepository);
+        $rememberMeTokenProvider = new RememberMeTokenProvider(fn () => $rememberMeRepository);
         $token = $rememberMeTokenProvider->loadTokenBySeries($series);
 
         $this->assertSame(FrontendUser::class, $token->getClass());
@@ -59,7 +59,7 @@ class RememberMeTokenProviderTest extends TestCase
             ->with($series)
         ;
 
-        $rememberMeTokenProvider = new RememberMeTokenProvider($rememberMeRepository);
+        $rememberMeTokenProvider = new RememberMeTokenProvider(fn () => $rememberMeRepository);
         $rememberMeTokenProvider->deleteTokenBySeries($series);
     }
 
@@ -82,7 +82,7 @@ class RememberMeTokenProviderTest extends TestCase
             ->method('persist')
         ;
 
-        $rememberMeTokenProvider = new RememberMeTokenProvider($rememberMeRepository);
+        $rememberMeTokenProvider = new RememberMeTokenProvider(fn () => $rememberMeRepository);
         $rememberMeTokenProvider->updateToken($series, 'new-value', new \DateTime());
     }
 
@@ -96,7 +96,7 @@ class RememberMeTokenProviderTest extends TestCase
             ->method('persist')
         ;
 
-        $rememberMeTokenProvider = new RememberMeTokenProvider($rememberMeRepository);
+        $rememberMeTokenProvider = new RememberMeTokenProvider(fn () => $rememberMeRepository);
         $rememberMeTokenProvider->createNewToken($token);
     }
 }
