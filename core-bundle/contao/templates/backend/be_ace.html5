@@ -6,14 +6,15 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
 
 // Use document.write() here in case ACE is loaded in a subpalette (see #1424)
 ?>
-<script>window.ace || document.write('<script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script>')</script>
+<script>window.ace || document.write('<script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script>')</script>
 <script>
 window.ace && window.addEvent('domready', function() {
-  var ta = document.getElementById('<?= $this->selector ?>'),
-      dom = ace.require("ace/lib/dom");
+  let ta = document.getElementById('<?= $this->selector ?>'),
+      dom = ace.require("ace/lib/dom"),
+      ws = ace.require("ace/ext/whitespace");
 
   // Create a div to apply the editor to
-  var div = document.createElement('div');
+  let div = document.createElement('div');
   div.id = '<?= $this->selector ?>_div';
   div.className = ta.className;
   ta.parentNode.insertBefore(div, ta.nextSibling);
@@ -22,7 +23,7 @@ window.ace && window.addEvent('domready', function() {
   ta.style['display'] = 'none';
 
   // Instantiate the editor
-  var editor = ace.edit('<?= $this->selector ?>_div');
+  let editor = ace.edit('<?= $this->selector ?>_div');
   editor.$blockScrolling = Infinity;
   editor.setTheme("ace/theme/clouds");
   editor.renderer.setScrollMargin(3, 3, 0, 0);
@@ -34,6 +35,9 @@ window.ace && window.addEvent('domready', function() {
   editor.getSession().setUseWrapMode(true);
   editor.setAutoScrollEditorIntoView(true);
 
+  // Auto-detect the indentation
+  ws.detectIndentation(editor.getSession());
+
   // Add the fullscreen command
   editor.commands.addCommand({
     name: 'Fullscreen',
@@ -44,12 +48,19 @@ window.ace && window.addEvent('domready', function() {
     }
   });
 
+  // Enable code autocompletion
+  editor.setOptions({
+    enableSnippets: true,
+    enableBasicAutocompletion: true,
+    enableLiveAutocompletion: true
+  });
+
   // Disable command conflicts with AltGr (see #5792)
   editor.commands.bindKey('Ctrl-alt-a|Ctrl-alt-e|Ctrl-alt-h|Ctrl-alt-l|Ctrl-alt-s', null);
 
   // Adjust the height of the editor
-  var updateHeight = function() {
-    var newHeight
+  let updateHeight = function() {
+    let newHeight
       = editor.getSession().getScreenLength()
       * (editor.renderer.lineHeight || 16);
     editor.container.style['height'] = Math.max(newHeight + 8, 30) + 'px';
