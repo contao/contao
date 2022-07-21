@@ -1181,6 +1181,67 @@ class DbafsTest extends TestCase
         $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
     }
 
+    public function testSyncWithMove(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllNumeric')
+            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->willReturn([
+                ['a', 'ee61', 'fdc43e4749862887eb87d5dde07c5cd8', 1, null],
+                ['b', 'ab54', 'd41d8cd98f00b204e9800998ecf8427e', 1, null],
+                ['a/file', 'cc12', 'acbd18db4cc2f85cedef654fccc4a4d8', 0, null],
+            ])
+        ;
+
+        $expected = [
+            [
+                ['path' => 'a'],
+                ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
+            ],
+            [
+                ['path' => 'a/file'],
+                ['path' => 'b/file', 'pid' => 'ab54'], // updated path and uuid of "files/b"
+            ],
+            [
+                ['path' => 'b'],
+                ['hash' => 'fdc43e4749862887eb87d5dde07c5cd8'],
+            ],
+        ];
+
+        $connection
+            ->expects($this->exactly(3))
+            ->method('update')
+            ->willReturnCallback(
+                function (string $table, array $updates, array $criteria) use (&$expected): void {
+                    $this->assertSame('tl_files', $table);
+                    $this->assertArrayHasKey('tstamp', $updates);
+
+                    unset($updates['tstamp']);
+
+                    [$expectedCriteria, $expectedUpdates] = array_shift($expected);
+
+                    $this->assertSame($expectedCriteria, $criteria);
+                    $this->assertSame($expectedUpdates, $updates);
+                }
+            )
+        ;
+
+        $filesystem = new VirtualFilesystem(
+            $this->getMountManagerWithRootAdapter(),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory('a');
+        $filesystem->createDirectory('b');
+        $filesystem->write('b/file', 'foo');
+
+        $dbafs = $this->getDbafs($connection, $filesystem);
+
+        $dbafs->sync();
+    }
+
     public function testSyncWithoutChanges(): void
     {
         $filesystem = $this->createMock(VirtualFilesystemInterface::class);
