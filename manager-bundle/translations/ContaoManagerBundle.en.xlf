@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoManagerBundle.en.xlf">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoManagerBundle.en.xlf">
     <body>
       <trans-unit id="1" resname="debug_mode">
         <source>Debug mode</source>
