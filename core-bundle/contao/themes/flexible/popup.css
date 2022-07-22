@@ -27,7 +27,7 @@ body {
 	white-space:normal;
 }
 .tl_show tr:nth-child(even) td {
-	background:#f6f6f8;
+	background:var(--table-odd);
 }
 .tl_label {
 	margin-right:12px;
