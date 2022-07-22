@@ -1238,7 +1238,6 @@ class DbafsTest extends TestCase
         $filesystem->write('b/file', 'foo');
 
         $dbafs = $this->getDbafs($connection, $filesystem);
-
         $dbafs->sync();
     }
 
