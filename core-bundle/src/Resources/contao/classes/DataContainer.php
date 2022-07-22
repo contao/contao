@@ -409,7 +409,7 @@ abstract class DataContainer extends Backend
 				}
 			}
 			// Use strlen() here (see #3277)
-			elseif (!\strlen($this->varValue))
+			elseif ('' !== (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
