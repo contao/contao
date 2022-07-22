@@ -8,7 +8,7 @@
 
 /* Body */
 body {
-	background:#fff;
+	background:var(--content-bg);
 	padding:12px;
 }
 

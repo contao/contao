@@ -8,7 +8,7 @@
 
 /* Body */
 body {
-	background:#eaeaec url("icons/contao.svg") center 4.5em no-repeat;
+	background:var(--body-bg) url("icons/contao.svg") center 4.5em no-repeat;
 }
 
 /* Container */
@@ -18,7 +18,7 @@ body {
 #main {
 	max-width:350px;
 	margin:0 auto;
-	background:#fff;
+	background:var(--content-bg);
 	border-radius:2px;
 }
 

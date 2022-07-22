@@ -8,11 +8,11 @@
 
 /* Body */
 body {
-	background:#eaecef;
+	background:var(--body-bg);
 	overflow-y:scroll;
 }
 body.popup {
-	background:#fff;
+	background:var(--content-bg);
 }
 
 /* Header */

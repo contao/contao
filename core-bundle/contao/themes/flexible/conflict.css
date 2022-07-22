@@ -8,14 +8,14 @@
 
 /* Body */
 body {
-	background:#eaeaec url("icons/stop.svg") center 3em no-repeat;
+	background:var(--body-bg) url("icons/stop.svg") center 3em no-repeat;
 }
 
 /* Container */
 #container {
 	width:760px;
 	margin:14em auto 0;
-	background:#fff;
+	background:var(--content-bg);
 }
 #main {
 	padding:45px;
