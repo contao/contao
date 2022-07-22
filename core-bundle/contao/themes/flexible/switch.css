@@ -67,7 +67,7 @@ h1 {
 /* Close */
 .close {
 	font-size:1rem;
-	color:#999;
+	color:var(--gray);
 	font-weight:600;
 	padding:0 2px 0 3px;
 	vertical-align:text-bottom;

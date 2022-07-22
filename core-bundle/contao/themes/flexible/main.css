@@ -33,7 +33,7 @@ body.popup {
 	font-weight:600;
 }
 #header h1 a .app-title {
-	color:#f47c00;
+	color:var(--contao);
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#header h1 a {
@@ -63,7 +63,7 @@ body.popup {
 	padding:2px;
 	border-radius:2px;
 	text-indent:0;
-	color:#fff;
+	color:var(--white);
 	font-weight:400;
 }
 #tmenu .burger {
@@ -98,7 +98,7 @@ body.popup {
 	transition:background-color .3s ease, color .3s ease;
 }
 #tmenu a:hover,#tmenu a.hover,#tmenu li:hover .profile button,#tmenu .active .profile button,#tmenu .burger button:hover {
-	color:#f47c00;
+	color:var(--contao);
 }
 #tmenu ul.menu_level_1 {
 	min-width:150px;
@@ -315,7 +315,7 @@ body.popup {
 	}
 }
 #tl_navigation .menu_level_1 a:hover,#tl_navigation .menu_level_1 li.current a {
-	color:#f47c00;
+	color:var(--contao);
 }
 #tl_navigation .collapsed .menu_level_1 {
 	display:none;
@@ -395,16 +395,16 @@ h2.sub_headline {
 	background:#fbf2e5 url("icons/featured.svg") no-repeat 16px 12px;
 }
 .tl_gerror,.tl_gerror a,.tl_error,.tl_error a {
-	color:#c33;
+	color:var(--red);
 }
 .tl_confirm,.tl_confirm a {
-	color:#589b0e;
+	color:var(--green);
 }
 .tl_info,.tl_info a {
-	color:#006494;
+	color:var(--blue);
 }
 .tl_new,.tl_new a {
-	color:#d68c23;
+	color:var(--orange);
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
 	padding:8px 10px 8px 30px;
@@ -693,14 +693,14 @@ h2.sub_headline {
 	display:block;
 }
 #tl_crawl .result .summary.success {
-	color:#589b0e;
+	color:var(--green);
 }
 #tl_crawl .result .summary.failure {
-	color:#c33;
+	color:var(--red);
 }
 #tl_crawl .result .warning {
 	display:none;
-	color:#006494;
+	color:var(--blue);
 }
 
 /* Two-factor */
@@ -824,13 +824,13 @@ h2.sub_headline {
 	padding:12px 12px 12px 24px;
 	background:url("icons/loading.svg") no-repeat left center;
 	background-size:16px;
-	color:#006494;
+	color:var(--blue);
 }
 #index_complete {
 	margin:0;
 	padding:12px 12px 12px 24px;
 	background:url("icons/ok.svg") no-repeat left center;
-	color:#589b0e;
+	color:var(--green);
 }
 
 /* Listing */
@@ -977,7 +977,7 @@ table.tl_listing {
 }
 .tl_select_label,.tl_radio_label {
 	margin-right:2px;
-	color:#999;
+	color:var(--gray);
 	font-size:.75rem;
 }
 
@@ -1067,10 +1067,10 @@ table.tl_listing {
 	color:#a6a6a6;
 }
 .tl_content .ce_text a {
-	color:#589b0e;
+	color:var(--green);
 }
 .tl_content span.comment {
-	color:#006494;
+	color:var(--blue);
 	display:inline-block;
 	margin-bottom:3px;
 }
@@ -1099,13 +1099,13 @@ table.tl_listing {
 	line-height:16px;
 }
 .cte_type.published,.cte_type.published a {
-	color:#589b0e;
+	color:var(--green);
 }
 .cte_type.unpublished,.cte_type.unpublished a {
-	color:#c33;
+	color:var(--red);
 }
 .cte_type .visibility {
-	color:#999;
+	color:var(--gray);
 }
 .limit_height {
 	overflow:hidden;
@@ -1127,7 +1127,7 @@ table.tl_listing {
 	background:#fff;
 	width:24px;
 	line-height:8px;
-	color:#999;
+	color:var(--gray);
 	outline:none;
 	border-top-left-radius:2px;
 	border-top-right-radius:2px;
@@ -1174,7 +1174,7 @@ table.tl_listing {
 }
 .tl_folder.tl_folder_dropping,.tl_folder_top.tl_folder_dropping {
 	background-color:#4078a5 !important;
-	color:#fff !important;
+	color:var(--white) !important;
 }
 .tl_folder.tl_folder_dropping a,.tl_folder_top.tl_folder_dropping a {
 	color:inherit;
@@ -1191,7 +1191,7 @@ table.tl_listing {
 	position:absolute;
 	background:#4078a5;
 	border-radius:10px;
-	color:#fff;
+	color:var(--white);
 	padding:5px 10px !important;
 	margin-left:0;
 	text-indent:0;
@@ -1258,7 +1258,7 @@ table.tl_listing {
 }
 label.tl_change_selected {
 	margin-right:2px;
-	color:#999;
+	color:var(--gray);
 	font-size:.75rem;
 }
 
@@ -1774,7 +1774,7 @@ ul.sortable button:hover {
 	background:#f9f9f9;
 }
 ul.sortable button[disabled] {
-	color:#999;
+	color:var(--gray);
 	cursor:not-allowed;
 }
 ul.sortable button[disabled]:hover {
@@ -1965,7 +1965,7 @@ time[title] {
 
 /* Error messages */
 label.error,legend.error,.tl_checkbox_container.error legend {
-	color:#c33;
+	color:var(--red);
 }
 .tl_tbox .tl_error,.tl_box .tl_error {
 	background:none;
@@ -1980,7 +1980,7 @@ label.error,legend.error,.tl_checkbox_container.error legend {
 	display:inline-block;
 	padding:12px 12px 12px 30px;
 	background:#faebeb url("icons/error.svg") no-repeat 9px center;
-	color:#c33;
+	color:var(--red);
 	text-indent:0;
 }
 
@@ -2033,7 +2033,7 @@ fieldset.collapsed > legend {
 	background:#fcfcfe;
 }
 #tl_maintenance_cache td span {
-	color:#999;
+	color:var(--gray);
 }
 #tl_maintenance_cache td:first-child {
 	width:16px;
@@ -2081,7 +2081,7 @@ fieldset.collapsed > legend {
 	padding-right:3px;
 }
 .pagination .active {
-	color:#999;
+	color:var(--gray);
 }
 .pagination-lp {
 	margin-left:15px;
