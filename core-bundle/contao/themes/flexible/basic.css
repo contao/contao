@@ -12,6 +12,17 @@ html {
 	-webkit-text-size-adjust:100%;
 }
 
+/* Appearance */
+body {
+	--text:#222;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		--text:#ddd;
+	}
+}
+
 /* General */
 header,footer,nav,section,aside,main,article,figure,figcaption {
 	display:block;
@@ -48,15 +59,13 @@ body {
 	font-weight:400;
 	font-size:.875rem;
 	line-height:1;
-	color:#444;
+	color:var(--text);
 }
 h1,h2,h3,h4,h5,h6,strong,b,th {
-	color:#222;
 	font-weight:600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	body {
-		color:#222;
 		font-weight:300;
 	}
 	h1,h2,h3,h4,h5,h6,strong,b,th {
@@ -106,13 +115,8 @@ span.mandatory {
 
 /* Basic elements */
 a {
-	color:#444;
+	color:var(--text);
 	text-decoration:none;
-}
-@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	a {
-		color:#222;
-	}
 }
 a:hover,a:active {
 	color:#006494;

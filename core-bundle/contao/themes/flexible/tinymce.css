@@ -11,7 +11,7 @@ body, th, td {
 	font-weight:400;
 	font-size:.875rem;
 	line-height:1.2;
-	color:#444;
+	color:var(--text);
 }
 h1,h2,h3,h4,h5,h6,strong,b,th {
 	font-weight:600;
@@ -19,7 +19,6 @@ h1,h2,h3,h4,h5,h6,strong,b,th {
 
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	body, th, td {
-		color:#222;
 		font-weight:300;
 	}
 	h1,h2,h3,h4,h5,h6,strong,b,th {

@@ -109,7 +109,7 @@ body.popup {
 	background:#fff;
 	box-shadow:0 0 3px #999;
 	z-index:1;
-	color:#444;
+	color:var(--text);
 	text-align:left;
 	opacity:0;
 	visibility:hidden;
@@ -118,11 +118,6 @@ body.popup {
 #tmenu .active ul.menu_level_1 {
 	opacity:1;
 	visibility:visible;
-}
-@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#tmenu ul.menu_level_1 {
-		color:#222;
-	}
 }
 #tmenu ul.menu_level_1 li a {
 	display:block;
@@ -142,7 +137,7 @@ body.popup {
 	white-space:nowrap;
 }
 #tmenu ul.menu_level_1 strong {
-	color:#222;
+	color:var(--text);
 	display:block;
 }
 #tmenu ul.menu_level_1:before {
@@ -1810,12 +1805,7 @@ ul.sortable button[disabled]:hover {
 	background:url("icons/manager.svg") 12px center no-repeat;
 }
 #picker-menu a:hover {
-	color:#444;
-}
-@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#picker-menu a:hover {
-		color:#222;
-	}
+	color:var(--text);
 }
 #picker-menu a.pagePicker {
 	background-image:url("icons/pagemounts.svg");
@@ -1839,12 +1829,7 @@ ul.sortable button[disabled]:hover {
 .ace_editor,.ace_editor * {
 	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
 	font-size:.75rem !important;
-	color:#444;
-}
-@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	.ace_editor,.ace_editor * {
-		color:#222;
-	}
+	color:var(--text);
 }
 .ace-fullsize {
 	overflow:hidden !important;
