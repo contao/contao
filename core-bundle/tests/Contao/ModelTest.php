@@ -51,7 +51,7 @@ class ModelTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Model::class]);
+        $this->resetStaticProperties([Model::class, System::class]);
 
         parent::tearDown();
     }
