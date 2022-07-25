@@ -426,6 +426,11 @@ abstract class Model
 	 */
 	public static function convertToPhpValue(string $strKey, mixed $varValue): mixed
 	{
+		if (null === $varValue)
+		{
+			return null;
+		}
+
 		if (!self::$arrColumnCastTypes)
 		{
 			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
