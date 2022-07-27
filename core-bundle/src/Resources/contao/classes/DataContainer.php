@@ -408,7 +408,6 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			// Use strlen() here (see #3277)
 			elseif ('' !== (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
@@ -416,7 +415,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
 		}
