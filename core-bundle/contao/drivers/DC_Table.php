@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -21,7 +22,6 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -733,7 +733,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// ID and PID are mandatory (PID can be 0!)
 		if (!$this->intId || Input::get('pid') === null)
 		{
-			throw new NotFoundHttpException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		try
@@ -875,7 +875,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$this->intId)
 		{
-			throw new NotFoundHttpException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		/** @var Session $objSession */
@@ -1487,7 +1487,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (null === $currentRecord)
 		{
-			throw new NotFoundHttpException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $currentRecord));
@@ -1723,7 +1723,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether there is a record
 		if (null === $currentRecord)
 		{
-			throw new NotFoundHttpException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$error = false;
@@ -1828,7 +1828,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Redirect if there is no record with the given ID
 		if (null === $currentRecord)
 		{
-			throw new NotFoundHttpException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));

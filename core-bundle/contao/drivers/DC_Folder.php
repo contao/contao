@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
@@ -784,7 +785,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			throw new UnprocessableEntityHttpException();
+			throw new BadRequestException();
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -971,7 +972,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			throw new UnprocessableEntityHttpException();
+			throw new BadRequestException();
 		}
 
 		$objSession = System::getContainer()->get('session');
