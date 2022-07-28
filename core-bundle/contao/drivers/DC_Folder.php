@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
@@ -29,6 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
@@ -661,7 +661,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $source
 	 *
 	 * @throws AccessDeniedException
-	 * @throws BadRequestException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function cut($source=null)
 	{
@@ -693,7 +693,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new BadRequestException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -784,7 +784,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			throw new BadRequestException();
+			throw new UnprocessableEntityHttpException();
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -815,7 +815,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $destination
 	 *
 	 * @throws AccessDeniedException
-	 * @throws BadRequestException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function copy($source=null, $destination=null)
 	{
@@ -853,7 +853,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new BadRequestException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
 		$this->denyAccessUnlessGranted(
@@ -971,7 +971,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			throw new BadRequestException();
+			throw new UnprocessableEntityHttpException();
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -1963,7 +1963,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
-	 * @throws BadRequestException
+	 * @throws UnprocessableEntityHttpException
 	 * @throws NotFoundException
 	 */
 	public function source()
@@ -1972,7 +1972,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (is_dir($this->strRootDir . '/' . $this->intId))
 		{
-			throw new BadRequestException('Folder "' . $this->intId . '" cannot be edited.');
+			throw new UnprocessableEntityHttpException('Folder "' . $this->intId . '" cannot be edited.');
 		}
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId))

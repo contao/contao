@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -23,6 +22,7 @@ use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
 
@@ -719,7 +719,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @throws AccessDeniedException
-	 * @throws BadRequestException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
@@ -777,7 +777,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check for circular references
 		if (\in_array($this->set['pid'], $cr))
 		{
-			throw new BadRequestException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
 
 		$this->set['tstamp'] = time();
