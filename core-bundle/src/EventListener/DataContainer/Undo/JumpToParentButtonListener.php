@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -23,10 +23,9 @@ use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Callback(target="list.operations.jumpToParent.button", table="tl_undo")
- *
  * @internal
  */
+#[AsCallback(table: 'tl_undo', target: 'list.operations.jumpToParent.button')]
 class JumpToParentButtonListener
 {
     public function __construct(private ContaoFramework $framework, private Connection $connection, private TranslatorInterface $translator)

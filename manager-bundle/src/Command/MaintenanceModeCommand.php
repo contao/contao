@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,14 +22,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:maintenance-mode',
+    description: 'Changes the state of the system maintenance mode.'
+)]
 class MaintenanceModeCommand extends Command
 {
-    protected static $defaultName = 'contao:maintenance-mode';
-    protected static $defaultDescription = 'Changes the state of the system maintenance mode.';
-
     private Filesystem $filesystem;
 
     public function __construct(private string $maintenanceFilePath, private Environment $twig, Filesystem $filesystem = null)

@@ -31,11 +31,14 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'monolog.logger.contao',
         'security.authentication_utils',
         'security.authentication.trust_resolver',
+        'security.authorization_checker',
         'security.encoder_factory',
         'security.firewall.map',
         'security.helper',
         'security.logout_url_generator',
         'security.password_hasher_factory',
+        'security.token_storage',
+        'twig',
         'uri_signer',
     ];
 

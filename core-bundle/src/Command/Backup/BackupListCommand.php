@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:backup:list',
+    description: 'Lists the existing database backups.'
+)]
 class BackupListCommand extends AbstractBackupCommand
 {
-    protected static $defaultName = 'contao:backup:list';
-    protected static $defaultDescription = 'Lists the existing database backups.';
-
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
         $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;

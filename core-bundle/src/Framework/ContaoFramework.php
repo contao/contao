@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -28,7 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -47,7 +45,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     public function __construct(
         private RequestStack $requestStack,
-        private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
         private int $errorLevel,
     ) {
@@ -163,7 +160,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $config->getInstance();
 
         $this->registerHookListeners();
-        $this->validateInstallation();
 
         Input::initialize();
         TemplateLoader::initialize();
@@ -185,7 +181,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         foreach ($basicClasses as $class) {
             if (!class_exists($class, false)) {
-                require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
+                require_once __DIR__.'/../../contao/library/Contao/'.$class.'.php';
             }
         }
     }
@@ -200,29 +196,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE'] = $language;
-    }
-
-    /**
-     * Redirects to the install tool if the installation is incomplete.
-     */
-    private function validateInstallation(): void
-    {
-        if (null === $this->request) {
-            return;
-        }
-
-        static $installRoutes = [
-            'contao_install',
-            'contao_install_redirect',
-        ];
-
-        if (\in_array($this->request->attributes->get('_route'), $installRoutes, true)) {
-            return;
-        }
-
-        if (!$this->getAdapter(Config::class)->isComplete()) {
-            throw new RedirectResponseException($this->urlGenerator->generate('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL));
-        }
     }
 
     private function setTimezone(): void

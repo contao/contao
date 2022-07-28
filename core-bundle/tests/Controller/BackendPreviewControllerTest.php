@@ -50,7 +50,7 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
-        $request = Request::create('https://localhost/managed-edition/public/contao/preview');
+        $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
         $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/public/index.php');
 
@@ -58,7 +58,7 @@ class BackendPreviewControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/managed-edition/public/preview.php/contao/preview', $response->getTargetUrl());
+        $this->assertSame('/managed-edition/public/preview.php/contao/preview?page=123', $response->getTargetUrl());
     }
 
     public function testDeniesAccessIfNotGranted(): void

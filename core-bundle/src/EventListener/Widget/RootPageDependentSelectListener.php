@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -34,9 +34,7 @@ class RootPageDependentSelectListener
     ) {
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.options")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.options')]
     public function optionsCallback(DataContainer $dc): array
     {
         $options = [];
@@ -67,9 +65,7 @@ class RootPageDependentSelectListener
         return $options;
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
     public function saveCallback(mixed $value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
@@ -88,9 +84,7 @@ class RootPageDependentSelectListener
         return serialize($newValues);
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.wizard")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.wizard')]
     public function wizardCallback(DataContainer $dc): string
     {
         $wizards = [];

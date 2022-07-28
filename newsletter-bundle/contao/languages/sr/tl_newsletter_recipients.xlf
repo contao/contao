@@ -1,0 +1,106 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_newsletter_recipients.php" source-language="en" target-language="sr">
+    <body>
+      <trans-unit id="tl_newsletter_recipients.email.0">
+        <source>E-mail address</source>
+        <target>Имејл адреса</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.email.1">
+        <source>Please enter the recipient's e-mail address.</source>
+        <target>Унесите имејл адресу примаоца.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.active.0">
+        <source>Activate recipient</source>
+        <target>Активирај примаоца</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.active.1">
+        <source>Recipients are usually activated automatically (double-opt-in).</source>
+        <target>Примаоци су обично аутоматски активирани (метод двоструке потврде).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.addedOn.0">
+        <source>Subscription date</source>
+        <target>Датум претплате</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.addedOn.1">
+        <source>The date of subscription.</source>
+        <target>Датум претплате.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.ip.0">
+        <source>IP address</source>
+        <target>IP адреса</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.ip.1">
+        <source>The IP address of the subscriber.</source>
+        <target>IP адреса претплатника.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.token.0">
+        <source>Activation token</source>
+        <target>Токен за активацију</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.token.1">
+        <source>The activation token of the subscription.</source>
+        <target>Токен за активацију претплате.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.email_legend">
+        <source>E-mail address</source>
+        <target>Имејл адреса</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.confirm">
+        <source>%s new recipients have been imported.</source>
+        <target>Увезено је %s нових претплатника.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.invalid">
+        <source>%s invalid entries have been skipped.</source>
+        <target>Прескочено је %s неисправних записа.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.subscribed">
+        <source>subscribed on %s</source>
+        <target>претплаћен на %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.manually">
+        <source>added manually</source>
+        <target>ручно додат</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.import.0">
+        <source>CSV import</source>
+        <target>CSV увоз</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.import.1">
+        <source>Import recipients from a CSV file</source>
+        <target>Увези листу примаоца из CSV фајла</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.new.0">
+        <source>New</source>
+        <target>Ново</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.new.1">
+        <source>Create a new recipient</source>
+        <target>Креирај новог примаоца</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.show">
+        <source>Show the details of recipient ID %s</source>
+        <target>Прикажи детаље примаоца ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.edit">
+        <source>Edit recipient ID %s</source>
+        <target>Уреди примаоца ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.cut">
+        <source>Move recipient ID %s</source>
+        <target>Помери примаоца ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.copy">
+        <source>Duplicate recipient ID %s</source>
+        <target>Копирај примаоца ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.delete">
+        <source>Delete recipient ID %s</source>
+        <target>Обриши примаоца ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle">
+        <source>Activate/deactivate recipient ID %s</source>
+        <target>Активирај/деактивирај примаоца ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

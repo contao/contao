@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Table(name: 'tl_remember_me')]
 #[Entity(repositoryClass: RememberMeRepository::class)]
@@ -33,7 +32,7 @@ class RememberMe
     #[GeneratedValue]
     protected int $id;
 
-    #[Column(type: 'binary_string', length: 32, nullable: false, options: ['fixed' => true])]
+    #[Column(type: 'binary_string', length: 88, nullable: false, options: ['fixed' => true])]
     protected string $series;
 
     #[Column(type: 'binary_string', length: 64, nullable: false, options: ['fixed' => true])]
@@ -42,30 +41,19 @@ class RememberMe
     #[Column(type: 'datetime', nullable: false)]
     protected \DateTimeInterface $lastUsed;
 
-    #[Column(type: 'datetime', nullable: true)]
-    protected \DateTimeInterface|null $expires = null;
-
     #[Column(type: 'string', length: 100, nullable: false)]
     protected string $class;
 
     #[Column(type: 'string', length: 200, nullable: false)]
-    protected string $username;
+    protected string $userIdentifier;
 
-    public function __construct(UserInterface $user, string $series)
+    public function __construct(string $class, string $userIdentifier, string $series, string $value, \DateTime $lastUsed)
     {
-        $this->class = $user::class;
+        $this->class = $class;
         $this->series = $series;
-        $this->value = random_bytes(64);
-        $this->username = $user->getUserIdentifier();
-        $this->lastUsed = new \DateTime();
-        $this->expires = null;
-    }
-
-    public function __clone()
-    {
-        $this->value = '';
-        $this->lastUsed = new \DateTime();
-        $this->expires = null;
+        $this->value = $value;
+        $this->userIdentifier = $userIdentifier;
+        $this->lastUsed = $lastUsed;
     }
 
     public function getSeries(): string
@@ -78,21 +66,21 @@ class RememberMe
         return $this->value;
     }
 
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
     public function getLastUsed(): \DateTimeInterface
     {
         return $this->lastUsed;
     }
 
-    public function getExpires(): \DateTimeInterface|null
+    public function setLastUsed(\DateTimeInterface $lastUsed): self
     {
-        return $this->expires;
-    }
-
-    public function setExpiresInSeconds(int $seconds): self
-    {
-        if (null === $this->expires) {
-            $this->expires = (new \DateTime())->add(new \DateInterval('PT'.$seconds.'S'));
-        }
+        $this->lastUsed = $lastUsed;
 
         return $this;
     }
@@ -102,16 +90,8 @@ class RememberMe
         return $this->class;
     }
 
-    public function getUsername(): string
+    public function getUserIdentifier(): string
     {
-        return $this->username;
-    }
-
-    public function cloneWithNewValue(): self
-    {
-        $clone = clone $this;
-        $clone->value = random_bytes(64);
-
-        return $clone;
+        return $this->userIdentifier;
     }
 }

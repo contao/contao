@@ -14,18 +14,17 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\UserModel;
 use Twig\Environment;
 
 /**
- * @Callback(target="list.label.label", table="tl_undo")
- *
  * @internal
  */
+#[AsCallback(table: 'tl_undo', target: 'list.label.label')]
 class LabelListener
 {
     public function __construct(private ContaoFramework $framework, private Environment $twig)

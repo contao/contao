@@ -2,6 +2,63 @@
 
 ## Version 4.* to 5.0
 
+### app.php
+
+The old `app.php` entry point has been removed. Adjust your server configuration to use `index.php` instead.
+
+### DCA "exclude" fields
+
+The `exclude` property on DCA fields is no longer initialized when loading a back end module. Make sure to check for
+`ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE` to know if a field should be available to a user.
+
+### checkCredentials hook
+
+The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.
+
+### postLogin hook
+
+The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### importUser hook
+
+The `importUser` hook has been removed. Implement a custom `UserProvider` service instead.
+
+### postAuthenticate hook
+
+The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### postLogout hook
+
+The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
+
+### Contao 4 migrations
+
+Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
+
+### Install tool
+
+The install tool has been removed. Use the `contao:setup`, `contao:migrate` and `contao:user:create` commands or the
+Contao Manager instead.
+
+### DataContainer callbacks
+
+DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
+after the existing callbacks instead of before.
+
+### Insert tag flag uncached
+
+The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
+
+### Unknown insert tags
+
+Unknown insert tags are no longer removed from the resulting text. Instead, they are now kept unchanged and are visible
+in the front end.
+
+### Insert tag hooks
+
+The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
+passed instead.
+
 ### Figure
 
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
@@ -22,10 +79,7 @@ usages, render the `component/_figure.html.twig` template yourself by including 
 } %}
 ```
 
-### Install tool
-
-The ability to execute migrations in the install tool has been removed. Use the `contao:migrate` command or the Contao
-Manager instead.
+### sqlCompileCommands hook
 
 The `sqlCompileCommands` hook has been removed. Use the Doctrine DBAL `postGenerateSchema` event instead.
 
@@ -161,6 +215,8 @@ The following content element types have been rewritten as fragment controllers 
  - `toplink` (`ce_toplink` → `content_element/toplink`)
  - `image` (`ce_image` → `content_element/image`)
  - `gallery` (`ce_gallery` → `content_element/gallery`)
+ - `youtube` (`ce_youtube` → `content_element/youtube`)
+ - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
 use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
@@ -178,6 +234,8 @@ $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
+$GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
+$GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
 ```
 
 ### Show to guests only

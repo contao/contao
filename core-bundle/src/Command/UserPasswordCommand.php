@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -29,16 +30,12 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-/**
- * Changes the password of a Contao back end user.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:user:password',
+    description: 'Changes the password of a Contao back end user.'
+)]
 class UserPasswordCommand extends Command
 {
-    protected static $defaultName = 'contao:user:password';
-    protected static $defaultDescription = 'Changes the password of a Contao back end user.';
-
     public function __construct(
         private ContaoFramework $framework,
         private Connection $connection,

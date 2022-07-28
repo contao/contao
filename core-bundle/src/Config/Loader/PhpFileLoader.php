@@ -37,7 +37,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class PhpFileLoader extends Loader
 {
-    public function load($resource, string $type = null): string
+    public function load(mixed $resource, string $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
 
@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports(mixed $resource, string $type = null): bool
     {
         return 'php' === Path::getExtension((string) $resource, true);
     }
