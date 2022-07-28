@@ -232,6 +232,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 if (!isset($_SERVER['MAILER_DSN'])) {
                     if (isset($_SERVER['MAILER_URL'])) {
+                        trigger_deprecation('contao/manager-bundle', '4.13', 'Using the MAILER_URL environment variable is deprecated and will be removed in Contao 5. Use the MAILER_DSN environment variable instead.');
                         $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
                     } else {
                         $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));

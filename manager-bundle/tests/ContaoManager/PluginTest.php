@@ -946,6 +946,7 @@ class PluginTest extends ContaoTestCase
 
     /**
      * @dataProvider getMailerUrlParameters
+     * @group legacy
      */
     public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
     {
@@ -1040,6 +1041,7 @@ class PluginTest extends ContaoTestCase
 
     /**
      * @dataProvider getInvalidMailerUrlParameters
+     * @group legacy
      */
     public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
     {
