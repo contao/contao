@@ -153,9 +153,18 @@ class ContaoSetupCommandTest extends ContaoTestCase
     /**
      * @dataProvider provideKernelSecretValues
      */
-    public function testWritesAppSecretToDotEnv(string $kernelSecret): void
+    public function testWritesAppSecretToDotEnv(string $kernelSecret, bool $existingDotEnvFile): void
     {
         $projectDir = $this->getTempDir();
+
+        $dotEnvFile = Path::join($projectDir, '.env');
+        $dotEnvLocalFile = Path::join($projectDir, '.env.local');
+
+        $filesystem = new Filesystem();
+
+        if ($existingDotEnvFile) {
+            $filesystem->touch($dotEnvFile);
+        }
 
         $command = new ContaoSetupCommand(
             $projectDir,
@@ -167,12 +176,10 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $dotEnvFile = Path::join($projectDir, '.env.local');
-        $filesystem = new Filesystem();
+        $this->assertFileExists($dotEnvFile);
+        $this->assertFileExists($dotEnvLocalFile);
 
-        $this->assertTrue($filesystem->exists($dotEnvFile));
-
-        $vars = (new Dotenv())->parse(file_get_contents($dotEnvFile));
+        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalFile));
 
         $this->assertArrayHasKey('APP_SECRET', $vars);
         $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
@@ -181,12 +188,21 @@ class ContaoSetupCommandTest extends ContaoTestCase
             '[INFO] An APP_SECRET was generated and written to your .env.local file.',
             $commandTester->getDisplay()
         );
+
+        if (!$existingDotEnvFile) {
+            $this->assertStringContainsString(
+                '[INFO] An empty .env file was created.',
+                $commandTester->getDisplay()
+            );
+        }
     }
 
     public function provideKernelSecretValues(): \Generator
     {
-        yield 'none' => [''];
-        yield 'default' => ['ThisTokenIsNotSoSecretChangeIt'];
+        yield 'no secret set, no .env file' => ['', false];
+        yield 'default secret set, no .env file' => ['ThisTokenIsNotSoSecretChangeIt', false];
+        yield 'no secret set, existing .env file' => ['', true];
+        yield 'default secret set, existing .env file' => ['ThisTokenIsNotSoSecretChangeIt', true];
     }
 
     /**

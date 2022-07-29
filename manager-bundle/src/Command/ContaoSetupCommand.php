@@ -18,6 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -62,11 +63,19 @@ class ContaoSetupCommand extends Command
 
         // Auto-generate a kernel secret if none was set
         if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
-            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'));
+            $filesystem = new Filesystem();
+
+            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
             $io->info('An APP_SECRET was generated and written to your .env.local file.');
+
+            if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
+                $filesystem->touch($envPath);
+            }
+
+            $io->info('An empty .env file was created.');
         }
 
         if (false === $this->phpPath) {
