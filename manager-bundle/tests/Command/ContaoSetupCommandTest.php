@@ -16,6 +16,8 @@ use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -24,7 +26,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 {
     public function testIsHidden(): void
     {
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/public');
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', 'secret');
 
         $this->assertTrue($command->isHidden());
     }
@@ -65,7 +67,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $memoryLimit = ini_set('memory_limit', '1G');
         $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler);
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', 'secret', $createProcessHandler);
 
         (new CommandTester($command))->execute([], $options);
 
@@ -118,6 +120,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/public',
+            'secret',
             $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
@@ -134,6 +137,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $command = new ContaoSetupCommand(
             'project/dir',
             'project/dir/public',
+            'secret',
             $this->getCreateProcessHandler($this->getProcessMocks())
         );
 
@@ -141,10 +145,49 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $commandTester->execute([]);
 
         $this->assertSame(
-            '[output 1][output 2][output 3][output 4][output 5][output 6][output 7]'.
-            'Done! Please run the contao:migrate command to make sure the database is up-to-date.'.PHP_EOL,
+            "[output 1][output 2][output 3][output 4][output 5][output 6][output 7]\n".
+            ' [OK] Done! Please run the contao:migrate command to make sure the database is up-to-date.',
+            trim($commandTester->getDisplay())
+        );
+    }
+
+    /**
+     * @dataProvider provideKernelSecretValues
+     */
+    public function testWritesAppSecretToDotEnv(string $kernelSecret): void
+    {
+        $projectDir = $this->getTempDir();
+
+        $command = new ContaoSetupCommand(
+            $projectDir,
+            Path::join($projectDir, 'public'),
+            $kernelSecret,
+            $this->getCreateProcessHandler($this->getProcessMocks())
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $dotEnvFile = Path::join($projectDir, '.env');
+        $filesystem = new Filesystem();
+
+        $this->assertTrue($filesystem->exists($dotEnvFile));
+
+        $vars = (new Dotenv())->parse(file_get_contents($dotEnvFile));
+
+        $this->assertArrayHasKey('APP_SECRET', $vars);
+        $this->assertSame(64, \strlen($vars['APP_SECRET']));
+
+        $this->assertStringContainsString(
+            '[INFO] An APP_SECRET was generated and written to your .env file.',
             $commandTester->getDisplay()
         );
+    }
+
+    public function provideKernelSecretValues(): \Generator
+    {
+        yield 'none' => [''];
+        yield 'default' => ['ThisTokenIsNotSoSecretChangeIt'];
     }
 
     /**
