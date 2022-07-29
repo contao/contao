@@ -176,7 +176,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $vars = (new Dotenv())->parse(file_get_contents($dotEnvFile));
 
         $this->assertArrayHasKey('APP_SECRET', $vars);
-        $this->assertSame(64, \strlen($vars['APP_SECRET']));
+        $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
 
         $this->assertStringContainsString(
             '[INFO] An APP_SECRET was generated and written to your .env file.',
