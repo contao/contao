@@ -167,7 +167,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $dotEnvFile = Path::join($projectDir, '.env');
+        $dotEnvFile = Path::join($projectDir, '.env.local');
         $filesystem = new Filesystem();
 
         $this->assertTrue($filesystem->exists($dotEnvFile));
@@ -178,7 +178,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
 
         $this->assertStringContainsString(
-            '[INFO] An APP_SECRET was generated and written to your .env file.',
+            '[INFO] An APP_SECRET was generated and written to your .env.local file.',
             $commandTester->getDisplay()
         );
     }
