@@ -71,7 +71,7 @@ class MigrateCommand extends Command
             if ($errors = $this->compileConfigurationErrors()) {
                 if ($asJson) {
                     foreach ($errors as $message) {
-                        $this->writeNdjson('error', ['message' => $message]);
+                        $this->writeNdjson('problem', ['message' => $message]);
                     }
                 } else {
                     foreach ($errors as $error) {
@@ -419,6 +419,7 @@ class MigrateCommand extends Command
     {
         $this->io->writeln(
             json_encode(
+                // make sure $type is the first in array but always wins
                 array_merge(['type' => $type], $data, ['type' => $type]),
                 JSON_INVALID_UTF8_SUBSTITUTE
             )
