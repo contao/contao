@@ -146,7 +146,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $this->assertSame(
             "[output 1][output 2][output 3][output 4][output 5][output 6][output 7]\n".
-            ' [OK] Done! Please run the contao:migrate command to make sure the database is up-to-date.',
+            ' [INFO] Done! Please run the contao:migrate command to make sure the database is up-to-date.',
             trim($commandTester->getDisplay())
         );
     }
