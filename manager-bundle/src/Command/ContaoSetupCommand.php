@@ -73,9 +73,9 @@ class ContaoSetupCommand extends Command
 
             if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
                 $filesystem->touch($envPath);
-            }
 
-            $io->info('An empty .env file was created.');
+                $io->info('An empty .env file was created.');
+            }
         }
 
         if (false === $this->phpPath) {

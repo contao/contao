@@ -195,6 +195,8 @@ class ContaoSetupCommandTest extends ContaoTestCase
                 $commandTester->getDisplay()
             );
         }
+
+        $filesystem->remove([$dotEnvFile, $dotEnvLocalFile]);
     }
 
     public function provideKernelSecretValues(): \Generator
