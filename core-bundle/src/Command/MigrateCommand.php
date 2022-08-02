@@ -420,7 +420,7 @@ class MigrateCommand extends Command
         $this->io->writeln(
             json_encode(
                 // make sure $type is the first in array but always wins
-                array_merge(['type' => $type], $data, ['type' => $type]),
+                ['type' => $type] + $data,
                 JSON_INVALID_UTF8_SUBSTITUTE
             )
         );
