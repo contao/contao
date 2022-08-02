@@ -36,7 +36,7 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron($this->fn($repository), $this->fn($this->createMock(EntityManagerInterface::class)));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -71,7 +71,7 @@ class CronTest extends TestCase
             )
         ;
 
-        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class), $logger);
+        $cron = new Cron($this->fn($repository), $this->fn($this->createMock(EntityManagerInterface::class)), $logger);
         $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
@@ -113,7 +113,7 @@ class CronTest extends TestCase
             ->method('flush')
         ;
 
-        $cron = new Cron($repository, $manager);
+        $cron = new Cron($this->fn($repository), $this->fn($manager));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -127,14 +127,14 @@ class CronTest extends TestCase
             ->with(Cron::SCOPE_CLI)
         ;
 
-        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron($this->fn($this->createMock(CronJobRepository::class)), $this->fn($this->createMock(EntityManagerInterface::class)));
         $cron->addCronJob(new CronJob($cronjob, '@hourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testInvalidArgumentExceptionForScope(): void
     {
-        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron($this->fn($this->createMock(CronJobRepository::class)), $this->fn($this->createMock(EntityManagerInterface::class)));
 
         try {
             $cron->run(Cron::SCOPE_CLI);
@@ -164,5 +164,12 @@ class CronTest extends TestCase
         ;
 
         return $entity;
+    }
+
+    private function fn($service)
+    {
+        return static function () use ($service) {
+            return $service;
+        };
     }
 }
