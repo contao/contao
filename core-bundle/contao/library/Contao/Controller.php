@@ -1167,13 +1167,12 @@ abstract class Controller extends System
 	/**
 	 * Load a set of DCA files
 	 *
-	 * @param string  $strTable   The table name
-	 * @param boolean $blnNoCache If true, the cache will be bypassed
+	 * @param string $strTable The table name
 	 */
-	public static function loadDataContainer($strTable, $blnNoCache=false)
+	public static function loadDataContainer($strTable)
 	{
 		$loader = new DcaLoader($strTable);
-		$loader->load($blnNoCache);
+		$loader->load();
 	}
 
 	/**
