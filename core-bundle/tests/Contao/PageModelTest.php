@@ -169,7 +169,7 @@ class PageModelTest extends ContaoTestCase
     public function testFolderurlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
         if (!\defined('TL_MODE')) {
-            define('TL_MODE', 'BE');
+            \define('TL_MODE', 'BE');
         }
 
         $statement = $this->createMock(Statement::class);
@@ -208,7 +208,7 @@ class PageModelTest extends ContaoTestCase
                 ['id' => '2', 'pid' => '1', 'alias' => 'alias2'],
                 ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
             ],
-            'alias2/'
+            'alias2/',
         ];
 
         yield 'Inherits a folderUrl from parent page' => [
@@ -217,7 +217,7 @@ class PageModelTest extends ContaoTestCase
                 ['id' => '2', 'pid' => '1', 'alias' => 'foo/bar'],
                 ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
             ],
-            'foo/bar/'
+            'foo/bar/',
         ];
 
         yield 'Does not inherit from the root page' => [
@@ -225,7 +225,7 @@ class PageModelTest extends ContaoTestCase
                 ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
                 ['id' => '1', 'pid' => '0', 'type' => 'root', 'fallback' => '1', 'alias' => 'foo/bar'],
             ],
-            ''
+            '',
         ];
 
         yield 'Does not inherit the index alias' => [
@@ -233,7 +233,7 @@ class PageModelTest extends ContaoTestCase
                 ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
                 ['id' => '1', 'pid' => '0', 'alias' => 'index'],
             ],
-            ''
+            '',
         ];
     }
 
