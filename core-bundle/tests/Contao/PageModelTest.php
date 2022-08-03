@@ -161,6 +161,83 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
     }
 
+    /**
+     * @group legacy
+     * @runInSeparateProcess
+     * @dataProvider folderUrlProvider
+     */
+    public function testFolderurlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
+    {
+        if (!\defined('TL_MODE')) {
+            define('TL_MODE', 'BE');
+        }
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnOnConsecutiveCalls(
+                ...array_map(
+                    static function ($p) {
+                        return new Result([$p], '');
+                    },
+                    $databaseResultData
+                )
+            )
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly(\count($databaseResultData)))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $page = PageModel::findWithDetails(3);
+
+        $this->assertInstanceOf(PageModel::class, $page);
+        $this->assertSame($expectedFolderUrl, $page->folderUrl);
+    }
+
+    public function folderUrlProvider(): \Generator
+    {
+        yield 'Inherits the alias from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'alias3'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'alias2'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'alias2/'
+        ];
+
+        yield 'Inherits a folderUrl from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'baz'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'foo/bar'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'foo/bar/'
+        ];
+
+        yield 'Does not inherit from the root page' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'type' => 'root', 'fallback' => '1', 'alias' => 'foo/bar'],
+            ],
+            ''
+        ];
+
+        yield 'Does not inherit the index alias' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'index'],
+            ],
+            ''
+        ];
+    }
+
+
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
