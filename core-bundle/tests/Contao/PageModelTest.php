@@ -237,7 +237,6 @@ class PageModelTest extends ContaoTestCase
         ];
     }
 
-
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
