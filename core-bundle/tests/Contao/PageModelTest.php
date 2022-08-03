@@ -166,7 +166,7 @@ class PageModelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @dataProvider folderUrlProvider
      */
-    public function testFolderurlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
+    public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
         if (!\defined('TL_MODE')) {
             \define('TL_MODE', 'BE');
