@@ -12,10 +12,14 @@
             {{ block('splash_screen_component') }}
         {% else %}
             {% block iframe %}
-                {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
-                    .mergeWith(iframe_attrs|default)
-                %}
-                <iframe{{ iframe_attrs }}></iframe>
+                {% if as_editor_view %}
+                    <p><a href="{{ source.base_url }}" target="_blank" rel="noreferrer noopener">{{ source.base_url }}</a></p>
+                {% else %}
+                    {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
+                        .mergeWith(iframe_attrs|default)
+                    %}
+                    <iframe{{ iframe_attrs }}></iframe>
+                {% endif %}
             {% endblock %}
         {% endif %}
 
