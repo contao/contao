@@ -7,30 +7,31 @@
     {% set video_attributes = attrs(video_attributes|default)
         .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
     %}
-    <figure{{ video_attributes }}>
-        {% if splash_image %}
-            {{ block('splash_screen_component') }}
-        {% else %}
-            {% block iframe %}
-                {% if as_editor_view %}
-                    <p><a href="{{ source.base_url }}" target="_blank" rel="noreferrer noopener">{{ source.base_url }}</a></p>
-                {% else %}
+
+    {% if as_editor_view %}
+        <p><a href="{{ source.base_url }}" target="_blank" rel="noreferrer noopener">{{ source.base_url }}</a></p>
+    {% else %}
+        <figure{{ video_attributes }}>
+            {% if splash_image %}
+                {{ block('splash_screen_component') }}
+            {% else %}
+                {% block iframe %}
                     {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
                         .mergeWith(iframe_attrs|default)
                     %}
                     <iframe{{ iframe_attrs }}></iframe>
+                {% endblock %}
+            {% endif %}
+
+            {% block video_caption %}
+                {% if caption %}
+                    <figcaption{{ attrs(video_caption_attributes|default) }}>
+                        {{- caption|insert_tag_raw -}}
+                    </figcaption>
                 {% endif %}
             {% endblock %}
-        {% endif %}
-
-        {% block video_caption %}
-            {% if caption %}
-                <figcaption{{ attrs(video_caption_attributes|default) }}>
-                    {{- caption|insert_tag_raw -}}
-                </figcaption>
-            {% endif %}
-        {% endblock %}
-    </figure>
+        </figure>
+    {% endif %}
 {% endblock %}
 
 {% block splash_screen_button_content %}
