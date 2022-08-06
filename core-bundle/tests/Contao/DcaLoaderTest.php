@@ -35,8 +35,6 @@ class DcaLoaderTest extends TestCase
         $this->resetStaticProperties([System::class, Config::class, DcaLoader::class]);
 
         parent::tearDown();
-
-        (new Filesystem())->remove($this->getTempDir());
     }
 
     public function testThrowsTheSameExceptionWhenLoadingTwice(): void
