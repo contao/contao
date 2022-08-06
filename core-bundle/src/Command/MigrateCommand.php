@@ -19,11 +19,15 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,10 +47,11 @@ class MigrateCommand extends Command
     private BackupManager $backupManager;
     private SchemaProvider $schemaProvider;
     private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
+    private Connection $connection;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
@@ -55,6 +60,7 @@ class MigrateCommand extends Command
         $this->backupManager = $backupManager;
         $this->schemaProvider = $schemaProvider;
         $this->rowSizeCalculator = $rowSizeCalculator;
+        $this->connection = $connection;
         $this->installer = $installer;
 
         parent::__construct();
@@ -150,6 +156,8 @@ class MigrateCommand extends Command
         if ($asJson && !$dryRun && $input->isInteractive()) {
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
         }
+
+        $this->validateDatabaseVersion();
 
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
@@ -536,5 +544,27 @@ class MigrateCommand extends Command
         }
 
         return $warnings;
+    }
+
+    private function validateDatabaseVersion(): void
+    {
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
+        $currentPlatform = $this->connection->getDatabasePlatform();
+        $driver = $this->connection->getDriver();
+
+        if (
+            !$driverConnection instanceof ServerInfoAwareConnection
+            || !$driver instanceof VersionAwarePlatformDriver
+        ) {
+            return;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+
+        if ($correctPlatform::class !== $currentPlatform::class) {
+            throw new RuntimeException(sprintf('Wrong database version, please set it to "%s". Expected "%s" was "%s".', $version, $correctPlatform::class, $currentPlatform::class));
+        }
     }
 }

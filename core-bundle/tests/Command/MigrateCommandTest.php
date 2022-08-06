@@ -24,10 +24,15 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -429,6 +434,61 @@ class MigrateCommandTest extends TestCase
         $this->assertSame('Fatal', $json['message']);
     }
 
+    /**
+     * @dataProvider getOutputFormats
+     *
+     * @group legacy
+     */
+    public function testDoesAbortOnWrongServerVersion(string $format): void
+    {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
+        $platform = new MySQL57Platform();
+        $driver = new Driver();
+
+        $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
+        $driverConnection
+            ->method('getServerVersion')
+            ->willReturn('8.0.29')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn($platform)
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver)
+        ;
+
+        $connection
+            ->method('getWrappedConnection')
+            ->willReturn($driverConnection)
+        ;
+
+        $command = $this->getCommand([], [], [], null, null, $connection);
+        $tester = new CommandTester($command);
+        $errorMessage = 'Wrong database version, please set it to "8.0.29". Expected "Doctrine\DBAL\Platforms\MySQL80Platform" was "Doctrine\DBAL\Platforms\MySQL57Platform".';
+
+        if ('ndjson' !== $format) {
+            $this->expectException(RuntimeException::class);
+            $this->expectExceptionMessage($errorMessage);
+        }
+
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(1, $code);
+
+        $json = $this->jsonArrayFromNdjson($display)[0];
+
+        $this->assertSame('error', $json['type']);
+        $this->assertSame($errorMessage, $json['message']);
+    }
+
     public function getOutputFormats(): \Generator
     {
         yield ['txt'];
@@ -448,7 +508,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<MigrationResult>> $migrationResults
      * @param array<array<string>>          $runonceFiles
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, BackupManager $backupManager = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -498,6 +558,7 @@ class MigrateCommandTest extends TestCase
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class),
+            $connection ?? $this->createMock(Connection::class),
             $installer ?? $this->createMock(Installer::class)
         );
     }
