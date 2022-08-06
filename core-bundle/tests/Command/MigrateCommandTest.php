@@ -21,6 +21,7 @@ use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
@@ -383,13 +384,9 @@ class MigrateCommandTest extends TestCase
 
     /**
      * @dataProvider getOutputFormats
-     *
-     * @group legacy
      */
     public function testDoesAbortOnWrongServerVersion(string $format): void
     {
-        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-
         $platform = new MySQL57Platform();
         $driver = new Driver();
 
@@ -416,7 +413,7 @@ class MigrateCommandTest extends TestCase
             ->willReturn($driverConnection)
         ;
 
-        $command = $this->getCommand([], [], [], null, null, $connection);
+        $command = $this->getCommand([], [], [], null, $connection);
         $tester = new CommandTester($command);
         $errorMessage = 'Wrong database version, please set it to "8.0.29". Expected "Doctrine\DBAL\Platforms\MySQL80Platform" was "Doctrine\DBAL\Platforms\MySQL57Platform".';
 
@@ -425,7 +422,7 @@ class MigrateCommandTest extends TestCase
             $this->expectExceptionMessage($errorMessage);
         }
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -484,12 +481,20 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$duplicatedRunonceFiles)
         ;
 
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+            $connection
+                ->method('getDatabasePlatform')
+                ->willReturn($this->createMock(AbstractPlatform::class))
+            ;
+        }
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
             $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
-            $connection ?? $this->createMock(Connection::class),
+            $connection,
             $installer ?? $this->createMock(Installer::class)
         );
     }
