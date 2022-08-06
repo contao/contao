@@ -1433,7 +1433,7 @@ abstract class Controller extends System
 	 */
 	public static function loadDataContainer($strTable, $blnNoCache=false)
 	{
-		if (func_num_args() > 1)
+		if (\func_num_args() > 1)
 		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s" with the $blnNoCache parameter has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
 		}
