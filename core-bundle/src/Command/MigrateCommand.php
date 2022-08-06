@@ -550,7 +550,7 @@ class MigrateCommand extends Command
     {
         // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
-        $currentPlatform = get_class($this->connection->getDatabasePlatform());
+        $currentPlatform = \get_class($this->connection->getDatabasePlatform());
         $driver = $this->connection->getDriver();
 
         if (
@@ -561,7 +561,7 @@ class MigrateCommand extends Command
         }
 
         $version = $driverConnection->getServerVersion();
-        $correctPlatform = get_class($driver->createDatabasePlatformForVersion($version));
+        $correctPlatform = \get_class($driver->createDatabasePlatformForVersion($version));
 
         if ($correctPlatform !== $currentPlatform) {
             throw new RuntimeException(sprintf('Wrong database version, please set it to "%s". Expected "%s" was "%s".', $version, $correctPlatform, $currentPlatform));

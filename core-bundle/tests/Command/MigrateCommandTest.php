@@ -27,6 +27,7 @@ use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -550,6 +551,14 @@ class MigrateCommandTest extends TestCase
             ->willReturn(new Schema())
         ;
 
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+            $connection
+                ->method('getDatabasePlatform')
+                ->willReturn($this->createMock(AbstractPlatform::class))
+            ;
+        }
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
@@ -558,7 +567,7 @@ class MigrateCommandTest extends TestCase
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class),
-            $connection ?? $this->createMock(Connection::class),
+            $connection,
             $installer ?? $this->createMock(Installer::class)
         );
     }
