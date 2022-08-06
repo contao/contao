@@ -1439,7 +1439,7 @@ abstract class Controller extends System
 		}
 
 		$loader = new DcaLoader($strTable);
-		$loader->load($blnNoCache);
+		$loader->load(...($blnNoCache ? array(true) : array()));
 	}
 
 	/**
