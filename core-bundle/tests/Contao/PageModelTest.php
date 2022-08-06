@@ -27,7 +27,6 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -41,18 +40,7 @@ class PageModelTest extends TestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
-        ;
-
         $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
-        ;
-
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
