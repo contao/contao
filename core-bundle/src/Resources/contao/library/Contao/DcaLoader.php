@@ -65,6 +65,11 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
+		if (\func_num_args() > 0)
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s" with the $blnNoCache parameter has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+		}
+
 		try
 		{
 			$this->loadDcaFiles($blnNoCache);

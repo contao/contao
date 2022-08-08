@@ -6009,7 +6009,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
-		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
+		list($offset, $limit) = explode(',', $this->limit ?? '') + array(null, null);
 
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
