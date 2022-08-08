@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -38,7 +41,7 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
+    public function __construct(private string $projectDir, string $webDir, private string|null $kernelSecret, \Closure $createProcessHandler = null)
     {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
@@ -56,6 +59,25 @@ class ContaoSetupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
+        // Auto-generate a kernel secret if none was set
+        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+            $filesystem = new Filesystem();
+
+            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
+            $dotenv->dump();
+
+            $io->info('An APP_SECRET was generated and written to your .env.local file.');
+
+            if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
+                $filesystem->touch($envPath);
+
+                $io->info('An empty .env file was created.');
+            }
+        }
+
         if (false === $this->phpPath) {
             throw new \RuntimeException('The php executable could not be found.');
         }
@@ -89,7 +111,7 @@ class ContaoSetupCommand extends Command
             $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
         }
 
-        $output->writeln('<info>Done! Please run the contao:migrate command to make sure the database is up-to-date.</info>');
+        $io->info('Done! Please run the contao:migrate command to make sure the database is up-to-date.');
 
         return Command::SUCCESS;
     }

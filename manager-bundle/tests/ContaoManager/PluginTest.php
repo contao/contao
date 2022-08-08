@@ -305,7 +305,6 @@ class PluginTest extends ContaoTestCase
                     'COOKIE_WHITELIST',
                     'DATABASE_URL',
                     'DISABLE_HTTP_CACHE',
-                    'MAILER_URL',
                     'MAILER_DSN',
                     'TRACE_LEVEL',
                     'TRUSTED_PROXIES',
@@ -919,127 +918,6 @@ class PluginTest extends ContaoTestCase
             'tls',
             'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
         ];
-    }
-
-    /**
-     * @dataProvider getMailerUrlParameters
-     */
-    public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
-    {
-        $_SERVER['MAILER_URL'] = $mailerUrl;
-
-        $container = $this->getContainer();
-
-        (new Plugin())->getExtensionConfig('framework', [], $container);
-
-        $bag = $container->getParameterBag()->all();
-
-        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
-    }
-
-    public function getMailerUrlParameters(): \Generator
-    {
-        yield [
-            'sendmail://localhost',
-            'sendmail://default',
-        ];
-
-        yield [
-            'mail://localhost',
-            'sendmail://default',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25',
-            'smtp://127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
-            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?username=foo@bar.com',
-            'smtp://foo%%40bar.com@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?username=foo@bar.com&password=foobar',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://foo@bar.com:foobar@127.0.0.1:25',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:587?encryption=tls',
-            'smtp://127.0.0.1:587',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:587?username=foo@bar.com&password=foobar&encryption=tls',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
-        ];
-
-        yield [
-            'smtp://127.0.0.1?encryption=ssl',
-            'smtps://127.0.0.1',
-        ];
-
-        yield [
-            'smtp://foo@bar.com:foobar@127.0.0.1?encryption=ssl',
-            'smtps://foo%%40bar.com:foobar@127.0.0.1',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:465?encryption=ssl',
-            'smtps://127.0.0.1:465',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:465?username=foo@bar.com&password=foobar&encryption=ssl',
-            'smtps://foo%%40bar.com:foobar@127.0.0.1:465',
-        ];
-
-        yield [
-            'gmail://localhost',
-            'smtps://smtp.gmail.com',
-        ];
-
-        yield [
-            '?transport=gmail',
-            'smtps://smtp.gmail.com',
-        ];
-    }
-
-    /**
-     * @dataProvider getInvalidMailerUrlParameters
-     */
-    public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
-    {
-        $_SERVER['MAILER_URL'] = $invalidMailerUrl;
-
-        $container = $this->getContainer();
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        (new Plugin())->getExtensionConfig('framework', [], $container);
-    }
-
-    public function getInvalidMailerUrlParameters(): \Generator
-    {
-        yield['smtp'];
-
-        yield['smtp://'];
-
-        yield['//smtp'];
-
-        yield['?host=localhost'];
-
-        yield['foo://localhost'];
     }
 
     public function testUpdatesTheClickjackingPaths(): void

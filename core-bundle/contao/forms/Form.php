@@ -218,7 +218,11 @@ class Form extends Hybrid
 
 				if ($objWidget instanceof UploadableWidgetInterface)
 				{
-					$arrFiles[$objField->name] = $objWidget->value;
+					if ($objWidget->value)
+					{
+						$arrFiles[$objField->name] = $objWidget->value;
+					}
+
 					$hasUpload = true;
 				}
 
