@@ -33,7 +33,6 @@ use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -490,7 +489,7 @@ class MigrateCommandTest extends TestCase
             $this->assertSame('database-error', $json['type']);
             $this->assertSame($errorMessage, $json['message']);
         } else {
-            $this->assertSame('[ERROR] '.$errorMessage, trim($display));
+            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $display)));
         }
     }
 
