@@ -470,24 +470,28 @@ class MigrateCommandTest extends TestCase
             ->willReturn($driverConnection)
         ;
 
+        $connection
+            ->method('getParams')
+            ->willReturn(['serverVersion' => '5.7.39'])
+        ;
+
         $command = $this->getCommand([], [], [], null, null, $connection);
         $tester = new CommandTester($command);
-        $errorMessage = 'Wrong database version, please set it to "8.0.29". Expected "Doctrine\DBAL\Platforms\MySQL80Platform" was "Doctrine\DBAL\Platforms\MySQL57Platform".';
-
-        if ('ndjson' !== $format) {
-            $this->expectException(RuntimeException::class);
-            $this->expectExceptionMessage($errorMessage);
-        }
+        $errorMessage = 'Wrong database version configured, please set it to "8.0.29", currently set to "5.7.39"';
 
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
 
-        $json = $this->jsonArrayFromNdjson($display)[0];
+        if ('ndjson' === $format) {
+            $json = $this->jsonArrayFromNdjson($display)[0];
 
-        $this->assertSame('error', $json['type']);
-        $this->assertSame($errorMessage, $json['message']);
+            $this->assertSame('database-error', $json['type']);
+            $this->assertSame($errorMessage, $json['message']);
+        } else {
+            $this->assertSame('[ERROR] '.$errorMessage, trim($display));
+        }
     }
 
     public function getOutputFormats(): \Generator
