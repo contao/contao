@@ -29,7 +29,7 @@
   <?= $this->javascripts ?>
 
 </head>
-<body class="popup">
+<body>
 
   <div id="container">
     <main id="main">
