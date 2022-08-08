@@ -811,7 +811,7 @@ services:
     contao.security.remember_me_token_provider:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
         arguments:
-            - '@contao.repository.remember_me'
+            - !service_closure '@contao.repository.remember_me'
 
     contao.security.token_checker:
         public: true

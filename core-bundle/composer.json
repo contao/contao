@@ -41,7 +41,7 @@
         "composer-runtime-api": "^2.0.14",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "contao-components/ace": "^1.2",
+        "contao-components/ace": "^1.8",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.5",

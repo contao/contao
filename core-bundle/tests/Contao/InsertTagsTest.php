@@ -157,6 +157,91 @@ class InsertTagsTest extends TestCase
             'foo{{ins::1{{plain::2]]3}}baz',
             'foo{{ins::12}}3baz',
         ];
+
+        yield 'Flag addslashes' => [
+            '{{plain::f\'oo|addslashes}}',
+            'f\\\'oo',
+        ];
+
+        yield 'Flag standardize' => [
+            '{{plain::foo & bar|standardize}}',
+            'foo-bar',
+        ];
+
+        yield 'Flag ampersand' => [
+            '{{plain::foo & bar|ampersand}}',
+            'foo &amp; bar',
+        ];
+
+        yield 'Flag specialchars' => [
+            '{{plain::foo & bar < baz|specialchars}}',
+            'foo &amp; bar &lt; baz',
+        ];
+
+        yield 'Flag strtolower' => [
+            '{{plain::FOO|strtolower}}',
+            'foo',
+        ];
+
+        yield 'Flag utf8_strtolower' => [
+            '{{plain::FÖO|utf8_strtolower}}',
+            'föo',
+        ];
+
+        yield 'Flag strtoupper' => [
+            '{{plain::foo|strtoupper}}',
+            'FOO',
+        ];
+
+        yield 'Flag utf8_strtoupper' => [
+            '{{plain::föo|utf8_strtoupper}}',
+            'FÖO',
+        ];
+
+        yield 'Flag ucfirst' => [
+            '{{plain::foo|ucfirst}}',
+            'Foo',
+        ];
+
+        yield 'Flag lcfirst' => [
+            '{{plain::FOO|lcfirst}}',
+            'fOO',
+        ];
+
+        yield 'Flag ucwords' => [
+            '{{plain::foo bar|ucwords}}',
+            'Foo Bar',
+        ];
+
+        yield 'Flag trim' => [
+            '{{plain:: foo |trim}}',
+            'foo',
+        ];
+
+        yield 'Flag rtrim' => [
+            '{{plain:: foo |rtrim}}',
+            ' foo',
+        ];
+
+        yield 'Flag ltrim' => [
+            '{{plain:: foo |ltrim}}',
+            'foo ',
+        ];
+
+        yield 'Flag utf8_romanize' => [
+            '{{plain::föo|utf8_romanize}}',
+            'foo',
+        ];
+
+        yield 'Flag urlencode' => [
+            '{{plain::foo & bar|urlencode}}',
+            'foo+%26+bar',
+        ];
+
+        yield 'Flag rawurlencode' => [
+            '{{plain::foo & bar|rawurlencode}}',
+            'foo%20%26%20bar',
+        ];
     }
 
     /**

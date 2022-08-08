@@ -283,7 +283,7 @@ abstract class ModuleNews extends Module
 
 		foreach ($objArticles as $objArticle)
 		{
-			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, '', $count);
+			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, '', ++$count);
 		}
 
 		return $arrArticles;

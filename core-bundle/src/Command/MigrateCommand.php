@@ -67,33 +67,33 @@ class MigrateCommand extends Command
 
         $asJson = 'ndjson' === $input->getOption('format');
 
-        if ($errors = $this->compileConfigurationErrors()) {
-            if ($asJson) {
-                foreach ($errors as $message) {
-                    $this->writeNdjson('error', ['message' => $message]);
-                }
-            } else {
-                foreach ($errors as $error) {
-                    $this->io->block($error, '!', 'fg=yellow', ' ', true);
+        try {
+            if ($errors = $this->compileConfigurationErrors()) {
+                if ($asJson) {
+                    foreach ($errors as $message) {
+                        $this->writeNdjson('error', ['message' => $message]);
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $this->io->block($error, '!', 'fg=yellow', ' ', true);
+                    }
+
+                    $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
                 }
 
-                $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
+                return Command::FAILURE;
             }
 
-            return Command::FAILURE;
-        }
+            if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
+                return Command::FAILURE;
+            }
 
-        if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
-            return Command::FAILURE;
-        }
-
-        if (!$asJson) {
-            return $this->executeCommand($input);
-        }
-
-        try {
             return $this->executeCommand($input);
         } catch (\Throwable $exception) {
+            if (!$asJson) {
+                throw $exception;
+            }
+
             $this->writeNdjson('error', [
                 'message' => $exception->getMessage(),
                 'code' => $exception->getCode(),
