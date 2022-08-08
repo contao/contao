@@ -19,7 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FetchArticlesForFeedEvent
 {
-    /** @var array<NewsModel>|null */
+    /**
+     * @var array<NewsModel>|null
+     */
     private array|null $articles = null;
 
     public function __construct(private readonly FeedInterface $feed, private readonly Request $request, private readonly PageModel $pageModel)

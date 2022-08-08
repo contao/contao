@@ -46,17 +46,17 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework([
-            PageModel::class => $pageAdapter,
-        ]);
-
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
 
-        $this->assertSame([
-            1 => 'Example Feed (RSS 2.0)',
-            2 => 'Example Feed (Atom)',
-            3 => 'Example Feed (JSON)',
-        ], $listener());
+        $this->assertSame(
+            [
+                1 => 'Example Feed (RSS 2.0)',
+                2 => 'Example Feed (Atom)',
+                3 => 'Example Feed (JSON)',
+            ],
+            $listener()
+        );
     }
 
     public function testReturnsEmptyArrayIfNoFeedsExist(): void
@@ -69,11 +69,9 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
-            PageModel::class => $pageAdapter,
-        ]);
-
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
+
         $this->assertSame([], $listener());
     }
 }

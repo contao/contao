@@ -36,14 +36,20 @@ use Symfony\Component\Filesystem\Path;
 
 class NewsFeedListener
 {
-    public function __construct(private readonly ContaoFramework $framework, private readonly ImageFactoryInterface $imageFactory, private readonly InsertTagParser $insertTags, private readonly string $projectDir, private readonly EntityCacheTags $cacheTags)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly InsertTagParser $insertTags,
+        private readonly string $projectDir,
+        private readonly EntityCacheTags $cacheTags,
+    ) {
     }
 
     public function onFetchArticlesForFeed(FetchArticlesForFeedEvent $event): void
     {
         $pageModel = $event->getPageModel();
         $archives = StringUtil::deserialize($pageModel->newsArchives, true);
+
         $featured = match ($pageModel->feedFeatured) {
             'featured' => true,
             'unfeatured' => false,
@@ -51,10 +57,7 @@ class NewsFeedListener
         };
 
         $newsModel = $this->framework->getAdapter(NewsModel::class);
-
-        $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems, 0, [
-            'return' => 'Array',
-        ]);
+        $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems, 0, ['return' => 'Array']);
 
         $event->setArticles($articles);
     }
@@ -124,6 +127,7 @@ class NewsFeedListener
 
             if (null !== $elements) {
                 $description = '';
+
                 // Overwrite the request (see #7756)
                 $environment->set('request', $item->getLink());
 
@@ -153,7 +157,6 @@ class NewsFeedListener
 
     protected function getEnclosures(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): array
     {
-        $enclosures = [];
         $uuids = [];
 
         if ($article->singleSRC) {
@@ -178,6 +181,7 @@ class NewsFeedListener
         $baseUrl = $event->getBaseUrl();
         $pageModel = $event->getPageModel();
         $size = StringUtil::deserialize($pageModel->imgSize, true);
+        $enclosures = [];
 
         while ($files->next()) {
             $file = new File($files->path);

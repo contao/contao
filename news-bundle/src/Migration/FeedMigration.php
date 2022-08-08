@@ -29,7 +29,7 @@ class FeedMigration extends AbstractMigration
             return false;
         }
 
-        return $this->connection->fetchOne('SELECT COUNT(id) FROM tl_news_feed') > 0;
+        return $this->connection->fetchOne('SELECT COUNT(*) FROM tl_news_feed') > 0;
     }
 
     public function run(): MigrationResult
@@ -66,7 +66,7 @@ class FeedMigration extends AbstractMigration
             $rootPage = $this->findMatchingRootPage($feed);
 
             if (!$rootPage) {
-                $this->logger->warning('Could not migrate feed '.$feed['title'].' because there is no root page');
+                $this->logger->warning('Could not migrate feed "'.$feed['title'].'" because there is no root page');
                 continue;
             }
 
@@ -83,6 +83,7 @@ class FeedMigration extends AbstractMigration
                 'maxFeedItems' => $feed['maxItems'],
                 'imgSize' => $feed['imgSize'],
             ]);
+
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
         }
 
@@ -93,13 +94,14 @@ class FeedMigration extends AbstractMigration
     {
         $feedBase = preg_replace('/^https?:\/\//', '', $feed['feedBase']);
 
-        $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => $feedBase, 'language' => $feed['language']])
-        ;
+        $page = $this->connection->fetchOne(
+            "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
+            ['dns' => $feedBase, 'language' => $feed['language']]
+        );
 
         // Find first root page, if none matches by dns and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1")
-            ;
+            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1");
         }
 
         return $page;

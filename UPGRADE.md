@@ -1,15 +1,11 @@
 # API changes
 
-## Version 5.0 to 5.1
-
-### News Feeds
-
-News Feeds are now implemented as page controllers. You may add new RSS, Atom and JSON feeds in the site structure back-end module.
-Feeds to not have to live under `share/` anymore but can be configured via page alias and nesting as any other page.
-
-The {{news_feed:id}} insert tag has been removed. You may use {{link_url::id}} instead.
-
 ## Version 4.* to 5.0
+
+### News feeds
+
+News feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
+module. The `{{news_feed:id}}` insert tag has been removed. You can use `{{link_url::id}}` instead.
 
 ### app.php
 

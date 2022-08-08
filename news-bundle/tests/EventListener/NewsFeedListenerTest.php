@@ -40,6 +40,7 @@ class NewsFeedListenerTest extends ContaoTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->resetStaticProperties([Files::class, System::class]);
     }
 
@@ -66,15 +67,19 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'newsArchives' => serialize([1]),
-            'feedFeatured' => $feedFeatured,
-            'maxFeedItems' => 0,
-        ]);
+
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'newsArchives' => serialize([1]),
+                'feedFeatured' => $feedFeatured,
+                'maxFeedItems' => 0,
+            ]
+        );
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
-
         $listener->onFetchArticlesForFeed($event);
+
         $this->assertSame($collection, $event->getArticles());
     }
 
@@ -150,11 +155,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('author')
-            ->willReturn(
-                $this->mockClassWithProperties(UserModel::class, [
-                    'name' => 'Jane Doe',
-                ])
-            )
+            ->willReturn($this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']))
         ;
 
         $news = $this->mockAdapter(['generateNewsUrl']);
@@ -177,14 +178,15 @@ class NewsFeedListenerTest extends ContaoTestCase
         $filesModel
             ->expects($this->once())
             ->method('findMultipleByUuids')
-            ->willReturn(new Collection([
-                $this->mockClassWithProperties(FilesModel::class, [
-                    'path' => 'files/foo.jpg',
-                ]),
-                $this->mockClassWithProperties(FilesModel::class, [
-                    'path' => 'files/bar.jpg',
-                ]),
-            ], 'tl_files'))
+            ->willReturn(
+                new Collection(
+                    [
+                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
+                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
+                    ],
+                    'tl_files'
+                )
+            )
         ;
 
         $container = $this->getContainerWithContaoConfiguration($projectDir);
@@ -197,18 +199,22 @@ class NewsFeedListenerTest extends ContaoTestCase
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
         ]);
+
         $framework->setContainer($container);
 
         $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $projectDir, $cacheTags);
-
         $feed = $this->createMock(Feed::class);
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'feedSource' => $feedSource,
-            'imgSize' => serialize([100, 100, 'crop']),
-        ]);
+
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'feedSource' => $feedSource,
+                'imgSize' => serialize([100, 100, 'crop']),
+            ]
+        );
+
         $request = $this->createMock(Request::class);
         $baseUrl = 'example.org';
-
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
         $listener->onTransformArticleForFeed($event);

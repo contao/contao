@@ -29,6 +29,7 @@
     "require": {
         "php": "^8.1",
         "contao/core-bundle": "self.version",
+        "debril/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^2.4",
         "symfony/config": "^5.4 || ^6.0",
         "symfony/dependency-injection": "^5.4 || ^6.0",
@@ -36,8 +37,7 @@
         "symfony/http-foundation": "^5.4 || ^6.0",
         "symfony/http-kernel": "^5.4 || ^6.0",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^5.4 || ^6.0",
-        "debril/feed-io": "^6.0"
+        "symfony/yaml": "^5.4 || ^6.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",

@@ -36,10 +36,6 @@ class PageListenerTest extends ContaoTestCase
             ],
         ];
 
-        $user = $this->mockClassWithProperties(BackendUser::class, [
-            'id' => 1,
-        ]);
-
         $result = $this->createMock(Result::class);
         $result
             ->expects($this->once())
@@ -54,16 +50,19 @@ class PageListenerTest extends ContaoTestCase
             ->with('id, title')
             ->willReturn($queryBuilder)
         ;
+
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_news_archive')
             ->willReturn($queryBuilder)
         ;
+
         $queryBuilder
             ->expects($this->never())
             ->method('where')
         ;
+
         $queryBuilder
             ->expects($this->once())
             ->method('executeQuery')
@@ -77,12 +76,15 @@ class PageListenerTest extends ContaoTestCase
             ->willReturn($queryBuilder)
         ;
 
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
+
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
+
         $security
             ->expects($this->once())
             ->method('isGranted')
@@ -91,10 +93,14 @@ class PageListenerTest extends ContaoTestCase
         ;
 
         $listener = new PageListener($connection, $security);
-        $this->assertSame([
-            42 => 'The answer to life, the universe and everything',
-            84 => 'Example news archive',
-        ], $listener->getAllowedArchives());
+
+        $this->assertSame(
+            [
+                42 => 'The answer to life, the universe and everything',
+                84 => 'Example news archive',
+            ],
+            $listener->getAllowedArchives()
+        );
     }
 
     public function testEditorHasAccessToAllowedArchives(): void
@@ -106,16 +112,14 @@ class PageListenerTest extends ContaoTestCase
             ],
         ];
 
-        $user = $this->mockClassWithProperties(BackendUser::class, [
-            'id' => 1,
-        ]);
-
         $result = $this->createMock(Result::class);
         $result
             ->expects($this->once())
             ->method('fetchAllAssociative')
             ->willReturn($archives)
         ;
+
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
 
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr
@@ -131,17 +135,20 @@ class PageListenerTest extends ContaoTestCase
             ->with('id, title')
             ->willReturn($queryBuilder)
         ;
+
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_news_archive')
             ->willReturn($queryBuilder)
         ;
+
         $queryBuilder
             ->expects($this->once())
             ->method('expr')
             ->willReturn($expr)
         ;
+
         $queryBuilder
             ->expects($this->once())
             ->method('executeQuery')
@@ -161,6 +168,7 @@ class PageListenerTest extends ContaoTestCase
             ->method('getUser')
             ->willReturn($user)
         ;
+
         $security
             ->expects($this->once())
             ->method('isGranted')
@@ -169,8 +177,7 @@ class PageListenerTest extends ContaoTestCase
         ;
 
         $listener = new PageListener($connection, $security);
-        $this->assertSame([
-            42 => 'The answer to life, the universe and everything',
-        ], $listener->getAllowedArchives());
+
+        $this->assertSame([42 => 'The answer to life, the universe and everything'], $listener->getAllowedArchives());
     }
 }

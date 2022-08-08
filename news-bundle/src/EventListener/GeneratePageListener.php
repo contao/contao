@@ -52,6 +52,7 @@ class GeneratePageListener
             if (NewsFeedController::TYPE !== $feed->type) {
                 continue;
             }
+
             // TODO: Use ResponseContext, once it supports appending to <head>
             $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($feed->getAbsoluteUrl(), $feed->feedFormat, $feed->title);
         }

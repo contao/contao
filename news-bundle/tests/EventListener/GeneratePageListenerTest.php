@@ -49,6 +49,7 @@ class GeneratePageListenerTest extends ContaoTestCase
                 ['feedFormat', 'rss'],
             ])
         ;
+
         $newsFeedModel
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -88,7 +89,9 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoValidModels(): void
     {
-        $collection = new Collection([$this->mockClassWithProperties(PageModel::class, ['type' => 'regular'])], 'tl_page');
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
+        $collection = new Collection([$pageModel], 'tl_page');
+
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
         ];

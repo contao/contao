@@ -41,7 +41,7 @@ class InsertTagsListener
         $key = strtolower($elements[0]);
 
         if ('news_feed' === $key) {
-            $this->logger->warning('The `news_feed` insert tag has been removed in Contao 5.0. Use `link_url` instead.');
+            $this->logger->warning('The "news_feed" insert tag has been removed in Contao 5.0. Use "link_url" instead.');
 
             return false;
         }

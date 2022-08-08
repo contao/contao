@@ -29,8 +29,8 @@ class LayoutFeedOptionsListener
     public function __invoke(): array
     {
         $this->framework->initialize();
-        $model = $this->framework->getAdapter(PageModel::class);
 
+        $model = $this->framework->getAdapter(PageModel::class);
         $feeds = $model->findByType(NewsFeedController::TYPE);
 
         $options = [];

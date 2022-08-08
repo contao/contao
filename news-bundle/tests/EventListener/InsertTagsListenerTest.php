@@ -26,8 +26,9 @@ class InsertTagsListenerTest extends ContaoTestCase
         $logger
             ->expects($this->once())
             ->method('warning')
-            ->with('The `news_feed` insert tag has been removed in Contao 5.0. Use `link_url` instead.')
+            ->with('The "news_feed" insert tag has been removed in Contao 5.0. Use "link_url" instead.')
         ;
+
         $listener = new InsertTagsListener($this->mockContaoFramework(), $logger);
         $url = $listener('news_feed::2', false, null, []);
 
