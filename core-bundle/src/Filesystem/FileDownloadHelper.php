@@ -72,7 +72,7 @@ class FileDownloadHelper
     public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
         if (null !== $fileName) {
-            // We're calling makeDisposition() here to check if the file name is valid
+            // Call makeDisposition() here to check if the file name is valid
             HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName, 'f');
         }
 

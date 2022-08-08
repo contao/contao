@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
@@ -28,7 +29,6 @@ use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
@@ -39,10 +39,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Security;
 
-/**
- * @ContentElement("download", category="files")
- * @ContentElement("downloads", category="files")
- */
+#[AsContentElement('download', category: 'files')]
+#[AsContentElement('downloads', category: 'files')]
 class DownloadsController extends AbstractContentElementController
 {
     public function __construct(
@@ -58,9 +56,9 @@ class DownloadsController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // Todo: Remove method and move logic into its own action, once we have
-        //       a strategy how to handle permissions for downloads via a real
-        //       route. See #4862 for more details.
+        // TODO: Remove method and move logic into its own action, once we have
+        // a strategy how to handle permissions for downloads via a real route.
+        // See #4862 for more details.
         $this->handleDownload($request);
 
         $filesystemItems = $this->getFilesystemItems($model);
@@ -158,15 +156,15 @@ class DownloadsController extends AbstractContentElementController
     private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
         $path = $filesystemItem->getPath();
-        $inline = (bool) $model->inline;
+        $inline = $model->inline;
 
         if (null !== ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline)))) {
             return (string) $publicUri;
         }
 
-        // Todo: Use an exclusive route once we have a strategy how to handle
-        //       permissions for it. Right now we use the current route and
-        //       then throw a ResponseException to initiate the download.
+        // TODO: Use an exclusive route once we have a strategy how to handle
+        // permissions for it. Right now we use the current route and then
+        // throw a ResponseException to initiate the download.
         $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
         $context = ['id' => $model->id];
 
