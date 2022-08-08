@@ -69,15 +69,14 @@ class DefaultOperationsListener
     {
         $operations = [];
 
-        $dca = &$GLOBALS['TL_DCA'][$table];
-        $isTreeMode = ($dca['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE;
-        $hasPtable = !empty($dca['config']['ptable'] ?? null);
-        $ctable = $dca['config']['ctable'][0] ?? null;
+        $isTreeMode = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE;
+        $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
+        $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
-        $canEdit = !($dca['config']['notEditable'] ?? false);
-        $canCopy = !($dca['config']['closed'] ?? false) && !($dca['config']['notCopyable'] ?? false);
-        $canSort = !($dca['config']['notSortable'] ?? false);
-        $canDelete = !($dca['config']['notDeletable'] ?? false);
+        $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
+        $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($canEdit) {
             $operations += [
