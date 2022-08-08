@@ -1732,6 +1732,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!\count($ids))
+		{
+			return;
+		}
+
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{
