@@ -16,7 +16,6 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\MySQL\Comparator;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
@@ -517,7 +516,7 @@ class InstallerTest extends TestCase
     private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
     {
         $platform = new MySQLPlatform();
-        $comparator = new Comparator($platform);
+        $comparator = (new MySQLSchemaManager($this->createMock(Connection::class), $platform))->createComparator();
 
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
