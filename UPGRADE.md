@@ -217,6 +217,8 @@ The following content element types have been rewritten as fragment controllers 
  - `gallery` (`ce_gallery` → `content_element/gallery`)
  - `youtube` (`ce_youtube` → `content_element/youtube`)
  - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
+ - `downloads` (`ce_downloads` → `content_element/downloads`)
+ - `download` (`ce_download` → `content_element/download`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
 use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
@@ -236,6 +238,8 @@ $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 $GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
 $GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
+$GLOBALS['TL_CTE']['files']['downloads'] = \Contao\ContentDownloads::class;
+$GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
 ```
 
 ### Show to guests only

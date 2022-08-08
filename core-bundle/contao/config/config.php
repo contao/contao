@@ -18,8 +18,6 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentDownload;
-use Contao\ContentDownloads;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
@@ -278,11 +276,6 @@ $GLOBALS['TL_CTE'] = array
 	'media' => array
 	(
 		'player'          => ContentPlayer::class,
-	),
-	'files' => array
-	(
-		'download'        => ContentDownload::class,
-		'downloads'       => ContentDownloads::class
 	),
 	'includes' => array
 	(
