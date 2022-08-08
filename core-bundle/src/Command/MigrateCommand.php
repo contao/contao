@@ -23,7 +23,6 @@ use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -131,7 +130,9 @@ class MigrateCommand extends Command
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
         }
 
-        $this->validateDatabaseVersion();
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
+        }
 
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
@@ -479,7 +480,7 @@ class MigrateCommand extends Command
         }
     }
 
-    private function validateDatabaseVersion(): void
+    private function validateDatabaseVersion(bool $asJson): bool
     {
         // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
@@ -490,14 +491,28 @@ class MigrateCommand extends Command
             !$driverConnection instanceof ServerInfoAwareConnection
             || !$driver instanceof VersionAwarePlatformDriver
         ) {
-            return;
+            return true;
         }
 
         $version = $driverConnection->getServerVersion();
         $correctPlatform = \get_class($driver->createDatabasePlatformForVersion($version));
 
-        if ($correctPlatform !== $currentPlatform) {
-            throw new RuntimeException(sprintf('Wrong database version, please set it to "%s". Expected "%s" was "%s".', $version, $correctPlatform, $currentPlatform));
+        if ($correctPlatform === $currentPlatform) {
+            return true;
         }
+
+        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+
+        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
+            $message .= sprintf(', currently set to "%s"', $currentVersion);
+        }
+
+        if ($asJson) {
+            $this->writeNdjson('database-error', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }

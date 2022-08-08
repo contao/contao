@@ -25,7 +25,6 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
@@ -413,24 +412,28 @@ class MigrateCommandTest extends TestCase
             ->willReturn($driverConnection)
         ;
 
+        $connection
+            ->method('getParams')
+            ->willReturn(['serverVersion' => '5.7.39'])
+        ;
+
         $command = $this->getCommand([], [], [], null, $connection);
         $tester = new CommandTester($command);
-        $errorMessage = 'Wrong database version, please set it to "8.0.29". Expected "Doctrine\DBAL\Platforms\MySQL80Platform" was "Doctrine\DBAL\Platforms\MySQL57Platform".';
-
-        if ('ndjson' !== $format) {
-            $this->expectException(RuntimeException::class);
-            $this->expectExceptionMessage($errorMessage);
-        }
+        $errorMessage = 'Wrong database version configured, please set it to "8.0.29", currently set to "5.7.39"';
 
         $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
 
-        $json = $this->jsonArrayFromNdjson($display)[0];
+        if ('ndjson' === $format) {
+            $json = $this->jsonArrayFromNdjson($display)[0];
 
-        $this->assertSame('error', $json['type']);
-        $this->assertSame($errorMessage, $json['message']);
+            $this->assertSame('database-error', $json['type']);
+            $this->assertSame($errorMessage, $json['message']);
+        } else {
+            $this->assertSame('[ERROR] '.$errorMessage, trim($display));
+        }
     }
 
     public function getOutputFormats(): \Generator
