@@ -20,6 +20,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -296,7 +297,19 @@ class ContentElementTestCase extends TestCase
             ->willReturnCallback(
                 static function (Uuid $uuid): FilesystemItem|null {
                     $storageMap = [
-                        self::FILE_IMAGE1 => new FilesystemItem(true, 'image1.jpg'),
+                        self::FILE_IMAGE1 => new FilesystemItem(
+                            true,
+                            'image1.jpg',
+                            123456,
+                            1024,
+                            'image/jpg',
+                            [
+                                'metadata' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
+                                    ['en']
+                                ),
+                            ],
+                        ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),

@@ -220,6 +220,8 @@ The following content element types have been rewritten as fragment controllers 
  - `gallery` (`ce_gallery` → `content_element/gallery`)
  - `youtube` (`ce_youtube` → `content_element/youtube`)
  - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
+ - `downloads` (`ce_downloads` → `content_element/downloads`)
+ - `download` (`ce_download` → `content_element/download`)
  - `player` (`ce_player` → `content_element/player`)
  - `teaser` (`ce_teaser` → `content_element/teaser`)
 
@@ -241,6 +243,8 @@ $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 $GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
 $GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
+$GLOBALS['TL_CTE']['files']['downloads'] = \Contao\ContentDownloads::class;
+$GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
 $GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['includes']['teaser'] = \Contao\ContentTeaser::class;
 ```

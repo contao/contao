@@ -18,8 +18,6 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentDownload;
-use Contao\ContentDownloads;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentSliderStart;
@@ -272,11 +270,6 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
-	),
-	'files' => array
-	(
-		'download'        => ContentDownload::class,
-		'downloads'       => ContentDownloads::class
 	),
 	'includes' => array
 	(

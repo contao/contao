@@ -1,0 +1,8 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_download.html.twig" %}
+
+{% block content %}
+    {% if downloads %}
+        {% with {download: downloads|first} %}{{ block('download_component') }}{% endwith %}
+    {% endif %}
+{% endblock %}
