@@ -31,11 +31,15 @@ class DataContainerOperation implements \ArrayAccess
         $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
 
         if (isset($operation['label'])) {
-            if (\is_array($operation['label'])) {
-                $operation['title'] = sprintf($operation['label'][1] ?? '', $id);
-                $operation['label'] = $operation['label'][0] ?? $name;
+            // Copy and dereference pointer to $GLOBALS['TL_LANG']
+            $label = $operation['label'];
+            unset($operation['label']);
+
+            if (\is_array($label)) {
+                $operation['title'] = sprintf($label[1] ?? '', $id);
+                $operation['label'] = $label[0] ?? $name;
             } else {
-                $operation['label'] = $operation['title'] = sprintf($operation['label'], $id);
+                $operation['label'] = $operation['title'] = sprintf($label, $id);
             }
         } else {
             $operation['label'] = $operation['title'] = $name;

@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
         <target>Došlo k chybě!</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+        <target>Data nešlo uložit, protože došlo k chybě!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -186,12 +190,15 @@
         <target>Číslicové aliasy nejsou podporované</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
-        <target>Předpona adresy &quot;%s&quot; je již používaná jinou kořenovou stránkou se stejnou doménou.</target>
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Stránka s adresou &quot;%s&quot; již existuje!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Tento alias způsobuje konflikty na stránce &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -270,8 +277,7 @@
         <target>Na nejvyšší úrovni se musí nacházet &quot;Kořenové stránky webu&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>Ve struktuře stránek se nachází stránky na vysoké úrovni, které nejsou kořenové stránky.</target>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -296,10 +302,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
         <target>Nenalezen žádný záznam pro %s. Prosím synchronizujte systém souborů.</target>
-      </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Zadejte prosím identifikační číslo Google+ nebo platné jméno!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -349,6 +351,16 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Cesta k předloze &quot;%s&quot; nemůže obsahovat následující znaky: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Neznámé uživatelské jméno: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím sečtěte %d a %d.</target>
@@ -392,6 +404,14 @@
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
         <target>HTML kód. Jisté HTML tagy jsou z bezpečnostních důvodů zakázány.</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Nefiltrované HTML</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>Tento modul dovoluje použít vlastní HTML kód.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -750,16 +770,14 @@
         <target>Interní přesměrování</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Tato stránka automaticky přesměrovává návštěvníka na jinou stránku tohoto webu. Přesměrování pomocí ID stránky nebo aliasu.</target>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
         <target>Kořen nového webu</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>Pokud chcete vytvořit více než jeden web se stejným stromem stránek, můžete zde definovat nový počáteční bod. Kořen stránky obsahuje DNS záznam, jazyk nebo oboje.</target>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -798,8 +816,7 @@
         <target>503 Servis je nedostupný</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
-        <target>Pokud se stránka nachází ve vývojářském módu, zobrazí se místo toho stránka 503.</target>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1317,8 +1334,8 @@
         <target>Titulek</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licence</target>
+        <source>License URL</source>
+        <target>Odkaz na licenci</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1340,9 +1357,13 @@
         <source>Predefined dimensions</source>
         <target>Předdefinované rozměry</target>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
-        <target>Relativní formát</target>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+        <target>Vlastní rozměry</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
+        <target>Obrázek bude převeden do daných rozměrů.</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1360,21 +1381,13 @@
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
         <target>Kratší strana obrázku bude přizpůsobená zadaným rozměrům a obrázek bude zmenšený.</target>
       </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-        <target>Přesné rozměry</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>Obrázek bude zmenšený podle zadaných rozměrů. Bude-li třeba, bude oříznut. </target>
-      </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
-        <target>Důležitá část</target>
+        <source>Crop (important part)</source>
+        <target>Oříznout (důležitá část)</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Zachová důležitou část obrázku jako vybranou v manažeru souborů. </target>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>Zachová důležitou část obrázku jako vybranou v manažeru souborů. Pokud to bude nutné, obrázek bude oříznut.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1478,7 +1491,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
-        <target>Upravit několik položek najednou</target>
+        <target>Upravit několik záznamů najednou</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1581,8 +1594,8 @@
         <target>Klávesové zkratky backendu</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Více o zrychlení vašeho pracovního postupu pomocí &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klávesových zkratek&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Více o zrychlení vašeho pracovního postupu pomocí &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klávesových zkratek&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1753,8 +1766,8 @@
         <target>Uložit a zavřít</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
-        <target>Uložit a upravit</target>
+        <source>Save and edit child elements</source>
+        <target>Uložit a upravit související elementy</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1964,10 +1977,6 @@
         <source>Contao version %s is available.</source>
         <target>Je dostupná nová verze Contao %s</target>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-        <target>Zalomení řádků</target>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
         <target>POZOR! Ztratí se všechny neuložené změny. Opravdu chcete pokračovat?</target>
@@ -2031,22 +2040,6 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
         <target>Články</target>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-        <target>Manažer souborů</target>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-        <target>Struktura stránek</target>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-        <target>Zpět do výběru souborů</target>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
-        <target>Zpět do výběru stránek</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2158,7 +2151,7 @@
       </trans-unit>
       <trans-unit id="MSC.name">
         <source>Name</source>
-        <target>Název</target>
+        <target>Jméno</target>
       </trans-unit>
       <trans-unit id="MSC.emailAddress">
         <source>E-mail address</source>
@@ -2549,8 +2542,7 @@
         <target>Stáhnout %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
-        <target>Musíte přidat kořenovou stránku do této struktury, abyste zadali soubor s meta daty.</target>
+        <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2673,17 +2665,21 @@
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
         <target>Existuje přinejmenším jedna skupina, která má přistup k frontendovému modulu Seznam a jeho &quot;list_*&quot; polím. Od té doby, kdy mohou obsahovat náhodné SQL údaje, mají uživatele této skupiny plnou kontrolu nad systémem!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jedna skupina uživatelů, která má přistup k nefiltrovaným HTML. Od té doby kdy je kód HTML tohoto elementu není filtrovaný, mají takové uživatelské skupiny plnou kontrolu nad systémem!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jeden uživatel, který má přistup k nefiltrovaným HTML. Od té doby kdy je kód HTML tohoto elementu není filtrovaný, má daný uživatel plnou kontrolu nad systémem!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
-        <target>Povolit</target>
+        <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Neaktivní</target>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Interní editor CSS byl vyřazen a bude odstraněn v jedné z následující verzi Contaa 5.0! Prosím stáhněte si a přeneste dané soubory do příslušné složky instalace Contaa a přidejte je do Vzhledu stránek jako externí soubory CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2747,12 +2743,33 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>Odkaz na sdílení</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Rodičovský</target>
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Manuální</target>
+      </trans-unit>
+      <trans-unit id="MSC.draft">
+        <source>Draft</source>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2922,13 +2939,9 @@
         <source>Drag element ID %s</source>
         <target>Uchopit položku ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-        <target>Upravit nastavení položky</target>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
-        <target>Upravit nastavení položky ID %s</target>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
+        <target>Upravit související elementy elementu ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2963,8 +2976,7 @@
         <target>Počet úspěšně indexovaných odkazů: %d. Počet neúspěšných: %d.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>Počet přeskočených odkazů: %d (pokud nějaké postrádáte, podívejte se prosím do vývojářského protokolu).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

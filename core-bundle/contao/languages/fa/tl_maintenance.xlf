@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="fa">
+  <file datatype="php" original="contao/languages/en/tl_maintenance.php" source-language="en" target-language="fa">
     <body>
       <trans-unit id="tl_maintenance.cacheTables.0">
         <source>Purge data</source>
@@ -89,8 +89,7 @@
         <target>پاکسازی کش اسکریپت</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
-        <target>پرونده‌های &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; را حذف می‌کند، برگه‌های سبک داخلی ار بازتولید کرده و سپس نهان‌گاه مشترک را پاک‌سازی می‌کند.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
@@ -113,8 +112,7 @@
         <target>بازتولید پرونده‌های XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>پرونده‌های XML (نقشه سایت و خوراک‌ها) را بازتولید کرده و سپس نهان‌گاه مشترک را پاک‌سازی می‌کند تا پیوندی به منابع حذف‌شده وجود نداشته باشد.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -152,13 +150,14 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>خزنده در حال کار کردن است. لطفا برای مشاهده‌ی نتایج صبر کنید.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>دانلود لاگ دیباگ</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
-        <target>دانلود لاگ</target>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

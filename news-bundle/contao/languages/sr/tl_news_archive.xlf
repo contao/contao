@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" target-language="sr">
+  <file datatype="php" original="contao/languages/en/tl_news_archive.php" source-language="en" target-language="sr">
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
@@ -14,8 +14,7 @@
         <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
-        <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Одаберите страницу на којој се налази читач вести и на коју ће посетиоци бити преусмерени кликом на ставку вести.</target>
+        <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
@@ -157,13 +156,8 @@
         <source>Edit news archive ID %s</source>
         <target>Уреди категорију вести %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.editheader">
-        <source>Edit the settings of news archive ID %s</source>
-        <target>Уреди подешавања категорије вести ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.editmeta">
-        <source>Edit the news archive settings</source>
-        <target>Уреди подешавања категорије вести</target>
+      <trans-unit id="tl_news_archive.children">
+        <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>

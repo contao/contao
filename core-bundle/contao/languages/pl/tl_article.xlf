@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_article.php" source-language="en" target-language="pl">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_article.title.0">
         <source>Title</source>
@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>
-        <target>Autor</target>
+        <target>Imię</target>
       </trans-unit>
       <trans-unit id="tl_article.author.1">
         <source>Here you can change the author of the article.</source>
@@ -32,14 +32,6 @@
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
         <target>Przypisz artykuł do kolumny, nagłówka lub stopki.</target>
-      </trans-unit>
-      <trans-unit id="tl_article.keywords.0">
-        <source>Meta keywords</source>
-        <target>Słowa kluczowe</target>
-      </trans-unit>
-      <trans-unit id="tl_article.keywords.1">
-        <source>Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).</source>
-        <target>Możesz wprowadzić listę słów kluczowych oddzielonych przecinkami. Jednakże, słowa kluczowe nie są już istotne dla większości wyszukiwarek internetowych (włącznie z Google).</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
@@ -73,14 +65,6 @@
         <source>Here you can choose which options are available.</source>
         <target>Po zaznaczeniu tej opcji nad artykułem pojawia się link &quot;print as PDF&quot;. Opcja rozpoznaje typ arkusza stylów &quot;print&quot; oraz &quot;all&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_article.guests.0">
-        <source>Show to guests only</source>
-        <target>Pokaż tylko dla osób niezalogowanych</target>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.1">
-        <source>Hide the article if a member is logged in.</source>
-        <target>Ukryj artykuł, jeśli użytkownik jest zalogowany.</target>
-      </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
         <source>Article template</source>
         <target>Szablon artykułu</target>
@@ -111,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_article.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Jeśli potrzebujesz osobnej definicji do formatowania tego modułu w stylach CSS, możesz tu wprowadzić ID. To ID będzie przypisane do tego modułu i można je opisywać w arkuszu CSS.</target>
+        <target>Jeśli potrzebujesz osobnej definicji do formatowania tego modułu w stylach CSS, możesz tu wprowadzić ID. To ID będzie przypisane do tego modułu i można je modyfikować w arkuszu CSS.</target>
       </trans-unit>
       <trans-unit id="tl_article.published.0">
         <source>Publish article</source>
@@ -123,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_article.start.0">
         <source>Show from</source>
-        <target>Pokazuj od</target>
+        <target>Wrapper start</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -131,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
-        <target>Pokazuj do</target>
+        <target>Wrapper stop</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -150,8 +134,8 @@
         <target>Tytuł i autor</target>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
-        <source>Section and keywords</source>
-        <target>Sekcja i słowa kluczowe</target>
+        <source>Section</source>
+        <target>Sekcja</target>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>
@@ -175,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_article.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawienia publikacji</target>
+        <target>Ustawinia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_article.print">
         <source>Print the page</source>
@@ -209,9 +193,9 @@
         <source>Edit article ID %s</source>
         <target>Edytuj artykuł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader">
-        <source>Edit the settings of article ID %s</source>
-        <target>Edytuj ustawienia artykułu ID %s</target>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Edytuj elementy treści artykułu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>

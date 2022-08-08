@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_news_archive.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
@@ -7,31 +7,31 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>Lütfen haber arşivine başlık girin</target>
+        <target>Lütfen haber arşivi başlığını yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
-        <target>Yönlendirme sayfası</target>
+        <target>Yönlendirilecek sayfa</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
-        <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Lütfen ziyaretçiler bir etkinliğe tıkladığında yönlendirilecekleri haber okuyucu sayfasını seçin</target>
+        <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
+        <target>Lütfen ziyaretçilerin bir habere tıkladığında yönlendirilecekleri haber okuyucu sayfasını seçin.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
-        <target>Yorum yapılmasına izin ver</target>
+        <target>Yorum yapılabilsin</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.1">
         <source>Allow visitors to comment news items.</source>
-        <target>Ziyaretçilere haber parçalarına yorum yapma izni verin</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler haberlere yorum yapabilir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify.0">
         <source>Notify</source>
-        <target>Bilgilendir</target>
+        <target>Bildir</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Lütfen, yorum yapıldığında bilgilendirilmesini istediğiniz kişiyi seçiniz.</target>
+        <target>Lütfen yorum yapıldığında bildirim gönderilecek kişiyi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.0">
         <source>Sort order</source>
@@ -43,51 +43,51 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.0">
         <source>Comments per page</source>
-        <target>Tek sayfadaki yorum öge sayısı</target>
+        <target>Bir sayfadaki yorum sayısı</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Tek sayfadaki yorum öge sayısını belirtin. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.0">
         <source>Moderate comments</source>
-        <target>Yorumları denetle</target>
+        <target>Yorumlar onaylansın</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Yorumlar web sitesinde yayınlanmadan önce onaylansın.</target>
+        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode kullanılmasına izin ver.</target>
+        <target>BBCode kullanılabilsin</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Ziyaretçilerin yorumlarında BBCode kullanmalarına izin ver.</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Yorum yapmak için oturum açılmalı</target>
+        <target>Oturum açmadan yorum yapılamasın</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
-        <target>Yalnızca kimliği doğrulanmış üyelerin yorum oluşturmasına izin verin.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yalnızca oturum açmış kullanıcılar yorum yapabilir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
-        <target>Spam korumasını devre dışı bırak</target>
+        <target>Spam koruması devre dışı bırakılsın</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Bu seçeneği sadece yetkili kullanıcılar sınırlı yorum sayısına sahipse kullanın.</target>
+        <target>Bu seçeneği yalnızca oturum açmış kullanıcılar yorum yapabiliyorsa etkinleştirin.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.0">
         <source>Protect archive</source>
-        <target>Arşivi koru</target>
+        <target>Arşiv korunsun</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.1">
         <source>Show news items to certain member groups only.</source>
-        <target>Haber parçalarını sadece seçilmiş grup üyelerine göster</target>
+        <target>Haberler yalnızca belirli grup üyelerine görüntülensin.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.0">
         <source>Allowed member groups</source>
@@ -95,15 +95,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
-        <target>Bu gruplar bu arşivdeki haber parçalarını göre bilecektir</target>
+        <target>Bu gruplar bu arşivdeki haberleri görebilir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
-        <target>Düzenleme tarihi</target>
+        <target>Düzenlenme tarihi</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>En son düzenlemenin tarihi ve saati</target>
+        <target>Son düzenlenme tarihi ve saati</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title_legend">
         <source>Title and redirect page</source>
@@ -115,11 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
-        <target>Korumaya eriş</target>
+        <target>Erişim koruması</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>RSS/Atom beslemesi</target>
+        <target>RSS/Atom akışı</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
-        <target>Haber parçasının yazarı</target>
+        <target>Haberi yazan</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
-        <target>Haberler beslemelerini yönet</target>
+        <target>Haber akışları yönetimi</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -147,35 +147,31 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
-        <target>Yeni bir haber arşivi oluştur</target>
+        <target>Yeni bir haber arşivi ekle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>%s haber arşivinin ayrıntılarını göster</target>
+        <target>%s kodlu haber arşivinin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
-        <target>%s haber arşivini düzenle</target>
+        <target>%s kodlu haber arşivini düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.editheader">
-        <source>Edit the settings of news archive ID %s</source>
-        <target>%s haber arşivinin ayarlarını düzenle</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.editmeta">
-        <source>Edit the news archive settings</source>
-        <target>Haber arşivi ayarlarını düzenle</target>
+      <trans-unit id="tl_news_archive.children">
+        <source>Edit the news items of news archive ID %s</source>
+        <target>%s kodlu haber arşivinin haberlerini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>%s haber arşivini çoğalt</target>
+        <target>%s kodlu haber arşivini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>%s haber arşivini sil</target>
+        <target>%s kodlu haber arşivini sil</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>%s haber arşivinin yorumlarını göster</target>
+        <target>%s kodlu haber arşivinin yorumlarını görüntüle</target>
       </trans-unit>
     </body>
   </file>

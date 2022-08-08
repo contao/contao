@@ -30,7 +30,7 @@ class ImagesLoader extends Loader
         $this->pathPrefix = Path::makeRelative($imageTargetDir, $projectDir);
     }
 
-    public function load($resource, string $type = null): RouteCollection
+    public function load(mixed $resource, string $type = null): RouteCollection
     {
         $route = new Route(
             '/'.$this->pathPrefix.'/{path}',

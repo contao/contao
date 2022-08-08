@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
-        <target>Druh položky</target>
+        <target>Druh elementu</target>
       </trans-unit>
       <trans-unit id="tl_content.type.1">
         <source>Please choose the type of content element.</source>
@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>Zobrazit náhledy obrázků</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>Zobrazit náhledy vybraných obrázků</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -52,8 +54,7 @@
         <target>Přepsat meta data</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the metadata from the file manager.</source>
-        <target>Přepsat meta informace z Manažera souborů.</target>
+        <source>Overwrite the metadata of the file.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -78,14 +79,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Zde můžete přidat název obrázku (&lt;em&gt;název&lt;/em&gt; atribut).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.0">
-        <source>Image margin</source>
-        <target>Okraj obrázku</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.1">
-        <source>Here you can enter the top, right, bottom and left margin.</source>
-        <target>Zde můžete zadat odsazení zeshora (top), zprava (right), zespodu (bottom) a zleva (left).</target>
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.0">
         <source>Image link target</source>
@@ -126,6 +119,14 @@
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Seznam povolených znaků HTML můžete upravit v nastaveních systému.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>Kód HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Dávejte si pozor na to, jaké věci přidáváte, pokud jim nerozumíte. To by mohlo umožnit napadaní vaší identity nebo převzetí kontroly nad celým systémem.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -607,14 +608,6 @@
         <source>These groups will be able to see the content element.</source>
         <target>Zde můžete zvolit, kterým skupinám bude povoleno vydět element</target>
       </trans-unit>
-      <trans-unit id="tl_content.guests.0">
-        <source>Show to guests only</source>
-        <target>Ukázat pouze hostům</target>
-      </trans-unit>
-      <trans-unit id="tl_content.guests.1">
-        <source>Hide the content element if a member is logged in.</source>
-        <target>Skrýt element, pokud je člen přihlášen</target>
-      </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
         <target>Kaskádovitý styl ID/class</target>
@@ -665,6 +658,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>Nastavení náhledu</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -842,6 +836,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Použít doménu youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Přehrávat video v časové smyčce</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Automatické přehrávání</target>
@@ -894,10 +892,6 @@
         <source>Edit content element ID %s</source>
         <target>Upravit element ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader">
-        <source>Edit the article settings</source>
-        <target>Upravit nastavení článku</target>
-      </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
         <target>Zobrazit/Skrýt obsahovou položku ID %s</target>
@@ -921,10 +915,6 @@
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Upravit zdrojový element ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle">
-        <source>Edit article ID %s</source>
-        <target>Upravit článek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

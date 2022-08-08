@@ -365,6 +365,139 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['foo', 'delete'], array_keys($operations));
     }
 
+    public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'notEditable' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['copy', 'delete', 'show'], array_keys($operations));
+    }
+
+    public function testDoesNotAddCopyOperationIfTableIsNotCopyable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'notCopyable' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'delete', 'show'], array_keys($operations));
+    }
+
+    public function testDoesNotAddCopyOperationIfTableIsClosed(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'closed' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'delete', 'show'], array_keys($operations));
+    }
+
+    public function testDoesNotAddCutOperationIfTableIsNotSortable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'ptable' => 'tl_bar',
+                'notSortable' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'copy', 'delete', 'show'], array_keys($operations));
+    }
+
+    public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'notDeletable' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'copy', 'show'], array_keys($operations));
+    }
+
+    public function testAlwaysAddsChildrenAndShowOperation(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'closed' => true,
+                'notCreatable' => true,
+                'notEditable' => true,
+                'notCopyable' => true,
+                'notSortable' => true,
+                'notDeletable' => true,
+                'ctable' => ['tl_bar'],
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['children', 'show'], array_keys($operations));
+    }
+
     private function assertOperation(array $operation, string $href, string $icon, bool $hasCallback): void
     {
         $this->assertArrayHasKey('href', $operation);

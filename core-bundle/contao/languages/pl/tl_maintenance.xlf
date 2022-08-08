@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="pl">
+  <file datatype="php" original="contao/languages/en/tl_maintenance.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_maintenance.cacheTables.0">
         <source>Purge data</source>
-        <target>Usuń dane</target>
+        <target>Usuń dane sesji</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheTables.1">
         <source>Please select the data you want to purge or rebuild.</source>
@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
-        <target>Usuń dane</target>
+        <target>Usuń dane sesji</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
@@ -90,8 +90,8 @@
         <target>Wyczyść cache skryptów</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
-        <target>Usuwa automatycznie generowane pliki &lt;code&gt;.css&lt;/code&gt; i &lt;code&gt;.js&lt;/code&gt;, odtwarza wewnętrzne arkusze stylów, a następnie usuwa wspólną pamięć podręczną.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Usuwa automatycznie generowane pliki &lt;code&gt;.css&lt;/code&gt; i &lt;code&gt;.js&lt;/code&gt;, a następnie oczyszcza współdzieloną pamięć podręczną, dzięki czemu nie ma żadnych łączy do usuniętych zasobów.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
@@ -114,8 +114,8 @@
         <target>Odtwórz pliki XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Odtwarza pliki XML (mapy stron i kanały), a następnie usuwa udostępnioną pamięć podręczną, więc nie ma żadnych łączy do usuniętych zasobów.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odtwarza pliki XML w folderze &lt;code&gt;shared&lt;/code&gt;, a następnie usuwa współdzieloną pamięć podręczną, dzięki czemu nie ma żadnych łączy do usuniętych zasobów.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -153,12 +153,16 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Robot obecnie działa. Poczekaj, aż zakończy się, aby zobaczyć wyniki.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Pobierz dziennik debugowania</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>Dziennik debugowania</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Jeśli wystąpiły błędy lub strony zostały pominięte, sprawdź dziennik debugowania, aby uzyskać więcej informacji.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
         <target>Pobierz dziennik</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">

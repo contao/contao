@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
@@ -54,8 +54,7 @@
         <target>Sovrascrivere i metadati</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the metadata from the file manager.</source>
-        <target>Sovrascrivere i metadati del file manager.</target>
+        <source>Overwrite the metadata of the file.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -80,14 +79,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Titolo dell'immagine (si possono utilizzare anche gli attributi (&lt;em&gt;titolo&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.0">
-        <source>Image margin</source>
-        <target>Margine immagine</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.1">
-        <source>Here you can enter the top, right, bottom and left margin.</source>
-        <target>Inserisci un valore per margini: top, right, bottom, left e seleziona l'unità di misura. Il margine è la distanza tra un elemento e gli elementi che lo circondano.</target>
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.0">
         <source>Image link target</source>
@@ -128,6 +119,14 @@
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Inserisci il codice HTML. L'elenco dei tag consentiti è modificabile tramite le Impostazioni generali del backend</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>Codice HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Fai attenzione quando incolli codice che non comprendi. Ciò potrebbe consentire ad individui esterni di rubare la tua identità o prendere il controllo dell'intero sistema.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -609,14 +608,6 @@
         <source>These groups will be able to see the content element.</source>
         <target>Qui potete scegliere a quali gruppi verrà consentito di visualizzare il contenuto dell'elemento.</target>
       </trans-unit>
-      <trans-unit id="tl_content.guests.0">
-        <source>Show to guests only</source>
-        <target>Mostra solo agli utenti che non hanno effettuato il login (guest/ospiti)</target>
-      </trans-unit>
-      <trans-unit id="tl_content.guests.1">
-        <source>Hide the content element if a member is logged in.</source>
-        <target>Nasconde il contenuto se un membro ha effettuato il login.</target>
-      </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
         <target>ID e classe CSS</target>
@@ -845,6 +836,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Usa il dominio youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Video loop</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Autoplay</target>
@@ -897,10 +892,6 @@
         <source>Edit content element ID %s</source>
         <target>Modifica l'elemento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader">
-        <source>Edit the article settings</source>
-        <target>Modifica le impostazioni dell'articolo</target>
-      </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
         <target>Nascondi/mostra elemento di contenuto ID %s</target>
@@ -924,10 +915,6 @@
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Modifica l'origine dell'elemento ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle">
-        <source>Edit article ID %s</source>
-        <target>Modifica l'articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

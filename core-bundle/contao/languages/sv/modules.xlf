@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="sv">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="sv">
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
@@ -34,12 +34,11 @@
         <target>Hantera teman, frontend-moduler, sidlayouter eller bildstorlekar</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-        <target>Sidstruktur</target>
+        <source>Pages</source>
+        <target>Målsidor</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
-        <target>Skapa och hantera hemsidans sidstruktur och konfigurera egenskaperna för varje sida.</target>
+        <source>Set up the pages of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -98,8 +97,8 @@
         <target>System</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-        <target>Filhanteraren</target>
+        <source>Files</source>
+        <target>Filer</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -185,18 +184,6 @@
         <source>Front end modules</source>
         <target>Frontend-moduler</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-        <target>Formatdefinitioner</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Stilmallar</target>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-        <target>Stilmallar</target>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Frontend-moduler</target>
@@ -226,8 +213,7 @@
         <target>Navigationsmeny</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
-        <target>Genererar en navigationsmeny från sidstrukturen.</target>
+        <source>Generates a navigation menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -250,8 +236,7 @@
         <target>Snabbnavigering</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
-        <target>Skapar en rullgardinsmeny från sidstrukturen. Den ger besökaren möjligheten att 'hoppa' till en viss sida.</target>
+        <source>Generates a drop-down menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -282,8 +267,7 @@
         <target>HTML-webbplatskarta</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
-        <target>Skapar en lista över alla tillgängliga sidor i sidstrukturen.</target>
+        <source>Generates a list of all pages</source>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -393,6 +377,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>Ger dig möjlighet att inkludera egen HTML-kod.</target>
       </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Ofiltrerad HTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Låter dig lägga till anpassad, ofiltrerad HTML-kod</target>
+      </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
         <target>Anpassad mall</target>
@@ -422,8 +414,7 @@
         <target>Rotsidaberoende moduler</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
-        <source>Generates different modules depending on the root page</source>
-        <target>Genererar olika moduler beroende på rotsidan</target>
+        <source>Generates different modules depending on the website root page</source>
       </trans-unit>
     </body>
   </file>

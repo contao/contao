@@ -266,18 +266,8 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Alerts
-        $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());
-        $this->assertSame('/contao/alerts', $children['alerts']->getUri());
+        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-alert',
-                'title' => 'MSC.systemMessages',
-                'onclick' => "Backend.openModalIframe({'title':'MSC.systemMessages','url':this.href});return false",
-            ],
-            $children['alerts']->getLinkAttributes()
-        );
 
         // Submenu
         $this->assertSame('<button type="button">MSC.user foo</button>', $children['submenu']->getLabel());
@@ -308,7 +298,7 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
         // Burger
-        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }

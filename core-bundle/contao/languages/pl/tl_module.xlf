@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="pl">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
-        <target>Nazwa</target>
+        <target>Nagłówek</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -70,8 +70,7 @@
         <target>Strona odsyłająca</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
-        <source>Please choose the reference page from the site structure.</source>
-        <target>Tutaj możesz wybrać inny punkt startowy do wygenerowania mapy serwisu.</target>
+        <source>Please choose the reference page.</source>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -94,8 +93,7 @@
         <target>Strony</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.1">
-        <source>Please choose one or more pages from the site structure.</source>
-        <target>Wybierz strony do modułu szybkich odnośników.</target>
+        <source>Please choose one or more pages.</source>
       </trans-unit>
       <trans-unit id="tl_module.showHidden.0">
         <source>Show hidden items</source>
@@ -305,14 +303,6 @@
         <source>Please select a file from the files directory.</source>
         <target>Wybierz plik z katalogu.</target>
       </trans-unit>
-      <trans-unit id="tl_module.url.0">
-        <source>URL</source>
-        <target>URL</target>
-      </trans-unit>
-      <trans-unit id="tl_module.url.1">
-        <source>Please enter the URL (http://…) of the Flash movie.</source>
-        <target>Wpisz kompletny URL łącznie z http://.</target>
-      </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
         <target>Pełen podgląd/nowe okno</target>
@@ -344,6 +334,14 @@
       <trans-unit id="tl_module.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Wprowadź twój kod HTML.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>Kod HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Zachowaj ostrożność podczas wklejania informacji, których nie rozumiesz. Może to umożliwić napastnikom kradzież tożsamości użytkownika lub przejęcie kontroli nad całym systemem.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
@@ -384,14 +382,6 @@
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
         <target>Tutaj możesz wybrać, które grupy użytkowników będą mogły zobaczyć ten moduł.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.0">
-        <source>Show to guests only</source>
-        <target>Pokaż tylko dla osób niezalogowanych</target>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.1">
-        <source>Hide the module if a member is logged in.</source>
-        <target>Ukryj ten moduł, jeśli użytkownik jest zalogowany.</target>
       </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>
@@ -510,8 +500,7 @@
         <target>Moduły</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
-        <source>Please select a module for every root page.</source>
-        <target>Wybierz moduł dla każdego punktu startowego.</target>
+        <source>Please select a module for every website root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
