@@ -432,7 +432,7 @@ class MigrateCommandTest extends TestCase
             $this->assertSame('database-error', $json['type']);
             $this->assertSame($errorMessage, $json['message']);
         } else {
-            $this->assertSame('[ERROR] '.$errorMessage, trim($display));
+            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $display)));
         }
     }
 
