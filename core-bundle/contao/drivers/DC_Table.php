@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
 
@@ -620,13 +621,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param array $set
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function create($set=array())
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
 		// Get all default values for the new entry
@@ -717,13 +718,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		$cr = array();
@@ -731,7 +733,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// ID and PID are mandatory (PID can be 0!)
 		if (!$this->intId || Input::get('pid') === null)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		try
@@ -775,7 +777,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check for circular references
 		if (\in_array($this->set['pid'], $cr))
 		{
-			throw new InternalServerErrorException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
 
 		$this->set['tstamp'] = time();
@@ -818,13 +820,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Move all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function cutAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		/** @var Session $objSession */
@@ -862,18 +864,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return integer|boolean
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		if (!$this->intId)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		/** @var Session $objSession */
@@ -1158,13 +1160,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Move all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copyAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		/** @var Session $objSession */
@@ -1472,20 +1474,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		$currentRecord = $this->getCurrentRecord();
 
 		if (null === $currentRecord)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $currentRecord));
@@ -1606,13 +1608,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Delete all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function deleteAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		/** @var Session $objSession */
@@ -1721,7 +1723,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether there is a record
 		if (null === $currentRecord)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$error = false;
@@ -1807,13 +1809,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		if ($intId)
@@ -1827,7 +1828,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Redirect if there is no record with the given ID
 		if (null === $currentRecord)
 		{
-			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));
@@ -2282,13 +2283,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';
@@ -2688,13 +2689,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param integer $intId
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function toggle($intId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		if ($intId)
@@ -2754,13 +2754,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function overrideAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';
