@@ -1732,7 +1732,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
-		if (empty($ids))
+		if (!\count($ids))
 		{
 			return;
 		}
