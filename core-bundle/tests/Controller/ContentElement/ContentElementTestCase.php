@@ -427,11 +427,7 @@ class ContentElementTestCase extends TestCase
         $pageAdapter = $this->mockAdapter(['findPublishedById']);
         $pageAdapter
             ->method('findPublishedById')
-            ->willReturnCallback(
-                static fn (int $id) => [
-                    self::PAGE1 => $page1,
-                ][$id] ?? null
-            )
+            ->willReturnCallback(static fn (int $id) => [self::PAGE1 => $page1][$id] ?? null)
         ;
 
         $article1 = $this->mockClassWithProperties(ArticleModel::class);
@@ -443,11 +439,7 @@ class ContentElementTestCase extends TestCase
         $articleAdapter = $this->mockAdapter(['findPublishedById']);
         $articleAdapter
             ->method('findPublishedById')
-            ->willReturnCallback(
-                static fn (int $id) => [
-                    self::ARTICLE1 => $article1,
-                ][$id] ?? null
-            )
+            ->willReturnCallback(static fn (int $id) => [self::ARTICLE1 => $article1][$id] ?? null)
         ;
 
         return $this->mockContaoFramework([

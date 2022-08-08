@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FilesModel;
@@ -28,8 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @ContentElement(category="media")
- *
  * @phpstan-type FigureData array{
  *      media: array{
  *          type: 'video'|'audio',
@@ -39,6 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      metadata: Metadata
  *  }
  */
+#[AsContentElement(category: 'media')]
 class PlayerController extends AbstractContentElementController
 {
     private const VIDEO_TYPES = ['webm', 'mp4', 'm4v', 'mov', 'wmv', 'ogv'];
@@ -49,9 +48,8 @@ class PlayerController extends AbstractContentElementController
      */
     private array $publicUriByStoragePath = [];
 
-    public function __construct(
-        private readonly VirtualFilesystem $filesStorage,
-    ) {
+    public function __construct(private readonly VirtualFilesystem $filesStorage)
+    {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
@@ -65,9 +63,9 @@ class PlayerController extends AbstractContentElementController
         }
 
         // Compile data
-        $figureData = $isVideo ?
-            $this->buildVideoFigureData($model, $sourceFiles) :
-            $this->buildAudioFigureData($model, $sourceFiles)
+        $figureData = $isVideo
+            ? $this->buildVideoFigureData($model, $sourceFiles)
+            : $this->buildAudioFigureData($model, $sourceFiles)
         ;
 
         $template->set('figure', (object) $figureData);
@@ -80,6 +78,7 @@ class PlayerController extends AbstractContentElementController
      * @param list<FilesystemItem> $sourceFiles
      *
      * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     *
      * @phpstan-return FigureData
      */
     private function buildVideoFigureData(ContentModel $model, array $sourceFiles): array
@@ -100,10 +99,10 @@ class PlayerController extends AbstractContentElementController
             ->setIfExists('preload', $model->playerPreload)
         ;
 
-        $range = $model->playerStart || $model->playerStop ? sprintf(
-            '#t=%s',
-            implode(',', [$model->playerStart ?: '', $model->playerStop ?: ''])
-        ) : '';
+        $range = $model->playerStart || $model->playerStop
+            ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
+            : ''
+        ;
 
         $captions = [$model->playerCaption];
 
@@ -135,11 +134,13 @@ class PlayerController extends AbstractContentElementController
      * @param list<FilesystemItem> $sourceFiles
      *
      * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     *
      * @phpstan-return FigureData
      */
     private function buildAudioFigureData(ContentModel $model, array $sourceFiles): array
     {
-        $attributes = $this->parsePlayerOptions($model)
+        $attributes = $this
+            ->parsePlayerOptions($model)
             ->setIfExists('preload', $model->playerPreload)
         ;
 

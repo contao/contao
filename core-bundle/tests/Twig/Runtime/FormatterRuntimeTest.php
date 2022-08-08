@@ -34,10 +34,7 @@ class FormatterRuntimeTest extends TestCase
             ->method('initialize')
         ;
 
-        $this->assertSame(
-            '1.50 KiB',
-            (new FormatterRuntime($framework))->formatBytes(1024 + 512, 2)
-        );
+        $this->assertSame('1.50 KiB', (new FormatterRuntime($framework))->formatBytes(1024 + 512, 2));
 
         unset($GLOBALS['TL_LANG']);
     }
