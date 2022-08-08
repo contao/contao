@@ -1104,7 +1104,7 @@ abstract class Model
 				{
 					$varKey = \is_array($arrOptions['value'] ?? null) ? $arrOptions['value'][0] : ($arrOptions['value'] ?? null);
 
-					// Return early if column is primary key and field value is null (#5033)
+					// Return early if column is unique and field value is null (#5033)
 					if ($varKey === null)
 					{
 						return null;
