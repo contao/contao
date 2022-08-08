@@ -408,7 +408,7 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			elseif ('' !== (string) $this->varValue)
+			elseif ('' === (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
