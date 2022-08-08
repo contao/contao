@@ -273,7 +273,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function loadDataContainer($strTable, $blnNoCache = false): never
+    public static function loadDataContainer($strTable): never
     {
         self::throwOnAccess();
     }
