@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class PageNotFoundException extends NotFoundException
+use Symfony\Component\HttpFoundation\Exception\BadRequestException as BaseBadRequestException;
+
+class BadRequestException extends BaseBadRequestException
 {
 }
