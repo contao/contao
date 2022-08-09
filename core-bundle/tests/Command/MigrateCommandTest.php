@@ -44,6 +44,20 @@ class MigrateCommandTest extends TestCase
         parent::tearDown();
     }
 
+    public function testAbortsEarlyIfThereAreNoMigrations(): void
+    {
+        $backupManager = $this->createBackupManager(false);
+
+        $command = $this->getCommand([], [], [], null, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
     public function testAbortsEarlyIfTheBackupFails(): void
     {
         $backupManager = $this->createBackupManager(true);
@@ -53,7 +67,14 @@ class MigrateCommandTest extends TestCase
             ->willThrowException(new BackupManagerException('Something went terribly wrong.'))
         ;
 
-        $command = $this->getCommand([], [], [], null, $backupManager);
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [],
+            [],
+            null,
+            $backupManager
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -451,6 +472,11 @@ class MigrateCommandTest extends TestCase
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, BackupManager $backupManager = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
+
+        $migrations
+            ->method('hasPending')
+            ->willReturnCallback(static fn () => \count($pendingMigrations) > 0)
+        ;
 
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];

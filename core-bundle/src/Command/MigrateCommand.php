@@ -103,6 +103,16 @@ class MigrateCommand extends Command
     private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
+
+        // Return early if there is no work to be done
+        if (!$this->hasWorkToDo()) {
+            if (!$asJson) {
+                $this->io->info('Database dump skipped because there are no migrations to execute.');
+            }
+
+            return true;
+        }
+
         $config = $this->backupManager->createCreateConfig();
 
         if (!$asJson) {
@@ -184,6 +194,30 @@ class MigrateCommand extends Command
         }
 
         return 0;
+    }
+
+    private function hasWorkToDo(): bool
+    {
+        // There are some pending migrations
+        if ($this->migrations->hasPending()) {
+            return true;
+        }
+
+        // There are some runonce files to be processed
+        if (\count($this->getRunOnceFiles()) > 0) {
+            return true;
+        }
+
+        // There are installer commands to be executed
+        if (null !== $this->installer) {
+            $this->installer->compileCommands();
+
+            if (\count($this->installer->getCommands(false)) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
