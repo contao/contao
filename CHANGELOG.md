@@ -2,7 +2,46 @@
 
 This project adheres to [Semantic Versioning].
 
-## [5.0.0-RC1] (2022-07-15)
+## [5.0.0-RC2] (2022-08-09)
+
+**New features:**
+
+- [#5103] Use CSS variables in the back end ([leofeyer])
+- [#4893] Modern fragments: article teaser + player content elements ([m-vo])
+- [#4862] Modern fragments: download content elements ([m-vo])
+- [#5017] Use the new features of ACE 1.8 ([leofeyer])
+- [#4371] Tune the back end theme ([leofeyer])
+
+**Fixed issues:**
+
+- [#5076] Handle empty array when preloading records ([aschempp])
+- [#5060] Do not modify the global TL_LANG array ([ausi])
+- [#5097] Allow null query on unique fields and implement early return ([fritzmg])
+- [#5048] Fix modulewizard.js ([fritzmg])
+- [#4826] Throw correct exceptions on error in DC ([aschempp])
+- [#5035] Check DCA config when adding default operations ([aschempp])
+- [#4939] Fix sectionwizard.js ([fritzmg])
+- [#5036] Don’t cast null values in Model::convertToPhpValue ([ausi])
+- [#5093] Fix undefined array key breadcrumb ([ausi])
+- [#5094] Fix compatibility with doctrine/dbal 3.3.8 ([ausi])
+- [#5070] Fix DcaLoader exceptions ([ausi])
+- [#5066] Auto-generate and dump the APP_SECRET during contao-setup ([m-vo])
+- [#5088] Show the video URL in the backend preview ([bytehead])
+- [#5083] Fix invalid parameter number error ([ausi])
+- [#5079] Add the removed count increment again ([ausi])
+- [#5073] Fix broken insert tag flags ([ausi])
+- [#5038] Remove two redundant body classes ([leofeyer])
+- [#5057] Fix empty form uploads causing an error ([fritzmg])
+- [#5063] Drop support for MAILER_URL ([aschempp])
+- [#5037] Fix a wrong method call in the Newsletter class ([leofeyer])
+- [#5023] Correctly handle NDJSON exceptions when checking the DB configuration ([aschempp])
+- [#5022] Lazy-load the RememberMeRepository ([aschempp])
+- [#5008] Fix useSSL default value ([fritzmg])
+- [#5005] Fix database type error in contao:user:create command ([fritzmg])
+- [#5000] Fix requirements with Symfony 6.x ([bytehead])
+- [#4976] Improve currentRecord checks and permissions ([aschempp])
+
+## [5.0.0-RC1] (2022-07-17)
 
 **New features:**
 
@@ -23,14 +62,14 @@ This project adheres to [Semantic Versioning].
 - [#4922] Remove $arrCache from the insert tag hooks ([ausi])
 - [#4921] Deprecate uppercase letters in insert tags ([ausi])
 - [#4920] Keep unknown insert tags as plain strings ([ausi])
-- [#4912] Remove the move operation from DC_Table ([aschempp])
+- [#4912] Remove the "move" operation from DC_Table ([aschempp])
 - [#4918] Move pages and files to the "content" category ([leofeyer])
-- [#4797] Change boolean from char(1) to tinyint(1) ([fritzmg])
+- [#4797] Change boolean columns from char(1) to tinyint(1) ([fritzmg])
 - [#4874] Replace the contao_figure function ([m-vo])
 - [#4876] Allow reading from VFS storages in the FigureBuilder ([m-vo])
 - [#4875] Improve the `debug:contao-twig` command ([m-vo])
 - [#4810] Modern fragments: text content elements (part 2) ([m-vo])
-- [#4888] Move installer into the core ([m-vo])
+- [#4888] Move the installer into the core ([m-vo])
 - [#4892] Use the current record in the `findCurrentPid()` method ([leofeyer])
 - [#4770] Permission rework ([Toflar])
 - [#4851] Get rid of the base tag ([leofeyer])
@@ -54,7 +93,7 @@ This project adheres to [Semantic Versioning].
 - [#4772] Remove the wrapper around custom layout sections ([leofeyer])
 - [#4749] Add the unfiltered HTML element ([ausi])
 - [#4760] Replace `personalData` with `personalDetails` ([leofeyer])
-- [#4751] Remove orderField ([ausi])
+- [#4751] Remove the orderField ([ausi])
 - [#4345] Rewrite the Backend.autoFocusFirstInputField to vanilla JS ([aschempp])
 - [#4756] Use the same icons for expanding and collapsing everywhere ([leofeyer])
 - [#4734] Remove more legacy deprecations ([ausi])
@@ -67,7 +106,7 @@ This project adheres to [Semantic Versioning].
 - [#4735] Use uppercase country codes for tl_member ([ausi])
 - [#4738] Remove some deprecated constants ([ausi])
 - [#4737] Remove contao:version command ([ausi])
-- [#4721] Remov support for deprecated value in tl_article.printable ([Toflar])
+- [#4721] Remove support for deprecated value in tl_article.printable ([Toflar])
 - [#4716] Add two more FilesystemItemIterator related helper functions ([m-vo])
 - [#4715] Support our template hierarchy in the Twig "use" tag ([m-vo])
 - [#4375] Rewrite fieldset toggling to vanilla JS ([aschempp])
@@ -238,6 +277,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.0-RC2]: https://github.com/contao/contao/releases/tag/5.0.0-RC2
 [5.0.0-RC1]: https://github.com/contao/contao/releases/tag/5.0.0-RC1
 [ameotoko]: https://github.com/ameotoko
 [aschempp]: https://github.com/aschempp
@@ -252,6 +292,37 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5103]: https://github.com/contao/contao/pull/5103
+[#4893]: https://github.com/contao/contao/pull/4893
+[#4862]: https://github.com/contao/contao/pull/4862
+[#5017]: https://github.com/contao/contao/pull/5017
+[#4371]: https://github.com/contao/contao/pull/4371
+[#5076]: https://github.com/contao/contao/pull/5076
+[#5060]: https://github.com/contao/contao/pull/5060
+[#5097]: https://github.com/contao/contao/pull/5097
+[#5048]: https://github.com/contao/contao/pull/5048
+[#4826]: https://github.com/contao/contao/pull/4826
+[#5035]: https://github.com/contao/contao/pull/5035
+[#4939]: https://github.com/contao/contao/pull/4939
+[#5036]: https://github.com/contao/contao/pull/5036
+[#5093]: https://github.com/contao/contao/pull/5093
+[#5094]: https://github.com/contao/contao/pull/5094
+[#5070]: https://github.com/contao/contao/pull/5070
+[#5066]: https://github.com/contao/contao/pull/5066
+[#5088]: https://github.com/contao/contao/pull/5088
+[#5083]: https://github.com/contao/contao/pull/5083
+[#5079]: https://github.com/contao/contao/pull/5079
+[#5073]: https://github.com/contao/contao/pull/5073
+[#5038]: https://github.com/contao/contao/pull/5038
+[#5057]: https://github.com/contao/contao/pull/5057
+[#5063]: https://github.com/contao/contao/pull/5063
+[#5037]: https://github.com/contao/contao/pull/5037
+[#5023]: https://github.com/contao/contao/pull/5023
+[#5022]: https://github.com/contao/contao/pull/5022
+[#5008]: https://github.com/contao/contao/pull/5008
+[#5005]: https://github.com/contao/contao/pull/5005
+[#5000]: https://github.com/contao/contao/pull/5000
+[#4976]: https://github.com/contao/contao/pull/4976
 [#4834]: https://github.com/contao/contao/pull/4834
 [#4995]: https://github.com/contao/contao/pull/4995
 [#4983]: https://github.com/contao/contao/pull/4983
