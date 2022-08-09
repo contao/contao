@@ -24,7 +24,6 @@ use PhpCsFixer\Fixer\Phpdoc\PhpdocOrderFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocScalarFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocSeparationFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocSummaryFixer;
-use PhpCsFixer\Fixer\Phpdoc\PhpdocToCommentFixer;
 use PhpCsFixer\Fixer\ReturnNotation\ReturnAssignmentFixer;
 use PhpCsFixer\Fixer\Semicolon\MultilineWhitespaceBeforeSemicolonsFixer;
 use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
@@ -63,7 +62,6 @@ return static function (ECSConfig $ecsConfig): void {
         PhpdocScalarFixer::class,
         PhpdocSeparationFixer::class,
         PhpdocSummaryFixer::class,
-        PhpdocToCommentFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
         StrictComparisonFixer::class,

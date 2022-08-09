@@ -174,7 +174,6 @@ abstract class Model
 					}
 					else
 					{
-						/** @var static $objRelated */
 						$objRelated = new $strClass();
 						$objRelated->setRow($row);
 
