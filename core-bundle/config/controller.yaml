@@ -87,9 +87,15 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\PlayerController:
+        arguments:
+            - '@contao.filesystem.virtual.files'
+
     Contao\CoreBundle\Controller\ContentElement\TableController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TeaserController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TextController:
         arguments:

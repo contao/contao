@@ -40,17 +40,6 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('PNG', $fileItem->getExtension());
         $this->assertSame('png', $fileItem->getExtension(true));
         $this->assertSame('bar.PNG', $fileItem->getName());
-
-        $directoryItem = new FilesystemItem(
-            false,
-            'foo/bar',
-            123450
-        );
-
-        $this->assertFalse($directoryItem->isFile());
-        $this->assertSame('foo/bar', $directoryItem->getPath());
-        $this->assertSame('foo/bar', (string) $directoryItem);
-        $this->assertSame(123450, $directoryItem->getLastModified());
     }
 
     /**

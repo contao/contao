@@ -20,10 +20,8 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentModel;
 use Contao\ContentModule;
-use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\ContentTeaser;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
 use Contao\FilesModel;
@@ -273,17 +271,12 @@ $GLOBALS['TL_CTE'] = array
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
 	),
-	'media' => array
-	(
-		'player'          => ContentPlayer::class,
-	),
 	'includes' => array
 	(
 		'article'         => ContentArticle::class,
 		'alias'           => ContentAlias::class,
 		'form'            => Form::class,
 		'module'          => ContentModule::class,
-		'teaser'          => ContentTeaser::class
 	)
 );
 
