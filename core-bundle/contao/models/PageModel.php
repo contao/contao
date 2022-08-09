@@ -872,7 +872,6 @@ class PageModel extends Model
 		}
 
 		// Set some default values
-		$this->protected = $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
 		$this->layout = $this->includeLayout ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
