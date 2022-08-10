@@ -118,7 +118,7 @@ abstract class AbstractController extends SymfonyAbstractController
             }
 
             // Tag the page (see #2137)
-            $this->tagResponse($pageModel);
+            $this->container->get('contao.cache.entity_tags')->tagWithModelInstance($tags);
         }
 
         return $response;
