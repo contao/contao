@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Doctrine\DBAL\Connection;
@@ -26,9 +26,7 @@ class PageListener
     {
     }
 
-    /**
-     * @Callback(table="tl_page", target="config.onload")
-     */
+    #[AsCallback('tl_page', 'config.onload')]
     public function onLoad(DataContainer $dc): void
     {
         $type = $dc->getCurrentRecord()['type'] ?? null;
@@ -40,9 +38,7 @@ class PageListener
         $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class'] = 'clr w50';
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.newsArchives.options")
-     */
+    #[AsCallback('tl_page', 'fields.newsArchives.options')]
     public function getAllowedArchives(): array
     {
         $user = $this->security->getUser();
@@ -67,9 +63,7 @@ class PageListener
         return $options;
     }
 
-    /**
-     * @Hook("getPageStatusIcon")
-     */
+    #[AsHook('getPageStatusIcon')]
     public function getStatusIcon(object $page, string $image): string
     {
         if (NewsFeedController::TYPE !== $page->type) {

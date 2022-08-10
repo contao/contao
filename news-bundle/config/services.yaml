@@ -60,9 +60,6 @@ services:
             - '@contao.insert_tag.parser'
             - '%kernel.project_dir%'
             - '@contao.cache.entity_tags'
-        tags:
-            - { name: kernel.event_listener, event: Contao\NewsBundle\Event\FetchArticlesForFeedEvent, method: onFetchArticlesForFeed }
-            - { name: kernel.event_listener, event: Contao\NewsBundle\Event\TransformArticleForFeedEvent, method: onTransformArticleForFeed }
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener

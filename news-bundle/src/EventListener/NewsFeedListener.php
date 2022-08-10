@@ -32,6 +32,7 @@ use FeedIo\Feed\Item\Author;
 use FeedIo\Feed\Item\AuthorInterface;
 use FeedIo\Feed\Item\Media;
 use FeedIo\Feed\ItemInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
 
 class NewsFeedListener
@@ -45,6 +46,7 @@ class NewsFeedListener
     ) {
     }
 
+    #[AsEventListener(FetchArticlesForFeedEvent::class)]
     public function onFetchArticlesForFeed(FetchArticlesForFeedEvent $event): void
     {
         $pageModel = $event->getPageModel();
@@ -62,6 +64,7 @@ class NewsFeedListener
         $event->setArticles($articles);
     }
 
+    #[AsEventListener(TransformArticleForFeedEvent::class)]
     public function onTransformArticleForFeed(TransformArticleForFeedEvent $event): void
     {
         $article = $event->getArticle();

@@ -14,9 +14,9 @@ namespace Contao\NewsBundle\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\PageModel;
@@ -25,9 +25,7 @@ use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Page(contentComposition=false)
- */
+#[AsPage(contentComposition: false)]
 class NewsFeedController extends AbstractController implements DynamicRouteInterface
 {
     final public const TYPE = 'news_feed';
