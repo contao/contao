@@ -32,6 +32,9 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\UserModel;
 use FeedIo\Feed;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,14 +45,13 @@ class NewsFeedListenerTest extends ContaoTestCase
         parent::tearDown();
 
         $this->resetStaticProperties([Files::class, System::class]);
+        (new Filesystem())->remove($this->getImagesDir());
     }
-
     /**
      * @dataProvider featured
      */
     public function testFetchesArticlesFromArchives(string $feedFeatured, ?bool $featuredOnly): void
     {
-        $projectDir = '/project';
         $collection = [$this->mockClassWithProperties(NewsModel::class)];
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
@@ -77,7 +79,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
-        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $projectDir, $cacheTags);
+        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $this->getTempDir(), $cacheTags);
         $listener->onFetchArticlesForFeed($event);
 
         $this->assertSame($collection, $event->getArticles());
@@ -88,7 +90,16 @@ class NewsFeedListenerTest extends ContaoTestCase
      */
     public function testTransformsArticlesToFeedItems(string $feedSource, string $expecedContent): void
     {
-        $projectDir = Path::canonicalize(__DIR__.'/../Fixtures');
+        (new Filesystem())->mkdir($this->getImagesDir());
+
+        $imagine = new Imagine();
+
+        foreach (['foo.jpg', 'bar.jpg'] as $filename) {
+            $imagine
+                ->create(new Box(100, 100))
+                ->save(Path::join($this->getImagesDir(), $filename))
+            ;
+        }
 
         $image = $this->createMock(ImageInterface::class);
         $image
@@ -102,8 +113,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $image
             ->method('getPath')
             ->willReturnOnConsecutiveCalls(
-                $projectDir.'/files/foo.jpg',
-                $projectDir.'/files/bar.jpg',
+                $this->getImagesDir().'/foo.jpg',
+                $this->getImagesDir().'/bar.jpg',
             )
         ;
 
@@ -189,7 +200,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             )
         ;
 
-        $container = $this->getContainerWithContaoConfiguration($projectDir);
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
         $framework = $this->mockContaoFramework([
@@ -216,7 +227,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $projectDir, $cacheTags);
+        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags);
         $listener->onTransformArticleForFeed($event);
 
         $item = $event->getItem();
@@ -241,5 +252,10 @@ class NewsFeedListenerTest extends ContaoTestCase
     {
         yield 'Teaser only' => ['source_teaser', 'Example teaser'];
         yield 'Text' => ['source_text', 'Example content'];
+    }
+
+    private function getImagesDir(): string
+    {
+        return Path::join($this->getTempDir(), 'files');
     }
 }
