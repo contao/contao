@@ -302,6 +302,9 @@
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
       </trans-unit>
+      <trans-unit id="tl_layout.feed_legend">
+        <source>Feeds</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
       </trans-unit>

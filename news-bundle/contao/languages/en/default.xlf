@@ -39,10 +39,10 @@
         <source>Back to the news overview</source>
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
-        <source>News Feed</source>
+        <source>News feed</source>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
-        <source>Create a RSS/Atom/JSON feed from your news archives</source>
+        <source>Create an RSS, Atom or JSON feed from your news archives.</source>
       </trans-unit>
     </body>
   </file>

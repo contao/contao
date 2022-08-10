@@ -8,7 +8,19 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,alias,type;{meta_legend},description;{feed_legend},newsArchives,feedFormat,maxFeedItems,feedFeatured,feedSource,imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},sitemap,hide,noSearch;{publish_legend},published,start,stop';
+use Contao\DataContainer;
+
+$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,description;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{publish_legend},published,start,stop';
+
+$GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'][] = static function (DataContainer $dc)
+{
+	if ((!$currentRecord = $dc->getCurrentRecord()) || ($currentRecord['type'] ?? null) !== 'news_feed')
+	{
+		return;
+	}
+
+	$GLOBALS['TL_DCA']['tl_page']['fields']['description']['label'] = &$GLOBALS['TL_LANG']['tl_page']['feedDescription'];
+};
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,
@@ -48,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
 	'inputType' => 'select',
 	'options' => array('all_items', 'featured', 'unfeatured'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
-	'eval' => array('tl_class'=>'w50 clr'),
+	'eval' => array('tl_class'=>'w50'),
 	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
 );
 
