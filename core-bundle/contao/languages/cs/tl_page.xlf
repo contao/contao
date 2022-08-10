@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>Zadejte předponu adresy URL (např. jazyk), která bude připojena ke všem aliasům stránek pod touto kořenovou stránkou webu.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>

@@ -178,6 +178,29 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
     }
 
+    public function testFirst(): void
+    {
+        $iterator = new FilesystemItemIterator(
+            new \ArrayIterator([
+                $first = new FilesystemItem(true, 'foo'),
+                new FilesystemItem(true, 'bar'),
+            ])
+        );
+
+        $this->assertSame($first, $iterator->first());
+        $this->assertSame($first, $iterator->first());
+
+        $this->assertSameItems(['foo', 'bar'], $iterator->toArray());
+    }
+
+    public function testFirstWithEmptySet(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->assertNull($iterator->first());
+        $this->assertSame([], $iterator->toArray());
+    }
+
     /**
      * @param array<string>         $expected
      * @param array<FilesystemItem> $actual

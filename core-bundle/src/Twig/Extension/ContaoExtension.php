@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
+use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -236,6 +237,11 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'highlight_auto',
                 [HighlighterRuntime::class, 'highlightAuto'],
+            ),
+            new TwigFilter(
+                'format_bytes',
+                [FormatterRuntime::class, 'formatBytes'],
+                ['is_safe' => ['html']]
             ),
         ];
     }

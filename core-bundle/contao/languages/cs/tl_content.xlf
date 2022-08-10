@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata of the file.</source>
+        <target>Přepište metadata souboru.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

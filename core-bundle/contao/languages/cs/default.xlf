@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>Předponu adresy URL &quot;%s&quot; již používá jiná kořenová stránka webu se stejným názvem domény!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -278,6 +279,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
+        <target>Existují stránky nejvyšší úrovně, které nejsou kořenovými stránkami webu.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -357,9 +359,11 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Verzi %d nelze obnovit, protože již není kompatibilní s aktuální strukturou databáze. Obnovte data ručně.</target>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+        <target>Čas ukončení musí být pozdější než čas zahájení.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -771,6 +775,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
+        <target>Tento typ stránky automaticky přesměruje návštěvníky na jinou stránku.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -778,6 +783,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Tento typ stránky označuje výchozí bod nového webu.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -817,6 +823,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Když je kořenová stránka webu v režimu údržby, všechny požadavky zobrazí chybovou stránku 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -2543,6 +2550,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
+        <target>Chcete-li zadat metadata souboru, musíte přidat kořenovou stránku webu.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2751,25 +2759,31 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
-        <target>Manuální</target>
+        <target>Nápověda</target>
       </trans-unit>
       <trans-unit id="MSC.draft">
         <source>Draft</source>
+        <target>Koncept</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
+        <target>Kliknutím načtěte video.</target>
       </trans-unit>
       <trans-unit id="MSC.dataTransmission">
         <source>Your IP address will be transmitted to %s.</source>
+        <target>Vaše IP adresa bude přenesena na %s.</target>
       </trans-unit>
       <trans-unit id="MSC.showFrom">
         <source>visible from %s</source>
+        <target>viditelné z %s</target>
       </trans-unit>
       <trans-unit id="MSC.showTo">
         <source>visible until %s</source>
+        <target>viditelné do %s</target>
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+        <target>viditelné z %s do %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2977,6 +2991,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>%d URI byly přeskočeny.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

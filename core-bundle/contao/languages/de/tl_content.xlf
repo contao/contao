@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster öffnen.</target>
+        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuen Browserfenster öffnen.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>

@@ -43,7 +43,6 @@ class ContentAlias extends ContentElement
 				$objElement->classes = array_merge((array) $objElement->classes, array($this->cssID[1]));
 			}
 
-			/** @var ContentProxy $proxy */
 			$proxy = new $strClass($objElement, $this->strColumn);
 
 			if (!empty($this->cssID[0]))

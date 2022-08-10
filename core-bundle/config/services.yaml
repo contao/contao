@@ -204,6 +204,11 @@ services:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
         public: true
 
+    contao.filesystem.file_download_helper:
+        class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        arguments:
+            - '@uri_signer'
+
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
@@ -968,6 +973,11 @@ services:
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.formatter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
+        arguments:
+            - '@contao.framework'
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime

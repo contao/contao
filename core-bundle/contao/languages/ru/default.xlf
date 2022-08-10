@@ -363,6 +363,7 @@
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+        <target>Время окончания должно быть позже времени начала.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2774,12 +2775,15 @@
       </trans-unit>
       <trans-unit id="MSC.showFrom">
         <source>visible from %s</source>
+        <target>виден от %s</target>
       </trans-unit>
       <trans-unit id="MSC.showTo">
         <source>visible until %s</source>
+        <target>виден до %s</target>
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+        <target>виден от %s до %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
