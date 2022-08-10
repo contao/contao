@@ -27,17 +27,6 @@ class MigrationCollection
         $this->migrations = $migrations;
     }
 
-    public function hasPending(): bool
-    {
-        foreach ($this->migrations as $migration) {
-            if ($migration->shouldRun()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @return iterable<MigrationInterface>
      */

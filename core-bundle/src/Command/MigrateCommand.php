@@ -199,7 +199,7 @@ class MigrateCommand extends Command
     private function hasWorkToDo(): bool
     {
         // There are some pending migrations
-        if ($this->migrations->hasPending()) {
+        foreach ($this->migrations->getPending() as $migration) {
             return true;
         }
 

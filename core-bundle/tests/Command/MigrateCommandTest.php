@@ -473,14 +473,14 @@ class MigrateCommandTest extends TestCase
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
-        $migrations
-            ->method('hasPending')
-            ->willReturnCallback(static fn () => \count($pendingMigrations) > 0)
-        ;
+        $pendingMigrations[] = [];
+        $pendingMigrations[] = [];
+        $pendingMigrations[] = [];
 
-        $pendingMigrations[] = [];
-        $pendingMigrations[] = [];
-        $pendingMigrations[] = [];
+        $migrations
+            ->method('getPending')
+            ->willReturn(...$pendingMigrations)
+        ;
 
         $migrations
             ->method('getPendingNames')
