@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedFormat'] = array(
 	'inputType' => 'select',
 	'options' => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(32) NOT NULL default 'rss'"
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default 'rss'"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(
@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(
 	'options' => array('source_teaser', 'source_text'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(32) NOT NULL default 'source_teaser'"
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default 'source_teaser'"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['maxFeedItems'] = array(
@@ -48,14 +48,14 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
 	'inputType' => 'select',
 	'options' => array('all_items', 'featured', 'unfeatured'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
-	'eval' => array('tl_class'=>'w50'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedDescription'] = array(
 	'exclude' => true,
 	'inputType' => 'textarea',
-	'eval' => array('style'=>'height:60px', 'tl_class'=>'clr'),
+	'eval' => array('style' => 'height:60px', 'tl_class' => 'clr'),
 	'sql' => "text NULL"
 );
 

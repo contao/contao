@@ -43,6 +43,7 @@ class FeedMigration extends AbstractMigration
             'feedSource' => "varchar(32) NOT NULL default 'source_teaser'",
             'maxFeedItems' => 'smallint(5) unsigned NOT NULL default 25',
             'feedFeatured' => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'",
+            'feedDescription' => 'text NULL',
             'imgSize' => "varchar(255) NOT NULL default ''",
         ];
 
@@ -73,11 +74,11 @@ class FeedMigration extends AbstractMigration
                     'tstamp' => $feed['tstamp'],
                     'title' => $feed['title'],
                     'alias' => 'share/'.$feed['alias'],
-                    'feedDescription' => $feed['description'],
                     'feedSource' => $feed['source'],
                     'feedFormat' => $feed['format'],
                     'newsArchives' => $feed['archives'],
                     'maxFeedItems' => $feed['maxItems'],
+                    'feedDescription' => $feed['description'],
                     'imgSize' => $feed['imgSize'],
                 ]
             );
