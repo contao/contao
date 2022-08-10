@@ -26,6 +26,7 @@ class GeneratePageListenerTest extends ContaoTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $GLOBALS['TL_HEAD'] = [];
     }
 

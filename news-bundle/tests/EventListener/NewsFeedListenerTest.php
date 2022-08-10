@@ -63,8 +63,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($collection)
         ;
 
-        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $projectDir, $cacheTags);
-
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
 
@@ -78,6 +76,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         );
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
+
+        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $projectDir, $cacheTags);
         $listener->onFetchArticlesForFeed($event);
 
         $this->assertSame($collection, $event->getArticles());
@@ -202,7 +202,6 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $framework->setContainer($container);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $projectDir, $cacheTags);
         $feed = $this->createMock(Feed::class);
 
         $pageModel = $this->mockClassWithProperties(
@@ -217,6 +216,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
+        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $projectDir, $cacheTags);
         $listener->onTransformArticleForFeed($event);
 
         $item = $event->getItem();
