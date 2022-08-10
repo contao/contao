@@ -71,20 +71,20 @@ class NewsFeedListener
 
         $item = new Item();
 
-        $item->setTitle($this->getTitle($article, $item, $event))
-            ->setLastModified($this->getLastModified($article, $item, $event))
-            ->setLink($this->getLink($article, $item, $event))
-            ->setPublicId($this->getPublicId($article, $item, $event))
+        $item->setTitle($article->headline)
+            ->setLastModified((new \DateTime())->setTimestamp($article->date))
+            ->setLink($this->getLink($article))
             ->setContent($this->getContent($article, $item, $event))
         ;
+        $item->setPublicId($item->getLink());
 
-        $author = $this->getAuthor($article, $item, $event);
+        $author = $this->getAuthor($article);
 
         if ($author) {
             $item->setAuthor($author);
         }
 
-        $enclosures = $this->getEnclosures($article, $item, $event);
+        $enclosures = $this->getEnclosures($article, $event);
 
         foreach ($enclosures as $enclosure) {
             $item->addMedia($enclosure);
@@ -93,24 +93,9 @@ class NewsFeedListener
         $event->setItem($item);
     }
 
-    private function getTitle(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
-    {
-        return $article->headline;
-    }
-
-    private function getLink(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
+    private function getLink(NewsModel $article): string
     {
         return $this->framework->getAdapter(News::class)->generateNewsUrl($article, false, true);
-    }
-
-    private function getPublicId(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
-    {
-        return $item->getLink();
-    }
-
-    private function getLastModified(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): \DateTime
-    {
-        return (new \DateTime())->setTimestamp($article->date);
     }
 
     private function getContent(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
@@ -148,7 +133,7 @@ class NewsFeedListener
         return $controller->convertRelativeUrls($description, $item->getLink());
     }
 
-    private function getAuthor(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): ?AuthorInterface
+    private function getAuthor(NewsModel $article): ?AuthorInterface
     {
         /** @var UserModel $authorModel */
         if (($authorModel = $article->getRelated('author')) instanceof UserModel) {
@@ -158,7 +143,7 @@ class NewsFeedListener
         return null;
     }
 
-    private function getEnclosures(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): array
+    private function getEnclosures(NewsModel $article, TransformArticleForFeedEvent $event): array
     {
         $uuids = [];
 
