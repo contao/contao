@@ -26,7 +26,7 @@ class PageListener
     {
     }
 
-    #[AsCallback('tl_page', 'config.onload')]
+    #[AsCallback('tl_page', target: 'config.onload')]
     public function onLoad(DataContainer $dc): void
     {
         $type = $dc->getCurrentRecord()['type'] ?? null;
@@ -38,7 +38,7 @@ class PageListener
         $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class'] = 'clr w50';
     }
 
-    #[AsCallback('tl_page', 'fields.newsArchives.options')]
+    #[AsCallback('tl_page', target: 'fields.newsArchives.options')]
     public function getAllowedArchives(): array
     {
         $user = $this->security->getUser();
