@@ -70,17 +70,16 @@ class NewsFeedListener
         $article = $event->getArticle();
 
         $item = new Item();
-
-        $item->setTitle($article->headline)
+        $item
+            ->setTitle($article->headline)
             ->setLastModified((new \DateTime())->setTimestamp($article->date))
             ->setLink($this->getLink($article))
             ->setContent($this->getContent($article, $item, $event))
         ;
+
         $item->setPublicId($item->getLink());
 
-        $author = $this->getAuthor($article);
-
-        if ($author) {
+        if ($author = $this->getAuthor($article)) {
             $item->setAuthor($author);
         }
 
@@ -101,7 +100,6 @@ class NewsFeedListener
     private function getContent(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
     {
         $pageModel = $event->getPageModel();
-        $request = $event->getRequest();
 
         $environment = $this->framework->getAdapter(Environment::class);
         $controller = $this->framework->getAdapter(Controller::class);
@@ -121,10 +119,11 @@ class NewsFeedListener
 
                 foreach ($elements as $element) {
                     $description .= $controller->getContentElement($element);
+
                     $this->cacheTags->tagWithModelInstance($element);
                 }
 
-                $environment->set('request', $request->getUri());
+                $environment->set('request', $event->getRequest()->getUri());
             }
         }
 
@@ -136,7 +135,7 @@ class NewsFeedListener
     private function getAuthor(NewsModel $article): ?AuthorInterface
     {
         /** @var UserModel $authorModel */
-        if (($authorModel = $article->getRelated('author')) instanceof UserModel) {
+        if ($authorModel = $article->getRelated('author')) {
             return (new Author())->setName($authorModel->name);
         }
 
@@ -188,10 +187,7 @@ class NewsFeedListener
                 $fileSize = $file->exists() ? $file->filesize : null;
             }
 
-            $media = (new Media())
-                ->setUrl($fileUrl)
-                ->setType($file->mime)
-            ;
+            $media = (new Media())->setUrl($fileUrl)->setType($file->mime);
 
             if ($fileSize) {
                 $media->setLength($fileSize);

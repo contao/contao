@@ -45,7 +45,6 @@ class NewsFeedListenerTest extends ContaoTestCase
         parent::tearDown();
 
         $this->resetStaticProperties([Files::class, System::class]);
-        (new Filesystem())->remove($this->getImagesDir());
     }
 
     /**
@@ -91,14 +90,17 @@ class NewsFeedListenerTest extends ContaoTestCase
      */
     public function testTransformsArticlesToFeedItems(string $feedSource, string $expecedContent): void
     {
-        (new Filesystem())->mkdir($this->getImagesDir());
+        $imageDir = Path::join($this->getTempDir(), 'files');
+
+        $fs = new Filesystem();
+        $fs->mkdir($imageDir);
 
         $imagine = new Imagine();
 
         foreach (['foo.jpg', 'bar.jpg'] as $filename) {
             $imagine
                 ->create(new Box(100, 100))
-                ->save(Path::join($this->getImagesDir(), $filename))
+                ->save(Path::join($imageDir, $filename))
             ;
         }
 
@@ -114,8 +116,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $image
             ->method('getPath')
             ->willReturnOnConsecutiveCalls(
-                $this->getImagesDir().'/foo.jpg',
-                $this->getImagesDir().'/bar.jpg',
+                $imageDir.'/foo.jpg',
+                $imageDir.'/bar.jpg',
             )
         ;
 
@@ -132,8 +134,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->method('create')
             ->willReturn($image)
         ;
-
-        $cacheTags = $this->createMock(EntityCacheTags::class);
 
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
@@ -215,6 +215,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $framework->setContainer($container);
 
         $feed = $this->createMock(Feed::class);
+        $cacheTags = $this->createMock(EntityCacheTags::class);
 
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
@@ -240,6 +241,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->assertSame($expecedContent, $item->getContent());
         $this->assertSame('Jane Doe', $item->getAuthor()->getName());
         $this->assertCount(2, $item->getMedias());
+
+        $fs->remove($imageDir);
     }
 
     public function featured(): \Generator
@@ -253,10 +256,5 @@ class NewsFeedListenerTest extends ContaoTestCase
     {
         yield 'Teaser only' => ['source_teaser', 'Example teaser'];
         yield 'Text' => ['source_text', 'Example content'];
-    }
-
-    private function getImagesDir(): string
-    {
-        return Path::join($this->getTempDir(), 'files');
     }
 }
