@@ -47,6 +47,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->resetStaticProperties([Files::class, System::class]);
         (new Filesystem())->remove($this->getImagesDir());
     }
+
     /**
      * @dataProvider featured
      */
