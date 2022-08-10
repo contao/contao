@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace EventListener\DataContainer;
+namespace Contao\NewsBundle\Tests\EventListener\DataContainer;
 
 use Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener;
 use Contao\PageModel;

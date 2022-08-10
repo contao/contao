@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Controller\Page;
+namespace Contao\NewsBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\EntityCacheTags;
