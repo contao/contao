@@ -20,7 +20,6 @@ use Contao\System;
 if (Input::get('do') == 'news')
 {
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_news', 'checkPermission'));
-	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_news', 'generateFeed');
 }
 
 /**
@@ -147,41 +146,5 @@ class tl_content_news extends Backend
 		{
 			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id . '.');
 		}
-	}
-
-	/**
-	 * Check for modified news feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('session');
-		$session = $objSession->get('news_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$this->import(News::class, 'News');
-
-		foreach ($session as $id)
-		{
-			$this->News->generateFeedsByArchive($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('news_feed_updater', null);
 	}
 }

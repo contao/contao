@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### News feeds
+
+News feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
+module. The `{{news_feed:id}}` insert tag has been removed. You can use `{{link_url::id}}` instead.
+
 ### app.php
 
 The old `app.php` entry point has been removed. Adjust your server configuration to use `index.php` instead.
