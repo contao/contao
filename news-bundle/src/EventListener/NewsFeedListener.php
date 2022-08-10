@@ -93,27 +93,27 @@ class NewsFeedListener
         $event->setItem($item);
     }
 
-    protected function getTitle(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
+    private function getTitle(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
     {
         return $article->headline;
     }
 
-    protected function getLink(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
+    private function getLink(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
     {
         return $this->framework->getAdapter(News::class)->generateNewsUrl($article, false, true);
     }
 
-    protected function getPublicId(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
+    private function getPublicId(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
     {
         return $item->getLink();
     }
 
-    protected function getLastModified(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): \DateTime
+    private function getLastModified(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): \DateTime
     {
         return (new \DateTime())->setTimestamp($article->date);
     }
 
-    protected function getContent(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
+    private function getContent(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
     {
         $pageModel = $event->getPageModel();
         $request = $event->getRequest();
@@ -148,7 +148,7 @@ class NewsFeedListener
         return $controller->convertRelativeUrls($description, $item->getLink());
     }
 
-    protected function getAuthor(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): ?AuthorInterface
+    private function getAuthor(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): ?AuthorInterface
     {
         /** @var UserModel $authorModel */
         if (($authorModel = $article->getRelated('author')) instanceof UserModel) {
@@ -158,7 +158,7 @@ class NewsFeedListener
         return null;
     }
 
-    protected function getEnclosures(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): array
+    private function getEnclosures(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): array
     {
         $uuids = [];
 
