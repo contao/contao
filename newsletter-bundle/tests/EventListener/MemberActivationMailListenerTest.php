@@ -32,7 +32,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
         $connection
             ->expects($this->once())
             ->method('fetchFirstColumn')
-            ->with("SELECT title FROM tl_newsletter_channel WHERE id IN (?)", [[2, 3]], [Types::SIMPLE_ARRAY])
+            ->with('SELECT title FROM tl_newsletter_channel WHERE id IN (?)', [[2, 3]], [Types::SIMPLE_ARRAY])
             ->willReturn(['Channel 1', 'Channel 2'])
         ;
 

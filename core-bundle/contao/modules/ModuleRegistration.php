@@ -464,7 +464,8 @@ class ModuleRegistration extends Module
 		$container->get('event_dispatcher')->dispatch($event);
 
 		// Send the token
-		if ($event->getSendOptInToken()) {
+		if ($event->getSendOptInToken())
+		{
 			$text = $container->get('contao.string.simple_token_parser')->parse($event->getText(), $event->getSimpleTokens());
 			$optInToken->send($event->getSubject(), $text);
 		}
