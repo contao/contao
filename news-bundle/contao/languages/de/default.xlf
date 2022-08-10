@@ -49,6 +49,14 @@
         <source>Back to the news overview</source>
         <target>Zurück zur Newsübersicht</target>
       </trans-unit>
+      <trans-unit id="PTY.news_feed.0">
+        <source>News feed</source>
+        <target>News-Feed</target>
+      </trans-unit>
+      <trans-unit id="PTY.news_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your news archives.</source>
+        <target>Erstellen Sie einen RSS-, Atom- oder JSON-Feed aus Ihren Nachrichtenarchiven.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

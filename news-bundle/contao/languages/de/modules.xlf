@@ -6,12 +6,8 @@
         <target>Nachrichten</target>
       </trans-unit>
       <trans-unit id="MOD.news.1">
-        <source>Manage news and export them as RSS or Atom feed</source>
-        <target>Nachrichten verwalten und als RSS- oder Atom-Feed exportieren</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_news_feed">
-        <source>News feeds</source>
-        <target>News-Feeds</target>
+        <source>Manage news</source>
+        <target>Nachrichten verwalten</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>

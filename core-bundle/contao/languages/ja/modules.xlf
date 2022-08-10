@@ -50,8 +50,7 @@
         <target>独自のテンプレートの追加や編集</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>アカウント管理</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>

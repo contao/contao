@@ -116,10 +116,6 @@
         <source>Access protection</source>
         <target>Mbrojtja qasjes</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-        <target>RSS/Atom furnizim</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
         <target>Drejtori sistemit</target>

@@ -401,6 +401,9 @@
         <source>Style sheets</source>
         <target>Kaskádovité styly</target>
       </trans-unit>
+      <trans-unit id="tl_layout.feed_legend">
+        <source>Feeds</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
         <target>Muduly frontendu</target>

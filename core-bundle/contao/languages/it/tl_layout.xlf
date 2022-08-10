@@ -401,6 +401,9 @@
         <source>Style sheets</source>
         <target>Fogli di stile</target>
       </trans-unit>
+      <trans-unit id="tl_layout.feed_legend">
+        <source>Feeds</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
         <target>Moduli nel frontend</target>

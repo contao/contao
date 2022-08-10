@@ -116,10 +116,6 @@
         <source>Access protection</source>
         <target>حفاظت دسترسی</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-        <target>خوراک RSS/Atom</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
         <target>مدیر سامانه</target>

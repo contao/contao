@@ -49,8 +49,7 @@
         <target>Aggiungo o modifica template personalizzati</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>Gestione account</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>

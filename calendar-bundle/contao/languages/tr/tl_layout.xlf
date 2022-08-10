@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>Lütfen düzene eklemek istediğiniz takvim akışlarını seçin.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom akışları</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

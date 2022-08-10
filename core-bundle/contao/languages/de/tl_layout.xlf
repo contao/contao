@@ -401,6 +401,10 @@
         <source>Style sheets</source>
         <target>Stylesheets</target>
       </trans-unit>
+      <trans-unit id="tl_layout.feed_legend">
+        <source>Feeds</source>
+        <target>Feeds</target>
+      </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
         <target>Frontend-Module</target>

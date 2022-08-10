@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>Välj nyhetsströmmar som du vill inkludera i layouten.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom-flöden</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

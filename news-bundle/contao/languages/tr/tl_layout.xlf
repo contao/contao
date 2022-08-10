@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>Düzene eklemek istediğiniz haber akışlarını seçin.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom akışları</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

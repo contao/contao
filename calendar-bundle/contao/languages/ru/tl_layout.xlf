@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>Выберите каналы календаря, которые хотите добавить в макет.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom-каналы</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

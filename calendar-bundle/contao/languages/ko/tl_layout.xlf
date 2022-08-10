@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>레이아웃에 추가할 달력 피드를 선택하십시오.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom 피드</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>
