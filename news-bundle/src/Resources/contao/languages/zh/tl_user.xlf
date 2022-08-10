@@ -10,12 +10,10 @@
         <target>您可以在这里创建1个或多个新闻存档访问权限。</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>新闻权限</target>
+        <source>News archive permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>您可以在这里定义新闻权限</target>
+        <source>Here you can define the news archive permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

@@ -1,0 +1,278 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_member.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_member.firstname.0">
+        <source>First name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="tl_member.firstname.1">
+        <source>Please enter the first name.</source>
+        <target>Lütfen adı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.lastname.0">
+        <source>Last name</source>
+        <target>Soyad</target>
+      </trans-unit>
+      <trans-unit id="tl_member.lastname.1">
+        <source>Please enter the last name.</source>
+        <target>Lütfen soyadı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.dateOfBirth.0">
+        <source>Date of birth</source>
+        <target>Doğum tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_member.dateOfBirth.1">
+        <source>Please enter the date of birth.</source>
+        <target>Lütfen doğum tarihini yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.gender.0">
+        <source>Gender</source>
+        <target>Cinsiyet</target>
+      </trans-unit>
+      <trans-unit id="tl_member.gender.1">
+        <source>Please choose the gender.</source>
+        <target>Lütfen bir cinsiyet seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.company.0">
+        <source>Company</source>
+        <target>Kuruluş</target>
+      </trans-unit>
+      <trans-unit id="tl_member.company.1">
+        <source>Here you can enter a company name.</source>
+        <target>Buraya bir kuruluş adı yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.street.0">
+        <source>Street</source>
+        <target>Sokak</target>
+      </trans-unit>
+      <trans-unit id="tl_member.street.1">
+        <source>Please enter the street name and number.</source>
+        <target>Lütfen sokak adı ve kapı numarasını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.postal.0">
+        <source>Postal code</source>
+        <target>Posta kodu</target>
+      </trans-unit>
+      <trans-unit id="tl_member.postal.1">
+        <source>Please enter the postal code.</source>
+        <target>Lütfen posta kodunu yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.city.0">
+        <source>City</source>
+        <target>İlçe</target>
+      </trans-unit>
+      <trans-unit id="tl_member.city.1">
+        <source>Plase enter the name of the city.</source>
+        <target>Lütfen ilçeyi yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.state.0">
+        <source>State</source>
+        <target>İl</target>
+      </trans-unit>
+      <trans-unit id="tl_member.state.1">
+        <source>Plase enter the name of the state.</source>
+        <target>Lütfen ili yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.country.0">
+        <source>Country</source>
+        <target>Ülke</target>
+      </trans-unit>
+      <trans-unit id="tl_member.country.1">
+        <source>Please select the country.</source>
+        <target>Lütfen ülkeyi seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.phone.0">
+        <source>Phone number</source>
+        <target>Telefon numarası</target>
+      </trans-unit>
+      <trans-unit id="tl_member.phone.1">
+        <source>Please enter the phone number.</source>
+        <target>Lütfen telefon numarasını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.mobile.0">
+        <source>Cell phone number</source>
+        <target>Cep telefonu numarası</target>
+      </trans-unit>
+      <trans-unit id="tl_member.mobile.1">
+        <source>Please enter the cell phone number.</source>
+        <target>Lütfen cep telefonu numarasını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.fax.0">
+        <source>Fax number</source>
+        <target>Faks numarası</target>
+      </trans-unit>
+      <trans-unit id="tl_member.fax.1">
+        <source>Please enter the fax number.</source>
+        <target>Lütfen faks numarasını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.email.0">
+        <source>E-mail address</source>
+        <target>E-posta adresi</target>
+      </trans-unit>
+      <trans-unit id="tl_member.email.1">
+        <source>Please enter a valid e-mail address.</source>
+        <target>Lütfen geçerli bir e-posta adresi yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.website.0">
+        <source>Website</source>
+        <target>Web sitesi</target>
+      </trans-unit>
+      <trans-unit id="tl_member.website.1">
+        <source>Here you can enter a web address.</source>
+        <target>Buraya bir web sitesi adresi yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.language.0">
+        <source>Language</source>
+        <target>Dil</target>
+      </trans-unit>
+      <trans-unit id="tl_member.language.1">
+        <source>Please select the language.</source>
+        <target>Lütfen dili seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.groups.0">
+        <source>Member groups</source>
+        <target>Üye grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.groups.1">
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Buradan üyeyi bir ya da birkaç gruba atayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.login.0">
+        <source>Allow login</source>
+        <target>Oturum açabilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_member.login.1">
+        <source>Allow the member to log into the front end.</source>
+        <target>Bu seçenek etkinleştirildiğinde, üye ön yüzde oturum açabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.username.0">
+        <source>Username</source>
+        <target>Kullanıcı adı</target>
+      </trans-unit>
+      <trans-unit id="tl_member.username.1">
+        <source>Please enter a unique username.</source>
+        <target>Lütfen benzersiz bir kullanıcı adı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.assignDir.0">
+        <source>Set home directory</source>
+        <target>Giriş klasörünü ayarla</target>
+      </trans-unit>
+      <trans-unit id="tl_member.assignDir.1">
+        <source>Define a home directory for the member.</source>
+        <target>Buradan üyenin giriş klasörünü belirtebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.homeDir.0">
+        <source>Home directory</source>
+        <target>Giriş klasörü</target>
+      </trans-unit>
+      <trans-unit id="tl_member.homeDir.1">
+        <source>Please select a folder from the files directory.</source>
+        <target>Lütfen files klasöründen bir klasör seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.disable.0">
+        <source>Deactivate</source>
+        <target>Devre dışı bırak</target>
+      </trans-unit>
+      <trans-unit id="tl_member.disable.1">
+        <source>Temporarily disable the account.</source>
+        <target>Hesabı geçici olarak devre dışı bırakır.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.start.0">
+        <source>Activate on</source>
+        <target>Etkinleştirilme zamanı</target>
+      </trans-unit>
+      <trans-unit id="tl_member.start.1">
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Hesabın belirli bir tarih/saatten önce etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.stop.0">
+        <source>Deactivate on</source>
+        <target>Devre dışı bırakılma zamanı</target>
+      </trans-unit>
+      <trans-unit id="tl_member.stop.1">
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Hesabın belirli bir tarih/saatten sonra etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
+      </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>İki aşamalı kimlik doğrulama kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_member.personal_legend">
+        <source>Personal data</source>
+        <target>Kişisel veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_member.address_legend">
+        <source>Address details</source>
+        <target>Adres ayrıntıları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.contact_legend">
+        <source>Contact details</source>
+        <target>Kişi ayrıntıları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.groups_legend">
+        <source>Member groups</source>
+        <target>Üye grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.login_legend">
+        <source>Login details</source>
+        <target>Oturum açma bilgileri</target>
+      </trans-unit>
+      <trans-unit id="tl_member.homedir_legend">
+        <source>Home directory</source>
+        <target>Giriş klasörü</target>
+      </trans-unit>
+      <trans-unit id="tl_member.account_legend">
+        <source>Account settings</source>
+        <target>Hesap ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.personalData">
+        <source>Personal data</source>
+        <target>Kişisel veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_member.addressDetails">
+        <source>Address details</source>
+        <target>Adres ayrıntıları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.contactDetails">
+        <source>Contact details</source>
+        <target>Kişi ayrıntıları</target>
+      </trans-unit>
+      <trans-unit id="tl_member.loginDetails">
+        <source>Login details</source>
+        <target>Oturum açma bilgileri</target>
+      </trans-unit>
+      <trans-unit id="tl_member.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_member.new.1">
+        <source>Create a new member</source>
+        <target>Yeni bir üye ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_member.show">
+        <source>Show the details of member ID %s</source>
+        <target>%s kodlu üyenin ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_member.edit">
+        <source>Edit member ID %s</source>
+        <target>%s kodlu üyeyi düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_member.copy">
+        <source>Duplicate member ID %s</source>
+        <target>%s kodlu üyeyi kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_member.delete">
+        <source>Delete member ID %s</source>
+        <target>%s kodlu üyeyi sil</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle">
+        <source>Activate/deactivate member ID %s</source>
+        <target>%s kodlu üyeyi etkinleştir/devre dışı bırak</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su">
+        <source>Preview the front end as member ID %s</source>
+        <target>Ön yüzü %s kodlu üye olarak görüntüle</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

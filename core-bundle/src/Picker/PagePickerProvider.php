@@ -68,10 +68,6 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
                 $attributes['fieldType'] = $fieldType;
             }
 
-            if ($source = $config->getExtra('source')) {
-                $attributes['preserveRecord'] = $source;
-            }
-
             if (\is_array($rootNodes = $config->getExtra('rootNodes'))) {
                 $attributes['rootNodes'] = $rootNodes;
             }

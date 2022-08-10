@@ -190,13 +190,13 @@ class TablePickerProviderTest extends ContaoTestCase
         yield 'preserve source record' => [
             ['source' => '15'],
             '',
-            ['fieldType' => 'radio', 'preserveRecord' => '15'],
+            ['fieldType' => 'radio'],
         ];
 
         yield 'everything' => [
             ['fieldType' => 'foobar', 'source' => '42'],
-            '1,2,3',
-            ['fieldType' => 'foobar', 'preserveRecord' => '42', 'value' => [1, 2, 3]],
+            '',
+            ['fieldType' => 'foobar'],
         ];
 
         yield 'ignores additional extras' => [

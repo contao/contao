@@ -110,7 +110,6 @@ class PagePickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'checkbox',
-                'preserveRecord' => 'tl_page.2',
                 'rootNodes' => [1, 2, 3],
                 'value' => [5],
             ],
