@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>Одаберите сажетке вести које желите придружити распореду.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom сажеци</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

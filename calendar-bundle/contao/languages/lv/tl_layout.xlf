@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>Lūdzu izvēlieties kalendāru barotnes, kuras vēlaties pievienot salikumam.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom barotnes</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

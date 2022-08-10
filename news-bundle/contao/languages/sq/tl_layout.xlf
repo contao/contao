@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>Zgjedhoni furnimin e lajmeve që doni të futen në struktur.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>Furnizime RSS/Atom</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

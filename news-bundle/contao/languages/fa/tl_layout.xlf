@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>لطفا خبرخوان‌هایی را که می‌خواهید برای اضافه شدن به چیدمان انتخاب کنید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>خوراک‌های آراس‌اس/اتم</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

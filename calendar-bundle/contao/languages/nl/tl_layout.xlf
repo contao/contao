@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>Selecteer de RSS/Atom kalender feeds die u wilt toevoegen aan de huidige lay-out.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom feeds</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

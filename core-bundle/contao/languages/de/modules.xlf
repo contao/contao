@@ -50,8 +50,8 @@
         <target>Eigene Templates anlegen oder bearbeiten</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>Benutzerverwaltung</target>
+        <source>Accounts</source>
+        <target>Benutzer</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>

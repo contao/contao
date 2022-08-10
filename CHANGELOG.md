@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.0-RC3] (2022-08-10)
+
+**New features:**
+
+- [#4682] News feeds as page controller ([bezin])
+
 ## [5.0.0-RC2] (2022-08-09)
 
 **New features:**
@@ -277,6 +283,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.0-RC3]: https://github.com/contao/contao/releases/tag/5.0.0-RC3
 [5.0.0-RC2]: https://github.com/contao/contao/releases/tag/5.0.0-RC2
 [5.0.0-RC1]: https://github.com/contao/contao/releases/tag/5.0.0-RC1
 [ameotoko]: https://github.com/ameotoko
@@ -292,6 +299,7 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#4682]: https://github.com/contao/contao/pull/4682
 [#5103]: https://github.com/contao/contao/pull/5103
 [#4893]: https://github.com/contao/contao/pull/4893
 [#4862]: https://github.com/contao/contao/pull/4862

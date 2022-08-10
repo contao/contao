@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>レイアウトに追加したいニュースのフィードを選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atomフィード</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -6,12 +6,7 @@
         <target>Notícias</target>
       </trans-unit>
       <trans-unit id="MOD.news.1">
-        <source>Manage news and export them as RSS or Atom feed</source>
-        <target>Este módulo permite que você gerencie notícias no seu website.</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_news_feed">
-        <source>News feeds</source>
-        <target>Feeds de notícias</target>
+        <source>Manage news</source>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>

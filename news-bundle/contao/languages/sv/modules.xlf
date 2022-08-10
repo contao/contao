@@ -6,12 +6,7 @@
         <target>Nyheter</target>
       </trans-unit>
       <trans-unit id="MOD.news.1">
-        <source>Manage news and export them as RSS or Atom feed</source>
-        <target>Denna modul ger dig möjligheter att hantera nyheter på din site.</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_news_feed">
-        <source>News feeds</source>
-        <target>RSS-nyhetsström</target>
+        <source>Manage news</source>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>

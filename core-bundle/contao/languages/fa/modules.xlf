@@ -49,8 +49,7 @@
         <target>افزودن یا ویرایش قالب‌های سفارشی</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>مدیریت حساب</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>

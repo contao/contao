@@ -9,10 +9,6 @@
         <source>Please select the calendar feeds you want to add to the layout.</source>
         <target>Изаберите сажетак календара који желите придружити распореду.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom сажеци</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

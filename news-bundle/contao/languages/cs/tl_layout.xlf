@@ -9,10 +9,6 @@
         <source>Please select the news feeds you want to add to the layout.</source>
         <target>Zvolte prosím kanály, které chcete přidat do tohoto vzhledu.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Kanál</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

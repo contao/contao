@@ -117,10 +117,6 @@
         <source>Access protection</source>
         <target>Chráněný přístup</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-        <target>Kanál RSS</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
         <target>Administrátor systému</target>

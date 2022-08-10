@@ -116,10 +116,6 @@
         <source>Access protection</source>
         <target>Protection d'accès</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-        <target>Flux RSS/Atom</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
         <target>Administrateur système</target>
