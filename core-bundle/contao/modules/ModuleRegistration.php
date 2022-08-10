@@ -464,7 +464,7 @@ class ModuleRegistration extends Module
 			// Make sure newsletter is an array
 			if (!\is_array($arrData['newsletter'] ?? null))
 			{
-				if ($arrData['newsletter'])
+				if ($arrData['newsletter'] ?? null)
 				{
 					$arrData['newsletter'] = array($arrData['newsletter']);
 				}
