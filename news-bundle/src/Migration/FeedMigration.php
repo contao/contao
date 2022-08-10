@@ -51,12 +51,7 @@ class FeedMigration extends AbstractMigration
                 continue;
             }
 
-            $this->connection->executeStatement("
-                ALTER TABLE
-                    tl_page
-                ADD
-                    $field $definition
-            ");
+            $this->connection->executeStatement("ALTER TABLE tl_page ADD $field $definition");
         }
 
         // Migrate data from `tl_news_feeds` to `tl_page`

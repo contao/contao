@@ -29,15 +29,16 @@ class LayoutFeedOptionsListener
         $this->framework->initialize();
 
         $model = $this->framework->getAdapter(PageModel::class);
-        $feeds = $model->findByType(NewsFeedController::TYPE);
+
+        if (!$feeds = $model->findByType(NewsFeedController::TYPE)) {
+            return [];
+        }
 
         $options = [];
         $formats = ['rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'];
 
-        if (null !== $feeds) {
-            foreach ($feeds as $feed) {
-                $options[$feed->id] = sprintf('%s (%s)', $feed->title, $formats[$feed->feedFormat]);
-            }
+        foreach ($feeds as $feed) {
+            $options[$feed->id] = sprintf('%s (%s)', $feed->title, $formats[$feed->feedFormat]);
         }
 
         return $options;

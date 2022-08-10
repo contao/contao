@@ -14,7 +14,6 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\LayoutModel;
-use Contao\Model\Collection;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -43,11 +42,10 @@ class GeneratePageListener
 
         $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (!($feeds = $adapter->findMultipleByIds($newsfeeds)) instanceof Collection) {
+        if (!$feeds = $adapter->findMultipleByIds($newsfeeds)) {
             return;
         }
 
-        /** @var PageModel $feed */
         foreach ($feeds as $feed) {
             if (NewsFeedController::TYPE !== $feed->type) {
                 continue;

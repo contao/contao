@@ -59,7 +59,7 @@ class InsertTagsListener
 
         $adapter = $this->framework->getAdapter(NewsModel::class);
 
-        if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
+        if (!$model = $adapter->findByIdOrAlias($idOrAlias)) {
             return '';
         }
 
