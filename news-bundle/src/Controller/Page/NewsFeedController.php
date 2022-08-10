@@ -61,13 +61,14 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
             ->setLanguage($pageModel->language)
         ;
 
+        $dispatcher = $this->container->get('event_dispatcher');
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
-        $this->container->get('event_dispatcher')->dispatch($event);
+        $dispatcher->dispatch($event);
 
         if (null !== ($articles = $event->getArticles())) {
             foreach ($articles as $article) {
                 $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
-                $this->container->get('event_dispatcher')->dispatch($event);
+                $dispatcher->dispatch($event);
                 $feed->add($event->getItem());
                 $this->tagResponse($article);
                 $this->tagResponse('contao.db.tl_news_archive.'.$article->pid);
