@@ -99,8 +99,8 @@ class NewsFeedControllerTest extends ContaoTestCase
             [
                 'id' => 42,
                 'title' => 'Latest News',
-                'description' => 'Get latest news',
                 'alias' => 'latest-news',
+                'feedDescription' => 'Get latest news',
                 'feedFormat' => 'rss',
                 'language' => 'en',
             ]

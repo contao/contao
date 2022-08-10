@@ -55,7 +55,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
 
         $feed = (new Feed())
             ->setTitle($pageModel->title)
-            ->setDescription($pageModel->description)
+            ->setDescription($pageModel->feedDescription)
             ->setLanguage($pageModel->language)
         ;
 

@@ -8,19 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\DataContainer;
-
-$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,description;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{publish_legend},published,start,stop';
-
-$GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'][] = static function (DataContainer $dc)
-{
-	if ((!$currentRecord = $dc->getCurrentRecord()) || ($currentRecord['type'] ?? null) !== 'news_feed')
-	{
-		return;
-	}
-
-	$GLOBALS['TL_DCA']['tl_page']['fields']['description']['label'] = &$GLOBALS['TL_LANG']['tl_page']['feedDescription'];
-};
+$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{publish_legend},published,start,stop';
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,
@@ -62,6 +50,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
 	'eval' => array('tl_class'=>'w50'),
 	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['feedDescription'] = array(
+	'exclude' => true,
+	'inputType' => 'textarea',
+	'eval' => array('style'=>'height:60px', 'tl_class'=>'clr'),
+	'sql' => "text NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['imgSize'] = array(
