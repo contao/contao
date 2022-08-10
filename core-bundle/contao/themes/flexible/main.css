@@ -291,7 +291,7 @@ body.popup {
 	width: calc(100% - 30px);
 	height: 1px;
 	display: block;
-	margin: 15px auto 18px;
+	margin: 15px auto;
 	background: #3a454d;
 }
 
@@ -1441,6 +1441,10 @@ table.tl_listing {
 
 .tl_listing .tl_left * {
 	vertical-align: text-top;
+}
+
+.tl_listing .tl_left a:hover {
+	color: var(--text);
 }
 
 .tl_tree_xtnd .tl_file {
