@@ -1310,7 +1310,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
@@ -1339,38 +1338,52 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
+		// Do not call recursively (see #4777)
 	}
 
+	/**
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+	 */
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
+		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
+
+		if (($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ctables[] = $strTable;
+		}
+
+		if (!$ctables)
 		{
 			return;
 		}
 
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		foreach ($ctables as $ctable)
 		{
 			Controller::loadDataContainer($ctable);
 

@@ -168,6 +168,14 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
+    contao.listener.legacy_login_constants:
+        class: Contao\CoreBundle\EventListener\LegacyLoginConstantsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            # The priority must be lower than the one of the firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
@@ -194,6 +202,14 @@ services:
         tags:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
+
+    contao.listener.page_trail_cache_tags:
+        class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+        tags:
+            - { name: kernel.event_listener }
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
