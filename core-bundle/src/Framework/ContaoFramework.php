@@ -61,6 +61,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
+    private bool $setLoginConstantsOnInit = false;
 
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel, bool $legacyRouting)
     {
@@ -172,6 +173,27 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
+     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+     */
+    public function setLoginConstants(): void
+    {
+        // If the framework has not been initialized yet, set the login constants on init (#4968)
+        if (!$this->isInitialized()) {
+            $this->setLoginConstantsOnInit = true;
+
+            return;
+        }
+
+        if ('FE' === $this->getMode()) {
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+        } else {
+            \define('BE_USER_LOGGED_IN', false);
+            \define('FE_USER_LOGGED_IN', false);
+        }
+    }
+
+    /**
      * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
     private function setConstants(): void
@@ -189,14 +211,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         // Define the login status constants (see #4099, #5279)
-        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
-            $session->start();
-
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+        if ($this->setLoginConstantsOnInit || null === $this->requestStack->getCurrentRequest()) {
+            $this->setLoginConstants();
         }
 
         // Define the relative path to the installation (see #5339)

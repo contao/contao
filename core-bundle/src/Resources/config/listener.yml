@@ -337,6 +337,14 @@ services:
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
+    contao.listener.legacy_login_constants:
+        class: Contao\CoreBundle\EventListener\LegacyLoginConstantsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            # The priority must be lower than the one of the firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
+
     contao.listener.page_trail_cache_tags:
         class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
         arguments:
