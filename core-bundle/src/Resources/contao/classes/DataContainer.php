@@ -360,6 +360,8 @@ abstract class DataContainer extends Backend
 					$newPaletteFields[$k] = $v . '_' . $suffix;
 				}
 
+				$this->import(BackendUser::class, 'User');
+
 				if ($this->User->isAdmin)
 				{
 					$newPaletteFields['pid'] = 'pid_' . $suffix;
