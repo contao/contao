@@ -462,17 +462,7 @@ class ModuleRegistration extends Module
 		if (isset($bundles['ContaoNewsletterBundle']))
 		{
 			// Make sure newsletter is an array
-			if (!\is_array($arrData['newsletter'] ?? null))
-			{
-				if ($arrData['newsletter'])
-				{
-					$arrData['newsletter'] = array($arrData['newsletter']);
-				}
-				else
-				{
-					$arrData['newsletter'] = array();
-				}
-			}
+			$arrData['newsletter'] = (array) ($arrData['newsletter'] ?? null);
 
 			// Replace the wildcard
 			if (!empty($arrData['newsletter']))
