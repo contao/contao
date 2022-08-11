@@ -28,7 +28,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
+     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced.%s
      */
     public function testAdjustsLengthIfRowFormatIsEngineIsNotInnoDB(): void
     {
@@ -46,7 +46,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
+     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced.%s
      */
     public function testAdjustsLengthIfRowFormatIsNotDynamicOrCompressed(): void
     {
@@ -93,7 +93,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
+     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced.%s
      */
     public function testAdjustsLengthIfLargePrefixIsDisabled(): void
     {
@@ -114,7 +114,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
+     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced.%s
      */
     public function testAdjustsLengthIfCollationIsNotAsciiBin(): void
     {
@@ -135,7 +135,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
+     * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced.%s
      */
     public function testAdjustsLengthIfCollationIsNotAsciiBinAndLargePrefixIsNotEnabled(): void
     {
@@ -169,18 +169,24 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
         return $connection;
     }
 
-    private function getSchema(array $fieldOptions = [], array $tableOptions = [])
+    private function getSchema(array $fieldOptions = [], array $tableOptions = []): Schema
     {
-        $fieldOptions = array_merge([
-            'length' => 2048,
-            'platformOptions' => ['collation' => 'ascii_bin'],
-        ], $fieldOptions);
+        $fieldOptions = array_merge(
+            [
+                'length' => 2048,
+                'platformOptions' => ['collation' => 'ascii_bin'],
+            ],
+            $fieldOptions
+        );
 
-        $tableOptions = array_merge([
-            'charset' => 'utf8mb4',
-            'engine' => 'InnoDB',
-            'row_format' => 'DYNAMIC',
-        ], $tableOptions);
+        $tableOptions = array_merge(
+            [
+                'charset' => 'utf8mb4',
+                'engine' => 'InnoDB',
+                'row_format' => 'DYNAMIC',
+            ],
+            $tableOptions
+        );
 
         $column = new Column('url', new StringType(), $fieldOptions);
         $index = new Index('url', ['url'], true);
