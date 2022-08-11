@@ -36,7 +36,8 @@ window.tinymce && tinymce.init({
   importcss_append: true,
   extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
   menubar: 'file edit insert view format table',
-  toolbar: 'link unlink | image | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code'
+  toolbar: 'link unlink | image | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code',
+  cache_suffix: '?v=<?= $this->assetVersion('js/tinymce.min.js', 'contao-components/tinymce4') ?>'
 });
 </script>
 <?php endif; ?>

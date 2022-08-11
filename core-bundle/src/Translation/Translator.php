@@ -130,7 +130,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         $item = &$GLOBALS['TL_LANG'];
 
         foreach ($parts as $part) {
-            if (!isset($item[$part])) {
+            if (!\is_array($item) || !isset($item[$part])) {
                 return null;
             }
 

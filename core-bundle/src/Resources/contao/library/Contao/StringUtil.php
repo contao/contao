@@ -945,16 +945,6 @@ class StringUtil
 			return $str;
 		}
 
-		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
-		{
-			return utf8_decode($str);
-		}
-
-		if ($from == 'ISO-8859-1' && $to == 'UTF-8')
-		{
-			return utf8_encode($str);
-		}
-
 		return mb_convert_encoding($str, $to, $from);
 	}
 

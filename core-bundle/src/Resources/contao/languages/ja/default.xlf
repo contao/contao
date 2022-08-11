@@ -321,6 +321,10 @@
         <source>Unknown username: %s</source>
         <target>不明なユーザー名: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>バージョン%dは現在のデータベース構造と互換性がなくなっているため復元できませんでした。手動でデータを復元してください。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -2886,8 +2890,8 @@
         <target>%d個のURIをインデックスできました。%d個のインデックスに失敗しました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d 個のURIを飛ばしました。(欠けているURIがある場合はデバッグログを確認してください。)</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d個のURLを飛ばしました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

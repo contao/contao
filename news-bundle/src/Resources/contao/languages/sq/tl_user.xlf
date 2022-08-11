@@ -10,12 +10,10 @@
         <target>Zgjedhoni arkivin e lajmeve, të cilën doni ta aktivizoni për përdoruesin.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Auorizimet e lajmeve</target>
+        <source>News archive permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Përcaktoni autorizimet e lajmeve</target>
+        <source>Here you can define the news archive permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

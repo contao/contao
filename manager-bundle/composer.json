@@ -1,9 +1,8 @@
 {
     "name": "contao/manager-bundle",
-    "type": "symfony-bundle",
     "description": "Symfony bundle for the Contao Managed Edition",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/manager-bundle",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-json": "*",
@@ -33,8 +39,8 @@
         "symfony/debug": "4.4.*",
         "symfony/debug-bundle": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
-        "symfony/dotenv": "4.4.*",
         "symfony/doctrine-bridge": "4.4.*",
+        "symfony/dotenv": "4.4.*",
         "symfony/expression-language": "4.4.*",
         "symfony/filesystem": "4.4.* || 5.4.*",
         "symfony/finder": "4.4.*",
@@ -67,9 +73,6 @@
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
-    "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
-    },
     "autoload": {
         "psr-4": {
             "Contao\\ManagerBundle\\": "src/"
@@ -83,10 +86,13 @@
     "bin": [
         "bin/contao-console"
     ],
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/manager-bundle",
-        "docs": "https://docs.contao.org"
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }

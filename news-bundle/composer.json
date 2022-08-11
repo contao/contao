@@ -1,9 +1,8 @@
 {
     "name": "contao/news-bundle",
-    "type": "contao-bundle",
     "description": "Adds news functionality to Contao",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/news-bundle",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.2 || ^8.0",
         "contao/core-bundle": "self.version",
@@ -25,10 +31,6 @@
         "symfony/http-kernel": "4.4.*",
         "symfony/yaml": "4.4.*"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
-    },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
@@ -36,8 +38,9 @@
         "symfony/http-client": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*"
     },
-    "extra": {
-        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {
@@ -58,10 +61,13 @@
             "Contao\\NewsBundle\\Tests\\": "tests/"
         }
     },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/news-bundle",
-        "docs": "https://docs.contao.org"
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     }
 }

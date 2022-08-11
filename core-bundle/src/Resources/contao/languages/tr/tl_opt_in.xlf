@@ -1,0 +1,38 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_opt_in.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_opt_in.token">
+        <source>Token</source>
+        <target>Belirteç</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.confirmedOn">
+        <source>Confirmed on</source>
+        <target>Onaylanma tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.removeOn">
+        <source>Remove on</source>
+        <target>Kaldırılma tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+        <target>Geçersiz kılan kaynak</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailSubject">
+        <source>E-mail subject</source>
+        <target>E-posta konusu</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailText">
+        <source>E-mail text</source>
+        <target>E-posta metni</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.show">
+        <source>Show the details of token ID %s</source>
+        <target>%s kodlu belirtecin ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.resend">
+        <source>Resend token ID %s</source>
+        <target>%s kodlu belirteci yeniden gönder</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -157,12 +157,16 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>現在クローラーが動作中です。結果を見るには終了するまで待ってください。</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>デバッグログをダウンロード</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>デバッグログ</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>エラーが起きるかページが飛ばされた場合は、さらに詳しい情報をデバッグログで確認してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
         <target>ログをダウンロード</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
