@@ -4408,7 +4408,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id'; // Always force deterministic order for pagination reasons, see #5077
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 
 			$objOrderByStmt = $this->Database->prepare($query);
@@ -4775,7 +4775,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
-				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy) . ', id';  // Always force deterministic order for pagination reasons, see #5077
+				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy) . ', id';
 
 				// Set the foreignKey so that the label is translated
 				if (!$GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'])
@@ -4789,7 +4789,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id'; // Always force deterministic order for pagination reasons, see #5077
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 		}
 
