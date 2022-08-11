@@ -20,8 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class StringUtilTest extends TestCase
 {
-    private $prevSubstituteCharacter;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,16 +29,6 @@ class StringUtilTest extends TestCase
         $container->set('monolog.logger.contao', new NullLogger());
 
         System::setContainer($container);
-
-        // Save the previous substitute character, as we need to override it in the tests (see #5011)
-        $this->prevSubstituteCharacter = mb_substitute_character();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        mb_substitute_character($this->prevSubstituteCharacter);
     }
 
     public function testGeneratesAliases(): void
@@ -615,12 +603,16 @@ class StringUtilTest extends TestCase
      */
     public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
     {
+        $prevSubstituteCharacter = mb_substitute_character();
+
         // Enforce substitute character for these tests (see #5011)
         mb_substitute_character(0x3F);
 
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
         $this->assertSame($expected, $result);
+
+        mb_substitute_character($prevSubstituteCharacter);
     }
 
     public function validEncodingsProvider(): \Generator
