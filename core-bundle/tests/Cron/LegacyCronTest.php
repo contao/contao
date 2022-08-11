@@ -57,7 +57,7 @@ class LegacyCronTest extends TestCase
             ->method('onMonthly')
         ;
 
-        // Register crons the legacy way
+        // Register cron jobs the legacy way
         $GLOBALS['TL_CRON'] = [
             'minutely' => [['TestCron', 'onMinutely']],
             'hourly' => [['TestCron', 'onHourly']],

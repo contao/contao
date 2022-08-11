@@ -69,7 +69,7 @@ class LegacyCron
     }
 
     /**
-     * @todo Migrate our own cronjobs to the new framework
+     * @todo Migrate our own cron jobs to the new framework
      */
     private function runLegacyCrons(string $interval): void
     {
