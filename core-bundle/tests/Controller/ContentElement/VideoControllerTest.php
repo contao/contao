@@ -43,7 +43,7 @@ class VideoControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/youtube">
+            <div class="content-youtube">
                 <figure class="aspect aspect--4:3">
                     <iframe
                         width="640"
@@ -85,7 +85,7 @@ class VideoControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/vimeo">
+            <div class="content-vimeo">
                 <figure>
                 <button data-splash-screen>
                     <img src="files/image1.jpg" alt>

@@ -36,7 +36,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 <a href="/my-link.html">/my-link.html</a>
             </div>
             HTML;
@@ -62,7 +62,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 See the <a href="https://www.php.net/manual/en/function.sprintf.php" title="sprintf() documentation" target="_blank" rel="noreferrer noopener">sprintf() documentation</a>
                 on how to use the %s placeholder.
             </div>
@@ -89,7 +89,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 <figure>
                     This is me…
                     <a href="/foo.html#demo" data-lightbox="bar">

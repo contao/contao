@@ -35,7 +35,7 @@ class ToplinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<HTML
             <!-- indexer::stop -->
-            <div class="content_element/toplink">
+            <div class="content-toplink">
                 $expectedLinkElement
             </div>
             <!-- indexer::continue -->

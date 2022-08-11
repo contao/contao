@@ -36,7 +36,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/download">
+            <div class="content-download">
                 <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1.jpg</a>
             </div>
             HTML;
@@ -62,7 +62,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/download">
+            <div class="content-download">
                 <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[Download the file])" type="image/jpg">The file</a>
             </div>
             HTML;
@@ -82,7 +82,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/download">
+            <div class="content-download">
             </div>
             HTML;
 
@@ -108,7 +108,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/downloads">
+            <div class="content-downloads">
                 <ul>
                     <li>
                         <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1.jpg</a>
