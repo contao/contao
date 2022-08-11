@@ -575,7 +575,7 @@ class MigrateCommand extends Command
         }
 
         if ($asJson) {
-            $this->writeNdjson('database-error', ['message' => $message]);
+            $this->writeNdjson('problem', ['message' => $message]);
         } else {
             $this->io->error($message);
         }
