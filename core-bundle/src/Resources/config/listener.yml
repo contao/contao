@@ -203,6 +203,14 @@ services:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
+    contao.listener.page_trail_cache_tags:
+        class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
