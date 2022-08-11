@@ -175,6 +175,14 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
+    contao.listener.legacy_login_constants:
+        class: Contao\CoreBundle\EventListener\LegacyLoginConstantsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            # The priority must be lower than the one of the firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
