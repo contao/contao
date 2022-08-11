@@ -138,6 +138,13 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
+    contao.listener.doctrine_schema.adjust_search_url_length:
+        class: Contao\CoreBundle\EventListener\DoctrineSchema\AdjustSearchUrlLengthListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: doctrine.event_listener, event: postGenerateSchema, priority: -100 }
+
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
