@@ -551,20 +551,24 @@ class MigrateCommand extends Command
     {
         // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
-        $currentPlatform = \get_class($this->connection->getDatabasePlatform());
+
+        if (!$driverConnection instanceof ServerInfoAwareConnection) {
+            return true;
+        }
+
         $driver = $this->connection->getDriver();
 
-        if (
-            !$driverConnection instanceof ServerInfoAwareConnection
-            || !$driver instanceof VersionAwarePlatformDriver
-        ) {
+        if (!$driver instanceof VersionAwarePlatformDriver) {
             return true;
         }
 
         $version = $driverConnection->getServerVersion();
-        $correctPlatform = \get_class($driver->createDatabasePlatformForVersion($version));
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
 
-        if ($correctPlatform === $currentPlatform) {
+        /** @var AbstractPlatform $currentPlatform */
+        $currentPlatform = $this->connection->getDatabasePlatform();
+
+        if (\get_class($correctPlatform) === \get_class($currentPlatform)) {
             return true;
         }
 
