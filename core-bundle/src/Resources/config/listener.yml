@@ -386,7 +386,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
-            - '@http_kernel'
+            - '@uri_signer'
+            - '%fragment.path%'
         tags:
             - kernel.event_listener
 
