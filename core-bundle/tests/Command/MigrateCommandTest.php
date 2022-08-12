@@ -407,7 +407,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @dataProvider getOutputFormats
      */
-    public function testDoesAbortOnFatalError(string $format): void
+    public function testAbortsOnFatalError(string $format): void
     {
         $installer = $this->createMock(Installer::class);
         $installer
@@ -435,16 +435,13 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @dataProvider getOutputFormats
-     *
      * @group legacy
+     *
+     * @dataProvider getOutputFormats
      */
-    public function testDoesAbortOnWrongServerVersion(string $format): void
+    public function testAbortsOnWrongServerVersion(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-
-        $platform = new MySQL57Platform();
-        $driver = new Driver();
 
         $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
         $driverConnection
@@ -453,15 +450,14 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn($platform)
+            ->willReturn(new MySQL57Platform())
         ;
 
         $connection
             ->method('getDriver')
-            ->willReturn($driver)
+            ->willReturn(new Driver())
         ;
 
         $connection
