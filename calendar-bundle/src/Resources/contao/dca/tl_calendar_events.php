@@ -969,8 +969,8 @@ class tl_calendar_events extends Backend
 	 */
 	public function adjustTime(DataContainer $dc)
 	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
+		// Return if there is no active record (override all) or no start date has been set yet
+		if (!$dc->activeRecord || !$dc->activeRecord->startDate)
 		{
 			return;
 		}
@@ -997,7 +997,7 @@ class tl_calendar_events extends Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?? $dc->activeRecord->startTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', '' !== (string) $dc->activeRecord->endTime ? $dc->activeRecord->endTime : $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events
