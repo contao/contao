@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
-        <target>List der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
+        <target>Liste der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
