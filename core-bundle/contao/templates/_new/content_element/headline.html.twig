@@ -1,3 +1,8 @@
 {% use "@Contao/component/_headline.html.twig" %}
 
+{% set headline = headline|merge({ attributes: attrs(headline.attributes|default)
+    .setIfExists('id', element_html_id)
+    .addClass([element_css_classes, "content-#{type}"])
+}) %}
+
 {{ block('headline_component') }}

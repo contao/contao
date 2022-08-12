@@ -16,14 +16,14 @@
 #}
 
 {% block headline_component %}
-    {% set list = headline|default(_context) %}
+    {% set headline = headline|default(_context) %}
     {% set tag_name = headline.tag_name|default('h2') %}
 
-    <{{ headline.tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
+    <{{ tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
     {%- block headline_inner %}
         {%- apply spaceless %}
             {{ headline.text|insert_tag_raw }}
         {% endapply -%}
     {% endblock -%}
-    </{{ headline.tag_name }}>
+    </{{ tag_name }}>
 {% endblock %}
