@@ -203,7 +203,7 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']) || isset($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
 		{
 			return;
 		}
