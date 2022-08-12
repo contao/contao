@@ -532,7 +532,12 @@ class MigrateCommandTest extends TestCase
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
+        $migrations
+            ->method('hasPending')
+            ->willReturn((bool) \count($pendingMigrations))
+        ;
 
+        // Add empty pending migrations after mocking the hasPending() method!
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];

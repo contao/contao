@@ -22,7 +22,6 @@ return static function (ECSConfig $ecsConfig): void {
         ],
         TypeHintOrderFixer::class,
         UnusedVariableSniff::class => [
-            'core-bundle/src/Command/MigrateCommand.php',
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',
             'manager-bundle/src/Resources/skeleton/*.php',
         ],
