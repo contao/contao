@@ -130,11 +130,12 @@
         <target>Update de database</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Houd er rekening mee dat de update-assistent alleen tabellen afhandelt welke met &lt;code&gt; tl _ &lt;/ code&gt; beginnen.</target>
+        <source>Here you can update the database schema.</source>
+        <target>Hier kunt u het databaseschema bijwerken.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
+        <target>De database is up-to-date.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
+        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren uit de &lt;code&gt;templates&lt;/code&gt; map. Alle bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruikt u in plaats daarvan de themamanager in de Contao back -end.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
@@ -353,9 +355,11 @@
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
+        <target>Uw databaseserver wordt niet uitgevoerd in de strikte modus!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>Het uitvoeren van MySQL in de niet-strikte modus kan corrupte of afgekapte gegevens veroorzaken. Schakel de strikte modus in uw &lt;code&gt;my.cnf&lt;/code&gt; bestand in of configureer de verbindingsopties in het bestand &lt;code&gt;config/config.yml&lt;/code&gt; als volgt:</target>
       </trans-unit>
     </body>
   </file>

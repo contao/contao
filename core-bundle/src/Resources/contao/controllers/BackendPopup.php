@@ -75,13 +75,15 @@ class BackendPopup extends Backend
 			die('Invalid file name');
 		}
 
+		$container = System::getContainer();
+
 		// Limit preview to the files directory
-		if (!preg_match('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '@i', $this->strFile))
+		if (!preg_match('@^' . preg_quote($container->getParameter('contao.upload_path'), '@') . '@i', $this->strFile))
 		{
 			die('Invalid path');
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = $container->getParameter('kernel.project_dir');
 
 		// Check whether the file exists
 		if (!file_exists($projectDir . '/' . $this->strFile))
@@ -149,7 +151,6 @@ class BackendPopup extends Backend
 					;
 
 					$previewPictures = array();
-					$container = System::getContainer();
 					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
 
 					if (($previewCount = \count(is_countable($pictures) ? $pictures : iterator_to_array($pictures))) < 4)
@@ -184,7 +185,7 @@ class BackendPopup extends Backend
 				if (\is_array($arrMeta))
 				{
 					$objTemplate->meta = $arrMeta;
-					$objTemplate->languages = System::getContainer()->get('contao.intl.locales')->getLocales();
+					$objTemplate->languages = $container->get('contao.intl.locales')->getLocales();
 				}
 			}
 
@@ -203,7 +204,7 @@ class BackendPopup extends Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($this->strFile);
 		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+		$objTemplate->charset = $container->getParameter('kernel.charset');
 		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];
 		$objTemplate->download = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 

@@ -1,0 +1,110 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_preview_link.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_preview_link.url.0">
+        <source>Target URL</source>
+        <target>Hedef adres</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.url.1">
+        <source>The front end URL to be shared.</source>
+        <target>Paylaşılacak ön yüz adresi.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.showUnpublished.0">
+        <source>Show unpublished</source>
+        <target>Yayınlanmamış ögeler görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.showUnpublished.1">
+        <source>Show unpublished pages and elements when sharing this link.</source>
+        <target>Bu seçenek etkinleştirildiğinde, bu bağlantı paylaşılırken yayınlanmamış sayfa ve bileşenler görüntülenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdAt.0">
+        <source>Created at</source>
+        <target>Oluşturulma</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdAt.1">
+        <source>Date and time when the preview link was created.</source>
+        <target>Ön izleme bağlantısının oluşturulma tarihi ve saati.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdBy.0">
+        <source>Created by</source>
+        <target>Oluşturan</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdBy.1">
+        <source>The user who created the preview link.</source>
+        <target>Ön izleme bağlantısını oluşturan kullanıcı.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresInDays.0">
+        <source>Expires after</source>
+        <target>Geçerlilik süresi</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresInDays.1">
+        <source>Select how long the preview link should be available.</source>
+        <target>Ön izleme bağlantısının ne kadar süreyle geçerli olacağını seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresAt.0">
+        <source>Valid until</source>
+        <target>Geçerlilik sonu</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresAt.1">
+        <source>Preview of the final date until which the link is available.</source>
+        <target>Ön izleme bağlantısının geçerli olacağı son tarih.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.published.0">
+        <source>Enable</source>
+        <target>Etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.published.1">
+        <source>Activate the link for sharing.</source>
+        <target>Bu seçenek etkinleştirildiğinde, bağlantı paylaşımı etkinleştirilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.share.0">
+        <source>Copy to clipboard</source>
+        <target>Panoya kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.share.1">
+        <source>Copy the preview link ID %s to your clipboard.</source>
+        <target>%s kodlu ön izleme bağlantısını panoya kopyalar.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.url_legend">
+        <source>Target URL</source>
+        <target>Hedef adres</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.config_legend">
+        <source>Configuration</source>
+        <target>Yapılandırma</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.publishing_legend">
+        <source>Publish settings</source>
+        <target>Yayınlanma ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.1">
+        <source>1 day</source>
+        <target>1 gün</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.7">
+        <source>7 days</source>
+        <target>7 gün</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.30">
+        <source>30 days</source>
+        <target>30 gün</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintNew">
+        <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Bir ön izleme bağlantısı eklemek için, ön yüz ön izleme araç çubuğundaki &quot;Adresi paylaş&quot; düğmesini kullanın.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintSave">
+        <source>Please save this record to generate the preview link.</source>
+        <target>Lütfen ön izleme bağlantısını oluşturmak için bu kaydı kaydedin.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintEdit">
+        <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Ön izleme bağlantısı: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintExpired">
+        <source>This preview link has expired and can no longer be shared.</source>
+        <target>Ön izleme bağlantısının geçerlilik süresi geçmiş olduğundan artık paylaşılamaz.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

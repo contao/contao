@@ -674,6 +674,86 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
+    /**
+     * @dataProvider provideUserExtensionConfigs
+     */
+    public function testSetsDefaultCollation(array $userExtensionConfig): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'default_table_options' => [
+                                'charset' => 'utf8mb4',
+                                'collate' => 'utf8mb4_unicode_ci',
+                                'collation' => 'utf8mb4_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $userExtensionConfig,
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'default_table_options' => [
+                                    'collate' => 'utf8_unicode_ci',
+                                    'collation' => 'utf8_unicode_ci',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideUserExtensionConfigs(): \Generator
+    {
+        yield 'collate' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collate' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'collation' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collation' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function testUpdatesTheMailerTransport(): void
     {
         $container = $this->getContainer();

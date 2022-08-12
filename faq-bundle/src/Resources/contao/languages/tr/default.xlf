@@ -7,10 +7,11 @@
       </trans-unit>
       <trans-unit id="MSC.faqPicker">
         <source>FAQ</source>
-        <target>FAQ</target>
+        <target>SSS</target>
       </trans-unit>
       <trans-unit id="MSC.faqOverview">
         <source>Back to the FAQ overview</source>
+        <target>SSS özetine geri dön</target>
       </trans-unit>
     </body>
   </file>

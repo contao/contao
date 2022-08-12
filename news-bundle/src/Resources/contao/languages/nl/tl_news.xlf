@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
         <source>Here you can overwrite how search engines handle the news item.</source>
+        <target>Hier kunt u overschrijven hoe zoekmachines omgaan met het nieuwsitem.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>

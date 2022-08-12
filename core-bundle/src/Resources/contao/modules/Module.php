@@ -458,7 +458,7 @@ abstract class Module extends Frontend
 		$row['rel'] = '';
 		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
-		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
+		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objSubpage->description);
 
 		$arrRel = array();
 
@@ -475,6 +475,13 @@ abstract class Module extends Frontend
 		if (!empty($arrRel))
 		{
 			$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
+		}
+
+		// Tag the page
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_page.' . $objSubpage->id));
 		}
 
 		return $row;

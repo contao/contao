@@ -52,7 +52,7 @@ class TablePickerProviderTest extends ContaoTestCase
      */
     public function testSupportsLegacyContext(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.');
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name "Table" for table "tl_foobar" as DataContainer name has been deprecated %s.');
 
         // Load the class to ensure that the global DC_Table alias is set
         class_exists(DC_Table::class);
@@ -87,7 +87,7 @@ class TablePickerProviderTest extends ContaoTestCase
      */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.');
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name "Foobar" for table "tl_foobar" as DataContainer name has been deprecated %s.');
 
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
@@ -192,13 +192,13 @@ class TablePickerProviderTest extends ContaoTestCase
         yield 'preserve source record' => [
             ['source' => '15'],
             '',
-            ['fieldType' => 'radio', 'preserveRecord' => '15'],
+            ['fieldType' => 'radio'],
         ];
 
         yield 'everything' => [
             ['fieldType' => 'foobar', 'source' => '42'],
-            '1,2,3',
-            ['fieldType' => 'foobar', 'preserveRecord' => '42', 'value' => [1, 2, 3]],
+            '',
+            ['fieldType' => 'foobar'],
         ];
 
         yield 'ignores additional extras' => [

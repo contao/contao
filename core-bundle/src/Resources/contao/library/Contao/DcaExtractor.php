@@ -456,7 +456,7 @@ class DcaExtractor extends Controller
 				static::$arrSql = $arrSql;
 			}
 
-			$arrTable = static::$arrSql[$this->strTable];
+			$arrTable = static::$arrSql[$this->strTable] ?? array();
 			$engine = null;
 			$charset = null;
 

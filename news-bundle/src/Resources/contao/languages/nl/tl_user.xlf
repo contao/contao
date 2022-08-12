@@ -11,9 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News archive permissions</source>
+        <target>Nieuwsarchief rechten</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news archive permissions.</source>
+        <target>Hier kunt u de rechten van het nieuwsarchief definiëren.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

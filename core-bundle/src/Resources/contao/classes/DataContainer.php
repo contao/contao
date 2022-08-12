@@ -408,15 +408,14 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			// Use strlen() here (see #3277)
-			elseif (!\strlen($this->varValue))
+			elseif ('' === (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
 		}
@@ -469,12 +468,6 @@ abstract class DataContainer extends Backend
 				foreach ($newPaletteFields as $k=>$v)
 				{
 					$newPaletteFields[$k] = $v . '_' . $suffix;
-				}
-
-				if ($this->User->isAdmin)
-				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
 				}
 			}
 
@@ -1497,7 +1490,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] ?? null))
@@ -1524,38 +1516,52 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
+		// Do not call recursively (see #4777)
 	}
 
+	/**
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+	 */
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
+		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
+
+		if (($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ctables[] = $strTable;
+		}
+
+		if (!$ctables)
 		{
 			return;
 		}
 
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		foreach ($ctables as $ctable)
 		{
 			Controller::loadDataContainer($ctable);
 
@@ -1630,7 +1636,7 @@ abstract class DataContainer extends Backend
 
 		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.');
+			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name "%s" for table "%s" as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', $dataContainer, $table);
 
 			$dataContainer = 'DC_' . $dataContainer;
 

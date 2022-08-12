@@ -140,7 +140,7 @@ class FormTextArea extends Widget
 				return $this->intRows;
 
 			case 'value':
-				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
+				return StringUtil::specialchars(str_replace('\n', "\n", (string) $this->varValue));
 
 			case 'rawValue':
 				return $this->varValue;

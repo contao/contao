@@ -247,8 +247,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
+                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $this->enableStrictMode($extensionConfigs, $container);
+                return $extensionConfigs;
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
@@ -425,6 +427,41 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 ],
             ],
         ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Sets the "collate" and "collation" options to the same value (see #4798).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function setDefaultCollation(array $extensionConfigs): array
+    {
+        $defaultCollation = null;
+
+        foreach ($extensionConfigs as $config) {
+            $collation = $config['dbal']['connections']['default']['default_table_options']['collation'] ?? $config['dbal']['connections']['default']['default_table_options']['collate'] ?? null;
+
+            if (null !== $collation) {
+                $defaultCollation = $collation;
+            }
+        }
+
+        if (null !== $defaultCollation) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => $defaultCollation,
+                                'collation' => $defaultCollation,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
 
         return $extensionConfigs;
     }

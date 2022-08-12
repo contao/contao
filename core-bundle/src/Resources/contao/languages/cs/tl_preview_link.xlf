@@ -91,15 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Pro přidání odkazu náhledu použijte tlačítko &quot;Sdílet URL&quot; na frontendu v horní liště náhledu.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>Uložte prosím tento záznam, abyste mohli vytvořit odkaz na náhled.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Odkaz náhledu: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>Tento odkaz náhledu vypršel a nemůže se již sdílet.</target>
       </trans-unit>
     </body>
   </file>

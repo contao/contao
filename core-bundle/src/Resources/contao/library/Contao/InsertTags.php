@@ -175,7 +175,10 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			if (!$blnCache || strncasecmp($tags[$_rit+1], 'fragment::', 10) !== 0)
+			{
+				$tags[$_rit + 1] = (string) $this->replaceInternal($tags[$_rit + 1], $blnCache);
+			}
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -183,7 +186,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && $elements[0] != 'fragment' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
@@ -198,7 +201,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -232,6 +235,11 @@ class InsertTags extends Controller
 			// Replace the tag
 			switch (strtolower($elements[0]))
 			{
+				// Uncached (ESI) fragments
+				case 'fragment':
+					$arrCache[$strTag] = substr($strTag, 10);
+					break;
+
 				// Date
 				case 'date':
 					$flags[] = 'attr';
@@ -1258,8 +1266,12 @@ class InsertTags extends Controller
 							// ignore
 							break;
 
-						case 'refresh':
 						case 'uncached':
+							trigger_deprecation('contao/core-bundle', '4.13', 'The insert tag flag "|uncached" has been deprecated and will no longer work in Contao 5.0. use "{{fragment::*}}" instead.');
+							// ignore
+							break;
+
+						case 'refresh':
 							// ignore
 							break;
 

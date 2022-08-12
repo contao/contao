@@ -30,16 +30,17 @@ class ModuleNewsletterList extends Module
 	 */
 	public function generate()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['newsletterlist'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = StringUtil::specialcharsUrl($container->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -53,9 +54,9 @@ class ModuleNewsletterList extends Module
 		}
 
 		// Tag the channels (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if ($container->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger = $container->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_newsletter_channel.' . $id; }, $this->nl_channels));
 		}
 
@@ -75,6 +76,7 @@ class ModuleNewsletterList extends Module
 
 		$strRequest = StringUtil::ampersand(Environment::get('request'));
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
+		$container = System::getContainer();
 
 		if ($objNewsletter !== null)
 		{
@@ -129,9 +131,9 @@ class ModuleNewsletterList extends Module
 			}
 
 			// Tag the newsletters (see #2137)
-			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			if ($container->has('fos_http_cache.http.symfony_response_tagger'))
 			{
-				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger = $container->get('fos_http_cache.http.symfony_response_tagger');
 				$responseTagger->addTags($tags);
 			}
 		}

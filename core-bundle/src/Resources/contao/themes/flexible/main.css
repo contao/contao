@@ -1016,6 +1016,13 @@ table.tl_listing {
 	position:relative;
 	background-color:#fff;
 }
+.tl_content.draft > *,
+.tl_folder.draft > *,
+.tl_file.draft > *,
+.hover-row.draft > td,
+.hover-row.draft > td > * {
+	opacity:0.5;
+}
 .parent_view > ul {
 	background:#f3f3f5;
 }
@@ -1071,6 +1078,8 @@ table.tl_listing {
 	line-height:16px;
 }
 .tl_content_right {
+	position: relative;
+	z-index: 1;
 	float:right;
 	text-align:right;
 	margin-left:12px;

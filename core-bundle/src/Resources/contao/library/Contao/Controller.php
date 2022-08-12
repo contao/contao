@@ -1130,7 +1130,7 @@ abstract class Controller extends System
 		}
 
 		// Remove the request token and referer ID
-		unset($pairs['rt'], $pairs['ref']);
+		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
 		foreach ($arrUnset as $key)
 		{
@@ -1433,8 +1433,13 @@ abstract class Controller extends System
 	 */
 	public static function loadDataContainer($strTable, $blnNoCache=false)
 	{
+		if (\func_num_args() > 1)
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s" with the $blnNoCache parameter has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+		}
+
 		$loader = new DcaLoader($strTable);
-		$loader->load($blnNoCache);
+		$loader->load(...($blnNoCache ? array(true) : array()));
 	}
 
 	/**
@@ -1857,14 +1862,13 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())
 		{
 			if ($objFiles->type == 'file')
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
 				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;

@@ -72,7 +72,7 @@ class Cron
         /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
 
-        /** @var array<CronJob> */
+        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
         $now = new \DateTimeImmutable();
 
@@ -108,7 +108,7 @@ class Cron
                 // Update the cron entry
                 $lastRunEntity->setLastRun($now);
 
-                // Add job to the crons to be run
+                // Add job to the cron jobs to be run
                 $cronJobsToBeRun[] = $cron;
             }
 
@@ -117,7 +117,7 @@ class Cron
             $repository->unlockTable();
         }
 
-        // Execute all crons to be run
+        // Execute all cron jobs to be run
         foreach ($cronJobsToBeRun as $cron) {
             if (null !== $this->logger) {
                 $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));

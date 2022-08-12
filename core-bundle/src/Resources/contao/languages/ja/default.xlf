@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>このエイリアスはページ&quot;%s&quot; (ID %s)と競合を引き起こします!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -355,6 +356,10 @@
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
         <target>不明なユーザー名: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>バージョン%dは現在のデータベース構造と互換性がなくなっているため復元できませんでした。手動でデータを復元してください。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2973,8 +2978,8 @@
         <target>%d個のURIをインデックスできました。%d個のインデックスに失敗しました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d 個のURIを飛ばしました。(欠けているURIがある場合はデバッグログを確認してください。)</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d個のURLを飛ばしました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

@@ -617,7 +617,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if (null !== ($newPath = $changedValues[ChangeSet::ATTR_PATH] ?? null)) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($newPath);
-                $dataToUpdate['pid'] = $getParentUuid($pathIdentifier);
+                $dataToUpdate['pid'] = $getParentUuid($newPath);
             }
 
             if (null !== ($newHash = $changedValues[ChangeSet::ATTR_HASH] ?? null)) {
