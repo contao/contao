@@ -88,6 +88,7 @@ services:
             - '@contao.doctrine.backup_manager'
             - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
+            - '@database_connection'
             - '@?contao_installation.database.installer'
 
     contao.command.resize_images:

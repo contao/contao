@@ -337,6 +337,14 @@ services:
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
+    contao.listener.page_trail_cache_tags:
+        class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.pretty_error_screen:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
@@ -378,7 +386,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
-            - '@http_kernel'
+            - '@uri_signer'
+            - '%fragment.path%'
         tags:
             - kernel.event_listener
 
