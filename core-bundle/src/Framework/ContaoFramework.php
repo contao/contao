@@ -186,6 +186,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public function setLoginConstants(): void
     {
+        if (\defined('BE_USER_LOGGED_IN') || \defined('FE_USER_LOGGED_IN')) {
+            return;
+        }
+
         // If the framework has not been initialized yet, set the login constants on init (#4968)
         if (!$this->isInitialized()) {
             $this->setLoginConstantsOnInit = true;
