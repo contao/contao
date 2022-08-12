@@ -218,6 +218,8 @@ class PrettyErrorScreenListener
      */
     private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {
+        $this->framework->initialize();
+
         $config = $this->framework->getAdapter(Config::class);
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 
