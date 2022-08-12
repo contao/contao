@@ -17,7 +17,7 @@
 
 {% block headline_component %}
     {% set headline = headline|default(_context) %}
-    {% set tag_name = headline.tag_name|default('h2') %}
+    {% set tag_name = headline.tag_name|default('h1') %}
 
     <{{ tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
     {%- block headline_inner %}

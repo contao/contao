@@ -1,8 +1,8 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_headline.html.twig" %}
 
-{% set headline = headline|merge({ attributes: attrs(headline.attributes|default)
-    .setIfExists('id', element_html_id)
-    .addClass([element_css_classes, "content-#{type}"])
-}) %}
+{% block wrapper_tag %}{{ headline.tag_name|default('h1') }}{% endblock %}
 
-{{ block('headline_component') }}
+{% block inner %}
+    {{- block('headline_inner') -}}
+{% endblock %}
