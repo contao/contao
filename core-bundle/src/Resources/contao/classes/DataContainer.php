@@ -359,12 +359,6 @@ abstract class DataContainer extends Backend
 				{
 					$newPaletteFields[$k] = $v . '_' . $suffix;
 				}
-
-				if ($this->User->isAdmin)
-				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
-				}
 			}
 
 			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
