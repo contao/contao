@@ -216,6 +216,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $defaults = $route->getDefaults();
         $defaults['pageModel'] = 42;
+
         $expectedUrl = '/_fragment?_path='.urlencode(http_build_query($defaults));
 
         $this->assertNull($event->getResponse());

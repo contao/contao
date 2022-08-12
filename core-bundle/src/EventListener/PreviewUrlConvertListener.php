@@ -89,8 +89,10 @@ class PreviewUrlConvertListener
     private function getFragmentUrl(Request $request, PageModel $pageModel): string
     {
         $route = $this->pageRegistry->getRoute($pageModel);
+
         $defaults = $route->getDefaults();
         $defaults['pageModel'] = $pageModel->id;
+
         $uri = new ControllerReference($defaults['_controller'], $defaults);
 
         return (new FragmentUriGenerator($this->fragmentPath, $this->signer))->generate($uri, $request, true);
