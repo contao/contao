@@ -551,7 +551,8 @@ class MigrateCommand extends Command
     {
         // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
-        $currentPlatform = \get_class($this->connection->getDatabasePlatform());
+        $currentPlatform = $this->connection->getDatabasePlatform();
+        $currentPlatform = $currentPlatform ? \get_class($currentPlatform) : null;
         $driver = $this->connection->getDriver();
 
         if (
