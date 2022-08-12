@@ -945,10 +945,14 @@ class PluginTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getMailerUrlParameters
      */
     public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using the "MAILER_URL" environment variable has been deprecated %s.');
+
         $_SERVER['MAILER_URL'] = $mailerUrl;
 
         $container = $this->getContainer();
@@ -1039,10 +1043,14 @@ class PluginTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getInvalidMailerUrlParameters
      */
     public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using the "MAILER_URL" environment variable has been deprecated %s.');
+
         $_SERVER['MAILER_URL'] = $invalidMailerUrl;
 
         $container = $this->getContainer();
