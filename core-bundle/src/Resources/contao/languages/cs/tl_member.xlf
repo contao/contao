@@ -62,16 +62,16 @@
         <target>Město</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
-        <target>Zadejte město</target>
+        <source>Please enter the name of the city.</source>
+        <target>Zadejte prosím název města.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
         <target>Kraj</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
-        <target>Zadejte kraj</target>
+        <source>Please enter the name of the state.</source>
+        <target>Zadejte prosím název státu.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>

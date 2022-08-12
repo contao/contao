@@ -159,12 +159,15 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLog">
         <source>Debug log</source>
+        <target>Protokol ladění</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Pokud došlo k chybám nebo byly stránky přeskočeny, vyhledejte další informace v protokolu ladění.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Stáhnout protokol</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
