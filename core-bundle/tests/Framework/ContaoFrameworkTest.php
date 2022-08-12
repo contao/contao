@@ -235,7 +235,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -253,7 +253,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         // Call setLoginConstants before initialize
@@ -273,7 +273,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testSetsTheLoginConstantsOnInitIfThereIsNoRequest(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -287,10 +287,11 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      * @group legacy
-     * @expectedDeprecation Using $_SESSION has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.
      */
     public function testInitializesTheFrameworkInPreviewMode(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.');
+
         $beBag = new ArrayAttributeBag();
         $beBag->setName('contao_backend');
 
