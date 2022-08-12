@@ -34,7 +34,7 @@ class LegacyLoginConstantsListener
 
     public function __invoke(RequestEvent $event): void
     {
-        if ($event->isMainRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
