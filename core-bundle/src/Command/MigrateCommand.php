@@ -21,6 +21,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
