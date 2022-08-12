@@ -435,10 +435,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testAbortsOnWrongServerVersion(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
         $driverConnection
             ->method('getServerVersion')
