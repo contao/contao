@@ -456,11 +456,11 @@ class DcaExtractor extends Controller
 				static::$arrSql = $arrSql;
 			}
 
-			$arrTable = static::$arrSql[$this->strTable];
+			$arrTable = static::$arrSql[$this->strTable] ?? null;
 			$engine = null;
 			$charset = null;
 
-			if (isset($arrTable['TABLE_OPTIONS']))
+			if ($arrTable && isset($arrTable['TABLE_OPTIONS']))
 			{
 				if (\is_array($arrTable['TABLE_OPTIONS']))
 				{
@@ -491,7 +491,7 @@ class DcaExtractor extends Controller
 			}
 
 			// Fields
-			if (isset($arrTable['TABLE_FIELDS']))
+			if ($arrTable && isset($arrTable['TABLE_FIELDS']))
 			{
 				foreach ($arrTable['TABLE_FIELDS'] as $k=>$v)
 				{
@@ -500,7 +500,7 @@ class DcaExtractor extends Controller
 			}
 
 			// Keys
-			if (isset($arrTable['TABLE_CREATE_DEFINITIONS']))
+			if ($arrTable && isset($arrTable['TABLE_CREATE_DEFINITIONS']))
 			{
 				foreach ($arrTable['TABLE_CREATE_DEFINITIONS'] as $strKey)
 				{
