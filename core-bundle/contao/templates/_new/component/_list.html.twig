@@ -47,7 +47,7 @@
     {% set limit_elements = list.limit|default(0) > 0 %}
     {% set limit = list.limit|default(number_of_items) %}
     {% set items_per_page = list.items_per_page|default(number_of_items) %}
-    {% set number_of_pages = ((limit_elements ?: number_of_items) / items_per_page)|round(0, 'ceil') %}
+    {% set number_of_pages = items_per_page ? ((limit_elements ?: number_of_items) / items_per_page)|round(0, 'ceil') : 1 %}
     {% set add_pagination = number_of_pages > 1 %}
 
     {% block list %}
