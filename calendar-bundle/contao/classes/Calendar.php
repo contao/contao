@@ -136,7 +136,6 @@ class Calendar extends Frontend
 		$objFeed->language = $arrFeed['language'];
 		$objFeed->published = $arrFeed['tstamp'];
 
-		$arrUrls = array();
 		$this->arrEvents = array();
 		$time = time();
 
@@ -170,14 +169,7 @@ class Calendar extends Frontend
 					continue;
 				}
 
-				// Get the jumpTo URL
-				if (!isset($arrUrls[$jumpTo]))
-				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
-				}
-
-				$strUrl = $arrUrls[$jumpTo];
-				$this->addEvent($objArticle, $objArticle->startTime, $objArticle->endTime, $strUrl);
+				$this->addEvent($objArticle, $objArticle->startTime, $objArticle->endTime, $objParent);
 
 				// Recurring events
 				if ($objArticle->recurring)
@@ -207,7 +199,7 @@ class Calendar extends Frontend
 
 						if ($intStartTime >= $time)
 						{
-							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl, '', true);
+							$this->addEvent($objArticle, $intStartTime, $intEndTime, $objParent, '', true);
 						}
 					}
 				}
@@ -327,11 +319,11 @@ class Calendar extends Frontend
 	 * @param CalendarEventsModel $objEvent
 	 * @param integer             $intStart
 	 * @param integer             $intEnd
-	 * @param string              $strUrl
+	 * @param PageModel           $objParent
 	 * @param string              $strBase
 	 * @param boolean             $isRepeated
 	 */
-	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='', $isRepeated=false)
+	protected function addEvent($objEvent, $intStart, $intEnd, $objParent, $strBase='', $isRepeated=false)
 	{
 		if ($intEnd < time())
 		{
@@ -371,13 +363,6 @@ class Calendar extends Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
-
-		// Backwards compatibility (see #8329)
-		if ($strBase && !preg_match('#^https?://#', $strUrl))
-		{
-			$strUrl = $strBase . $strUrl;
-		}
-
 		$link = '';
 
 		switch ($objEvent->source)
@@ -410,7 +395,14 @@ class Calendar extends Frontend
 				break;
 
 			default:
-				$link = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvent->alias ?: $objEvent->id));
+				$link = $objParent->getAbsoluteUrl('/' . ($objEvent->alias ?: $objEvent->id));
+
+				// Backwards compatibility (see #8329)
+				if ($strBase && !preg_match('#^https?://#', $link))
+				{
+					$link = $strBase . $link;
+				}
+
 				break;
 		}
 
