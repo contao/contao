@@ -186,6 +186,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public function setLoginConstants(): void
     {
+        // Check if the constants have already been defined (see #5137)
         if (\defined('BE_USER_LOGGED_IN') || \defined('FE_USER_LOGGED_IN')) {
             return;
         }
