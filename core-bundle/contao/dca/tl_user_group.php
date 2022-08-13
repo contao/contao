@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Controller;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -301,9 +302,9 @@ class tl_user_group extends Backend
 
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_'),
+			Controller::addStaticUrlTo(Image::getPath($image)),
+			Controller::addStaticUrlTo(Image::getPath($disabled ? $image : rtrim($image, '_'))),
+			Controller::addStaticUrlTo(Image::getPath(rtrim($image, '_') . '_')),
 			$label
 		);
 	}

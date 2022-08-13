@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -610,9 +611,9 @@ class tl_user extends Backend
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_')
+			Controller::addStaticUrlTo(Image::getPath($image)),
+			Controller::addStaticUrlTo(Image::getPath($disabled ? $image : rtrim($image, '_'))),
+			Controller::addStaticUrlTo(Image::getPath(rtrim($image, '_') . '_'))
 		);
 
 		return $args;
@@ -955,6 +956,6 @@ class tl_user extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '"data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Controller::addStaticUrlTo(Image::getPath('visible.svg')) . '" data-icon-disabled="' . Controller::addStaticUrlTo(Image::getPath('invisible.svg')) . '"data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }
