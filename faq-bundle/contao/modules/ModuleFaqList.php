@@ -25,12 +25,6 @@ class ModuleFaqList extends Module
 	protected $strTemplate = 'mod_faqlist';
 
 	/**
-	 * Target pages
-	 * @var array
-	 */
-	protected $arrTargets = array();
-
-	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -140,18 +134,12 @@ class ModuleFaqList extends Module
 			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
-		// Get the URL from the jumpTo page of the category
-		if (!isset($this->arrTargets[$jumpTo]))
+		if ($jumpTo && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 		{
-			$this->arrTargets[$jumpTo] = StringUtil::ampersand(Environment::get('requestUri'));
-
-			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
-			{
-				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl('/%s'));
-			}
+			/** @var PageModel $objTarget */
+			return StringUtil::ampersand($objTarget->getFrontendUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 		}
 
-		return sprintf(preg_replace('/%(?!s)/', '%%', $this->arrTargets[$jumpTo]), ($objFaq->alias ?: $objFaq->id));
+		return StringUtil::ampersand(Environment::get('requestUri'));
 	}
 }

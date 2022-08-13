@@ -71,7 +71,6 @@ class ModuleNewsletterList extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$arrJumpTo = array();
 		$arrNewsletter = array();
 
 		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
@@ -98,29 +97,21 @@ class ModuleNewsletterList extends Module
 					continue;
 				}
 
-				$strUrl = $strRequest;
-
-				if (!isset($arrJumpTo[$objTarget->jumpTo]))
+				if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 				{
-					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
-					{
-						/** @var PageModel $objJumpTo */
-						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl('/%s');
-					}
-					else
-					{
-						$arrJumpTo[$objTarget->jumpTo] = $strUrl;
-					}
+					/** @var PageModel $objJumpTo */
+					$strUrl = $objJumpTo->getFrontendUrl('/' . ($objNewsletter->alias ?: $objNewsletter->id));
 				}
-
-				$strUrl = $arrJumpTo[$objTarget->jumpTo];
-				$strAlias = $objNewsletter->alias ?: $objNewsletter->id;
+				else
+				{
+					$strUrl = $strRequest;
+				}
 
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
 					'title' => StringUtil::stripInsertTags($objNewsletter->subject),
-					'href' => sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), $strAlias),
+					'href' => $strUrl,
 					'date' => Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => Date::parse($objPage->datimFormat, $objNewsletter->date),
 					'time' => Date::parse($objPage->timeFormat, $objNewsletter->date),
