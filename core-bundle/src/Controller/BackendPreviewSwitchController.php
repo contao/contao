@@ -36,9 +36,8 @@ use Twig\Error\Error as TwigError;
  *    loading and force back end scope)
  * b) Provide the member usernames for the datalist
  * c) Process the switch action (i.e. log in a specific front end user).
- *
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_allow_preview" = true})
  */
+#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewSwitchController
 {
     public function __construct(
@@ -55,9 +54,7 @@ class BackendPreviewSwitchController
     ) {
     }
 
-    /**
-     * @Route("/preview_switch", name="contao_backend_switch")
-     */
+    #[Route('/preview_switch', name: 'contao_backend_switch')]
     public function __invoke(Request $request): Response
     {
         $user = $this->security->getUser();
@@ -128,6 +125,12 @@ class BackendPreviewSwitchController
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             $frontendUsername = $request->request->get('user');
+
+            // Logout the current logged-in user if an empty user is submitted
+            if ('' === $frontendUsername && null !== $this->tokenChecker->getFrontendUsername()) {
+                $this->previewAuthenticator->removeFrontendAuthentication();
+                $frontendUsername = null;
+            }
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');

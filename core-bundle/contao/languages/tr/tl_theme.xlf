@@ -1,0 +1,194 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_theme.name.0">
+        <source>Theme title</source>
+        <target>Tema başlığı</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.name.1">
+        <source>Please enter a unique theme title.</source>
+        <target>Lütfen benzersiz bir tema adı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.0">
+        <source>Author</source>
+        <target>Tasarımcı</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.1">
+        <source>Please enter the name of the theme designer.</source>
+        <target>Lütfen tema tasarımcısının adını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.0">
+        <source>Folders</source>
+        <target>Klasörler</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.1">
+        <source>Please select the folders that belong to the theme from the files directory.</source>
+        <target>Lütfen files klasöründen tema dosyalarının bulunduğu klasörleri seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.0">
+        <source>Templates folder</source>
+        <target>Temalar klasörü</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.1">
+        <source>Here you can select a templates folder that will be exported with the theme.</source>
+        <target>Buradan tema ile dışa aktarılacak bir temalar klasörü klasörü seçebilirsiniz. </target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.0">
+        <source>Screenshot</source>
+        <target>Ekran görüntüsü</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.1">
+        <source>Here you can choose a screenshot of the theme.</source>
+        <target>Buradan temanın ekran görüntüsünü değiştirilebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.0">
+        <source>Source files</source>
+        <target>Kaynak dosyalar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.1">
+        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <target>Buradan içe aktarılacak bir ya da birkaç .cto ya da .sql dosyası yükleyebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.0">
+        <source>Revision date</source>
+        <target>Düzenlenme tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Son düzenlenme tarihi ve saati</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.title_legend">
+        <source>Title and author</source>
+        <target>Başlık ve yazar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.config_legend">
+        <source>Configuration</source>
+        <target>Yapılandırma</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.theme_imported">
+        <source>Theme &quot;%s&quot; has been imported.</source>
+        <target>&quot;%s&quot; teması içe aktarıldı.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.checking_theme">
+        <source>The theme data is being checked</source>
+        <target>Tema verileri denetleniyor</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_fields">
+        <source>Tables and fields</source>
+        <target>Tablolar ve alanlar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_field">
+        <source>The field &lt;strong&gt;%s&lt;/strong&gt; is missing in the database and will not be imported.</source>
+        <target>Veritabanında &lt;strong&gt;%s&lt;/strong&gt; alanı eksik olduğundan içe aktarılmayacak.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_ok">
+        <source>The tables have been successfully checked.</source>
+        <target>Tablolar denetlendi.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_xml">
+        <source>Theme &quot;%s&quot; is corrupt and cannot be imported.</source>
+        <target>&quot;%s&quot; teması bozulmuş olduğundan içe aktarılamaz.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.custom_templates">
+        <source>Custom templates</source>
+        <target>Özel kalıplar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.template_exists">
+        <source>The template &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; exists and will be overwritten.</source>
+        <target>&lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; kalıbı zaten var ve üzerine yazılacak.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates_ok">
+        <source>No conflicts detected.</source>
+        <target>Herhangi bir çakışma algılanmadı.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.0">
+        <source>Theme store</source>
+        <target>Tema deposu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.1">
+        <source>Find more themes in the Contao theme store</source>
+        <target>Contao tema mağazasından başka temalar alabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>İçe aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>İçe bir tema aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Örnek bir web sitesini içe aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Buradan bir &lt;code&gt;.sql&lt;/code&gt; dosyasını içe aktarabilirsiniz. Var olan tüm veriler silinecek! Yalnızca bir temayı içe aktarmak istiyorsanız buradan bir dosya seçmeyin.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>İçe aktarma türü</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Buradan içe aktarma türünü seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Tam SQL içe aktarma</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Yalnızca veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Tabloları temizlemeden yalnızca veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Tema ayarlarını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.1">
+        <source>Create a new theme</source>
+        <target>Yeni bir tema ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.show">
+        <source>Show the details of theme ID %s</source>
+        <target>%s kodlu temanın ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit">
+        <source>Edit theme ID %s</source>
+        <target>%s kodlu temayı düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.delete">
+        <source>Delete theme ID %s</source>
+        <target>%s kodlu temayı sil</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.css">
+        <source>Edit the style sheets of theme ID %s</source>
+        <target>%s kodlu temanın biçem sayfalarını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules">
+        <source>Edit the front end modules of theme ID %s</source>
+        <target>%s kodlu temanın ön yüz modüllerini düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout">
+        <source>Edit the page layouts of theme ID %s</source>
+        <target>%s kodlu temanın sayfa düzenlerini düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes">
+        <source>Edit the image sizes of theme ID %s</source>
+        <target>%s kodlu temanın görsel boyutlarını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme">
+        <source>Export theme ID %s</source>
+        <target>%s kodlu temayı dışa aktar</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

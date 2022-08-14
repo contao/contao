@@ -13,15 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @ContentElement(category="includes")
- */
+#[AsContentElement(category: 'includes')]
 class TemplateController extends AbstractContentElementController
 {
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response

@@ -20,7 +20,6 @@ use Contao\MakerBundle\Generator\TemplateGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,7 +37,6 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         protected ClassGenerator $classGenerator,
         protected DcaGenerator $dcaGenerator,
         protected LanguageFileGenerator $languageFileGenerator,
-        protected PhpCompatUtil $phpCompatUtil,
         protected string $projectDir,
     ) {
     }

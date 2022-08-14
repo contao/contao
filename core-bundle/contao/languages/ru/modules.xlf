@@ -1,0 +1,425 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="MOD.content">
+        <source>Content</source>
+        <target>Контент</target>
+      </trans-unit>
+      <trans-unit id="MOD.article.0">
+        <source>Articles</source>
+        <target>Статьи</target>
+      </trans-unit>
+      <trans-unit id="MOD.article.1">
+        <source>Manage articles and content elements</source>
+        <target>Управление статьями и элементами контента</target>
+      </trans-unit>
+      <trans-unit id="MOD.form.0">
+        <source>Forms</source>
+        <target>Формы</target>
+      </trans-unit>
+      <trans-unit id="MOD.form.1">
+        <source>Create custom forms and store or send the submitted data</source>
+        <target>Создание пользовательских форм для получения или отправки представленных данных.</target>
+      </trans-unit>
+      <trans-unit id="MOD.design">
+        <source>Layout</source>
+        <target>Макет</target>
+      </trans-unit>
+      <trans-unit id="MOD.themes.0">
+        <source>Themes</source>
+        <target>Темы</target>
+      </trans-unit>
+      <trans-unit id="MOD.themes.1">
+        <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Управление темами, модулями внешнего интерфейса, макетами страниц или размерами изображений</target>
+      </trans-unit>
+      <trans-unit id="MOD.page.0">
+        <source>Pages</source>
+        <target>Страницы</target>
+      </trans-unit>
+      <trans-unit id="MOD.page.1">
+        <source>Set up the pages of your website(s)</source>
+        <target>Настройте страницы вашего веб-сайта(ов)</target>
+      </trans-unit>
+      <trans-unit id="MOD.tpl_editor.0">
+        <source>Templates</source>
+        <target>Шаблоны</target>
+      </trans-unit>
+      <trans-unit id="MOD.tpl_editor.1">
+        <source>Add or edit custom templates</source>
+        <target>Добавить или редактировать пользовательские шаблоны</target>
+      </trans-unit>
+      <trans-unit id="MOD.accounts">
+        <source>Accounts</source>
+      </trans-unit>
+      <trans-unit id="MOD.member.0">
+        <source>Members</source>
+        <target>Участники</target>
+      </trans-unit>
+      <trans-unit id="MOD.member.1">
+        <source>Manage member accounts (front end)</source>
+        <target>Управление учётными записями участников (внешний интерфейс).</target>
+      </trans-unit>
+      <trans-unit id="MOD.mgroup.0">
+        <source>Member groups</source>
+        <target>Группы участников</target>
+      </trans-unit>
+      <trans-unit id="MOD.mgroup.1">
+        <source>Manage member groups (front end)</source>
+        <target>Управление группами участников (внешний интерфейс).</target>
+      </trans-unit>
+      <trans-unit id="MOD.user.0">
+        <source>Users</source>
+        <target>Пользователи</target>
+      </trans-unit>
+      <trans-unit id="MOD.user.1">
+        <source>Manage user accounts (back end)</source>
+        <target>Управление учётными записями пользователей (панель управления).</target>
+      </trans-unit>
+      <trans-unit id="MOD.group.0">
+        <source>User groups</source>
+        <target>Группы пользователей</target>
+      </trans-unit>
+      <trans-unit id="MOD.group.1">
+        <source>Manage user groups (back end)</source>
+        <target>Управление группами пользователей (панель управления).</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Двойное подтверждение</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage double opt-in tokens</source>
+        <target>Управление двойными токенами</target>
+      </trans-unit>
+      <trans-unit id="MOD.system">
+        <source>System</source>
+        <target>Система</target>
+      </trans-unit>
+      <trans-unit id="MOD.files.0">
+        <source>Files</source>
+        <target>Файлы</target>
+      </trans-unit>
+      <trans-unit id="MOD.files.1">
+        <source>Manage files and folders</source>
+        <target>Управление файлами и каталогами</target>
+      </trans-unit>
+      <trans-unit id="MOD.log.0">
+        <source>System log</source>
+        <target>Системный журнал</target>
+      </trans-unit>
+      <trans-unit id="MOD.log.1">
+        <source>Browse the system log</source>
+        <target>Просмотр системного журнала</target>
+      </trans-unit>
+      <trans-unit id="MOD.settings.0">
+        <source>Settings</source>
+        <target>Настройки</target>
+      </trans-unit>
+      <trans-unit id="MOD.settings.1">
+        <source>Adjust the Contao configuration</source>
+        <target>Настройка конфигурации Contao</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+        <target>Предпросмотр ссылок</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+        <target>Управление предпросмотром ссылок внешнего интерфейса.</target>
+      </trans-unit>
+      <trans-unit id="MOD.maintenance.0">
+        <source>Maintenance</source>
+        <target>Обслуживание</target>
+      </trans-unit>
+      <trans-unit id="MOD.maintenance.1">
+        <source>Crawl the website or purge generated data</source>
+        <target>Просканировать веб-сайт или удалить сгенерированные данные</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+        <target>Безопасность</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+        <target>Защитите свой аккаунт</target>
+      </trans-unit>
+      <trans-unit id="MOD.undo.0">
+        <source>Restore</source>
+        <target>Восстановление</target>
+      </trans-unit>
+      <trans-unit id="MOD.undo.1">
+        <source>Restore deleted records</source>
+        <target>Восстановление удаленных записей</target>
+      </trans-unit>
+      <trans-unit id="MOD.login.0">
+        <source>User profile</source>
+        <target>Профиль пользователя</target>
+      </trans-unit>
+      <trans-unit id="MOD.login.1">
+        <source>Change your personal data or set a new password</source>
+        <target>Изменение личных данных или пароля</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>Элементы контента</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Поля</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_image_size">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_image_size_item">
+        <source>Media queries</source>
+        <target>Media queries (Медиа-запросы)</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Макеты страниц</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Модули внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="MOD.modules">
+        <source>Front end modules</source>
+        <target>Модули внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="MOD.layout">
+        <source>Page layouts</source>
+        <target>Макеты страниц</target>
+      </trans-unit>
+      <trans-unit id="MOD.image_sizes">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
+      </trans-unit>
+      <trans-unit id="MOD.theme_import">
+        <source>Theme import</source>
+        <target>Импорт темы</target>
+      </trans-unit>
+      <trans-unit id="MOD.theme_export">
+        <source>Theme export</source>
+        <target>Экспорт темы</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigationMenu">
+        <source>Navigation</source>
+        <target>Навигация</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigation.0">
+        <source>Navigation menu</source>
+        <target>Меню навигации</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigation.1">
+        <source>Generates a navigation menu from the pages</source>
+        <target>Создает меню навигации из страниц</target>
+      </trans-unit>
+      <trans-unit id="FMD.customnav.0">
+        <source>Custom navigation</source>
+        <target>Выборочная навигация</target>
+      </trans-unit>
+      <trans-unit id="FMD.customnav.1">
+        <source>Generates a custom navigation menu</source>
+        <target>Создает выборочное меню навигации</target>
+      </trans-unit>
+      <trans-unit id="FMD.breadcrumb.0">
+        <source>Breadcrumb navigation</source>
+        <target>Навигация с историей посещения разделов</target>
+      </trans-unit>
+      <trans-unit id="FMD.breadcrumb.1">
+        <source>Generates a breadcrumb navigation menu</source>
+        <target>Создает меню навигации с историей посещения разделов</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicknav.0">
+        <source>Quick navigation</source>
+        <target>Быстрая навигация</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicknav.1">
+        <source>Generates a drop-down menu from the pages</source>
+        <target>Создает выпадающее меню из страниц</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicklink.0">
+        <source>Quick link</source>
+        <target>Быстрая ссылка</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicklink.1">
+        <source>Generates a custom drop-down menu</source>
+        <target>Создает выборочное выпадающее меню.</target>
+      </trans-unit>
+      <trans-unit id="FMD.booknav.0">
+        <source>Book navigation</source>
+        <target>Книжная навигация</target>
+      </trans-unit>
+      <trans-unit id="FMD.booknav.1">
+        <source>Generates a book navigation menu</source>
+        <target>Создает меню книжной навигации</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlenav.0">
+        <source>Article navigation</source>
+        <target>Навигация статей</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlenav.1">
+        <source>Generates a pagination menu to navigate articles</source>
+        <target>Создает меню разбиения на страницы для навигации по статьям</target>
+      </trans-unit>
+      <trans-unit id="FMD.sitemap.0">
+        <source>HTML sitemap</source>
+        <target>HTML-карта веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="FMD.sitemap.1">
+        <source>Generates a list of all pages</source>
+        <target>Создает список всех страниц</target>
+      </trans-unit>
+      <trans-unit id="FMD.user">
+        <source>User</source>
+        <target>Пользователь</target>
+      </trans-unit>
+      <trans-unit id="FMD.login.0">
+        <source>Login form</source>
+        <target>Форма авторизации</target>
+      </trans-unit>
+      <trans-unit id="FMD.login.1">
+        <source>Generates a login form</source>
+        <target>Создает форму авторизации</target>
+      </trans-unit>
+      <trans-unit id="FMD.logout.0">
+        <source>Automatic logout</source>
+        <target>Автоматический выход из системы</target>
+      </trans-unit>
+      <trans-unit id="FMD.logout.1">
+        <source>Automatically logs out a member</source>
+        <target>Автоматическое завершение сеанса участника</target>
+      </trans-unit>
+      <trans-unit id="FMD.personalData.0">
+        <source>Personal data</source>
+        <target>Личные данные</target>
+      </trans-unit>
+      <trans-unit id="FMD.personalData.1">
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Создает форму для заполнения личных данных участника</target>
+      </trans-unit>
+      <trans-unit id="FMD.registration.0">
+        <source>Registration</source>
+        <target>Регистрация пользователя</target>
+      </trans-unit>
+      <trans-unit id="FMD.registration.1">
+        <source>Generates a member registration form</source>
+        <target>Создает форму для заполнения участником при регистрации</target>
+      </trans-unit>
+      <trans-unit id="FMD.changePassword.0">
+        <source>Change password</source>
+        <target>Сменить пароль</target>
+      </trans-unit>
+      <trans-unit id="FMD.changePassword.1">
+        <source>Generates a form to change the password</source>
+        <target>Создает форму смены пароля</target>
+      </trans-unit>
+      <trans-unit id="FMD.lostPassword.0">
+        <source>Lost password</source>
+        <target>Забытый пароль</target>
+      </trans-unit>
+      <trans-unit id="FMD.lostPassword.1">
+        <source>Generates a form to request a new password</source>
+        <target>Создает форму запроса нового пароля</target>
+      </trans-unit>
+      <trans-unit id="FMD.closeAccount.0">
+        <source>Close account</source>
+        <target>Закрыть учетную запись</target>
+      </trans-unit>
+      <trans-unit id="FMD.closeAccount.1">
+        <source>Generates a form to delete a member account</source>
+        <target>Создает форму удаления учетной записи</target>
+      </trans-unit>
+      <trans-unit id="FMD.application">
+        <source>Applications</source>
+        <target>Приложения</target>
+      </trans-unit>
+      <trans-unit id="FMD.form.0">
+        <source>Form</source>
+        <target>Форма</target>
+      </trans-unit>
+      <trans-unit id="FMD.form.1">
+        <source>Adds a form to the page</source>
+        <target>Добавляет форму на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.search.0">
+        <source>Search engine</source>
+        <target>Поисковая система</target>
+      </trans-unit>
+      <trans-unit id="FMD.search.1">
+        <source>Adds a search form to the page</source>
+        <target>Добавляет форму поиска по веб-сайту на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlelist.0">
+        <source>Article list</source>
+        <target>Список статей</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlelist.1">
+        <source>Generates a list of articles of a column</source>
+        <target>Создает список статей в конкретной колонке</target>
+      </trans-unit>
+      <trans-unit id="FMD.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Разное</target>
+      </trans-unit>
+      <trans-unit id="FMD.randomImage.0">
+        <source>Random image</source>
+        <target>Случайное изображение</target>
+      </trans-unit>
+      <trans-unit id="FMD.randomImage.1">
+        <source>Adds a random image to the page</source>
+        <target>Добавляет случайные изображения на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.html.0">
+        <source>Custom HTML</source>
+        <target>Пользовательский HTML-код</target>
+      </trans-unit>
+      <trans-unit id="FMD.html.1">
+        <source>Allows you to add custom HTML code</source>
+        <target>Позволяет добавлять собственный HTML-код</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Нефильтрованный HTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Позволяет добавлять собственный нефильтрованный HTML-код.</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>Пользовательский шаблон</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>Создает модуль для вставки пользовательского шаблона. </target>
+      </trans-unit>
+      <trans-unit id="FMD.rssReader.0">
+        <source>RSS reader</source>
+        <target>Просмотрщик RSS-каналов</target>
+      </trans-unit>
+      <trans-unit id="FMD.rssReader.1">
+        <source>Adds an RSS feed to the page</source>
+        <target>Добавляет RSS-канал на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Двухфакторная авторизация</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Создает форму для настройки или изменения двухфакторной авторизации</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+        <target>Модули, зависящие от корневой страницы</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.1">
+        <source>Generates different modules depending on the website root page</source>
+        <target>Создает различные модули в зависимости от корневой страницы веб-сайта</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

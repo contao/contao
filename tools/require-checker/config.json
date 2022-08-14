@@ -37,7 +37,6 @@
         "AppBundle\\AppBundle",
         "Composer\\Script\\Event",
         "Composer\\Util\\Filesystem",
-        "Contao\\InstallationBundle\\Database\\Installer",
         "Contao\\ManagerPlugin\\Bundle\\BundlePluginInterface",
         "Contao\\ManagerPlugin\\Bundle\\Config\\BundleConfig",
         "Contao\\ManagerPlugin\\Bundle\\Parser\\ParserInterface",

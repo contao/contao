@@ -1,8 +1,8 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.x" alt></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.x/graph/badge.svg" alt></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.0" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.0/graph/badge.svg" alt></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
@@ -22,7 +22,6 @@ The monorepo is automatically split into separate packages:
  * [CommentsBundle](https://github.com/contao/comments-bundle)
  * [CoreBundle](https://github.com/contao/core-bundle)
  * [FaqBundle](https://github.com/contao/faq-bundle)
- * [InstallationBundle](https://github.com/contao/installation-bundle)
  * [ListingBundle](https://github.com/contao/listing-bundle)
  * [MakerBundle](https://github.com/contao/maker-bundle)
  * [ManagerBundle](https://github.com/contao/manager-bundle)
@@ -62,8 +61,8 @@ Next, install the dependencies:
 composer update
 ```
 
-Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish your setup by
-opening `https://your-domain.local/contao/install` in your browser.
+Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
+running `contao:setup` on the command line.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
 from within your application.

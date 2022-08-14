@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,16 +23,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 
-/**
- * Dumps debug information about a Contao DCA.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'debug:dca',
+    description: 'Dumps the DCA configuration for a table.'
+)]
 class DebugDcaCommand extends Command
 {
-    protected static $defaultName = 'debug:dca';
-    protected static $defaultDescription = 'Dumps the DCA configuration for a table.';
-
     public function __construct(private ContaoFramework $framework)
     {
         parent::__construct();

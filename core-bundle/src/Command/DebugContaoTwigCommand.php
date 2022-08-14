@@ -16,6 +16,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -27,14 +28,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @experimental
- */
+#[AsCommand(
+    name: 'debug:contao-twig',
+    description: 'Displays the Contao template hierarchy.'
+)]
 class DebugContaoTwigCommand extends Command
 {
-    protected static $defaultName = 'debug:contao-twig';
-    protected static $defaultDescription = 'Displays the Contao template hierarchy.';
-
     public function __construct(
         private TemplateHierarchyInterface $hierarchy,
         private ContaoFilesystemLoaderWarmer $cacheWarmer,

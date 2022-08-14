@@ -19,6 +19,8 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,16 +31,12 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-/**
- * Creates a new Contao back end user.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:user:create',
+    description: 'Create a new Contao back end user.'
+)]
 class UserCreateCommand extends Command
 {
-    protected static $defaultName = 'contao:user:create';
-    protected static $defaultDescription = 'Create a new Contao back end user.';
-
     private array $locales;
 
     public function __construct(
@@ -275,6 +273,6 @@ class UserCreateCommand extends Command
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 
-        $this->connection->insert('tl_user', $data);
+        $this->connection->insert('tl_user', $data, ['admin' => Types::BOOLEAN, 'pwChange' => Types::BOOLEAN]);
     }
 }

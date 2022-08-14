@@ -1,0 +1,90 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size_item.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="tl_image_size_item.media.0">
+        <source>Media query</source>
+        <target>Media query (Медиа-запрос)</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.media.1">
+        <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
+        <target>Вы можете определить, когда следует использовать размер изображения, напр., &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.0">
+        <source>Invisible</source>
+        <target>Невидимый</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.1">
+        <source>Do not use the image size definition.</source>
+        <target>Не использовать определение размера изображения.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.0">
+        <source>Revision date</source>
+        <target>Дата изменения</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Дата и время последнего изменения</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.title_legend">
+        <source>Image size settings</source>
+        <target>Настройки размера изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
+        <target>Настройки источника изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.visibility_legend">
+        <source>Visibility</source>
+        <target>Видимость</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.1">
+        <source>Create a new media query</source>
+        <target>Создать новый Media query (Медиа-запрос)</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show">
+        <source>Show the details of media query ID %s</source>
+        <target>Показать детали Media query (Медиа-запроса) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit">
+        <source>Edit media query ID %s</source>
+        <target>Редактировать Media query (Медиа-запрос) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut">
+        <source>Move media query ID %s</source>
+        <target>Переместить Media query (Медиа-запрос) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy">
+        <source>Duplicate media query ID %s</source>
+        <target>Дублировать Media query (Медиа-запрос) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete">
+        <source>Delete media query ID %s</source>
+        <target>Удалить Media query (Медиа-запрос) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle">
+        <source>Activate/deactivate media query ID %s</source>
+        <target>Активировать/деактивировать Media query (Медиа-запрос) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.1">
+        <source>Paste after media query ID %s</source>
+        <target>Вставить после Media query (Медиа-запроса) ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.0">
+        <source>Create a new media query at the top</source>
+        <target>Создать новый Media query (Медиа-запрос) вверху</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.1">
+        <source>Create a new media query after media query ID %s</source>
+        <target>Создать новый Media query (Медиа-запрос) после медиа-запроса ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

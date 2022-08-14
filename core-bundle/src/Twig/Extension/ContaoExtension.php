@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
+use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -66,7 +67,7 @@ final class ContaoExtension extends AbstractExtension
         // namespaces, as well as the existing bundle templates we're already
         // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
-        $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
+        $this->addContaoEscaperRule('%^@ContaoCore/%');
 
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
@@ -236,6 +237,11 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'highlight_auto',
                 [HighlighterRuntime::class, 'highlightAuto'],
+            ),
+            new TwigFilter(
+                'format_bytes',
+                [FormatterRuntime::class, 'formatBytes'],
+                ['is_safe' => ['html']]
             ),
         ];
     }

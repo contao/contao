@@ -175,7 +175,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
-            $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
+            $loader->load(__DIR__.'/../../skeleton/config/services.php');
         }
     }
 
@@ -363,7 +363,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 $_ENV[$k] ??= isset($_SERVER[$k]) && !str_starts_with($k, 'HTTP_') ? $_SERVER[$k] : $v;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
-            (new Dotenv(false))->loadEnv($filePath, 'APP_ENV', $defaultEnv);
+            (new Dotenv())->usePutenv(false)->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

@@ -28,7 +28,7 @@ class ImportExtractor
 
             $type = \is_array($parameter) ? $parameter[0] : $parameter;
 
-            if (!class_exists((string) $type, true)) {
+            if (!class_exists((string) $type)) {
                 continue;
             }
 
@@ -38,7 +38,7 @@ class ImportExtractor
         $returnType = $method->getReturnType();
 
         // If a return type is set, check if the class exists and add it to our imports
-        if (null !== $returnType && class_exists($returnType, true)) {
+        if (null !== $returnType && class_exists($returnType)) {
             $objectTypeHints[] = $returnType;
         }
 

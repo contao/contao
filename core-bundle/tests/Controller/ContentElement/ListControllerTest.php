@@ -29,7 +29,7 @@ class ListControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/list">
+            <div class="content-list">
                 <h2>Ordered list</h2>
                 <ol>
                     <li>first</li>
@@ -48,17 +48,17 @@ class ListControllerTest extends ContentElementTestCase
             new ListController(),
             [
                 'type' => 'list',
-                'listitems' => serialize(['foo', 'bar']),
+                'listitems' => serialize(['foo', 'bar{{br}}baz <i>plain</i>']),
                 'listtype' => 'unordered',
                 'cssID' => serialize(['', 'my-class']),
             ],
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="my-class content_element/list">
+            <div class="my-class content-list">
                 <ul>
                     <li>foo</li>
-                    <li>bar</li>
+                    <li>bar<br>baz &lt;i&gt;plain&lt;/i&gt;</li>
                 </ul>
             </div>
             HTML;

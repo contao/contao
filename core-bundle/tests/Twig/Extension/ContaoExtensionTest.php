@@ -112,7 +112,7 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(6, $filters);
+        $this->assertCount(7, $filters);
 
         $expectedFilters = [
             'escape',
@@ -121,6 +121,7 @@ class ContaoExtensionTest extends TestCase
             'insert_tag_raw',
             'highlight',
             'highlight_auto',
+            'format_bytes',
         ];
 
         foreach ($filters as $filter) {
@@ -351,7 +352,6 @@ class ContaoExtensionTest extends TestCase
         yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
         yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
         yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
-        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**

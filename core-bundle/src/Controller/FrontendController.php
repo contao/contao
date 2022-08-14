@@ -22,15 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
 /**
- * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend', '_token_check' => true])]
 class FrontendController extends AbstractController
 {
-    /**
-     * @Route("/_contao/cron", name="contao_frontend_cron")
-     */
+    #[Route('/_contao/cron', name: 'contao_frontend_cron')]
     public function cronAction(Request $request): Response
     {
         if ($request->isMethod(Request::METHOD_GET)) {
@@ -40,9 +37,7 @@ class FrontendController extends AbstractController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @Route("/_contao/share", name="contao_frontend_share")
-     */
+    #[Route('/_contao/share', name: 'contao_frontend_share')]
     public function shareAction(): RedirectResponse
     {
         $this->initializeContaoFramework();
@@ -54,9 +49,8 @@ class FrontendController extends AbstractController
 
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
-     *
-     * @Route("/_contao/logout", name="contao_frontend_logout")
      */
+    #[Route('/_contao/logout', name: 'contao_frontend_logout')]
     public function logoutAction(): never
     {
         throw new LogoutException('The user was not logged out correctly.');
@@ -70,9 +64,8 @@ class FrontendController extends AbstractController
      * the output is cached (used in the core if the "alwaysLoadFromCache"
      * option is enabled to evaluate the RememberMe cookie and then set
      * the session cookie).
-     *
-     * @Route("/_contao/check_cookies", name="contao_frontend_check_cookies")
      */
+    #[Route('/_contao/check_cookies', name: 'contao_frontend_check_cookies')]
     public function checkCookiesAction(): Response
     {
         static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -89,9 +82,8 @@ class FrontendController extends AbstractController
     /**
      * Returns a script that makes sure a valid request token is filled into
      * all forms if the "alwaysLoadFromCache" option is enabled.
-     *
-     * @Route("/_contao/request_token_script", name="contao_frontend_request_token_script")
      */
+    #[Route('/_contao/request_token_script', name: 'contao_frontend_request_token_script')]
     public function requestTokenScriptAction(): Response
     {
         $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue());

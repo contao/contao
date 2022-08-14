@@ -1,7 +1,0 @@
-# Composer
-/composer.lock
-/vendor/
-
-# PhpUnit
-/.phpunit.result.cache
-/phpunit.xml

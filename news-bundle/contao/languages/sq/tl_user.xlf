@@ -1,0 +1,40 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="sq">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>Arkivet e lajmeve</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Zgjedhoni arkivin e lajmeve, të cilën doni ta aktivizoni për përdoruesin.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.0">
+        <source>News archive permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news archive permissions.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeeds.0">
+        <source>Allowed news feeds</source>
+        <target>Burimet e lajmeve të lejuara</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeeds.1">
+        <source>Here you can grant access to one or more news feeds.</source>
+        <target>Këtu mund të epeni qasje për një apo më shumë furnizim lajmesh.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeedp.0">
+        <source>News feed permissions</source>
+        <target>Drejtat e burimeve të lajmeve</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeedp.1">
+        <source>Here you can define the news feed permissions.</source>
+        <target>Këtu mund të përcaktohen lejet për furnizimin e lajmeve.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news_legend">
+        <source>News permissions</source>
+        <target>Auorizimet e lajmeve</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
+use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
@@ -19,6 +20,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -37,6 +39,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
@@ -44,9 +47,11 @@ use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
+use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Nyholm\Psr7\Uri;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
@@ -64,6 +69,10 @@ class ContentElementTestCase extends TestCase
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+    final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
+    final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
+    final public const ARTICLE1 = 123;
+    final public const PAGE1 = 5;
 
     protected function tearDown(): void
     {
@@ -140,6 +149,7 @@ class ContentElementTestCase extends TestCase
 
         $controller->setFragmentOptions([
             'template' => $template ?? "content_element/{$modelData['type']}",
+            'type' => $modelData['type'],
         ]);
 
         $response = $controller(new Request(), $model, 'main');
@@ -198,7 +208,7 @@ class ContentElementTestCase extends TestCase
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
     {
-        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../src/Resources');
+        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
         $templateLocator = new TemplateLocator(
             '',
@@ -258,12 +268,14 @@ class ContentElementTestCase extends TestCase
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $framework = $this->getDefaultFramework();
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
+                FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
             ])
         );
 
@@ -285,12 +297,43 @@ class ContentElementTestCase extends TestCase
             ->willReturnCallback(
                 static function (Uuid $uuid): FilesystemItem|null {
                     $storageMap = [
-                        self::FILE_IMAGE1 => new FilesystemItem(true, 'image1.jpg'),
+                        self::FILE_IMAGE1 => new FilesystemItem(
+                            true,
+                            'image1.jpg',
+                            123456,
+                            1024,
+                            'image/jpg',
+                            [
+                                'metadata' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
+                                    ['en']
+                                ),
+                            ],
+                        ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),
+                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv'),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
+                }
+            )
+        ;
+
+        $storage
+            ->method('generatePublicUri')
+            ->willReturnCallback(
+                static function (string $path): Uri|null {
+                    $publicUriMap = [
+                        'image1.jpg' => new Uri('https://example.com/files/image1.jpg'),
+                        'image2.jpg' => new Uri('https://example.com/files/image2.jpg'),
+                        'image3.jpg' => new Uri('https://example.com/files/image3.jpg'),
+                        'video.mp4' => new Uri('https://example.com/files/video.mp4'),
+                        'video.ogv' => new Uri('https://example.com/files/video.ogv'),
+                    ];
+
+                    return $publicUriMap[$path] ?? null;
                 }
             )
         ;
@@ -363,6 +406,14 @@ class ContentElementTestCase extends TestCase
 
     protected function getDefaultFramework(): ContaoFramework
     {
+        $GLOBALS['TL_LANG'] = [
+            'MSC' => [
+                'decimalSeparator' => '.',
+                'thousandsSeparator' => ',',
+            ],
+            'UNITS' => ['Byte'],
+        ];
+
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->method('get')
@@ -383,9 +434,32 @@ class ContentElementTestCase extends TestCase
             ->willReturnArgument(0)
         ;
 
+        $page1 = $this->mockClassWithProperties(PageModel::class);
+        $page1->id = self::PAGE1;
+
+        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter
+            ->method('findPublishedById')
+            ->willReturnCallback(static fn (int $id) => [self::PAGE1 => $page1][$id] ?? null)
+        ;
+
+        $article1 = $this->mockClassWithProperties(ArticleModel::class);
+        $article1->id = self::ARTICLE1;
+        $article1->pid = self::PAGE1;
+        $article1->title = 'A title';
+        $article1->teaser = '<p>This will tease you to read article 1.</p>';
+
+        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter
+            ->method('findPublishedById')
+            ->willReturnCallback(static fn (int $id) => [self::ARTICLE1 => $article1][$id] ?? null)
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
+            PageModel::class => $pageAdapter,
+            ArticleModel::class => $articleAdapter,
         ]);
     }
 }

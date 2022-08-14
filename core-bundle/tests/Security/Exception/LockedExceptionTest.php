@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Exception;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
 
@@ -26,9 +27,13 @@ class LockedExceptionTest extends TestCase
 
     public function testSerializesItself(): void
     {
+        $user = $this->createMock(BackendUser::class);
+
         $exception = new LockedException(300, 'foobar');
+        $exception->setUser($user);
+
         $serialized = $exception->__serialize();
-        $expected = [300, [null, [null, 0, 'foobar', __FILE__, 29]]];
+        $expected = [300, [$user, [null, 0, 'foobar', __FILE__, 32]]];
 
         $this->assertSame($expected, $serialized);
 

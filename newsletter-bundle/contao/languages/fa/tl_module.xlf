@@ -1,0 +1,110 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_module.newsletters.0">
+        <source>Subscribable newsletters</source>
+        <target>خبرنامه‌های قابل اشتراک</target>
+      </trans-unit>
+      <trans-unit id="tl_module.newsletters.1">
+        <source>Show these channels in the front end form.</source>
+        <target>این خبرنامه‌ها را در فرم بخش کاربری نشان می‌دهید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_channels.0">
+        <source>Channels</source>
+        <target>کانال‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_channels.1">
+        <source>Please select one or more channels.</source>
+        <target>لطفا یک یا چند کانال را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>متن اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>اینجا می‌توانید به عنوان مثال یادداشت حریم خصوصی را وارد کنید تا اشتراک خبرنامه با GDPR سازگار باشد.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_hideChannels.0">
+        <source>Hide channel menu</source>
+        <target>پنهان کردن منو کانال‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_hideChannels.1">
+        <source>Do not show the channel selection menu.</source>
+        <target>منو انتخاب کانال را نشان ندهید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_subscribe.0">
+        <source>Subscription message</source>
+        <target>متن اشتراک</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_subscribe.1">
+        <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
+        <target>شما می‌توانید از وایلدکارت‌ها استفاده کنید &lt;em&gt;##channels##&lt;/em&gt; (نام‌های کانال), &lt;em&gt;##domain##&lt;/em&gt; (نام دامنه) and &lt;em&gt;##link##&lt;/em&gt; (پیوند فعال‌سازی).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_unsubscribe.0">
+        <source>Unsubscription message</source>
+        <target>متن قطع اشتراک</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_unsubscribe.1">
+        <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
+        <target>شما می‌توانید فرانویسه‌های &lt;em&gt;##channels##&lt;/em&gt; (channel names) و &lt;em&gt;##domain##&lt;/em&gt; (domain name) را استفاده کنید..</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_template.0">
+        <source>Newsletter template</source>
+        <target>قالب ماژول</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_template.1">
+        <source>Here you can select a newsletter template.</source>
+        <target>اینجا می‌توانید قالب خبرنامه را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>متن اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_subscribe.0">
+        <source>Your subscription on %s</source>
+        <target>اشتراک شما در %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_subscribe.1">
+        <source>You have subscribed to the following channels on ##domain##:
+
+##channels##
+
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
+</source>
+        <target>شما در کانال‌های زیر در ##domain## مشترک شده‌اید:
+
+##channels##
+
+لطفا برای فعال کردن اشتراک‌تان لینک زیر را کلیک کنید:
+
+##link##
+
+لینک تایید برای 24 ساعت معتبر است. شما می‌توانید اشتراک‌تان هر زمانی لغو کنید.
+
+اگر شما خودتان مشترک نشده‌اید، این ایمیل را نادیده بگیرید.
+</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_unsubscribe.0">
+        <source>Your subscription on %s</source>
+        <target>اشتراک شما در %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_unsubscribe.1">
+        <source>You have unsubscribed from the following channels on ##domain##:
+
+##channels##
+</source>
+        <target>شما از کانال‌های زیر در ##domain## لغو اشتراک کرده‌اید:
+
+##channels##
+</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

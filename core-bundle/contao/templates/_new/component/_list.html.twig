@@ -1,0 +1,150 @@
+{#
+    This component outputs a generic ordered/unordered list.
+
+        <ul class="my-list">
+          <li>…</li>
+          <li>…</li>
+        </ul>
+
+    Setting "randomize_order" to true will randomize the order of list items.
+    Setting "items_per_page" to a number smaller than the amount of list items
+    will output a pagination control beneath the list.
+
+    Both of the above operations run client-side. To prevent a flash of
+    unstyled content, you may want to target the list's data-list-* attributes
+    via CSS; they are set to "ready" once initialized:
+
+        *[data-list-random]:not(*[data-list-random="ready"]) {
+            filter: blur(1em); /* blur list until shuffled */
+        }
+
+    Mandatory variables:
+        @var iterable items
+
+    Optional variables:
+        @var bool randomize_order
+        @var int limit
+        @var int items_per_page
+        @var string tag_name
+        @var \Contao\CoreBundle\String\HtmlAttributes list_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes item_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes pagination_attributes
+
+    Note:
+        You can either group all variables in an object named "list" or
+        all directly in the context. Grouping under an object has precedence.
+#}
+
+{% trans_default_domain 'contao_default' %}
+
+{% block list_component %}
+    {% set list = list|default(_context) %}
+    {% set tag_name = list.tag_name|default('ul') %}
+
+    {# Set defaults for the various display modes #}
+    {% set number_of_items = list.items|length  %}
+    {% set randomize_order = list.randomize_order is defined and list.randomize_order %}
+    {% set limit_elements = list.limit|default(0) > 0 %}
+    {% set limit = list.limit|default(number_of_items) %}
+    {% set items_per_page = list.items_per_page|default(number_of_items) %}
+    {% set number_of_pages = ((limit_elements ?: number_of_items) / items_per_page)|round(0, 'ceil') %}
+    {% set add_pagination = number_of_pages > 1 %}
+
+    {% block list %}
+        {# If the list should be shuffled, paginated or limited, add the
+           respective data-attributes. #}
+        {% set list_attributes = attrs(list.list_attributes|default)
+            .set('data-list-random', '', randomize_order)
+            .set('data-list-paginate', items_per_page ~ ',' ~ limit, add_pagination or limit_elements)
+        %}
+        <{{ tag_name }}{% block list_attributes %}{{ list_attributes }}{% endblock %}>
+        {% for item in list.items %}
+            <li{% block list_item_attributes %}{{ attrs(list.item_attributes|default) }}{% endblock %}>
+                {%- block list_item %}
+                    {# Render the content of your list item here: {{ item }} #}
+                {% endblock -%}
+            </li>
+        {% endfor %}
+        </{{ tag_name }}>
+    {% endblock %}
+
+    {% if add_pagination %}
+        {% block pagination %}
+            {% set pagination_attributes = attrs(list.pagination_attributes|default)
+                .set('data-pagination')
+                .set('aria-label', 'MSC.pagination'|trans)
+            %}
+            <nav{{ pagination_attributes }}>
+                <ol>
+                    {% for page in range(1, number_of_pages) %}
+                        <li>
+                            {% set link_attributes = attrs()
+                                .set('href', '#')
+                                .set('data-page', page)
+                                .set('title', 'MSC.goToPage'|trans([page]))
+                            %}
+                            <a{{ link_attributes }}>{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </nav>
+        {% endblock %}
+    {% endif %}
+
+    {% if randomize_order or add_pagination or limit_elements %}
+        {% block list_script %}
+            {% add "list_script" to body %}
+                <script>
+                    {# Shuffle lists #}
+                    document.querySelectorAll('*[data-list-random]').forEach(list => {
+                        {# Shuffle order of children by appending them at a random position. #}
+                        for (let i = list.children.length; i >= 0; i--) {
+                            list.appendChild(list.children[Math.floor(Math.random() * i)]);
+                        }
+
+                        list.dataset.listRandom = 'ready';
+                    })
+
+                    {# Apply pagination #}
+                    document.querySelectorAll('*[data-list-paginate]').forEach(list => {
+                        const [items_per_page, max_items] = list.dataset.listPaginate.split(',').map(v => Number(v));
+                        const list_elements = list.querySelectorAll('li');
+                        const pagination = list.parentElement.querySelector('*[data-pagination]');
+                        const pagination_elements = pagination ? pagination.querySelectorAll('*[data-page]') : [];
+
+                        const show_list_element = (element, active) => {
+                            {% block pagination_script_show_element %}
+                                element.style.display = active ? 'revert' : 'none';
+                            {% endblock %}
+                        };
+
+                        const select_nav_element = (element, active) => {
+                            {% block pagination_script_activate_selector %}
+                                element.classList.toggle('active', active);
+                            {% endblock %}
+                        };
+
+                        const paginate = page => {
+                            list_elements.forEach((element, index) => {
+                                show_list_element(element, index >= ((page - 1) * items_per_page) && index < page * items_per_page && index < max_items);
+                            });
+                            pagination_elements.forEach(element => {
+                                select_nav_element(element, Number(element.dataset.page) === page)
+                            });
+                        };
+
+                        pagination_elements.forEach(pagination_element => {
+                            pagination_element.addEventListener('click', e => {
+                                e.preventDefault();
+                                paginate(Number(pagination_element.dataset.page));
+                            });
+                        });
+
+                        paginate(1);
+                        list.dataset.listPaginate = 'ready';
+                    });
+                </script>
+            {% endadd %}
+        {% endblock %}
+    {% endif %}
+{% endblock %}

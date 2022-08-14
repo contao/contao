@@ -13,20 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:backup:restore',
+    description: 'Restores a database backup.'
+)]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
-    protected static $defaultName = 'contao:backup:restore';
-    protected static $defaultDescription = 'Restores a database backup.';
-
     protected function configure(): void
     {
         parent::configure();

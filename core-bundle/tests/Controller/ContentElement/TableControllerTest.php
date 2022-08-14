@@ -37,7 +37,7 @@ class TableControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/table">
+            <div class="content-table">
                 <table>
                     <caption>My caption</caption>
                     <tbody>
@@ -80,7 +80,7 @@ class TableControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/table">
+            <div class="content-table">
                 <table data-sortable-table="{&quot;descending&quot;:false}">
                     <thead>
                         <tr>
