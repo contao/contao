@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'select',

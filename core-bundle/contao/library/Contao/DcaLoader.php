@@ -72,6 +72,11 @@ class DcaLoader extends Controller
 				throw static::$arrLoaded['dcaFiles'][$this->strTable];
 			}
 
+			if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
+			{
+				trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA has has been deprecated and will throw an exception in Contao 6.0.');
+			}
+
 			return;
 		}
 
@@ -86,6 +91,11 @@ class DcaLoader extends Controller
 			static::$arrLoaded['dcaFiles'][$this->strTable] = $e;
 
 			throw $e;
+		}
+
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA has has been deprecated and will throw an exception in Contao 6.0.');
 		}
 	}
 

@@ -636,7 +636,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Use array_key_exists here (see #5252)
 			if (\array_key_exists('default', $v))
 			{
-				$this->set[$k] = \is_array($v['default']) ? serialize($v['default']) : $v['default'];
+				$default = $v['default'];
+
+				if ($default instanceof \Closure)
+				{
+					$default = $default($this);
+				}
+
+				$this->set[$k] = \is_array($default) ? serialize($default) : $default;
 			}
 		}
 
@@ -913,7 +920,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Use array_key_exists to allow NULL (see #5252)
 						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k] ?? array()))
 						{
-							$v = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default'];
+							$default = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default'];
+
+							if ($default instanceof \Closure)
+							{
+								$default = $default($this);
+							}
+
+							$v = \is_array($default) ? serialize($default) : $default;
 						}
 					}
 
@@ -1109,7 +1123,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							// Use array_key_exists to allow NULL (see #5252)
 							if (\array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk] ?? array()))
 							{
-								$vv = \is_array($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) ? serialize($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) : $GLOBALS['TL_DCA'][$v]['fields'][$kk]['default'];
+								$default = $GLOBALS['TL_DCA'][$v]['fields'][$kk]['default'];
+
+								if ($default instanceof \Closure)
+								{
+									$default = $default($this);
+								}
+
+								$vv = \is_array($default) ? serialize($default) : $default;
 							}
 						}
 
@@ -2458,7 +2479,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Set the default value and try to load the current value from DB (see #5252)
 						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
 						{
-							$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
+							$default = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
+
+							if ($default instanceof \Closure)
+							{
+								$default = $default($this);
+							}
+
+							$this->varValue = \is_array($default) ? serialize($default) : $default;
 						}
 
 						if (($currentRecord[$v] ?? null) !== false)
