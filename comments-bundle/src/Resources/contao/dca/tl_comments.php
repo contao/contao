@@ -324,7 +324,7 @@ class tl_comments extends Contao\Backend
 	public function notifyOfReply(Contao\DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
-		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
+		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifiedReply)
 		{
 			return;
 		}
