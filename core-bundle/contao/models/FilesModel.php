@@ -154,7 +154,7 @@ class FilesModel extends Model
 			$intPid = StringUtil::uuidToBin($intPid);
 		}
 
-		return static::findBy(array("$t.pid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
+		return static::findBy(array("$t.pid=UNHEX(?)"), bin2hex((string) $intPid), $arrOptions);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class FilesModel extends Model
 			}
 		}
 
-		return static::findOneBy(array("$t.uuid=UNHEX(?)"), bin2hex($strUuid), $arrOptions);
+		return static::findOneBy(array("$t.uuid=UNHEX(?)"), bin2hex((string) $strUuid), $arrOptions);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class FilesModel extends Model
 				$v = StringUtil::uuidToBin($v);
 			}
 
-			$arrUuids[$k] = "UNHEX('" . bin2hex($v) . "')";
+			$arrUuids[$k] = "UNHEX('" . bin2hex((string) $v) . "')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -354,7 +354,7 @@ class FilesModel extends Model
 				$v = StringUtil::uuidToBin($v);
 			}
 
-			$arrUuids[$k] = "UNHEX('" . bin2hex($v) . "')";
+			$arrUuids[$k] = "UNHEX('" . bin2hex((string) $v) . "')";
 		}
 
 		if (!isset($arrOptions['order']))

@@ -189,7 +189,7 @@ class FormSelect extends Widget
 		// Make sure there are no multiple options in single mode
 		elseif (\is_array($this->varValue))
 		{
-			$this->varValue = $this->varValue[0];
+			$this->varValue = $this->varValue[0] ?? null;
 		}
 
 		// Chosen

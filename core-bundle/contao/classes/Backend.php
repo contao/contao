@@ -310,7 +310,7 @@ abstract class Backend extends Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback'] ?? null))
+		elseif (isset($arrModule['callback']) && class_exists($arrModule['callback']))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
