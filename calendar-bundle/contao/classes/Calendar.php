@@ -207,7 +207,7 @@ class Calendar extends Frontend
 
 						if ($intStartTime >= $time)
 						{
-							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl, '', true);
+							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl, true);
 						}
 					}
 				}
@@ -328,10 +328,9 @@ class Calendar extends Frontend
 	 * @param integer             $intStart
 	 * @param integer             $intEnd
 	 * @param string              $strUrl
-	 * @param string              $strBase
 	 * @param boolean             $isRepeated
 	 */
-	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='', $isRepeated=false)
+	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $isRepeated=false)
 	{
 		if ($intEnd < time())
 		{
@@ -371,12 +370,6 @@ class Calendar extends Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
-
-		// Backwards compatibility (see #8329)
-		if ($strBase && !preg_match('#^https?://#', $strUrl))
-		{
-			$strUrl = $strBase . $strUrl;
-		}
 
 		$link = '';
 
