@@ -83,8 +83,8 @@ class PageUrlListener
 
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'] ?? null,
-            $currentRecord['id'] ?? null,
+            $currentRecord['title'] ?? '',
+            (int) ($currentRecord['id'] ?? null),
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
