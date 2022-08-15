@@ -27,7 +27,7 @@ return static function (ContainerConfigurator $configurator) use ($container): v
     }
 
     $config = $configurator->services();
-    $config->defaults()->autowire(true)->autoconfigure(true);
+    $config->defaults()->autowire()->autoconfigure();
 
     $servicesDir = $container->getParameter('kernel.project_dir').'/src';
 
