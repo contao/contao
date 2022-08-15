@@ -190,8 +190,8 @@
         <target>Individuelle URL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Hier können Sie eine individuelle kanonische URL setzen.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Hier können Sie eine individuelle kanonische URL wie z. B. https://example.com/ setzen.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
