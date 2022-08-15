@@ -746,9 +746,15 @@ a.tl_submit {
 	height: 6px;
 	position: absolute;
 	top: -13px;
+	left: 9px;
 	border-left: 7px solid transparent;
 	border-right: 7px solid transparent;
 	border-bottom: 7px solid var(--invert-bg);
+}
+
+.tip--rtl:before {
+	left: auto;
+	right: 9px;
 }
 
 /* Row highlighting */
