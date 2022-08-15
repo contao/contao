@@ -20,7 +20,10 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -71,7 +74,7 @@ class MigrateCommand extends Command
             if ($errors = $this->compileConfigurationErrors()) {
                 if ($asJson) {
                     foreach ($errors as $message) {
-                        $this->writeNdjson('error', ['message' => $message]);
+                        $this->writeNdjson('problem', ['message' => $message]);
                     }
                 } else {
                     foreach ($errors as $error) {
@@ -109,6 +112,16 @@ class MigrateCommand extends Command
     private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
+
+        // Return early if there is no work to be done
+        if (!$this->migrations->hasPending()) {
+            if (!$asJson) {
+                $this->io->info('Database dump skipped because there are no migrations to execute.');
+            }
+
+            return true;
+        }
+
         $config = $this->backupManager->createCreateConfig();
 
         if (!$asJson) {
@@ -155,6 +168,10 @@ class MigrateCommand extends Command
 
         if ($asJson && !$dryRun && $input->isInteractive()) {
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
+        }
+
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
         }
 
         if ($input->getOption('migrations-only')) {
@@ -419,7 +436,8 @@ class MigrateCommand extends Command
     {
         $this->io->writeln(
             json_encode(
-                array_merge(['type' => $type], $data, ['type' => $type]),
+                // make sure $type is the first in array but always wins
+                ['type' => $type] + $data,
                 JSON_INVALID_UTF8_SUBSTITUTE
             )
         );
@@ -640,5 +658,44 @@ class MigrateCommand extends Command
         }
 
         return $warnings;
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        $driverConnection = $this->connection->getNativeConnection();
+
+        if (!$driverConnection instanceof ServerInfoAwareConnection) {
+            return true;
+        }
+
+        $driver = $this->connection->getDriver();
+
+        if (!$driver instanceof VersionAwarePlatformDriver) {
+            return true;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+
+        /** @var AbstractPlatform $currentPlatform */
+        $currentPlatform = $this->connection->getDatabasePlatform();
+
+        if ($correctPlatform::class === $currentPlatform::class) {
+            return true;
+        }
+
+        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+
+        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
+            $message .= sprintf(', currently set to "%s"', $currentVersion);
+        }
+
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }

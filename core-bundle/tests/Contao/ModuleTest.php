@@ -27,7 +27,6 @@ use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -37,18 +36,7 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
-        ;
-
         $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
-        ;
-
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)

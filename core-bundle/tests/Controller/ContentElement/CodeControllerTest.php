@@ -34,7 +34,7 @@ class CodeControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div id="my-id" class="my-class content_element/code">
+            <div id="my-id" class="my-class content-code">
                 <h1>Some Code</h1>
                 <pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span></span>{}</code></pre>
             </div>
@@ -72,7 +72,7 @@ class CodeControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div id="my-id" class="my-class content_element/code">
+            <div id="my-id" class="my-class content-code">
                 <h1>Some Code</h1>
                 <pre>&lt;?php class Foo{}</pre>
             </div>

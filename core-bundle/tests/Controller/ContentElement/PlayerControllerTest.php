@@ -34,7 +34,7 @@ class PlayerControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/player">
+            <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
                         <source src="https://example.com/files/video.mp4">
@@ -75,7 +75,7 @@ class PlayerControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/player">
+            <div class="content-player">
                 <ul>
                     <li>
                         <span>video.mp4</span> <span class="size">(0.0 Byte)</span>

@@ -304,13 +304,13 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if (Input::isPost() && Environment::get('isAjaxRequest'))
+		if (Input::post('action') && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback'] ?? null))
+		elseif (isset($arrModule['callback']) && class_exists($arrModule['callback']))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);

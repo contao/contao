@@ -136,7 +136,7 @@ class FormTextarea extends Widget
 				return $this->intRows;
 
 			case 'value':
-				return str_replace('\n', "\n", $this->varValue);
+				return str_replace('\n', "\n", (string) $this->varValue);
 
 			case 'rawValue':
 				return $this->varValue;

@@ -163,7 +163,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/markdown">
+            <div class="content-markdown">
                 <h2>Headline</h2>
                     <ul>
                         <li>my</li>

@@ -791,7 +791,7 @@ abstract class Widget extends Controller
 			return $varInput;
 		}
 
-		if (!$this->doNotTrim)
+		if (!$this->doNotTrim && \is_string($varInput))
 		{
 			$varInput = trim($varInput);
 		}
