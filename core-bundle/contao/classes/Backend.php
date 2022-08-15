@@ -304,7 +304,7 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if (Input::isPost() && Environment::get('isAjaxRequest'))
+		if (Input::post('action') && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}

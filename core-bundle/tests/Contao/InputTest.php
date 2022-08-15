@@ -918,5 +918,9 @@ class InputTest extends TestCase
         $this->assertSame(['123', 'key2'], Input::getKeys());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->push(new Request($data, [], [], [], [], ['REQUEST_METHOD' => 'POST']));
+
+        $this->assertTrue(Input::isPost(), 'isPost() should return true, even if the post data was empty');
     }
 }
