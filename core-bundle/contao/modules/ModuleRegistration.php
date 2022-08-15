@@ -606,7 +606,7 @@ class ModuleRegistration extends Module
 		// Add user details
 		foreach ($arrData as $k=>$v)
 		{
-			if ($k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
+			if ($k == 'id' || $k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
 			{
 				continue;
 			}
@@ -618,7 +618,7 @@ class ModuleRegistration extends Module
 				$v = Date::parse(Config::get('dateFormat'), $v);
 			}
 
-			$strData .= $GLOBALS['TL_LANG']['tl_member'][$k][0] . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
+			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";

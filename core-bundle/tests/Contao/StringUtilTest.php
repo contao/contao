@@ -293,9 +293,16 @@ class StringUtilTest extends TestCase
      */
     public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
+        $prevSubstituteCharacter = mb_substitute_character();
+
+        // Enforce substitute character for these tests (see #5011)
+        mb_substitute_character(0x3F);
+
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
         $this->assertSame($expected, $result);
+
+        mb_substitute_character($prevSubstituteCharacter);
     }
 
     public function validEncodingsProvider(): \Generator

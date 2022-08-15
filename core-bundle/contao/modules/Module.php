@@ -453,6 +453,13 @@ abstract class Module extends Frontend
 			$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 		}
 
+		// Tag the page
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_page.' . $objSubpage->id));
+		}
+
 		return $row;
 	}
 

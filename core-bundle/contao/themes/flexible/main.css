@@ -1208,14 +1208,6 @@ table.tl_listing {
 	opacity: 0.5;
 }
 
-.draft-label {
-	position: absolute;
-	width: 100%;
-	top: calc(50% - 7px);
-	left: 0;
-	text-align: center;
-}
-
 .parent_view > ul {
 	background: #f3f3f5;
 }

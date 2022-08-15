@@ -570,7 +570,7 @@ abstract class System
 	 */
 	public static function urlEncode($strPath)
 	{
-		return str_replace('%2F', '/', rawurlencode($strPath));
+		return str_replace('%2F', '/', rawurlencode((string) $strPath));
 	}
 
 	/**

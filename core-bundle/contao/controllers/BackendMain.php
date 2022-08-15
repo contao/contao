@@ -108,7 +108,7 @@ class BackendMain extends Backend
 		$this->Template->main = '';
 
 		// Ajax request
-		if (Input::isPost() && Environment::get('isAjaxRequest'))
+		if (Input::post('action') && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
