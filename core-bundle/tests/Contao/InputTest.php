@@ -921,6 +921,6 @@ class InputTest extends TestCase
 
         $stack->push(new Request($data, [], [], [], [], ['REQUEST_METHOD' => 'POST']));
 
-        $this->assertFalse(Input::isPost(), 'isPost() should return false if the post data was empty');
+        $this->assertTrue(Input::isPost(), 'isPost() should return true, even if the post data was empty');
     }
 }

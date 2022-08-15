@@ -221,13 +221,13 @@ class Input
 	}
 
 	/**
-	 * Return true if the request is a non-empty POST request
+	 * Return true if the request is a POST request
 	 */
 	public static function isPost(): bool
 	{
 		if ($request = static::getRequest())
 		{
-			return $request->isMethod('POST') && $request->request->count();
+			return $request->isMethod('POST');
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
