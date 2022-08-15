@@ -62,16 +62,14 @@
         <target>Cidade</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
-        <target>Favor inserir o nome da sua cidade.</target>
+        <source>Please enter the name of the city.</source>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
         <target>Estado</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
-        <target>Favor inserir o nome do seu estado.</target>
+        <source>Please enter the name of the state.</source>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>

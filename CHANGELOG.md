@@ -2,6 +2,36 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.7] (2022-08-15)
+
+**Fixed issues:**
+
+- [#5112] Allow subpalettes based on value 0 in case of selects ([dennisbohn])
+- [#5142] Support pid foreign keys in DC_Table ([richardhj])
+- [#5104] Skip the database backup in contao:migrate command if there is no work to do ([qzminski])
+- [#5092] Check database version in migrate command ([ausi])
+- [#4979] Fix legacy routing matcher not matching the route if page has no alias ([qzminski])
+- [#5064] Deprecate the MAILER_URL environment variable ([aschempp])
+- [#4988] Redirect to fragment URL on preview URL error ([aschempp])
+- [#5009] Keep the ResponseContextAccessor available for autowiring ([aschempp])
+- [#5061] Improve canonical URL help text ([ausi])
+- [#5129] Handle non-existing table in DcaExtractor ([aschempp])
+- [#5108] Do not override manually defined ptable configuration ([dmolineus])
+- [#5016] Fix several argument warnings on PHP methods ([aschempp])
+- [#5095] Don’t use deprecated getIdentifierQuoteCharacter() ([ausi])
+- [#5098] Fix compatibility with doctrine/dbal 3.3.8 ([ausi])
+- [#5071] Deprecate noCache parameter of DcaLoader ([ausi])
+- [#5059] Fix illegal string offsets in the translator ([ausi])
+- [#5026] Also set collation for database.sql files ([fritzmg])
+- [#5020] Fix wrong UUID being applied when moving resources ([m-vo])
+- [#4965] Use cache_suffix for TinyMCE ([fritzmg])
+- [#4973] Deprecate the importUser hook ([bytehead])
+- [#4957] Fixed str_replace errors when passing null ([aschempp])
+- [#4961] Always set both collate and collation to the same value ([fritzmg])
+- [#4952] Allow iterating FilesystemItemIterator multiple times ([m-vo])
+- [#4933] Do not set header in Ajax::executePostActions ([fritzmg])
+- [#4948] Fix potential PHP 8 warnings when resizing an uploaded image ([qzminski])
+
 ## [4.13.6] (2022-07-05)
 
 **Fixed issues:**
@@ -420,6 +450,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.7]: https://github.com/contao/contao/releases/tag/4.13.7
 [4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
 [4.13.5]: https://github.com/contao/contao/releases/tag/4.13.5
 [4.13.4]: https://github.com/contao/contao/releases/tag/4.13.4
@@ -456,6 +487,31 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5112]: https://github.com/contao/contao/pull/5112
+[#5142]: https://github.com/contao/contao/pull/5142
+[#5104]: https://github.com/contao/contao/pull/5104
+[#5092]: https://github.com/contao/contao/pull/5092
+[#4979]: https://github.com/contao/contao/pull/4979
+[#5064]: https://github.com/contao/contao/pull/5064
+[#4988]: https://github.com/contao/contao/pull/4988
+[#5009]: https://github.com/contao/contao/pull/5009
+[#5061]: https://github.com/contao/contao/pull/5061
+[#5129]: https://github.com/contao/contao/pull/5129
+[#5108]: https://github.com/contao/contao/pull/5108
+[#5016]: https://github.com/contao/contao/pull/5016
+[#5095]: https://github.com/contao/contao/pull/5095
+[#5098]: https://github.com/contao/contao/pull/5098
+[#5071]: https://github.com/contao/contao/pull/5071
+[#5059]: https://github.com/contao/contao/pull/5059
+[#5026]: https://github.com/contao/contao/pull/5026
+[#5020]: https://github.com/contao/contao/pull/5020
+[#4965]: https://github.com/contao/contao/pull/4965
+[#4973]: https://github.com/contao/contao/pull/4973
+[#4957]: https://github.com/contao/contao/pull/4957
+[#4961]: https://github.com/contao/contao/pull/4961
+[#4952]: https://github.com/contao/contao/pull/4952
+[#4933]: https://github.com/contao/contao/pull/4933
+[#4948]: https://github.com/contao/contao/pull/4948
 [#4941]: https://github.com/contao/contao/pull/4941
 [#4932]: https://github.com/contao/contao/pull/4932
 [#4808]: https://github.com/contao/contao/pull/4808

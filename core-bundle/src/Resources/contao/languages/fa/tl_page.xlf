@@ -190,8 +190,7 @@
         <target>URL اختصاصی</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>اینجا می‌توانید بک URL کانونیکال اختصاصی تنظیم کنید.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
