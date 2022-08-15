@@ -54,7 +54,7 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addField(array|string $name, array|string $parent = null, string $position = self::POSITION_AFTER, \Closure|array|string|null $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
+    public function addField(array|string $name, array|string|null $parent = null, string $position = self::POSITION_AFTER, \Closure|array|string|null $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
