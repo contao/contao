@@ -671,7 +671,7 @@ class Versions extends Controller
 								   ->execute(...$params);
 
 		$security = System::getContainer()->get('security.helper');
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		while ($objVersions->next())
 		{
