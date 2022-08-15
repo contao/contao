@@ -950,7 +950,7 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Controller::addStaticUrlTo(Image::getPath($icon)) . '" data-icon-disabled="' . Controller::addStaticUrlTo(Image::getPath($_icon)) . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1176,7 +1176,7 @@ abstract class DataContainer extends Backend
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Controller::addStaticUrlTo(Image::getPath($icon)) . '" data-icon-disabled="' . Controller::addStaticUrlTo(Image::getPath($_icon)) . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{

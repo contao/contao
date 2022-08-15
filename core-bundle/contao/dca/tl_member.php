@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -435,9 +434,9 @@ class tl_member extends Backend
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
-			Controller::addStaticUrlTo(Image::getPath($image)),
-			Controller::addStaticUrlTo(Image::getPath($disabled ? $image : rtrim($image, '_'))),
-			Controller::addStaticUrlTo(Image::getPath(rtrim($image, '_') . '_'))
+			Image::getUrl($image),
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_')
 		);
 
 		return $args;
