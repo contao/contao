@@ -24,6 +24,12 @@ class ModuleNewsletterList extends Module
 	protected $strTemplate = 'mod_newsletterlist';
 
 	/**
+	 * Page cache array
+	 * @var array
+	 */
+	private static $arrPageCache = array();
+
+	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -97,7 +103,7 @@ class ModuleNewsletterList extends Module
 					continue;
 				}
 
-				if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
+				if (($objJumpTo = $this->getPageWithDetails($jumpTo)) instanceof PageModel)
 				{
 					/** @var PageModel $objJumpTo */
 					$strUrl = $objJumpTo->getFrontendUrl('/' . ($objNewsletter->alias ?: $objNewsletter->id));
@@ -130,5 +136,21 @@ class ModuleNewsletterList extends Module
 		}
 
 		$this->Template->newsletters = $arrNewsletter;
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 *
+	 * @param  integer        $intPageId
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (!isset(self::$arrPageCache[$intPageId]))
+		{
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+		}
+
+		return self::$arrPageCache[$intPageId];
 	}
 }

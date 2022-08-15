@@ -25,6 +25,12 @@ class ModuleFaqList extends Module
 	protected $strTemplate = 'mod_faqlist';
 
 	/**
+	 * Page cache array
+	 * @var array
+	 */
+	private static $arrPageCache = array();
+
+	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -134,12 +140,28 @@ class ModuleFaqList extends Module
 			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
-		if ($jumpTo && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
+		if ($jumpTo && ($objTarget = $this->getPageWithDetails($jumpTo)) !== null)
 		{
 			/** @var PageModel $objTarget */
 			return StringUtil::ampersand($objTarget->getFrontendUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 		}
 
 		return StringUtil::ampersand(Environment::get('requestUri'));
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 *
+	 * @param  integer        $intPageId
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (!isset(self::$arrPageCache[$intPageId]))
+		{
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+		}
+
+		return self::$arrPageCache[$intPageId];
 	}
 }
