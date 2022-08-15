@@ -19,6 +19,13 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class MigrationCollectionTest extends TestCase
 {
+    public function testHasPendingMigrations(): void
+    {
+        $migrations = new MigrationCollection($this->getMigrationServices());
+
+        $this->assertTrue($migrations->hasPending());
+    }
+
     public function testGetPendingNames(): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());

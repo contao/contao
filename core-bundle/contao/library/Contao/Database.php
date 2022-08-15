@@ -458,15 +458,17 @@ class Database
 	public function isUniqueValue($strTable, $strField, $varValue, $intId=null)
 	{
 		$strQuery = "SELECT * FROM $strTable WHERE " . static::quoteIdentifier($strField) . "=?";
+		$params = array($varValue);
 
 		if ($intId !== null)
 		{
 			$strQuery .= " AND id!=?";
+			$params[] = $intId;
 		}
 
 		$objUnique = $this->prepare($strQuery)
 						  ->limit(1)
-						  ->execute($varValue, $intId);
+						  ->execute(...$params);
 
 		return $objUnique->numRows ? false : true;
 	}
@@ -689,20 +691,7 @@ class Database
 	 */
 	public static function quoteIdentifier($strName)
 	{
-		static $strQuoteCharacter = null;
-
-		if ($strQuoteCharacter === null)
-		{
-			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter() ?? '"';
-		}
-
-		// The identifier is quoted already
-		if (strncmp($strName, $strQuoteCharacter, 1) === 0)
-		{
-			return $strName;
-		}
-
-		// Not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+		// Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
 		if (!preg_match('/^[A-Za-z0-9_$.]+$/', $strName))
 		{
 			return $strName;

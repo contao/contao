@@ -140,13 +140,15 @@ abstract class Backend extends Controller
 			case 'json':
 			case 'less':
 			case 'mysql':
-			case 'php':
 			case 'scss':
 			case 'sql':
 			case 'twig':
 			case 'xml':
-			case 'yaml':
 				return $ext;
+
+			case 'yml':
+			case 'yaml':
+				return 'yaml';
 
 			case 'js':
 			case 'javascript':
@@ -170,8 +172,8 @@ abstract class Backend extends Controller
 			case 'h': case 'hh': case 'hpp': case 'h++':
 				return 'c_cpp';
 
+			case 'php':
 			case 'html5':
-			case 'xhtml':
 				return 'php';
 
 			case 'svg':
@@ -308,7 +310,7 @@ abstract class Backend extends Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback'] ?? null))
+		elseif (isset($arrModule['callback']) && class_exists($arrModule['callback']))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);

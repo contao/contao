@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
@@ -34,12 +34,11 @@
         <target>Beheer thema's, front-endmodules, paginalay-outs of afbeeldingsformaten</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-        <target>Site-structuur</target>
+        <source>Pages</source>
+        <target>Pagina's</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
-        <target>Structuur van de website(s) opzetten en beheren.</target>
+        <source>Set up the pages of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,8 +49,7 @@
         <target>Aangepaste sjablonen toevoegen of bewerken</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>Account beheerder</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -98,8 +96,8 @@
         <target>Systeem</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-        <target>Bestandsbeheer</target>
+        <source>Files</source>
+        <target>Bestanden</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -123,9 +121,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Voorbeeldlinks</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Beheer voorbeeldlinks voor de front-end.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -183,18 +183,6 @@
         <source>Front end modules</source>
         <target>Front-end modules</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-        <target>Opmaak definities</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Style sheets</target>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-        <target>Style sheets</target>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Front-end modules</target>
@@ -224,8 +212,7 @@
         <target>Navigatiemenu</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
-        <target>Genereert het navigatiemenu van de website.</target>
+        <source>Generates a navigation menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -248,8 +235,7 @@
         <target>Snelmenu</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
-        <target>Genereert een drop-down menu van (een deel van) de site-structuur.</target>
+        <source>Generates a drop-down menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -280,8 +266,7 @@
         <target>HTML sitemap</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
-        <target>Toont alle beschikbare pagina's.</target>
+        <source>Generates a list of all pages</source>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -391,12 +376,21 @@
         <source>Allows you to add custom HTML code</source>
         <target>Voegt uw eigen HTML code toe.</target>
       </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Ongefilterde HTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Hiermee kunt u aangepaste, ongefilterde HTML code toevoegen</target>
+      </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
         <target>Custom template</target>
       </trans-unit>
       <trans-unit id="FMD.template.1">
         <source>Generates a module to insert a custom template.</source>
+        <target>Genereert een module om een aangepaste template in te voegen.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
@@ -416,9 +410,10 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Root pagina-afhankelijke modules</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
-        <source>Generates different modules depending on the root page</source>
+        <source>Generates different modules depending on the website root page</source>
       </trans-unit>
     </body>
   </file>

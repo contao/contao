@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
@@ -34,12 +34,12 @@
         <target>Spravovat vzhledy, frontendové moduly, vzhledy stránek nebo rozměry obrázků</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-        <target>Struktura stránek</target>
+        <source>Pages</source>
+        <target>Stránky</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
-        <target>Tento modul umožňuje nastavit strukturu stránek Vaší webové stránky.</target>
+        <source>Set up the pages of your website(s)</source>
+        <target>Nastavte stránky svého webu (webů)</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,8 +50,7 @@
         <target>Přidat nebo upravit vlastní předlohy</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>Manažer účtů</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -98,8 +97,8 @@
         <target>Systém</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-        <target>Manažer souborů</target>
+        <source>Files</source>
+        <target>Soubory</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -123,9 +122,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Odkaz náhledu</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Spravovat odkazy náhledu pro frontend</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -184,18 +185,6 @@
         <source>Front end modules</source>
         <target>Muduly frontendu</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-        <target>Definice formátu</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Kaskádovité styly</target>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-        <target>Kaskádovité styly</target>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Muduly frontendu</target>
@@ -225,8 +214,8 @@
         <target>Navigační menu</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
-        <target>generuje navigační menu ze struktury stránek.</target>
+        <source>Generates a navigation menu from the pages</source>
+        <target>Vygeneruje navigační nabídku ze stránek</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -249,8 +238,8 @@
         <target>Rychlá navigace</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
-        <target>vytvoří rozbalovací menu ze struktury stránek.</target>
+        <source>Generates a drop-down menu from the pages</source>
+        <target>Vygeneruje rozbalovací nabídku ze stránek</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -281,8 +270,8 @@
         <target>Mapa stránek HTML</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
-        <target>Tento modul zobrazuje všechny dostupné stránky.</target>
+        <source>Generates a list of all pages</source>
+        <target>Vygeneruje seznam všech stránek</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -392,6 +381,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>Tento modul dovoluje použít vlastní HTML kód.</target>
       </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Nefiltrované HTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Tento modul dovoluje použít vlastní nefiltrovaný HTML kód.</target>
+      </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
         <target>Vlastní předloha</target>
@@ -418,9 +415,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Moduly závislé na kořenové stránce</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
-        <source>Generates different modules depending on the root page</source>
+        <source>Generates different modules depending on the website root page</source>
+        <target>Generuje různé moduly v závislosti na kořenové stránce webu</target>
       </trans-unit>
     </body>
   </file>

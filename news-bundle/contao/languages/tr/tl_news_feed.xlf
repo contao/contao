@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_feed.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_news_feed.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_news_feed.title.0">
         <source>Title</source>
@@ -7,23 +7,23 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.title.1">
         <source>Please enter a feed title.</source>
-        <target>Lütfen besleme başlığını giriniz.</target>
+        <target>Lütfen bir akış başlığı yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.0">
         <source>Feed alias</source>
-        <target>Besleme lakabı</target>
+        <target>Akış kısaltması</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.1">
         <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the &lt;em&gt;share&lt;/em&gt; directory of your Contao installation, e.g. as &lt;em&gt;share/name.xml&lt;/em&gt;.</source>
-        <target>Buraya benzeri olmayan bir dosya adı girebilirsiniz (uzantı olmadan). XML besleme dosyası &lt;em&gt; share &lt;/em&gt; Contao kurulum dizininde otomatik olarak oluşturulacaktır. &lt;em&gt; share/isim.xml &lt;/em&gt; gibi.</target>
+        <target>Buraya benzersiz bir dosya adı yazabilirsiniz (uzantı olmadan). Bu adı taşıyan XML akış dosyası Contao kurulumundaki &lt;em&gt;share&lt;/em&gt; klasöründe otomatik olarak oluşturulur. &lt;em&gt;share/dosyadi.xml&lt;/em&gt; gibi.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.0">
         <source>Feed language</source>
-        <target>Besleme dili</target>
+        <target>Akış dili</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>ISO-639 standardına göre beslemenin dilini yazın (&lt;em&gt;tr&lt;/em&gt; ya da &lt;em&gt;tr-tr&lt;/em&gt; ).</target>
+        <target>ISO-639 standardına göre akış dilinin kodunu yazın (&lt;em&gt;tr&lt;/em&gt; ya da &lt;em&gt;tr-tr&lt;/em&gt; ).</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.0">
         <source>News archives</source>
@@ -31,23 +31,23 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.1">
         <source>Here you can choose the news archives to be included in the feed.</source>
-        <target>Buradan beslemeye dahil edilecek haber arşivlerini seçebilirsiniz.</target>
+        <target>Buradan akışa katılacak haber arşivlerini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.format.0">
         <source>Feed format</source>
-        <target>Besleme biçimi</target>
+        <target>Akış biçimi</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.format.1">
         <source>Please choose a feed format.</source>
-        <target>Lütfen, bir besleme biçimi seçiniz.</target>
+        <target>Lütfen, bir akış biçimi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source.0">
         <source>Export settings</source>
-        <target>Aktarma ayarları</target>
+        <target>Dışa aktarma ayarları</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source.1">
         <source>Here you can choose what will be exported.</source>
-        <target>Burada aktarılacak bilgiler seçebilirsiniz.</target>
+        <target>Buradan dışa aktarılacak bilgileri seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.0">
         <source>Maximum number of items</source>
@@ -55,23 +55,23 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.1">
         <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
-        <target>Burada beslemede görüntülenecek öge sayısını belirtebilirsiniz. Tüm ögelerin gösterilmesi için 0 yazın.</target>
+        <target>Buradan akıştaki öge sayısını belirtebilirsiniz. Tüm ögelerin dışa aktarılması için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.feedBase.0">
         <source>Base URL</source>
-        <target>Temel URL</target>
+        <target>Temel adres</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.feedBase.1">
         <source>Please enter the base URL with protocol (e.g. &lt;em&gt;http://&lt;/em&gt;).</source>
-        <target>Lütfen temel URL'i iletişim protokolü ile birlikte giriniz (&lt;em&gt;http://&lt;/em&gt; gibi).</target>
+        <target>Lütfen iletişim kuralı ile temel adresi yazın (&lt;em&gt;http://&lt;/em&gt; gibi).</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.description.0">
         <source>Feed description</source>
-        <target>Besleme açıklaması</target>
+        <target>Akış açıklaması</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.description.1">
         <source>Here you can enter a short description of the news feed.</source>
-        <target>Buraya haber beslemesi için kısa bir açıklama girebilirsiniz.</target>
+        <target>Buraya haber akışının kısa açıklamasını yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.title_legend">
         <source>Title and language</source>
@@ -83,19 +83,19 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.config_legend">
         <source>Feed settings</source>
-        <target>Besleme ayarları</target>
+        <target>Akış ayarları</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.image_legend">
         <source>Image settings</source>
-        <target>Resim ayarları</target>
+        <target>Görsel ayarları</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
-        <target>Haber fragmanı</target>
+        <target>Haber tanıtımları</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_text">
         <source>Full stories</source>
-        <target>Tüm hikayeler</target>
+        <target>Tüm öyküler</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
         <source>New</source>
@@ -103,23 +103,23 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
-        <target>Yeni bir besleme oluşturun</target>
+        <target>Yeni bir akış ekle</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
-        <target>Besleme ID %s ayrıntılarını göster</target>
+        <target>%s kodlu akışın ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
-        <target>Besleme ID %s düzenle</target>
+        <target>%s kodlu akışı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
-        <target>Besleme ID %s çoğalt</target>
+        <target>%s kodlu akışı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
-        <target>Besleme ID %s sil</target>
+        <target>%s kodlu akışı sil</target>
       </trans-unit>
     </body>
   </file>

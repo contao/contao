@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
@@ -34,12 +34,11 @@
         <target>Gestisci temi, moduli front-end, layout di pagina o dimensioni delle immagini</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-        <target>Struttura sito</target>
+        <source>Pages</source>
+        <target>Pagine</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
-        <target>Definisci la struttura del tuo sito</target>
+        <source>Set up the pages of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,8 +49,7 @@
         <target>Aggiungo o modifica template personalizzati</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>Gestione account</target>
+        <source>Accounts</source>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -98,8 +96,8 @@
         <target>Sistema</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-        <target>Gestione file</target>
+        <source>Files</source>
+        <target>Files</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -185,18 +183,6 @@
         <source>Front end modules</source>
         <target>Moduli nel frontend</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-        <target>Definizione dei formati</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Fogli di stile</target>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-        <target>Fogli di stile</target>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Moduli nel frontend</target>
@@ -226,8 +212,7 @@
         <target>Menu navigazione</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
-        <target>genera un menu di navigazione dalla struttura del sito</target>
+        <source>Generates a navigation menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -250,8 +235,7 @@
         <target>Navigazione veloce</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
-        <target>genera un menu a tendina dalla struttura del sito</target>
+        <source>Generates a drop-down menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -282,8 +266,7 @@
         <target>HTML sitemap</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
-        <target>genera un elenco di tutte le pagine del sito</target>
+        <source>Generates a list of all pages</source>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -393,6 +376,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>ti permette di aggiungere codice HTML personalizzato</target>
       </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>HTML non filtrato</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Consente di aggiungere codice HTML personalizzato e non filtrato</target>
+      </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
         <target>Template personalizzato</target>
@@ -422,8 +413,7 @@
         <target>Moduli dipendenti dalla pagina principale</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
-        <source>Generates different modules depending on the root page</source>
-        <target>Genera moduli diversi a seconda della pagina principale</target>
+        <source>Generates different modules depending on the website root page</source>
       </trans-unit>
     </body>
   </file>

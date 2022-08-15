@@ -1,0 +1,59 @@
+{#
+    This component outputs a download link together with file previews if
+    enabled and available. It is intended to be used together with a
+    \Contao\CoreBundle\Filesystem\FilesystemItem object.
+
+        <a href="path/to/the/menu.pdf" title="Download Menu" type="text/pdf">Menu</a>
+        <figure>…</figure>
+        <figure>…</figure>
+
+    By default, the link text and title are derived from the file metadata and
+    file name. If you want to set them explicitly, set a "title" and/or "text"
+    variable with respective values.
+
+    Mandatory variables:
+        @var string href
+        @var \Contao\CoreBundle\Filesystem\FilesystemItem file
+
+    Optional variables:
+        @var string title
+        @var string text
+        @var \Contao\CoreBundle\String\HtmlAttributes link_attributes
+        @var bool show_file_previews
+        @var iterable<\Contao\CoreBundle\Image\Studio\Figure> file_previews
+
+    Note:
+        You can either group all variables in an object named "download" or
+        all directly in the context. Grouping under an object has precedence.
+#}
+
+{% trans_default_domain 'contao_default' %}
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% block download_component %}
+    {% set download = download|default(_context) %}
+
+    {# Derive title and link text if not explicitly set #}
+    {% set title = download.title|default(download.file.extraMetadata['metadata'].default.title|default(download.file.name)) %}
+    {% set text = download.text|default(download.file.name) %}
+
+    {% block download_link %}
+        {% set dowload_link_attributes = attrs(dowload.link_attributes|default)
+            .set('href', download.href)
+            .set('title','MSC.download'|trans([title]))
+            .setIfExists('type', download.file.mimeType|default) %}
+        <a{% block download_link_attributes %}{{ dowload_link_attributes }}{% endblock %}>
+            {%- block download_link_inner %}{{ text }}{% endblock -%}
+        </a>
+    {% endblock %}
+
+    {% if download.show_file_previews is defined and download.show_file_previews %}
+        {% block file_previews %}
+            {% for image in download.file_previews %}
+                {% block file_preview %}
+                    {% with {figure: image} %}{{ block('figure_component') }}{% endwith %}
+                {% endblock %}
+            {% endfor %}
+        {% endblock %}
+    {% endif %}
+{% endblock %}

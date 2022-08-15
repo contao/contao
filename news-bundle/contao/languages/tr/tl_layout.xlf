@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_layout.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_layout.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_layout.newsfeeds.0">
         <source>News feeds</source>
@@ -7,11 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.newsfeeds.1">
         <source>Please select the news feeds you want to add to the layout.</source>
-        <target>Sayfaya eklemek istediğiniz haber akışlarını seçin.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
-        <target>RSS/Atom akışları</target>
+        <target>Düzene eklemek istediğiniz haber akışlarını seçin.</target>
       </trans-unit>
     </body>
   </file>

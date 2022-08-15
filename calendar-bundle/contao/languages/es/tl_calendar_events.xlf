@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar_events.php" source-language="en" target-language="es">
+  <file datatype="php" original="contao/languages/en/tl_calendar_events.php" source-language="en" target-language="es">
     <body>
       <trans-unit id="tl_calendar_events.title.0">
         <source>Title</source>
@@ -213,6 +213,13 @@
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
         <target>Al hacer clic en el botón &quot;leer más ...&quot;, los visitantes serán redirigidos a una URL personalizada.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.0">
+        <source>Link text</source>
+        <target>Título del link</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.1">
+        <source>Here you can override the default &quot;read more…&quot; link text.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
         <target>Saltar a la página</target>
@@ -361,6 +368,9 @@
         <source>Edit event ID %s</source>
         <target>Editar evento con ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.children">
+        <source>Edit the content elements of event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
         <target>Duplicar evento con ID %s</target>
@@ -381,17 +391,9 @@
         <source>Feature/unfeature event ID %s</source>
         <target>ID %s de evento de función / no función</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader">
-        <source>Edit the settings of event ID %s</source>
-        <target>Edite la configuración de ID de evento %s</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Pegar en este calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta">
-        <source>Edit the event settings</source>
-        <target>Editar configuración de eventos</target>
       </trans-unit>
     </body>
   </file>

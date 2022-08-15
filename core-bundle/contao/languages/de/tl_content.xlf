@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="de">
+  <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
@@ -54,8 +54,8 @@
         <target>Metadaten überschreiben</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the metadata from the file manager.</source>
-        <target>Die Metadaten aus der Dateiverwaltung überschreiben.</target>
+        <source>Overwrite the metadata of the file.</source>
+        <target>Die Metadaten der Datei überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -81,14 +81,6 @@
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Hier können Sie den Titel des Bildes eingeben (&lt;em&gt;title&lt;/em&gt;-Attribut).</target>
       </trans-unit>
-      <trans-unit id="tl_content.imagemargin.0">
-        <source>Image margin</source>
-        <target>Bildabstand</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.1">
-        <source>Here you can enter the top, right, bottom and left margin.</source>
-        <target>Hier können Sie den oberen, rechten, unteren und linken Außenabstand eingeben.</target>
-      </trans-unit>
       <trans-unit id="tl_content.imageUrl.0">
         <source>Image link target</source>
         <target>Bildlink-Adresse</target>
@@ -103,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster öffnen.</target>
+        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuen Browserfenster öffnen.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>
@@ -128,6 +120,14 @@
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Sie können die Liste der erlaubten HTML-Tags in den Backend-Einstellungen ändern.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>HTML-Code</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Seien Sie vorsichtig, wenn Sie Dinge einfügen, die Sie nicht verstehen. Dies könnte Angreifern ermöglichen, Ihre Identität zu stehlen oder die Kontrolle über das gesamte System zu übernehmen.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -609,14 +609,6 @@
         <source>These groups will be able to see the content element.</source>
         <target>Diese Gruppen können das Inhaltselement sehen.</target>
       </trans-unit>
-      <trans-unit id="tl_content.guests.0">
-        <source>Show to guests only</source>
-        <target>Nur Gästen anzeigen</target>
-      </trans-unit>
-      <trans-unit id="tl_content.guests.1">
-        <source>Hide the content element if a member is logged in.</source>
-        <target>Das Inhaltselement verstecken, sobald ein Mitglied angemeldet ist.</target>
-      </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
         <target>CSS-ID/Klasse</target>
@@ -845,6 +837,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Die youtube-nocookie.com-Domain verwenden</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Endlosschleife</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Autoplay</target>
@@ -897,10 +893,6 @@
         <source>Edit content element ID %s</source>
         <target>Inhaltselement ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader">
-        <source>Edit the article settings</source>
-        <target>Artikeleinstellungen bearbeiten</target>
-      </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
         <target>Inhaltselement ID %s verstecken/anzeigen</target>
@@ -924,10 +916,6 @@
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Quellelement ID %s bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle">
-        <source>Edit article ID %s</source>
-        <target>Artikel ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

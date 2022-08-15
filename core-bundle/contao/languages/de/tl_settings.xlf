@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="de">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
@@ -87,19 +87,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
-        <target>List der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
+        <target>Liste der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
         <target>&lt;code&gt;*&lt;/code&gt;-Attribute können für XSS-Angriffe missbraucht werden. Erlauben Sie diese nur, wenn alle Backend-Benutzer vertrauenswürdig sind!</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.0">
-        <source>Disable request tokens</source>
-        <target>Anfrage-Tokens deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted (insecure!).</source>
-        <target>Das Anfrage-Token beim Absenden eines Formulars nicht prüfen (unsicher!).</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -108,22 +100,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Hier können Sie eine kommagetrennte Liste von Dateitypen eingeben, die über Contao heruntergeladen werden dürfen.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.0">
-        <source>Maximum GD image width</source>
-        <target>Maximale GD-Bildbreite</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.1">
-        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-        <target>Hier können Sie die maximale Bildbreite eingeben, die die GD Library zu verarbeiten versuchen soll.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.0">
-        <source>Maximum GD image height</source>
-        <target>Maximale GD-Bildhöhe</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.1">
-        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-        <target>Hier können Sie die maximale Bildhöhe eingeben, die die GD Library zu verarbeiten versuchen soll.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>

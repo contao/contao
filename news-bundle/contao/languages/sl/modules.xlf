@@ -1,17 +1,12 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="sl">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="MOD.news.0">
         <source>News</source>
         <target>Novice</target>
       </trans-unit>
       <trans-unit id="MOD.news.1">
-        <source>Manage news and export them as RSS or Atom feed</source>
-        <target>Upravljaj novice in jiih izvozi kot RSS ali Atom izvleček.</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_news_feed">
-        <source>News feeds</source>
-        <target>Izvleček novic</target>
+        <source>Manage news</source>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>

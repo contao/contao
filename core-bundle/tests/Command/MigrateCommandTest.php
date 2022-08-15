@@ -24,24 +24,38 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class MigrateCommandTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);
 
         parent::tearDown();
+    }
+
+    public function testAbortsEarlyIfThereAreNoMigrations(): void
+    {
+        $backupManager = $this->createBackupManager(false);
+
+        $command = $this->getCommand([], [], null, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
     public function testAbortsEarlyIfTheBackupFails(): void
@@ -53,7 +67,13 @@ class MigrateCommandTest extends TestCase
             ->willThrowException(new BackupManagerException('Something went terribly wrong.'))
         ;
 
-        $command = $this->getCommand([], [], null, $backupManager);
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [],
+            null,
+            $backupManager
+        );
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -386,6 +406,57 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @dataProvider getOutputFormats
+     */
+    public function testAbortsOnWrongServerVersion(string $format): void
+    {
+        $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
+        $driverConnection
+            ->method('getServerVersion')
+            ->willReturn('8.0.29')
+        ;
+
+        $connection = $this->createDefaultConnection();
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySQLPlatform())
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($this->createMock(Driver::class))
+        ;
+
+        $connection
+            ->method('getNativeConnection')
+            ->willReturn($driverConnection)
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(['serverVersion' => '5.7.39'])
+        ;
+
+        $command = $this->getCommand([], [], null, null, $connection);
+        $tester = new CommandTester($command);
+        $errorMessage = 'Wrong database version configured, please set it to "8.0.29", currently set to "5.7.39"';
+
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(1, $code);
+
+        if ('ndjson' === $format) {
+            $json = $this->jsonArrayFromNdjson($display)[0];
+
+            $this->assertSame('problem', $json['type']);
+            $this->assertSame($errorMessage, $json['message']);
+        } else {
+            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $display)));
+        }
+    }
+
+    /**
      * @dataProvider provideInvalidSqlModes
      */
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
@@ -641,13 +712,23 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
+        $migrations
+            ->method('hasPending')
+            ->willReturn((bool) \count($pendingMigrations))
+        ;
 
+        // Add empty pending migrations after mocking the hasPending() method!
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];
+
+        $migrations
+            ->method('getPending')
+            ->willReturn(...$pendingMigrations)
+        ;
 
         $migrations
             ->method('getPendingNames')

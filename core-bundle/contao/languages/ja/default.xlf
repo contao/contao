@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="ja">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="ja">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
         <target>エラーが発生しました。</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+        <target>エラーが発生したためデータを保存できませんでした!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -47,11 +51,11 @@
       </trans-unit>
       <trans-unit id="ERR.alpha">
         <source>Please enter alphabetic characters only!</source>
-        <target>半角の英文字、マイナス(-)、ドット(.)、スペース( )で入力してください。</target>
+        <target>半角の英文字で入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.alnum">
         <source>Please enter alphanumeric characters only!</source>
-        <target>半角の英数字、マイナス(-)、ドット(.)、スペース( )で入力してください。</target>
+        <target>半角の英数字で入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.phone">
         <source>Please enter a valid phone number!</source>
@@ -186,12 +190,16 @@
         <target>数字だけのエイリアスはサポートしていません!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
-        <target>&quot;%s&quot;というURLプリフィックスは既に同じドメイン名の別のルートページで使用されています!</target>
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>&quot;%s&quot;というURLプリフィックスは同じドメイン名の別のウェブサイトのルートで既に使用しています!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>&quot;%s&quot;というURLのページは既に存在します!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>このエイリアスはページ&quot;%s&quot; (ID %s)と競合を引き起こします!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -270,8 +278,8 @@
         <target>最上位のページはウェブサイトのルートでなければなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>サイト構造の最上位のページにウェブサイトのルートでないページがあります。</target>
+        <source>There are top-level pages which are not website root pages.</source>
+        <target>ウェブサイトのルートのページではない最上位のページがあります。</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -296,10 +304,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
         <target>%sに対応するデータベースの項目がありません。ファイルシステムと同期してください。</target>
-      </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Google+の数値のIDかバニティ名を入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -349,6 +353,18 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>テンプレートのパス: &quot;%s&quot;に以下の文字を含めてはなりません: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>不明なユーザー名: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>バージョン%dは現在のデータベース構造と互換性がなくなっているため復元できませんでした。手動でデータを復元してください。</target>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+        <target>終了時刻は開始時刻よりも後でなければなりません。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -391,7 +407,15 @@
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
-        <target>独自のHTMLコードを追加します。</target>
+        <target>独自のHTMLコードを追加できます。</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>フィルターしないHTML</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>独自の、フィルターしないHTMLコードを追加できます。</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -743,23 +767,23 @@
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
-        <target>外部リダイレクトのページは、ページをアクセスすると外部のウェブサイトに自動的にリダイレクトします。ハイパーリンクのように機能します。</target>
+        <target>この種類のページはアクセスすると外部のウェブサイトに自動的にリダイレクトします。ハイパーリンクのように機能します。</target>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
         <target>内部リダイレクト</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>内部リダイレクトのページは、ページをアクセスするとサイト構造内の別のページに自動的に移動します。</target>
+        <source>This type of page automatically forwards visitors to another page.</source>
+        <target>この種類のページはアクセスすると別のページに自動的に移動します。</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
         <target>ウェブサイトのルート</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>ウェブサイトのルートのページは、サイト構造内で新しいウェブサイトの開始点を示します。</target>
+        <source>This type of page marks the starting point of a new website.</source>
+        <target>この種類のページは新しいウェブサイトの開始点です。</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -798,8 +822,8 @@
         <target>503 サービスの利用不可</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
-        <target>ルートのページが保守モードのとき、503のエラーページをすべてのリクエストに表示します。</target>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>ウェブサイトのページが保守モードのときは、すべての要求に対して503のエラーページを表示します。</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -999,7 +1023,7 @@
       </trans-unit>
       <trans-unit id="MONTHS.4">
         <source>May</source>
-        <target>5</target>
+        <target>5月</target>
       </trans-unit>
       <trans-unit id="MONTHS.5">
         <source>June</source>
@@ -1318,8 +1342,8 @@
         <target>キャプション</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>ライセンス</target>
+        <source>License URL</source>
+        <target>ライセンスのURL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1341,9 +1365,13 @@
         <source>Predefined dimensions</source>
         <target>所定の寸法</target>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
-        <target>相対的な寸法</target>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+        <target>独自の寸法</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
+        <target>指定した寸法に画像の大きさを変更します。</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1351,7 +1379,7 @@
       </trans-unit>
       <trans-unit id="MSC.proportional.1">
         <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>画像の長い側を指定した寸法に調整して、画像の縦横比を保持して大きさを変更します。</target>
+        <target>画像の長い側を指定した寸法に調整して、画像の大きさを縦横比を保持して変更します。</target>
       </trans-unit>
       <trans-unit id="MSC.box.0">
         <source>Fit the box</source>
@@ -1359,23 +1387,15 @@
       </trans-unit>
       <trans-unit id="MSC.box.1">
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>画像の短い側を指定した寸法に調整して、画像の縦横比を保持して大きさを変更します。</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-        <target>正確な寸法</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>画像を指定した寸法に変更します。必要な場合は画像を切り取ります。</target>
+        <target>画像の短い側を指定した寸法に調整して、画像の大きさを縦横比を保持して変更します。</target>
       </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
-        <target>重要な部分</target>
+        <source>Crop (important part)</source>
+        <target>切り抜き(重要な部分)</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>ファイル管理で指定したように画像の重要な部分を保持します。</target>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>ファイル管理で指定した重要な部分を維持します。必要であれば、画像を切り抜きます。</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1754,8 +1774,8 @@
         <target>保存して閉じる</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
-        <target>保存して編集</target>
+        <source>Save and edit child elements</source>
+        <target>保存して子の要素を編集</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1965,10 +1985,6 @@
         <source>Contao version %s is available.</source>
         <target>Contaoバージョン%sを利用可能です。</target>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-        <target>ワードラップ</target>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
         <target>注意! 保存していない変更は失われます。続けますか?</target>
@@ -2032,22 +2048,6 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
         <target>アーティクル</target>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-        <target>ファイル管理</target>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-        <target>サイト構造</target>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-        <target>ファイル選択に戻る</target>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
-        <target>ページ選択に戻る</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2550,8 +2550,8 @@
         <target>%sをダウンロード</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
-        <target>ファイルのメタデータを入力するにはサイト構造でルートのページを追加しなければなりません。</target>
+        <source>You have to add a website root page to enter file metadata.</source>
+        <target>ファイルのメタデータを入力するにはウェブサイトのルートを追加しなければなりません。</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2655,11 +2655,11 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>テンプレートエディターにアクセス権のあるユーザーが存在します。テンプレートはPHPファイルですので、これらのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+        <target>テンプレートエディターにアクセス権のある通常ユーザーが存在します。テンプレートはPHPファイルですので、これらのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>テンプレートエディターにアクセス権のあるグループが存在します。テンプレートはPHPファイルですので、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+        <target>テンプレートエディターにアクセス権のあるユーザーグループが存在します。テンプレートはPHPファイルですので、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2667,11 +2667,19 @@
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>テーマをインポートする権限を持ったユーザーグループがあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのグループは暗黙の内にシステム全体を制御できます!</target>
+        <target>テーマをインポートする権限を持ったユーザーグループがあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>フロントエンドモジュールの「リスティング」と、その&quot;list_*&quot;の項目にアクセス権のあるユーザーグループが存在します。これらには任意のSQLの問い合わせを含めることができるため、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+        <target>フロントエンドモジュールの「リスティング」と、その&quot;list_*&quot;の項目にアクセス権のあるユーザーグループが存在します。これらには任意のSQLの問い合わせを含めることができるため、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>フィルターしないHTMLコンテント要素にアクセスを許可したユーザーグループが存在します。このコンテント要素のHTMLコードはフィルターされないので、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>フィルターしないHTMLコンテント要素にアクセスできる通常ユーザーが存在します。このコンテント要素のHTMLコードはフィルターされないので、これらのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2680,10 +2688,6 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>無効</target>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページのレイアウトに再追加することをご検討ください。</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2756,6 +2760,30 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
         <target>マニュアル</target>
+      </trans-unit>
+      <trans-unit id="MSC.draft">
+        <source>Draft</source>
+        <target>下書き</target>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+        <target>動画を読み込むにはクリックしてください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+        <target>%sにあなたのIPアドレスを送信します。</target>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+        <target>%sから表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+        <target>%sまで表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
+        <target>%sから%sまで表示</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2925,13 +2953,9 @@
         <source>Drag element ID %s</source>
         <target>ID %sの要素の詳細をドラッグ</target>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-        <target>要素の設定を変更</target>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
-        <target>ID %sの要素の設定を変更</target>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
+        <target>ID %sの要素の子の要素を編集</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2966,8 +2990,8 @@
         <target>%d個のURIをインデックスできました。%d個のインデックスに失敗しました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d 個のURIを飛ばしました。(欠けているURIがある場合はデバッグログを確認してください。)</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d個のURLを飛ばしました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

@@ -18,8 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -27,8 +28,12 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  */
 class PreviewUrlConvertListener
 {
-    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry, private HttpKernelInterface $httpKernel)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private PageRegistry $pageRegistry,
+        private UriSigner $signer,
+        private string $fragmentPath = '/_fragment',
+    ) {
     }
 
     public function __invoke(PreviewUrlConvertEvent $event): void
@@ -55,7 +60,7 @@ class PreviewUrlConvertListener
             try {
                 $event->setUrl($page->getPreviewUrl($this->getParams($request)));
             } catch (ExceptionInterface) {
-                $event->setResponse($this->forward($request, $page));
+                $event->setUrl($this->getFragmentUrl($request, $page));
             }
         }
     }
@@ -76,11 +81,15 @@ class PreviewUrlConvertListener
         return sprintf('/articles/%s%s', 'main' !== $article->inColumn ? $article->inColumn.':' : '', $article->alias);
     }
 
-    private function forward(Request $request, PageModel $pageModel): Response
+    private function getFragmentUrl(Request $request, PageModel $pageModel): string
     {
         $route = $this->pageRegistry->getRoute($pageModel);
-        $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
-        return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $defaults = $route->getDefaults();
+        $defaults['pageModel'] = $pageModel->id;
+
+        $uri = new ControllerReference($defaults['_controller'], $defaults);
+
+        return (new FragmentUriGenerator($this->fragmentPath, $this->signer))->generate($uri, $request, true);
     }
 }

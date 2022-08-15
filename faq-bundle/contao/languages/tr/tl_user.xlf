@@ -1,25 +1,25 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_user.faqs.0">
         <source>Allowed FAQ categories</source>
-        <target>İzin verilen FAQ kategorileri</target>
+        <target>İzin verilen SSS kategorileri</target>
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Burada bir yada bir kaç FAQ kategorisi için erişim izni verebilirsiniz.</target>
+        <target>Buradan bir yada bir kaç SSS kategorisi için erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.0">
         <source>FAQ category permissions</source>
-        <target>FAQ kategori izinleri</target>
+        <target>SSS kategori izinleri</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.1">
         <source>Here you can define the FAQ category permissions.</source>
-        <target>Burada FAQ kategori izinlerini belirleyebilirsiniz.</target>
+        <target>Buradan SSS kategori izinlerini belirleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
-        <target>FAQ izinleri</target>
+        <target>SSS izinleri</target>
       </trans-unit>
     </body>
   </file>

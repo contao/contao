@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_comments.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_comments.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_comments.source.0">
         <source>Origin</source>
-        <target>Aslı</target>
+        <target>Kaynak</target>
       </trans-unit>
       <trans-unit id="tl_comments.source.1">
         <source>The associated table.</source>
@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.parent.0">
         <source>Parent ID</source>
-        <target>Ana kimlik</target>
+        <target>Üst öge kodu</target>
       </trans-unit>
       <trans-unit id="tl_comments.parent.1">
         <source>The associated record.</source>
@@ -23,15 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_comments.date.1">
         <source>Please enter the comment date.</source>
-        <target>Lütfen yorum tarihini girin.</target>
+        <target>Lütfen yorum tarihini yazın.</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.0">
         <source>Author</source>
-        <target>Yazar</target>
+        <target>Tasarımcı</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
         <source>Please enter the author's name.</source>
-        <target>Lütfen yazarın adını girin.</target>
+        <target>Lütfen yazarın adını yazın.</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>E-posta adresi yayımlanmayacak.</target>
+        <target>E-posta adresi yayınlanmaz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.website.1">
         <source>Here you can enter a website address.</source>
-        <target>Buraya bir web sitesi adresi girebilirsiniz.</target>
+        <target>Buraya bir web sitesi adresi yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.member.0">
         <source>Member</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.member.1">
         <source>Here you can associate the comment with a member.</source>
-        <target>Burada yorumu bir üyeyle ilişkilendirebilirsiniz.</target>
+        <target>Buradan yorumu bir üyeyle ilişkilendirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
@@ -63,31 +63,31 @@
       </trans-unit>
       <trans-unit id="tl_comments.comment.1">
         <source>Please enter the comment.</source>
-        <target>Lütfen yorum girin.</target>
+        <target>Lütfen yorumu yazın.</target>
       </trans-unit>
       <trans-unit id="tl_comments.addReply.0">
         <source>Add a reply</source>
-        <target>Bir cevap yazın</target>
+        <target>Bir yanıt ekle</target>
       </trans-unit>
       <trans-unit id="tl_comments.addReply.1">
         <source>Here you can reply to the comment.</source>
-        <target>Burada yoruma cevap yazabilirsiniz.</target>
+        <target>Buradan yorumu yanıtlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author.0">
         <source>Author</source>
-        <target>Yazar</target>
+        <target>Tasarımcı</target>
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
-        <target>Burada cevaplayan yazarı değiştirebilirsiniz.</target>
+        <target>Buradan yanıtın yazarını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.reply.0">
         <source>Reply</source>
-        <target>Cevap</target>
+        <target>Yanıt</target>
       </trans-unit>
       <trans-unit id="tl_comments.reply.1">
         <source>Here you can enter the reply.</source>
-        <target>Buraya cevabı yazabilirsiniz.</target>
+        <target>Buraya yanıtı yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
         <source>Publish comment</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>
-        <target>Yorumu web sitesinde genele görünür yap</target>
+        <target>Bu seçenek etkinleştirildiğinde, yorum sitede herkesin görebileceği şekilde yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_comments.ip.0">
         <source>IP address</source>
@@ -103,27 +103,27 @@
       </trans-unit>
       <trans-unit id="tl_comments.ip.1">
         <source>The IP address of the author.</source>
-        <target>Yazarın IP adresi</target>
+        <target>Yazarın IP adresi.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>
-        <target>Bilgilendir (Yorum)</target>
+        <target>Bildirildi (yorum)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
-        <target>Bu yorumun bildirisi gönderildi.</target>
+        <target>Bu yorumun bildirimi gönderildi.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.0">
         <source>Notified (reply)</source>
-        <target>Bilgilendir (Cevap)</target>
+        <target>Bildirildi (yanıt)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.1">
         <source>The notification of the reply to this comment has been sent.</source>
-        <target>Bu yoruma verilen cevabın bildirisi gönderildi.</target>
+        <target>Bu yoruma verilen yanıtın bildirimi gönderildi.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
-        <target>Yazar</target>
+        <target>Tasarımcı</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment_legend">
         <source>Comment</source>
@@ -131,19 +131,19 @@
       </trans-unit>
       <trans-unit id="tl_comments.reply_legend">
         <source>Reply</source>
-        <target>Cevap</target>
+        <target>Yanıt</target>
       </trans-unit>
       <trans-unit id="tl_comments.publish_legend">
         <source>Publish settings</source>
-        <target>Yayınlama ayarları</target>
+        <target>Yayınlanma ayarları</target>
       </trans-unit>
       <trans-unit id="tl_comments.approved">
         <source>Approved</source>
-        <target>Onaylı</target>
+        <target>Onaylanmış</target>
       </trans-unit>
       <trans-unit id="tl_comments.pending">
         <source>Awaiting moderation</source>
-        <target>Denetleme bekleniyor</target>
+        <target>Onay bekliyor</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_content">
         <source>Article</source>
@@ -155,11 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_news">
         <source>News item</source>
-        <target>Haber öğesi</target>
+        <target>Haber ögesi</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_faq">
         <source>FAQ</source>
-        <target>FAQ</target>
+        <target>SSS</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_calendar_events">
         <source>Event</source>
@@ -167,19 +167,19 @@
       </trans-unit>
       <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
-        <target>Yorum ID %s ayrıntılarını göster </target>
+        <target>%s kodlu yorumun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
-        <target>Yorum ID %s düzenle</target>
+        <target>%s kodlu yorumu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
-        <target>Yorum ID %s sil.</target>
+        <target>%s kodlu yorumu sil</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
-        <target>Yorum ID %s yayınla/yayınlama </target>
+        <target>%s kodlu yorumu yayınla/yayından kaldır</target>
       </trans-unit>
     </body>
   </file>

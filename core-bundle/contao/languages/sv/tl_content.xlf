@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="sv">
+  <file datatype="php" original="contao/languages/en/tl_content.php" source-language="en" target-language="sv">
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
@@ -54,8 +54,7 @@
         <target>Skriv över metadata</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the metadata from the file manager.</source>
-        <target>Skriv över metadata från filhanteraren.</target>
+        <source>Overwrite the metadata of the file.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -80,14 +79,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Du bör alltid ange en titel för bilden. Titeln visas i en textruta när muspekaren förs över bilden.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.0">
-        <source>Image margin</source>
-        <target>Bildmarginal</target>
-      </trans-unit>
-      <trans-unit id="tl_content.imagemargin.1">
-        <source>Here you can enter the top, right, bottom and left margin.</source>
-        <target>Ange topp, höger, botten och vänster marginal samt en enhet.&lt;br /&gt; Marginal är avståndet mellan elementet och dess omgivande element.</target>
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.0">
         <source>Image link target</source>
@@ -128,6 +119,14 @@
       <trans-unit id="tl_content.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
         <target>Ange din HTML-kod. Listan över tillåtna HTML-taggar kan redigeras i systeminställningarna.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>HTML-kod</target>
+      </trans-unit>
+      <trans-unit id="tl_content.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>Var försiktig när du klistrar in saker du inte förstår. Detta kan tillåta angripare att stjäla din identitet eller ta kontroll över hela systemet.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
@@ -609,14 +608,6 @@
         <source>These groups will be able to see the content element.</source>
         <target>Här kan du välja vilka grupper som ska ha rätt att se innehållselementet.</target>
       </trans-unit>
-      <trans-unit id="tl_content.guests.0">
-        <source>Show to guests only</source>
-        <target>Visa enbart för gäster</target>
-      </trans-unit>
-      <trans-unit id="tl_content.guests.1">
-        <source>Hide the content element if a member is logged in.</source>
-        <target>Göm detta innehållselement när medlemmen är inloggad.</target>
-      </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
         <target>Stilmall ID och klass</target>
@@ -845,6 +836,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Använd domänen youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Loopvideo</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Automatisk uppspelning</target>
@@ -897,10 +892,6 @@
         <source>Edit content element ID %s</source>
         <target>Redigera innehållselement med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.editheader">
-        <source>Edit the article settings</source>
-        <target>Redigera inställningar för artikeln.</target>
-      </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
         <target>Dölj / visa innehållselement-ID %s</target>
@@ -924,10 +915,6 @@
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
         <target>Redigera källelementet med med ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle">
-        <source>Edit article ID %s</source>
-        <target>Redigera artikel med ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

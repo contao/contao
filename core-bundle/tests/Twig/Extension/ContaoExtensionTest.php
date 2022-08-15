@@ -112,7 +112,7 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(6, $filters);
+        $this->assertCount(7, $filters);
 
         $expectedFilters = [
             'escape',
@@ -121,6 +121,7 @@ class ContaoExtensionTest extends TestCase
             'insert_tag_raw',
             'highlight',
             'highlight_auto',
+            'format_bytes',
         ];
 
         foreach ($filters as $filter) {

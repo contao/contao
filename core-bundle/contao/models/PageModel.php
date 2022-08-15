@@ -872,7 +872,6 @@ class PageModel extends Model
 		}
 
 		// Set some default values
-		$this->protected = $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
 		$this->layout = $this->includeLayout ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
@@ -921,7 +920,7 @@ class PageModel extends Model
 					{
 						// If $folderUrl is not yet set, use the alias of the first
 						// parent page if it is not a root page (see #2129)
-						if (!$folderUrl && $objParentPage->alias)
+						if (!$folderUrl && $objParentPage->alias && $objParentPage->alias !== 'index' && $objParentPage->alias !== '/')
 						{
 							$folderUrl = $objParentPage->alias . '/';
 						}

@@ -28,7 +28,7 @@ class TextControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/text">
+            <div class="content-text">
                 <div class="rte">
                     <p>This is <b>rich</b><br>text.</p>
                     <p>There might be multiple paragraphs.</p>
@@ -58,7 +58,7 @@ class TextControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<HTML
-            <div class="$classes content_element/text">
+            <div class="$classes content-text">
                 <div class="rte">
                     <p>Text</p>
                 </div>

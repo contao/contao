@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
 
@@ -620,13 +621,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param array $set
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function create($set=array())
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
 		// Get all default values for the new entry
@@ -717,13 +718,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		$cr = array();
@@ -731,11 +733,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// ID and PID are mandatory (PID can be 0!)
 		if (!$this->intId || Input::get('pid') === null)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		// Load current record before calculating new position etc. in case the user does not have read access
-		$currentRecord = $this->getCurrentRecord();
+		try
+		{
+			// Load current record before calculating new position etc. in case the user does not have read access
+			$currentRecord = $this->getCurrentRecord();
+		}
+		catch (AccessDeniedException)
+		{
+			$currentRecord = null;
+		}
+
+		if ($currentRecord === null)
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
+		}
 
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
@@ -758,7 +777,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check for circular references
 		if (\in_array($this->set['pid'], $cr))
 		{
-			throw new InternalServerErrorException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
 
 		$this->set['tstamp'] = time();
@@ -801,13 +820,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Move all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function cutAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		/** @var Session $objSession */
@@ -845,18 +864,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return integer|boolean
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		if (!$this->intId)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		/** @var Session $objSession */
@@ -1037,12 +1056,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 				{
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND ptable=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
+					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND ptable=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
 												->execute($id, $table);
 				}
 				else
 				{
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
+					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
 												->execute($id);
 				}
 
@@ -1141,13 +1160,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Move all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copyAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		/** @var Session $objSession */
@@ -1214,7 +1233,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1242,7 +1261,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 															->execute($pid);
 
 							$count = 2;
@@ -1299,7 +1318,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								{
 									$count = 1;
 
-									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 																	->execute($newPID);
 
 									while ($objNewSorting->next())
@@ -1382,7 +1401,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// ID is set (insert after the current record)
 			if ($this->intId)
 			{
-				$currentRecord = $this->getCurrentRecord();
+				try
+				{
+					$currentRecord = $this->getCurrentRecord();
+				}
+				catch (AccessDeniedException)
+				{
+					$currentRecord = null;
+				}
 
 				// Select current record
 				if (null !== $currentRecord)
@@ -1403,7 +1429,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$count = 1;
 
-							$objNewSorting = $this->Database->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting");
+							$objNewSorting = $this->Database->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting, id");
 
 							while ($objNewSorting->next())
 							{
@@ -1448,20 +1474,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		$currentRecord = $this->getCurrentRecord();
 
 		if (null === $currentRecord)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $currentRecord));
@@ -1582,13 +1608,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Delete all selected records
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function deleteAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		/** @var Session $objSession */
@@ -1660,9 +1686,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($rows as $row)
 				{
-					$currentRecord = $this->getCurrentRecord($row['id'], $v);
+					try
+					{
+						$currentRecord = $this->getCurrentRecord($row['id'], $v);
 
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
+						if ($currentRecord === null)
+						{
+							continue;
+						}
+
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
 
 					$delete[$v][] = $row['id'];
 
@@ -1685,7 +1723,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether there is a record
 		if (null === $currentRecord)
 		{
-			$this->redirect($this->getReferer());
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$error = false;
@@ -1771,13 +1809,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		if ($intId)
@@ -1791,8 +1828,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Redirect if there is no record with the given ID
 		if (null === $currentRecord)
 		{
-			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));
 
 		// Store the active record (backwards compatibility)
 		$this->objActiveRecord = (object) $currentRecord;
@@ -2199,7 +2238,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$strBackUrl = $this->getReferer(true);
 
-		if ((string) $this->objActiveRecord->tstamp === '0')
+		if ((string) $currentRecord['tstamp'] === '0')
 		{
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 
@@ -2244,13 +2283,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';
@@ -2298,6 +2337,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Walk through each record
 				foreach ($ids as $id)
 				{
+					try
+					{
+						$currentRecord = $this->getCurrentRecord($id);
+
+						if (null === $currentRecord)
+						{
+							continue;
+						}
+
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
+
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
@@ -2355,7 +2410,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$blnAjax = false;
 					$box = '';
 
-					$currentRecord = $this->getCurrentRecord($id);
 					$excludedFields = array();
 
 					// Store the active record (backwards compatibility)
@@ -2635,13 +2689,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param integer $intId
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function toggle($intId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		if ($intId)
@@ -2701,13 +2754,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function overrideAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$return = '';
@@ -2748,6 +2801,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					foreach ($ids as $id)
 					{
+						try
+						{
+							$currentRecord = $this->getCurrentRecord();
+
+							if ($currentRecord === null)
+							{
+								continue;
+							}
+						}
+						catch (AccessDeniedException)
+						{
+							continue;
+						}
+
 						$this->intId = $id;
 						$this->procedure = array('id=?');
 						$this->values = array($this->intId);
@@ -2755,7 +2822,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->blnCreateNewVersion = false;
 
 						// Store the active record (backwards compatibility)
-						$this->objActiveRecord = (object) $this->getCurrentRecord();
+						$this->objActiveRecord = (object) $currentRecord;
 
 						$objVersions = new Versions($this->strTable, $this->intId);
 						$objVersions->initialize();
@@ -3269,7 +3336,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$sValues = array();
 			$subpalettes = array();
 
-			$currentRow = $this->getCurrentRecord();
+			try
+			{
+				$currentRow = $this->getCurrentRecord();
+			}
+			catch (AccessDeniedException)
+			{
+				$currentRow = null;
+			}
 
 			// Get selector values from DB
 			if (null !== $currentRow)
@@ -3289,9 +3363,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					if ($trigger)
+					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
 					{
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
+						if ($trigger)
 						{
 							$sValues[] = $name;
 
@@ -3301,16 +3375,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
 							}
 						}
-						else
-						{
-							$sValues[] = $trigger;
-							$key = $name . '_' . $trigger;
+					}
+					else
+					{
+						$sValues[] = $trigger;
+						$key = $name . '_' . $trigger;
 
-							// Look for a subpalette
-							if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-							{
-								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-							}
+						// Look for a subpalette
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
+						{
+							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
 					}
 				}
@@ -3412,24 +3486,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$origId = $this->id;
 				$origActiveRecord = $this->activeRecord;
 
-				// Get the current record
-				$currentRecord = $this->getCurrentRecord($intId);
-
-				$this->id = $intId;
-				$this->activeRecord = (object) $currentRecord;
-
-				// Invalidate cache tags (no need to invalidate the parent)
-				$this->invalidateCacheTags();
-
-				$this->id = $origId;
-				$this->activeRecord = $origActiveRecord;
-
-				$objStmt = $this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
-										  ->execute((int) $intId);
-
-				if ($objStmt->affectedRows > 0)
+				try
 				{
-					$reload = true;
+					// Get the current record
+					$currentRecord = $this->getCurrentRecord($intId);
+				}
+				catch (AccessDeniedException)
+				{
+					$currentRecord = null;
+				}
+
+				if ($currentRecord !== null)
+				{
+					$this->id = $intId;
+					$this->activeRecord = (object) $currentRecord;
+
+					// Invalidate cache tags (no need to invalidate the parent)
+					$this->invalidateCacheTags();
+
+					$this->id = $origId;
+					$this->activeRecord = $origActiveRecord;
+
+					$objStmt = $this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
+											  ->execute((int) $intId);
+
+					if ($objStmt->affectedRows > 0)
+					{
+						$reload = true;
+					}
 				}
 			}
 		}
@@ -3621,12 +3705,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($fld == 'id')
 			{
-				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
+				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ""))
 										  ->execute(...$this->values);
 			}
 			elseif ($blnHasSorting)
 			{
-				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort")
+				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
 										  ->execute(...$this->values);
 			}
 			else
@@ -3667,7 +3751,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}
@@ -3873,7 +3957,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$arrIds = array();
 
 		// Get records
-		$objRows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting" : ""))
+		$objRows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting, id" : ""))
 								  ->execute($id);
 
 		while ($objRows->next())
@@ -3951,7 +4035,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		$currentRecord = $this->getCurrentRecord($id, $table);
+		try
+		{
+			$currentRecord = $this->getCurrentRecord($id, $table);
+		}
+		catch (AccessDeniedException)
+		{
+			$currentRecord = null;
+		}
 
 		// Return if there is no result
 		if (null === $currentRecord)
@@ -3976,7 +4067,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -4007,13 +4098,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$blnDraft = (string) ($currentRecord['tstamp'] ?? null) === '0';
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ($blnDraft ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
-
-		if ($blnDraft)
-		{
-			$return .= '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ';
-		}
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = ($intMargin / $intSpacing + 1);
@@ -4164,12 +4249,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues = $this->values;
 				array_unshift($arrValues, $id);
 
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute(...$arrValues);
 			}
 			else
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($id);
 			}
 
@@ -4504,7 +4589,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$query .= " ORDER BY " . implode(', ', $orderBy);
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 
 			$objOrderByStmt = $this->Database->prepare($query);
@@ -4571,7 +4656,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$blnDraft = (string) ($row[$i]['tstamp'] ?? null) === '0';
 				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
 				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
 				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
@@ -4585,7 +4669,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ($blnDraft ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 				// Opening wrappers
@@ -4654,11 +4738,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
 					$this->import($strClass);
-					$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $this->$strClass->$strMethod($row[$i]) . '</div>';
+					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
-					$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+					$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
 				}
 				else
 				{
@@ -4870,7 +4954,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
-				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
+				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy) . ', id';
 
 				// Set the foreignKey so that the label is translated
 				if (!($GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] ?? null))
@@ -4884,7 +4968,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			else
 			{
-				$query .= " ORDER BY " . implode(', ', $orderBy);
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 		}
 
@@ -5017,18 +5101,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$blnDraft = (string) ($row['tstamp'] ?? null) === '0';
-
 				$return .= '
-  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ($blnDraft ? ' draft' : '') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;
-
-				if ($blnDraft && !\is_array($label))
-				{
-					$label = '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' . $label;
-				}
 
 				// Handle strings and arrays
 				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
@@ -6044,7 +6121,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
-		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
+		list($offset, $limit) = explode(',', $this->limit ?? '') + array(null, null);
 
 		// Set the limit filter based on the page number
 		if (Input::get('lp') !== null)
@@ -6248,7 +6325,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''));
+				$objIds = $this->Database->execute("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL)" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''));
 
 				if ($objIds->numRows > 0)
 				{

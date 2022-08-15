@@ -420,15 +420,14 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			// Use strlen() here (see #3277)
-			elseif (!\strlen($this->varValue))
+			elseif ('' === (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
@@ -1432,7 +1431,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] ?? null))
@@ -1459,64 +1457,30 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
-	}
-
-	public function addCtableTags($strTable, $intId, &$tags)
-	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
-		{
-			return;
-		}
-
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
-		{
-			Controller::loadDataContainer($ctable);
-
-			if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? null)
-			{
-				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=? AND ptable=?')
-										 ->execute($intId, $strTable);
-			}
-			else
-			{
-				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=?')
-										 ->execute($intId);
-			}
-
-			if (!$objIds->numRows)
-			{
-				continue;
-			}
-
-			while ($objIds->next())
-			{
-				$tags[] = 'contao.db.' . $ctable . '.' . $objIds->id;
-
-				$this->addCtableTags($ctable, $objIds->id, $tags);
-			}
-		}
+		// Do not call recursively (see #4777)
 	}
 
 	/**
@@ -1732,6 +1696,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!\count($ids))
+		{
+			return;
+		}
+
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{

@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_comments.php" source-language="en" target-language="fa">
+  <file datatype="php" original="contao/languages/en/tl_comments.php" source-language="en" target-language="fa">
     <body>
       <trans-unit id="tl_comments.source.0">
         <source>Origin</source>
-        <target>منشاء</target>
+        <target>اصل</target>
       </trans-unit>
       <trans-unit id="tl_comments.source.1">
         <source>The associated table.</source>
@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_content">
         <source>Article</source>
-        <target>مقاله</target>
+        <target>نوشته</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_page">
         <source>Page</source>

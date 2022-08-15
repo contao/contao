@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="es">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="es">
     <body>
       <trans-unit id="tl_user.username.0">
         <source>Username</source>
@@ -40,14 +40,6 @@
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
         <target>Aquí puedes sobre escribir el tema del back end.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.fullscreen.0">
-        <source>Fullscreen</source>
-        <target>Pantalla completa</target>
-      </trans-unit>
-      <trans-unit id="tl_user.fullscreen.1">
-        <source>Do not limit the width of the back end.</source>
-        <target>No limite el ancho del back-end.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -333,6 +325,9 @@
         <source>Image cache</source>
         <target>Caché de imagen</target>
       </trans-unit>
+      <trans-unit id="tl_user.previewLabel">
+        <source>Preview cache</source>
+      </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
         <target>Caché compartida</target>
@@ -344,6 +339,9 @@
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
         <target>Los datos de las imágenes han sido purgados</target>
+      </trans-unit>
+      <trans-unit id="tl_user.previewPurged">
+        <source>The preview cache has been purged</source>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>

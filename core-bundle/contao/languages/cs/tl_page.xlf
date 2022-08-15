@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Náhled konečné cesty (zřejmě s náhradním elementem) ke stránce.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Priorita směřování</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Případně nastavte prioritu, abyste mohli ovlivnit pořadí směrování. Výchozí: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -251,8 +254,8 @@
         <target>Předpona URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
-        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Zadejte prosím předponu URL (např. jazyk), která se objeví na konci aliasů stránek této kořenové stránky.</target>
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>Zadejte předponu adresy URL (např. jazyk), která bude připojena ke všem aliasům stránek pod touto kořenovou stránkou webu.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -312,9 +315,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Vzhled podstránek</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Zde můžete vybrat rozdílný vzhled pro podstránky.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -412,22 +417,6 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Skrýt stránku v navigačním menu</target>
       </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-        <target>Ukázat pouze hostům</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-        <target>Skrýt stránku, pokud je člen přihlášený.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-        <target>Index tabulátoru</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-        <target>Procházení navigace pomocí tabulátoru.</target>
-      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Klávesová zkratka</target>
@@ -482,6 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Směrování</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -577,6 +567,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Sdědit vzhled stránky</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -630,18 +621,17 @@
         <source>Edit the articles of page ID %s</source>
         <target>Upravit článek stránky ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-        <target>Vypnout přesměrovací mód (legacy routing mode), aby se spustilo toto nastavení.</target>
-      </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Konflikty směrování</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Následující stránka má stejný alias, který může způsobovat problémy s touto stránkou. Pokud není odkaz stránky správný, pokuste se změnit prioritu směrování.</target>
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Aktivováním kanonických odkazů v kořenové stránce spustíte dané nastavení.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

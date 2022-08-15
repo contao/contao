@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_user.news.0">
         <source>Allowed archives</source>
@@ -7,31 +7,31 @@
       </trans-unit>
       <trans-unit id="tl_user.news.1">
         <source>Here you can grant access to one or more news archives.</source>
-        <target>Burada bir veya birden fazla haber arşivi için erişim izni verebilirsiniz.</target>
+        <target>Buradan bir ya da birkaç haber arşivine erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Haber izinleri</target>
+        <source>News archive permissions</source>
+        <target>Haber arşivi izinleri</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Burada haber izinlerini tanımlayabilirsiniz.</target>
+        <source>Here you can define the news archive permissions.</source>
+        <target>Buradan haber arşivi izinlerini tanımlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
-        <target>İzin verilen haberler beslemeleri</target>
+        <target>İzin verilen haber akışları</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
-        <target>Burada bir veya birden fazla haber beslemesi için erişim izni verebilirsiniz.</target>
+        <target>Buradan bir ya da birkaç haber akışına erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>News feed permissions</source>
-        <target>Haberler besleme izinleri</target>
+        <target>Haber akışı izinleri</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>
-        <target>Burada haber besleme izinlerini tanımlayabilirsin.</target>
+        <target>Buradan haber akışı izinlerini tanımlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
