@@ -423,7 +423,7 @@ class Calendar extends Frontend
 	 */
 	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='', $isRepeated=false)
 	{
-		if (\get_class($this) !== self::class)
+		if (static::class !== self::class)
 		{
 			trigger_deprecation('contao/calendar-bundle', '4.9', 'Calling "%s()" from an extended class has been deprecated, it will be made private in Contao 5.0.', __METHOD__);
 		}
