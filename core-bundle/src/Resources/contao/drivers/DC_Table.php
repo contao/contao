@@ -3316,9 +3316,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					if ($trigger)
+					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
 					{
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
+						if ($trigger)
 						{
 							$sValues[] = $name;
 
@@ -3328,16 +3328,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
 							}
 						}
-						else
-						{
-							$sValues[] = $trigger;
-							$key = $name . '_' . $trigger;
+					}
+					else
+					{
+						$sValues[] = $trigger;
+						$key = $name . '_' . $trigger;
 
-							// Look for a subpalette
-							if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-							{
-								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-							}
+						// Look for a subpalette
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
+						{
+							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
 					}
 				}
