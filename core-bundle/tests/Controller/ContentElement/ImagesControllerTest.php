@@ -72,7 +72,7 @@ class ImagesControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content-gallery">
+            <div class="cols-2 content-gallery">
                 <ul>
                     <li>
                         <figure>
