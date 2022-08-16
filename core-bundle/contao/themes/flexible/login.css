@@ -93,7 +93,7 @@ label[for="username"] {
 label[for="password"], label[for="confirm"] {
 	position: absolute;
 	top: 10px;
-	right: 7px;
+	right: 31px;
 	background: url("icons/lock-locked.svg") left top no-repeat;
 	background-size: 14px;
 	width: 14px;
