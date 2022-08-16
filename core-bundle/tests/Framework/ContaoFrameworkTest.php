@@ -258,7 +258,6 @@ class ContaoFrameworkTest extends TestCase
 
         // Call setLoginConstants before initialize
         $framework->setLoginConstants();
-
         $framework->initialize();
 
         $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
@@ -284,9 +283,10 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @group legacy
      */
     public function testInitializesTheFrameworkInPreviewMode(): void
     {

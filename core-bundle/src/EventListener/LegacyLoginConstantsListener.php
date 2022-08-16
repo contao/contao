@@ -22,10 +22,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class LegacyLoginConstantsListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
