@@ -74,6 +74,27 @@ class Image
 	}
 
 	/**
+	 * Get the URL to an image
+	 *
+	 * @param string $src The image name or path
+	 *
+	 * @return string The path-absolute or absolute URL depending on the assets context
+	 */
+	public static function getUrl($src)
+	{
+		$src = System::urlEncode(self::getPath($src));
+
+		if (!$src)
+		{
+			return '';
+		}
+
+		$context = str_starts_with($src, 'assets/') ? 'assets_context' : 'files_context';
+
+		return Controller::addStaticUrlTo($src, System::getContainer()->get('contao.assets.' . $context));
+	}
+
+	/**
 	 * Generate an image tag and return it as string
 	 *
 	 * @param string $src        The image path
@@ -125,8 +146,6 @@ class Image
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
-		$context = (strncmp($src, 'assets/', 7) === 0) ? 'assets_context' : 'files_context';
-
-		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.' . $context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
+		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
 	}
 }

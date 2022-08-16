@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,

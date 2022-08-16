@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -522,8 +522,8 @@ class tl_article extends Backend
 
 		$attributes = sprintf(
 			'data-icon="%s" data-icon-disabled="%s"',
-			Image::getPath($unpublished ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_')
+			Image::getUrl($unpublished ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_'),
 		);
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
@@ -556,7 +556,7 @@ class tl_article extends Backend
 		// Generate an alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate((string) $dc->activeRecord->title, (int) $dc->activeRecord->pid, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -848,6 +848,6 @@ class tl_article extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 }

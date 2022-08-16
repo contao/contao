@@ -310,7 +310,7 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return a route relative to the base URL
+	 * Generate a URL for the given route
 	 *
 	 * @param string $strName   The route name
 	 * @param array  $arrParams The route parameters

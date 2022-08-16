@@ -469,7 +469,7 @@ class tl_form extends Backend
 		// Generate an alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate((string) $dc->activeRecord->title, (int) (Input::post('jumpTo') ?: $dc->activeRecord->jumpTo), $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
