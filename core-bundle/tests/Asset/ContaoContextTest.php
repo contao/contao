@@ -205,7 +205,7 @@ class ContaoContextTest extends TestCase
 
         System::setContainer($container);
 
-        $page = new PageModel();
+        $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
         $page->type = 'root';
         $page->fallback = true;
         $page->staticPlugins = '';

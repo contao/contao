@@ -57,6 +57,9 @@ class TemplateLoaderTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.twig.filesystem_loader', $this->createMock(TemplateHierarchyInterface::class));
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
+
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_theme.php', '<?php $GLOBALS["TL_DCA"]["tl_theme"] = [];');
 
         System::setContainer($container);
     }
