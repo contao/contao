@@ -2761,10 +2761,6 @@
         <source>Manual</source>
         <target>マニュアル</target>
       </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
-        <target>下書き</target>
-      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>動画を読み込むにはクリックしてください。</target>
