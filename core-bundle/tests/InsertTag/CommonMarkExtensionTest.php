@@ -40,7 +40,6 @@ class CommonMarkExtensionTest extends TestCase
 
         $parser = new MarkdownParser($environment);
         $renderer = new HtmlRenderer($environment);
-
         $document = $parser->parse('[My text for my link]({{news_url::42}})');
 
         $html = (string) $renderer->renderDocument($document);
