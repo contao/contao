@@ -428,7 +428,7 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection
-            ->method('getNativeConnection')
+            ->method('getWrappedConnection')
             ->willReturn($driverConnection)
         ;
 
@@ -439,7 +439,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand([], [], null, null, $connection);
         $tester = new CommandTester($command);
-        $errorMessage = 'Wrong database version configured, please set it to "8.0.29", currently set to "5.7.39"';
+        $errorMessage = "Wrong database version configured!\nYou have version 8.0.29 but the database connection is configured to 5.7.39.";
 
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
@@ -452,7 +452,7 @@ class MigrateCommandTest extends TestCase
             $this->assertSame('problem', $json['type']);
             $this->assertSame($errorMessage, $json['message']);
         } else {
-            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $display)));
+            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', "\n", $display)));
         }
     }
 
