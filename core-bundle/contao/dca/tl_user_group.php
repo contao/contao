@@ -301,9 +301,9 @@ class tl_user_group extends Backend
 
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_'),
+			Image::getUrl($image),
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_'),
 			$label
 		);
 	}
