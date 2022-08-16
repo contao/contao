@@ -24,6 +24,12 @@ class ModuleNewsletterList extends Module
 	protected $strTemplate = 'mod_newsletterlist';
 
 	/**
+	 * Page cache array
+	 * @var array
+	 */
+	private static $arrPageCache = array();
+
+	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -71,7 +77,6 @@ class ModuleNewsletterList extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$arrJumpTo = array();
 		$arrNewsletter = array();
 
 		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
@@ -98,29 +103,21 @@ class ModuleNewsletterList extends Module
 					continue;
 				}
 
-				$strUrl = $strRequest;
-
-				if (!isset($arrJumpTo[$objTarget->jumpTo]))
+				if (($objJumpTo = $this->getPageWithDetails($jumpTo)) instanceof PageModel)
 				{
-					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
-					{
-						/** @var PageModel $objJumpTo */
-						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl('/%s');
-					}
-					else
-					{
-						$arrJumpTo[$objTarget->jumpTo] = $strUrl;
-					}
+					/** @var PageModel $objJumpTo */
+					$strUrl = $objJumpTo->getFrontendUrl('/' . ($objNewsletter->alias ?: $objNewsletter->id));
 				}
-
-				$strUrl = $arrJumpTo[$objTarget->jumpTo];
-				$strAlias = $objNewsletter->alias ?: $objNewsletter->id;
+				else
+				{
+					$strUrl = $strRequest;
+				}
 
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
 					'title' => StringUtil::stripInsertTags($objNewsletter->subject),
-					'href' => sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), $strAlias),
+					'href' => $strUrl,
 					'date' => Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => Date::parse($objPage->datimFormat, $objNewsletter->date),
 					'time' => Date::parse($objPage->timeFormat, $objNewsletter->date),
@@ -139,5 +136,22 @@ class ModuleNewsletterList extends Module
 		}
 
 		$this->Template->newsletters = $arrNewsletter;
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 *
+	 * @param integer $intPageId
+	 *
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (!\array_key_exists($intPageId, self::$arrPageCache))
+		{
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+		}
+
+		return self::$arrPageCache[$intPageId];
 	}
 }
