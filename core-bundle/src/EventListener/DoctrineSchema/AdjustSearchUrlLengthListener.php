@@ -34,15 +34,17 @@ class AdjustSearchUrlLengthListener
     {
         $schema = $event->getSchema();
 
-        if (
-            !$schema->hasTable('tl_search')
-            || !($table = $schema->getTable('tl_search'))
-            || !$table->hasColumn('url')
-            || !($column = $table->getColumn('url'))
-            || !$table->hasIndex('url')
-        ) {
+        if (!$schema->hasTable('tl_search')) {
             return;
         }
+
+        $table = $schema->getTable('tl_search');
+
+        if (!$table->hasColumn('url') || !$table->hasIndex('url')) {
+            return;
+        }
+
+        $column = $table->getColumn('url');
 
         // Get maximum index size for this table
         $maxIndexSize = $this->getMaximumIndexSize($table);
