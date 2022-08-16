@@ -157,7 +157,7 @@ class ModuleFaqList extends Module
 	 */
 	private function getPageWithDetails($intPageId)
 	{
-		if (!isset(self::$arrPageCache[$intPageId]))
+		if (!\array_key_exists($intPageId, self::$arrPageCache))
 		{
 			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
 		}
