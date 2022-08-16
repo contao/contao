@@ -30,6 +30,9 @@ class AbstractCandidates implements CandidatesInterface
     {
     }
 
+    /**
+     * @param string $name
+     */
     public function isCandidate($name): bool
     {
         return str_starts_with($name, 'tl_page.');

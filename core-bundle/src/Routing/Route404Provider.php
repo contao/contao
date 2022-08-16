@@ -52,6 +52,9 @@ class Route404Provider extends AbstractPageRouteProvider
         return $collection;
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
         $this->framework->initialize();
