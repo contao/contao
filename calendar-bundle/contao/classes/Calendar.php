@@ -395,7 +395,6 @@ class Calendar extends Frontend
 
 			default:
 				$link = $objParent->getAbsoluteUrl('/' . ($objEvent->alias ?: $objEvent->id));
-
 				break;
 		}
 
