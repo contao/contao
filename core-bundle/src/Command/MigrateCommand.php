@@ -662,7 +662,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        $driverConnection = $this->connection->getNativeConnection();
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {
             return true;
@@ -684,10 +685,18 @@ class MigrateCommand extends Command
             return true;
         }
 
-        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
-
         if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
-            $message .= sprintf(', currently set to "%s"', $currentVersion);
+            $message =
+                <<<EOF
+                    Wrong database version configured!
+                    You have version $version but the database connection is configured to $currentVersion.
+                    EOF;
+        } else {
+            $message =
+                <<<EOF
+                    Wrong database version configured!
+                    You have version $version but the database connection is configured to a different version.
+                    EOF;
         }
 
         if ($asJson) {
