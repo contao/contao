@@ -43,15 +43,17 @@ class CronTest extends TestCase
 
     public function testExecutesSingleCronJob(): void
     {
-        $repository = $this->createMock(CronJobRepository::class);
-
         $cronjob = $this->createMock(TestCronJob::class);
         $cronjob
             ->expects($this->once())
             ->method('onHourly')
         ;
 
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron(
+            fn () => $this->createMock(CronJobRepository::class),
+            fn () => $this->createMock(EntityManagerInterface::class)
+        );
+
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->runJob($cronjob::class.'::onHourly', Cron::SCOPE_CLI);
     }
