@@ -2,6 +2,24 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.0-RC4] (2022-08-16)
+
+**Fixed issues:**
+
+- [#5141] Don’t use sprintf() for alias URLs ([ausi])
+- [#5156] Correctly handle RTL layout and window border in tips ([aschempp])
+- [#5158] Do not define ptable for tl_content ([fritzmg])
+- [#4326] Fix the remaining relative URLs ([fritzmg])
+- [#5139] Add static URLs to data-icon attributes ([ausi])
+- [#5147] Fix loop when loading DCA and BackendUser ([ausi])
+- [#5144] Fix type error in slug generation ([ausi])
+- [#5135] Fix the headline template ([ausi])
+- [#5146] Fix Input::isPost() behavior for empty requests ([ausi])
+- [#5140] Fix division by zero in _list.html.twig ([ausi])
+- [#5065] Rename the database error type ([aschempp])
+- [#5117] Change default CSS class names for content elements ([ausi])
+- [#5115] Fix member registration issues ([fritzmg])
+
 ## [5.0.0-RC3] (2022-08-10)
 
 **New features:**
@@ -283,6 +301,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.0-RC4]: https://github.com/contao/contao/releases/tag/5.0.0-RC4
 [5.0.0-RC3]: https://github.com/contao/contao/releases/tag/5.0.0-RC3
 [5.0.0-RC2]: https://github.com/contao/contao/releases/tag/5.0.0-RC2
 [5.0.0-RC1]: https://github.com/contao/contao/releases/tag/5.0.0-RC1
@@ -299,6 +318,19 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5141]: https://github.com/contao/contao/pull/5141
+[#5156]: https://github.com/contao/contao/pull/5156
+[#5158]: https://github.com/contao/contao/pull/5158
+[#4326]: https://github.com/contao/contao/pull/4326
+[#5139]: https://github.com/contao/contao/pull/5139
+[#5147]: https://github.com/contao/contao/pull/5147
+[#5144]: https://github.com/contao/contao/pull/5144
+[#5135]: https://github.com/contao/contao/pull/5135
+[#5146]: https://github.com/contao/contao/pull/5146
+[#5140]: https://github.com/contao/contao/pull/5140
+[#5065]: https://github.com/contao/contao/pull/5065
+[#5117]: https://github.com/contao/contao/pull/5117
+[#5115]: https://github.com/contao/contao/pull/5115
 [#4682]: https://github.com/contao/contao/pull/4682
 [#5103]: https://github.com/contao/contao/pull/5103
 [#4893]: https://github.com/contao/contao/pull/4893

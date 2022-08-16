@@ -2761,10 +2761,6 @@
         <source>Manual</source>
         <target>Nápověda</target>
       </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
-        <target>Koncept</target>
-      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>Kliknutím načtěte video.</target>

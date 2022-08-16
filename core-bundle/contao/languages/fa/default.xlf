@@ -2741,9 +2741,6 @@
         <source>Manual</source>
         <target>دستی</target>
       </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
-      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
       </trans-unit>
