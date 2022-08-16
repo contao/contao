@@ -84,7 +84,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames(?array $names = null): iterable
     {
         $this->framework->initialize();
 
