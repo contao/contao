@@ -121,6 +121,7 @@ class BackendPassword extends Backend
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
+		$objTemplate->wizard = Backend::getTogglePasswordWizard('password');
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 
