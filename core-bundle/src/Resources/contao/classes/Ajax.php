@@ -392,9 +392,9 @@ class Ajax extends Backend
 						}
 					}
 
+					// Keep the previous sorting order when reloading the widget
 					if ($dc->activeRecord)
 					{
-						// Keep the previous sorting order when reloading the widget
 						$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
 					}
 
