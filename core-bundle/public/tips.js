@@ -34,9 +34,21 @@
 
             timer = setTimeout(function () {
                 const position = el.getBoundingClientRect();
+                const rtl = getComputedStyle(el).direction === 'rtl';
+                const clientWidth = document.html.clientWidth;
+
+                if ((rtl && position.x < 200) || (!rtl && position.x < (clientWidth - 200))) {
+                    tip.style.left = `${(window.scrollX + position.left + x)}px`;
+                    tip.style.right = 'auto';
+                    tip.classList.remove('tip--rtl')
+                } else {
+                    tip.style.left = 'auto';
+                    tip.style.right = `${(clientWidth - window.scrollX - position.right + x)}px`;
+                    tip.classList.add('tip--rtl')
+                }
+
                 tip.innerHTML = `<div>${text}</div>`;
                 tip.style.top = `${(window.scrollY + position.top + y)}px`;
-                tip.style.left = `${(window.scrollX + position.left + x)}px`;
                 tip.style.display = 'block';
                 tip.style.willChange = 'auto';
                 tip.setAttribute('aria-hidden', false);
