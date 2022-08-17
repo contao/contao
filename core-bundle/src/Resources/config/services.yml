@@ -196,8 +196,8 @@ services:
 
     Contao\CoreBundle\Cron\Cron:
         arguments:
-            - '@Contao\CoreBundle\Repository\CronJobRepository'
-            - '@doctrine.orm.entity_manager'
+            - !service_closure '@Contao\CoreBundle\Repository\CronJobRepository'
+            - !service_closure '@doctrine.orm.entity_manager'
             - '@?logger'
         public: true
 

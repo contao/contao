@@ -323,6 +323,7 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Artık geçerli veritabanı yapısıyla uyumlu olmadığından %d sürümü geri yüklenemedi. Lütfen verileri el ile geri yükleyin.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

@@ -62,7 +62,7 @@
         <target>İlçe</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
+        <source>Please enter the name of the city.</source>
         <target>Lütfen ilçeyi yazın.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
@@ -70,7 +70,7 @@
         <target>İl</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
+        <source>Please enter the name of the state.</source>
         <target>Lütfen ili yazın.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">

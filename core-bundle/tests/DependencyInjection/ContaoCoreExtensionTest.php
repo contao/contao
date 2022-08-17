@@ -154,6 +154,7 @@ use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -1621,8 +1622,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference(CronJobRepository::class),
-                new Reference('doctrine.orm.entity_manager'),
+                new ServiceClosureArgument(new Reference(CronJobRepository::class)),
+                new ServiceClosureArgument(new Reference('doctrine.orm.entity_manager')),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()

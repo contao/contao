@@ -62,16 +62,14 @@
         <target>城市</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
-        <target>请输入城市名称。</target>
+        <source>Please enter the name of the city.</source>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
         <target>州</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
-        <target>请输入州名称。</target>
+        <source>Please enter the name of the state.</source>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>

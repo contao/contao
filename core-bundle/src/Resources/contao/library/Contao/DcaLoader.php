@@ -148,7 +148,7 @@ class DcaLoader extends Controller
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
-				if (isset($v['label']))
+				if (\array_key_exists('label', $v))
 				{
 					continue;
 				}

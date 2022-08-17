@@ -211,7 +211,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
+				$objIds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 										 ->execute(0);
 
 				if ($objIds->numRows > 0)
@@ -1050,12 +1050,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
+					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
 												->execute($id, $table);
 				}
 				else
 				{
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
+					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
 												->execute($id);
 				}
 
@@ -1205,7 +1205,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1233,7 +1233,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 															->execute($pid);
 
 							$count = 2;
@@ -1290,7 +1290,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 								{
 									$count = 1;
 
-									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
+									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
 																	->execute($newPID);
 
 									while ($objNewSorting->next())
@@ -1396,7 +1396,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						{
 							$count = 1;
 
-							$objNewSorting = $this->Database->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting");
+							$objNewSorting = $this->Database->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting, id");
 
 							while ($objNewSorting->next())
 							{
@@ -3227,9 +3227,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					if ($trigger)
+					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
 					{
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
+						if ($trigger)
 						{
 							$sValues[] = $name;
 
@@ -3239,16 +3239,16 @@ class DC_Table extends DataContainer implements \listable, \editable
 								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
 							}
 						}
-						else
-						{
-							$sValues[] = $trigger;
-							$key = $name . '_' . $trigger;
+					}
+					else
+					{
+						$sValues[] = $trigger;
+						$key = $name . '_' . $trigger;
 
-							// Look for a subpalette
-							if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-							{
-								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-							}
+						// Look for a subpalette
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
+						{
+							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
 					}
 				}
@@ -3556,12 +3556,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if ($fld == 'id')
 			{
-				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
+				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ""))
 										  ->execute($this->values);
 			}
 			elseif ($blnHasSorting)
 			{
-				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort")
+				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
 										  ->execute($this->values);
 			}
 			else
@@ -3792,7 +3792,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$arrIds = array();
 
 		// Get records
-		$objRows = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting" : ""))
+		$objRows = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting, id" : ""))
 								  ->execute($id);
 
 		while ($objRows->next())
@@ -3880,7 +3880,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			if ($this->strTable != $table || $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -3911,13 +3911,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$mouseover = ' hover-div';
 		}
 
-		$blnDraft = (string) $objRow->tstamp === '0';
-		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ($blnDraft ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
-
-		if ($blnDraft)
-		{
-			$return .= '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ';
-		}
+		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) $objRow->tstamp === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$args = array();
@@ -4079,12 +4073,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$arrValues = $this->values;
 				array_unshift($arrValues, $id);
 
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($arrValues);
 			}
 			else
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($id);
 			}
 
@@ -4409,7 +4403,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$query .= " ORDER BY " . implode(', ', $orderBy);
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 
 			$objOrderByStmt = $this->Database->prepare($query);
@@ -4482,7 +4476,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$blnDraft = (string) $row[$i]['tstamp'] === '0';
 					$blnWrapperStart = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
 					$blnWrapperSeparator = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
 					$blnWrapperStop = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
@@ -4496,7 +4489,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ($blnDraft ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 					// Opening wrappers
@@ -4563,11 +4556,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
 						$this->import($strClass);
-						$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $this->$strClass->$strMethod($row[$i]) . '</div>';
+						$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']))
 					{
-						$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+						$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
 					}
 
 					// Make items sortable
@@ -4776,7 +4769,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
-				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
+				$query .= " ORDER BY (SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy) . ', id';
 
 				// Set the foreignKey so that the label is translated
 				if (!$GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'])
@@ -4790,7 +4783,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$query .= " ORDER BY " . implode(', ', $orderBy);
+				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 		}
 
@@ -4998,14 +4991,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$blnDraft = (string) ($row['tstamp'] ?? null) === '0';
-
 				$return .= '
-  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ($blnDraft ? ' draft' : '') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;
-				$label = ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $label;
 
 				// Call the label_callback ($row, $label, $this)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
