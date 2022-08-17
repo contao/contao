@@ -615,11 +615,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
+		$databaseFields = array_column($this->Database->listFields($this->strTable), 'name');
+
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (\array_key_exists('default', $v))
+			if (\array_key_exists('default', $v) && \in_array($k, $databaseFields, true))
 			{
 				$this->set[$k] = \is_array($v['default']) ? serialize($v['default']) : $v['default'];
 
@@ -658,7 +660,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
 		{
 			$this->set['tstamp'] = 0;
-			$this->set = array_intersect_key($this->set, array_flip(array_column($this->Database->listFields($this->strTable), 'name')));
 
 			$objInsertStmt = $this->Database->prepare("INSERT INTO " . $this->strTable . " %s")
 											->set($this->set)
