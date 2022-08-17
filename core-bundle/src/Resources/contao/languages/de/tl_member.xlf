@@ -62,7 +62,7 @@
         <target>Ort</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
+        <source>Please enter the name of the city.</source>
         <target>Bitte geben Sie den Namen des Ortes ein.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
@@ -70,7 +70,7 @@
         <target>Staat</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
+        <source>Please enter the name of the state.</source>
         <target>Bitte geben Sie den Namen des Staates ein.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">

@@ -163,7 +163,7 @@ class DcaLoader extends Controller
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
-				if (isset($v['label']))
+				if (\array_key_exists('label', $v))
 				{
 					continue;
 				}
@@ -203,7 +203,7 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']) || isset($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
 		{
 			return;
 		}

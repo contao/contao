@@ -1011,7 +1011,7 @@
       </trans-unit>
       <trans-unit id="MONTHS.4">
         <source>May</source>
-        <target>5</target>
+        <target>5月</target>
       </trans-unit>
       <trans-unit id="MONTHS.5">
         <source>June</source>

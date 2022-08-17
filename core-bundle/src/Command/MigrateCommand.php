@@ -19,7 +19,11 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -43,10 +47,11 @@ class MigrateCommand extends Command
     private BackupManager $backupManager;
     private SchemaProvider $schemaProvider;
     private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
+    private Connection $connection;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
@@ -55,6 +60,7 @@ class MigrateCommand extends Command
         $this->backupManager = $backupManager;
         $this->schemaProvider = $schemaProvider;
         $this->rowSizeCalculator = $rowSizeCalculator;
+        $this->connection = $connection;
         $this->installer = $installer;
 
         parent::__construct();
@@ -103,6 +109,16 @@ class MigrateCommand extends Command
     private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
+
+        // Return early if there is no work to be done
+        if (!$this->hasWorkToDo()) {
+            if (!$asJson) {
+                $this->io->info('Database dump skipped because there are no migrations to execute.');
+            }
+
+            return true;
+        }
+
         $config = $this->backupManager->createCreateConfig();
 
         if (!$asJson) {
@@ -151,6 +167,10 @@ class MigrateCommand extends Command
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
         }
 
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
+        }
+
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
                 throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
@@ -184,6 +204,30 @@ class MigrateCommand extends Command
         }
 
         return 0;
+    }
+
+    private function hasWorkToDo(): bool
+    {
+        // There are some pending migrations
+        if ($this->migrations->hasPending()) {
+            return true;
+        }
+
+        // There are some runonce files to be processed
+        if (\count($this->getRunOnceFiles()) > 0) {
+            return true;
+        }
+
+        // There are installer commands to be executed
+        if (null !== $this->installer) {
+            $this->installer->compileCommands();
+
+            if (\count($this->installer->getCommands(false)) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
@@ -536,5 +580,45 @@ class MigrateCommand extends Command
         }
 
         return $warnings;
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
+
+        if (!$driverConnection instanceof ServerInfoAwareConnection) {
+            return true;
+        }
+
+        $driver = $this->connection->getDriver();
+
+        if (!$driver instanceof VersionAwarePlatformDriver) {
+            return true;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+
+        /** @var AbstractPlatform $currentPlatform */
+        $currentPlatform = $this->connection->getDatabasePlatform();
+
+        if (\get_class($correctPlatform) === \get_class($currentPlatform)) {
+            return true;
+        }
+
+        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+
+        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
+            $message .= sprintf(', currently set to "%s"', $currentVersion);
+        }
+
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }
