@@ -662,7 +662,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        $driverConnection = $this->connection->getNativeConnection();
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {
             return true;

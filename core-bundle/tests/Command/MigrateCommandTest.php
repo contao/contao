@@ -32,11 +32,14 @@ use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class MigrateCommandTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);
@@ -406,10 +409,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testAbortsOnWrongServerVersion(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
         $driverConnection
             ->method('getServerVersion')
@@ -428,7 +435,7 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection
-            ->method('getNativeConnection')
+            ->method('getWrappedConnection')
             ->willReturn($driverConnection)
         ;
 
