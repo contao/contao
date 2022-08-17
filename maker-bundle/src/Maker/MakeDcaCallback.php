@@ -107,6 +107,13 @@ class MakeDcaCallback extends AbstractMaker
             }
         }
 
+        $useAttributes = true;
+
+        // Backwards compatibility with symfony/maker-bundle < 1.44.0
+        if (\method_exists($this->phpCompatUtil, 'canUseAttributes')) {
+            $useAttributes = $this->phpCompatUtil->canUseAttributes();
+        }
+
         $this->classGenerator->generate([
             'source' => 'dca-callback/Callback.tpl.php',
             'fqcn' => $elementDetails->getFullName(),
@@ -117,7 +124,7 @@ class MakeDcaCallback extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
+                'use_attributes' => $useAttributes,
             ],
         ]);
 
