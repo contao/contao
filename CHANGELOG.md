@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.33] (2022-08-17)
+
+**Fixed issues:**
+
+- [#5013] Do not insert fields that do not exist in the DB ([aschempp])
+- [#5164] Fix check for existing label in DcaLoader ([ausi])
+- [#5130] Only set login constants in master request ([fritzmg])
+- [#5155] Deprecate Calendar::addEvent() ([ausi])
+- [#5143] Do not run the DC constructor inside the picker widget ([ausi])
+- [#5132] Check for column options in AdjustSearchUrlLengthListener ([fritzmg])
+- [#5154] Allow empty key for subpalette suffix based on select ([dennisbohn])
+- [#5145] Fix typo in tl_comments ([ausi])
+
 ## [4.9.32] (2022-08-12)
 
 **Fixed issues:**
@@ -983,6 +996,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.33]: https://github.com/contao/contao/releases/tag/4.9.33
 [4.9.32]: https://github.com/contao/contao/releases/tag/4.9.32
 [4.9.31]: https://github.com/contao/contao/releases/tag/4.9.31
 [4.9.30]: https://github.com/contao/contao/releases/tag/4.9.30
@@ -1056,6 +1070,14 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5013]: https://github.com/contao/contao/pull/5013
+[#5164]: https://github.com/contao/contao/pull/5164
+[#5130]: https://github.com/contao/contao/pull/5130
+[#5155]: https://github.com/contao/contao/pull/5155
+[#5143]: https://github.com/contao/contao/pull/5143
+[#5132]: https://github.com/contao/contao/pull/5132
+[#5154]: https://github.com/contao/contao/pull/5154
+[#5145]: https://github.com/contao/contao/pull/5145
 [#5123]: https://github.com/contao/contao/pull/5123
 [#5121]: https://github.com/contao/contao/pull/5121
 [#4628]: https://github.com/contao/contao/pull/4628
