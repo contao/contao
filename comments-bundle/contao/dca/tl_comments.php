@@ -294,7 +294,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))

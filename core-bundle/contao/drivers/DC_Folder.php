@@ -134,7 +134,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		parent::__construct();
 
 		$container = System::getContainer();
-		$objSession = $container->get('session');
+		$objSession = $container->get('request_stack')->getSession();
 
 		// Check the request token (see #4007)
 		if (Input::get('act') !== null)
@@ -283,7 +283,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	public function showAll()
 	{
 		$return = '';
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
@@ -645,7 +645,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('id' => $id, 'pid' => $strFolder)));
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -697,7 +697,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new UnprocessableEntityHttpException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -788,7 +788,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -867,7 +867,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))
 		);
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -975,7 +975,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -1092,7 +1092,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1152,7 +1152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			$objSession = System::getContainer()->get('session');
+			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
 			$objSession->set('CLIPBOARD', $arrClipboard);
@@ -1233,7 +1233,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				if ($blnIsAjax)
 				{
-					$objSession = System::getContainer()->get('session');
+					$objSession = System::getContainer()->get('request_stack')->getSession();
 
 					if ($objSession->isStarted())
 					{
@@ -1656,7 +1656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$security = System::getContainer()->get('security.helper');
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -2323,7 +2323,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Set the new value so the input field can show it
 			if (Input::get('act') == 'editAll')
 			{
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				if (($index = array_search($this->strPath . '/' . $this->varValue . $this->strExtension, $session['CURRENT']['IDS'])) !== false)
@@ -2488,7 +2488,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -2524,7 +2524,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
 		// Get the session data and toggle the nodes
@@ -2819,7 +2819,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected function searchMenu()
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -3043,7 +3043,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
-			$strNode = System::getContainer()->get('session')->getBag('contao_backend')->get('tl_files_node');
+			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
 
 			// If the files node is not within the current path, remove it (see #856)
 			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)

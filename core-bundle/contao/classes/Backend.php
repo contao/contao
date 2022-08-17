@@ -560,7 +560,7 @@ abstract class Backend extends Controller
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
 		if (Input::get('pn') !== null)
@@ -753,7 +753,7 @@ abstract class Backend extends Controller
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
 		if (Input::get('fn') !== null)

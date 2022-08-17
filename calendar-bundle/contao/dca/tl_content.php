@@ -88,7 +88,7 @@ class tl_content_calendar extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
 										 ->execute($dc->currentPid);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -150,7 +150,7 @@ class tl_content_calendar extends Backend
 	 */
 	public function generateFeed()
 	{
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->get('calendar_feed_updater');
 
 		if (empty($session) || !is_array($session))

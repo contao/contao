@@ -260,7 +260,7 @@ class tl_image_size extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))

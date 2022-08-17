@@ -118,7 +118,7 @@ class BackendMain extends Backend
 		if (Input::get('mtg'))
 		{
 			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$session = $objSessionBag->all();
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);

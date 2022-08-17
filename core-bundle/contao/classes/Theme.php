@@ -46,7 +46,7 @@ class Theme extends Backend
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
-			$objSession = System::getContainer()->get('session');
+			$objSession = System::getContainer()->get('request_stack')->getSession();
 
 			if (!Input::post('confirm'))
 			{
@@ -712,7 +712,7 @@ class Theme extends Backend
 			unset($tl_files, $tl_theme, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSession->remove('uploaded_themes');
 
 		$this->import(Automator::class, 'Automator');

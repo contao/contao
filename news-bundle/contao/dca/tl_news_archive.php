@@ -270,7 +270,7 @@ class tl_news_archive extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 

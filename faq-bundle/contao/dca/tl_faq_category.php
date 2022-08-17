@@ -267,7 +267,7 @@ class tl_faq_category extends Backend
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Check current action
 		switch (Input::get('act'))
@@ -354,7 +354,7 @@ class tl_faq_category extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 

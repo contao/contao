@@ -335,7 +335,7 @@ class tl_files extends Backend
 
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
-		$objSession = $container->get('session');
+		$objSession = $container->get('request_stack')->getSession();
 
 		$session = $objSession->all();
 
