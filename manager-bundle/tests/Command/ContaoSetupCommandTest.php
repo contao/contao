@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\Command;
 use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
@@ -24,6 +25,13 @@ use Symfony\Component\Process\Process;
 
 class ContaoSetupCommandTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testIsHidden(): void
     {
         $command = new ContaoSetupCommand('project/dir', 'project/dir/public', 'secret');
