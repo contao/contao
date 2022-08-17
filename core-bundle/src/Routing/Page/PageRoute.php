@@ -130,7 +130,7 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this;
     }
 
-    public function getContent(): ?object
+    public function getContent(): object|null
     {
         return $this->content;
     }
