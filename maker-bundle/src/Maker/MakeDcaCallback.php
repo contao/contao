@@ -110,7 +110,7 @@ class MakeDcaCallback extends AbstractMaker
         $useAttributes = true;
 
         // Backwards compatibility with symfony/maker-bundle < 1.44.0
-        if (\method_exists($this->phpCompatUtil, 'canUseAttributes')) {
+        if (method_exists($this->phpCompatUtil, 'canUseAttributes')) {
             $useAttributes = $this->phpCompatUtil->canUseAttributes();
         }
 
