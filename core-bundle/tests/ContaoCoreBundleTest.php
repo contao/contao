@@ -18,7 +18,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
@@ -56,7 +55,6 @@ class ContaoCoreBundleTest extends TestCase
             AddEventAliasesPass::class,
             MakeServicesPublicPass::class,
             AddAssetsPackagesPass::class,
-            AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
             TaggedMigrationsPass::class,
             PickerProviderPass::class,
