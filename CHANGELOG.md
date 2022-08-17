@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.8] (2022-08-17)
+
+**Fixed issues:**
+
+- [#5185] Make the maker-bundle compatible with symfony/maker-bundle >= 1.44.0 ([leofeyer])
+- [#4571] Allow searching content elements and members by ID ([christianbarkowsky])
+- [#5099] Fix the preview link purge job ([aschempp])
+- [#5167] Allow usages of picker without active record ([bezin])
+- [#5170] Correctly replace insert tags within links in the markdown element ([Toflar])
+- [#5165] Add the password toggle to the "change password" dialog ([leofeyer])
+- [#5137] Set login constants in request listener ([fritzmg])
+- [#5159] Do not define ptable for tl_content ([fritzmg])
+
 ## [4.13.7] (2022-08-15)
 
 **Fixed issues:**
@@ -450,6 +463,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.8]: https://github.com/contao/contao/releases/tag/4.13.8
 [4.13.7]: https://github.com/contao/contao/releases/tag/4.13.7
 [4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
 [4.13.5]: https://github.com/contao/contao/releases/tag/4.13.5
@@ -467,6 +481,7 @@ This project adheres to [Semantic Versioning].
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
+[christianbarkowsky]: https://github.com/christianbarkowsky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [dennisbohn]: https://github.com/dennisbohn
@@ -487,6 +502,14 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5185]: https://github.com/contao/contao/pull/5185
+[#4571]: https://github.com/contao/contao/pull/4571
+[#5099]: https://github.com/contao/contao/pull/5099
+[#5167]: https://github.com/contao/contao/pull/5167
+[#5170]: https://github.com/contao/contao/pull/5170
+[#5165]: https://github.com/contao/contao/pull/5165
+[#5137]: https://github.com/contao/contao/pull/5137
+[#5159]: https://github.com/contao/contao/pull/5159
 [#5112]: https://github.com/contao/contao/pull/5112
 [#5142]: https://github.com/contao/contao/pull/5142
 [#5104]: https://github.com/contao/contao/pull/5104
