@@ -24,7 +24,7 @@ class PurgePreviewLinksCronTest extends ContaoTestCase
         $connection
             ->expects($this->once())
             ->method('executeStatement')
-            ->with('DELETE FROM tl_preview_link WHERE createdAt<=UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL 31 DAY))')
+            ->with('DELETE FROM tl_preview_link WHERE createdAt<=UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 31 DAY))')
         ;
 
         $cron = new PurgePreviewLinksCron($connection);
