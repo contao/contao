@@ -615,7 +615,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
-		$databaseFields = array_column($this->Database->listFields($this->strTable), 'name');
+		$databaseFields = $this->Database->getFieldNames($this->strTable);
 
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
