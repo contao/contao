@@ -95,6 +95,12 @@ class MakeEventListener extends AbstractMaker
         /** @var MethodDefinition $definition */
         $definition = $events[$event];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
+        $useAttributes = true;
+
+        // Backwards compatibility with symfony/maker-bundle < 1.44.0
+        if (method_exists($this->phpCompatUtil, 'canUseAttributes')) {
+            $useAttributes = $this->phpCompatUtil->canUseAttributes();
+        }
 
         $this->classGenerator->generate([
             'source' => 'event-listener/EventListener.tpl.php',
@@ -105,7 +111,7 @@ class MakeEventListener extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
+                'use_attributes' => $useAttributes,
             ],
         ]);
 

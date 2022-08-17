@@ -52,6 +52,12 @@ class MakeFrontendModule extends AbstractFragmentMaker
         $classNameWithoutSuffix = $this->getClassNameWithoutSuffix($className);
         $elementName = Container::underscore($classNameWithoutSuffix);
         $elementDetails = $generator->createClassNameDetails($name, 'Controller\\FrontendModule\\');
+        $useAttributes = true;
+
+        // Backwards compatibility with symfony/maker-bundle < 1.44.0
+        if (method_exists($this->phpCompatUtil, 'canUseAttributes')) {
+            $useAttributes = $this->phpCompatUtil->canUseAttributes();
+        }
 
         $this->classGenerator->generate([
             'source' => 'frontend-module/FrontendModule.tpl.php',
@@ -60,7 +66,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 'className' => $elementDetails->getShortName(),
                 'elementName' => $elementName,
                 'category' => $category,
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
+                'use_attributes' => $useAttributes,
             ],
         ]);
 
