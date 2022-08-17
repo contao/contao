@@ -37,7 +37,14 @@ class ControllerResolverTest extends TestCase
         $request = new Request();
         $request->attributes->set('_controller', 'foo.bar');
 
-        $resolver = new ControllerResolver($this->createMock(ControllerResolverInterface::class), $registry);
+        $decorated = $this->createMock(ControllerResolverInterface::class);
+        $decorated
+            ->expects($this->once())
+            ->method('getController')
+            ->willReturn(false)
+        ;
+
+        $resolver = new ControllerResolver($decorated, $registry);
         $resolver->getController($request);
 
         $this->assertSame('Foo\Bar\FooBarController', $request->attributes->get('_controller'));
@@ -49,6 +56,7 @@ class ControllerResolverTest extends TestCase
         $decorated
             ->expects($this->once())
             ->method('getController')
+            ->willReturn(false)
         ;
 
         $resolver = new ControllerResolver($decorated, new FragmentRegistry());
@@ -66,7 +74,13 @@ class ControllerResolverTest extends TestCase
         $request = new Request();
         $request->attributes->set('_controller', new ControllerReference('foo'));
 
-        $resolver = new ControllerResolver($this->createMock(ControllerResolverInterface::class), $registry);
+        $decorated = $this->createMock(ControllerResolverInterface::class);
+        $decorated
+            ->method('getController')
+            ->willReturn(false)
+        ;
+
+        $resolver = new ControllerResolver($decorated, $registry);
         $resolver->getController($request);
     }
 }
