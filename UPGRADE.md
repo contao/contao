@@ -2,6 +2,16 @@
 
 ## Version 4.* to 5.0
 
+## TL_ASSETS_URL and TL_FILES_URL
+
+The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been removed. Use the assets or files context instead:
+
+ ```php
+$container = System::getContainer();
+echo $container->get('contao.assets.assets_context')->getStaticUrl();
+echo $container->get('contao.assets.files_context')->getStaticUrl();
+```
+
 ### News feeds
 
 News feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
