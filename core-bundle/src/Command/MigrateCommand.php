@@ -685,19 +685,13 @@ class MigrateCommand extends Command
             return true;
         }
 
-        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
-            $message =
-                <<<EOF
-                    Wrong database version configured!
-                    You have version $version but the database connection is configured to $currentVersion.
-                    EOF;
-        } else {
-            $message =
-                <<<EOF
-                    Wrong database version configured!
-                    You have version $version but the database connection is configured to a different version.
-                    EOF;
-        }
+        // If serverVersion is not configured we would actually never end up here
+        $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
+        $message =
+            <<<EOF
+                Wrong database version configured!
+                You have version $version but the database connection is configured to $currentVersion.
+                EOF;
 
         if ($asJson) {
             $this->writeNdjson('problem', ['message' => $message]);
