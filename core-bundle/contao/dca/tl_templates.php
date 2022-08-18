@@ -153,7 +153,7 @@ class tl_templates extends Backend
 	public function addBreadcrumb()
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
 		if (Input::get('fn') !== null)

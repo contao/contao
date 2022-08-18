@@ -124,7 +124,7 @@ class ModuleCloseAccount extends Module
 
 				// Log out the user (see #93)
 				$container->get('security.token_storage')->setToken();
-				$container->get('session')->invalidate();
+				$container->get('request_stack')->getSession()->invalidate();
 
 				// Check whether there is a jumpTo page
 				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

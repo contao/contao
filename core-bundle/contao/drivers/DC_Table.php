@@ -113,7 +113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		parent::__construct();
 
 		$container = System::getContainer();
-		$objSession = $container->get('session');
+		$objSession = $container->get('request_stack')->getSession();
 
 		// Check the request token (see #4007)
 		if (Input::get('act') !== null)
@@ -320,7 +320,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->limit = '';
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$this->reviseTable();
 
@@ -630,11 +630,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
+		$databaseFields = $this->Database->getFieldNames($this->strTable);
+
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (\array_key_exists('default', $v))
+			if (\array_key_exists('default', $v) && \in_array($k, $databaseFields, true))
 			{
 				$default = $v['default'];
 
@@ -663,7 +665,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty the clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -774,7 +776,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -837,7 +839,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -886,7 +888,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
@@ -1191,7 +1193,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -1244,7 +1246,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 				/** @var Session $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
@@ -1639,7 +1641,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
@@ -1927,7 +1929,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			/** @var Session $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
@@ -2317,7 +2319,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -2795,7 +2797,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -3476,7 +3478,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$new_records = $objSessionBag->get('new_records');
 
@@ -3632,7 +3634,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
@@ -3997,7 +3999,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -4050,7 +4052,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
@@ -4340,7 +4342,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function parentView()
 	{
 		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -5276,7 +5278,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$searchFields = array();
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -5447,7 +5449,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
@@ -5532,7 +5534,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function limitMenu($blnOptional=false)
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
@@ -5669,7 +5671,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function filterMenu($intFilterPanel)
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$fields = '';
 		$sortingFields = array();
@@ -6144,7 +6146,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function paginationMenu()
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;

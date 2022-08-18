@@ -18,6 +18,7 @@ use Contao\PageModel;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler as BaseFragmentHandler;
 
 class FragmentHandler extends BaseFragmentHandler
@@ -38,6 +39,9 @@ class FragmentHandler extends BaseFragmentHandler
         parent::__construct($requestStack, [], $debug);
     }
 
+    /**
+     * @param string|ControllerReference $uri
+     */
     public function render($uri, string $renderer = 'inline', array $options = []): string|null
     {
         if (!$uri instanceof FragmentReference) {

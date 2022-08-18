@@ -511,7 +511,7 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
@@ -754,7 +754,7 @@ class tl_user extends Backend
 				if (in_array('purge_session', $arrPurge))
 				{
 					/** @var AttributeBagInterface $objSessionBag */
-					$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+					$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 					$objSessionBag->clear();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}

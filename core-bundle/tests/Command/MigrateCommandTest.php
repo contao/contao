@@ -32,11 +32,14 @@ use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class MigrateCommandTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);
@@ -44,8 +47,13 @@ class MigrateCommandTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testAbortsEarlyIfThereAreNoMigrations(): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $backupManager = $this->createBackupManager(false);
 
         $command = $this->getCommand([], [], null, $backupManager);
@@ -83,10 +91,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testExecutesWithoutPendingMigrations(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $command = $this->getCommand();
         $tester = new CommandTester($command);
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
@@ -109,10 +121,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormatsAndBackup
      */
     public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
@@ -163,10 +179,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testExecutesSchemaDiff(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $returnedCommands = [
             [
                 'First call QUERY 1',
@@ -246,10 +266,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->once())
@@ -314,8 +338,13 @@ class MigrateCommandTest extends TestCase
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testAbortsIfAnswerIsNo(): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]]
@@ -336,10 +365,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testDoesNotAbortIfMigrationFails(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]]
@@ -376,10 +409,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testAbortsOnFatalError(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
@@ -406,10 +443,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getOutputFormats
      */
     public function testAbortsOnWrongServerVersion(string $format): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
         $driverConnection
             ->method('getServerVersion')
@@ -457,10 +498,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider provideInvalidSqlModes
      */
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 
@@ -656,10 +701,14 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider provideInvalidSqlModes
      */
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
         $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 

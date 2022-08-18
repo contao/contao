@@ -74,7 +74,7 @@ class DcaLoader extends Controller
 
 			if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA has has been deprecated and will throw an exception in Contao 6.0.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.0.', $this->strTable);
 			}
 
 			return;
@@ -95,7 +95,7 @@ class DcaLoader extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA has has been deprecated and will throw an exception in Contao 6.0.');
+			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.0.', $this->strTable);
 		}
 	}
 

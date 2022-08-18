@@ -71,7 +71,7 @@ class Ajax extends Backend
 	public function executePreActions()
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		switch ($this->strAction)
 		{
@@ -294,7 +294,10 @@ class Ajax extends Backend
 					}
 
 					// Keep the previous sorting order when reloading the widget
-					$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
+					if ($dc->activeRecord)
+					{
+						$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
+					}
 
 					$varValue = serialize($varValue);
 				}

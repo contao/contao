@@ -856,6 +856,14 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.session.factory:
+        class: Contao\CoreBundle\Session\SessionFactory
+        decorates: session.factory
+        arguments:
+            - '@contao.session.factory.inner'
+            - '@contao.session.contao_backend'
+            - '@contao.session.contao_frontend'
+
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:

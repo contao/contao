@@ -64,7 +64,7 @@
         "symfony/twig-bundle": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
         "symfony/yaml": "^5.4 || ^6.0",
-        "toflar/psr6-symfony-http-cache-store": "^3.0",
+        "toflar/psr6-symfony-http-cache-store": "^3.0 || ^4.0",
         "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
