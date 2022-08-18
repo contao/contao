@@ -959,12 +959,9 @@ class tl_content extends Backend
 	{
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
-			foreach (array_keys($v) as $kk)
+			if (array_key_exists($element, $v))
 			{
-				if ($kk == $element)
-				{
-					return $k;
-				}
+				return $k;
 			}
 		}
 

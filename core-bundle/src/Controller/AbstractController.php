@@ -77,12 +77,8 @@ abstract class AbstractController extends SymfonyAbstractController
 
     /**
      * Set the cache headers according to the page settings.
-     *
-     * @param Response $response The response object
-     *
-     * @return Response The response object
      */
-    protected function setCacheHeaders(Response $response, PageModel $pageModel)
+    protected function setCacheHeaders(Response $response, PageModel $pageModel): Response
     {
         // Do not cache the response if caching was not configured at all or disabled explicitly
         if ($pageModel->cache < 1 && $pageModel->clientCache < 1) {
