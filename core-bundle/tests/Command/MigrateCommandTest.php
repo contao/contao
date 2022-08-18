@@ -66,6 +66,32 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testExecutesBackupIfPendingSchemaDiff(): void
+    {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
+        $backupManager = $this->createBackupManager(true);
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+            ->willReturn(['QUERY'])
+        ;
+
+        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([], ['interactive' => false]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Creating a database dump/', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
     public function testAbortsEarlyIfTheBackupFails(): void
     {
         $backupManager = $this->createBackupManager(true);

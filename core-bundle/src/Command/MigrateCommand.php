@@ -114,7 +114,7 @@ class MigrateCommand extends Command
         $asJson = 'ndjson' === $input->getOption('format');
 
         // Return early if there is no work to be done
-        if (!$this->migrations->hasPending()) {
+        if (!$this->hasWorkToDo()) {
             if (!$asJson) {
                 $this->io->info('Database dump skipped because there are no migrations to execute.');
             }
@@ -207,6 +207,20 @@ class MigrateCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    private function hasWorkToDo(): bool
+    {
+        // There are some pending migrations
+        if ($this->migrations->hasPending()) {
+            return true;
+        }
+
+        if (\count($this->commandCompiler->compileCommands()) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
