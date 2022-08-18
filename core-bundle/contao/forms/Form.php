@@ -325,10 +325,7 @@ class Form extends Hybrid
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
 		// so it can be used on any forward page using the {{form_session_data::<form-field-name>}} insert tag
-		if ($request = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			$request->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
-		}
+		System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
 
 		// Send form data via e-mail
 		if ($this->sendViaEmail)
