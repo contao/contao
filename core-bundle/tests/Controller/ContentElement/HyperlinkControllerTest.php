@@ -14,14 +14,13 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
 use Contao\StringUtil;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -47,7 +46,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -74,7 +73,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsImageLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
