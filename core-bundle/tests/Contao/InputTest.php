@@ -932,7 +932,6 @@ class InputTest extends TestCase
         $data = ['key' => ['value1', 'value2']];
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
-
         $stack->push(new Request($data, $data, [], $data));
 
         $this->assertSame(['value1', 'value2'], Input::get('key'));
