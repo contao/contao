@@ -39,7 +39,7 @@ class HyperlinkController extends AbstractContentElementController
         $href = $this->insertTagParser->replaceInline($model->url);
 
         if (Validator::isRelativeUrl($href)) {
-            $href = $this->requestStack->getMainRequest()?->getBasePath().'/'.$href;
+            $href = $this->requestStack->getCurrentRequest()?->getBasePath().'/'.$href;
         }
 
         $linkAttributes = (new HtmlAttributes())
