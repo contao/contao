@@ -33,7 +33,6 @@ abstract class Backend extends Controller
 	{
 		parent::__construct();
 		$this->import(Database::class, 'Database');
-		$this->setStaticUrls();
 	}
 
 	/**
