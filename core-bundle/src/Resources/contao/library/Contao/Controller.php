@@ -1931,6 +1931,8 @@ abstract class Controller extends System
 
 	/**
 	 * Set the static URL constants
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public static function setStaticUrls()
 	{
