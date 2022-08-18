@@ -685,8 +685,9 @@ class MigrateCommand extends Command
             return true;
         }
 
-        // If serverVersion is not configured we would actually never end up here
+        // If serverVersion is not configured, we will actually never end up here
         $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
+
         $message =
             <<<EOF
                 Wrong database version configured!
