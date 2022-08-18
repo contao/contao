@@ -27,9 +27,7 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		$objModule = ModuleModel::findByPk($this->module);
-
-		if ($objModule === null)
+		if (!$objModule = ModuleModel::findByPk($this->module))
 		{
 			return '';
 		}

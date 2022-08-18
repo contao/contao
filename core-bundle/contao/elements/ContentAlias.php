@@ -27,7 +27,10 @@ class ContentAlias extends ContentElement
 			return '';
 		}
 
-		$objElement = ContentModel::findByPk($this->cteAlias);
+		if (!$objElement = ContentModel::findByPk($this->cteAlias))
+		{
+			return '';
+		}
 
 		// Clone the model, so we do not modify the shared model in the registry
 		$objModel = $objElement->cloneOriginal();
