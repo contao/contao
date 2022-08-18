@@ -48,12 +48,11 @@ class BackendPassword extends Backend
 	 */
 	public function run()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$objTemplate = new BackendTemplate('be_password');
 
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
-			$pw = $request->request->get('password');
+			$pw = System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('password');
 
 			// Password too short
 			if (mb_strlen($pw) < Config::get('minPasswordLength'))

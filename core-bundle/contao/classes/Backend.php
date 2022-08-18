@@ -419,6 +419,8 @@ abstract class Backend extends Controller
 					$this->loadDataContainer($ptable);
 				}
 
+				$request = $container->get('request_stack')->getCurrentRequest();
+
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
@@ -439,10 +441,10 @@ abstract class Backend extends Controller
 						{
 							$strUrl = $container->get('router')->generate('contao_backend', array
 							(
-								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'do' => $request->query->get('do'),
 								'table' => $table,
 								'id' => $objRow->id,
-								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'ref' => $request->attributes->get('_contao_referer_id'),
 								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
