@@ -923,4 +923,19 @@ class InputTest extends TestCase
 
         $this->assertTrue(Input::isPost(), 'isPost() should return true, even if the post data was empty');
     }
+
+    /**
+     * @group legacy
+     */
+    public function testArrayValuesFromGetAndPost(): void
+    {
+        $data = ['key' => ['value1', 'value2']];
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request($data, $data, [], $data));
+
+        $this->assertSame(['value1', 'value2'], Input::get('key'));
+        $this->assertSame(['value1', 'value2'], Input::post('key'));
+        $this->assertSame(['value1', 'value2'], Input::cookie('key'));
+    }
 }
