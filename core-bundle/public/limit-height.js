@@ -18,21 +18,18 @@ window.addEventListener('DOMContentLoaded', function () {
         // Return if there is no height value
         if (!hgt) return;
 
-        const toggler = document.createElement('div');
-        toggler.classList.add('limit_toggler');
+        const height = div.offsetHeight;
+
+        // Resize the element
+        div.style.height = hgt+'px';
+
+        // Do not add the toggle if the preview height is below the max-height
+        if (height <= hgt) return;
 
         const button = document.createElement('button');
         button.setAttribute('type', 'button');
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
-        toggler.append(button);
-
-        // Disable the function if the preview height is below the max-height
-        if (div.offsetHeight <= hgt) {
-            return;
-        }
-
-        div.style.height = hgt+'px';
 
         button.addEventListener('click', function () {
             if (div.offsetHeight > hgt) {
@@ -41,6 +38,10 @@ window.addEventListener('DOMContentLoaded', function () {
                 div.style.height = 'auto';
             }
         });
+
+        const toggler = document.createElement('div');
+        toggler.classList.add('limit_toggler');
+        toggler.append(button);
 
         div.append(toggler);
     });
