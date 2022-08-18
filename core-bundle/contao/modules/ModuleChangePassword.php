@@ -98,7 +98,7 @@ class ModuleChangePassword extends Module
 		$objMember = MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #8301)

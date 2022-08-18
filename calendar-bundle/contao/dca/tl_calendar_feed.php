@@ -265,7 +265,7 @@ class tl_calendar_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Check current action
 		switch (Input::get('act'))
@@ -352,7 +352,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_calendar_feed']) && in_array($insertId, $arrNew['tl_calendar_feed']))
@@ -441,7 +441,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function generateFeed()
 	{
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->get('calendar_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -488,7 +488,7 @@ class tl_calendar_feed extends Backend
 			return;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');

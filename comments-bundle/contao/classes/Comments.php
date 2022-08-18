@@ -273,7 +273,7 @@ class Comments extends Frontend
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		// Do not index or cache the page with the confirmation message
 		if ($session->isStarted())

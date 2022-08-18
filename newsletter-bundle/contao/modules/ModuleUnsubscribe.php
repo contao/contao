@@ -108,7 +108,7 @@ class ModuleUnsubscribe extends Module
 			$this->Template->captcha = $objWidget->parse();
 		}
 
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		// Confirmation message
 		if ($session->isStarted())
@@ -286,7 +286,7 @@ class ModuleUnsubscribe extends Module
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
-		System::getContainer()->get('session')->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
 
 		$this->reload();
 	}

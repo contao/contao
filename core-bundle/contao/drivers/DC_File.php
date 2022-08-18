@@ -148,7 +148,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 			// Render boxes
 			$class = 'tl_tbox';
