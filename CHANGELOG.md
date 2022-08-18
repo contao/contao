@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.0] (2022-08-18)
+
+**Fixed issues:**
+
+- [#5200] Fix the limit-height.js script ([leofeyer])
+- [#5199] Fix Input compatibility with Symfony 6 ([ausi])
+- [#5198] Fix skipping backups with schema diff ([ausi])
+- [#5001] Use Controller::getContentElement() in the alias element ([leofeyer])
+- [#5169] Fix server check in migrate command and improve message ([aschempp])
+- [#5195] Fix back end preview redirect ([ausi])
+- [#5193] Clear the DEPRECATED.md file and remove some leftovers ([leofeyer])
+- [#5179] Fix download element back end layout ([ausi])
+- [#5189] Fix compatibility with Symfony 6 session ([ausi])
+- [#5188] Add compatibility with symfony/cache ^6.0 ([leofeyer])
+- [#5176] Add CSS class for number of columns to gallery template ([ausi])
+- [#5180] Fix configuration of TemplateOptionsListener ([ausi])
+- [#5175] Fix loading empty DCAs in unit tests ([ausi])
+- [#5173] Move media above rich text ([ausi])
+- [#5174] Fix compatibility with Symfony 6 ([ausi])
+- [#5171] Fix icons.css compatbility in downloads element ([ausi])
+- [#5163] Fix check for existing label in DcaLoader ([ausi])
+
 ## [5.0.0-RC4] (2022-08-16)
 
 **Fixed issues:**
@@ -301,6 +323,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.0]: https://github.com/contao/contao/releases/tag/5.0.0
 [5.0.0-RC4]: https://github.com/contao/contao/releases/tag/5.0.0-RC4
 [5.0.0-RC3]: https://github.com/contao/contao/releases/tag/5.0.0-RC3
 [5.0.0-RC2]: https://github.com/contao/contao/releases/tag/5.0.0-RC2
@@ -318,6 +341,23 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5200]: https://github.com/contao/contao/pull/5200
+[#5199]: https://github.com/contao/contao/pull/5199
+[#5198]: https://github.com/contao/contao/pull/5198
+[#5001]: https://github.com/contao/contao/pull/5001
+[#5169]: https://github.com/contao/contao/pull/5169
+[#5195]: https://github.com/contao/contao/pull/5195
+[#5193]: https://github.com/contao/contao/pull/5193
+[#5179]: https://github.com/contao/contao/pull/5179
+[#5189]: https://github.com/contao/contao/pull/5189
+[#5188]: https://github.com/contao/contao/pull/5188
+[#5176]: https://github.com/contao/contao/pull/5176
+[#5180]: https://github.com/contao/contao/pull/5180
+[#5175]: https://github.com/contao/contao/pull/5175
+[#5173]: https://github.com/contao/contao/pull/5173
+[#5174]: https://github.com/contao/contao/pull/5174
+[#5171]: https://github.com/contao/contao/pull/5171
+[#5163]: https://github.com/contao/contao/pull/5163
 [#5141]: https://github.com/contao/contao/pull/5141
 [#5156]: https://github.com/contao/contao/pull/5156
 [#5158]: https://github.com/contao/contao/pull/5158
