@@ -27,37 +27,15 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		$objModel = ModuleModel::findByPk($this->module);
+		$objModule = ModuleModel::findByPk($this->module);
 
-		if ($objModel === null)
+		if ($objModule === null)
 		{
 			return '';
 		}
 
-		$strClass = Module::findClass($objModel->type);
-
-		if (!class_exists($strClass))
-		{
-			return '';
-		}
-
-		if (is_a($strClass, ModuleProxy::class, true))
-		{
-			if (!empty($this->cssID[1]))
-			{
-				$objModel->classes = array_merge((array) $objModel->classes, array($this->cssID[1]));
-			}
-
-			$proxy = new $strClass($objModel, $this->strColumn);
-
-			if (!empty($this->cssID[0]))
-			{
-				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
-			}
-
-			return $proxy->generate();
-		}
-
+		// Clone the model, so we do not modify the shared model in the registry
+		$objModel = $objModule->cloneOriginal();
 		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)
@@ -72,21 +50,7 @@ class ContentModule extends ContentElement
 			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
-		// Clone the model, so we do not modify the shared model in the registry
-		$objModel = $objModel->cloneOriginal();
 		$objModel->cssID = $cssID;
-		$objModel->typePrefix = 'ce_';
-
-		$strStopWatchId = 'contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')';
-
-		if (System::getContainer()->getParameter('kernel.debug'))
-		{
-			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start($strStopWatchId, 'contao.layout');
-		}
-
-		/** @var Module $objModule */
-		$objModule = new $strClass($objModel, $this->strColumn);
 
 		// Tag the content element (see #2137)
 		if ($this->objModel !== null)
@@ -94,14 +58,7 @@ class ContentModule extends ContentElement
 			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
 		}
 
-		$strBuffer = $objModule->generate();
-
-		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
-		{
-			$objStopwatch->stop($strStopWatchId);
-		}
-
-		return $strBuffer;
+		return Controller::getFrontendModule($objModel, $this->strColumn);
 	}
 
 	/**

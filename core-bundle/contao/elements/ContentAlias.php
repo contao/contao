@@ -22,45 +22,19 @@ class ContentAlias extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		$objElement = ContentModel::findByPk($this->cteAlias);
 
-		if ($objElement === null)
-		{
-			return '';
-		}
+		// Clone the model, so we do not modify the shared model in the registry
+		$objModel = $objElement->cloneOriginal();
+		$objModel->origId = $objModel->origId ?: $objModel->id;
+		$objModel->id = $this->id;
 
-		$strClass = static::findClass($objElement->type);
-
-		if (!class_exists($strClass))
-		{
-			return '';
-		}
-
-		if (is_a($strClass, ContentProxy::class, true))
-		{
-			if (!empty($this->cssID[1]))
-			{
-				$objElement->classes = array_merge((array) $objElement->classes, array($this->cssID[1]));
-			}
-
-			$proxy = new $strClass($objElement, $this->strColumn);
-
-			if (!empty($this->cssID[0]))
-			{
-				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
-			}
-
-			return $proxy->generate();
-		}
-
-		$objElement->origId = $objElement->origId ?: $objElement->id;
-		$objElement->id = $this->id;
-		$objElement->typePrefix = 'ce_';
-
-		/** @var ContentElement $objElement */
-		$objElement = new $strClass($objElement, $this->strColumn);
-
-		$cssID = StringUtil::deserialize($objElement->cssID, true);
+		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
@@ -74,9 +48,9 @@ class ContentAlias extends ContentElement
 			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
-		$objElement->cssID = $cssID;
+		$objModel->cssID = $cssID;
 
-		return $objElement->generate();
+		return Controller::getContentElement($objModel, $this->strColumn);
 	}
 
 	/**
