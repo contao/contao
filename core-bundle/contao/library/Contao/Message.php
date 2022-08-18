@@ -101,7 +101,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ?? self::getMode()), $strMessage);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ?? self::getMode()), $strMessage);
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Message
 	public static function generateUnwrapped($strScope=null, $blnRaw=false)
 	{
 		$strScope ??= self::getMode();
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -170,7 +170,7 @@ class Message
 	 */
 	public static function reset()
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -207,7 +207,7 @@ class Message
 	 */
 	public static function hasError($strScope=null)
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -226,7 +226,7 @@ class Message
 	 */
 	public static function hasConfirmation($strScope=null)
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -245,7 +245,7 @@ class Message
 	 */
 	public static function hasNew($strScope=null)
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -264,7 +264,7 @@ class Message
 	 */
 	public static function hasInfo($strScope=null)
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{
@@ -283,7 +283,7 @@ class Message
 	 */
 	public static function hasRaw($strScope=null)
 	{
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		if (!$session->isStarted())
 		{

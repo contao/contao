@@ -361,7 +361,7 @@ class tl_newsletter extends Backend
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
 											 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));

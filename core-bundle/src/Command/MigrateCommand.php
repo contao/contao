@@ -114,7 +114,7 @@ class MigrateCommand extends Command
         $asJson = 'ndjson' === $input->getOption('format');
 
         // Return early if there is no work to be done
-        if (!$this->migrations->hasPending()) {
+        if (!$this->hasWorkToDo()) {
             if (!$asJson) {
                 $this->io->info('Database dump skipped because there are no migrations to execute.');
             }
@@ -207,6 +207,20 @@ class MigrateCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    private function hasWorkToDo(): bool
+    {
+        // There are some pending migrations
+        if ($this->migrations->hasPending()) {
+            return true;
+        }
+
+        if (\count($this->commandCompiler->compileCommands()) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
@@ -662,7 +676,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        $driverConnection = $this->connection->getNativeConnection();
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {
             return true;
@@ -684,11 +699,14 @@ class MigrateCommand extends Command
             return true;
         }
 
-        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+        // If serverVersion is not configured, we will actually never end up here
+        $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
 
-        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
-            $message .= sprintf(', currently set to "%s"', $currentVersion);
-        }
+        $message =
+            <<<EOF
+                Wrong database version configured!
+                You have version $version but the database connection is configured to $currentVersion.
+                EOF;
 
         if ($asJson) {
             $this->writeNdjson('problem', ['message' => $message]);

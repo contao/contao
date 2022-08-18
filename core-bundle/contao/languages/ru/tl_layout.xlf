@@ -403,6 +403,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>Feeds</source>
+        <target>Каналы</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

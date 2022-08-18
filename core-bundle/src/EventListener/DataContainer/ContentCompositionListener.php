@@ -85,7 +85,6 @@ class ContentCompositionListener
     {
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
-
         $currentRecord = $dc->getCurrentRecord();
 
         // Return if there is no current record (override all)

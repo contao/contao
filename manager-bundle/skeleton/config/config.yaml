@@ -1,7 +1,6 @@
 imports:
     - { resource: parameters.yaml }
     - { resource: security.yaml }
-    - { resource: services.yaml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -63,15 +62,12 @@ doctrine:
         auto_mapping: true
         auto_generate_proxy_classes: false
         naming_strategy: doctrine.orm.naming_strategy.default
-        metadata_cache_driver:
-            type: service
-            id: app.doctrine_system_cache_provider
         query_cache_driver:
-            type: service
-            id: app.doctrine_system_cache_provider
+            type: pool
+            pool: doctrine.system_cache_pool
         result_cache_driver:
-            type: service
-            id: app.doctrine_result_cache_provider
+            type: pool
+            pool: doctrine.result_cache_pool
 
 # Security configuration
 nelmio_security:

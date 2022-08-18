@@ -238,7 +238,7 @@ class PrettyErrorScreenListener
     private function getStatusCodeForException(\Throwable $exception): int
     {
         if ($exception instanceof HttpException) {
-            return (int) $exception->getStatusCode();
+            return $exception->getStatusCode();
         }
 
         return 500;

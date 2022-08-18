@@ -6,6 +6,10 @@
     {% with {items: downloads} %}{{ block('list_component') }}{% endwith %}
 {% endblock %}
 
+{% block list_item_attributes %}
+    {{- attrs(list.item_attributes|default).addClass(['download-element', "ext-#{item.file.extension(true)}"]) -}}
+{% endblock %}
+
 {% block list_item %}
     {% with {download: item} %}{{ block('download_component') }}{% endwith %}
 {% endblock %}

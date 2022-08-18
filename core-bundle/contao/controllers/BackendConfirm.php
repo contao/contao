@@ -48,7 +48,7 @@ class BackendConfirm extends Backend
 	 */
 	public function run()
 	{
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Redirect to the back end home page
 		if (Input::post('FORM_SUBMIT') == 'invalid_token_url')

@@ -2761,10 +2761,6 @@
         <source>Manual</source>
         <target>Handbuch</target>
       </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
-        <target>Entwurf</target>
-      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>Bitte klicken, um das Video zu laden.</target>

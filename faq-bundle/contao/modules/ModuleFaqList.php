@@ -25,10 +25,10 @@ class ModuleFaqList extends Module
 	protected $strTemplate = 'mod_faqlist';
 
 	/**
-	 * Target pages
+	 * Page cache array
 	 * @var array
 	 */
-	protected $arrTargets = array();
+	private static $arrPageCache = array();
 
 	/**
 	 * Display a wildcard in the back end
@@ -140,18 +140,28 @@ class ModuleFaqList extends Module
 			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
-		// Get the URL from the jumpTo page of the category
-		if (!isset($this->arrTargets[$jumpTo]))
+		if ($jumpTo && ($objTarget = $this->getPageWithDetails($jumpTo)) !== null)
 		{
-			$this->arrTargets[$jumpTo] = StringUtil::ampersand(Environment::get('requestUri'));
-
-			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
-			{
-				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl('/%s'));
-			}
+			/** @var PageModel $objTarget */
+			return StringUtil::ampersand($objTarget->getFrontendUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 		}
 
-		return sprintf(preg_replace('/%(?!s)/', '%%', $this->arrTargets[$jumpTo]), ($objFaq->alias ?: $objFaq->id));
+		return StringUtil::ampersand(Environment::get('requestUri'));
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 *
+	 * @param  integer        $intPageId
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (!\array_key_exists($intPageId, self::$arrPageCache))
+		{
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+		}
+
+		return self::$arrPageCache[$intPageId];
 	}
 }

@@ -297,14 +297,6 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function setStaticUrls(): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
     public static function addStaticUrlTo($script, ContaoContext $context = null): never
     {
         self::throwOnAccess();

@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Учетные записи</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>

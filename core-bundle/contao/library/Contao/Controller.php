@@ -1440,20 +1440,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Set the static URL constants
-	 */
-	public static function setStaticUrls()
-	{
-		if (\defined('TL_FILES_URL'))
-		{
-			return;
-		}
-
-		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
-		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
-	}
-
-	/**
 	 * Add a static URL to a script
 	 *
 	 * @param string             $script  The script path

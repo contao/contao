@@ -312,7 +312,7 @@ class tl_form extends Backend
 			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Check current action
 		switch (Input::get('act'))
@@ -399,7 +399,7 @@ class tl_form extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
@@ -469,7 +469,7 @@ class tl_form extends Backend
 		// Generate an alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate((string) $dc->activeRecord->title, (int) (Input::post('jumpTo') ?: $dc->activeRecord->jumpTo), $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{

@@ -35,7 +35,6 @@ class SitemapListener
         }
 
         $arrPages = [];
-        $arrProcessed = [];
         $time = time();
 
         // Get all calendars
@@ -57,35 +56,27 @@ class SitemapListener
                 continue;
             }
 
-            // Get the URL of the jumpTo page
-            if (!isset($arrProcessed[$objCalendar->jumpTo])) {
-                $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objCalendar->jumpTo);
+            $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objCalendar->jumpTo);
 
-                // The target page does not exist
-                if (null === $objParent) {
-                    continue;
-                }
-
-                // The target page has not been published (see #5520)
-                if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time)) {
-                    continue;
-                }
-
-                // The target page is protected (see #8416)
-                if ($objParent->protected) {
-                    continue;
-                }
-
-                // The target page is exempt from the sitemap (see #6418)
-                if ('noindex,nofollow' === $objParent->robots) {
-                    continue;
-                }
-
-                // Generate the URL
-                $arrProcessed[$objCalendar->jumpTo] = $objParent->getAbsoluteUrl('/%s');
+            // The target page does not exist
+            if (null === $objParent) {
+                continue;
             }
 
-            $strUrl = $arrProcessed[$objCalendar->jumpTo];
+            // The target page has not been published (see #5520)
+            if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time)) {
+                continue;
+            }
+
+            // The target page is protected (see #8416)
+            if ($objParent->protected) {
+                continue;
+            }
+
+            // The target page is exempt from the sitemap (see #6418)
+            if ('noindex,nofollow' === $objParent->robots) {
+                continue;
+            }
 
             // Get the items
             $objEvents = $this->framework->getAdapter(CalendarEventsModel::class)->findPublishedDefaultByPid($objCalendar->id);
@@ -99,7 +90,7 @@ class SitemapListener
                     continue;
                 }
 
-                $arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvent->alias ?: $objEvent->id));
+                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objEvent->alias ?: $objEvent->id));
             }
         }
 

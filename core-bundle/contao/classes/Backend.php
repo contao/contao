@@ -33,7 +33,6 @@ abstract class Backend extends Controller
 	{
 		parent::__construct();
 		$this->import(Database::class, 'Database');
-		$this->setStaticUrls();
 	}
 
 	/**
@@ -304,7 +303,7 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if (Input::isPost() && Environment::get('isAjaxRequest'))
+		if (Input::post('action') && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}
@@ -419,6 +418,8 @@ abstract class Backend extends Controller
 					$this->loadDataContainer($ptable);
 				}
 
+				$request = $container->get('request_stack')->getCurrentRequest();
+
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
@@ -439,10 +440,10 @@ abstract class Backend extends Controller
 						{
 							$strUrl = $container->get('router')->generate('contao_backend', array
 							(
-								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'do' => $request->query->get('do'),
 								'table' => $table,
 								'id' => $objRow->id,
-								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'ref' => $request->attributes->get('_contao_referer_id'),
 								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
@@ -560,7 +561,7 @@ abstract class Backend extends Controller
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
 		if (Input::get('pn') !== null)
@@ -681,7 +682,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1)))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0)))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getUrl(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1)))) . '" data-icon-disabled="' . Image::getUrl(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0)))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -753,7 +754,7 @@ abstract class Backend extends Controller
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
 		if (Input::get('fn') !== null)

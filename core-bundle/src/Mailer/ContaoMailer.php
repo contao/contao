@@ -54,7 +54,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $attributes = $this->requestStack->getCurrentRequest()->attributes;
+        $attributes = $request->attributes;
 
         if (!$attributes->has('pageModel')) {
             return;

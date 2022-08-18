@@ -38,7 +38,6 @@ class SitemapListener
         }
 
         $arrPages = [];
-        $arrProcessed = [];
         $time = time();
 
         // Get all news archives
@@ -60,35 +59,27 @@ class SitemapListener
                 continue;
             }
 
-            // Get the URL of the jumpTo page
-            if (!isset($arrProcessed[$objArchive->jumpTo])) {
-                $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
+            $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
 
-                // The target page does not exist
-                if (null === $objParent) {
-                    continue;
-                }
-
-                // The target page has not been published (see #5520)
-                if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time)) {
-                    continue;
-                }
-
-                // The target page is protected (see #8416)
-                if ($objParent->protected) {
-                    continue;
-                }
-
-                // The target page is exempt from the sitemap (see #6418)
-                if ('noindex,nofollow' === $objParent->robots) {
-                    continue;
-                }
-
-                // Generate the URL
-                $arrProcessed[$objArchive->jumpTo] = $objParent->getAbsoluteUrl('/%s');
+            // The target page does not exist
+            if (null === $objParent) {
+                continue;
             }
 
-            $strUrl = $arrProcessed[$objArchive->jumpTo];
+            // The target page has not been published (see #5520)
+            if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time)) {
+                continue;
+            }
+
+            // The target page is protected (see #8416)
+            if ($objParent->protected) {
+                continue;
+            }
+
+            // The target page is exempt from the sitemap (see #6418)
+            if ('noindex,nofollow' === $objParent->robots) {
+                continue;
+            }
 
             // Get the items
             $objArticles = $this->framework->getAdapter(NewsModel::class)->findPublishedDefaultByPid($objArchive->id);
@@ -102,7 +93,7 @@ class SitemapListener
                     continue;
                 }
 
-                $arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objNews->alias ?: $objNews->id));
+                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objNews->alias ?: $objNews->id));
             }
         }
 

@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
@@ -436,7 +436,7 @@ class tl_faq extends Backend
 				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
 										 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
@@ -540,9 +540,7 @@ class tl_faq extends Backend
 			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
 		}
 
-		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl('/%s'));
-
-		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
+		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 	}
 
 	/**

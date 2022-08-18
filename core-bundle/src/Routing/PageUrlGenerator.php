@@ -19,7 +19,6 @@ use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
@@ -52,7 +51,6 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             $route = $this->provider->getRouteByName($name);
         }
 
-        /** @var CompiledRoute $compiledRoute */
         $compiledRoute = $route->compile();
 
         if (

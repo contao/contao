@@ -2761,10 +2761,6 @@
         <source>Manual</source>
         <target>El ile</target>
       </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
-        <target>Taslak</target>
-      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>Lütfen görüntüyü yüklemek için tıklayın.</target>

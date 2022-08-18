@@ -104,7 +104,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
+			'search'                  => true
 		),
 		'tstamp' => array
 		(
@@ -232,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.intl.locales')->getLocales(null, false);
+				return System::getContainer()->get('contao.intl.locales')->getLocales();
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -434,9 +435,9 @@ class tl_member extends Backend
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_')
+			Image::getUrl($image),
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_')
 		);
 
 		return $args;

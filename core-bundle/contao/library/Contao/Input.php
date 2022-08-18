@@ -215,9 +215,8 @@ class Input
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
-		$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !$isBackend);
 
-		return $varValue;
+		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !$isBackend);
 	}
 
 	/**
@@ -1093,7 +1092,9 @@ class Input
 				return $arrGet[$strKey];
 			}
 
-			return $request->query->get($strKey);
+			// Since we don't know whether the value will be an array or a string,
+			// we can neither use ->get($strKey) nor ->all($strKey) in Symfony 6.
+			return $request->query->all()[$strKey] ?? null;
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
@@ -1147,7 +1148,9 @@ class Input
 				return $arrCookie[$strKey];
 			}
 
-			return $request->cookies->get($strKey);
+			// Since we don't know whether the value will be an array or a string,
+			// we can neither use ->get($strKey) nor ->all($strKey) in Symfony 6.
+			return $request->cookies->all()[$strKey] ?? null;
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_COOKIE with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);

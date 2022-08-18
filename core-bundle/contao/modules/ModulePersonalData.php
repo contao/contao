@@ -110,7 +110,7 @@ class ModulePersonalData extends Module
 		$objMember = MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #7415)

@@ -1,6 +1,10 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_download.html.twig" %}
 
+{% if downloads %}
+    {% set attributes = attrs(attributes|default).addClass(['download-element', "ext-#{(downloads|first).file.extension(true)}"]) %}
+{% endif %}
+
 {% block content %}
     {% if downloads %}
         {% with {download: downloads|first} %}{{ block('download_component') }}{% endwith %}
