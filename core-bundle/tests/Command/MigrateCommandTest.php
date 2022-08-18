@@ -480,7 +480,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand([], [], null, null, $connection);
         $tester = new CommandTester($command);
-        $errorMessage = "Wrong database version configured! You have version 8.0.29 but the database connection is configured to 5.7.39.";
+        $errorMessage = 'Wrong database version configured! You have version 8.0.29 but the database connection is configured to 5.7.39.';
 
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
