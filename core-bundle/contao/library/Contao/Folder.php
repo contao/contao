@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * Creates, reads, writes and deletes folders
  *
@@ -340,7 +342,7 @@ class Folder extends System
 
 		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
+			(new Filesystem())->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
 		}
 	}
 
@@ -395,7 +397,7 @@ class Folder extends System
 	{
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
 		{
-			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
+			(new Filesystem())->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
 		}
 	}
 

@@ -26,7 +26,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'assets.packages',
         'database_connection',
         'debug.stopwatch',
-        'filesystem',
         'fragment.handler',
         'mailer',
         'monolog.logger.contao',
