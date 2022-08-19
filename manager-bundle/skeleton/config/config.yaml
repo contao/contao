@@ -62,6 +62,9 @@ doctrine:
         auto_mapping: true
         auto_generate_proxy_classes: false
         naming_strategy: doctrine.orm.naming_strategy.default
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
         query_cache_driver:
             type: pool
             pool: doctrine.system_cache_pool
