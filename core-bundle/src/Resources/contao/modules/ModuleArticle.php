@@ -288,6 +288,8 @@ class ModuleArticle extends Module
 			throw new \Exception('No PDF extension found. Did you forget to install contao/tcpdf-bundle?');
 		}
 
+		trigger_deprecation('contao/core-bundle', '4.13', 'Printing an article as PDF has been deprecated in Contao 4.13 and will be removed in Contao 5.0');
+
 		// HOOK: allow individual PDF routines
 		if (isset($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && \is_array($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
 		{
