@@ -469,18 +469,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		// Print the article as PDF
-		if (Input::get('pdf') !== null && $objRow->printable && Input::get('pdf') == $objRow->id)
-		{
-			$options = StringUtil::deserialize($objRow->printable);
-
-			if (\is_array($options) && \in_array('pdf', $options))
-			{
-				$objArticle = new ModuleArticle($objRow);
-				$objArticle->generatePdf();
-			}
-		}
-
 		$objRow->headline = $objRow->title;
 		$objRow->multiMode = $blnMultiMode;
 

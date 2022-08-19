@@ -74,9 +74,6 @@
         "phpunit/phpunit": "^9.5",
         "symfony/phpunit-bridge": "^5.4 || ^6.0"
     },
-    "suggest": {
-        "contao/tcpdf-bundle": "To export articles as PDF files"
-    },
     "autoload": {
         "psr-4": {
             "Contao\\ManagerBundle\\": "src/"

@@ -251,37 +251,6 @@ class ModuleArticle extends Module
 		}
 	}
 
-	/**
-	 * Print an article as PDF and stream it to the browser
-	 */
-	public function generatePdf()
-	{
-		$this->headline = $this->title;
-		$this->printable = false;
-
-		$container = System::getContainer();
-
-		// Generate article
-		$strArticle = $container->get('contao.insert_tag.parser')->replaceInline($this->generate());
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
-		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
-
-		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
-		{
-			throw new \Exception('No PDF extension found. Did you forget to install contao/tcpdf-bundle?');
-		}
-
-		// HOOK: allow individual PDF routines
-		if (isset($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && \is_array($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['printArticleAsPdf'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($strArticle, $this);
-			}
-		}
-	}
-
 	protected function getResponseCacheTags(): array
 	{
 		// Do not tag with 'contao.db.tl_module.<id>' when rendering articles (see #2814)
