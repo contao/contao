@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.1] (2022-08-19)
+
+**Fixed issues:**
+
+- [#5207] Fix database exception during contao-setup ([ausi])
+- [#5204] Do not use the `filesystem` service in the `Folder` class ([fritzmg])
+- [#5205] Drop the deprecated article-to-PDF functionality ([aschempp])
+
 ## [5.0.0] (2022-08-18)
 
 **Fixed issues:**
@@ -323,6 +331,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.1]: https://github.com/contao/contao/releases/tag/5.0.1
 [5.0.0]: https://github.com/contao/contao/releases/tag/5.0.0
 [5.0.0-RC4]: https://github.com/contao/contao/releases/tag/5.0.0-RC4
 [5.0.0-RC3]: https://github.com/contao/contao/releases/tag/5.0.0-RC3
@@ -341,6 +350,9 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5207]: https://github.com/contao/contao/pull/5207
+[#5204]: https://github.com/contao/contao/pull/5204
+[#5205]: https://github.com/contao/contao/pull/5205
 [#5200]: https://github.com/contao/contao/pull/5200
 [#5199]: https://github.com/contao/contao/pull/5199
 [#5198]: https://github.com/contao/contao/pull/5198
