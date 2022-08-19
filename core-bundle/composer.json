@@ -168,9 +168,6 @@
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },
-    "suggest": {
-        "contao/tcpdf-bundle": "To export articles as PDF files"
-    },
     "autoload": {
         "psr-4": {
             "Contao\\CoreBundle\\": "src/"
