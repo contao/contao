@@ -50,12 +50,20 @@ class GetDotEnvCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = $this->projectDir.'/.env';
+        $pathLocal = $path.'.local';
 
-        if (!file_exists($path)) {
+        if (!file_exists($path) && !file_exists($pathLocal)) {
             return 0;
         }
 
-        $vars = (new Dotenv(false))->parse(file_get_contents($path));
+        $vars = [];
+
+        foreach ([$path, $pathLocal] as $filePath) {
+            if (file_exists($filePath)) {
+                $vars = array_merge($vars, (new Dotenv(false))->parse(file_get_contents($filePath)));
+            }
+        }
+
         $key = $input->getArgument('key');
 
         if (!$key) {

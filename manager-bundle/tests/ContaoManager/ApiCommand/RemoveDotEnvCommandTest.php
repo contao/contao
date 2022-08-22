@@ -46,7 +46,7 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
 
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
-        $this->tempfile = $this->tempdir.'/.env';
+        $this->tempfile = $this->tempdir.'/.env.local';
 
         $application = $this->createMock(Application::class);
         $application
@@ -105,5 +105,18 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function testSetsToEmptyStringIfNonLocalFileExists(): void
+    {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), "FOO='BAR'\n");
+        $this->filesystem->dumpFile($this->tempfile, "FOO='BAR'\n");
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO']);
+
+        $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertSame("FOO=\n", file_get_contents($this->tempfile));
     }
 }
