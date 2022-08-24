@@ -4827,6 +4827,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$orderBy[$k] = $key . ' ' . $direction;
 				}
+
+				// If the label field contains a reference to another table, join the table for correct sorting
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $field)
+				{
+					$arrField = explode(':', $field, 2);
+					
+					if ($arrField[0] === $key && count($arrField) === 2)
+					{
+						$fieldRef = explode('.', $arrField[1], 2);
+						$orderBy[$k] = sprintf('(SELECT %s FROM %s WHERE %s.id = %s.%s)', $fieldRef[1], $fieldRef[0], $fieldRef[0], $this->strTable, $key);
+						
+						if ($direction)
+						{
+							$orderBy[$k] .= ' ' . $direction;
+						}
+					}
+				}
 			}
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT)
