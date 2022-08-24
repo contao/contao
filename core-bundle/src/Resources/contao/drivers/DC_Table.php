@@ -4833,7 +4833,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$arrField = explode(':', $field, 2);
 					
-					if ($arrField[0] === $key && count($arrField) === 2)
+					if ($arrField[0] === $key && \count($arrField) === 2)
 					{
 						$fieldRef = explode('.', $arrField[1], 2);
 						$orderBy[$k] = sprintf('(SELECT %s FROM %s WHERE %s.id = %s.%s)', $fieldRef[1], $fieldRef[0], $fieldRef[0], $this->strTable, $key);
