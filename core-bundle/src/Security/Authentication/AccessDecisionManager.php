@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Bundle\SecurityBundle\Security\FirewallContext;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -21,25 +20,24 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
 {
     private AccessDecisionManagerInterface $inner;
     private AccessDecisionManagerInterface $contaoAccessDecisionManager;
-    private ScopeMatcher $scopeMatcher;
-    private RequestStack $requestStack;
+    private FirewallContext $firewallContext;
 
-    public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $contaoAccessDecisionManager, ScopeMatcher $scopeMatcher, RequestStack $requestStack)
+    public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $contaoAccessDecisionManager, FirewallContext $firewallContext)
     {
         $this->inner = $inner;
         $this->contaoAccessDecisionManager = $contaoAccessDecisionManager;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->requestStack = $requestStack;
+        $this->firewallContext = $firewallContext;
     }
 
     public function decide(TokenInterface $token, array $attributes, $object = null): bool
     {
-        $request = $this->requestStack->getMainRequest();
+        $config = $this->firewallContext->getConfig();
+        $firewallName = $config ? $config->getName() : '';
 
-        if (null === $request || !$this->scopeMatcher->isContaoRequest($request)) {
-            return $this->inner->decide($token, $attributes, $object);
+        if ('contao_frontend' === $firewallName || 'contao_backend' === $firewallName) {
+            return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
         }
 
-        return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
+        return $this->inner->decide($token, $attributes, $object);
     }
 }
