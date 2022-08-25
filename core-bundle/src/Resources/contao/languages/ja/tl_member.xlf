@@ -62,16 +62,16 @@
         <target>市区町村</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
-        <target>市区町村の名前を入力してください。</target>
+        <source>Please enter the name of the city.</source>
+        <target>市区町村名を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
         <target>都道府県</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
-        <target>都道府県の名前を入力してください。</target>
+        <source>Please enter the name of the state.</source>
+        <target>都道府県名を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>

@@ -997,15 +997,9 @@ table.tl_listing {
 .tl_content.draft > *,
 .tl_folder.draft > *,
 .tl_file.draft > *,
+.hover-row.draft > td,
 .hover-row.draft > td > * {
 	opacity:0.5;
-}
-.draft-label {
-	position:absolute;
-	width:100%;
-	top:calc(50% - 7px);
-	left:0;
-	text-align:center;
 }
 .parent_view > ul {
 	background:#f3f3f5;
