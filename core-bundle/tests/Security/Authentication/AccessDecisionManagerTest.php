@@ -70,7 +70,10 @@ class AccessDecisionManagerTest extends TestCase
         return $manager;
     }
 
-    private function mockFirewallContext(string $name)
+    /**
+     * @return FirewallContext&MockObject
+     */
+    private function mockFirewallContext(string $name): FirewallContext
     {
         $context = $this->createMock(FirewallContext::class);
 
