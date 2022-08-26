@@ -22,6 +22,9 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
     private AccessDecisionManagerInterface $contaoAccessDecisionManager;
     private FirewallContext $firewallContext;
 
+    /**
+     * @internal
+     */
     public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $contaoAccessDecisionManager, FirewallContext $firewallContext)
     {
         $this->inner = $inner;

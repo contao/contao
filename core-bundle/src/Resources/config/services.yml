@@ -713,8 +713,7 @@ services:
         arguments:
             - '@.inner'
             - '@contao.security.access_decision_manager.priority'
-            - '@contao.routing.scope_matcher'
-            - '@request_stack'
+            - '@security.firewall.context'
 
     contao.security.access_decision_manager.priority:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
