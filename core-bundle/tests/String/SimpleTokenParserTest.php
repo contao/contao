@@ -378,11 +378,6 @@ class SimpleTokenParserTest extends TestCase
             false,
         ];
 
-        yield 'Test single unknown token (regex test)' => [
-            'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
-            false,
-        ];
-
         yield 'Test PHP constants are treated as unknown variables' => [
             '__FILE__=="foo"',
             'Tried to evaluate unknown simple token(s): "__FILE__".',

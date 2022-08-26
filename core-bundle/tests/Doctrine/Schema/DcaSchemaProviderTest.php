@@ -18,8 +18,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
@@ -106,19 +106,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('text', $table->getColumn('teaser')->getType()->getName());
         $this->assertFalse($table->getColumn('teaser')->getNotnull());
         $this->assertFalse($table->getColumn('teaser')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
 
         $this->assertTrue($table->hasColumn('description'));
         $this->assertSame('text', $table->getColumn('description')->getType()->getName());
         $this->assertFalse($table->getColumn('description')->getNotnull());
         $this->assertFalse($table->getColumn('description')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
 
         $this->assertTrue($table->hasColumn('content'));
         $this->assertSame('text', $table->getColumn('content')->getType()->getName());
         $this->assertFalse($table->getColumn('content')->getNotnull());
         $this->assertFalse($table->getColumn('content')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
 
         $this->assertTrue($table->hasColumn('price'));
         $this->assertSame('decimal', $table->getColumn('price')->getType()->getName());
@@ -138,19 +138,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
         $this->assertFalse($table->getColumn('thumb')->getNotnull());
         $this->assertFalse($table->getColumn('thumb')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
 
         $this->assertTrue($table->hasColumn('image'));
         $this->assertSame('blob', $table->getColumn('image')->getType()->getName());
         $this->assertFalse($table->getColumn('image')->getNotnull());
         $this->assertFalse($table->getColumn('image')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
 
         $this->assertTrue($table->hasColumn('attachment'));
         $this->assertSame('blob', $table->getColumn('attachment')->getType()->getName());
         $this->assertFalse($table->getColumn('attachment')->getNotnull());
         $this->assertFalse($table->getColumn('attachment')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
 
         $this->assertTrue($table->hasColumn('published'));
         $this->assertSame('string', $table->getColumn('published')->getType()->getName());
@@ -195,13 +195,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
                         ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
                         ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
-                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TINYTEXT],
-                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TEXT],
-                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT],
+                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT],
+                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT],
+                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT],
                         ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => 1.99],
-                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TINYBLOB],
-                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB],
-                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB],
+                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB],
+                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB],
+                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB],
                         ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
                     ],
                 ],
@@ -628,7 +628,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('text', $table->getColumn('text')->getType()->getName());
         $this->assertFalse($table->getColumn('text')->getNotnull());
         $this->assertFalse($table->getColumn('text')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
 
         $this->assertTrue($table->hasIndex('text'));
         $this->assertFalse($table->getIndex('text')->isUnique());

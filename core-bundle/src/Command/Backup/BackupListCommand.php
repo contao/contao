@@ -23,12 +23,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupListCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:list';
+    protected static $defaultDescription = 'Lists the existing database backups.';
 
-    protected function configure(): void
+    public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
-        parent::configure();
+        $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;
+        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
 
-        $this->setDescription('Lists the existing backups.');
+        return ($offset >= 0 ? '+' : '-').$formatted;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -41,7 +43,12 @@ class BackupListCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->table(['Created', 'Size', 'Path'], $this->formatForTable($this->backupManager->listBackups()));
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+
+        $io->table(
+            [sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
+            $this->formatForTable($this->backupManager->listBackups(), $timeZone)
+        );
 
         return 0;
     }
@@ -49,15 +56,19 @@ class BackupListCommand extends AbstractBackupCommand
     /**
      * @param array<Backup> $backups
      */
-    private function formatForTable(array $backups): array
+    private function formatForTable(array $backups, \DateTimeZone $timeZone): array
     {
         $formatted = [];
 
         foreach ($backups as $backup) {
+            // TODO: Change this to \DateTime::createFromInterface($backup->getCreatedAt()) as soon as we require PHP >=8.0
+            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $backup->getCreatedAt()->getTimezone());
+            $localeDateTime->setTimezone($timeZone);
+
             $formatted[] = [
-                $backup->getCreatedAt()->format('Y-m-d H:i:s'),
+                $localeDateTime->format('Y-m-d H:i:s'),
                 $this->getHumanReadableSize($backup),
-                $backup->getFilepath(),
+                $backup->getFilename(),
             ];
         }
 
@@ -83,6 +94,10 @@ class BackupListCommand extends AbstractBackupCommand
      */
     private function getHumanReadableSize(Backup $backup): string
     {
+        if (0 === $backup->getSize()) {
+            return '0 B';
+        }
+
         $base = log($backup->getSize()) / log(1024);
         $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][(int) floor($base)];
 

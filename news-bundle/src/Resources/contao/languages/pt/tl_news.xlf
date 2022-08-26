@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
         <source>Here you can overwrite how search engines handle the news item.</source>
+        <target>Aqui pode escrever por cima da forma como os motores de busca lidam com a notícia.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
@@ -254,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
         <source>Metadata</source>
+        <target>Metadado</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>

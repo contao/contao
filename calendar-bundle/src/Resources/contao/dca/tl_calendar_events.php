@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\Events;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -32,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_calendar',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
@@ -372,7 +373,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'size' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['size'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -560,8 +561,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property Calendar $Calendar
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_calendar_events extends Backend
 {
@@ -970,8 +969,8 @@ class tl_calendar_events extends Backend
 	 */
 	public function adjustTime(DataContainer $dc)
 	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
+		// Return if there is no active record (override all) or no start date has been set yet
+		if (!$dc->activeRecord || !$dc->activeRecord->startDate)
 		{
 			return;
 		}
@@ -998,7 +997,7 @@ class tl_calendar_events extends Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?? $dc->activeRecord->startTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', '' !== (string) $dc->activeRecord->endTime ? $dc->activeRecord->endTime : $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events

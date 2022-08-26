@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster öffnen.</target>
+        <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuen Browserfenster öffnen.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_content.shClass.1">
         <source>Here you can configure the syntax highlighter (e.g. &lt;em&gt;gutter: false;&lt;/em&gt;).</source>
-        <target>Hier können Sie den Syntax-Highlighter konfigurieren (z.B. &lt;em&gt;gutter: false;&lt;/em&gt;).</target>
+        <target>Hier können Sie den Syntax-Highlighter konfigurieren (z. B. &lt;em&gt;gutter: false;&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.highlight.0">
         <source>Syntax highlighting</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.embed.1">
         <source>Use the wildcard &quot;%s&quot; to embed the link in a phrase (e.g. &lt;em&gt;For more information please visit %s&lt;/em&gt;).</source>
-        <target>Verwenden Sie den Platzhalter &quot;%s&quot;, um den Link in einen Text einzubetten (z.B. &lt;em&gt;Für mehr Informationen besuchen Sie %s&lt;/em&gt;).</target>
+        <target>Verwenden Sie den Platzhalter &quot;%s&quot;, um den Link in einen Text einzubetten (z. B. &lt;em&gt;Für mehr Informationen besuchen Sie %s&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.0">
         <source>Lightbox</source>
@@ -431,7 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
-        <target>Bitte geben Sie die YouTube-Video-ID ein (z.B. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
+        <target>Bitte geben Sie die YouTube-Video-ID ein (z. B. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
@@ -439,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
-        <target>Bitte geben Sie die Vimeo-Video-ID ein (z.B. &lt;em&gt;275028611&lt;/em&gt;).</target>
+        <target>Bitte geben Sie die Vimeo-Video-ID ein (z. B. &lt;em&gt;275028611&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Breite und Höhe des Mediaplayers in Pixeln (z.B. 640x480).</target>
+        <target>Breite und Höhe des Mediaplayers in Pixeln (z. B. 640x480).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -519,7 +519,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
-        <target>Hier können Sie einen hexadezimalen Farbcode (z.B. ff0000) für die Steuerelemente eingeben.</target>
+        <target>Hier können Sie einen hexadezimalen Farbcode (z. B. ff0000) für die Steuerelemente eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -844,6 +844,10 @@
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
         <target>Die youtube-nocookie.com-Domain verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Endlosschleife</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

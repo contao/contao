@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 403 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError403 extends Frontend
 {
@@ -25,9 +23,14 @@ class PageError403 extends Frontend
 	 * Generate an error 403 page
 	 *
 	 * @param PageModel|integer|null $objRootPage
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageError403::getResponse() method instead
 	 */
 	public function generate($objRootPage=null)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageError403::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError403::getResponse() method instead.');
+
 		if (is_numeric($objRootPage))
 		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::generate() has been deprecated and will no longer work in Contao 5.0.');

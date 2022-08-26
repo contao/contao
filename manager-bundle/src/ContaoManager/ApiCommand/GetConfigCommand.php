@@ -23,6 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GetConfigCommand extends Command
 {
+    protected static $defaultName = 'config:get';
+    protected static $defaultDescription = 'Gets the Contao Manager configuration as JSON string.';
+
     private ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
@@ -30,16 +33,6 @@ class GetConfigCommand extends Command
         parent::__construct();
 
         $this->managerConfig = $application->getManagerConfig();
-    }
-
-    protected function configure(): void
-    {
-        parent::configure();
-
-        $this
-            ->setName('config:get')
-            ->setDescription('Gets the Contao Manager configuration as JSON string.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

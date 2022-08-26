@@ -259,6 +259,14 @@ class RouteProvider extends AbstractPageRouteProvider
                     return -1;
                 }
 
+                if ('/' === $a->getPath() && '/' !== $b->getPath()) {
+                    return -1;
+                }
+
+                if ('/' === $b->getPath() && '/' !== $a->getPath()) {
+                    return 1;
+                }
+
                 return $this->compareRoutes($a, $b, $languages);
             }
         );

@@ -13,8 +13,6 @@ namespace Contao;
 /**
  * Front end module "lost password".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to ModuleLostPassword in Contao 5.0
  */
 class ModulePassword extends Module
@@ -41,7 +39,7 @@ class ModulePassword extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -223,7 +221,7 @@ class ModulePassword extends Module
 		$objVersions = new Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Define the form field

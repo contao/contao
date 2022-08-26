@@ -30,8 +30,6 @@ use Doctrine\DBAL\Exception\DriverException;
  *     $res  = $stmt->execute(4);
  *
  * @property string $error The last error message
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Database
 {
@@ -498,8 +496,6 @@ class Database
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
 	 *
-	 * @author Andreas Schempp
-	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name
 	 * @param boolean $blnSorting   True if the table has a sorting field
@@ -715,20 +711,7 @@ class Database
 	 */
 	public static function quoteIdentifier($strName)
 	{
-		static $strQuoteCharacter = null;
-
-		if ($strQuoteCharacter === null)
-		{
-			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
-		}
-
-		// The identifier is quoted already
-		if (strncmp($strName, $strQuoteCharacter, 1) === 0)
-		{
-			return $strName;
-		}
-
-		// Not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+		// Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
 		if (!preg_match('/^[A-Za-z0-9_$.]+$/', $strName))
 		{
 			return $strName;

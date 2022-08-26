@@ -14,8 +14,6 @@ use Highlight\Highlighter;
 
 /**
  * Front end content element "code".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentCode extends ContentElement
 {

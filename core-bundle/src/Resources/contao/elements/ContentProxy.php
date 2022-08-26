@@ -12,11 +12,10 @@ namespace Contao;
 
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\Model\Collection;
+use Contao\Model\Registry;
 
 /**
  * Proxy for new content element fragments, so they are accessible via $GLOBALS['TL_CTE'].
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class ContentProxy extends ContentElement
 {
@@ -40,7 +39,7 @@ class ContentProxy extends ContentElement
 			throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 		}
 
-		$this->reference = new ContentElementReference($objElement, $strColumn);
+		$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement));
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor

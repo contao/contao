@@ -16,15 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 <?php if ($use_attributes): ?>
-#[AsFrontendModule("<?= $elementName ?>", category: "<?= $category ?>")]
+#[AsFrontendModule(category: "<?= $category ?>")]
 <?php else: ?>
 /**
- * @FrontendModule("<?= $elementName ?>", category="<?= $category ?>")
+ * @FrontendModule(category="<?= $category ?>")
  */
 <?php endif; ?>
 class <?= $className ?> extends AbstractFrontendModuleController
 {
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         return $template->getResponse();
     }

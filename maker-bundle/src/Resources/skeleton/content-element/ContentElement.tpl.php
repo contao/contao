@@ -16,15 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 <?php if ($use_attributes): ?>
-#[AsContentElement("<?= $elementName ?>", category: "<?= $category ?>")]
+#[AsContentElement(category: "<?= $category ?>")]
 <?php else: ?>
 /**
- * @ContentElement("<?= $elementName ?>", category="<?= $category ?>")
+ * @ContentElement(category="<?= $category ?>")
  */
 <?php endif; ?>
 class <?= $className ?> extends AbstractContentElementController
 {
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         return $template->getResponse();
     }

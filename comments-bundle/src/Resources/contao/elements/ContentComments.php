@@ -14,8 +14,6 @@ namespace Contao;
  * Class ContentComments
  *
  * @property Comments $Comments
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentComments extends ContentElement
 {

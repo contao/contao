@@ -20,9 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle a regular front end page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
+#[\AllowDynamicProperties]
 class PageRegular extends Frontend
 {
 	/**
@@ -35,9 +34,14 @@ class PageRegular extends Frontend
 	 *
 	 * @param PageModel $objPage
 	 * @param boolean   $blnCheckRequest
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageRegular::getResponse() method instead
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageRegular::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRegular::getResponse() method instead.');
+
 		$this->prepare($objPage);
 
 		$this->Template->output($blnCheckRequest);
@@ -226,12 +230,12 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $headBag->getMetaRobots();
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots());
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = $headBag->getCanonicalUriForRequest($request);
+			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
 		}
 
 		// Fall back to the default title tag

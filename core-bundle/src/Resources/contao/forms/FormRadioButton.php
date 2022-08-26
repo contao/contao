@@ -16,8 +16,6 @@ namespace Contao;
  * @property boolean $mandatory
  * @property array   $options
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to FormRadio in Contao 5.0
  */
 class FormRadioButton extends Widget

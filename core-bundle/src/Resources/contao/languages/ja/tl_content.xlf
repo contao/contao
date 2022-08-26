@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>プレビューの画像を表示</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>選択したファイルのプレビューの画像を表示します。</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -666,6 +668,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>プレビューの設定</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -769,11 +772,11 @@
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
+        <target>ページのレイアウトに&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
+        <target>ページのレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
       </trans-unit>
       <trans-unit id="tl_content.player_autoplay">
         <source>Autoplay</source>
@@ -842,6 +845,10 @@
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
         <target>youtube-nocookie.comドメインを使用</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>動画を繰り返し再生</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

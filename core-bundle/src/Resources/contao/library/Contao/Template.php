@@ -62,8 +62,6 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
  * @property string       $currentDevice
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Template extends Controller
 {
@@ -487,6 +485,19 @@ abstract class Template extends Controller
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return $url;
+	}
+
+	/**
+	 * Returns an asset version
+	 *
+	 * @param string      $path
+	 * @param string|null $packageName
+	 *
+	 * @return string
+	 */
+	public function assetVersion($path, $packageName = null)
+	{
+		return System::getContainer()->get('assets.packages')->getVersion($path, $packageName);
 	}
 
 	/**

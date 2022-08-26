@@ -42,6 +42,13 @@ class AuthenticationProviderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
+    }
+
     public function testAuthenticatesTwoFactorToken(): void
     {
         $user = $this->createPartialMock(FrontendUser::class, []);

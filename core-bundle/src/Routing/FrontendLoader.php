@@ -27,7 +27,7 @@ class FrontendLoader extends Loader
      */
     public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
-        trigger_deprecation('contao/core-bundle', '4.10', 'Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated and will no longer work in Contao 5.0. Use Symfony routing instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.10', 'Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated and will no longer work in Contao 5.0. Use Symfony routing instead.');
 
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;

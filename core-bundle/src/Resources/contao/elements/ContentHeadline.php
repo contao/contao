@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "headline".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentHeadline extends ContentElement
 {

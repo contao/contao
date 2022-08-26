@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -40,9 +41,11 @@ class InsertTagsTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
 
         InsertTags::reset();
+
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }

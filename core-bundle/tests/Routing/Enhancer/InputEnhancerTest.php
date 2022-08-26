@@ -23,11 +23,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
 {
-    protected function setUp(): void
+    protected function tearDown(): void
     {
-        parent::setUp();
+        unset($GLOBALS['TL_AUTO_ITEM']);
 
-        unset($_GET, $GLOBALS['TL_AUTO_ITEM']);
+        parent::tearDown();
     }
 
     public function testReturnsTheDefaultsIfThereIsNoPageModel(): void

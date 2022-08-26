@@ -110,8 +110,8 @@
         <target>Individuelle Bezeichnung</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Hier können Sie eine individuelle Bezeichnung für das Drop-Down-Menü eingeben.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Hier können Sie eine individuelle Bezeichnung für das Dropdown-Menü oder den Link zur Übersicht eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -487,7 +487,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_text.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any input field (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Eingabefelder (z.B. &lt;em&gt;##lastname##&lt;/em&gt;) benutzen.</target>
+        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Eingabefelder (z. B. &lt;em&gt;##lastname##&lt;/em&gt;) benutzen.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.0">
         <source>Password message</source>
@@ -495,7 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Mitgliedsdaten (z.B. &lt;em&gt;##lastname##&lt;/em&gt;) verwenden.</target>
+        <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Mitgliedsdaten (z. B. &lt;em&gt;##lastname##&lt;/em&gt;) verwenden.</target>
       </trans-unit>
       <trans-unit id="tl_module.data.0">
         <source>Template data</source>
@@ -514,8 +514,8 @@
         <target>Bitte wählen Sie ein Modul für jede Root-Seite.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
-        <target>Modul für &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Modul wählen für &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

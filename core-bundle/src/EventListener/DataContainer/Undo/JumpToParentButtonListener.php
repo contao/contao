@@ -29,7 +29,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class JumpToParentButtonListener
 {
-    use UndoListenerTrait;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private TranslatorInterface $translator;
 
     public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)
     {
@@ -65,7 +67,7 @@ class JumpToParentButtonListener
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\': this.href });return false">%s</a> ',
-            $backend->addToUrl($parentLinkParameters),
+            $backend->addToUrl($parentLinkParameters.'&popup=1'),
             StringUtil::specialchars($newTitle),
             StringUtil::specialchars($newTitle),
             $image->getHtml($icon, $label)
@@ -113,5 +115,30 @@ class JumpToParentButtonListener
         }
 
         return null;
+    }
+
+    private function getParentTableForRow(string $table, array $row): ?array
+    {
+        if (true === ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
+            return ['table' => $row['ptable'], 'id' => $row['pid']];
+        }
+
+        if (isset($GLOBALS['TL_DCA'][$table]['config']['ptable'])) {
+            return ['table' => $GLOBALS['TL_DCA'][$table]['config']['ptable'], 'id' => $row['pid']];
+        }
+
+        return null;
+    }
+
+    private function checkIfParentExists(array $parent): bool
+    {
+        $count = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
+            [
+                'id' => $parent['id'],
+            ]
+        );
+
+        return (int) $count > 0;
     }
 }

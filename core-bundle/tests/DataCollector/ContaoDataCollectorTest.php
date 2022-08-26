@@ -21,6 +21,8 @@ use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoDataCollectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Model::class, Registry::class]);
+
+        parent::tearDown();
+    }
+
     public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [
@@ -79,6 +88,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -119,6 +129,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -211,6 +222,48 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getLegacyRouting()['hooks']
         );
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function testHandlesMissingLayoutIdGracefully(): void
+    {
+        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout->name = 'Default';
+        $layout->id = 2;
+        $layout->template = 'fe_page';
+
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 2;
+
+        $GLOBALS['objPage'] = $page;
+
+        $collector = $this->getDataCollector();
+        $collector->setFramework($framework);
+        $collector->collect(new Request(), new Response());
+
+        $this->assertSame(
+            [
+                'version' => ContaoCoreBundle::getVersion(),
+                'framework' => false,
+                'models' => 0,
+                'frontend' => true,
+                'preview' => false,
+                'layout' => '',
+                'template' => '',
+                'legacy_routing' => false,
+            ],
+            $collector->getSummary()
+        );
+
+        $collector->reset();
+
+        $this->assertSame([], $collector->getSummary());
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void

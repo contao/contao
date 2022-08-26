@@ -19,8 +19,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property array  $cal_calendar
  * @property string $cal_ctemplate
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCalendar extends Events
 {
@@ -58,7 +56,7 @@ class ModuleCalendar extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}

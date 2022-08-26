@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\FrontendUser;
 use Contao\Image;
 use Contao\MemberGroupModel;
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(
@@ -54,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('icon', 'firstname', 'lastname', 'username', 'dateAdded'),
+			'fields'                  => array('', 'firstname', 'lastname', 'username', 'dateAdded'),
 			'showColumns'             => true,
 			'label_callback'          => array('tl_member', 'addIcon')
 		),
@@ -124,7 +125,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
+			'search'                  => true
 		),
 		'tstamp' => array
 		(
@@ -423,8 +425,6 @@ if (defined('TL_MODE') && TL_MODE == 'FE')
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_member extends Backend
 {
@@ -518,7 +518,9 @@ class tl_member extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		return '<a href="contao/preview.php?user=' . rawurlencode($row['username']) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
+		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
+
+		return '<a href="' . StringUtil::specialcharsUrl($url) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

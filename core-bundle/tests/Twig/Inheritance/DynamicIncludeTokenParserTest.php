@@ -109,9 +109,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $templateHierarchy
             ->method('getFirst')
             ->with('foo')
-            ->willThrowException(
-                new \LogicException('<original message>')
-            )
+            ->willThrowException(new \LogicException('<original message>'))
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));

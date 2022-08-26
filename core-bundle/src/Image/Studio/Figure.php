@@ -193,10 +193,7 @@ class Figure
         }
 
         // Allow removing attributes by setting them to null
-        $linkAttributes = array_filter(
-            $this->linkAttributes,
-            static fn ($attribute): bool => null !== $attribute
-        );
+        $linkAttributes = array_filter($this->linkAttributes, static fn ($attribute): bool => null !== $attribute);
 
         // Optionally strip the href attribute
         return $includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]);

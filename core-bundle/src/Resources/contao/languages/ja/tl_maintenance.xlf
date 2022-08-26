@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.0">
         <source>Purge the version table</source>
-        <target>バージョンを消去</target>
+        <target>バージョンのテーブルを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
-        <target>システムログの消去</target>
+        <target>システムのログを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
-        <target>画像キャッシュの消去</target>
+        <target>画像のキャッシュを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
@@ -79,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>プレビューのキャッシュを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>自動的に生成したプレビューの画像を削除して、共有キャッシュを消去します。これで削除したリソースへのリンクはなくなります。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -112,8 +114,8 @@
         <target>XMLファイルを再作成</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>XMLファイル(サイトマップとフィード)を再作成してページキャッシュを消去します。これで削除したリソースへのリンクはなくなります。</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>&lt;code&gt;shared&lt;/code&gt;フォルダーのXMSファイルの再作成と共有キャッシュのを消去を行って、削除したリソースへのリンクがない状態にします。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -151,12 +153,16 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>現在クローラーが動作中です。結果を見るには終了するまで待ってください。</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>デバッグログをダウンロード</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>デバッグログ</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>エラーが起きるかページが飛ばされた場合は、さらに詳しい情報をデバッグログで確認してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
         <target>ログをダウンロード</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">

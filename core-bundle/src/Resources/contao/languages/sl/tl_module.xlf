@@ -110,8 +110,7 @@
         <target>Prilagojena oznaka</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Tu lahko vnesete prilagojeno oznako spustnega menija.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -439,9 +438,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.0">
         <source>Delete home directory</source>
+        <target>Izbriši domačo mapo</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.1">
         <source>Delete the home directory when the account is deleted.</source>
+        <target>Izbriši domačo mapo, ko je izbrisan uporabniški račun</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
@@ -492,9 +493,11 @@
       </trans-unit>
       <trans-unit id="tl_module.data.0">
         <source>Template data</source>
+        <target>Podatki predloge</target>
       </trans-unit>
       <trans-unit id="tl_module.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>V predlogi so na voljo te vrednosti v &lt;code&gt;$this-&gt;data&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.0">
         <source>Modules</source>
@@ -502,9 +505,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Prosimo, izberite modul za vsako od vrhnjih strani.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Izberite modul za &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

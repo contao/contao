@@ -842,6 +842,9 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Utilisez le domaine youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Lecture automatique</target>

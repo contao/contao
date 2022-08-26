@@ -78,12 +78,12 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-        $this->assertFileNotExists($this->tempfile);
+        $this->assertFileDoesNotExist($this->tempfile);
     }
 
     public function testIgnoresIfDotEnvDoesNotExist(): void
     {
-        $this->assertFileNotExists($this->tempfile);
+        $this->assertFileDoesNotExist($this->tempfile);
 
         $tester = new CommandTester($this->command);
         $tester->execute(['key' => 'FOO']);

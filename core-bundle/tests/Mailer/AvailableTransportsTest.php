@@ -17,9 +17,18 @@ use Contao\CoreBundle\Mailer\TransportConfig;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 
 class AvailableTransportsTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+
+        parent::tearDown();
+    }
+
     public function testAnnotatedCallbacks(): void
     {
         $service = new AvailableTransports();

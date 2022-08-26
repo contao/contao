@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.stylesheet.1">
         <source>Here you can add internal style sheets to the layout.</source>
-        <target>ページレイアウトに内部のスタイルシートを追加できます</target>
+        <target>ページのレイアウトに内部のスタイルシートを追加できます</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>ページレイアウトの設定に基づいてCSSによる配置を生成します。この構成要素はレイアウトビルダーが動作するために必要です!</target>
+        <target>ページのレイアウトの設定に基づいてCSSによる配置を生成します。この構成要素はレイアウトビルダーが動作するために必要です!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
@@ -475,27 +475,27 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
-        <target>新しいページレイアウトを作成</target>
+        <target>新しいページのレイアウトを作成</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
-        <target>ID %sのページレイアウトの詳細を表示</target>
+        <target>ID %sのページのレイアウトの詳細を表示</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
-        <target>ID %sのページレイアウトを編集</target>
+        <target>ID %sのページのレイアウトを編集</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
-        <target>ID %sのページレイアウトを複製</target>
+        <target>ID %sのページのレイアウトを複製</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
-        <target>ID %sのページレイアウトを移動</target>
+        <target>ID %sのページのレイアウトを移動</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
-        <target>ID %sのページレイアウトを削除</target>
+        <target>ID %sのページのレイアウトを削除</target>
       </trans-unit>
     </body>
   </file>

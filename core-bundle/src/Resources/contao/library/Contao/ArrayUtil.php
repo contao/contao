@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provides array manipulation methods
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ArrayUtil
 {

@@ -26,6 +26,7 @@ use Contao\Model\Collection;
  * @property string|integer    $maxItems
  * @property string            $feedBase
  * @property string|null       $description
+ * @property string|integer    $imgSize
  *
  * @property string $feedName
  *
@@ -69,8 +70,6 @@ use Contao\Model\Collection;
  * @method static integer countByMaxItems($val, array $opt=array())
  * @method static integer countByFeedBase($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CalendarFeedModel extends Model
 {

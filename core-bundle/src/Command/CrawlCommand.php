@@ -45,6 +45,7 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 class CrawlCommand extends Command
 {
     protected static $defaultName = 'contao:crawl';
+    protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
 
     private Factory $escargotFactory;
     private Filesystem $filesystem;
@@ -71,11 +72,10 @@ class CrawlCommand extends Command
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', '0')
-            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '0')
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '10')
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
-            ->setDescription('Crawls the Contao root pages with the desired subscribers')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
     }

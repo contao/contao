@@ -20,11 +20,16 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Main back end controller.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendMain extends Backend
 {
+	/**
+	 * @var Template
+	 *
+	 * @todo Remove in Contao 5.0
+	 */
+	protected $Template;
+
 	/**
 	 * Current Ajax object
 	 * @var Ajax
@@ -58,7 +63,7 @@ class BackendMain extends Backend
 		// Password change required
 		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
-			$this->redirect('contao/password.php');
+			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required
@@ -129,7 +134,7 @@ class BackendMain extends Backend
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);
 
-			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*$|mtg=[^&]*&(amp;)?/i', '', Environment::get('request')));
 		}
 		// Error
 		elseif (Input::get('act') == 'error')

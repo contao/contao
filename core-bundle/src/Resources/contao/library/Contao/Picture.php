@@ -39,9 +39,6 @@ trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Picture" cla
  *     $data = Picture::create('example.jpg', 1)->getTemplateData();
  *     $data = Picture::create('example.jpg', array(100, 100, 'crop'))->getTemplateData();
  *
- * @author Martin Auswöger <https://github.com/ausi>
- * @author Yanick Witschi <https://github.com/Toflar>
- *
  * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
  *             Use the contao.image.picture_factory service instead.
  */

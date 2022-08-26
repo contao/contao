@@ -18,8 +18,6 @@ trigger_deprecation('contao/core-bundle', '4.9', 'Using the "Contao\FrontendCron
 /**
  * Command scheduler controller.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use the
  *             Contao\CoreBundle\Cron\Cron service instead
  */

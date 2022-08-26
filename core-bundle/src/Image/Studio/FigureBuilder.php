@@ -155,7 +155,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException("DBAFS item '$filesModel->path' is not a file.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
 
             return $this;
         }
@@ -164,7 +164,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
+            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -180,7 +180,7 @@ class FigureBuilder
         $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
-            $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
         }
@@ -198,7 +198,7 @@ class FigureBuilder
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
-            $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
         }
@@ -231,7 +231,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
+            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -253,7 +253,7 @@ class FigureBuilder
     public function from($identifier): self
     {
         if (null === $identifier) {
-            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+            $this->lastException = new InvalidResourceException('The defined resource is "null".');
 
             return $this;
         }

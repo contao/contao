@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>Прикажи преглед слике</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>Прикажи прегледе слика изабраних фајла.</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -665,6 +667,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>Подешавања прегледа</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -841,6 +844,9 @@
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
         <target>Користи youtube-nocookie.com домен</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

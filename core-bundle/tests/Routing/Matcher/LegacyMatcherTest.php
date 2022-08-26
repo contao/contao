@@ -33,6 +33,13 @@ class LegacyMatcherTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
+    }
+
     public function testDoesNothingIfNoHooksAreRegistered(): void
     {
         unset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']);

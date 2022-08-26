@@ -22,8 +22,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string   $com_template
  * @property string   $cal_template
  * @property array    $cal_calendar
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends Events
 {
@@ -51,7 +49,7 @@ class ModuleEventReader extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -267,8 +265,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
-			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
+			$objTemplate->teaser = StringUtil::encodeEmail($objEvent->teaser);
 		}
 
 		// Display the "read more" button for external/article links

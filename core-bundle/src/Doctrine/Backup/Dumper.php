@@ -14,11 +14,11 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\BinaryType;
 
 class Dumper implements DumperInterface
 {
@@ -39,8 +39,14 @@ class Dumper implements DumperInterface
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
 
+        $this->disableQueryBuffering($connection);
+
         $schemaManager = $connection->createSchemaManager();
-        $platform = $connection->getDatabasePlatform();
+        $platform = clone $connection->getDatabasePlatform();
+
+        $reflection = (new \ReflectionClass($platform))->getProperty('_keywords');
+        $reflection->setAccessible(true);
+        $reflection->setValue($platform, $this->getCompatibleKeywords());
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
             yield from $this->dumpSchema($platform, $table);
@@ -54,6 +60,22 @@ class Dumper implements DumperInterface
         yield 'SET FOREIGN_KEY_CHECKS = 1;';
     }
 
+    private function disableQueryBuffering(Connection $connection): void
+    {
+        $pdo = $connection->getNativeConnection();
+
+        if (!$pdo instanceof \PDO) {
+            return;
+        }
+
+        // Already disabled
+        if (!$pdo->getAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY)) {
+            return;
+        }
+
+        $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+    }
+
     /**
      * @phpstan-param AbstractSchemaManager<AbstractPlatform> $schemaManager
      */
@@ -61,7 +83,7 @@ class Dumper implements DumperInterface
     {
         foreach ($schemaManager->listViews() as $view) {
             yield sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield $platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';';
+            yield sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
 
@@ -78,47 +100,67 @@ class Dumper implements DumperInterface
     private function dumpData(Connection $connection, Table $table): \Generator
     {
         yield sprintf('-- BEGIN DATA %s', $table->getName());
+
         $values = [];
+        $columnBindingTypes = [];
+        $columnUtf8Charsets = [];
 
         foreach ($table->getColumns() as $column) {
-            if ($column->getType() instanceof BinaryType) {
-                $values[] = sprintf('HEX(`%s`) AS `%s`', $column->getName(), $column->getName());
-            } else {
-                $values[] = sprintf('`%s` AS `%s`', $column->getName(), $column->getName());
-            }
+            $columnName = $column->getName();
+            $values[] = "`$columnName` AS `$columnName`";
+            $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
+            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
-        $rows = $connection->executeQuery(sprintf('SELECT %s FROM `%s`', implode(', ', $values), $table->getName()));
+        $values = implode(', ', $values);
+        $tableName = $table->getName();
+        $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
 
         foreach ($rows->iterateAssociative() as $row) {
             $insertColumns = [];
             $insertValues = [];
 
             foreach ($row as $columnName => $value) {
-                $insertColumns[] = sprintf('`%s`', $columnName);
-                $insertValues[] = $this->formatValueForDump($value, $table->getColumn($columnName), $connection);
+                $insertColumns[] = "`$columnName`";
+
+                $insertValues[] = $this->formatValueForDump(
+                    $value,
+                    $columnBindingTypes[$columnName],
+                    $columnUtf8Charsets[$columnName],
+                    $connection
+                );
             }
 
-            yield sprintf(
-                'INSERT INTO `%s` (%s) VALUES (%s);',
-                $table->getName(),
-                implode(', ', $insertColumns),
-                implode(', ', $insertValues)
-            );
+            $insertColumns = implode(', ', $insertColumns);
+            $insertValues = implode(', ', $insertValues);
+
+            yield "INSERT INTO `$tableName` ($insertColumns) VALUES ($insertValues);";
         }
     }
 
     /**
-     * @param mixed $value
+     * @param string|int|float|null $value
      */
-    private function formatValueForDump($value, Column $column, Connection $connection): string
+    private function formatValueForDump($value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
         }
 
-        if ($column->getType() instanceof BinaryType) {
-            return sprintf('UNHEX(%s)', $connection->quote($value));
+        $value = (string) $value;
+
+        if ('' === $value) {
+            return "''";
+        }
+
+        // In MySQL, booleans are stored as tinyint, so we don't need to quote that either
+        if (ParameterType::INTEGER === $columnBindingType || ParameterType::BOOLEAN === $columnBindingType) {
+            return $value;
+        }
+
+        // Non-ASCII values
+        if (preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]/', $value) && (!$isUtf8Charset || !preg_match('//u', $value))) {
+            return '0x'.bin2hex($value);
         }
 
         return $connection->quote($value);
@@ -143,5 +185,25 @@ class Dumper implements DumperInterface
         }
 
         return $filteredTables;
+    }
+
+    private function getCompatibleKeywords(): KeywordList
+    {
+        return new class() extends KeywordList {
+            public function isKeyword($word): bool
+            {
+                return true;
+            }
+
+            protected function getKeywords(): array
+            {
+                return [];
+            }
+
+            public function getName(): string
+            {
+                return 'AllWordsAreKeywords';
+            }
+        };
     }
 }

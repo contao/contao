@@ -46,6 +46,13 @@ class StringUtilTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Input::class, System::class]);
+
+        parent::tearDown();
+    }
+
     public function testGeneratesAliases(): void
     {
         $this->assertSame('foo', StringUtil::generateAlias('foo'));
@@ -286,9 +293,16 @@ class StringUtilTest extends TestCase
      */
     public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
+        $prevSubstituteCharacter = mb_substitute_character();
+
+        // Enforce substitute character for these tests (see #5011)
+        mb_substitute_character(0x3F);
+
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
         $this->assertSame($expected, $result);
+
+        mb_substitute_character($prevSubstituteCharacter);
     }
 
     public function validEncodingsProvider(): \Generator
@@ -296,14 +310,14 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
             'ISO-8859-1',
-            utf8_decode('𝚏ōȏճăᴦ'),
+            '??????',
             'UTF-8',
         ];
 
         yield 'From ISO-8859-1 to UTF-8' => [
             '𝚏ōȏճăᴦ',
             'UTF-8',
-            utf8_encode('𝚏ōȏճăᴦ'),
+            'ðÅÈÕ³Äá´¦',
             'ISO-8859-1',
         ];
 

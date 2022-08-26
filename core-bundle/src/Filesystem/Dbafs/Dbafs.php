@@ -51,7 +51,6 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     private string $table;
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483648; // 2 GiB
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -88,9 +87,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->dbPathPrefix = Path::canonicalize($prefix);
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     */
     public function setMaxFileSize(int $bytes): void
     {
-        $this->maxFileSize = $bytes;
+        trigger_deprecation('contao/core-bundle', '4.13', 'Setting a maximum file size has no effect anymore. The "%s()" method will be removed in Contao 5.', __METHOD__);
     }
 
     public function setBulkInsertSize(int $chunkSize): void
@@ -591,7 +593,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if (!empty($inserts)) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // `uuid`, `pid`, …
+            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
@@ -615,7 +617,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if (null !== ($newPath = $changedValues[ChangeSet::ATTR_PATH] ?? null)) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($newPath);
-                $dataToUpdate['pid'] = $getParentUuid($pathIdentifier);
+                $dataToUpdate['pid'] = $getParentUuid($newPath);
             }
 
             if (null !== ($newHash = $changedValues[ChangeSet::ATTR_HASH] ?? null)) {
@@ -653,7 +655,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * This includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
-     * This method also builds lookup tables for hashes, 'last modified' timestamps
+     * This method also builds lookup tables for hashes, "last modified" timestamps
      * and UUIDs of the entire table.
      *
      * @param array<string> $searchPaths       non-empty list of search paths
@@ -722,6 +724,14 @@ class Dbafs implements DbafsInterface, ResetInterface
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
 
+                // Ignore paths with non-UTF-8 characters
+                // TODO: Move check to VirtualFilesystem#listContents() and throw a VirtualFilesystemException instead in Contao 5.
+                if (1 !== preg_match('//u', $path)) {
+                    trigger_deprecation('contao/core-bundle', '4.13', 'Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
+
+                    continue;
+                }
+
                 if (!$item->isFile()) {
                     if (!$shallow) {
                         yield from $traverseRecursively($path);
@@ -730,13 +740,8 @@ class Dbafs implements DbafsInterface, ResetInterface
                     continue;
                 }
 
-                // Ignore file markers
-                if (self::FILE_MARKER_PUBLIC === basename($path)) {
-                    continue;
-                }
-
-                // Ignore files that are too big
-                if ($item->getFileSize() > $this->maxFileSize) {
+                // Ignore dot files
+                if (0 === strpos(basename($path), '.')) {
                     continue;
                 }
 
@@ -816,7 +821,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * double slash (//) as suffix.
      *
      * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
      * truthy result.
      *
      * @param array<string> $basePaths
@@ -893,7 +898,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $shallowDirectories = [];
         $deepDirectories = [];
 
-        // Normalize '/**' and '/*' suffixes
+        // Normalize "/**" and "/*" suffixes
         $paths = array_map(
             static function (string $path) use (&$shallowDirectories, &$deepDirectories): string {
                 if (preg_match('@^[^*]+/(\*\*?)@', $path, $matches)) {

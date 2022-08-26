@@ -18,17 +18,23 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class RootPageDependentSelectListener
 {
     private Connection $connection;
+    private UrlGeneratorInterface $router;
     private TranslatorInterface $translator;
     private ContaoCsrfTokenManager $csrfTokenManager;
 
-    public function __construct(Connection $connection, TranslatorInterface $translator, ContaoCsrfTokenManager $csrfTokenManager)
+    public function __construct(Connection $connection, UrlGeneratorInterface $router, TranslatorInterface $translator, ContaoCsrfTokenManager $csrfTokenManager)
     {
         $this->connection = $connection;
+        $this->router = $router;
         $this->translator = $translator;
         $this->csrfTokenManager = $csrfTokenManager;
     }
@@ -102,10 +108,15 @@ class RootPageDependentSelectListener
             }
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
+            $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1', 'rt' => $this->csrfTokenManager->getDefaultTokenValue()]);
 
-            $wizards[$rootPage] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getDefaultTokenValue().'"
-                title="'.StringUtil::specialchars($title).'"
-                onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $title)).'\',\'url\':this.href});return false">'.Image::getHtml('alias.svg', $title).'</a>';
+            $wizards[$rootPage] = sprintf(
+                ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+                StringUtil::specialcharsUrl($href),
+                StringUtil::specialchars($title),
+                StringUtil::specialchars(str_replace("'", "\\'", $title)),
+                Image::getHtml('alias.svg', $title)
+            );
         }
 
         return serialize($wizards);

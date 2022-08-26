@@ -34,8 +34,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $editableFileTypes
  * @property boolean $createNewVersion
  * @property boolean $isDbAssisted
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
@@ -128,7 +126,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		parent::__construct();
 
-		$objSession = System::getContainer()->get('session');
+		$container = System::getContainer();
+		$objSession = $container->get('session');
 
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
@@ -136,7 +135,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
-				$this->redirect('contao/confirm.php');
+				$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 			}
 		}
 
@@ -152,7 +151,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
+			$container->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -204,7 +203,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
-		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Check for valid file types
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'] ?? null)
@@ -234,14 +233,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? $container->getParameter('contao.editable_files')));
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path');
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? $container->getParameter('contao.upload_path');
 
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
@@ -364,7 +363,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for);
+				$for = preg_quote($for, null);
 			}
 
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";
@@ -2377,7 +2376,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Make sure unique fields are unique
-			if ((!is_scalar($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2441,7 +2440,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Save the value if there was no error
-			if ((!is_scalar($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+			if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 			{
 				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
@@ -2450,7 +2449,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 
 				// Set the correct empty value (see #6284, #6373)
-				if (is_scalar($varValue) && (string) $varValue === '')
+				if (!\is_array($varValue) && (string) $varValue === '')
 				{
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
@@ -2472,8 +2471,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * Synchronize the file system with the database
 	 *
 	 * @return string
-	 *
-	 * @throws AccessDeniedException
 	 */
 	public function sync()
 	{
@@ -2482,86 +2479,18 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
-		$this->loadLanguageFile('tl_files');
+		$container = System::getContainer();
 
 		// Synchronize
-		$strLog = Dbafs::syncFiles();
+		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
-		// Show the results
-		$arrMessages = array();
-		$arrCounts   = array('Added'=>0, 'Changed'=>0, 'Unchanged'=>0, 'Moved'=>0, 'Deleted'=>0);
-
-		// Read the log file
-		$fh = fopen($this->strRootDir . '/' . $strLog, 'r');
-
-		while (($buffer = fgets($fh)) !== false)
-		{
-			list($type, $file) = explode('] ', trim(substr($buffer, 1)), 2);
-
-			// Add a message depending on the type
-			switch ($type)
-			{
-				case 'Added':
-					$arrMessages[] = '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncAdded'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Changed':
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncChanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Unchanged':
-					$arrMessages[] = '<p class="tl_confirm hidden">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncUnchanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Moved':
-					list($source, $target) = explode(' to ', $file, 2);
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncMoved'], StringUtil::specialchars($source), StringUtil::specialchars($target)) . '</p>';
-					break;
-
-				case 'Deleted':
-					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				default:
-					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
-					break;
-			}
-
-			++$arrCounts[$type];
-		}
-
-		// Close the log file
-		unset($buffer);
-		fclose($fh);
-
-		// Confirm
-		Message::addConfirmation($GLOBALS['TL_LANG']['tl_files']['syncComplete']);
-
-		$return = Message::generate() . '
-<div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
-</div>
-<div id="sync-results">
-  <p class="left">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncResult'], System::getFormattedNumber($arrCounts['Added'], 0), System::getFormattedNumber($arrCounts['Changed'], 0), System::getFormattedNumber($arrCounts['Unchanged'], 0), System::getFormattedNumber($arrCounts['Moved'], 0), System::getFormattedNumber($arrCounts['Deleted'], 0)) . '</p>
-  <p class="right"><input type="checkbox" id="show-hidden" class="tl_checkbox" onclick="Backend.toggleUnchanged()"> <label for="show-hidden">' . $GLOBALS['TL_LANG']['tl_files']['syncShowUnchanged'] . '</label></p>
-</div>
-<div id="result-list">';
-
-		// Add the messages
-		foreach ($arrMessages as $strMessage)
-		{
-			$return .= "\n  " . $strMessage;
-		}
-
-		$return .= '
-</div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
-  <a href="' . $this->getReferer(true) . '" class="tl_submit" style="display:inline-block">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</a>
-</div>
-</div>';
-
-		return $return;
+		return $container->get('twig')->render(
+			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			array(
+				'change_set' => $changeSet,
+				'referer' => $this->getReferer(true),
+			)
+		);
 	}
 
 	/**
@@ -2771,7 +2700,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $currentEncoded));
 
-				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote($arrClipboard['id'], '#') . '(/|$)#i', $currentFolder)))
+				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder)))
 				{
 					$return .= Image::getHtml('pasteinto_.svg');
 				}
@@ -2854,7 +2783,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
-			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails'))
+			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails') && \in_array($objFile->extension, System::getContainer()->getParameter('contao.image.valid_extensions')))
 			{
 				$blnCanResize = true;
 
@@ -2959,7 +2888,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";

@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>
+        <target>Preveri z regularnim izrazom po meri.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
@@ -205,6 +206,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageWidth.1">
         <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tu lahko določite največjo dovoljeno širino slik za nalaganje v pikslih. Vnesite 0 za privzeto vrednost v sistemu.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageHeight.0">
         <source>Maximum image height</source>
@@ -212,6 +214,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageHeight.1">
         <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tu lahko določite največjo dovoljeno višino slik za nalaganje v pikslih. Vnesite 0 za privzeto vrednost v sistemu.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>

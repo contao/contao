@@ -16,8 +16,6 @@ use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 
 /**
  * Front end content element "download".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentDownload extends ContentElement
 {
@@ -88,9 +86,10 @@ class ContentDownload extends ContentElement
 	protected function compile()
 	{
 		$objFile = new File($this->singleSRC);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
 		}
@@ -166,7 +165,7 @@ class ContentDownload extends ContentElement
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
 
-			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+			$builder->enableLightbox()->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
 		}
 		else
 		{

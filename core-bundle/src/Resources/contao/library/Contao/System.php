@@ -40,20 +40,19 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *         }
  *     }
  *
- * @property Automator                $Automator   The automator object
- * @property Config                   $Config      The config object
- * @property Database                 $Database    The database object
- * @property Environment              $Environment The environment object
- * @property Files                    $Files       The files object
- * @property Input                    $Input       The input object
- * @property Installer                $Installer   The database installer object
- * @property Updater                  $Updater     The database updater object
- * @property Messages                 $Messages    The messages object
- * @property Session                  $Session     The session object
- * @property StyleSheets              $StyleSheets The style sheets object
- * @property BackendUser|FrontendUser $User        The user object
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @property Automator                        $Automator   The automator object
+ * @property Config                           $Config      The config object
+ * @property Database                         $Database    The database object
+ * @property Environment                      $Environment The environment object
+ * @property Files                            $Files       The files object
+ * @property Input                            $Input       The input object
+ * @property Installer                        $Installer   The database installer object
+ * @property Updater                          $Updater     The database updater object
+ * @property Messages                         $Messages    The messages object
+ * @property Session                          $Session     The session object
+ * @property StyleSheets                      $StyleSheets The style sheets object
+ * @property BackendTemplate|FrontendTemplate $Template    The template object (TODO: remove this line in Contao 5.0)
+ * @property BackendUser|FrontendUser         $User        The user object
  */
 abstract class System
 {
@@ -425,7 +424,14 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if (!$return)
 		{
-			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
+			if (\defined('TL_MODE') && TL_MODE == 'BE')
+			{
+				$return = static::getContainer()->get('router')->generate('contao_backend');
+			}
+			else
+			{
+				$return = Environment::get('url');
+			}
 		}
 
 		// Do not urldecode here!
@@ -498,7 +504,7 @@ abstract class System
 				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
 			}
 
-			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strLanguage) as $strLocale => $strLabel)
+			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strCacheKey) as $strLocale => $strLabel)
 			{
 				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
 			}
@@ -513,7 +519,7 @@ abstract class System
 				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
 			}
 
-			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strLanguage) as $strCountryCode => $strLabel)
+			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strCacheKey) as $strCountryCode => $strLabel)
 			{
 				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
 			}
@@ -713,7 +719,7 @@ abstract class System
 	 */
 	public static function urlEncode($strPath)
 	{
-		return str_replace('%2F', '/', rawurlencode($strPath));
+		return str_replace('%2F', '/', rawurlencode((string) $strPath));
 	}
 
 	/**

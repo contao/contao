@@ -40,6 +40,7 @@ use Symfony\Component\Filesystem\Path;
 class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';
+    protected static $defaultDescription = 'Displays the Contao Manager plugin configurations.';
 
     private ContaoKernel $kernel;
     private ?SymfonyStyle $io = null;
@@ -56,7 +57,6 @@ class DebugPluginsCommand extends Command
         $this
             ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
             ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
-            ->setDescription('Displays the Contao Manager plugin configurations')
         ;
     }
 

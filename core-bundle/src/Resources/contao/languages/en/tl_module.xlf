@@ -84,7 +84,7 @@
         <source>Custom label</source>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the dropdown menu or the back link.</source>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -387,7 +387,7 @@
         <source>Please select a module for every root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for "%s"</source>
+        <source>Choose module for "%s"</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

@@ -15,8 +15,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\StyleSheets
 /**
  * Provide methods to handle style sheets.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use external stylesheets instead.
  */

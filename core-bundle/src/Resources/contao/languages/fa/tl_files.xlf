@@ -81,6 +81,12 @@
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
         <target>اینجا می‌توانید فراداده پرونده را وارد کنید. برای افزودن یک زبان، برگه‌ی ریشه مربوطه را در ساختار سایت ایجاد کنید.</target>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
         <target>بارگذاری پرونده</target>
@@ -170,8 +176,7 @@
         <target>هماهنگ‌سازی کامل شده است</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;نتیجه:&lt;/strong&gt; %s اضافه شد | %s تغییر یافت | %s بدون تغییر | %s جابجا شد | %s deleted</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

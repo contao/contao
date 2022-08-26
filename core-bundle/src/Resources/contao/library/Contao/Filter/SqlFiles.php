@@ -12,8 +12,6 @@ namespace Contao\Filter;
 
 /**
  * Filters a directory for .sql files
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SqlFiles extends \RecursiveFilterIterator
 {

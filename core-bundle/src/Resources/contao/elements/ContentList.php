@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "list".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentList extends ContentElement
 {

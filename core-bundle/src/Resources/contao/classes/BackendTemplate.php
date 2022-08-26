@@ -16,13 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
  * Provide methods to handle back end templates.
  *
  * @property string $ua
- * @property array  $javascripts
- * @property array  $stylesheets
+ * @property string $javascripts
+ * @property string $stylesheets
  * @property string $mootools
  * @property string $attributes
  * @property string $badgeTitle
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendTemplate extends Template
 {

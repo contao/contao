@@ -29,6 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UserListCommand extends Command
 {
     protected static $defaultName = 'contao:user:list';
+    protected static $defaultDescription = 'Lists Contao back end users.';
 
     private ContaoFramework $framework;
 
@@ -45,7 +46,6 @@ class UserListCommand extends Command
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
-            ->setDescription('Lists Contao back end users.')
         ;
     }
 
@@ -66,7 +66,7 @@ class UserListCommand extends Command
                 // no break
 
             case 'txt':
-                if (0 === $users->count()) {
+                if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -90,7 +90,7 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): Collection
+    private function getUsers(bool $onlyAdmins = false): ?Collection
     {
         $this->framework->initialize();
 
@@ -133,8 +133,12 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(Collection $users, array $columns): array
+    private function formatJson(?Collection $users, array $columns): array
     {
+        if (!$users) {
+            return [];
+        }
+
         if ([] === $columns) {
             return $users->fetchAll();
         }

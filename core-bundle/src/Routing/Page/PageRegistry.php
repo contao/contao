@@ -66,7 +66,7 @@ class PageRegistry
         } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
+            $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());

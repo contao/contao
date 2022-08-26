@@ -26,18 +26,18 @@ class ArticlePickerProviderTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $GLOBALS['TL_LANG']['MSC']['articlePicker'] = 'Article picker';
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
-
         unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
     }
 
     /**
@@ -121,7 +121,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_article.2',
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
@@ -131,7 +130,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_article.2',
             ],
             $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
         );

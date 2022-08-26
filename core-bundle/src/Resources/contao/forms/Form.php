@@ -29,8 +29,6 @@ namespace Contao;
  * @property boolean $storeValues
  * @property string  $targetTable
  * @property string  $customTpl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Form extends Hybrid
 {
@@ -73,7 +71,7 @@ class Form extends Hybrid
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['form'][0] . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
-			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -395,8 +393,8 @@ class Form extends Hybrid
 			// Get subject and message
 			if ($this->format == 'email')
 			{
-				$message = $arrSubmitted['message'];
-				$email->subject = $arrSubmitted['subject'];
+				$message = $arrSubmitted['message'] ?? '';
+				$email->subject = $arrSubmitted['subject'] ?? '';
 			}
 
 			// Set the admin e-mail as "from" address
@@ -462,7 +460,7 @@ class Form extends Hybrid
 				foreach ($_SESSION['FILES'] as $file)
 				{
 					// Add a link to the uploaded file
-					if ($file['uploaded'])
+					if ($file['uploaded'] ?? null)
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
@@ -559,7 +557,7 @@ class Form extends Hybrid
 		// Store the submission time to invalidate the session later on
 		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
-		$arrFiles = $_SESSION['FILES'];
+		$arrFiles = $_SESSION['FILES'] ?? null;
 
 		// HOOK: process form data callback
 		if (isset($GLOBALS['TL_HOOKS']['processFormData']) && \is_array($GLOBALS['TL_HOOKS']['processFormData']))

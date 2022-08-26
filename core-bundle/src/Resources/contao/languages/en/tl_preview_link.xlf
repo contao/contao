@@ -68,6 +68,18 @@
       <trans-unit id="tl_preview_link.expire_options.30">
         <source>30 days</source>
       </trans-unit>
+      <trans-unit id="tl_preview_link.hintNew">
+        <source>To add a preview link, use the "Share URL" button in the front end preview toolbar.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintSave">
+        <source>Please save this record to generate the preview link.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintEdit">
+        <source>Preview link: &lt;a href="%s" data-to-clipboard="%s"&gt;%s&lt;/a&gt;</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintExpired">
+        <source>This preview link has expired and can no longer be shared.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -97,10 +97,7 @@ class FrontendLoaderTest extends TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertSame(
-            '/foobar.html',
-            $router->generate('contao_frontend', ['alias' => 'foobar'])
-        );
+        $this->assertSame('/foobar.html', $router->generate('contao_frontend', ['alias' => 'foobar']));
     }
 
     public function testGeneratesTheFrontEndUrlWithLocale(): void
@@ -144,10 +141,7 @@ class FrontendLoaderTest extends TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertSame(
-            '/',
-            $router->generate('contao_index')
-        );
+        $this->assertSame('/', $router->generate('contao_index'));
     }
 
     public function testGeneratesTheIndexUrlWithLocale(): void
@@ -156,10 +150,7 @@ class FrontendLoaderTest extends TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertSame(
-            '/en/',
-            $router->generate('contao_index', ['_locale' => 'en'])
-        );
+        $this->assertSame('/en/', $router->generate('contao_index', ['_locale' => 'en']));
     }
 
     public function testFailsToGenerateTheIndexUrlIfTheLocaleIsMissing(): void

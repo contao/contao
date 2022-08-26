@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Collegamenti di anteprima</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Gestisci i collegamenti di anteprima per il front-end.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -417,9 +419,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Moduli dipendenti dalla pagina principale</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>Genera moduli diversi a seconda della pagina principale</target>
       </trans-unit>
     </body>
   </file>

@@ -66,6 +66,11 @@ services:
             - '@database_connection'
             - '@contao.framework'
 
+    contao.migration.version_409.player_color:
+        class: Contao\CoreBundle\Migration\Version409\PlayerColorMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_410.drop_search:
         class: Contao\CoreBundle\Migration\Version410\DropSearchMigration
         arguments:
@@ -108,6 +113,13 @@ services:
         class: Contao\CoreBundle\Migration\Version412\PageLanguageMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_413.rel_lightbox:
+        class: Contao\CoreBundle\Migration\Version413\RelLightboxMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.resource_finder'
 
     # Backwards compatibility
     Contao\CoreBundle\Migration\MigrationCollection:

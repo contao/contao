@@ -17,8 +17,6 @@ use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Provide methods to run automated jobs.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Automator extends System
 {

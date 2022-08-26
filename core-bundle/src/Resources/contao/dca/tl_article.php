@@ -16,6 +16,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -31,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_page',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
@@ -331,8 +332,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_article extends Backend
 {
@@ -411,7 +410,7 @@ class tl_article extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id']))
+		if (!empty($session['CLIPBOARD']['tl_article']['id']) && is_array($session['CLIPBOARD']['tl_article']['id']))
 		{
 			$clipboard = array();
 
@@ -565,7 +564,9 @@ class tl_article extends Backend
 			Image::getPath(rtrim($image, '_') . '_')
 		);
 
-		return '<a href="contao/preview.php?page=' . $row['pid'] . '&amp;article=' . ($row['alias'] ?: $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
+		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
+
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
 	}
 
 	/**

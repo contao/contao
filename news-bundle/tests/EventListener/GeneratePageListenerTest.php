@@ -24,10 +24,15 @@ use Contao\TestCase\ContaoTestCase;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG'], $GLOBALS['TL_HEAD']);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNewsFeedLink(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class);
         $newsFeedModel->feedBase = 'http://localhost/';
         $newsFeedModel->alias = 'news';
@@ -56,21 +61,17 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $adapters = [
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
         ];
@@ -81,6 +82,6 @@ class GeneratePageListenerTest extends ContaoTestCase
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 }

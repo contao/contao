@@ -57,7 +57,19 @@ class PluginTest extends ContaoTestCase
     {
         parent::setUp();
 
+        $this->backupServerEnvGetPost();
+
         unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+    }
+
+    protected function tearDown(): void
+    {
+        Plugin::autoloadModules('');
+
+        $this->restoreServerEnvGetPost();
+        $this->resetStaticProperties([Plugin::class]);
+
+        parent::tearDown();
     }
 
     public function testDependsOnCoreBundlePlugin(): void
@@ -448,6 +460,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                            'options' => [
+                                1002 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -486,6 +501,9 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'mysqli',
                             'host' => 'localhost',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -508,6 +526,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'url' => '%env(DATABASE_URL)%',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -536,6 +557,7 @@ class PluginTest extends ContaoTestCase
                             'driver' => 'pdo_mysql',
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                1002 => '',
                             ],
                         ],
                     ],
@@ -547,6 +569,189 @@ class PluginTest extends ContaoTestCase
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
+    /**
+     * @dataProvider provideDatabaseDrivers
+     */
+    public function testEnablesStrictMode(array $connectionConfig, int $expectedOptionKey): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => $connectionConfig,
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideDatabaseDrivers(): \Generator
+    {
+        yield 'pdo with driver' => [
+            [
+                'driver' => 'mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias mysql2' => [
+            [
+                'driver' => 'mysql2',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias pdo_mysql' => [
+            [
+                'driver' => 'pdo_mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url' => [
+            [
+                'url' => 'mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias mysql2' => [
+            [
+                'url' => 'mysql2://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias pdo_mysql' => [
+            [
+                'url' => 'pdo-mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'mysqli with driver' => [
+            [
+                'driver' => 'mysqli',
+            ],
+            3,
+        ];
+
+        yield 'mysqli with url' => [
+            [
+                'url' => 'mysqli://user:secret@localhost/mydb',
+            ],
+            3,
+        ];
+    }
+
+    /**
+     * @dataProvider provideUserExtensionConfigs
+     */
+    public function testSetsDefaultCollation(array $userExtensionConfig): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'default_table_options' => [
+                                'charset' => 'utf8mb4',
+                                'collate' => 'utf8mb4_unicode_ci',
+                                'collation' => 'utf8mb4_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $userExtensionConfig,
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'default_table_options' => [
+                                    'collate' => 'utf8_unicode_ci',
+                                    'collation' => 'utf8_unicode_ci',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideUserExtensionConfigs(): \Generator
+    {
+        yield 'collate' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collate' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'collation' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collation' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function testUpdatesTheMailerTransport(): void
@@ -740,10 +945,14 @@ class PluginTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getMailerUrlParameters
      */
     public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using the "MAILER_URL" environment variable has been deprecated %s.');
+
         $_SERVER['MAILER_URL'] = $mailerUrl;
 
         $container = $this->getContainer();
@@ -834,10 +1043,14 @@ class PluginTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getInvalidMailerUrlParameters
      */
     public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using the "MAILER_URL" environment variable has been deprecated %s.');
+
         $_SERVER['MAILER_URL'] = $invalidMailerUrl;
 
         $container = $this->getContainer();
@@ -858,6 +1071,60 @@ class PluginTest extends ContaoTestCase
         yield['?host=localhost'];
 
         yield['foo://localhost'];
+    }
+
+    public function testUpdatesTheClickjackingPaths(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $expectedConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/.*' => 'SAMEORIGIN',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotOverrideDefaultClickjackingPath(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'DENY',
+                        '^/.*' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
@@ -895,6 +1162,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                1002 => '',
                             ],
                         ],
                     ],

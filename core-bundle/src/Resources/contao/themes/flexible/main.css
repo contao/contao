@@ -55,7 +55,7 @@ body:not(.fullscreen) #header .inner {
 #tmenu li {
 	position:relative;
 }
-#tmenu a,#tmenu .h2 {
+#tmenu a,#tmenu .profile button {
 	padding:13px 12px;
 	display:inline-block;
 }
@@ -89,23 +89,25 @@ body:not(.fullscreen) #header .inner {
 	margin-bottom:-1px;
 	vertical-align:middle;
 }
-#tmenu .h2 {
-	padding-right:26px;
+#tmenu .profile button {
+	position: relative;
 	cursor:pointer;
-	background:url("icons/chevron-down.svg") right 9px top 14px no-repeat;
 	font-size:.875rem;
 	font-weight:400;
 	color:#fff;
+	border:none;
+	padding-right:26px;
+	background:url("icons/chevron-down.svg") right 9px top 14px no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#tmenu .h2 {
+	#tmenu .profile button {
 		font-weight:300;
 	}
 }
-#tmenu a,#tmenu .h2,#tmenu .burger button {
+#tmenu a,#tmenu .profile button,#tmenu .burger button {
 	transition:background-color .3s ease;
 }
-#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .h2,#tmenu .active .h2,#tmenu .burger button:hover {
+#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .profile button,#tmenu .active .profile button,#tmenu .burger button:hover {
 	background-color:#e87600;
 }
 #tmenu ul.menu_level_1 {
@@ -172,7 +174,7 @@ body:not(.fullscreen) #header .inner {
 	position: absolute;
 	top:-5px;
 }
-#tmenu .icon-alert {
+#tmenu .icon-alert,#tmenu .icon-manual {
 	width:16px;
 	margin-bottom:-2px;
 	position:relative;
@@ -180,6 +182,9 @@ body:not(.fullscreen) #header .inner {
 	overflow:hidden;
 	white-space:nowrap;
 	text-indent:28px; /* 16px width + 12px padding */
+}
+#tmenu .icon-manual {
+	background:url("icons/manual.svg") center center no-repeat;
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
@@ -344,23 +349,25 @@ body:not(.fullscreen) #container {
 	margin:18px 0;
 	padding:0 16px;
 	font-size:1.1rem;
+	display:flex;
 }
 .popup #main_headline {
 	display:none;
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:max-content;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	line-height:22px;
+	flex:1 0 0;
 }
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
 #main_headline span + span::before {
-	content: '› ';
+	content: "\A0› "; /* Non-breaking-space to prevent collapsing whitespace */
 	font-weight: 600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
@@ -410,9 +417,11 @@ h2.sub_headline {
 	color:#d68c23;
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
-	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
+}
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
 }
 
 /* Filter */
@@ -644,7 +653,6 @@ h2.sub_headline {
 	height:20px;
 	overflow:hidden;
 	background-color:#f0f0f2;
-	margin-right:20px;
 	border-radius:2px;
 }
 #tl_crawl .progress-bar {
@@ -687,11 +695,6 @@ h2.sub_headline {
 }
 #tl_crawl .wait {
 	margin-top:18px;
-}
-#tl_crawl .debug-log {
-	position:absolute;
-	top:2px;
-	right:0;
 }
 #tl_crawl .results.running .show-when-finished,#tl_crawl .results.finished .show-when-running {
 	display:none;
@@ -1013,6 +1016,13 @@ table.tl_listing {
 	position:relative;
 	background-color:#fff;
 }
+.tl_content.draft > *,
+.tl_folder.draft > *,
+.tl_file.draft > *,
+.hover-row.draft > td,
+.hover-row.draft > td > * {
+	opacity:0.5;
+}
 .parent_view > ul {
 	background:#f3f3f5;
 }
@@ -1043,7 +1053,7 @@ table.tl_listing {
 .tl_content h1,.tl_content h2,.tl_content h3,.tl_content h4,.tl_content h5,.tl_content h6 {
 	font-size:.875rem;
 }
-.tl_content img,.selector_container img {
+.tl_content img,.selector_container img,.tl_undo_preview img {
 	max-width:320px;
 	height:auto;
 }
@@ -1068,6 +1078,8 @@ table.tl_listing {
 	line-height:16px;
 }
 .tl_content_right {
+	position: relative;
+	z-index: 1;
 	float:right;
 	text-align:right;
 	margin-left:12px;
@@ -2202,15 +2214,17 @@ fieldset.collapsed > legend {
 		transform:translateX(240px);
 	}
 	#left {
+		visibility: hidden;
 		position:absolute;
 		top:40px;
 		width:240px;
-		transition:transform .2s ease;
+		transition:transform .2s ease, visibility .2s ease;
 		-webkit-transform:translateX(-240px);
 		transform:translateX(-240px);
-		will-change:transform;
+		will-change:transform, visibility;
 	}
 	.show-navigation #left {
+		visibility: visible;
 		-webkit-transform:none;
 		transform:none;
 	}
@@ -2254,7 +2268,7 @@ fieldset.collapsed > legend {
 	#tmenu .icon-preview {
 		background:url("icons/preview.svg") center center no-repeat;
 	}
-	#tmenu .h2 {
+	#tmenu .profile button {
 		width:16px;
 		margin:0 0 -2px;
 		padding-right:12px;

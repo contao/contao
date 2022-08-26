@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
@@ -62,6 +63,19 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
+                    ->validate()
+                        ->always(
+                            static function (array $options): array {
+                                foreach (array_keys($options) as $option) {
+                                    if ($newKey = Config::getNewKey($option)) {
+                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                    }
+                                }
+
+                                return $options;
+                            }
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
@@ -79,7 +93,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
+                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. "/preview.php").')
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -165,6 +179,9 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('jxl_quality')
                         ->end()
                         ->booleanNode('jxl_lossless')
+                        ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                         ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
@@ -527,7 +544,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()
@@ -585,16 +602,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
                     ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('badge_title')
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
+                    ->cannotBeEmpty()
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('route_prefix')
@@ -632,10 +652,6 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('directory')
-                    ->info('The directory the backups are stored in.')
-                    ->defaultValue('%kernel.project_dir%/var/backups')
-                ->end()
                 ->arrayNode('ignore_tables')
                     ->info('These tables are ignored by default when creating and restoring backups.')
                     ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])

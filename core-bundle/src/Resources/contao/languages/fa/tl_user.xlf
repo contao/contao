@@ -333,6 +333,10 @@
         <source>Image cache</source>
         <target>کش تصویر</target>
       </trans-unit>
+      <trans-unit id="tl_user.previewLabel">
+        <source>Preview cache</source>
+        <target>کش پیش‌نمایش</target>
+      </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
         <target>کش مشترک</target>
@@ -344,6 +348,9 @@
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
         <target>کش تصویر پاک‌سازی شده است.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.previewPurged">
+        <source>The preview cache has been purged</source>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>

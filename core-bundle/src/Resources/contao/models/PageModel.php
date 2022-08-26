@@ -309,8 +309,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageModel extends Model
 {
@@ -709,6 +707,11 @@ class PageModel extends Model
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
+		if ('' === $pageModel->alias)
+		{
+			return null;
+		}
+
 		$pageModel->loadDetails();
 
 		$t = static::$strTable;
@@ -1167,7 +1170,7 @@ class PageModel extends Model
 					{
 						// If $folderUrl is not yet set, use the alias of the first
 						// parent page if it is not a root page (see #2129)
-						if (!$folderUrl && $objParentPage->alias)
+						if (!$folderUrl && $objParentPage->alias && $objParentPage->alias !== 'index' && $objParentPage->alias !== '/')
 						{
 							$folderUrl = $objParentPage->alias . '/';
 						}

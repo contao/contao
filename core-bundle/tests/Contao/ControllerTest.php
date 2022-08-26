@@ -12,24 +12,55 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InvalidResourceException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Environment;
 use Contao\FilesModel;
 use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Controller::resetControllerCache();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            Config::class,
+            Environment::class,
+            Controller::class,
+        ]);
+
+        parent::tearDown();
+    }
 
     /**
      * @group legacy
@@ -59,8 +90,13 @@ class ControllerTest extends TestCase
         $this->assertCount(13, $timeZones['United States']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testGeneratesTheMargin(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using Contao\Controller::generateMargin is deprecated%s');
+
         $margins = [
             'top' => '40px',
             'right' => '10%',
@@ -185,6 +221,8 @@ class ControllerTest extends TestCase
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         System::setContainer($container);
 
@@ -348,7 +386,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('contao.monolog.logger.error', $logger);
+        $container->set('monolog.logger.contao.error', $logger);
 
         System::setContainer($container);
 
@@ -660,5 +698,110 @@ class ControllerTest extends TestCase
             ]),
             'root_1.svg',
         ];
+    }
+
+    /**
+     * @dataProvider redirectProvider
+     *
+     * @group legacy
+     */
+    public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(\count($routes)))
+            ->method('generate')
+            ->withConsecutive(...array_map(static fn ($route) => [$route], $routes))
+            ->willReturnOnConsecutiveCalls(...array_map(static fn ($route) => '/'.$route, $routes))
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        try {
+            Controller::redirect($location);
+        } catch (RedirectResponseException $exception) {
+            /** @var RedirectResponse $response */
+            $response = $exception->getResponse();
+
+            $this->assertInstanceOf(RedirectResponse::class, $response);
+            $this->assertSame($expected, $response->getTargetUrl());
+        }
+    }
+
+    public function redirectProvider(): \Generator
+    {
+        yield 'Never calls the router without old backend path' => [
+            'https://example.com',
+            [],
+            'https://example.com',
+        ];
+
+        yield 'Replaces multiple paths (not really expected)' => [
+            'https://example.com/contao/main.php?contao/file.php=foo',
+            ['contao_backend', 'contao_backend_file'],
+            'https://example.com/contao_backend?contao_backend_file=foo',
+        ];
+
+        $pathMap = [
+            'contao/confirm.php' => 'contao_backend_confirm',
+            'contao/file.php' => 'contao_backend_file',
+            'contao/help.php' => 'contao_backend_help',
+            'contao/index.php' => 'contao_backend_login',
+            'contao/main.php' => 'contao_backend',
+            'contao/page.php' => 'contao_backend_page',
+            'contao/password.php' => 'contao_backend_password',
+            'contao/popup.php' => 'contao_backend_popup',
+            'contao/preview.php' => 'contao_backend_preview',
+        ];
+
+        foreach ($pathMap as $old => $new) {
+            yield 'Replaces '.$old.' with '.$new.' route' => [
+                "https://example.com/$old?foo=bar",
+                [$new],
+                "https://example.com/$new?foo=bar",
+            ];
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testCachesOldBackendPaths(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->withConsecutive(['contao_backend'], ['contao_backend_file'])
+            ->willReturn('/contao', '/contao/file')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        $ref = new \ReflectionClass(Controller::class);
+        $method = $ref->getMethod('replaceOldBePaths');
+        $method->setAccessible(true);
+
+        $this->assertSame(
+            $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),
+            'This is a template with link to <a href="/contao">backend main</a> and <a href="/contao?do=articles">articles</a>'
+        );
+
+        $this->assertSame(
+            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/file.php?x=y">files</a>'),
+            'Link to <a href="/contao">backend main</a> and <a href="/contao/file?x=y">files</a>'
+        );
     }
 }

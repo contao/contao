@@ -135,7 +135,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
             $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
-            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === \Locale::getPrimaryLanguage($pageB->rootLanguage)) {
+            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === LocaleUtil::getPrimaryLanguage($pageB->rootLanguage)) {
                 // If both pages have the same language without region and neither region has a priority,
                 // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
                 $langA = $pageA->rootSorting;
@@ -184,16 +184,16 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
 
-        // Prioritize the default behaviour when `requireItem` is enabled
+        // Prioritize the default behaviour when "requireItem" is enabled
         if ($pathA === $pathB && '{!parameters}' === substr($pathA, -13)) {
             $paramA = $a->getRequirement('parameters');
             $paramB = $b->getRequirement('parameters');
 
-            if ('/.+' === $paramA && '(/.+?)?' === $paramB) {
+            if ('/.+?' === $paramA && '(/.+?)?' === $paramB) {
                 return -1;
             }
 
-            if ('(/.+?)?' === $paramA && '/.+' === $paramB) {
+            if ('(/.+?)?' === $paramA && '/.+?' === $paramB) {
                 return 1;
             }
         }

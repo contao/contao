@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\Message;
@@ -26,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'ctable'                      => array('tl_style'),
 		'switchToEdit'                => true,
@@ -206,8 +207,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_style_sheet extends Backend
 {

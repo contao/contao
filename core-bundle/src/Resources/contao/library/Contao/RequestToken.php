@@ -29,8 +29,6 @@ trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\RequestToken
  *         throw new Exception("Invalid request token");
  *     }
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  *             Use the Symfony CSRF service via the container instead.
  */

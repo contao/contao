@@ -10,12 +10,12 @@
         <target>1つ以上のニュースアーカイブにアクセスを許可できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>ニュースの権限</target>
+        <source>News archive permissions</source>
+        <target>ニュースアーカイブの権限</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>ニュースの権限を設定できます。</target>
+        <source>Here you can define the news archive permissions.</source>
+        <target>ニュースアーカイブの権限を設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

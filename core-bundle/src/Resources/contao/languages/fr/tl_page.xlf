@@ -187,8 +187,7 @@
         <target>URL personnalisée</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Ici, vous pouvez définir une URL canonique personnalisée.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -639,6 +638,9 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

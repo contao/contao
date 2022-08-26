@@ -26,13 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class VersionCommand extends Command
 {
     protected static $defaultName = 'contao:version';
-
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Outputs the contao/core-bundle version (deprecated).')
-        ;
-    }
+    protected static $defaultDescription = 'Outputs the contao/core-bundle version (deprecated).';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
+    fwrite(STDERR, 'Run "composer bin isolated-tests up" to install the dependencies.'.PHP_EOL);
+    exit(1);
+}
+
+require __DIR__.'/../vendor/autoload.php';
+
+use Contao\Tools\IsolatedTests\RunTestsIsolatedCommand;
+use Symfony\Component\Console\Application;
+
+$command = new RunTestsIsolatedCommand(dirname(__DIR__, 3));
+
+$application = new Application();
+$application->add($command);
+$application->setDefaultCommand($command->getName(), true);
+$application->run();

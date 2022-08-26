@@ -26,7 +26,7 @@ class Adapter
     /**
      * @var class-string<T>
      */
-    private $class;
+    private string $class;
 
     /**
      * @param class-string<T> $class

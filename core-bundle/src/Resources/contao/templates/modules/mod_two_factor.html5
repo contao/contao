@@ -8,7 +8,7 @@
 
   <?php if ($this->enable): ?>
     <?php if ($this->message): ?>
-      <p class="error"><?= $this->message ?></p>
+      <p class="tl_error"><?= $this->message ?></p>
     <?php endif; ?>
     <p><?= $this->trans('MSC.twoFactorScan') ?></p>
     <form class="tl_two_factor_form" method="post">

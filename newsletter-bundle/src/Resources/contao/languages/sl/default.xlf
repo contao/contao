@@ -1,0 +1,58 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="ERR.subscribed">
+        <source>You are subscribed to the selected channels already.</source>
+        <target>Na to vrsto e-novic ste že naročeni.</target>
+      </trans-unit>
+      <trans-unit id="ERR.unsubscribed">
+        <source>You are not subscribed to the selected channels.</source>
+        <target>Na izbrano vrsto e-novic niste naročeni.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidToken">
+        <source>The activation link is invalid or outdated.</source>
+        <target>Povezava za aktivacijo je napačna ali je potekla.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noChannels">
+        <source>Please select at least one channel.</source>
+        <target>Prosimo, izberite vsaj eno vrsto e-novic.</target>
+      </trans-unit>
+      <trans-unit id="ERR.onDenyList">
+        <source>The e-mail address has been unsubscribed from the channel.</source>
+        <target>Vaš e-mail naslov je bil odjavljen iz te vrste e-novic.</target>
+      </trans-unit>
+      <trans-unit id="MSC.subscribe">
+        <source>Subscribe</source>
+        <target>Prijava</target>
+      </trans-unit>
+      <trans-unit id="MSC.unsubscribe">
+        <source>Unsubscribe</source>
+        <target>Odjava</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_subject">
+        <source>Your subscription on %s</source>
+        <target>Vaše naročilo na e-novice na %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_confirm">
+        <source>Thank you for your subscription. You will receive a confirmation e-mail.</source>
+        <target>Hvala za vaše prijavo. Prejeli boste potrditveni e-mail.</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_activate">
+        <source>Your subscription has been activated.</source>
+        <target>Vaša prijava je bila aktivirana.</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_removed">
+        <source>Your subscription has been cancelled.</source>
+        <target>Uspešno ste se odjavili.</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_channels">
+        <source>Channels</source>
+        <target>Vrste e-novic</target>
+      </trans-unit>
+      <trans-unit id="MSC.nl_overview">
+        <source>Back to the newsletter overview</source>
+        <target>Nazaj na pregled nastavitev teh e-novic</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

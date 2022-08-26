@@ -102,6 +102,7 @@ use Contao\Model\Collection;
  * @property string|boolean    $invisible
  * @property string|integer    $start
  * @property string|integer    $stop
+ * @property string|boolean    $showPreview
  *
  * @property string         $typePrefix
  * @property array          $classes
@@ -197,6 +198,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByInvisible($val, array $opt=array())
  * @method static ContentModel|null findOneByStart($val, array $opt=array())
  * @method static ContentModel|null findOneByStop($val, array $opt=array())
+ * @method static ContentModel|null findOneByShowPreview($val, array $opt=array())
  *
  * @method static Collection|ContentModel[]|ContentModel|null findByPid($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPtable($val, array $opt=array())
@@ -284,6 +286,7 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStart($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStop($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByShowPreview($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findAll(array $opt=array())
@@ -375,8 +378,7 @@ use Contao\Model\Collection;
  * @method static integer countByInvisible($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @method static integer countByShowPreview($val, array $opt=array())
  */
 class ContentModel extends Model
 {

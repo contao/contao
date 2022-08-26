@@ -130,8 +130,8 @@
         <target>データベースを更新</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>アップデートの支援は&lt;code&gt;tl_&lt;/code&gt;で始まる名前のテーブルだけを扱うことに注意してください。</target>
+        <source>Here you can update the database schema.</source>
+        <target>データベースのスキーマを更新できます。</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>

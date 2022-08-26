@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>テーマ、フロントエンドモジュール、ページレイアウト、画像サイズを管理</target>
+        <target>テーマ、フロントエンドモジュール、ページのレイアウト、画像サイズを管理</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>プレビューのリンク</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>プロントエンドのプレビューのリンクを管理します。</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -177,7 +179,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
@@ -201,7 +203,7 @@
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.image_sizes">
         <source>Image sizes</source>
@@ -417,9 +419,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>ルートページに依存するモジュール</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>ルートページに依存する異なるモジュールを生成</target>
       </trans-unit>
     </body>
   </file>

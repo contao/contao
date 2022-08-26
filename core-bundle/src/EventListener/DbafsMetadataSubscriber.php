@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Event\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\Image\ImportantPart;
@@ -86,7 +86,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],

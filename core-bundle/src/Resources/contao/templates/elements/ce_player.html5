@@ -6,13 +6,13 @@
     <?php if ($this->isVideo): ?>
       <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>"<?php endif; ?><?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
-          <source type="<?= $file->mime ?>" src="<?= $file->path.$this->range ?>" title="<?= $file->title ?>">
+          <source type="<?= $file->mime ?>" src="<?= $file->path.$this->range ?>">
         <?php endforeach; ?>
       </video>
     <?php else: ?>
       <audio<?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
-          <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
+          <source type="<?= $file->mime ?>" src="<?= $file->path ?>">
         <?php endforeach; ?>
       </audio>
     <?php endif; ?>

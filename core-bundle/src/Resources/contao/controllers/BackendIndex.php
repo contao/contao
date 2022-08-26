@@ -23,8 +23,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Handle back end logins and logouts.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendIndex extends Backend
 {

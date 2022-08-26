@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CronCommand extends Command
 {
     protected static $defaultName = 'contao:cron';
+    protected static $defaultDescription = 'Runs all registered cron jobs on the command line.';
 
     protected Cron $cron;
 
@@ -28,13 +29,6 @@ class CronCommand extends Command
         $this->cron = $cron;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Runs all registered cron jobs on the command line.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

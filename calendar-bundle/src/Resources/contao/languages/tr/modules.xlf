@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.calendar.1">
         <source>Manage events and display them in a calendar or event list</source>
-        <target>Etkinlikleri yöneterek, takvim ya da etkinlik listesi düzeninde görüntüler</target>
+        <target>Etkinlikleri yönetir ve takvim ya da etkinlik listesi düzeninde görüntüler</target>
       </trans-unit>
       <trans-unit id="MOD.tl_calendar_feed">
         <source>Calendar feeds</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="FMD.eventlist.1">
         <source>Adds a list of events to the page</source>
-        <target>Sayfaya etkinlik listesi ekler</target>
+        <target>Sayfaya bir etkinlikler listesi ekler</target>
       </trans-unit>
       <trans-unit id="FMD.eventreader.0">
         <source>Event reader</source>

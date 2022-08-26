@@ -65,6 +65,13 @@ class ImageSizesTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CROP']);
+
+        parent::tearDown();
+    }
+
     public function testReturnsAllOptionsWithImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);

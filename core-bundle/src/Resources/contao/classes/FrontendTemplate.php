@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  * @property array   $positions
  * @property array   $matches
  * @property string  $tag
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendTemplate extends Template
 {

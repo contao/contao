@@ -46,9 +46,9 @@ class FilesystemConfiguration
     /**
      * Adds another new VirtualFilesystem service.
      *
-     * Setting the name to 'foo' will create a 'contao.filesystem.virtual.foo'
+     * Setting the name to "foo" will create a "contao.filesystem.virtual.foo"
      * service and additionally enable constructor injection with an argument
-     * 'VirtualFilesystemInterface $fooStorage' if autowiring is available.
+     * "VirtualFilesystemInterface $fooStorage" if autowiring is available.
      *
      * @return Definition the newly created definition
      */
@@ -78,7 +78,7 @@ class FilesystemConfiguration
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images').
+     * (e.g. "files/foo" or "assets/images").
      *
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.
@@ -117,7 +117,7 @@ class FilesystemConfiguration
      * mountAdapter() instead.
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images'); the $filesystemPath can either
+     * (e.g. "files/foo" or "assets/images"); the $filesystemPath can either
      * be absolute or relative to the project root and may contain
      * placeholders (%name%).
      *
@@ -133,7 +133,15 @@ class FilesystemConfiguration
 
         $path = $this->container->getParameterBag()->resolveValue($path);
 
-        $this->mountAdapter('local', ['directory' => $path], $mountPath, $name);
+        $this->mountAdapter(
+            'local',
+            [
+                'directory' => $path,
+                'skip_links' => true,
+            ],
+            Path::normalize($mountPath),
+            $name
+        );
 
         return $this;
     }

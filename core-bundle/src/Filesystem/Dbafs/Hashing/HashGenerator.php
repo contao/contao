@@ -25,7 +25,7 @@ class HashGenerator implements HashGeneratorInterface
     public function __construct(string $hashAlgorithm, bool $useLastModified = true)
     {
         if (!\in_array($hashAlgorithm, $supportedHashAlgorithms = hash_algos(), true)) {
-            throw new \InvalidArgumentException(sprintf("The '%s' hash algorithm isn't available on this system. Try '%s' instead.", $hashAlgorithm, implode("' or '", $supportedHashAlgorithms)));
+            throw new \InvalidArgumentException(sprintf('The "%s" hash algorithm is not available on this system. Try "%s" instead.', $hashAlgorithm, implode('" or "', $supportedHashAlgorithms)));
         }
 
         $this->hashAlgorithm = $hashAlgorithm;

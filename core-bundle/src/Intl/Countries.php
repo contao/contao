@@ -98,10 +98,7 @@ class Countries
      */
     private function filterCountries(array $countries, array $filter): array
     {
-        $newList = array_filter(
-            $filter,
-            static fn ($country) => !\in_array($country[0], ['-', '+'], true)
-        );
+        $newList = array_filter($filter, static fn ($country) => !\in_array($country[0], ['-', '+'], true));
 
         if ($newList) {
             $countries = $newList;

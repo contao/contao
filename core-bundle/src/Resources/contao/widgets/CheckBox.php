@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $unknownOption
  * @property boolean $multiple
  * @property boolean $collapseUncheckedGroups
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CheckBox extends Widget
 {
@@ -164,32 +162,24 @@ class CheckBox extends Widget
 			$img = 'folPlus.svg';
 			$display = 'none';
 
-			if ($this->collapseUncheckedGroups || !isset($state[$id]) || !empty($state[$id]))
+			$blnIsOpen = ($state[$id] ?? null) || ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue));
+
+			if (!$blnIsOpen && $this->collapseUncheckedGroups && !isset($state[$id]))
 			{
-				$blnIsOpen = !$this->collapseUncheckedGroups && (!isset($state[$id]) || !empty($state[$id]));
-
-				if ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue))
+				foreach ($arrOption as $v)
 				{
-					$blnIsOpen = true;
-				}
-
-				if (!$blnIsOpen && $this->collapseUncheckedGroups)
-				{
-					foreach ($arrOption as $v)
+					if ($this->isChecked($v))
 					{
-						if ($this->isChecked($v))
-						{
-							$blnIsOpen = true;
-							break;
-						}
+						$blnIsOpen = true;
+						break;
 					}
 				}
+			}
 
-				if ($blnIsOpen)
-				{
-					$img = 'folMinus.svg';
-					$display = 'block';
-				}
+			if ($blnIsOpen)
+			{
+				$img = 'folMinus.svg';
+				$display = 'block';
 			}
 
 			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . Image::getHtml($img) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';

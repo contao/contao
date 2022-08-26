@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>Voorbeeldafbeeldingen weergeven</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>Toon voorbeeldafbeeldingen van de geselecteerde bestanden.</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -305,9 +307,11 @@
       </trans-unit>
       <trans-unit id="tl_content.data.0">
         <source>Template data</source>
+        <target>Templategegevens</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Deze waarden zijn beschikbaar als &lt;code&gt;$this-&gt;data&lt;/code&gt; in de template.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -663,6 +667,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>Voorbeeld instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -840,6 +845,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Gebruik het domein youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>Loop video</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Autostart</target>
@@ -862,6 +871,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_dnt">
         <source>Prevent session data tracking</source>
+        <target>Voorkomen dat sessiegegevens worden bijgehouden</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

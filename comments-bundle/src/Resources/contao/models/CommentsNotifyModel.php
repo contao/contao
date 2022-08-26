@@ -63,8 +63,6 @@ use Contao\Model\Collection;
  * @method static integer countByAddedOn($val, array $opt=array())
  * @method static integer countByActive($val, array $opt=array())
  * @method static integer countByTokenRemove($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CommentsNotifyModel extends Model
 {

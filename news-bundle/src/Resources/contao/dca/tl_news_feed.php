@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Environment;
 use Contao\Image;
 use Contao\Input;
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
@@ -229,8 +230,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_news_feed extends Backend
 {

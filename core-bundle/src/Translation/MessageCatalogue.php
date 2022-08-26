@@ -143,9 +143,9 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->parent->addResource($resource);
     }
 
-    private function isContaoDomain(string $domain): bool
+    private function isContaoDomain(?string $domain): bool
     {
-        return 0 === strncmp($domain, 'contao_', 7);
+        return 0 === strncmp($domain ?? '', 'contao_', 7);
     }
 
     private function loadMessage(string $id, string $domain): ?string
@@ -171,13 +171,17 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $item = &$GLOBALS['TL_LANG'];
 
         foreach ($parts as $part) {
-            if (!isset($item[$part])) {
+            if (!\is_array($item) || !isset($item[$part])) {
                 return null;
             }
 
             $item = &$item[$part];
         }
 
-        return $item;
+        if (\is_array($item)) {
+            return null;
+        }
+
+        return (string) $item;
     }
 }

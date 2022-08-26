@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -325,6 +326,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -335,7 +339,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(3));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
@@ -349,7 +353,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
-        $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
+        $this->assertEquals(new Reference('contao.filesystem.virtual.backups'), $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
         $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
 
@@ -363,7 +367,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'contao' => [
                     'backup' => [
-                        'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
                         'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
@@ -377,7 +380,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
-        $this->assertSame('somewhere/else', $definition->getArgument(2));
+        $this->assertEquals(new Reference('contao.filesystem.virtual.backups'), $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
         $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
 
@@ -618,9 +621,9 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $config
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('mountLocalAdapter')
-            ->with('upload/path', 'upload/path', 'files')
+            ->withConsecutive(['upload/path', 'upload/path', 'files'], ['var/backups', 'backups', 'backups'])
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
@@ -640,11 +643,29 @@ class ContaoCoreExtensionTest extends TestCase
         (new ContaoCoreExtension())->configureFilesystem($config);
     }
 
+    public function testRegistersTraceableAccessDecisionMangerInDebug(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.debug' => true,
+                'kernel.charset' => 'UTF-8',
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.debug.security.access.decision_manager'));
+
+        $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
+        $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
+        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
+    }
+
     public function testRegistersAsContentElementAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -659,9 +680,10 @@ class ContaoCoreExtensionTest extends TestCase
             ->with(
                 ContentElementReference::TAG_NAME,
                 [
-                    ['foo' => 'bar'],
-                    'type' => 'foo',
-                    'category' => 'bar',
+                    'foo' => 'bar',
+                    'baz' => 42,
+                    'type' => 'content_element/text',
+                    'category' => 'miscellaneous',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -671,22 +693,20 @@ class ContaoCoreExtensionTest extends TestCase
 
         $autoConfiguredAttributes[AsContentElement::class](
             $definition,
-            new AsContentElement(
-                'foo',
-                'bar',
-                'a_template',
-                'aMethod',
-                'inline',
-                ['foo' => 'bar']
-            )
+            new AsContentElement(...[
+                'type' => 'content_element/text',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
     public function testRegistersAsFrontendModuleAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -701,9 +721,10 @@ class ContaoCoreExtensionTest extends TestCase
             ->with(
                 FrontendModuleReference::TAG_NAME,
                 [
-                    ['foo' => 'bar'],
-                    'type' => 'foo',
-                    'category' => 'bar',
+                    'foo' => 'bar',
+                    'baz' => 42,
+                    'type' => 'frontend_module/navigation',
+                    'category' => 'miscellaneous',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -713,22 +734,20 @@ class ContaoCoreExtensionTest extends TestCase
 
         $autoConfiguredAttributes[AsFrontendModule::class](
             $definition,
-            new AsFrontendModule(
-                'foo',
-                'bar',
-                'a_template',
-                'aMethod',
-                'inline',
-                ['foo' => 'bar']
-            )
+            new AsFrontendModule(...[
+                'type' => 'frontend_module/navigation',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
     public function testRegistersAsPageAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -779,9 +798,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPickerProviderAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -805,9 +822,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCronjobAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -837,9 +852,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsHookAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -869,9 +882,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCallbackAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -912,9 +923,7 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -968,5 +977,12 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         return $container;
+    }
+
+    private function skipTestIfAttributesAreNotSupported(): void
+    {
+        if (\PHP_VERSION_ID < 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
     }
 }

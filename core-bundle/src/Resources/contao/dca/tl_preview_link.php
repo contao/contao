@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'inputType'               => 'select',
 			'options'                 => array('1', '7', '30'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_preview_link']['expire_options'],
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 1"
 		),
 		'showUnpublished' => array

@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -41,14 +43,24 @@ use Twig\TwigFunction;
 
 class ContaoExtensionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNodeVisitors(): void
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(2, $nodeVisitors);
+        $this->assertCount(3, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
         $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[2]);
     }
 
     public function testAddsTheTokenParsers(): void
@@ -296,6 +308,38 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame($expected, $output);
 
         unset($GLOBALS['TL_LANG']);
+    }
+
+    /**
+     * @dataProvider provideTemplateNames
+     */
+    public function testDefaultEscaperRules(string $templateName): void
+    {
+        $extension = $this->getContaoExtension();
+
+        $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
+        $property->setAccessible(true);
+        $rules = $property->getValue($extension);
+
+        $this->assertCount(2, $rules);
+
+        foreach ($rules as $rule) {
+            if (1 === preg_match($rule, $templateName)) {
+                return;
+            }
+        }
+
+        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+    }
+
+    public function provideTemplateNames(): \Generator
+    {
+        yield '@Contao namespace' => ['@Contao/foo.html.twig'];
+        yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
+        yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
+        yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
+        yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
+        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**

@@ -12,21 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Input;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
-class PageModelTest extends ContaoTestCase
+class PageModelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
@@ -36,18 +40,7 @@ class PageModelTest extends ContaoTestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
-        ;
-
         $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
-        ;
-
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -65,16 +58,13 @@ class PageModelTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        PageModel::reset();
+
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+
         parent::tearDown();
-
-        Registry::getInstance()->reset();
-
-        unset($GLOBALS['TL_MODELS']);
-
-        // Reset database instance
-        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([]);
     }
 
     public function testCreatingEmptyPageModel(): void
@@ -306,6 +296,38 @@ class PageModelTest extends ContaoTestCase
         ];
     }
 
+    public function testDoesNotFindSimilarIfAliasIsEmpty(): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 1,
+            'alias' => '',
+        ]);
+
+        $sourcePage
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertNull($result);
+    }
+
     /**
      * @param bool|string $expectedLayout
      *
@@ -381,6 +403,76 @@ class PageModelTest extends ContaoTestCase
                 [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpageLayout' => '']],
             ],
             '3',
+        ];
+    }
+
+    /**
+     * @group legacy
+     * @runInSeparateProcess
+     *
+     * @dataProvider folderUrlProvider
+     */
+    public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
+    {
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', 'BE');
+        }
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly(\count($databaseResultData)))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $page = PageModel::findWithDetails(3);
+
+        $this->assertInstanceOf(PageModel::class, $page);
+        $this->assertSame($expectedFolderUrl, $page->folderUrl);
+    }
+
+    public function folderUrlProvider(): \Generator
+    {
+        yield 'Inherits the alias from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'alias3'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'alias2'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'alias2/',
+        ];
+
+        yield 'Inherits a folderUrl from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'baz'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'foo/bar'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'foo/bar/',
+        ];
+
+        yield 'Does not inherit from the root page' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'type' => 'root', 'fallback' => '1', 'alias' => 'foo/bar'],
+            ],
+            '',
+        ];
+
+        yield 'Does not inherit the index alias' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'index'],
+            ],
+            '',
         ];
     }
 

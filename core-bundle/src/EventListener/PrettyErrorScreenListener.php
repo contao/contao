@@ -159,6 +159,9 @@ class PrettyErrorScreenListener
                 return;
             }
 
+            $errorPage->loadDetails();
+            $errorPage->protected = false;
+
             $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
@@ -215,6 +218,8 @@ class PrettyErrorScreenListener
      */
     private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {
+        $this->framework->initialize();
+
         $config = $this->framework->getAdapter(Config::class);
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 

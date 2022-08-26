@@ -23,13 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupCreateCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:create';
-
-    protected function configure(): void
-    {
-        parent::configure();
-
-        $this->setDescription('Creates a new backup.');
-    }
+    protected static $defaultDescription = 'Creates a new database backup.';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -56,7 +50,7 @@ class BackupCreateCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf('Successfully created an SQL dump at "%s".', $config->getBackup()->getFilepath()));
+        $io->success(sprintf('Successfully created SQL dump "%s".', $config->getBackup()->getFilename()));
 
         return 0;
     }

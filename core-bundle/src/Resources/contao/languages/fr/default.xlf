@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Une page avec l'URL &quot;%s&quot; existe déjà!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Ce suffixe d'URL entraînera des URL dupliquées (par exemple, %s)!</target>
@@ -349,6 +352,12 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Le chemin du modèle &quot;%s&quot; ne doit pas contenir les caractères suivants : %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Veuillez additionner %d et %d.</target>
@@ -372,6 +381,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>Génère un titre (h1 - h6).</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Divers</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -1314,8 +1327,7 @@
         <target>Légende</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licence</target>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1578,8 +1590,7 @@
         <target>Raccourcis clavier du back office</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Apprenez comment vous pouvez accélérer votre processus de travail en utilisant les &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt; raccourcis clavier&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2747,6 +2758,9 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
       </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>
@@ -2956,8 +2970,7 @@
         <target>%d URI(s) indexée(s) avec succès. %d ont échouée(s).</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URI(s) ont été ignorée(s) (s'il vous en manque une, consultez le journal de débogage).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

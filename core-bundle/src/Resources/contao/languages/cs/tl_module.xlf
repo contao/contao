@@ -110,8 +110,8 @@
         <target>Vlastní údaj</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Zde můžete zadat vlastní údaj pro rozbalovací menu.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Zde můžete zadat vlastní označení pro rozbalovací menu nebo odkaz ke stránce s přehledem.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Stránka přehledu</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Vyberte stránku přehledu, abyste přidali do předlohy příslušný odkaz.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -509,9 +511,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Vyberte prosím modul pro každou kořenovou stránku</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Vybrat modul pro &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

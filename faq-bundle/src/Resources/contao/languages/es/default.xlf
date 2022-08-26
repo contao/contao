@@ -7,10 +7,11 @@
       </trans-unit>
       <trans-unit id="MSC.faqPicker">
         <source>FAQ</source>
-        <target>FAQ (Preguntas frecuentes)</target>
+        <target>Preguntas frecuentes</target>
       </trans-unit>
       <trans-unit id="MSC.faqOverview">
         <source>Back to the FAQ overview</source>
+        <target>Volver a la vista general de las preguntas frecuentes </target>
       </trans-unit>
     </body>
   </file>

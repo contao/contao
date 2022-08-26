@@ -13,11 +13,10 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Front end module "search".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleSearch extends Module
 {
@@ -43,7 +42,7 @@ class ModuleSearch extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -75,6 +74,12 @@ class ModuleSearch extends Module
 
 		$blnFuzzy = $this->fuzzy;
 		$strQueryType = Input::get('query_type') ?: $this->queryType;
+
+		if (\is_array(Input::get('keywords')))
+		{
+			throw new BadRequestHttpException('Expected string, got array');
+		}
+
 		$strKeywords = trim(Input::get('keywords'));
 
 		$this->Template->uniqueId = $this->id;
@@ -247,8 +252,8 @@ class ModuleSearch extends Module
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
-				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
-				$arrMatches = StringUtil::trimsplit(',', $arrResult[$i]['matches']);
+				$strText = StringUtil::stripInsertTags(strtok($arrResult[$i]['text'], "\n"));
+				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context
 				foreach ($arrMatches as $strWord)

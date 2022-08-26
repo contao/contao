@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_order'] = array
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default 'ascending'"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'ascending'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_perPage'] = array
@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_moderate'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_bbcode'] = array
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_bbcode'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_disableCaptcha'] = array
@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_disableCaptcha'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
@@ -73,5 +73,5 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 		return Controller::getTemplateGroup('com_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );

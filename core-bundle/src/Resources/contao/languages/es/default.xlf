@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>¡Ya existe una página con la URL &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>¡Este sufijo de URL conducirá a URL duplicadas (p. Ej. %s)!</target>
@@ -347,6 +350,13 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>La ruta de la plantilla &quot;%s&quot; no debe contener los siguientes caracteres: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -371,6 +381,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>Este elemento contiene un titular independiente, que va entre etiquetas &lt;H1&gt;.</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Varios</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -446,12 +460,15 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a Markdown text.</source>
+        <target>Genera código HTML a partir de un texto Markdown.</target>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
+        <target>Plantilla personalizada</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
+        <target>Genera un elemento para insertar una plantilla personalizada.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -787,9 +804,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.0">
         <source>503 Service unavailable</source>
+        <target>503 Servicio no Disponible</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Cuando una página raíz está en modo de mantenimiento, se muestra una página de error 503 para todas las solicitudes.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1308,8 +1327,7 @@
         <target>Leyenda</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licencia</target>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1572,8 +1590,7 @@
         <target>Teclas de acceso rápido del Backend</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo mediante el uso de &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;atajos de teclado&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2661,6 +2678,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Hay al menos un grupo de usuarios que otorga permiso para el módulo front-end &quot;Listing&quot; y sus campos &quot;list_*&quot;. Dado que pueden contener consultas SQL arbitrarias, los usuarios de estos grupos implícitamente tienen control total sobre el sistema.</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2672,6 +2690,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>¡El editor de CSS interno ha quedado obsoleto y se eliminará en Contao 5.0! Considere exportar sus hojas de estilo existentes y volver a agregarlas al diseño de página como hojas de estilo externas.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2687,6 +2706,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Aquí puede limitar el número total de artículos. Establecer en 0 para mostrar todo. </target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2734,9 +2754,14 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>Compartir URL </target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Parent</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2947,8 +2972,7 @@
         <target>%dURI indexado(s) correctamente. %dha(n) fallado.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>Se omitieron los %d URI (si le falta uno, consulte el registro de depuración).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

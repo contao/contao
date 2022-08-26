@@ -21,8 +21,6 @@ namespace Contao;
  * @property integer $rows
  * @property integer $cols
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to FormTextarea in Contao 5.0
  */
 class FormTextArea extends Widget
@@ -142,7 +140,7 @@ class FormTextArea extends Widget
 				return $this->intRows;
 
 			case 'value':
-				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
+				return StringUtil::specialchars(str_replace('\n', "\n", (string) $this->varValue));
 
 			case 'rawValue':
 				return $this->varValue;

@@ -126,6 +126,13 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess(): void
     {
         $this->security
@@ -150,37 +157,6 @@ class ContentCompositionListenerTest extends TestCase
         $page = $this->mockPageWithRow();
 
         $this->expectSupportsContentComposition(false, $page);
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
-        ;
-
-        $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
-        );
-    }
-
-    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFound(): void
-    {
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('contao_user.modules', 'article')
-            ->willReturn(true)
-        ;
-
-        $page = $this->mockPageWithRow(null);
-
-        $this->expectSupportsContentComposition(true, $page);
 
         $this->imageAdapter
             ->expects($this->once())
@@ -254,10 +230,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('addToUrl')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null)
-        );
+        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null));
     }
 
     public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconAndHrefAreNull(): void
@@ -282,10 +255,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null)
-        );
+        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null));
     }
 
     public function testRendersArticlesOperationIfProviderSupportsCompositionAndPageLayoutHasArticles(): void
@@ -298,6 +268,39 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->mockPageWithRow(0);
+
+        $this->expectSupportsContentComposition(true, $page);
+
+        $this->imageAdapter
+            ->expects($this->once())
+            ->method('getHtml')
+            ->with('foo.svg', 'label')
+            ->willReturn('<img src="foo.svg" alt="label">')
+        ;
+
+        $this->backendAdapter
+            ->expects($this->once())
+            ->method('addToUrl')
+            ->with('link&amp;pn=17')
+            ->willReturn('linkWithPn')
+        ;
+
+        $this->assertSame(
+            '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+        );
+    }
+
+    public function testRendersArticlesOperationIfPageLayoutIsNotFound(): void
+    {
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('contao_user.modules', 'article')
+            ->willReturn(true)
+        ;
+
+        $page = $this->mockPageWithRow(null);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -557,9 +560,7 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('layout')
-            ->willReturn(
-                $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)])
-            )
+            ->willReturn($this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]))
         ;
 
         $article = [
@@ -661,10 +662,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
-        );
+        $this->assertSame('', $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false));
     }
 
     public function testDisablesPasteIntoArticleOnCircularReference(): void

@@ -14,8 +14,6 @@ namespace Contao;
  * Class ModuleFaqPage
  *
  * @property array $faq_categories
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqPage extends Module
 {
@@ -41,7 +39,7 @@ class ModuleFaqPage extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -90,10 +88,7 @@ class ModuleFaqPage extends Module
 			/** @var FaqModel $objFaq */
 			$objTemp = (object) $objFaq->row();
 
-			// Clean the RTE output
-			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
-			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
-
+			$objTemp->answer = StringUtil::encodeEmail($objFaq->answer);
 			$objTemp->addImage = false;
 			$objTemp->addBefore = false;
 
@@ -124,9 +119,15 @@ class ModuleFaqPage extends Module
 				$this->addEnclosuresToTemplate($objTemp, $objFaq->row());
 			}
 
+			$strAuthor = '';
+
 			/** @var UserModel $objAuthor */
-			$objAuthor = $objFaq->getRelated('author');
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $objAuthor->name);
+			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+			{
+				$strAuthor = $objAuthor->name;
+			}
+
+			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');

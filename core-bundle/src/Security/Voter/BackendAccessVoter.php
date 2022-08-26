@@ -100,7 +100,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
      */
     private function hasAccess($subject, string $field, BackendUser $user): bool
     {
-        if (!is_scalar($subject) && !\is_array($subject)) {
+        if (!\is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
 

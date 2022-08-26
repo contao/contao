@@ -29,18 +29,18 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		el.blur();
-
 		var item = $(id),
 			parent = $(el).getParent('li');
 
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'true');
 				$(el).store('tip:title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'false');
 				$(el).store('tip:title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -367,7 +367,7 @@ var AjaxRequest =
 				item.getElements('[data-required]').each(function(el) {
 					el.set('required', '').set('data-required', null);
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				el.value = '';
 				el.checked = '';
@@ -375,7 +375,7 @@ var AjaxRequest =
 				item.getElements('[required]').each(function(el) {
 					el.set('required', null).set('data-required', '');
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return;
 		}
@@ -422,6 +422,8 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				updateVersionNumber(txt);
+
 				AjaxRequest.hideBox();
 
 				// HOOK
@@ -429,6 +431,13 @@ var AjaxRequest =
 				window.fireEvent('ajax_change');
 			}
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+
+		function updateVersionNumber(html) {
+			if (!el.form.elements.VERSION_NUMBER) {
+				return;
+			}
+			el.form.elements.VERSION_NUMBER.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+		}
 	},
 
 	/**
@@ -1109,7 +1118,7 @@ var Backend =
 	 * it was defined and add the "down" CSS class to the header.
 	 */
 	initScrollOffset: function() {
-		// Kill the legacy cookie here; this way it can be sent by the server
+		// Kill the legacy cookie here; this way it can be sent by the server,
 		// but it won't be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
@@ -1552,6 +1561,13 @@ var Backend =
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
+			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
 			}
 			$(oid).value = els.join(',');
 		});
@@ -2409,7 +2425,7 @@ var Backend =
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
+			li.getElements('input, textarea').each(function(input) {
 				input.value = '';
 			});
 		} else {

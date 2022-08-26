@@ -15,6 +15,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\Input;
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_faq_category',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'question',
@@ -265,7 +266,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'size' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['size'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -358,8 +359,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_faq extends Backend
 {

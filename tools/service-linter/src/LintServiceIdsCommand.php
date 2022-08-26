@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\Tools\ServiceIdLinter;
 
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,12 +21,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 
 class LintServiceIdsCommand extends Command
 {
+    public string $projectDir;
+
     protected static $defaultName = 'contao:lint-service-ids';
+    protected static $defaultDescription = 'Checks the Contao service IDs.';
 
     /**
      * Strip from name if the alias is part of the namespace.
@@ -62,18 +65,11 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
-    public string $projectDir;
-
     public function __construct(string $projectDir)
     {
         parent::__construct();
 
         $this->projectDir = $projectDir;
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Checks the Contao service IDs.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -83,7 +79,8 @@ class LintServiceIdsCommand extends Command
             ->name('*.yaml')
             ->name('*.yml')
             ->path('src/Resources/config')
-            ->in($this->projectDir);
+            ->in($this->projectDir)
+        ;
 
         $hasError = false;
         $io = new SymfonyStyle($input, $output);
@@ -217,7 +214,7 @@ class LintServiceIdsCommand extends Command
         }
 
         // Rename "xxx_bundle" to "contao_xxx"
-        $chunks[0] = 'contao_' . substr($chunks[0], 0, -7);
+        $chunks[0] = 'contao_'.substr($chunks[0], 0, -7);
 
         // The last chunk is the class name.
         $name = array_pop($chunks);
@@ -254,7 +251,7 @@ class LintServiceIdsCommand extends Command
                 unset($nameChunks[$i]);
             }
 
-            if (\in_array($nameChunk . '_' . ($nameChunks[$i + 1] ?? ''), $chunks, true)) {
+            if (\in_array($nameChunk.'_'.($nameChunks[$i + 1] ?? ''), $chunks, true)) {
                 unset($nameChunks[$i], $nameChunks[$i + 1]);
             }
         }

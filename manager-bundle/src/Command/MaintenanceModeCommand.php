@@ -27,6 +27,7 @@ use Twig\Environment;
 class MaintenanceModeCommand extends Command
 {
     protected static $defaultName = 'contao:maintenance-mode';
+    protected static $defaultDescription = 'Changes the state of the system maintenance mode.';
 
     private string $maintenanceFilePath;
     private Environment $twig;
@@ -48,7 +49,6 @@ class MaintenanceModeCommand extends Command
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
-            ->setDescription('Changes the state of the system maintenance mode.')
         ;
     }
 

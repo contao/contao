@@ -28,9 +28,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TemplateOptionsListenerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $GLOBALS['TL_CTE'] = [
             'foobar' => [
@@ -47,11 +47,11 @@ class TemplateOptionsListenerTest extends TestCase
         ];
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
+        unset($GLOBALS['TL_CTE'], $GLOBALS['FE_MOD']);
 
-        unset($GLOBALS['TL_CTE']);
+        parent::tearDown();
     }
 
     public function testReturnsTheDefaultElementTemplate(): void

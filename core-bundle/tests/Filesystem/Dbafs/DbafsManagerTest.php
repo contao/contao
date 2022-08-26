@@ -114,15 +114,15 @@ class DbafsManagerTest extends TestCase
 
         $manager->register(
             $this->getDbafsCoveringUuids([
-                'foo/a' => $uuid1,
-                'foo/bar/b' => $uuid2,
+                'a' => $uuid1,
+                'bar/b' => $uuid2,
             ]),
             'foo'
         );
 
         $manager->register(
             $this->getDbafsCoveringUuids([
-                'other/c' => $uuid3,
+                'c' => $uuid3,
             ]),
             'other'
         );
@@ -378,17 +378,8 @@ class DbafsManagerTest extends TestCase
      */
     public function testListContents(bool $deep): void
     {
-        $dbafs1 = $this->getDbafsListingRecords(
-            'bar',
-            ['bar', 'baz', 'bar/file1'],
-            $deep,
-        );
-
-        $dbafs2 = $this->getDbafsListingRecords(
-            '',
-            ['file1', 'file2'],
-            $deep,
-        );
+        $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);
+        $dbafs2 = $this->getDbafsListingRecords('', ['file1', 'file2'], $deep);
 
         $manager = new DbafsManager();
         $manager->register($dbafs1, 'foo');
@@ -420,13 +411,7 @@ class DbafsManagerTest extends TestCase
             ->expects($this->once())
             ->method('sync')
             ->with('foo/*', 'foo/bar/**')
-            ->willReturn(
-                new ChangeSet(
-                    [],
-                    [],
-                    ['foo/bar/file1' => ChangeSet::TYPE_FILE],
-                )
-            )
+            ->willReturn(new ChangeSet([], [], ['foo/bar/file1' => ChangeSet::TYPE_FILE]))
         ;
 
         $filesFooBarDbafs = $this->createMock(DbafsInterface::class);
@@ -434,13 +419,7 @@ class DbafsManagerTest extends TestCase
             ->expects($this->once())
             ->method('sync')
             ->with('**')
-            ->willReturn(
-                new ChangeSet(
-                    [],
-                    [],
-                    ['file2' => ChangeSet::TYPE_FILE],
-                )
-            )
+            ->willReturn(new ChangeSet([], [], ['file2' => ChangeSet::TYPE_FILE]))
         ;
 
         $assetsDbafs = $this->createMock(DbafsInterface::class);
@@ -472,13 +451,7 @@ class DbafsManagerTest extends TestCase
             ->expects($this->once())
             ->method('sync')
             ->with()
-            ->willReturn(
-                new ChangeSet(
-                    [],
-                    [],
-                    ['foo/bar/file1' => ChangeSet::TYPE_FILE],
-                )
-            )
+            ->willReturn(new ChangeSet([], [], ['foo/bar/file1' => ChangeSet::TYPE_FILE]))
         ;
 
         $filesFooBarDbafs = $this->createMock(DbafsInterface::class);
@@ -486,13 +459,7 @@ class DbafsManagerTest extends TestCase
             ->expects($this->once())
             ->method('sync')
             ->with()
-            ->willReturn(
-                new ChangeSet(
-                    [],
-                    [],
-                    ['file2' => ChangeSet::TYPE_FILE],
-                )
-            )
+            ->willReturn(new ChangeSet([], [], ['file2' => ChangeSet::TYPE_FILE]))
         ;
 
         $assetsDbafs = $this->createMock(DbafsInterface::class);
@@ -580,16 +547,7 @@ class DbafsManagerTest extends TestCase
         $dbafs
             ->method('getRecord')
             ->with($path)
-            ->willReturn(
-                new FilesystemItem(
-                    true,
-                    $path,
-                    0,
-                    0,
-                    'application/x-empty',
-                    $extraMetadata
-                )
-            )
+            ->willReturn(new FilesystemItem(true, $path, 0, 0, 'application/x-empty', $extraMetadata))
         ;
 
         return $dbafs;

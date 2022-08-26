@@ -37,6 +37,13 @@ class PictureFactoryTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';

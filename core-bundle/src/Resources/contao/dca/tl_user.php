@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\Message;
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'onload_callback' => array
 		(
@@ -65,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('icon', 'name', 'username', 'dateAdded'),
+			'fields'                  => array('', 'name', 'username', 'dateAdded'),
 			'showColumns'             => true,
 			'label_callback'          => array('tl_user', 'addIcon')
 		),
@@ -483,8 +484,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_user extends Backend
 {
@@ -799,6 +798,12 @@ class tl_user extends Backend
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['htmlPurged']);
 				}
 
+				if (in_array('purge_previews', $arrPurge))
+				{
+					$this->Automator->purgePreviewCache();
+					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['previewPurged']);
+				}
+
 				if (in_array('purge_pages', $arrPurge))
 				{
 					$this->Automator->purgePageCache();
@@ -816,7 +821,8 @@ class tl_user extends Backend
     <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
     <input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label><br>
     <input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_pages" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label>
+    <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label><br>
+    <input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label>
   </fieldset>' . $dc->help() . '
 </div>';
 	}

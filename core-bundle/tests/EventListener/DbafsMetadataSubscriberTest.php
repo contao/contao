@@ -37,7 +37,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
     public function testEnhancesMetadata(): void
     {
-        $event = new RetrieveDbafsMetadataEvent('tl_files', $rowData = $this->getDemoRowData());
+        $event = new RetrieveDbafsMetadataEvent('tl_files', $this->getDemoRowData());
 
         $this->assertEmpty($event->getExtraMetadata());
 

@@ -17,8 +17,6 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * Provide methods to handle a logout page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageLogout extends Frontend
 {

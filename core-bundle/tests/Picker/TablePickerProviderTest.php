@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -24,18 +25,13 @@ use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TablePickerProviderTest extends ContaoTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $GLOBALS['TL_DCA'] = [];
-        $GLOBALS['BE_MOD'] = [];
-    }
+    use ExpectDeprecationTrait;
 
     protected function tearDown(): void
     {
@@ -51,9 +47,27 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tablePicker', $provider->getName());
     }
 
+    /**
+     * @group legacy
+     */
+    public function testSupportsLegacyContext(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name "Table" for table "tl_foobar" as DataContainer name has been deprecated %s.');
+
+        // Load the class to ensure that the global DC_Table alias is set
+        class_exists(DC_Table::class);
+
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
+
+        $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
+
+        $this->assertTrue($provider->supportsContext('dc.tl_foobar'));
+    }
+
     public function testSupportsContext(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
 
         $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
@@ -68,8 +82,13 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('foobar'));
     }
 
+    /**
+     * @group legacy
+     */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name "Foobar" for table "tl_foobar" as DataContainer name has been deprecated %s.');
+
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
 
@@ -80,7 +99,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
     public function testDoesNotSupportContextWithoutModule(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_page'];
 
         $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
@@ -173,13 +192,13 @@ class TablePickerProviderTest extends ContaoTestCase
         yield 'preserve source record' => [
             ['source' => '15'],
             '',
-            ['fieldType' => 'radio', 'preserveRecord' => '15'],
+            ['fieldType' => 'radio'],
         ];
 
         yield 'everything' => [
             ['fieldType' => 'foobar', 'source' => '42'],
-            '1,2,3',
-            ['fieldType' => 'foobar', 'preserveRecord' => '42', 'value' => [1, 2, 3]],
+            '',
+            ['fieldType' => 'foobar'],
         ];
 
         yield 'ignores additional extras' => [
@@ -255,7 +274,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutValue(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => 'Table']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class]];
 
         $params = [
             'do' => 'article',
@@ -277,7 +296,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => 'Table']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class]];
 
         $params = [
             'do' => 'article',
@@ -299,7 +318,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => 'Table', 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -321,7 +340,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithPtableAndMultipleTables(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_page', 'tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => 'Table', 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -349,7 +368,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
         $GLOBALS['TL_DCA']['tl_content'] = [
             'config' => [
-                'dataContainer' => 'Table',
+                'dataContainer' => DC_Table::class,
                 'ptable' => 'tl_article',
                 'dynamicPtable' => true,
             ],
@@ -378,7 +397,7 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => 'Table', 'dynamicPtable' => true]];
+        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'dynamicPtable' => true]];
 
         $params = [
             'do' => 'article',
@@ -402,7 +421,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutDbRecordRendersFirstModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => 'Table', 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -424,7 +443,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => 'Table', 'ptable' => 'tl_article']];
+        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article']];
 
         $params = [
             'do' => 'article',

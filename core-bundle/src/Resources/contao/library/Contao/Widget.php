@@ -100,8 +100,6 @@ use Doctrine\DBAL\Types\Types;
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Widget extends Controller
 {
@@ -706,7 +704,7 @@ abstract class Widget extends Controller
 			return ' ' . $strKey;
 		}
 
-		if ($varValue)
+		if ('' !== (string) $varValue)
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -807,7 +805,7 @@ abstract class Widget extends Controller
 			return $varInput;
 		}
 
-		if (!$this->doNotTrim)
+		if (!$this->doNotTrim && \is_string($varInput))
 		{
 			$varInput = trim($varInput);
 		}
@@ -1376,11 +1374,11 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? (($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) ? $ref : $v) : $v));
 					continue;
 				}
 
-				$key = $blnUseReference && isset($arrData['reference'][$k]) ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
+				$key = $blnUseReference && isset($arrData['reference'][$k]) ? (($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) ? $ref : $k) : $k;
 				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
@@ -1392,7 +1390,7 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? (($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) ? $ref : $vv) : $vv));
 				}
 			}
 

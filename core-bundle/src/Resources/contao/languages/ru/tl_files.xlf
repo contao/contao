@@ -81,6 +81,14 @@
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
         <target>Вы можете ввести метаданные файла. Чтобы добавить язык, создайте соответствующую корневую страницу в структуре веб-сайта.</target>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>Поле &quot;%s&quot; для языка &quot;%s&quot; должно соответствовать &quot;%s&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>Поле &quot;%s&quot; для языка &quot;%s&quot; должно содержать действующий URL.</target>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
         <target>Загрузка файла</target>
@@ -170,8 +178,8 @@
         <target>Синхронизация завершена</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;Результат:&lt;/strong&gt; добавлено %s | изменено %s | нетронуто %s | перемещено %s | удалено %s</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Результат:&lt;/strong&gt; добавлено %s | изменено %s | перемещено %4$s | удалено %5$s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

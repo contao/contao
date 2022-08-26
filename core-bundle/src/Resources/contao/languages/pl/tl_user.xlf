@@ -333,6 +333,10 @@
         <source>Image cache</source>
         <target>Pamięć podręczna obrazków</target>
       </trans-unit>
+      <trans-unit id="tl_user.previewLabel">
+        <source>Preview cache</source>
+        <target>Pamięć podręczna podglądu</target>
+      </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
         <target>Wspólna pamięć podręczna</target>
@@ -344,6 +348,10 @@
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
         <target>Pamięć podręczna obrazków została wyczyszczona</target>
+      </trans-unit>
+      <trans-unit id="tl_user.previewPurged">
+        <source>The preview cache has been purged</source>
+        <target>Pamięć podręczna podglądu została wyczyszczona.</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
@@ -33,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
@@ -522,6 +523,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'useFolderUrl' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -535,6 +537,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'urlSuffix' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
@@ -780,8 +783,6 @@ if (Input::get('popup'))
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_page extends Backend
 {

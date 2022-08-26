@@ -64,8 +64,6 @@ use Contao\Model\Registry;
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByEmailSubject($val, array $opt=array())
  * @method static integer countByEmailText($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class OptInModel extends Model
 {

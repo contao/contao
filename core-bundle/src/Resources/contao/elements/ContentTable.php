@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "table".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentTable extends ContentElement
 {

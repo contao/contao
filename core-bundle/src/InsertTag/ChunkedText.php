@@ -23,7 +23,7 @@ final class ChunkedText implements \IteratorAggregate
     /**
      * @var array<int, string>
      */
-    private $chunks;
+    private array $chunks;
 
     /**
      * @internal

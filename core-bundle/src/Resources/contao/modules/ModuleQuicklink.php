@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicklink extends Module
 {
@@ -42,7 +40,7 @@ class ModuleQuicklink extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -135,8 +133,6 @@ class ModuleQuicklink extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;

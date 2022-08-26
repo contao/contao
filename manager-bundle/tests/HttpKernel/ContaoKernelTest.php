@@ -26,7 +26,9 @@ use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,57 +37,32 @@ class ContaoKernelTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
+    private $shellVerbosityBackup;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Reset the ContaoKernel static properties
-        $reflection = new \ReflectionClass(ContaoKernel::class);
+        $this->backupServerEnvGetPost();
 
-        $prop = $reflection->getProperty('projectDir');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
+        $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'prod';
 
-        // Reset the manager-bundle Plugin static properties
-        $reflection = new \ReflectionClass(ManagerPlugin::class);
-
-        $prop = $reflection->getProperty('autoloadModules');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
-
-        // Reset the Request static properties
-        $reflection = new \ReflectionClass(Request::class);
-
-        $prop = $reflection->getProperty('trustedProxies');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        $prop = $reflection->getProperty('trustedHostPatterns');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        $prop = $reflection->getProperty('trustedHeaderSet');
-        $prop->setAccessible(true);
-        $prop->setValue(-1);
-
-        $prop = $reflection->getProperty('httpMethodParameterOverride');
-        $prop->setAccessible(true);
-        $prop->setValue(false);
-
-        $filesystem = new Filesystem();
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
+        $this->shellVerbosityBackup = getenv('SHELL_VERBOSITY');
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $filesystem = new Filesystem();
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
+
+        putenv('SHELL_VERBOSITY'.(false === $this->shellVerbosityBackup ? '' : '='.$this->shellVerbosityBackup));
+
+        $this->restoreServerEnvGetPost();
+        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class, Request::class, EnvPlaceholderParameterBag::class, ClassExistenceResource::class]);
+
+        parent::tearDown();
     }
 
     public function testResetsTheBundleLoaderOnShutdown(): void
@@ -394,7 +371,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
-        unset($_SERVER['APP_ENV']);
+        unset($_SERVER['APP_ENV'], $_ENV['APP_ENV'], $_ENV['DISABLE_HTTP_CACHE'], $_SERVER['DISABLE_HTTP_CACHE']);
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));

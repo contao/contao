@@ -20,8 +20,6 @@ namespace Contao;
  *
  *     echo Environment::get('scriptName');
  *     echo Environment::get('requestUri');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Environment
 {
@@ -65,7 +63,7 @@ class Environment
 		{
 			$arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 			$strServerKey = strtoupper(implode('_', $arrChunks));
-			static::$arrCache[$strKey] = $_SERVER[$strServerKey];
+			static::$arrCache[$strKey] = $_SERVER[$strServerKey] ?? null;
 		}
 
 		return static::$arrCache[$strKey];
@@ -206,7 +204,7 @@ class Environment
 			}
 			else
 			{
-				$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
+				$strRequest = ($arrComponents['path'] ?? '') . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
 			}
 		}
 		else
@@ -221,8 +219,6 @@ class Environment
 	 * Return the first eight accepted languages as array
 	 *
 	 * @return array The languages array
-	 *
-	 * @author Leo Unglaub <https://github.com/LeoUnglaub>
 	 */
 	protected static function httpAcceptLanguage()
 	{
@@ -277,6 +273,11 @@ class Environment
 	 */
 	protected static function httpUserAgent()
 	{
+		if (!isset($_SERVER['HTTP_USER_AGENT']))
+		{
+			return '';
+		}
+
 		$ua = strip_tags($_SERVER['HTTP_USER_AGENT']);
 		$ua = preg_replace('/javascript|vbscri?pt|script|applet|alert|document|write|cookie/i', '', $ua);
 
@@ -412,7 +413,7 @@ class Environment
 	}
 
 	/**
-	 * Return the relativ path to the script (e.g. index.php)
+	 * Return the relative path to the script (e.g. index.php)
 	 *
 	 * @return string The relative path to the script
 	 */
@@ -422,7 +423,7 @@ class Environment
 	}
 
 	/**
-	 * Return the relativ path to the script and include the request (e.g. index.php?id=2)
+	 * Return the relative path to the script and include the request (e.g. index.php?id=2)
 	 *
 	 * @return string The relative path to the script including the request string
 	 */

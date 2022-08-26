@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 
 class PurgeExpiredDataCron
 {
@@ -48,7 +49,10 @@ class PurgeExpiredDataCron
             return;
         }
 
-        $stmt = $this->connection->prepare(sprintf('DELETE FROM %s WHERE tstamp<:tstamp', $table));
-        $stmt->executeStatement(['tstamp' => time() - $period]);
+        $this->connection->executeStatement(
+            "DELETE FROM $table WHERE tstamp < :tstamp",
+            ['tstamp' => time() - $period],
+            ['tstamp' => Types::INTEGER],
+        );
     }
 }

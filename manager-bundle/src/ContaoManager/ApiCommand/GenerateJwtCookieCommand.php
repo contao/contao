@@ -24,6 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateJwtCookieCommand extends Command
 {
+    protected static $defaultName = 'jwt-cookie:generate';
+    protected static $defaultDescription = 'Generates a JWT cookie for the preview entry point.';
+
     private JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager $jwtManager = null)
@@ -35,13 +38,7 @@ class GenerateJwtCookieCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
-        $this
-            ->setName('jwt-cookie:generate')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie')
-            ->setDescription('Generates a JWT cookie for the preview entry point.')
-        ;
+        $this->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

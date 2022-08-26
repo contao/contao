@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
 use Contao\Widget;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -31,6 +31,13 @@ class WidgetTest extends TestCase
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'gif', 'png']);
 
         System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Input::class, System::class]);
+
+        parent::tearDown();
     }
 
     /**
@@ -50,6 +57,7 @@ class WidgetTest extends TestCase
         $method = $class->getMethod('getPost');
         $method->setAccessible(true);
 
+        $_GET = [];
         $_POST = [$input => $value];
         Input::resetCache();
         Input::initialize();
@@ -58,6 +66,7 @@ class WidgetTest extends TestCase
 
         // Restore the error reporting level
         error_reporting($errorReporting);
+        $_POST = [];
     }
 
     public function postProvider(): \Generator

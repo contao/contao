@@ -30,8 +30,6 @@ namespace Contao;
  * @property string  $path     The folder path
  * @property string  $value    Alias of $path
  * @property integer $size     The folder size
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Folder extends System
 {
@@ -276,7 +274,7 @@ class Folder extends System
 		}
 
 		// Reset the object AFTER the database has been updated
-		if ($return != false)
+		if ($return)
 		{
 			$this->strFolder = $strNewName;
 		}
@@ -585,14 +583,17 @@ class Folder extends System
 		$arrReturn = array();
 
 		// Scan directory
-		foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
+		if (is_dir($strFolder))
 		{
-			if ($strFile == '.' || $strFile == '..')
+			foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
 			{
-				continue;
-			}
+				if ($strFile == '.' || $strFile == '..')
+				{
+					continue;
+				}
 
-			$arrReturn[] = $strFile;
+				$arrReturn[] = $strFile;
+			}
 		}
 
 		// Cache the result

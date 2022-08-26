@@ -83,11 +83,7 @@ class FilesystemItem
             );
         }
 
-        return new self(
-            false,
-            $path,
-            $attributes->lastModified(),
-        );
+        return new self(false, $path, $attributes->lastModified());
     }
 
     /**

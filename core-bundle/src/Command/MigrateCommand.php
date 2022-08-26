@@ -13,10 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -31,22 +38,29 @@ use Symfony\Component\Filesystem\Path;
 class MigrateCommand extends Command
 {
     protected static $defaultName = 'contao:migrate';
+    protected static $defaultDescription = 'Executes migrations and updates the database schema.';
 
     private MigrationCollection $migrations;
     private FileLocator $fileLocator;
     private string $projectDir;
     private ContaoFramework $framework;
     private BackupManager $backupManager;
+    private SchemaProvider $schemaProvider;
+    private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
+    private Connection $connection;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
         $this->framework = $framework;
         $this->backupManager = $backupManager;
+        $this->schemaProvider = $schemaProvider;
+        $this->rowSizeCalculator = $rowSizeCalculator;
+        $this->connection = $connection;
         $this->installer = $installer;
 
         parent::__construct();
@@ -61,7 +75,7 @@ class MigrateCommand extends Command
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
             ->addOption('no-backup', null, InputOption::VALUE_NONE, 'Disable the database backup which is created by default before executing the migrations.')
-            ->setDescription('Executes migrations and updates the database schema.')
+            ->addOption('hash', null, InputOption::VALUE_REQUIRED, 'A hash value from a --dry-run result')
         ;
     }
 
@@ -69,8 +83,8 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        if (!$input->getOption('dry-run') && !$input->getOption('no-backup')) {
-            $this->backup($input);
+        if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
+            return 1;
         }
 
         if ('ndjson' !== $input->getOption('format')) {
@@ -92,15 +106,25 @@ class MigrateCommand extends Command
         return 1;
     }
 
-    private function backup(InputInterface $input): void
+    private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
+
+        // Return early if there is no work to be done
+        if (!$this->hasWorkToDo()) {
+            if (!$asJson) {
+                $this->io->info('Database dump skipped because there are no migrations to execute.');
+            }
+
+            return true;
+        }
+
         $config = $this->backupManager->createCreateConfig();
 
         if (!$asJson) {
             $this->io->info(sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilepath()
+                $config->getBackup()->getFilename()
             ));
         }
 
@@ -110,6 +134,8 @@ class MigrateCommand extends Command
             if ($asJson) {
                 $this->writeNdjson('backup-result', $config->getBackup()->toArray());
             }
+
+            return true;
         } catch (\Throwable $exception) {
             if ($asJson) {
                 $this->writeNdjson('error', [
@@ -122,6 +148,8 @@ class MigrateCommand extends Command
             } else {
                 $this->io->error($exception->getMessage());
             }
+
+            return false;
         }
     }
 
@@ -129,6 +157,7 @@ class MigrateCommand extends Command
     {
         $dryRun = (bool) $input->getOption('dry-run');
         $asJson = 'ndjson' === $input->getOption('format');
+        $specifiedHash = $input->getOption('hash');
 
         if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
             throw new InvalidOptionException(sprintf('Unsupported format "%s".', $input->getOption('format')));
@@ -136,6 +165,10 @@ class MigrateCommand extends Command
 
         if ($asJson && !$dryRun && $input->isInteractive()) {
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
+        }
+
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
         }
 
         if ($input->getOption('migrations-only')) {
@@ -147,22 +180,22 @@ class MigrateCommand extends Command
                 throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
             }
 
-            return $this->executeMigrations($dryRun, $asJson) ? 0 : 1;
+            return $this->executeMigrations($dryRun, $asJson, $specifiedHash) ? 0 : 1;
         }
 
         if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes')) ? 0 : 1;
+            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
         }
 
-        if (!$this->executeMigrations($dryRun, $asJson)) {
+        if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return 1;
         }
 
-        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'))) {
+        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations(false, $asJson)) {
+        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
             return 1;
         }
 
@@ -173,10 +206,35 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function executeMigrations(bool $dryRun, bool $asJson): bool
+    private function hasWorkToDo(): bool
+    {
+        // There are some pending migrations
+        if ($this->migrations->hasPending()) {
+            return true;
+        }
+
+        // There are some runonce files to be processed
+        if (\count($this->getRunOnceFiles()) > 0) {
+            return true;
+        }
+
+        // There are installer commands to be executed
+        if (null !== $this->installer) {
+            $this->installer->compileCommands();
+
+            if (\count($this->installer->getCommands(false)) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
         while (true) {
             $first = true;
+            $migrationLabels = [];
 
             foreach ($this->migrations->getPendingNames() as $migration) {
                 if ($first) {
@@ -187,9 +245,9 @@ class MigrateCommand extends Command
                     $first = false;
                 }
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-pending', ['name' => $migration]);
-                } else {
+                $migrationLabels[] = $migration;
+
+                if (!$asJson) {
                     $this->io->writeln(' * '.$migration);
                 }
             }
@@ -209,15 +267,25 @@ class MigrateCommand extends Command
                     $first = false;
                 }
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-pending', ['name' => 'Runonce file: '.$file]);
-                } else {
+                $migrationLabels[] = "Runonce file: $file";
+
+                if (!$asJson) {
                     $this->io->writeln(' * Runonce file: '.$file);
                 }
             }
 
+            $actualHash = hash('sha256', json_encode($migrationLabels));
+
+            if ($asJson) {
+                $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
+            }
+
             if ($first || $dryRun) {
                 break;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             if (!$asJson) {
@@ -266,6 +334,16 @@ class MigrateCommand extends Command
             if (!$asJson) {
                 $this->io->success('Executed '.$count.' migrations.');
             }
+
+            if (null !== $specifiedHash) {
+                // Do not run the schema update after migrations got executed
+                // if a hash was specified, because that hash could never match
+                // both, migrations and schema updates
+                $dryRun = true;
+
+                // Do not run the update recursive if a hash was specified
+                break;
+            }
         }
 
         return true;
@@ -293,7 +371,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($filePath);
     }
 
-    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption): bool
+    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service "contao_installation.database.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
@@ -301,40 +379,51 @@ class MigrateCommand extends Command
             return false;
         }
 
+        if ($schemaWarnings = $this->compileSchemaWarnings()) {
+            $this->io->warning(implode("\n\n", $schemaWarnings));
+
+            if (!$this->io->confirm('Continue regardless of the warnings?')) {
+                return false;
+            }
+        }
+
         $commandsByHash = [];
 
         while (true) {
             $this->installer->compileCommands();
 
-            if (!$commands = $this->installer->getCommands(false)) {
-                return true;
-            }
+            $commands = $this->installer->getCommands(false);
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),
                 static fn ($hash) => !isset($commandsByHash[$hash])
             ));
 
+            $commandsByHash = $commands;
+            $actualHash = hash('sha256', json_encode($commands));
+
+            if ($asJson) {
+                $this->writeNdjson('schema-pending', [
+                    'commands' => array_values($commandsByHash),
+                    'hash' => $actualHash,
+                ]);
+            }
+
             if (!$hasNewCommands) {
                 return true;
             }
 
             if (!$asJson) {
-                $this->io->section('Pending database migrations');
-            }
-
-            $commandsByHash = $commands;
-
-            if ($asJson) {
-                $this->writeNdjson('schema-pending', [
-                    'commands' => array_values($commandsByHash),
-                ]);
-            } else {
+                $this->io->section("Pending database migrations ($actualHash)");
                 $this->io->listing($commandsByHash);
             }
 
             if ($dryRun) {
                 return true;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             $options = $withDeletesOption
@@ -415,7 +504,14 @@ class MigrateCommand extends Command
             if (\count($exceptions)) {
                 return false;
             }
+
+            // Do not run the update recursive if a hash was specified
+            if (null !== $specifiedHash) {
+                break;
+            }
         }
+
+        return true;
     }
 
     private function getCommandHashes(array $commands, bool $withDrops): array
@@ -446,5 +542,83 @@ class MigrateCommand extends Command
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new \JsonException(json_last_error_msg());
         }
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function compileSchemaWarnings(): array
+    {
+        $warnings = [];
+        $schema = $this->schemaProvider->createSchema();
+
+        foreach ($schema->getTables() as $table) {
+            $warnings = [...$warnings, ...$this->compileTableWarnings($table)];
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function compileTableWarnings(Table $table): array
+    {
+        $warnings = [];
+
+        if ($table->hasOption('engine') && 'innodb' !== strtolower($table->getOption('engine'))) {
+            return $warnings;
+        }
+
+        $mysqlSize = $this->rowSizeCalculator->getMysqlRowSize($table);
+        $mysqlLimit = $this->rowSizeCalculator->getMysqlRowSizeLimit();
+        $innodbSize = $this->rowSizeCalculator->getInnodbRowSize($table);
+        $innodbLimit = $this->rowSizeCalculator->getInnodbRowSizeLimit();
+
+        if ($mysqlSize > $mysqlLimit || $innodbSize > $innodbLimit) {
+            $warnings[] = "The row size of table {$table->getName()} is too large:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
+        }
+
+        return $warnings;
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
+
+        if (!$driverConnection instanceof ServerInfoAwareConnection) {
+            return true;
+        }
+
+        $driver = $this->connection->getDriver();
+
+        if (!$driver instanceof VersionAwarePlatformDriver) {
+            return true;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+
+        /** @var AbstractPlatform $currentPlatform */
+        $currentPlatform = $this->connection->getDatabasePlatform();
+
+        if (\get_class($correctPlatform) === \get_class($currentPlatform)) {
+            return true;
+        }
+
+        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+
+        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
+            $message .= sprintf(', currently set to "%s"', $currentVersion);
+        }
+
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }

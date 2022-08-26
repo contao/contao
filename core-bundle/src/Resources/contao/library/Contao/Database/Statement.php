@@ -32,8 +32,6 @@ use Doctrine\DBAL\Exception\DriverException;
  * @property string  $error        The last error message
  * @property integer $affectedRows The number of affected rows
  * @property integer $insertId     The last insert ID
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Statement
 {
@@ -287,6 +285,16 @@ class Statement
 		}
 		catch (DriverException|\ArgumentCountError $exception)
 		{
+			// SQLSTATE[HY000]: This command is not supported in the prepared statement protocol
+			if ($exception->getCode() === 1295)
+			{
+				$this->resConnection->executeStatement($this->strQuery, $arrParams, $arrTypes);
+
+				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" for statements (instead of queries) has been deprecated and will no longer work in Contao 5.0. Use "%s::executeStatement()" instead.', __METHOD__, Connection::class);
+
+				return $this;
+			}
+
 			if (!$arrParams)
 			{
 				throw $exception;

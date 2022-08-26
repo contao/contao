@@ -13,15 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Path;
 
-class DebugContaoTwigCommandTest extends ContaoTestCase
+class DebugContaoTwigCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Table::class, Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $command = $this->getCommand();
@@ -102,7 +111,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                   baz          @D/baz.html5             /path/baz.html5
                  ------------ ------------------------ ----------------------
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'filter by full word' => [
@@ -118,7 +127,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                                @B/foo.html5             /path2/foo.html5
                  ------------ ------------------------ ----------------------
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'filter by prefix' => [
@@ -135,7 +144,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                   baz          @D/baz.html5             /path/baz.html5
                  ------------ ------------------------ ---------------------
 
-                OUTPUT
+                OUTPUT,
         ];
     }
 

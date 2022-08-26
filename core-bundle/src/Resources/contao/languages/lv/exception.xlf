@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="lv">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>Notikusi kļūda</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>Kas ir noticis?</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>Kā es varu atrisināt šo problēmu?</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>Lūdzu, izstāstiet vairāk</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>Lai pielāgotu šo paziņojumu, izveidojiet pielāgotu Twig veidni, kas ignorēs &lt;em&gt;%s&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>Skripta izpildes laikā notikusi kļūda. Kaut kas nestrādā pareizi.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Atveriet pašreizējo žurnāla datni direktorijā &lt;code&gt;var/logs&lt;/code&gt; un atrodiet saistīto kļūdas ziņojumu (parasti pēdējo).</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Skripta izpilde apstājās, jo kaut kas nedarbojas pareizi. Patiesais kļūdas ziņojums drošības apsvērumu dēļ šajā paziņojumā ir paslēpts, un to var atrast pašreizējā žurnāla failā (skatīt augstāk). Ja nesaprotat kļūdas ziņojumu vai nezināt, kā novērst problēmu, apmeklējiet &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao atbalsta lapu&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>Nederīgs pieprasījuma marķieris</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>Pieprasījuma marķieri nevarēja pārbaudīt.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click here&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
+        <target>Lūdzu, &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;noklikšķiniet šeit&lt;/a&gt; un mēģiniet vēlreiz. Neizmantojiet pārlūkprogrammas pogu &quot;Atpakaļ&quot;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>Šī kļūda rodas, ja tiek veikts POST pieprasījums bez derīga autentifikācijas marķiera. Contao 2.10 versijā atsauces pārbaude ir aizstāta ar pieprasījuma žetona sistēmu. Ja problēma saglabājas, iespējams, izmantojat nesaderīgu trešās puses paplašinājumu vai neesat pareizi atjauninājis Contao instalāciju.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Lai iegūtu vairāk informācijas, apmeklējiet &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao atbalsta lapu&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>Pakalpojums nav pieejams</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>Mājas lapa šobrīd nav pieejama. Lūdzu, atgriezieties vēlāk.</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+        <target>Nevar ģenerēt priekšgala URL</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>URL nevarēja ģenerēt, jo maršrutā nav norādīti obligātie parametri. Ir jānorāda papildu informācija (piemēram, ziņu aizstājvārds).</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Symfony maršrutos var būt mainīgi parametri, kas tiek pārbaudīti, izmantojot regulārās izteiksmes. Šādu konfigurāciju nav iespējams atrisināt:</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+        <target>Maršruta ceļš</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>Nosaukums</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+        <target>Prasība (Regex)</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>Noklusētā vērtība</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+        <target>tukšs</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -18,6 +19,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * A static class to replace insert tags
@@ -26,8 +28,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTags extends Controller
 {
@@ -111,7 +111,7 @@ class InsertTags extends Controller
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
 		/** @var PageModel $objPage */
-		global $objPage;
+		$objPage = $GLOBALS['objPage'] ?? null;
 
 		$container = System::getContainer();
 
@@ -127,7 +127,7 @@ class InsertTags extends Controller
 		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
 
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
-			. '('                        // Match the contents fo the tag
+			. '('                        // Match the contents of the tag
 				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
 				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
@@ -175,7 +175,10 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			if (!$blnCache || strncasecmp($tags[$_rit+1], 'fragment::', 10) !== 0)
+			{
+				$tags[$_rit + 1] = (string) $this->replaceInternal($tags[$_rit + 1], $blnCache);
+			}
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -183,7 +186,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && $elements[0] != 'fragment' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
@@ -198,7 +201,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -232,6 +235,11 @@ class InsertTags extends Controller
 			// Replace the tag
 			switch (strtolower($elements[0]))
 			{
+				// Uncached (ESI) fragments
+				case 'fragment':
+					$arrCache[$strTag] = substr($strTag, 10);
+					break;
+
 				// Date
 				case 'date':
 					$flags[] = 'attr';
@@ -299,7 +307,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
+							$arrCache[$strTag] = $container->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
 							break;
 						}
 						catch (\Throwable $exception)
@@ -312,7 +320,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
+							$arrCache[$strTag] = $container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
 							break;
 						}
 						catch (\Throwable $exception)
@@ -380,7 +388,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						System::getContainer()->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
+						$container->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
 					}
 
 					if (\count($keys) == 2)
@@ -552,13 +560,25 @@ class InsertTags extends Controller
 
 									if ($objNext instanceof PageModel)
 									{
-										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										try
+										{
+											$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										}
+										catch (ExceptionInterface $exception)
+										{
+										}
 										break;
 									}
 									// no break
 
 								default:
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									try
+									{
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									}
+									catch (ExceptionInterface $exception)
+									{
+									}
 									break;
 							}
 						}
@@ -649,8 +669,16 @@ class InsertTags extends Controller
 
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+					$strUrl = '';
+
+					try
+					{
+						$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					}
+					catch (ExceptionInterface $exception)
+					{
+					}
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -679,7 +707,7 @@ class InsertTags extends Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = StringUtil::toHtml5($objTeaser->teaser);
+						$arrCache[$strTag] = $objTeaser->teaser;
 					}
 					break;
 
@@ -711,7 +739,7 @@ class InsertTags extends Controller
 
 				// Version
 				case 'version':
-					$arrCache[$strTag] = VERSION . '.' . BUILD;
+					$arrCache[$strTag] = ContaoCoreBundle::getVersion();
 					break;
 
 				// Request token
@@ -813,7 +841,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+					$responseContext = $container->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -1146,7 +1174,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}
 
@@ -1238,8 +1266,12 @@ class InsertTags extends Controller
 							// ignore
 							break;
 
-						case 'refresh':
 						case 'uncached':
+							trigger_deprecation('contao/core-bundle', '4.13', 'The insert tag flag "|uncached" has been deprecated and will no longer work in Contao 5.0. use "{{fragment::*}}" instead.');
+							// ignore
+							break;
+
+						case 'refresh':
 							// ignore
 							break;
 
@@ -1261,7 +1293,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
+							$container->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
 							break;
 					}
 				}
@@ -1286,7 +1318,7 @@ class InsertTags extends Controller
 	private function parseUrlWithQueryString(string $url): array
 	{
 		// Restore [&] and &amp;
-		$url = str_replace(array('[&]', '&amp;'), '&', $url);
+		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
@@ -1318,10 +1350,15 @@ class InsertTags extends Controller
 	 */
 	private function encodeHtmlAttributes($html)
 	{
+		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		{
+			return $html;
+		}
+
 		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
 		$tagRegEx = '('
 			. '<'                         // Tag start
-			. '/?'                        // Optional slash for closing element
+			. '/?+'                       // Optional slash for closing element
 			. '([a-z][^\s/>]*+)'          // Tag name
 			. '(?:'                       // Attribute
 				. '[\s/]*+'               // Optional white space including slash
@@ -1337,12 +1374,12 @@ class InsertTags extends Controller
 				. ')?+'                   // Assignment is optional
 			. ')*+'                       // Attributes may occur zero or more times
 			. '[\s/]*+'                   // Optional white space including slash
-			. '>?'                        // Tag end (optional if EOF)
+			. '>?+'                       // Tag end (optional if EOF)
 			. '|<!--'                     // Or comment
 			. '|<!'                       // Or bogus ! comment
 			. '|<\?'                      // Or bogus ? comment
 			. '|</(?![a-z])'              // Or bogus / comment
-		. ')i';
+		. ')iS';
 
 		$htmlResult = '';
 		$offset = 0;
@@ -1352,7 +1389,7 @@ class InsertTags extends Controller
 			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
 
 			// Skip comments
-			if ($matches[0][0] === '<!--' || $matches[0][0] === '<!' || $matches[0][0] === '</' || $matches[0][0] === '<?')
+			if (\in_array($matches[0][0], array('<!--', '<!', '</', '<?'), true))
 			{
 				$commentCloseString = $matches[0][0] === '<!--' ? '-->' : '>';
 				$commentClosePos = strpos($html, $commentCloseString, $offset);
@@ -1365,19 +1402,22 @@ class InsertTags extends Controller
 
 			$tag = $matches[0][0];
 
-			// Encode insert tags
-			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
-			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
-			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
-			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			if (strpos($tag, '{{') !== false || strpos($tag, '}}') !== false)
+			{
+				// Encode insert tags
+				$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
+				$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+				$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+				$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			}
 
 			$offset = $matches[0][1] + \strlen($matches[0][0]);
 			$htmlResult .= $tag;
 
 			// Skip RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
 			if (
-				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'))
-				&& preg_match('(</' . preg_quote($matches[1][0]) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
+				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'), true)
+				&& preg_match('(</' . preg_quote($matches[1][0], null) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
 			) {
 				$offset = $endTagMatches[0][1] + \strlen($endTagMatches[0][0]);
 				$htmlResult .= substr($html, $matches[0][1] + \strlen($matches[0][0]), $offset - $matches[0][1] - \strlen($matches[0][0]));
@@ -1411,7 +1451,7 @@ class InsertTags extends Controller
 					. '|[^>][^\s>]*+' // Or unquoted value
 				. ')?+'               // Value is optional
 			. ')?+'                   // Assignment is optional
-		. ')i';
+		. ')iS';
 
 		$attributesResult = '';
 		$offset = 0;

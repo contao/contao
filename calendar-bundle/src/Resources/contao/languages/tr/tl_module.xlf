@@ -15,19 +15,19 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Birkaç güne yayılmış etkinlikler bir kez görüntülensin.</target>
+        <target>Bu seçenek etkinleştirildiğinde, birkaç güne yayılmış etkinlikler bir kez görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
-        <target>İşleyen etkinlikleri gizle.</target>
+        <target>Yürürlükteki etkinlikler gizlensin</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
-        <target>İşleyen etkinlikleri yakın gelecekteki etkinliklerin listesinde görüntüleme.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yürürlükteki etkinlikler yakın gelecekteki etkinlikler listesinde görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
-        <target>Hafta başlangıcı</target>
+        <target>Haftanın ilk günü</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Bu bölümden olay listesi biçimi seçilebilir.</target>
+        <target>Bıradan etkinlik listesi biçimini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
-        <target>İnternet adresi parametreleri yoksayılsın</target>
+        <target>Adres parametreleri yok sayılsın</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
-        <target>Bu seçenek etkinleştirildiğinde, zaman aralığı İnternet adresindeki gün/ay/yıl parametrelerine göre değiştirilmez.</target>
+        <target>Bu seçenek etkinleştirildiğinde, zaman aralığı adresteki gün/ay/yıl parametrelerine göre değiştirilmez.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
@@ -55,15 +55,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Bu bölümden sıralama şekli belirtilebilir.</target>
+        <target>Buradan sıralamayı seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
-        <target>Etkinlik okuyucu modül</target>
+        <target>Etkinlik okuyucu modülü</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bir etkinlik seçildiğinde kendiliğinden etkinlik okuyucuya geçilir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, bir etkinlik seçildiğinde otomatik olarak etkinlik okuyucuya geçilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Bu bölümden etkinlik sayısı sınırlanabilir. Tüm etkinliklerin görüntülenmesi için 0 yazın.</target>
+        <target>Bıradan etkinlik sayısını sınırlayabilirsiniz Tüm etkinliklerin görüntülenmesi için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select an event template.</source>
-        <target>Buradan bir etkinlik şablonu seçebilirsiniz.</target>
+        <target>Buradan bir etkinlik kalıbı seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select a calendar template.</source>
-        <target>Buradan bir takvim şablonu seçebilirsiniz.</target>
+        <target>Buradan bir takvim kalıbı seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
@@ -99,11 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
-        <target>Öne çıkan etkinlikler</target>
+        <target>Öne çıkarılmış etkinlikler</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
-        <target>Buradan öne çıkan etkinliklerin nasıl ele alınacağını seçebilirsiniz.</target>
+        <target>Buradan öne çıkarılmış etkinliklerin nasıl işleneceğini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -159,19 +159,19 @@
       </trans-unit>
       <trans-unit id="tl_module.next_cur_month">
         <source>of the current month</source>
-        <target>geçerli ay</target>
+        <target>/ geçerli ay</target>
       </trans-unit>
       <trans-unit id="tl_module.next_cur_year">
         <source>of the current year</source>
-        <target>geçerli yıl</target>
+        <target>/ geçerli yıl</target>
       </trans-unit>
       <trans-unit id="tl_module.next_next_month">
         <source>of the next month</source>
-        <target>gelecek ay</target>
+        <target>/ gelecek ay</target>
       </trans-unit>
       <trans-unit id="tl_module.next_next_year">
         <source>of the next year</source>
-        <target>gelecek yıl</target>
+        <target>/ gelecek yıl</target>
       </trans-unit>
       <trans-unit id="tl_module.next_all">
         <source>All upcoming events</source>
@@ -211,35 +211,35 @@
       </trans-unit>
       <trans-unit id="tl_module.past_cur_month">
         <source>of the current month</source>
-        <target>geçerli ay</target>
+        <target>/ geçerli ay</target>
       </trans-unit>
       <trans-unit id="tl_module.past_cur_year">
         <source>of the current year</source>
-        <target>geçerli yıl</target>
+        <target>/ geçerli yıl</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_month">
         <source>of the previous month</source>
-        <target>önceki ay</target>
+        <target>/ önceki ay</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_year">
         <source>of the previous year</source>
-        <target>önceki yıl</target>
+        <target>/ önceki yıl</target>
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
-        <target>Geçmiş tüm etkinlikler</target>
+        <target>Tüm geçmiş etkinlikler</target>
       </trans-unit>
       <trans-unit id="tl_module.events.all_items">
         <source>Show all events</source>
-        <target>Tüm etkinlikleri göster</target>
+        <target>Tüm etkinlikleri görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
-        <target>Tüm öne çıkan etkinlikleri göster</target>
+        <target>Yalnızca önce çıkarılmış etkinlikleri görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
-        <target>Öne çıkan etkinlikleri atla</target>
+        <target>Öne çıkarılmış etkinlikleri atla</target>
       </trans-unit>
     </body>
   </file>

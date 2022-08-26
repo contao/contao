@@ -12,11 +12,11 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Provide methods regarding news archives.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class News extends Frontend
 {
@@ -153,6 +153,7 @@ class News extends Frontend
 
 			/** @var RequestStack $requestStack */
 			$requestStack = $container->get('request_stack');
+			$currentRequest = $requestStack->getCurrentRequest();
 
 			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -198,7 +199,7 @@ class News extends Frontend
 				$objItem->published = $objArticle->date;
 
 				// Push a new request to the request stack (#3856)
-				$request = Request::create($objItem->link);
+				$request = $this->createSubRequest($objItem->link, $currentRequest);
 				$request->attributes->set('_scope', 'frontend');
 				$requestStack->push($request);
 
@@ -580,6 +581,37 @@ class News extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request = null): Request
+	{
+		$cookies = null !== $request ? $request->cookies->all() : array();
+		$server = null !== $request ? $request->server->all() : array();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== $request)
+		{
+			if ($request->get('_format'))
+			{
+				$subRequest->attributes->set('_format', $request->get('_format'));
+			}
+
+			if ($request->getDefaultLocale() !== $request->getLocale())
+			{
+				$subRequest->setLocale($request->getLocale());
+			}
+		}
+
+		// Always set a session (#3856)
+		$subRequest->setSession(new Session(new MockArraySessionStorage()));
+
+		return $subRequest;
 	}
 }
 

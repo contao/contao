@@ -45,7 +45,7 @@
 
 $schemaOrg = $this->getSchemaOrgData();
 
-if ($this->hasText()) {
+if ($this->hasText) {
     $schemaOrg['text'] = $this->rawHtmlToPlainText($this->text);
 }
 

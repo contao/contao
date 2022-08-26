@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Add system messages to the welcome screen.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Messages extends Backend
 {

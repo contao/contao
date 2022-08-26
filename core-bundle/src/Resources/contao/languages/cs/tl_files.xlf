@@ -81,6 +81,14 @@
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
         <target>Sem můžete zadat metadata. Chcete-li přidat jazyk, vytvořte kořenovou stránku ve Struktuře stránky</target>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>Pole &quot;%s&quot; pro jazyk &quot;%s&quot; musí souhlasit s &quot;%s&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>Pole &quot;%s&quot; pro jazyk &quot;%s&quot; musí obsahovat platnou URL.</target>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
         <target>Přenos souborů</target>
@@ -170,8 +178,8 @@
         <target>Synchronizace byla dokončena</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;Výsledek:&lt;/strong&gt; přidáno %s | upraveno %s | nezměněno %s  | přesunuto %s | smazáno %s</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Výsledek:&lt;/strong&gt; přidáno %s  | upraveno %s | přesunuto %4$s  |  smazáno %5$s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

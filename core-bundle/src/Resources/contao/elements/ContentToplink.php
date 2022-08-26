@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "toplink".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentToplink extends ContentElement
 {

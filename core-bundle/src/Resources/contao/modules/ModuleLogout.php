@@ -17,8 +17,6 @@ trigger_deprecation('contao/core-bundle', '4.2', 'Using the logout module has be
 /**
  * Front end module "logout".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
  *             Use the logout page instead.
  */
@@ -46,7 +44,7 @@ class ModuleLogout extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}

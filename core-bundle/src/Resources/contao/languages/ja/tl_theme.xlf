@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
-        <target>ID %sのテーマのページレイアウトを編集</target>
+        <target>ID %sのテーマのページのレイアウトを編集</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>

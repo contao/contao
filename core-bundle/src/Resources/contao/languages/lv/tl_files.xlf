@@ -1,0 +1,258 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_files.php" source-language="en" target-language="lv">
+    <body>
+      <trans-unit id="tl_files.name.0">
+        <source>Name</source>
+        <target>Nosaukums</target>
+      </trans-unit>
+      <trans-unit id="tl_files.name.1">
+        <source>The file or folder name (without extension).</source>
+        <target>Datnes vai mapes vārds (bez paplašinājuma).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.0">
+        <source>Path</source>
+        <target>Ceļš</target>
+      </trans-unit>
+      <trans-unit id="tl_files.path.1">
+        <source>The relative path to the file or folder.</source>
+        <target>Relatīvais ceļš uz datni vai mapi.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.0">
+        <source>Extension</source>
+        <target>Paplašinājums</target>
+      </trans-unit>
+      <trans-unit id="tl_files.extension.1">
+        <source>The file extension</source>
+        <target>Datnes paplašinājums</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.0">
+        <source>Public</source>
+        <target>Publisks</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protected.1">
+        <source>Make the folder and its sub-folders accessible via HTTP.</source>
+        <target>Padarīt mapi un tās apakšmapes pieejamas izmantojot HTTP.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Nesinhronizēt</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Nesinhronizēt mapi un tās apakšmapes ar datu bāzi.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.0">
+        <source>Important part x coordinate</source>
+        <target>Svarīgās daļas x koordināte</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartX.1">
+        <source>Here you can enter the x coordinate of the important part.</source>
+        <target>Šeit jūs varat norādīt svarīgās daļas x koordināti.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.0">
+        <source>Important part y coordinate</source>
+        <target>Svarīgās daļas y koordināte</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartY.1">
+        <source>Here you can enter the y coordinate of the important part.</source>
+        <target>Šeit jūs varat norādīt svarīgās daļas y koordināti.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.0">
+        <source>Important part width</source>
+        <target>Svarīgās daļas platums</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartWidth.1">
+        <source>Here you can enter the width of the important part.</source>
+        <target>Šeit jūs varat norādīt svarīgās daļas platumu.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.0">
+        <source>Important part height</source>
+        <target>Svarīgās daļas augstums</target>
+      </trans-unit>
+      <trans-unit id="tl_files.importantPartHeight.1">
+        <source>Here you can enter the height of the important part.</source>
+        <target>Šeit jūs varat norādīt svarīgās daļas augstumu.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.0">
+        <source>Metadata</source>
+        <target>Metadati</target>
+      </trans-unit>
+      <trans-unit id="tl_files.meta.1">
+        <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.0">
+        <source>File upload</source>
+        <target>Augšupielādes fails</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileupload.1">
+        <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
+        <target>Atlasiet datnes, kuras vēlaties augšupielādēt serverī (maksimāli %s un %s pikseļi).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.0">
+        <source>Source editor</source>
+        <target>Avota redaktors</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editor.1">
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Šeit jūs varat rediģēt datnes avotu (nospiediet F11, lai pārslēgtu pilnekrāna režīmu).</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadNback">
+        <source>Upload files and go back</source>
+        <target>Augšupielādēt datnes un iet atpakaļ</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFF">
+        <source>Edit a file or folder</source>
+        <target>Rediģēt datni vai mapi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.uploadFF">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Augšupielādēt uz mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.editFile">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>Rediģēt datnes &quot;%s&quot; avotu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Atzīmējiet attēla svarīgo daļu ar peles kursoru.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.browseFiles">
+        <source>Browse files</source>
+        <target>Pārlūkot datnes</target>
+      </trans-unit>
+      <trans-unit id="tl_files.clearList">
+        <source>Clear list</source>
+        <target>Notīrīt sarakstu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.startUpload">
+        <source>Start upload</source>
+        <target>Sākt augšupielādi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzone">
+        <source>Click or drop files here to upload</source>
+        <target>Noklikšķiniet vai nometiet datnes šeit, lai augšupielādētu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Datne ir pārāk liela ({{filesize}} MiB). Maksimālais datnes lielums ir {{maxFilesize}} MiB.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Šāda veida datnes nevar augšupielādēt.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.fileLocation">
+        <source>Path: %s</source>
+        <target>Ceļš: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncAdded">
+        <source>Added the file or folder &quot;%s&quot;</source>
+        <target>Pievienoja datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncChanged">
+        <source>Updated the hash of the file or folder &quot;%s&quot;</source>
+        <target>Atjaunināja datnes vai mapes &quot;%s&quot; jaucējatslēgu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncUnchanged">
+        <source>Found the file or folder &quot;%s&quot;</source>
+        <target>Atrada datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncMoved">
+        <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
+        <target>Atrada datni vai mapi &quot;%s&quot; pie &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncDeleted">
+        <source>Removed the file or folder &quot;%s&quot;</source>
+        <target>Aizvāca datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncComplete">
+        <source>The synchronization has been completed</source>
+        <target>Sinhronizācija ir pabeigta</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncResult">
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncShowUnchanged">
+        <source>Show unchanged</source>
+        <target>Rādīt nemainītos</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.0">
+        <source>New folder</source>
+        <target>Jauna mape</target>
+      </trans-unit>
+      <trans-unit id="tl_files.new.1">
+        <source>Create a new folder</source>
+        <target>Izveidot jaunu mapi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.0">
+        <source>Upload files</source>
+        <target>Augšupielādēt datnes</target>
+      </trans-unit>
+      <trans-unit id="tl_files.move.1">
+        <source>Upload files to the server</source>
+        <target>Augšupielādēt datnes uz serveri</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.0">
+        <source>Synchronize</source>
+        <target>Sinhronizēt</target>
+      </trans-unit>
+      <trans-unit id="tl_files.sync.1">
+        <source>Synchronize the file system and the database</source>
+        <target>Sinhronizēt datņu sistēmu un datu bāzi</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>Rādīt datnes vai mapes &quot;%s&quot; informāciju</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>Pārvietot datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>Kopēt datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>Rediģēt datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>Dzēst datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Vilkt datni vai mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>Rediģēt datnes &quot;%s&quot; avota tekstu</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Augšupielādēt uz mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>Aizsargāt mapi &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>Noņemt aizsardzību &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+        <target>Ielīmēt saknes mapē</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
+        <target>Ielīmēt mapē &quot;%s&quot;</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

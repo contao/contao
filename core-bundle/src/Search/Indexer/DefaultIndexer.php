@@ -48,7 +48,7 @@ class DefaultIndexer implements IndexerInterface
         }
 
         try {
-            $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text(null, true);
+            $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text();
         } catch (\Exception $e) {
             $title = 'undefined';
         }

@@ -53,7 +53,7 @@ doctrine:
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4
-                    collate: utf8mb4_unicode_ci
+                    collation: utf8mb4_unicode_ci
                     engine: InnoDB
                     row_format: DYNAMIC
         types:
@@ -75,9 +75,6 @@ doctrine:
 
 # Security configuration
 nelmio_security:
-    clickjacking:
-        paths:
-            '^/.*': SAMEORIGIN
     content_type:
         nosniff: true
     referrer_policy:

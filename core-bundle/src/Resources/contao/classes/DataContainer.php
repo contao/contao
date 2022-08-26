@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {
@@ -318,6 +316,10 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			// Forward compatibility with Contao 5.0
+			case 'currentPid':
+				return ((int) (\defined('CURRENT_ID') ? CURRENT_ID : 0)) ?: null;
 		}
 
 		return parent::__get($strKey);
@@ -354,7 +356,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -406,15 +408,14 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			// Use strlen() here (see #3277)
-			elseif (!\strlen($this->varValue))
+			elseif ('' === (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
 		}
@@ -467,12 +468,6 @@ abstract class DataContainer extends Backend
 				foreach ($newPaletteFields as $k=>$v)
 				{
 					$newPaletteFields[$k] = $v . '_' . $suffix;
-				}
-
-				if ($this->User->isAdmin)
-				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
 				}
 			}
 
@@ -637,7 +632,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -845,7 +840,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{
@@ -938,7 +933,7 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
+						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 					}
 
 					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
@@ -951,10 +946,10 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
+						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
-					parse_str(StringUtil::decodeEntities($v['href']), $params);
+					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
@@ -994,6 +989,8 @@ abstract class DataContainer extends Backend
 
 				continue;
 			}
+
+			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
 
 			$arrDirections = array('up', 'down');
 			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
@@ -1080,7 +1077,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1096,7 +1093,7 @@ abstract class DataContainer extends Backend
 			}
 			else
 			{
-				$href = $this->addToUrl($v['href']);
+				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
 			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
@@ -1493,7 +1490,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] ?? null))
@@ -1520,38 +1516,52 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
+		// Do not call recursively (see #4777)
 	}
 
+	/**
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+	 */
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
+		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
+
+		if (($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ctables[] = $strTable;
+		}
+
+		if (!$ctables)
 		{
 			return;
 		}
 
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		foreach ($ctables as $ctable)
 		{
 			Controller::loadDataContainer($ctable);
 
@@ -1612,14 +1622,30 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
+	 *
+	 * @todo Change the return type to ?string in Contao 5.0
 	 */
 	public static function getDriverForTable(string $table): string
 	{
+		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
+		{
+			return '';
+		}
+
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
-		if (false === strpos($dataContainer, '\\'))
+		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name "%s" for table "%s" as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', $dataContainer, $table);
+
 			$dataContainer = 'DC_' . $dataContainer;
+
+			if (class_exists($dataContainer))
+			{
+				$ref = new \ReflectionClass($dataContainer);
+
+				return $ref->getName();
+			}
 		}
 
 		return $dataContainer;
@@ -1689,7 +1715,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);

@@ -193,6 +193,10 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Страница с URL-адресом &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Этот алиас приводит к конфликту со страницей &quot;%s&quot; (ID %s)!</target>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Этот суффикс URL приведет к дублированию URL (наприм.: %s)!</target>
@@ -349,6 +353,14 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Путь к шаблону &quot;%s&quot; не должен содержать следующие символы: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Неизвестное имя пользователя: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Не удалось восстановить версию %d, так как она больше не совместима с текущей структурой базы данных. Пожалуйста, восстановите данные вручную.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
@@ -372,6 +384,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>Создает заголовок (h1 - h6).</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Разное</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -1314,8 +1330,8 @@
         <target>Подпись</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Лицензия</target>
+        <source>License URL</source>
+        <target>URL лицензии</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1578,8 +1594,8 @@
         <target>Комбинации клавиш панели управления</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Узнайте больше об ускорении рабочего процесса с помощью &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Обзор комбинаций клавиш&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Узнайте больше об ускорении рабочего процесса с помощью &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2743,9 +2759,15 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>Поделиться URL</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Родительский</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>Руководство</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2956,8 +2978,8 @@
         <target>Проиндексировано успешно: %d URI. Ошибок: %d.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URI был(и) пропущен(ы) (если вы пропустили один, проверьте журнал отладки).</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d URI(s) были пропущены.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

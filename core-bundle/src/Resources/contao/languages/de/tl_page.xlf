@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
-        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639 Standards ein (z.B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
+        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639 Standards ein (z. B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -190,8 +190,8 @@
         <target>Individuelle URL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Hier können Sie eine individuelle kanonische URL setzen.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Hier können Sie eine individuelle kanonische URL wie z. B. https://example.com/ setzen.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Geben Sie ein URL-Präfix (z.B. die Sprache) ein, das allen Seitenaliasen unterhalb dieses Startpunkts vorangestellt wird.</target>
+        <target>Geben Sie ein URL-Präfix (z. B. die Sprache) ein, das allen Seitenaliasen unterhalb dieses Startpunkts vorangestellt wird.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_page.autoforward.1">
         <source>Redirect visitors to another page (e.g. a login page).</source>
-        <target>Die Besucher zu einer anderen Seite (z.B. einer Login-Seite) weiterleiten.</target>
+        <target>Die Besucher zu einer anderen Seite (z. B. einer Login-Seite) weiterleiten.</target>
       </trans-unit>
       <trans-unit id="tl_page.protected.0">
         <source>Protect page</source>
@@ -648,6 +648,10 @@
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
         <target>Folgende Seiten haben einen ähnlichen Alias, der mit dieser Seite in Konflikt geraten kann. Wenn die URL nicht korrekt aufgelöst wird, versuchen Sie, die Priorität der Routen zu ändern.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Aktivieren Sie kanonische URLs im Startpunkt der Website, um diese Konfiguration zu aktivieren.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

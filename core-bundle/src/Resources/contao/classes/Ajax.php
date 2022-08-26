@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Provide methods to handle Ajax requests.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Ajax extends Backend
 {
@@ -179,8 +177,6 @@ class Ajax extends Backend
 	 */
 	public function executePostActions(DataContainer $dc)
 	{
-		header('Content-Type: text/html; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{
@@ -306,13 +302,21 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if (($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null) == 'File')
+					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
 					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
 					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+						$idField = 'id';
+
+						// ID is file path for DC_Folder
+						if ($dc instanceof DC_Folder)
+						{
+							$idField = 'path';
+						}
+
+						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
 												 ->execute($intId);
 
 						// The record does not exist
@@ -355,14 +359,10 @@ class Ajax extends Backend
 						break;
 
 					case 'reloadPagetree':
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'pageTree';
 						break;
 
 					default:
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'fileTree';
 				}
 
@@ -393,7 +393,10 @@ class Ajax extends Backend
 					}
 
 					// Keep the previous sorting order when reloading the widget
-					$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
+					if ($dc->activeRecord)
+					{
+						$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
+					}
 
 					$varValue = serialize($varValue);
 				}
@@ -439,20 +442,41 @@ class Ajax extends Backend
 					if (Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+
+						$objVersions = new Versions($dc->table, $this->strAjaxId);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
+						}
 					}
 					else
 					{
+						$objVersions = new Versions($dc->table, $dc->id);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
+						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
 					}
 				}

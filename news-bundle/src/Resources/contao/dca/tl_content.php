@@ -26,8 +26,6 @@ if (Input::get('do') == 'news')
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_content_news extends Backend
 {
@@ -65,10 +63,14 @@ class tl_content_news extends Backend
 		{
 			case '': // empty
 			case 'paste':
-			case 'create':
 			case 'select':
 				// Check access to the news item
 				$this->checkAccessToElement(CURRENT_ID, $root, true);
+				break;
+
+			case 'create':
+				// Check access to the parent element if a content element is created
+				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				break;
 
 			case 'editAll':

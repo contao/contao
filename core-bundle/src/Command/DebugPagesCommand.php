@@ -26,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DebugPagesCommand extends Command
 {
     protected static $defaultName = 'debug:pages';
+    protected static $defaultDescription = 'Displays the page controller configuration.';
 
     private ContaoFramework $framework;
     private PageRegistry $pageRegistry;
@@ -67,11 +68,6 @@ class DebugPagesCommand extends Command
         if (null !== $contentComposition) {
             $this->contentComposition[$type] = $contentComposition;
         }
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Displays the page controller configuration.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s e-pasta adrese(-es) ir izlaista(-as).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>

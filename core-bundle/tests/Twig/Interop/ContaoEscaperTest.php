@@ -23,6 +23,13 @@ use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @param string|int $input
      *
@@ -30,23 +37,9 @@ class ContaoEscaperTest extends TestCase
      */
     public function testEscapesHtml($input, string $expectedOutput): void
     {
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtml($input, null),
-            'no charset specified'
-        );
-
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtml($input, 'UTF-8'),
-            'UTF-8'
-        );
-
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtml($input, 'utf-8'),
-            'utf-8'
-        );
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, null), 'no charset specified');
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, 'UTF-8'), 'UTF-8');
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, 'utf-8'), 'utf-8');
     }
 
     public function provideHtmlInput(): \Generator
@@ -85,23 +78,9 @@ class ContaoEscaperTest extends TestCase
 
         System::setContainer($container);
 
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, null),
-            'no charset specified'
-        );
-
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, 'UTF-8'),
-            'UTF-8'
-        );
-
-        $this->assertSame(
-            $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, 'utf-8'),
-            'utf-8'
-        );
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtmlAttr($input, null), 'no charset specified');
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtmlAttr($input, 'UTF-8'), 'UTF-8');
+        $this->assertSame($expectedOutput, $this->invokeEscapeHtmlAttr($input, 'utf-8'), 'utf-8');
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -161,11 +140,7 @@ class ContaoEscaperTest extends TestCase
      */
     private function invokeEscapeHtml($input, ?string $charset): string
     {
-        return (new ContaoEscaper())->escapeHtml(
-            $this->createMock(Environment::class),
-            $input,
-            $charset
-        );
+        return (new ContaoEscaper())->escapeHtml($this->createMock(Environment::class), $input, $charset);
     }
 
     /**
@@ -173,10 +148,6 @@ class ContaoEscaperTest extends TestCase
      */
     private function invokeEscapeHtmlAttr($input, ?string $charset): string
     {
-        return (new ContaoEscaper())->escapeHtmlAttr(
-            $this->createMock(Environment::class),
-            $input,
-            $charset
-        );
+        return (new ContaoEscaper())->escapeHtmlAttr($this->createMock(Environment::class), $input, $charset);
     }
 }

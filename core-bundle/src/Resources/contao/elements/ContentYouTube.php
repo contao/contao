@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Content element "YouTube".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentYouTube extends ContentElement
 {

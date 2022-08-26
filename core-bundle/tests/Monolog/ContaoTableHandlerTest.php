@@ -25,6 +25,13 @@ class ContaoTableHandlerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
+    }
+
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();

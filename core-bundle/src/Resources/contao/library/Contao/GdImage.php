@@ -26,8 +26,6 @@ trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\GdImage" cla
  *     $target->convertToPaletteImage()
  *            ->saveToFile('image.jpg');
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
  *             Use the Imagine library instead.
  */

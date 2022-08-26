@@ -41,11 +41,7 @@ class Route404Provider extends AbstractPageRouteProvider
         $this->framework->initialize(true);
 
         $collection = new RouteCollection();
-
-        $routes = array_merge(
-            $this->getNotFoundRoutes(),
-            $this->getLocaleFallbackRoutes($request)
-        );
+        $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
 
         $this->sortRoutes($routes, $request->getLanguages());
 
@@ -161,7 +157,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage),
+            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
@@ -260,10 +256,11 @@ class Route404Provider extends AbstractPageRouteProvider
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
-                $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
-                $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
-                $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
-                $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
+                $nameA = array_search($a, $routes, true);
+                $nameB = array_search($b, $routes, true);
+
+                $errorA = false !== strpos('.error_404', $nameA, -10);
+                $errorB = false !== strpos('.error_404', $nameB, -10);
 
                 if ($errorA && !$errorB) {
                     return 1;
@@ -272,6 +269,9 @@ class Route404Provider extends AbstractPageRouteProvider
                 if ($errorB && !$errorA) {
                     return -1;
                 }
+
+                $localeA = '.locale' === substr($nameA, -7);
+                $localeB = '.locale' === substr($nameB, -7);
 
                 if ($localeA && !$localeB) {
                     return -1;

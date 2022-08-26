@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>Prikaži slike za predogled</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>Prikaži sličice za predogled za izbrane datoteke.</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -305,9 +307,11 @@
       </trans-unit>
       <trans-unit id="tl_content.data.0">
         <source>Template data</source>
+        <target>Podatki predloge</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>V predlogi so na voljo te vrednosti v &lt;code&gt;$this-&gt;data&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -463,6 +467,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.0">
         <source>Preloading</source>
+        <target>Prednalaganje</target>
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
@@ -658,6 +663,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>Nastavitve predogleda</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -780,12 +786,14 @@
       </trans-unit>
       <trans-unit id="tl_content.player_muted">
         <source>Mute the audio output</source>
+        <target>Utišaj zvok</target>
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Samodejno (prednaloži celoten posnetek)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -793,6 +801,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.none">
         <source>None (do not preload anything)</source>
+        <target>Nič (ničesar ne prednaloži)</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_autoplay">
         <source>Autoplay</source>
@@ -824,10 +833,14 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>Omeji sorodne posnetke znotraj istega kanala</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
         <target>Uporabi domeno youtube-nocookie.com</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

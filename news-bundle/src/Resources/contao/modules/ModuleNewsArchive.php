@@ -20,8 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property string $news_format
  * @property string $news_order
  * @property int    $news_readerModule
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsArchive extends ModuleNews
 {
@@ -47,7 +45,7 @@ class ModuleNewsArchive extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -95,9 +93,9 @@ class ModuleNewsArchive extends ModuleNews
 		$intBegin = 0;
 		$intEnd = 0;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']) && $this->news_jumpToCurrent != 'all_items')

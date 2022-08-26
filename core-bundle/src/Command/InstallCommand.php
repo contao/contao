@@ -28,6 +28,7 @@ use Symfony\Component\Filesystem\Path;
 class InstallCommand extends Command
 {
     protected static $defaultName = 'contao:install';
+    protected static $defaultDescription = 'Installs the required Contao directories.';
 
     private ?Filesystem $fs = null;
     private array $rows = [];
@@ -47,10 +48,7 @@ class InstallCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-            ->setDescription('Installs the required Contao directories')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

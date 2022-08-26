@@ -1,8 +1,10 @@
 <?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
 
+use Contao\DC_Table;
+
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'sql' => [
             'keys' => [
                 'id' => 'primary',

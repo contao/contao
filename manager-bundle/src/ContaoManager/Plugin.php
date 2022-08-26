@@ -232,6 +232,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 if (!isset($_SERVER['MAILER_DSN'])) {
                     if (isset($_SERVER['MAILER_URL'])) {
+                        trigger_deprecation('contao/manager-bundle', '4.13', 'Using the "MAILER_URL" environment variable has been deprecated and will no longer work in Contao 5.0. Use the "MAILER_DSN" environment variable instead.');
                         $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
                     } else {
                         $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
@@ -246,8 +247,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
+                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                return $extensionConfigs;
+
+            case 'nelmio_security':
+                return $this->checkClickjackingPaths($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -291,32 +298,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        $driver = null;
-        $url = null;
+        [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
-        foreach ($extensionConfigs as $extensionConfig) {
-            // Do not add PDO options if custom options have been defined
-            // Since this is merged recursively, we don't need to check other configs
-            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
-                return $extensionConfigs;
-            }
-
-            if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
-                $driver = $extensionConfig['dbal']['connections']['default']['driver'];
-            }
-
-            if (isset($extensionConfig['dbal']['connections']['default']['url'])) {
-                $url = $container->resolveEnvPlaceholders($extensionConfig['dbal']['connections']['default']['url'], true);
-            }
-        }
-
-        // If URL is set it overrides the driver option
-        if (null !== $url) {
-            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
+        // Do not add PDO options if custom options have been defined
+        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+            return $extensionConfigs;
         }
 
         // Do not add PDO options if the selected driver is not mysql
-        if (null !== $driver && !\in_array($driver, ['pdo_mysql', 'mysql', 'mysql2'], true)) {
+        if (null !== $driver && 'mysql' !== $driver) {
             return $extensionConfigs;
         }
 
@@ -408,6 +398,76 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
+     * Enables the SQL strict mode for PDO and MySQL drivers.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
+
+        // Skip if driver is not supported
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+            return $extensionConfigs;
+        }
+
+        // Skip if init command is already configured
+        if (isset($options[$key])) {
+            return $extensionConfigs;
+        }
+
+        // Enable strict mode
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            $key => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Sets the "collate" and "collation" options to the same value (see #4798).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function setDefaultCollation(array $extensionConfigs): array
+    {
+        $defaultCollation = null;
+
+        foreach ($extensionConfigs as $config) {
+            $collation = $config['dbal']['connections']['default']['default_table_options']['collation'] ?? $config['dbal']['connections']['default']['default_table_options']['collate'] ?? null;
+
+            if (null !== $collation) {
+                $defaultCollation = $collation;
+            }
+        }
+
+        if (null !== $defaultCollation) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => $defaultCollation,
+                                'collation' => $defaultCollation,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
+    }
+
+    /**
      * Changes the mail transport from "mail" to "sendmail".
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
@@ -464,6 +524,66 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $extensionConfigs;
     }
 
+    /**
+     * @return array{0: string|null, 1: array<string, mixed>}
+     */
+    private function parseDbalDriverAndOptions(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $driver = null;
+        $url = null;
+        $options = [];
+
+        foreach ($extensionConfigs as $config) {
+            if (null !== ($driverConfig = $config['dbal']['connections']['default']['driver'] ?? null)) {
+                $driver = $driverConfig;
+            }
+
+            if (null !== ($urlConfig = $config['dbal']['connections']['default']['url'] ?? null)) {
+                $url = $container->resolveEnvPlaceholders($urlConfig, true);
+            }
+
+            if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
+                $options[] = $optionsConfig;
+            }
+        }
+
+        // If URL is set, it overrides the driver option
+        if (!empty($url)) {
+            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
+        }
+
+        // Normalize the driver name
+        if (\in_array($driver, ['pdo_mysql', 'mysql2'], true)) {
+            $driver = 'mysql';
+        }
+
+        return [$driver, array_replace([], ...$options)];
+    }
+
+    /**
+     * Adds a clickjacking configuration for "^/.*" if not already defined.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkClickjackingPaths(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'clickjacking' => [
+                'paths' => [
+                    '^/.*' => 'SAMEORIGIN',
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
     {
         $driver = 'mysql';
@@ -488,7 +608,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter($name);
+        }
+
+        if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
         }
 
         return sprintf(

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Input;
+use Contao\Message;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -25,12 +26,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         ClockMock::register(PreviewLinkListener::class);
     }
@@ -44,6 +46,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             ''
@@ -65,6 +68,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             ''
@@ -86,6 +90,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             ''
@@ -119,10 +124,11 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(compact('url', 'showUnpublished'));
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input]),
+            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity($userId),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             '/preview.php'
@@ -169,10 +175,11 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create', 'url' => '/preview.php/foo/bar']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input]),
+            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             '/preview.php'
@@ -196,10 +203,11 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input]),
+            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             '/preview.php'
@@ -233,6 +241,7 @@ class PreviewLinkListenerTest extends TestCase
             $connection,
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
+            $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             ''

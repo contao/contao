@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractBackendController extends AbstractController
 {
     /**
-     * Renders a Twig template with additional context for `@Contao/be_main`.
+     * Renders a Twig template with additional context for "@Contao/be_main".
      */
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
@@ -39,7 +39,12 @@ abstract class AbstractBackendController extends AbstractController
                     $this->objAjax->executePreActions();
                 }
 
-                return $this->compileTemplateData($this->Template->getData());
+                $this->Template->setData($this->compileTemplateData($this->Template->getData()));
+
+                // Make sure the compile function is executed that adds additional context (see #4224)
+                $this->Template->getResponse();
+
+                return $this->Template->getData();
             }
         })();
 

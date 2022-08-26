@@ -37,8 +37,6 @@ namespace Contao;
  * @property integer $yearBegin  The beginning of the current year
  * @property integer $yearEnd    The end of the current year
  * @property string  $format     The date format string
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Date
 {
@@ -237,7 +235,7 @@ class Date
 
 				return $arrRegexp[$matches[0]] ?? $matches[0];
 			},
-			preg_quote($strFormat)
+			preg_quote($strFormat, null)
 		);
 	}
 
@@ -274,6 +272,8 @@ class Date
 
 		foreach ($arrCharacters as $strCharacter)
 		{
+			$arrInputFormat[$strFormat] ??= '';
+
 			if (isset($arrCharacterMapper[$strCharacter]))
 			{
 				$arrInputFormat[$strFormat] .= $arrCharacterMapper[$strCharacter];

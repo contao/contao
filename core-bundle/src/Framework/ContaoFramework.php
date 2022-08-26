@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -35,6 +36,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -51,6 +53,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private ScopeMatcher $scopeMatcher;
     private TokenChecker $tokenChecker;
     private Filesystem $filesystem;
+    private UrlGeneratorInterface $urlGenerator;
     private string $projectDir;
     private int $errorLevel;
     private bool $legacyRouting;
@@ -58,13 +61,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
+    private bool $setLoginConstantsOnInit = false;
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel, bool $legacyRouting)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel, bool $legacyRouting)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->filesystem = $filesystem;
+        $this->urlGenerator = $urlGenerator;
         $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
         $this->legacyRouting = $legacyRouting;
@@ -80,6 +85,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
+        Controller::resetControllerCache();
         Environment::reset();
         Input::resetCache();
         Input::resetUnusedGet();
@@ -167,6 +173,32 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
+     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+     */
+    public function setLoginConstants(): void
+    {
+        // Check if the constants have already been defined (see #5137)
+        if (\defined('BE_USER_LOGGED_IN') || \defined('FE_USER_LOGGED_IN')) {
+            return;
+        }
+
+        // If the framework has not been initialized yet, set the login constants on init (#4968)
+        if (!$this->isInitialized()) {
+            $this->setLoginConstantsOnInit = true;
+
+            return;
+        }
+
+        if ('FE' === $this->getMode()) {
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
+            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+        } else {
+            \define('BE_USER_LOGGED_IN', false);
+            \define('FE_USER_LOGGED_IN', false);
+        }
+    }
+
+    /**
      * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
     private function setConstants(): void
@@ -184,14 +216,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         // Define the login status constants (see #4099, #5279)
-        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
-            $session->start();
-
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+        if ($this->setLoginConstantsOnInit || null === $this->requestStack->getCurrentRequest()) {
+            $this->setLoginConstants();
         }
 
         // Define the relative path to the installation (see #5339)
@@ -356,7 +382,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if (!$this->getAdapter(Config::class)->isComplete()) {
-            throw new RedirectResponseException('/contao/install');
+            throw new RedirectResponseException($this->urlGenerator->generate('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL));
         }
     }
 

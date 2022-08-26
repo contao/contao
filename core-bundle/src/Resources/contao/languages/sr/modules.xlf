@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Линкови за преглед</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Управљање линковима за преглед Фронт енда.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -417,9 +419,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Модули зависни од коренске странице</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>Генерисање различитих модула у зависности од коренске странице</target>
       </trans-unit>
     </body>
   </file>

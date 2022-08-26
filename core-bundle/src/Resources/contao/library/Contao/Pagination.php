@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to render a pagination menu.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Pagination
 {
@@ -151,7 +149,7 @@ class Pagination
 
 		if (Input::get($strParameter) > 0)
 		{
-			$this->intPage = Input::get($strParameter);
+			$this->intPage = (int) Input::get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;

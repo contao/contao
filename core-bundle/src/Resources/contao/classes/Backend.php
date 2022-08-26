@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * Provide methods to manage back end controllers.
  *
  * @property Ajax $objAjax
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Backend extends Controller
 {
@@ -193,9 +191,13 @@ abstract class Backend extends Controller
 	 * Return a list of TinyMCE templates as JSON string
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function getTinyTemplates()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Backend::getTinyTemplates()" has been deprecated and will no longer work in Contao 5.0.');
+
 		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -339,14 +341,11 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session');
 		$arrTables = (array) ($arrModule['tables'] ?? array());
 		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
-		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
-		// Store the current ID in the current session
-		if ($id != $objSession->get('CURRENT_ID'))
-		{
-			$objSession->set('CURRENT_ID', $id);
-		}
+		$id = $this->findCurrentId($strTable);
+		$objSession->set('CURRENT_ID', $id);
 
+		// Define the current ID
 		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
 
 		if (isset($GLOBALS['TL_LANG']['MOD'][$module][0]))
@@ -432,7 +431,7 @@ abstract class Backend extends Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback'] ?? null))
+		elseif (isset($arrModule['callback']) && class_exists($arrModule['callback']))
 		{
 			/** @var Module $objCallback */
 			$objCallback = new $arrModule['callback']($dc);
@@ -459,7 +458,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -476,7 +475,14 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
+			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
+			{
+				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+			}
+			else
+			{
+				$this->Template->headline .= ' <span>' . Input::get('key') . '</span>';
+			}
 		}
 
 		// Default action
@@ -527,10 +533,14 @@ abstract class Backend extends Controller
 				$pid = $dc->id;
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-
 				$container = System::getContainer();
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				if ($ptable)
+				{
+					$this->loadDataContainer($ptable);
+				}
+
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -561,13 +571,15 @@ abstract class Backend extends Controller
 						}
 					}
 
-					System::loadLanguageFile($ptable);
-					$this->loadDataContainer($ptable);
-
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
 					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
+
+					if ($ptable)
+					{
+						$this->loadDataContainer($ptable);
+					}
 				}
 
 				// Add the last parent table
@@ -653,6 +665,81 @@ abstract class Backend extends Controller
 			}
 
 			return $dc->$act();
+		}
+
+		return null;
+	}
+
+	/**
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
+	 *
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
+	 */
+	protected function findCurrentId(?string $table): ?string
+	{
+		if (!$table)
+		{
+			return null;
+		}
+
+		$id = Input::get('id');
+		$pid = Input::get('pid');
+		$act = Input::get('act');
+		$mode = Input::get('mode');
+
+		// For these actions the id parameter refers to the parent record
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
+			return $id;
+		}
+
+		// For these actions the pid parameter refers to the insert position
+		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
+		{
+			// Mode “paste into”
+			if ($mode === '2')
+			{
+				return $pid;
+			}
+
+			// Mode “paste after”
+			$id = $pid;
+		}
+
+		if (!$id)
+		{
+			return null;
+		}
+
+		$allTables = array_merge(
+			...array_values(
+				array_map(
+					static function ($module)
+					{
+						return (array) ($module['tables'] ?? array());
+					},
+					array_merge(...array_values($GLOBALS['BE_MOD']))
+				)
+			)
+		);
+
+		// Do not run database queries for unknown tables
+		if (!\in_array($table, $allTables, true))
+		{
+			return null;
+		}
+
+		try
+		{
+			return $this->Database->prepare("SELECT pid FROM `$table` WHERE id=?")->limit(1)->execute($id)->pid;
+		}
+		catch (\Throwable $exception)
+		{
+			// Ignore errors
 		}
 
 		return null;
@@ -967,7 +1054,7 @@ abstract class Backend extends Controller
 		}
 
 		// Return the image
-		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -1117,7 +1204,7 @@ abstract class Backend extends Controller
 
 		foreach (array_keys($arrSections) as $k)
 		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k] ?? $k;
 		}
 
 		asort($arrSections);
@@ -1160,7 +1247,7 @@ abstract class Backend extends Controller
       e.preventDefault();
       Backend.openModalSelector({
         "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
+        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
         "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");

@@ -59,7 +59,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container): void
     {
         $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
-        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        $config = $container->getExtensionConfig($this->getAlias());
+        $config = $container->getParameterBag()->resolveValue($config);
+        $config = $this->processConfiguration($configuration, $config);
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
@@ -190,15 +193,20 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 }
             );
         }
+
+        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
+            $loader->load('services_debug.yml');
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
     {
+        // User uploads
         $filesStorageName = 'files';
 
-        // TODO: Deprecate the 'contao.upload_path' config key. In the next
-        // major version, $uploadPath can then be replaced with 'files' and the
-        // redundant 'files' attribute removed when mounting the local adapter.
+        // TODO: Deprecate the "contao.upload_path" config key. In the next
+        // major version, $uploadPath can then be replaced with "files" and the
+        // redundant "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -209,6 +217,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
         ;
     }
 
@@ -278,7 +292,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name '_defaults' but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
@@ -410,7 +424,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 

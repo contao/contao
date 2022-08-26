@@ -14,8 +14,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Front end module "book navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleBooknav extends Module
 {
@@ -47,7 +45,7 @@ class ModuleBooknav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -96,7 +94,7 @@ class ModuleBooknav extends Module
 			$intKey = $objPage->pid;
 
 			// Skip forward pages (see #5074)
-			while ($this->arrPages[$intKey]->type == 'forward' && isset($this->arrPages[$intKey]->pid))
+			while (isset($this->arrPages[$intKey]->pid) && $this->arrPages[$intKey]->type == 'forward')
 			{
 				$intKey = $this->arrPages[$intKey]->pid;
 			}

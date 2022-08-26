@@ -26,7 +26,7 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	= '<a><abbr><acronym><address><area><article><aside><audio>'
 	. '<b><bdi><bdo><big><blockquote><br><button>'
 	. '<caption><cite><code><col><colgroup>'
-	. '<data><datalist><dd><del><dfn><div><dl><dt>'
+	. '<data><datalist><dd><del><details><dfn><div><dl><dt>'
 	. '<em>'
 	. '<fieldset><figcaption><figure><footer><form>'
 	. '<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
@@ -38,7 +38,7 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<ol><optgroup><option><output>'
 	. '<p><picture><pre>'
 	. '<q>'
-	. '<s><samp><section><select><small><source><span><strong><style><sub><sup>'
+	. '<s><samp><section><select><small><source><span><strong><style><sub><summary><sup>'
 	. '<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
 	. '<u><ul>'
 	. '<var><video>'
@@ -60,6 +60,7 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'th', 'value' => 'rowspan,colspan,width,height'),
 	array('key' => 'style', 'value' => 'media'),
 	array('key' => 'time', 'value' => 'datetime'),
+	array('key' => 'details', 'value' => 'open'),
 ));
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();

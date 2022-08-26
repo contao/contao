@@ -26,10 +26,12 @@ use webignition\RobotsTxt\Record\Record;
 class RobotsTxtListener
 {
     private ContaoFramework $contaoFramework;
+    private string $routePrefix;
 
-    public function __construct(ContaoFramework $contaoFramework)
+    public function __construct(ContaoFramework $contaoFramework, string $routePrefix = '/contao')
     {
         $this->contaoFramework = $contaoFramework;
+        $this->routePrefix = $routePrefix;
     }
 
     public function __invoke(RobotsTxtEvent $event): void
@@ -56,7 +58,8 @@ class RobotsTxtListener
 
         foreach ($records as $record) {
             $directiveList = $record->getDirectiveList();
-            $directiveList->add(new Directive('Disallow', '/contao/'));
+            $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
+            $directiveList->add(new Directive('Disallow', '/_contao/'));
         }
 
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);

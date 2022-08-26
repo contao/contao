@@ -43,7 +43,7 @@ class CountriesTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
 
         foreach ($countryCodes as $countryCode) {
-            $this->assertRegExp('/^[A-Z]{2}$/', $countryCode);
+            $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
         }
     }
 
@@ -56,7 +56,7 @@ class CountriesTest extends TestCase
         $this->assertTrue(ArrayUtil::isAssoc($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
-            $this->assertRegExp('/^[A-Z]{2}$/', $countryCode);
+            $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
             $this->assertNotEmpty($countryName);
             $this->assertNotSame($countryCode, $countryName);
         }
@@ -136,7 +136,7 @@ class CountriesTest extends TestCase
         $this->assertNotSame($countryCodes, array_keys($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
-            $this->assertRegExp('/^[A-Z]{2}$/', $countryCode);
+            $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
             $this->assertNotEmpty($countryName);
         }
     }

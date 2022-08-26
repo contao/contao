@@ -15,23 +15,27 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-class TemplateControllerTest extends ContaoTestCase
+class TemplateControllerTest extends TestCase
 {
     public function testWithDataInput(): void
     {
         $data = [
             ['key' => 'Key 1', 'value' => 'Value 1'],
-            ['key' => 'Key 1', 'value' => 'Value 1'],
+            ['key' => 'Key 1', 'value' => 'Value 2'],
         ];
 
-        $container = $this->mockContainer($data, 'ce_template');
+        $keys = [
+            'Key 1' => 'Value 2',
+        ];
+
+        $container = $this->mockContainer($data, $keys, 'ce_template');
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = serialize($data);
@@ -44,7 +48,7 @@ class TemplateControllerTest extends ContaoTestCase
 
     public function testWithoutDataInput(): void
     {
-        $container = $this->mockContainer([], 'ce_template');
+        $container = $this->mockContainer([], [], 'ce_template');
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = null;
@@ -59,10 +63,15 @@ class TemplateControllerTest extends ContaoTestCase
     {
         $data = [
             ['key' => 'Key 1', 'value' => 'Value 1'],
-            ['key' => 'Key 1', 'value' => 'Value 1'],
+            ['key' => 'Key 2', 'value' => 'Value 2'],
         ];
 
-        $container = $this->mockContainer($data, 'ce_template_custom1');
+        $keys = [
+            'Key 1' => 'Value 1',
+            'Key 2' => 'Value 2',
+        ];
+
+        $container = $this->mockContainer($data, $keys, 'ce_template_custom1');
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = serialize($data);
@@ -74,7 +83,7 @@ class TemplateControllerTest extends ContaoTestCase
         $controller(new Request(), $contentModel, 'main');
     }
 
-    private function mockContainer(array $expectedData, string $expectedTemplate): Container
+    private function mockContainer(array $expectedData, array $expectedKeys, string $expectedTemplate): Container
     {
         $template = $this->createMock(FrontendTemplate::class);
         $template
@@ -91,6 +100,7 @@ class TemplateControllerTest extends ContaoTestCase
                 [$this->equalTo('class'), $this->equalTo('ce_template')],
                 [$this->equalTo('cssID'), $this->equalTo('')],
                 [$this->equalTo('inColumn'), $this->equalTo('main')],
+                [$this->equalTo('keys'), $this->equalTo($expectedKeys)],
                 [$this->equalTo('data'), $this->equalTo($expectedData)],
             )
         ;

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Nyholm\Psr7\Uri;
 
 /**
  * Creates and queries the search index
@@ -28,8 +29,6 @@ use Contao\Database\Result;
  *     {
  *         echo $result->url;
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Search
 {
@@ -51,7 +50,6 @@ class Search
 		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
-		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
 		$arrSet['filesize'] = $arrData['filesize'] ?? null;
@@ -59,6 +57,9 @@ class Search
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
+
+		// Ensure that the URL only contains ASCII characters (see #4260)
+		$arrSet['url'] = (string) (new Uri($arrData['url']));
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -173,7 +174,7 @@ class Search
 		$strBody = strip_tags($strBody);
 
 		// Put everything together
-		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
+		$arrSet['text'] = $strBody . ' ' . ($arrData['description'] ?? '') . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
@@ -193,130 +194,144 @@ class Search
 		// Prevent deadlocks
 		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
-		$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
-								->limit(1)
-								->execute($arrSet['checksum'], $arrSet['pid']);
-
-		if ($objIndex->numRows)
+		try
 		{
-			// The new URL is more canonical (shorter and/or fewer fragments)
-			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
+			$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+				->limit(1)
+				->execute($arrSet['checksum'], $arrSet['pid']);
+
+			if ($objIndex->numRows)
 			{
-				self::removeEntry($arrSet['url']);
+				// The new URL is more canonical (shorter and/or fewer fragments)
+				if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
+				{
+					self::removeEntry($arrSet['url']);
 
-				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
-							->set($arrSet)
-							->execute($objIndex->id);
-			}
-
-			$objDatabase->query("UNLOCK TABLES");
-
-			// The same page has been indexed under a different URL already (see #8460)
-			return false;
-		}
-
-		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
-								->limit(1)
-								->execute($arrSet['url']);
-
-		// Add the page to the tl_search table
-		if ($objIndex->numRows)
-		{
-			$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
 						->set($arrSet)
 						->execute($objIndex->id);
+				}
 
-			$intInsertId = $objIndex->id;
-		}
-		else
-		{
-			$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
-										 ->set($arrSet)
-										 ->execute();
-
-			$intInsertId = $objInsertStmt->insertId;
-		}
-
-		// Remove quotes
-		$strText = str_replace(array('´', '`'), "'", $arrSet['text']);
-
-		unset($arrSet);
-
-		// Split words
-		$arrWords = self::splitIntoWords(mb_strtolower($strText), $arrData['language']);
-		$arrIndex = array();
-
-		// Index words
-		foreach ($arrWords as $strWord)
-		{
-			if (isset($arrIndex[$strWord]))
-			{
-				$arrIndex[$strWord]++;
-				continue;
+				// The same page has been indexed under a different URL already (see #8460)
+				return false;
 			}
 
-			$arrIndex[$strWord] = 1;
-		}
+			$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
+				->limit(1)
+				->execute($arrSet['url']);
 
-		// Decrement document frequency counts
-		$objDatabase
-			->prepare("
-				UPDATE tl_search_term
-				INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-				SET documentFrequency = GREATEST(1, documentFrequency) - 1
-			")
-			->execute($intInsertId);
-
-		// Remove the existing index
-		$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
-					->execute($intInsertId);
-
-		// Add new terms and increment frequency counts of existing terms
-		$objDatabase
-			->prepare("
-				INSERT INTO tl_search_term (term, documentFrequency)
-				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
-				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
-			")
-			->execute(array_map('strval', array_keys($arrIndex)));
-
-		// Remove obsolete terms
-		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
-
-		$objTermIds = $objDatabase
-			->prepare("
-				SELECT term, id AS termId
-				FROM tl_search_term
-				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
-			")
-			->execute(array_map('strval', array_keys($arrIndex)));
-
-		$arrTermIds = array();
-
-		foreach ($objTermIds->fetchAllAssoc() as $arrTermId)
-		{
-			$arrTermIds[$arrTermId['term']] = (int) $arrTermId['termId'];
-		}
-
-		$arrQuery = array();
-		$arrValues = array();
-
-		foreach ($arrIndex as $k=>$v)
-		{
-			if (empty($arrTermIds[$k]))
+			// Add the page to the tl_search table
+			if ($objIndex->numRows)
 			{
-				continue;
+				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					->set($arrSet)
+					->execute($objIndex->id);
+
+				$intInsertId = $objIndex->id;
+			}
+			else
+			{
+				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+					->set($arrSet)
+					->execute();
+
+				$intInsertId = $objInsertStmt->insertId;
 			}
 
-			$arrQuery[] = '(?, ?, ?)';
-			$arrValues[] = $intInsertId;
-			$arrValues[] = $arrTermIds[$k];
-			$arrValues[] = $v;
+			// Remove quotes
+			$strText = str_replace(array('´', '`'), "'", $arrSet['text']);
+
+			unset($arrSet);
+
+			// Split words
+			$arrWords = self::splitIntoWords($strText, $arrData['language']);
+			$arrIndex = array();
+
+			// Index words
+			foreach ($arrWords as $strWord)
+			{
+				if (isset($arrIndex[$strWord]))
+				{
+					$arrIndex[$strWord]++;
+					continue;
+				}
+
+				$arrIndex[$strWord] = 1;
+			}
+
+			// Decrement document frequency counts
+			$objDatabase
+				->prepare("
+					UPDATE tl_search_term
+					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+					SET documentFrequency = GREATEST(1, documentFrequency) - 1
+				")
+				->execute($intInsertId);
+
+			// Remove the existing index
+			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+				->execute($intInsertId);
+
+			// Add new terms and increment frequency counts of existing terms
+			$objDatabase
+				->prepare("
+					INSERT INTO tl_search_term (term, documentFrequency)
+					VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
+					ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
+				")
+				->execute(array_map('strval', array_keys($arrIndex)));
+
+			// Remove obsolete terms
+			$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+
+			$objTermIds = $objDatabase
+				->prepare("
+					SELECT term, id AS termId
+					FROM tl_search_term
+					WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
+				")
+				->execute(array_map('strval', array_keys($arrIndex)));
+
+			$arrTermIds = array();
+
+			foreach ($objTermIds->fetchAllAssoc() as $arrTermId)
+			{
+				$arrTermIds[$arrTermId['term']] = (int) $arrTermId['termId'];
+			}
+
+			$arrQuery = array();
+			$arrValues = array();
+
+			foreach ($arrIndex as $k => $v)
+			{
+				if (empty($arrTermIds[$k]))
+				{
+					continue;
+				}
+
+				$arrQuery[] = '(?, ?, ?)';
+				$arrValues[] = $intInsertId;
+				$arrValues[] = $arrTermIds[$k];
+				$arrValues[] = $v;
+			}
+
+			// Create the new index
+			$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
+				->execute($arrValues);
+		}
+		finally
+		{
+			$objDatabase->query("UNLOCK TABLES");
 		}
 
-		// Create the new index
-		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-					->execute($arrValues);
+		self::updateVectorLengths((int) $intInsertId);
+
+		return true;
+	}
+
+	private static function updateVectorLengths(int $intInsertId): void
+	{
+		$objDatabase = Database::getInstance();
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
@@ -363,10 +378,6 @@ class Search
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
 		");
-
-		$objDatabase->query("UNLOCK TABLES");
-
-		return true;
 	}
 
 	/**
@@ -377,17 +388,64 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
 		$words = array();
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $part;
+				$words[] = $transliterator->transliterate($part);
 			}
 		}
 
 		return $words;
+	}
+
+	/**
+	 * Get different variants of the matched words that are present in the text,
+	 * e.g. with accents or diaeresis.
+	 *
+	 * @return string[]
+	 */
+	public static function getMatchVariants(array $arrMatches, string $strText, string $strLocale): array
+	{
+		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
+
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
+		$arrMatches = array_map(static fn ($match) => $transliterator->transliterate($match), $arrMatches);
+		$variants = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE && !\in_array($part, $variants, true) && \in_array($transliterator->transliterate($part), $arrMatches, true))
+			{
+				$variants[] = $part;
+			}
+		}
+
+		return $variants;
 	}
 
 	/**
@@ -432,7 +490,6 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = mb_strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -442,7 +499,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|\S+/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrPhrasesRegExp = array();
@@ -453,9 +510,32 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
 			{
-				$arrWildcards[] = str_replace('*', '%', $strKeyword);
+				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
+
+				foreach ($arrWildcardWords as $intIndex => $strWord)
+				{
+					if ($intIndex === 0 && $strKeyword[0] === '*')
+					{
+						$strWord = '%' . $strWord;
+					}
+
+					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					{
+						$strWord .= '%';
+					}
+
+					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					{
+						$arrWildcards[] = $strWord;
+					}
+					else
+					{
+						$arrKeywords[] = $strWord;
+					}
+				}
+
 				continue;
 			}
 
@@ -466,7 +546,7 @@ class Search
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
 						$arrPhrases[] = $strKeyword;
-						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
+						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword, null));
 					}
 					break;
 
@@ -489,14 +569,6 @@ class Search
 						{
 							$arrExcluded[] = $strWord;
 						}
-					}
-					break;
-
-				// Wildcards
-				case '*':
-					if (\strlen($strKeyword) > 1)
-					{
-						$arrWildcards[] = str_replace('*', '%', $strKeyword);
 					}
 					break;
 

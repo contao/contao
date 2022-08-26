@@ -16,8 +16,6 @@ namespace Contao;
  * @property boolean $mandatory
  * @property array   $options
  * @property array   $unknownOption
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class RadioButton extends Widget
 {

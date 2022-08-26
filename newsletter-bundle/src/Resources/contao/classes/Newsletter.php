@@ -18,8 +18,6 @@ use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Newsletter extends Backend
 {
@@ -374,7 +372,7 @@ class Newsletter extends Backend
 		}
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=' . rawurlencode($GLOBALS['TL_LANG']['MSC']['unsubscribe']) . '>');
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
 
 		return $objEmail;
 	}
@@ -415,7 +413,7 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);

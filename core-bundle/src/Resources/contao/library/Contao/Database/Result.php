@@ -30,8 +30,6 @@ use Doctrine\DBAL\Result as DoctrineResult;
  * @property integer $numRows    The number of rows in the result
  * @property integer $numFields  The number of fields in the result
  * @property boolean $isModified True if the result has been modified
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Result
 {

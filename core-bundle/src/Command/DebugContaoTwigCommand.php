@@ -30,6 +30,7 @@ use Symfony\Component\Filesystem\Path;
 class DebugContaoTwigCommand extends Command
 {
     protected static $defaultName = 'debug:contao-twig';
+    protected static $defaultDescription = 'Displays the Contao template hierarchy.';
 
     private TemplateHierarchyInterface $hierarchy;
     private ContaoFilesystemLoaderWarmer $cacheWarmer;
@@ -49,7 +50,6 @@ class DebugContaoTwigCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Displays the Contao template hierarchy.')
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;

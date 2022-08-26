@@ -43,6 +43,7 @@ use Symfony\Component\Process\Process;
 class ResizeImagesCommand extends Command
 {
     protected static $defaultName = 'contao:resize-images';
+    protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
 
     private ImageFactoryInterface $imageFactory;
     private ?DeferredResizerInterface $resizer;
@@ -75,7 +76,6 @@ class ResizeImagesCommand extends Command
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
             ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
-            ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
 
@@ -99,7 +99,7 @@ class ResizeImagesCommand extends Command
         $concurrent = (float) $input->getOption('concurrent');
 
         if (false !== $input->getOption('throttle')) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.');
             $this->io->warning('Using the throttle option is deprecated, use the concurrent option instead.');
 
             $throttle = (float) $input->getOption('throttle');
@@ -157,6 +157,8 @@ class ResizeImagesCommand extends Command
                 }
 
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
+
+                return 0;
             }
 
             return 1;

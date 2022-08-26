@@ -15,28 +15,25 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Undo;
 use Contao\Backend;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener;
-use Contao\CoreBundle\Fixtures\Contao\DC_NewsTableStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
 use Contao\UserModel;
-use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class LabelListenerTest extends TestCase
 {
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD'], $GLOBALS['TL_LANG']);
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
+        parent::tearDown();
     }
 
     public function testRendersUndoLabel(): void
     {
-        $connectionAdapter = $this->createMock(Connection::class);
+        $row = $this->setupDataSet();
 
         $userModelAdapter = $this->mockAdapter(['findById']);
         $userModel = $this->mockClassWithProperties(UserModel::class, [
@@ -51,28 +48,46 @@ class LabelListenerTest extends TestCase
             ->willReturn($userModel)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnMap([
-                ['tl_undo.pid.0', [], 'contao_tl_undo', null, 'User'],
-                ['tl_undo.fromTable.0', [], 'contao_tl_undo', null, 'Source table'],
-                ['MSC.parent', [], 'contao_default', null, 'Parent'],
-            ])
+        $framework = $this->mockContaoFramework([
+            Backend::class => $this->mockAdapter(['addToUrl']),
+            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->mockAdapter(['getHtml']),
+            UserModel::class => $userModelAdapter,
+        ]);
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->willReturn($row['preview'])
         ;
 
-        $dataContainerAdapter = $this->mockAdapter(['getDriverForTable']);
-        $dataContainerAdapter
+        $dc = $this->createMock(DC_Table::class);
+        $listener = new LabelListener($framework, $twig);
+
+        $this->assertSame('<result>', $listener($row, '', $dc));
+    }
+
+    public function testRendersUndoLabelForTabularRecords(): void
+    {
+        $row = $this->setupTabularDataSet();
+
+        $userModelAdapter = $this->mockAdapter(['findById']);
+        $userModel = $this->mockClassWithProperties(UserModel::class, [
+            'id' => 1,
+            'username' => 'k.jones',
+        ]);
+
+        $userModelAdapter
             ->expects($this->once())
-            ->method('getDriverForTable')
-            ->with('tl_news')
-            ->willReturn(DC_NewsTableStub::class)
+            ->method('findById')
+            ->with(1)
+            ->willReturn($userModel)
         ;
 
         $framework = $this->mockContaoFramework([
             Backend::class => $this->mockAdapter(['addToUrl']),
             Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
-            DataContainer::class => $dataContainerAdapter,
             Image::class => $this->mockAdapter(['getHtml']),
             UserModel::class => $userModelAdapter,
         ]);
@@ -85,9 +100,7 @@ class LabelListenerTest extends TestCase
         ;
 
         $dc = $this->createMock(DC_Table::class);
-        $row = $this->setupDataSet();
-
-        $listener = new LabelListener($framework, $connectionAdapter, $translator, $twig);
+        $listener = new LabelListener($framework, $twig);
 
         $this->assertSame('<result>', $listener($row, '', $dc));
     }
@@ -110,9 +123,7 @@ class LabelListenerTest extends TestCase
             ],
         ];
 
-        $GLOBALS['TL_DCA']['tl_news']['fields']['headline'] = [
-            'inputType' => 'text',
-        ];
+        $GLOBALS['TL_DCA']['tl_news']['fields']['headline'] = ['inputType' => 'text'];
 
         return [
             'id' => 1,
@@ -127,6 +138,43 @@ class LabelListenerTest extends TestCase
                     ],
                 ],
             ]),
+            'preview' => '<result>',
+        ];
+    }
+
+    private function setupTabularDataSet(): array
+    {
+        $GLOBALS['BE_MOD']['content']['members'] = [
+            'tables' => ['tl_user'],
+        ];
+
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
+
+        $GLOBALS['TL_DCA']['tl_user']['list'] = [
+            'label' => [
+                'showColumns' => true,
+                'fields' => ['username'],
+            ],
+            'sorting' => [
+                'mode' => DataContainer::MODE_SORTABLE,
+            ],
+        ];
+
+        $GLOBALS['TL_DCA']['tl_user']['fields']['headline'] = ['inputType' => 'text'];
+
+        return [
+            'id' => 1,
+            'fromTable' => 'tl_user',
+            'pid' => 1,
+            'data' => serialize([
+                'tl_user' => [
+                    [
+                        'id' => 42,
+                        'username' => 'k.jones',
+                    ],
+                ],
+            ]),
+            'preview' => serialize(['h.lewis']),
         ];
     }
 }

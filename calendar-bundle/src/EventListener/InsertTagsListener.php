@@ -107,7 +107,7 @@ class InsertTagsListener
                 return StringUtil::specialcharsAttribute($model->title);
 
             case 'event_teaser':
-                return StringUtil::toHtml5($model->teaser);
+                return $model->teaser;
         }
 
         return '';

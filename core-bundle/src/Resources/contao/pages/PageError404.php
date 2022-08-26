@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 404 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError404 extends Frontend
 {
@@ -26,9 +24,14 @@ class PageError404 extends Frontend
 	 * Generate an error 404 page
 	 *
 	 * @param PageModel|null $page
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageError404::getResponse() method instead
 	 */
 	public function generate($page=null)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageError404::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError404::getResponse() method instead.');
+
 		/** @var PageModel $objPage */
 		global $objPage;
 

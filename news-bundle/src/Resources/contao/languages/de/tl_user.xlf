@@ -10,12 +10,12 @@
         <target>Hier können Sie den Zugriff auf ein oder mehrere Nachrichten-Archive erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
+        <source>News archive permissions</source>
         <target>Archivrechte</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Hier können Sie die Archivrechte festlegen.</target>
+        <source>Here you can define the news archive permissions.</source>
+        <target>Hier können Sie die Berechtigungen für das Nachrichtenarchiv festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

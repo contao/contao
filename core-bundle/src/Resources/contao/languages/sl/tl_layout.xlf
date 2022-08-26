@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.external.1">
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
+        <target>Tu lahko dodate zunanje datoteke CSS, SCSS ali LESS iz datotčnega sistema.</target>
       </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
@@ -294,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.onload.1">
         <source>Here you can add a body &lt;em&gt;onload&lt;/em&gt; attribute.</source>
+        <target>Tu lahko elementu body nastavite atribut &lt;em&gt;onload&lt;/em&gt;. </target>
       </trans-unit>
       <trans-unit id="tl_layout.head.0">
         <source>Additional &amp;lt;head&amp;gt; tags</source>
@@ -301,6 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.head.1">
         <source>Here you can add individual tags to the &amp;lt;head&amp;gt; section of the page.</source>
+        <target>Tu lahko vnesete posamezne elemente HTML v glavo, t.j. lt;head&amp;gt;, strani.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.0">
         <source>Include jQuery</source>

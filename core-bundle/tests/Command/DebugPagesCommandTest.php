@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
+use Contao\Config;
 use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\PageError401;
 use Contao\PageError403;
 use Contao\PageError404;
@@ -27,12 +31,22 @@ use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageRoot;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class DebugPagesCommandTest extends ContaoTestCase
+class DebugPagesCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $framework = $this->mockContaoFramework();
@@ -79,7 +93,7 @@ class DebugPagesCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertSame($expectedOutput, preg_replace('/ +(?=\n)/', '', $commandTester->getDisplay(true)));
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -105,21 +119,21 @@ class DebugPagesCommandTest extends ContaoTestCase
                 Contao Pages
                 ============
 
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
-                  Type        Path   URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                             Options  
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
-                  error_401   *      *            no                    -                -              -                                                                    -        
-                  error_403   *      *            no                    -                -              -                                                                    -        
-                  error_404   *      *            no                    -                -              -                                                                    -        
-                  forward     *      *            no                    -                -              -                                                                    -        
-                  logout      *      *            no                    -                -              -                                                                    -        
-                  redirect    *      *            no                    -                -              -                                                                    -        
-                  regular     *      *            yes                   -                -              -                                                                    -        
-                  root        foo    .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController   -        
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
+                  Type        Path   URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                             Options
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
+                  error_401   *      *            no                    -                -              -                                                                    -
+                  error_403   *      *            no                    -                -              -                                                                    -
+                  error_404   *      *            no                    -                -              -                                                                    -
+                  forward     *      *            no                    -                -              -                                                                    -
+                  logout      *      *            no                    -                -              -                                                                    -
+                  redirect    *      *            no                    -                -              -                                                                    -
+                  regular     *      *            yes                   -                -              -                                                                    -
+                  root        foo    .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController   -
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
 
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'With custom pages' => [
@@ -137,17 +151,17 @@ class DebugPagesCommandTest extends ContaoTestCase
                 Contao Pages
                 ============
 
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
-                  Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options       
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
-                  bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -             
-                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false  
-                  regular   *         *            yes                   -                -              -                                                                             -             
-                  root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -             
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
+                  Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
+                  bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -
+                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false
+                  regular   *         *            yes                   -                -              -                                                                             -
+                  root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
     }
 }

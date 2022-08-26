@@ -41,11 +41,11 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'title' => array
 		(
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'url' => array
 		(
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(2048) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'text' => array
 		(

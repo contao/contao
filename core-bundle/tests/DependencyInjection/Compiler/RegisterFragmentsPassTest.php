@@ -60,7 +60,7 @@ class RegisterFragmentsPassTest extends TestCase
          */
         $this->assertSame('add', $element[0]);
         $this->assertSame('contao.content_element.text', $element[1][0]);
-        $this->assertRegExp('/^contao.fragment._config_/', (string) $element[1][1]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element[1][1]);
 
         $arguments = $container->getDefinition((string) $element[1][1])->getArguments();
         $this->assertSame('forward', $arguments[1]);
@@ -75,7 +75,7 @@ class RegisterFragmentsPassTest extends TestCase
          */
         $this->assertSame('add', $module[0]);
         $this->assertSame('contao.frontend_module.login', $module[1][0]);
-        $this->assertRegExp('/^contao.fragment._config_/', (string) $module[1][1]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module[1][1]);
 
         $arguments = $container->getDefinition((string) $module[1][1])->getArguments();
         $this->assertSame('esi', $arguments[1]);

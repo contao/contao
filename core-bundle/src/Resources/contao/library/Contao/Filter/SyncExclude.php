@@ -18,8 +18,6 @@ use Contao\StringUtil;
  *
  * The class filters dot files and folders, which are excluded from
  * being synchronized, from a directory listing.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SyncExclude extends \RecursiveFilterIterator
 {

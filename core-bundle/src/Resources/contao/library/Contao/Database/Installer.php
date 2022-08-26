@@ -21,8 +21,6 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Installer extends Controller
 {

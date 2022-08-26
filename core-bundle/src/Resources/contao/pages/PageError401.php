@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 401 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError401 extends Frontend
 {
@@ -25,9 +23,14 @@ class PageError401 extends Frontend
 	 * Generate an error 401 page
 	 *
 	 * @param PageModel|integer|null $objRootPage
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageError401::getResponse() method instead
 	 */
 	public function generate($objRootPage=null)
 	{
+		trigger_deprecation('contao/core-bundle', '4.19', 'Using PageError401::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError401::getResponse() method instead.');
+
 		if (is_numeric($objRootPage))
 		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError401::generate() has been deprecated and will no longer work in Contao 5.0.');
@@ -133,7 +136,7 @@ class PageError401 extends Frontend
 			}
 
 			// Add the referer so the login module can redirect back
-			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . Environment::get('base') . Environment::get('request');
+			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . rawurlencode(Environment::get('base') . Environment::get('request'));
 
 			$this->redirect(System::getContainer()->get('uri_signer')->sign($url));
 		}

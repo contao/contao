@@ -36,6 +36,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 class UserPasswordCommand extends Command
 {
     protected static $defaultName = 'contao:user:password';
+    protected static $defaultDescription = 'Changes the password of a Contao back end user.';
 
     private ContaoFramework $framework;
     private Connection $connection;
@@ -56,7 +57,6 @@ class UserPasswordCommand extends Command
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
             ->addOption('require-change', 'r', InputOption::VALUE_NONE, 'Require the user to change the password on their next login.')
-            ->setDescription('Changes the password of a Contao back end user.')
         ;
     }
 

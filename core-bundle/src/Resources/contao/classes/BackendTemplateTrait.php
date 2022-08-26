@@ -11,8 +11,6 @@
 namespace Contao;
 
 /**
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @internal
  */
 trait BackendTemplateTrait

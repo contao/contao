@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Confirm an invalid token URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendConfirm extends Backend
 {

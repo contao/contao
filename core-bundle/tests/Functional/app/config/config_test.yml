@@ -33,7 +33,7 @@ doctrine:
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4
-                    collate: utf8mb4_unicode_ci
+                    collation: utf8mb4_unicode_ci
                     engine: InnoDB
         types:
             binary_string:
@@ -47,6 +47,9 @@ contao:
     localconfig:
         licenseAccepted: true
         disableCron: true
+    search:
+        default_indexer:
+            enable: false
 
 scheb_two_factor:
     trusted_device:

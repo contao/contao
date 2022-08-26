@@ -20,7 +20,10 @@ class AsFrontendModule
 {
     public array $attributes;
 
-    public function __construct(string $type = null, string $category, string $template = null, string $method = null, string $renderer = null, array ...$attributes)
+    /**
+     * @param mixed ...$attributes
+     */
+    public function __construct(string $type = null, string $category = 'miscellaneous', string $template = null, string $method = null, string $renderer = null, ...$attributes)
     {
         $attributes['type'] = $type;
         $attributes['category'] = $category;

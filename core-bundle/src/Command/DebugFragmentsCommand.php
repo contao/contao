@@ -21,6 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DebugFragmentsCommand extends Command
 {
     protected static $defaultName = 'debug:fragments';
+    protected static $defaultDescription = 'Displays the fragment controller configuration.';
 
     private array $identifiers = [];
     private array $attributes = [];
@@ -35,13 +36,6 @@ class DebugFragmentsCommand extends Command
         $this->identifiers[] = $identifier;
         $this->configs[$identifier] = $config;
         $this->attributes[$identifier] = $attributes;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Displays the fragment controller configuration.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

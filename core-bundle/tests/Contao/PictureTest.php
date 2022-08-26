@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
@@ -36,27 +37,22 @@ class PictureTest extends TestCase
 
     private Filesystem $filesystem;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        $fs = new Filesystem();
-        $fs->mkdir(static::getTempDir().'/assets');
-        $fs->mkdir(static::getTempDir().'/assets/images');
-
-        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(static::getTempDir().'/assets/images/'.$subdir);
-        }
-
-        $fs->mkdir(static::getTempDir().'/system');
-        $fs->mkdir(static::getTempDir().'/system/tmp');
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->filesystem = new Filesystem();
+
+        $this->filesystem->mkdir(static::getTempDir().'/assets');
+        $this->filesystem->mkdir(static::getTempDir().'/assets/images');
+
+        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
+            $this->filesystem->mkdir(static::getTempDir().'/assets/images/'.$subdir);
+        }
+
+        $this->filesystem->mkdir(static::getTempDir().'/system');
+        $this->filesystem->mkdir(static::getTempDir().'/system/tmp');
+
         $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
@@ -65,6 +61,13 @@ class PictureTest extends TestCase
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         System::setContainer($this->getContainerWithImageServices());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
+
+        parent::tearDown();
     }
 
     /**
@@ -210,9 +213,9 @@ class PictureTest extends TestCase
         $this->assertSame(100, $pictureData['img']['height']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
         $this->assertSame([], $pictureData['sources']);
     }
 
@@ -241,9 +244,9 @@ class PictureTest extends TestCase
         $this->assertSame('100vw', $pictureData['img']['sizes']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
         $this->assertSame([], $pictureData['sources']);
     }
 

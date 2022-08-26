@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "article alias".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentArticle extends ContentElement
 {

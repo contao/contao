@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TemplateController extends AbstractFrontendModuleController
 {
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();
 

@@ -18,8 +18,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\TextStore" 
  *
  * @property integer $maxlength
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use the password widget instead.
  */

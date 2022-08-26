@@ -20,6 +20,13 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class InsecureInstallationListener
 {
+    private string $webDir;
+
+    public function __construct(string $webDir = '/public')
+    {
+        $this->webDir = $webDir;
+    }
+
     /**
      * Throws an exception if the document root is insecure.
      */
@@ -37,6 +44,6 @@ class InsecureInstallationListener
             return;
         }
 
-        throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /public subfolder.');
+        throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the '.$this->webDir.' subfolder.');
     }
 }

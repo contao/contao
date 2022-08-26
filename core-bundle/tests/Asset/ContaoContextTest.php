@@ -12,9 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Asset;
 
+use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -23,6 +27,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContaoContextTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testReturnsAnEmptyBasePathInDebugMode(): void
     {
         $context = new ContaoContext(new RequestStack(), $this->mockContaoFramework(), 'staticPlugins', true);

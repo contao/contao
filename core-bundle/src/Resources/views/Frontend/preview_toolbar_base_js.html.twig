@@ -260,25 +260,34 @@
                 return;
             }
 
+            const userField = form.querySelector('input[name="user"]');
+
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(form);
 
                 request('POST', form.action, formData, function () {
-                    if (204 === this.status) {
+                    if (422 !== this.status) {
                         location.reload();
-                    } else {
-                        location.reload();
+                    } else if (userField) {
+                        userField.setCustomValidity(this.responseText || 'An unknown error occurred.');
+                        userField.reportValidity();
                     }
                 });
             });
 
-            if (document.createElement('datalist') && window.HTMLDataListElement) {
-                const userField = form.querySelector('input[name="user"]');
-                let timer;
+            if (userField) {
+                // Reset custom validity message
+                form.querySelector('[type="submit"]').addEventListener('click', function () {
+                    userField.setCustomValidity('');
+                });
 
-                if (userField) {
+                if (document.createElement('datalist') && window.HTMLDataListElement) {
+                    let timer;
+
                     userField.addEventListener('input', function () {
+                        userField.setCustomValidity('');
+
                         if (userField.value.length < 2) {
                             return;
                         }

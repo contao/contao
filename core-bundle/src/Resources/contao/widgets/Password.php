@@ -17,8 +17,6 @@ namespace Contao;
  * @property boolean $mandatory
  * @property string  $placeholder
  * @property string  $description
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Password extends Widget
 {

@@ -15,9 +15,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provide methods to handle a forward page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageForward extends Frontend
 {
@@ -25,9 +22,14 @@ class PageForward extends Frontend
 	 * Redirect to an internal page
 	 *
 	 * @param PageModel $objPage
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageForward::getResponse() method instead
 	 */
 	public function generate($objPage)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageForward::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageForward::getResponse() method instead.');
+
 		$this->redirect($this->getForwardUrl($objPage), $this->getRedirectStatusCode($objPage));
 	}
 
@@ -93,6 +95,12 @@ class PageForward extends Frontend
 			foreach (array_keys($_GET) as $key)
 			{
 				if ($key == 'language')
+				{
+					continue;
+				}
+
+				// Ignore arrays (see #4895)
+				if (\is_array($_GET[$key]))
 				{
 					continue;
 				}

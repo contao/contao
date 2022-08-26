@@ -55,7 +55,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($availableLocales));
 
         foreach ($availableLocales as $localeId) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
 
         $this->assertIsArray($enabledLocales);
@@ -63,7 +63,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($enabledLocales));
 
         foreach ($enabledLocales as $localeId) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
     }
 
@@ -82,7 +82,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($availableCountries));
 
         foreach ($availableCountries as $country) {
-            $this->assertRegExp('/^[A-Z]{2}$/', $country);
+            $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $country);
         }
     }
 }

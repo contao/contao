@@ -110,8 +110,8 @@
         <target>Eigen label</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Hier kunt u een eigen label opgeven dat gebruikt wordt voor het drop-down menu.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Hier kunt u een aangepast label invoeren voor het drop-down menu of de overzichtslink.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Overzichtspagina</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Selecteer een overzichtspagina om er een link naar op te nemen in de template.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -441,9 +443,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.0">
         <source>Delete home directory</source>
+        <target>Verwijder home directory</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.1">
         <source>Delete the home directory when the account is deleted.</source>
+        <target>Verwijder de home directory wanneer het account wordt verwijderd.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
@@ -495,9 +499,11 @@
       </trans-unit>
       <trans-unit id="tl_module.data.0">
         <source>Template data</source>
+        <target>Templategegevens</target>
       </trans-unit>
       <trans-unit id="tl_module.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Deze waarden zijn beschikbaar als &lt;code&gt;$this-&gt;data&lt;/code&gt; in de template.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.0">
         <source>Modules</source>
@@ -505,9 +511,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Selecteer een module voor elke root pagina.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Kies een module voor &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

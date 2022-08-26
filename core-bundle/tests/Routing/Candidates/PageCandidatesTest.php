@@ -368,6 +368,16 @@ class PageCandidatesTest extends TestCase
                 'legacy' => [],
             ],
         ];
+
+        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot handle empty path" exception
+        yield [
+            '/0',
+            ['.html'],
+            [''],
+            [
+                'default' => [],
+            ],
+        ];
     }
 
     public function testIncluesPageWithAbsolutePath(): void

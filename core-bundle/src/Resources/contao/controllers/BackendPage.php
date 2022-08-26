@@ -20,8 +20,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\BackendPage
 /**
  * Back end page picker.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use the picker instead.
  */
@@ -62,7 +60,8 @@ class BackendPage extends Backend
 	 */
 	public function run()
 	{
-		$objSession = System::getContainer()->get('session');
+		$container = System::getContainer();
+		$objSession = $container->get('session');
 
 		$objTemplate = new BackendTemplate('be_picker');
 		$objTemplate->main = '';
@@ -77,8 +76,11 @@ class BackendPage extends Backend
 		$strTable = Input::get('table');
 		$strField = Input::get('field');
 
+		$id = $this->findCurrentId($strTable);
+		$objSession->set('CURRENT_ID', $id);
+
 		// Define the current ID
-		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
+		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = DataContainer::getDriverForTable($strTable);
@@ -143,18 +145,18 @@ class BackendPage extends Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
 		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+		$objTemplate->charset = $container->getParameter('kernel.charset');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->value = $objSessionBag->get('page_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? null;
 
-		$security = System::getContainer()->get('security.helper');
+		$security = $container->get('security.helper');
 
 		if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page'))
 		{
 			$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['pageManager'];
-			$objTemplate->managerHref = 'contao/main.php?do=page&amp;popup=1';
+			$objTemplate->managerHref = $container->get('router')->generate('contao_backend', array('do'=>'page', 'popup'=>'1'));
 		}
 
 		if (Input::get('switch') && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))

@@ -2,9 +2,11 @@
 
 declare(strict_types  =   1,ticks = 1);
 
+use Contao\DC_Table;
+
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'sql' => [
             'keys' => [
                 'id' => 'primary',

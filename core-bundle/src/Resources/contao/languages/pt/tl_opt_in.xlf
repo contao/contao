@@ -1,0 +1,38 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_opt_in.php" source-language="en" target-language="pt">
+    <body>
+      <trans-unit id="tl_opt_in.token">
+        <source>Token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.confirmedOn">
+        <source>Confirmed on</source>
+        <target>Confirmado em</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.removeOn">
+        <source>Remove on</source>
+        <target>Remover em</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+        <target>Invalidado</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailSubject">
+        <source>E-mail subject</source>
+        <target>Assunto de e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailText">
+        <source>E-mail text</source>
+        <target>Texto de e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.show">
+        <source>Show the details of token ID %s</source>
+        <target>Mostrar detalhes do token com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.resend">
+        <source>Resend token ID %s</source>
+        <target>Reenviar token ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

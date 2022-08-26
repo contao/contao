@@ -79,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>Svuota la cache di anteprima</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Rimuove le immagini generate automaticamente ed elimina la cache condivisa, in questo modo si eliminano anche riferimenti a risorse eliminate.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -113,8 +115,8 @@ Rimuove i file &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; gene
         <target>Ricrea i file XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Ricrea i file XML (sitemap e feed) ed elimina la cache condivisa, in questo modo si eliminano anche riferimenti a risorse eliminate.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Ricrea i file XML nella cartella &lt;code&gt;condivisa&lt;/code&gt; e poi elimina la cache condivisa, così che non ci siano collegamenti alle risorse eliminate.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -152,13 +154,14 @@ Rimuove i file &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; gene
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Il crawler sta attualmente funzionando. Attendi il termine per vedere i risultati.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Scarica il log del debug </target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
-        <target>Scarica il log</target>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

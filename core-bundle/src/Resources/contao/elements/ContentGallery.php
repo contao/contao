@@ -15,8 +15,6 @@ use Contao\Model\Collection;
 
 /**
  * Front end content element "gallery".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentGallery extends ContentElement
 {

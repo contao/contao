@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Un'anteprima del percorso finale (possibilmente con segnaposto) da abbinare a questa pagina.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Priorità del percorso</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>In modo opzionale, configurare la priorità per l'ordine dei percorsi. Predefinito: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -187,8 +190,7 @@
         <target>URL personalizzato</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Qui puoi impostare un URL canonico personalizzato.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -312,9 +314,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Layout di sottopagina</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Qui puoi selezionare un layout diverso per le sottopagine</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -482,6 +486,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Routing</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -577,6 +582,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Eredita layout di pagina</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -636,9 +642,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Conflitti di percorso</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Le pagine seguenti hanno un alias simile che potrebbe entrare in conflitto con questa pagina. Se l'URL non viene risolto correttamente, prova a modificare la priorità dei percorsi.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Abilita gli URL canonici nella pagina principale del sito web per attivare questa configurazione.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

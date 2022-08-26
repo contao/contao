@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
-        <target>Bitte geben Sie ein gültiges Gebietsschema wie z.B. &quot;de&quot; oder &quot;de_DE&quot; ein!</target>
+        <target>Bitte geben Sie ein gültiges Gebietsschema wie z. B. &quot;de&quot; oder &quot;de_DE&quot; ein!</target>
       </trans-unit>
       <trans-unit id="ERR.language">
         <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
-        <target>Bitte geben Sie einen gültigen Sprachcode wie z.B. &quot;de&quot; oder &quot;de-DE&quot; ein!</target>
+        <target>Bitte geben Sie einen gültigen Sprachcode wie z. B. &quot;de&quot; oder &quot;de-DE&quot; ein!</target>
       </trans-unit>
       <trans-unit id="ERR.alias">
         <source>Please enter only alphanumeric characters and the following special characters: .-_</source>
@@ -193,13 +193,17 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Eine Seite mit der URL &quot;%s&quot; existiert bereits!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Dieser Alias führt zu einem Konflikt mit der Seite &quot;%s&quot; (ID %s)!</target>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
-        <target>Dieses URL-Suffix würde zu doppelten URLs führen (z.B. %s)!</target>
+        <target>Dieses URL-Suffix würde zu doppelten URLs führen (z. B. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
-        <target>Dieses URL-Präfix würde zu doppelten URLs führen (z.B. %s)!</target>
+        <target>Dieses URL-Präfix würde zu doppelten URLs führen (z. B. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -349,6 +353,14 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Der Template-Pfad &quot;%s&quot; darf folgende Zeichen nicht enthalten: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Unbekannter Nutzername: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Version %d konnte nicht wiederhergestellt werden, da sie nicht mehr mit der aktuellen Datenbankstruktur kompatibel ist. Bitte stellen Sie die Daten manuell wieder her.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -372,6 +384,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>Erzeugt eine Überschrift (h1 - h6).</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Verschiedenes</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -451,11 +467,11 @@
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
-        <target>Eigenes Template</target>
+        <target>Individuelles Template</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
-        <target>Erzeugt ein Element zum Einfügen eines eigenen Templates.</target>
+        <target>Erzeugt ein Element zum Einfügen eines individuellen Templates.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -667,7 +683,7 @@
       </trans-unit>
       <trans-unit id="FFL.select.1">
         <source>A single- or multi-line drop-down menu.</source>
-        <target>Ein ein- oder mehrzeiliges Drop-Down-Menü.</target>
+        <target>Ein ein- oder mehrzeiliges Dropdown-Menü.</target>
       </trans-unit>
       <trans-unit id="FFL.radio.0">
         <source>Radio button menu</source>
@@ -1095,7 +1111,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Geben Sie eine Web-Adresse (http://…), eine E-Mail-Adresse (mailto:…) oder ein Inserttag ein.</target>
+        <target>Geben Sie eine Web-Adresse (http://…), eine E-Mail-Adresse (mailto:…) oder ein Insert-Tag ein.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -1314,8 +1330,8 @@
         <target>Bildunterschrift</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Lizenz</target>
+        <source>License URL</source>
+        <target>Lizenz-URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1578,8 +1594,8 @@
         <target>Backend-Tastaturkürzel</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://docs.contao.org/books/manual/current/de/02-administrationsbereich/backend-tastaturkuerzel.html&quot; title=&quot;Übersicht der Tastaturkürzel&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2603,7 +2619,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
-        <target>Hier können Sie die Zwei-Faktor-Authentifizierung aktivieren, um Ihren Account zusätzlich abzusichern. Sie müssen dann zusätzlich zu Ihrem Benutzernamen und Passwort einen Bestätigungscode eingeben, den Sie mit einer Zwei-Faktor-App wie z.B. 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator oder jeder anderen TOTP-App generieren können.</target>
+        <target>Hier können Sie die Zwei-Faktor-Authentifizierung aktivieren, um Ihren Account zusätzlich abzusichern. Sie müssen dann zusätzlich zu Ihrem Benutzernamen und Passwort einen Bestätigungscode eingeben, den Sie mit einer Zwei-Faktor-App wie z. B. 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator oder jeder anderen TOTP-App generieren können.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
@@ -2748,6 +2764,10 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
         <target>Ursprung</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>Handbuch</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2958,8 +2978,8 @@
         <target>%d URL(s) erfolgreich indexiert. %d fehlgeschlagen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URL(s) wurde(n) übersprungen (wenn Sie eine URL vermissen, prüfen Sie das Debug-Log).</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d URL(s) wurde(n) übersprungen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

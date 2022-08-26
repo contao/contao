@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle sections of a page layout.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SectionWizard extends Widget
 {

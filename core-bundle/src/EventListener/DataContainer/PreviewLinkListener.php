@@ -20,12 +20,14 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -36,16 +38,18 @@ class PreviewLinkListener
     private Connection $connection;
     private Security $security;
     private RequestStack $requestStack;
+    private TranslatorInterface $translator;
     private UrlGeneratorInterface $urlGenerator;
     private UriSigner $uriSigner;
     private string $previewScript;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, string $previewScript = '')
+    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, TranslatorInterface $translator, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, string $previewScript = '')
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->security = $security;
         $this->requestStack = $requestStack;
+        $this->translator = $translator;
         $this->urlGenerator = $urlGenerator;
         $this->uriSigner = $uriSigner;
         $this->previewScript = $previewScript;
@@ -79,6 +83,7 @@ class PreviewLinkListener
     public function createFromUrl(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
+        $message = $this->framework->getAdapter(Message::class);
         $user = $this->security->getUser();
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
@@ -120,8 +125,10 @@ class PreviewLinkListener
             }
         }
 
-        // Only allow creating new records from front end link with preview script in URL
-        if ('create' === $input->get('act') && false !== strpos($input->get('url') ?? '', $this->previewScript)) {
+        if (!$input->get('act')) {
+            $message->addInfo($this->translator->trans('tl_preview_link.hintNew', [], 'contao_tl_preview_link'));
+        } elseif ('create' === $input->get('act') && false !== strpos($input->get('url') ?? '', $this->previewScript)) {
+            // Only allow creating new records from front end link with preview script in URL
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }
 
@@ -130,6 +137,41 @@ class PreviewLinkListener
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = time();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
+    }
+
+    /**
+     * Adds a hint and modifies the edit view buttons.
+     *
+     * @Callback(table="tl_preview_link", target="config.onload")
+     */
+    public function adjustEditView(DataContainer $dc): void
+    {
+        $input = $this->framework->getAdapter(Input::class);
+        $message = $this->framework->getAdapter(Message::class);
+
+        if ('edit' !== $input->get('act')) {
+            return;
+        }
+
+        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id=?', [$dc->id]);
+
+        if ($row['expiresAt'] < time()) {
+            $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));
+        } elseif (0 === (int) $row['tstamp']) {
+            $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
+        } else {
+            $clipboard = $this->generateClipboardData((int) $row['id']);
+
+            $message->addInfo($this->translator->trans(
+                'tl_preview_link.hintEdit',
+                [
+                    $clipboard['content'],
+                    StringUtil::specialchars(json_encode($clipboard)),
+                    $clipboard['content'],
+                ],
+                'contao_tl_preview_link'
+            ));
+        }
     }
 
     /**
@@ -166,13 +208,28 @@ class PreviewLinkListener
      */
     public function shareOperation(array $row, ?string $href, ?string $label, ?string $title, string $icon): string
     {
-        $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $row['id']], UrlGeneratorInterface::ABSOLUTE_URL);
+        if ($row['expiresAt'] < time()) {
+            return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
+        }
+
+        $clipboard = $this->generateClipboardData((int) $row['id']);
 
         return sprintf(
-            '<a href="%s" target="_blank" title="%s" onclick="navigator.clipboard.writeText(this.href);return false">%s</a> ',
-            $this->uriSigner->sign($url),
+            '<a href="%s" target="_blank" title="%s" data-to-clipboard="%s">%s</a> ',
+            $clipboard['content'],
             StringUtil::specialchars($title),
+            StringUtil::specialchars(json_encode($clipboard)),
             Image::getHtml($icon, $label)
         );
+    }
+
+    private function generateClipboardData(int $id): array
+    {
+        $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return [
+            'content' => $this->uriSigner->sign($url),
+            'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
+        ];
     }
 }

@@ -24,6 +24,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ClearSessionDataListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($_SESSION);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider formDataProvider
      */

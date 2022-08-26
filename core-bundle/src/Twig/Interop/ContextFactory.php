@@ -142,7 +142,7 @@ final class ContextFactory
             }
 
             /**
-             * Called when evaluating `{{ var }}` in a Twig template.
+             * Called when evaluating "{{ var }}" in a Twig template.
              */
             public function __toString(): string
             {
@@ -154,7 +154,7 @@ final class ContextFactory
             }
 
             /**
-             * Called when evaluating '{{ var.invoke(…) }}' in a Twig template.
+             * Called when evaluating "{{ var.invoke(…) }}" in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
              *

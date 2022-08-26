@@ -22,6 +22,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (!\defined('TL_FILES_URL')) {
+            \define('TL_FILES_URL', '');
+        }
+    }
+
     protected function getFixturesDir(): string
     {
         return __DIR__.\DIRECTORY_SEPARATOR.'Fixtures';

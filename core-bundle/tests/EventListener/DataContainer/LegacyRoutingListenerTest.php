@@ -20,12 +20,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyRoutingListenerTest extends TestCase
 {
-    protected function setUp(): void
+    protected function tearDown(): void
     {
-        parent::setUp();
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_DCA']);
 
-        $GLOBALS['TL_HOOKS'] = [];
-        $GLOBALS['TL_DCA'] = [];
+        parent::tearDown();
     }
 
     public function testDisablesTheRoutingFields(): void

@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>قبلا یک صفحه با URL &quot;%s&quot; وجود دارد!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>این پسوند URL منجر به URLهای تکراری خواهد شد (مثلا %s)!</target>
@@ -349,6 +352,13 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>مسیر قالب &quot;%s&quot; نباید شامل نویسه‌های ذیل باشد: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>نام کاربری ناشناس:‌ %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>لطفا %d و %d را با هم جمع نمایید.</target>
@@ -372,6 +382,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>یک عنوان (h1-h6) تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>متفرقه</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -1314,8 +1328,8 @@
         <target>زیرنویس</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>مجوز</target>
+        <source>License URL</source>
+        <target>URL مجوز</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1578,8 +1592,7 @@
         <target>کلید‌های میانبر بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>با یادگیری استفاده از &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;میانبرهای صفحه‌کلید&lt;/a&gt; سرعت کار خود را افزایش دهید.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2743,9 +2756,15 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>اشتراک URL</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>والد</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>دستی</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2956,8 +2975,7 @@
         <target>%d URI با موفقیت فهرست شد. %d ناموفق بود.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URL نادیده گرفته شدند (اگر چیزی را از دست داده‌اید، گزارش خطایابی را بررسی کنید).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

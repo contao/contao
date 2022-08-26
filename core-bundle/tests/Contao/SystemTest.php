@@ -34,15 +34,7 @@ class SystemTest extends TestCase
 
         unset($GLOBALS['TL_LANG']);
 
-        $system = new \ReflectionClass(System::class);
-
-        $langProperty = $system->getProperty('arrLanguageFiles');
-        $langProperty->setAccessible(true);
-        $langProperty->setValue([]);
-
-        $containerProperty = $system->getProperty('objContainer');
-        $containerProperty->setAccessible(true);
-        $containerProperty->setValue(null);
+        $this->resetStaticProperties([System::class]);
 
         (new Filesystem())->remove($this->getTempDir());
     }
@@ -327,7 +319,7 @@ class SystemTest extends TestCase
         ]));
 
         $innerTranslator = new class() implements TranslatorInterface, TranslatorBagInterface {
-            public function getCatalogue($locale = null)
+            public function getCatalogue($locale = null): MessageCatalogue
             {
                 return new MessageCatalogue($locale);
             }

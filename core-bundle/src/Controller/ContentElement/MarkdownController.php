@@ -14,9 +14,12 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\CoreBundle\InsertTag\CommonMarkExtension;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\Template;
+use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -25,14 +28,13 @@ use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\TaskList\TaskListExtension;
 use League\CommonMark\MarkdownConverter;
-use League\CommonMark\MarkdownConverterInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownController extends AbstractContentElementController
 {
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();
 
@@ -48,7 +50,7 @@ class MarkdownController extends AbstractContentElementController
 
         $config = $this->getContaoAdapter(Config::class);
         $input = $this->getContaoAdapter(Input::class);
-        $html = $this->createConverter($model, $request)->convertToHtml($markdown)->getContent();
+        $html = $this->createConverter($model, $request)->convert($markdown)->getContent();
 
         $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 
@@ -60,7 +62,7 @@ class MarkdownController extends AbstractContentElementController
      * If you want to provide an extension with additional logic, consider providing your own special
      * content element for that.
      */
-    protected function createConverter(ContentModel $model, Request $request): MarkdownConverterInterface
+    protected function createConverter(ContentModel $model, Request $request): ConverterInterface
     {
         $environment = new Environment([
             'external_link' => [
@@ -72,6 +74,7 @@ class MarkdownController extends AbstractContentElementController
             ],
         ]);
 
+        $environment->addExtension(new CommonMarkExtension($this->container->get('contao.insert_tag.parser')));
         $environment->addExtension(new CommonMarkCoreExtension());
 
         // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
@@ -107,5 +110,14 @@ class MarkdownController extends AbstractContentElementController
         }
 
         return (string) file_get_contents($path);
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.insert_tag.parser'] = InsertTagParser::class;
+
+        return $services;
     }
 }

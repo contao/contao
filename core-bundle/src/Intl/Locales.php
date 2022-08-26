@@ -242,10 +242,7 @@ class Locales
      */
     private function filterLocales(array $locales, array $filter, string $default = null): array
     {
-        $newList = array_filter(
-            $filter,
-            static fn ($locale) => !\in_array($locale[0], ['-', '+'], true)
-        );
+        $newList = array_filter($filter, static fn ($locale) => !\in_array($locale[0], ['-', '+'], true));
 
         if ($newList) {
             $locales = $newList;

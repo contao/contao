@@ -1,5 +1,25 @@
 # Deprecated features
 
+## CURRENT_ID
+
+The `CURRENT_ID` constant and session variable have been deprecated and will be
+removed in Contao 5.0. Use `DataContainer::$currentPid` instead to determine
+the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
+## Request library
+
+Using `Contao\Request` is deprecated and will no longer work in Contao 5.0. Use an alternative library
+such as `symfony/http-client` instead.
+
+## Cache library
+
+Using `Contao\Cache` is deprecated and will no longer work in Contao 5.0. Use your own in-memory
+caches instead. Use `symfony/cache` for persistence.
+
 ## $GLOBALS['TL_CSS_UNITS']
 
 The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
@@ -283,8 +303,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
-have been deprecated and will be removed in Contao 5.0.
+The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT`, `TL_REFERER_ID` and
+`REQUEST_TOKEN` have been deprecated and will be removed in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -337,6 +357,12 @@ Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the `contao.csrf.token_manager` service instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 ```
 
 ## PHP entry points

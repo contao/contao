@@ -98,8 +98,6 @@ security:
 
             logout:
                 path: contao_backend_logout
-                handlers:
-                    - contao.security.logout_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -117,8 +115,6 @@ security:
 
             logout:
                 path: contao_frontend_logout
-                handlers:
-                    - contao.security.logout_handler
 
     access_control:
         - { path: ^%contao.backend.route_prefix%/login$, roles: PUBLIC_ACCESS }

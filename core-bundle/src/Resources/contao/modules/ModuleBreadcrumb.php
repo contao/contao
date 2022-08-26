@@ -14,8 +14,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "breadcrumb".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleBreadcrumb extends Module
 {
@@ -41,7 +39,7 @@ class ModuleBreadcrumb extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -163,7 +161,7 @@ class ModuleBreadcrumb extends Module
 				'class'    => ''
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles'));
+			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 			if ($strArticle === null)
 			{
@@ -247,6 +245,28 @@ class ModuleBreadcrumb extends Module
 		};
 
 		$this->Template->items = $items;
+
+		// Tag the pages
+		if (!System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			return;
+		}
+
+		$tags = array();
+
+		foreach ($items as $item)
+		{
+			if (isset($item['data']['id']))
+			{
+				$tags[] = 'contao.db.tl_page.' . $item['data']['id'];
+			}
+		}
+
+		if (!empty($tags))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
+		}
 	}
 
 	private function getPageFrontendUrl(PageModel $pageModel, $strParams=null)
@@ -257,8 +277,6 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage());
-
 			return '';
 		}
 	}

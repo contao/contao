@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\AbstractDbafsMetadataEvent;
-
 class RetrieveDbafsMetadataEvent extends AbstractDbafsMetadataEvent
 {
     /**

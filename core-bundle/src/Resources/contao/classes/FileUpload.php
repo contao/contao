@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provide methods to handle file uploads in the back end.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileUpload extends Backend
 {
@@ -302,6 +300,12 @@ class FileUpload extends Backend
 		}
 
 		$arrImageSize = $objFile->imageSize;
+
+		// Image size could not be determined
+		if (!isset($arrImageSize[0], $arrImageSize[1]))
+		{
+			return false;
+		}
 
 		// The image is too big to be handled by the GD library
 		if ($objFile->isGdImage && ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight')))

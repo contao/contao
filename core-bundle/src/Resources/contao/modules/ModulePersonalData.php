@@ -16,8 +16,6 @@ use Contao\CoreBundle\Exception\ResponseException;
  * Front end module "personal data".
  *
  * @property array $editable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModulePersonalData extends Module
 {
@@ -44,7 +42,7 @@ class ModulePersonalData extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -120,7 +118,7 @@ class ModulePersonalData extends Module
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Build the form
@@ -317,16 +315,10 @@ class ModulePersonalData extends Module
 		}
 
 		// Save the model
-		if ($blnModified)
+		if ($blnModified && !$doNotSubmit)
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
-
-			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
-			{
-				$objVersions->create();
-			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
@@ -359,6 +351,12 @@ class ModulePersonalData extends Module
 						$callback($this->User, $this);
 					}
 				}
+			}
+
+			// Create a new version
+			if ($blnModified && ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null))
+			{
+				$objVersions->create();
 			}
 
 			// Check whether there is a jumpTo page

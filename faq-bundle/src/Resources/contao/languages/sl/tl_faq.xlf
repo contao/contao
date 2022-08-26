@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.robots.1">
         <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Tu lahko nastavite, kako naj spletni iskalniki obravnavajo FAQ.</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
@@ -166,9 +167,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>Ustvari novo vprašanje na vrhu</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>Ustvari novo vprašanje za vprašanjem z ID %s</target>
       </trans-unit>
     </body>
   </file>

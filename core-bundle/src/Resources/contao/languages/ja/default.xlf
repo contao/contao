@@ -193,6 +193,10 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>&quot;%s&quot;というURLのページは既に存在します!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>このエイリアスはページ&quot;%s&quot; (ID %s)と競合を引き起こします!</target>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>このURLサフィックスは重複したURL(例: %s)につながります。</target>
@@ -349,6 +353,14 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>テンプレートのパス: &quot;%s&quot;に以下の文字を含めてはなりません: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>不明なユーザー名: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>バージョン%dは現在のデータベース構造と互換性がなくなっているため復元できませんでした。手動でデータを復元してください。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -372,6 +384,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>見出し(h1からh6)を生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>その他</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -995,7 +1011,7 @@
       </trans-unit>
       <trans-unit id="MONTHS.4">
         <source>May</source>
-        <target>5</target>
+        <target>5月</target>
       </trans-unit>
       <trans-unit id="MONTHS.5">
         <source>June</source>
@@ -1314,8 +1330,8 @@
         <target>キャプション</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>ライセンス</target>
+        <source>License URL</source>
+        <target>ライセンスのURL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1578,8 +1594,8 @@
         <target>バックエンドのキーボードのショートカット</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>&lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;キーボードのショートカットの概要&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使って、作業の流れを速くする方法を習得しましょう。</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使って、作業の流れを高速化する方法を学びましょう。</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2679,7 +2695,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページレイアウトに再追加することをご検討ください。</target>
+        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページのレイアウトに再追加することをご検討ください。</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2743,9 +2759,15 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>URLを共有</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>親</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>マニュアル</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2956,8 +2978,8 @@
         <target>%d個のURIをインデックスできました。%d個のインデックスに失敗しました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d 個のURIを飛ばしました。(欠けているURIがある場合はデバッグログを確認してください。)</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d個のURLを飛ばしました。</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

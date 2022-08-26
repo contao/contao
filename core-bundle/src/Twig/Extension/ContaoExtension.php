@@ -56,15 +56,18 @@ final class ContaoExtension extends AbstractExtension
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
-        // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
+        // namespaces, as well as the existing bundle templates we're already
+        // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
+        $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
     }
 
     /**
      * Adds a Contao escaper rule.
      *
      * If a template name matches any of the defined rules, it will be processed
-     * with the 'contao_html' escaper strategy. Make sure your rule will only
+     * with the "contao_html" escaper strategy. Make sure your rule will only
      * match templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
@@ -79,7 +82,7 @@ final class ContaoExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the 'contao_twig' escaper for Contao templates with
+            // Enables the "contao_twig" escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules
@@ -87,13 +90,16 @@ final class ContaoExtension extends AbstractExtension
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
+            // Triggers PHP deprecations if deprecated constructs are found in
+            // the parsed templates.
+            new DeprecationsNodeVisitor(),
         ];
     }
 
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the 'extends' and 'include' tags to
+            // Overwrite the parsers for the "extends" and "include" tags to
             // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
@@ -105,7 +111,7 @@ final class ContaoExtension extends AbstractExtension
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the 'include' function to additionally support the
+            // Overwrite the "include" function to additionally support the
             // Contao template hierarchy
             new TwigFunction(
                 'include',
@@ -170,7 +176,7 @@ final class ContaoExtension extends AbstractExtension
         };
 
         return [
-            // Overwrite the 'escape'/'e' filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked text
             new TwigFilter(
                 'escape',
                 $escaperFilter,
@@ -203,8 +209,8 @@ final class ContaoExtension extends AbstractExtension
         $template = Path::getFilenameWithoutExtension($name);
 
         $partialTemplate = new class($template) extends Template {
-            use FrontendTemplateTrait;
             use BackendTemplateTrait;
+            use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {

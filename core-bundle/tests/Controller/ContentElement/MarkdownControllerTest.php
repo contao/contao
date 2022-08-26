@@ -16,17 +16,26 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
-use Contao\TestCase\ContaoTestCase;
+use Contao\System;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownControllerTest extends ContaoTestCase
+class MarkdownControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testWithCodeInput(): void
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
@@ -34,6 +43,30 @@ class MarkdownControllerTest extends ContaoTestCase
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '# Headline';
+
+        $controller = new MarkdownController();
+        $controller->setContainer($container);
+        $controller(new Request(), $contentModel, 'main');
+    }
+
+    public function testInsertTagsInLinksAreCorrectlyReplaced(): void
+    {
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('{{news_url::42}}')
+            ->willReturn('https://contao.org/news-alias that-needs-encoding.html')
+        ;
+
+        $container = $this->mockContainer('<p><a rel="noopener noreferrer" target="_blank" class="external-link" href="https://contao.org/news-alias%20that-needs-encoding.html">My text for my link</a></p>'."\n");
+        $container->set('contao.insert_tag.parser', $insertTagParser);
+
+        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel->markdownSource = 'sourceText';
+        $contentModel->code = '[My text for my link]({{news_url::42}})';
+
+        System::setContainer($container);
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
@@ -55,6 +88,8 @@ class MarkdownControllerTest extends ContaoTestCase
             HTML;
 
         $container = $this->mockContainer($expectedHtml);
+
+        System::setContainer($container);
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';

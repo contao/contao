@@ -16,11 +16,20 @@ use Contao\CoreBundle\Command\DebugFragmentsCommand;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Fragment\FragmentConfig;
-use Contao\TestCase\ContaoTestCase;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DebugFragmentsCommandTest extends ContaoTestCase
+class DebugFragmentsCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Table::class, Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $command = new DebugFragmentsCommand();
@@ -44,7 +53,7 @@ class DebugFragmentsCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertSame($expectedOutput, preg_replace('/ +(?=\n)/', '', $commandTester->getDisplay(true)));
     }
 
     public function commandOutputProvider(): \Generator
@@ -58,14 +67,14 @@ class DebugFragmentsCommandTest extends ContaoTestCase
                 Contao Fragments
                 ================
 
-                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------ 
-                  Identifier       Controller                                                        Renderer   Render Options   Fragment Options  
-                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------ 
-                  contao.foo.bar   Contao\CoreBundle\Controller\FrontendModule\TwoFactorController   forward                                       
-                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------ 
+                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------
+                  Identifier       Controller                                                        Renderer   Render Options   Fragment Options
+                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------
+                  contao.foo.bar   Contao\CoreBundle\Controller\FrontendModule\TwoFactorController   forward
+                 ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'Multiple fragments' => [
@@ -78,15 +87,15 @@ class DebugFragmentsCommandTest extends ContaoTestCase
                 Contao Fragments
                 ================
 
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------ 
-                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options        
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------ 
-                  contao.foo.bar   Contao\CoreBundle\Controller\FrontendModule\TwoFactorController       forward                     category : application  
-                  contao.foo.baz   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category : foobar       
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------ 
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
+                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
+                  contao.foo.bar   Contao\CoreBundle\Controller\FrontendModule\TwoFactorController       forward                     category : application
+                  contao.foo.baz   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category : foobar
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'ESI fragment' => [
@@ -98,15 +107,15 @@ class DebugFragmentsCommandTest extends ContaoTestCase
                 Contao Fragments
                 ================
 
-                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------ 
-                  Identifier       Controller                                                            Renderer   Render Options          Fragment Options  
-                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------ 
-                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   esi        ignore_errors : false   category : esi    
-                                                                                                                                            foo      : bar    
-                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------ 
+                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
+                  Identifier       Controller                                                            Renderer   Render Options          Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   esi        ignore_errors : false   category : esi
+                                                                                                                                            foo      : bar
+                 ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
     }
 }

@@ -60,7 +60,7 @@ class PageRegistryTest extends TestCase
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
         $this->assertSame('', $route->getDefault('parameters'));
-        $this->assertSame('/.+', $route->getRequirement('parameters'));
+        $this->assertSame('/.+?', $route->getRequirement('parameters'));
     }
 
     /**

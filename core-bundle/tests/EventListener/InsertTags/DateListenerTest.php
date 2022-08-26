@@ -20,11 +20,20 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Date;
 use Contao\PageModel;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DateListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+
+        parent::tearDown();
+    }
+
     public function testAnnotatedCallbacks(): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());

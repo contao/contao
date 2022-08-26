@@ -21,8 +21,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\PageSelecto
  * @property array  $rootNodes
  * @property string $fieldType
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use the picker instead.
  */
@@ -93,7 +91,7 @@ class PageSelector extends Widget
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for);
+				$for = preg_quote($for, null);
 			}
 
 			$strPattern = "CAST(title AS CHAR) REGEXP ?";
@@ -265,16 +263,16 @@ class PageSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null)
+		switch (true)
 		{
-			case 'File':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_File::class, true):
 				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
-			case 'Table':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_Table::class, true):
 				if (!$this->Database->fieldExists($this->strField, $this->strTable))
 				{
 					break;

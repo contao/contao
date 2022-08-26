@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
@@ -24,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
 		'onload_callback' => array
@@ -169,8 +170,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_newsletter_recipients extends Backend
 {

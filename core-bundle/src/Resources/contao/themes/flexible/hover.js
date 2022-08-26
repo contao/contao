@@ -181,6 +181,7 @@ var Theme = {
 		burger
 			.addEvent('click', function() {
 				document.body.toggleClass('show-navigation');
+				burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
 			})
 			.addEvent('keydown', function(e) {
 				if (e.event.keyCode == 27) {
@@ -188,6 +189,21 @@ var Theme = {
 				}
 			})
 		;
+
+		if (window.matchMedia) {
+			var matchMedia = window.matchMedia('(max-width:991px)');
+			var setAriaControls = function () {
+				if (matchMedia.matches) {
+					burger.setAttribute('aria-controls', 'left')
+					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
+				} else {
+					burger.removeAttribute('aria-controls');
+					burger.removeAttribute('aria-expanded');
+				}
+			};
+			matchMedia.addEventListener('change', setAriaControls);
+			setAriaControls();
+		}
 	},
 
 	/**
@@ -198,14 +214,22 @@ var Theme = {
 		if (!tmenu) return;
 
 		var li = tmenu.getElement('.submenu'),
-			span = li.getFirst('span');
-		if (!li || !span) return;
+			button = li.getFirst('span').getFirst('button'),
+			menu = li.getFirst('ul');
+		if (!li || !button || !menu) return;
 
-		span.addEvent('click', function(e) {
+		button.setAttribute('aria-controls', 'tmenu__profile');
+		button.setAttribute('aria-expanded', 'false');
+
+		menu.id = 'tmenu__profile';
+
+		button.addEvent('click', function(e) {
 			if (li.hasClass('active')) {
 				li.removeClass('active');
+				button.setAttribute('aria-expanded', 'false');
 			} else {
 				li.addClass('active');
+				button.setAttribute('aria-expanded', 'true');
 			}
 			e.stopPropagation();
 		});

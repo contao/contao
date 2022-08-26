@@ -167,7 +167,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         try {
             return (bool) $this->expressionLanguage->evaluate($expression, $data);
-        } catch (SyntaxError $e) {
+        } catch (\Throwable $e) {
             throw new \InvalidArgumentException($e->getMessage(), 0, $e);
         }
     }

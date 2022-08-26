@@ -210,19 +210,8 @@ class FilesystemItemTest extends TestCase
 
     public function testWithMetadataIfNotDefinedDoesNotOverwriteExistingValues(): void
     {
-        $item = new FilesystemItem(
-            true,
-            'some/path',
-            123450,
-            static fn () => 1024,
-            'image/png'
-        );
-
-        $item = $item->withMetadataIfNotDefined(
-            static fn () => 98765,
-            2048,
-            null,
-        );
+        $item = new FilesystemItem(true, 'some/path', 123450, static fn () => 1024, 'image/png');
+        $item = $item->withMetadataIfNotDefined(static fn () => 98765, 2048, null);
 
         $this->assertSame(123450, $item->getLastModified());
         $this->assertSame(1024, $item->getFileSize());

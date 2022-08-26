@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
@@ -21,12 +23,14 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Nyholm\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 class MountManagerTest extends TestCase
 {
     public function testMountAdapters(): void
     {
-        $manager = new MountManager($rootAdapter = new InMemoryFilesystemAdapter());
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter = new InMemoryFilesystemAdapter());
 
         $this->assertSame(
             [
@@ -73,15 +77,13 @@ class MountManagerTest extends TestCase
         $filesAdapter = $this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod);
         $filesMediaAdapter = $this->mockFilesystemAdapterWithCall($delegateMethod, ['foo', ...$delegateArguments], $delegateReturn);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesAdapter, 'files');
         $manager->mount($filesMediaAdapter, 'files/media');
 
         [$method, $arguments, $return] = $call;
 
         $this->assertSame($return, $manager->$method('files/media/foo', ...$arguments));
-
-        $this->closeStreamResources($arguments);
     }
 
     /**
@@ -94,14 +96,12 @@ class MountManagerTest extends TestCase
         $rootAdapter = $this->mockFilesystemAdapterWithCall($delegateMethod, ['some/place', ...$delegateArguments], $delegateReturn);
         $filesAdapter = $this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesAdapter, 'files');
 
         [$method, $arguments, $return] = $call;
 
         $this->assertSame($return, $manager->$method('some/place', ...$arguments));
-
-        $this->closeStreamResources($arguments);
     }
 
     public function provideCalls(): \Generator
@@ -292,7 +292,7 @@ class MountManagerTest extends TestCase
             ->willThrowException($flysystemException)
         ;
 
-        $manager = new MountManager($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
+        $manager = $this->getMountManagerWithRootAdapter($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
         $manager->mount($adapter, 'some');
 
         [$method, $arguments,] = $call;
@@ -302,14 +302,12 @@ class MountManagerTest extends TestCase
 
             // Make sure to read from the iterator, so that the exception will get thrown
             if ('listContents' === $method) {
-                [...$result];
+                iterator_to_array($result);
             }
         } catch (VirtualFilesystemException $e) {
             $this->assertSame($flysystemException, $e->getPrevious());
             $this->assertSame('some/place', $e->getPath());
         }
-
-        $this->closeStreamResources($arguments);
     }
 
     public function provideCallsForFlysystemExceptions(): \Generator
@@ -390,7 +388,7 @@ class MountManagerTest extends TestCase
         $filesMediaExtraAdapter->write('cat.avif', '', $config);
         $filesMediaExtraAdapter->write('videos/funny.mov', '', $config);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesSpecialAdapter, 'files/special');
         $manager->mount($filesMediaExtraAdapter, 'files/media/extra');
 
@@ -454,9 +452,9 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: 'files/media' must not be reported as a directory
+                // Note: "files/media" must not be reported as a directory
                 // here, because it is virtual and implicit (i.e. only the
-                // explicitly mounted 'files/media/extra' is included).
+                // explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',
@@ -536,7 +534,7 @@ class MountManagerTest extends TestCase
 
     public function testEarlyReturnsForExistenceChecks(): void
     {
-        $manager = new MountManager(new InMemoryFilesystemAdapter());
+        $manager = $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter());
 
         $this->assertFalse($manager->fileExists(''));
         $this->assertFalse($manager->directoryExists(''));
@@ -555,11 +553,62 @@ class MountManagerTest extends TestCase
         $rootAdapter->createDirectory('b', $config);
         $rootAdapter->write('c', '', $config);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
 
         $this->assertFalse($manager->directoryExists('a'));
         $this->assertTrue($manager->directoryExists('b'));
         $this->assertFalse($manager->directoryExists('c'));
+    }
+
+    public function testGeneratePublicUri(): void
+    {
+        $fooAdapter = $this->createMock(FilesystemAdapter::class);
+
+        $publicUriProvider1 = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider1
+            ->expects($this->exactly(2))
+            ->method('getUri')
+            ->willReturnCallback(
+                function (FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options) use ($fooAdapter): ?UriInterface {
+                    if ('bar/baz.jpg' !== $adapterPath) {
+                        return null;
+                    }
+
+                    $this->assertSame($fooAdapter, $adapter);
+                    $this->assertNull($options);
+
+                    return new Uri('https://example.com/files/bar/baz.jpg');
+                }
+            )
+        ;
+
+        $options = $this->createMock(OptionsInterface::class);
+
+        $publicUriProvider2 = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider2
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'other.jpg', $options)
+            ->willReturn(new Uri('https://some-service.org/user42/other.jpg'))
+        ;
+
+        $mountManager = new MountManager([$publicUriProvider1, $publicUriProvider2]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertSame(
+            'https://example.com/files/bar/baz.jpg',
+            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg')
+        );
+
+        $this->assertSame(
+            'https://some-service.org/user42/other.jpg',
+            (string) $mountManager->generatePublicUri('foo/other.jpg', $options)
+        );
+    }
+
+    private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
+    {
+        return (new MountManager())->mount($adapter);
     }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
@@ -607,14 +656,5 @@ class MountManagerTest extends TestCase
         }
 
         return $adapter;
-    }
-
-    private function closeStreamResources(array $arguments): void
-    {
-        foreach ($arguments as $resource) {
-            if (\is_resource($resource)) {
-                fclose($resource);
-            }
-        }
     }
 }

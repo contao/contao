@@ -259,8 +259,6 @@ use Contao\Model\Collection;
  * @method static integer countByListstyleimage($val, array $opt=array())
  * @method static integer countByOwn($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class StyleModel extends Model
 {

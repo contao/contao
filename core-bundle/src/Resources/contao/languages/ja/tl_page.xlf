@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
-        <target>必要な項目</target>
+        <target>項目を必要</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
@@ -190,8 +190,8 @@
         <target>独自のURL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>基準のURLに独自の値を設定します。</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>https://example.com/ の様な独自の標準のURLを設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -303,21 +303,23 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>ページとその下位のページにページレイアウトを割り当てます。</target>
+        <target>ページとその下位のページにページのレイアウトを割り当てます。</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>ページレイアウトは「テーマ」のモジュールで管理できます。</target>
+        <target>ページのレイアウトは「テーマ」のモジュールで管理できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>下位のページのレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>下位のページのに異なるレイアウトを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -581,6 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>ページのレイアウトを継承</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -645,6 +648,10 @@
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
         <target>以下のページに、このページと競合するかもしれない似たようなエイリアスがあります。URLが正しく決定できない場合は、ルートの優先度を変更してみてください。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>この構成を有効にするには、ウェブサイトのルートの基準のURLを有効にしてください。</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

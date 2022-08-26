@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image as ContaoImage;
 use Contao\Image\DeferredImageInterface;
@@ -44,9 +45,9 @@ class ImageFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -56,20 +57,17 @@ class ImageFactoryTest extends TestCase
                 Path::join(self::getTempDir(), $directory)
             );
         }
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesAnImageObjectFromAnImagePath(): void
@@ -744,7 +742,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '(/images/.*dummy.*.jpg$)',
             $image->getPath(),
             'Hook should not get called for cached images'
@@ -823,7 +821,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
+        $this->assertMatchesRegularExpression('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
         $this->assertSame(100, $image->getDimensions()->getSize()->getWidth());
         $this->assertSame(100, $image->getDimensions()->getSize()->getHeight());
 
@@ -843,7 +841,9 @@ class ImageFactoryTest extends TestCase
         $framework ??= $this->createMock(ContaoFramework::class);
         $bypassCache ??= false;
         $validExtensions ??= ['jpg', 'svg'];
-        $uploadDir ??= Path::join($this->getTempDir(), 'images');
+
+        // Do not use Path::join here (see #4596)
+        $uploadDir ??= $this->getTempDir().'/images';
 
         if (null === $imagineOptions) {
             $imagineOptions = [

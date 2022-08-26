@@ -91,8 +91,6 @@ use Contao\Model\Collection;
  * @method static integer countByIp($val, array $opt=array())
  * @method static integer countByNotified($val, array $opt=array())
  * @method static integer countByNotifiedReply($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CommentsModel extends Model
 {

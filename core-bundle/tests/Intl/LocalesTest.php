@@ -36,10 +36,11 @@ class LocalesTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         \Locale::setDefault('');
+        ini_restore('intl.default_locale');
         unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
     }
 
     public function testGetsLocaleIds(): void
@@ -51,7 +52,7 @@ class LocalesTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
         foreach ($localeIds as $localeId) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
     }
 
@@ -86,7 +87,7 @@ class LocalesTest extends TestCase
         $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($label);
         }
     }
@@ -150,7 +151,7 @@ class LocalesTest extends TestCase
                 'de' => 'German',
                 'de_at' => 'German (Austria)',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en', false)
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en')
         );
 
         $this->assertSame(
@@ -242,7 +243,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
 
@@ -257,7 +258,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
     }
@@ -281,7 +282,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
     }
@@ -448,10 +449,7 @@ class LocalesTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
 
-        $this->assertSame(
-            ['de', 'de_AT', 'de_Cyrl', 'en_AT'],
-            $this->getLocalesService()->getLocaleIds()
-        );
+        $this->assertSame(['de', 'de_AT', 'de_Cyrl', 'en_AT'], $this->getLocalesService()->getLocaleIds());
     }
 
     /**
@@ -463,10 +461,7 @@ class LocalesTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
 
-        $this->assertSame(
-            ['de', 'de_Cyrl', 'en'],
-            $this->getLocalesService()->getLanguageLocaleIds()
-        );
+        $this->assertSame(['de', 'de_Cyrl', 'en'], $this->getLocalesService()->getLanguageLocaleIds());
     }
 
     public function getLanguagesHook(array &$return, array $languages, array $langsNative, bool $blnInstalledOnly): void

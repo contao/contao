@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
@@ -41,6 +42,15 @@ class RootPageDependentModulesControllerTest extends TestCase
         $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([TemplateLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
     }
 
     public function testReturnsWildCardWhenBackendRequest(): void

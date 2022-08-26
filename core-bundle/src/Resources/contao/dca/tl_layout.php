@@ -15,6 +15,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
@@ -444,8 +445,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_layout extends Backend
 {
@@ -531,7 +530,9 @@ class tl_layout extends Backend
 	 */
 	public function styleSheetLink(DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_style_sheet', 'id'=>$dc->activeRecord->pid, 'popup'=>'1', 'nb'=>'1', 'rt'=>REQUEST_TOKEN));
+
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**

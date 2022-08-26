@@ -29,13 +29,12 @@ class RootPageDependentSelect extends SelectMenu
 		$rootPages = $framework->getAdapter(PageModel::class)->findByType('root', array('order' => 'sorting'));
 		$wizard = StringUtil::deserialize($this->wizard);
 
-		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_module');
+		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_tl_module');
 
 		foreach ($rootPages as $rootPage)
 		{
-			$label = sprintf('%s (%s)', $rootPage->title, $rootPage->language);
-			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $label);
-			$this->strLabel = $label;
+			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $rootPage->title);
+			$this->strLabel = $rootPage->title;
 
 			$fields[] = sprintf(
 				'<select name="%s[]" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
@@ -44,7 +43,7 @@ class RootPageDependentSelect extends SelectMenu
 				$cssClasses,
 				($this->strClass ? ' ' . $this->strClass : ''),
 				$this->getAttributes(),
-				implode('', $this->getOptions($rootPage->id)),
+				implode('', $this->getOptions($rootPage)),
 				$wizard[$rootPage->id] ?? ''
 			);
 		}
@@ -64,16 +63,25 @@ class RootPageDependentSelect extends SelectMenu
 		return static::optionSelected($arrOption['value'] ?? null, $this->varValue[$arrOption['index']] ?? null);
 	}
 
-	private function getOptions(string $index): array
+	private function getOptions(PageModel $rootPage): array
 	{
 		$options = array();
 
 		foreach ($this->arrOptions as $option)
 		{
-			$option['index'] = $index;
+			$option['index'] = $rootPage->id;
 
 			if (isset($option['value']))
 			{
+				if ($this->isSelected($option))
+				{
+					$option['label'] = sprintf(
+						'%s <span style="color:#999;padding-left:3px">[%s]</span>',
+						$option['label'],
+						$rootPage->title,
+					);
+				}
+
 				$options[] = sprintf(
 					'<option value="%s"%s>%s</option>',
 					StringUtil::specialchars($option['value']),

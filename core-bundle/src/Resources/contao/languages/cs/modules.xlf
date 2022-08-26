@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Odkaz náhledu</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Spravovat odkazy náhledu pro frontend</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -418,9 +420,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Moduly závislé na kořenové stránce</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>Vytvoří moduly závislé na kořenové stránce</target>
       </trans-unit>
     </body>
   </file>

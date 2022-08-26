@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Voorbeeldlinks</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Beheer voorbeeldlinks voor de front-end.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -393,9 +395,11 @@
       </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
+        <target>Custom template</target>
       </trans-unit>
       <trans-unit id="FMD.template.1">
         <source>Generates a module to insert a custom template.</source>
+        <target>Genereert een module om een aangepaste template in te voegen.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
@@ -415,9 +419,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
+        <target>Root pagina-afhankelijke modules</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>Genereert verschillende modules, afhankelijk van de root pagina</target>
       </trans-unit>
     </body>
   </file>

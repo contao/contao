@@ -16,17 +16,15 @@ use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
-use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
 use Contao\GdImage;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
-use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
 final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
     protected function deprecationProvider(): array
     {
-        $deprecations = [
+        return [
             GdImage::class => ['%sUsing the "Contao\GdImage" class has been deprecated %s.'],
             PaletteNotFoundException::class => ['%sUsing the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
             PalettePositionException::class => ['%sUsing the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
@@ -38,11 +36,5 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface" interface is deprecated%s',
             ],
         ];
-
-        if (class_exists(LegacyLogoutHandlerListener::class)) {
-            $deprecations[LogoutHandler::class] = ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'];
-        }
-
-        return $deprecations;
     }
 }

@@ -3,15 +3,15 @@
     <body>
       <trans-unit id="ERR.subscribed">
         <source>You are subscribed to the selected channels already.</source>
-        <target>Seçilen kanallara zaten abonesiniz.</target>
+        <target>Seçilmiş kanallara zaten abonesiniz.</target>
       </trans-unit>
       <trans-unit id="ERR.unsubscribed">
         <source>You are not subscribed to the selected channels.</source>
-        <target>Seçilen kanallara abone değilsiniz.</target>
+        <target>Seçilmiş kanallara abone değilsiniz.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>Etkinleştirme bağlantısı geçersiz yada süresi geçmiş.</target>
+        <target>Etkinleştirme bağlantısı geçersiz ya da süresi geçmiş.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_confirm">
         <source>Thank you for your subscription. You will receive a confirmation e-mail.</source>
-        <target>Abone olduğunuz için teşekkürler. E-postanıza bir onay gönderildi.</target>
+        <target>Abone olduğunuz için teşekkürler. Size bir onay e-postası gönderildi.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_activate">
         <source>Your subscription has been activated.</source>
@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_overview">
         <source>Back to the newsletter overview</source>
+        <target>Haber bülteni özertine geri dön</target>
       </trans-unit>
     </body>
   </file>

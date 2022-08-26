@@ -24,6 +24,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class UnlockCommand extends Command
 {
+    protected static $defaultName = 'contao:install:unlock';
+    protected static $defaultDescription = 'Unlocks the install tool.';
+
     private string $lockFile;
 
     public function __construct(string $lockFile)
@@ -31,14 +34,6 @@ class UnlockCommand extends Command
         $this->lockFile = $lockFile;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('contao:install:unlock')
-            ->setDescription('Unlocks the install tool.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

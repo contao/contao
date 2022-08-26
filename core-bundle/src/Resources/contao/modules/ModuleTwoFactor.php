@@ -19,8 +19,6 @@ use Symfony\Component\Security\Core\Security;
 
 /**
  * Back end module "two factor".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleTwoFactor extends BackendModule
 {

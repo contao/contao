@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "teaser".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentTeaser extends ContentElement
 {
@@ -79,9 +77,7 @@ class ContentTeaser extends ContentElement
 		$link .= $objArticle->alias ?: $objArticle->id;
 		$this->Template->href = $this->objParent->getFrontendUrl($link);
 
-		// Clean the RTE output
-		$this->Template->text = StringUtil::toHtml5($objArticle->teaser);
-
+		$this->Template->text = $objArticle->teaser;
 		$this->Template->headline = $objArticle->title;
 		$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];

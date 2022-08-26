@@ -12,11 +12,10 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Nyholm\Psr7\Uri;
 
 /**
  * Class Comments
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Comments extends Frontend
 {
@@ -101,7 +100,7 @@ class Comments extends Frontend
 				$objPartial->setData($objComments->row());
 
 				// Clean the RTE output
-				$objPartial->comment = StringUtil::toHtml5($objComments->comment);
+				$objPartial->comment = $objComments->comment;
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
@@ -120,9 +119,6 @@ class Comments extends Frontend
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
 					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
-
-					// Clean the RTE output
-					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
 				$arrComments[] = $objPartial->parse();
@@ -552,6 +548,9 @@ class Comments extends Frontend
 
 		$time = time();
 
+		// Ensure that the URL only contains ASCII characters (see #4708)
+		$request = (string) (new Uri(Environment::get('request')));
+
 		// Prepare the record
 		$arrSet = array
 		(
@@ -560,7 +559,7 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => Environment::get('request'),
+			'url'          => $request,
 			'addedOn'      => $time,
 			'active'       => '',
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
@@ -570,7 +569,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . $request;
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');

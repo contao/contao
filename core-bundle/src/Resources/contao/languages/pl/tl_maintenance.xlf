@@ -79,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>Wyczyść cache podglądu</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Usuwa automatycznie generowane obrazki podglądu i usuwa wspólną pamięć podręczną, więc nie ma żadnych łączy do usuniętych zasobów. </target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -112,8 +114,8 @@
         <target>Odtwórz pliki XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Odtwarza pliki XML (mapy stron i kanały), a następnie usuwa udostępnioną pamięć podręczną, więc nie ma żadnych łączy do usuniętych zasobów.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odtwarza pliki XML w folderze &lt;code&gt;shared&lt;/code&gt;, a następnie usuwa współdzieloną pamięć podręczną, dzięki czemu nie ma żadnych łączy do usuniętych zasobów.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -151,12 +153,16 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Robot obecnie działa. Poczekaj, aż zakończy się, aby zobaczyć wyniki.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Pobierz dziennik debugowania</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>Dziennik debugowania</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Jeśli wystąpiły błędy lub strony zostały pominięte, sprawdź dziennik debugowania, aby uzyskać więcej informacji.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
         <target>Pobierz dziennik</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">

@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.1">
         <source>Conditional comments allow you to create Internet Explorer specific style sheets (e.g. &lt;em&gt;if lt IE 9&lt;/em&gt;).</source>
-        <target>Conditional Comments ermöglichen die Erstellung Internet Explorer-spezifischer Stylesheets (z.B. &lt;em&gt;if lt IE 9&lt;/em&gt;).</target>
+        <target>Conditional Comments ermöglichen die Erstellung Internet Explorer-spezifischer Stylesheets (z. B. &lt;em&gt;if lt IE 9&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>Hier können Sie den Medientyp mit Hilfe eines Media-Querys wie z.B. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; festlegen. Die oben ausgewählten Medientypen werden dadurch überschrieben.</target>
+        <target>Hier können Sie den Medientyp mit Hilfe eines Media-Querys wie z. B. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; festlegen. Die oben ausgewählten Medientypen werden dadurch überschrieben.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.1">
         <source>Here you can define global variables for the style sheet (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Hier können Sie globale Variablen für das Stylesheet definieren (z.B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
+        <target>Hier können Sie globale Variablen für das Stylesheet definieren (z. B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.0">
         <source>Source files</source>

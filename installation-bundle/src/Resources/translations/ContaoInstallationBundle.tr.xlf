@@ -39,11 +39,11 @@
       </trans-unit>
       <trans-unit id="10" resname="set_password_hint">
         <source>Please enter a password to prevent unauthorized access.</source>
-        <target>Yetkisiz oturum açmayı engellemek için bir parola yazın.</target>
+        <target>Yetkisiz erişimi engellemek için bir parola yazın.</target>
       </trans-unit>
       <trans-unit id="11" resname="password">
         <source>Password</source>
-        <target>Şifre</target>
+        <target>Parola</target>
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="19" resname="login">
         <source>Login</source>
-        <target>Giriş</target>
+        <target>Oturum aç</target>
       </trans-unit>
       <trans-unit id="20" resname="invalid_password">
         <source>Invalid password!</source>
-        <target>Geçersiz şifre!</target>
+        <target>Parola geçersiz!</target>
       </trans-unit>
       <trans-unit id="21" resname="database_connection">
         <source>Database connection</source>
@@ -107,15 +107,15 @@
       </trans-unit>
       <trans-unit id="27" resname="database_port">
         <source>Port number</source>
-        <target>Kapı numarası</target>
+        <target>Bağlantı noktası</target>
       </trans-unit>
       <trans-unit id="28" resname="database_user">
         <source>Username</source>
-        <target>Kullanıcı ismi</target>
+        <target>Kullanıcı adı</target>
       </trans-unit>
       <trans-unit id="29" resname="database_password">
         <source>Password</source>
-        <target>Şifre</target>
+        <target>Parola</target>
       </trans-unit>
       <trans-unit id="30" resname="database_name">
         <source>Database name</source>
@@ -130,11 +130,12 @@
         <target>Veritabanını güncelle</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Lütfen güncelleme yardımcısının yalnız &lt;code&gt;tl_&lt;/code&gt; ile başlayan tabloları işleyeceğini unutmayın.</target>
+        <source>Here you can update the database schema.</source>
+        <target>Buradan veri tabanı şemasını güncelleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
+        <target>Veritabanı güncel.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -166,34 +167,35 @@
       </trans-unit>
       <trans-unit id="42" resname="select_all">
         <source>Select all</source>
-        <target>Hepsini seç</target>
+        <target>Tümünü seç</target>
       </trans-unit>
       <trans-unit id="43" resname="template_import">
         <source>Import a template</source>
-        <target>Bir şablon yükle</target>
+        <target>İçe bir tema aktar</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
+        <target>Buradan &lt;code&gt;templates&lt;/code&gt; klasöründeki bir &lt;code&gt;.sql&lt;/code&gt; dosyasını içe aktarabilirsiniz. Var olan tüm veriler silinir! Yalnızca bir temayı içe aktarmak istiyorsanız, yönetim bölümündeki tema yönetimi bölümünü kullanın.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
-        <target>Yükleme işlemi tamamlanamadı! Veritabanınızın güncelliğini ve yüklemeye çalıştığınız şablon dosyasının kurulu Contao sürümünüzle uyumluluğunu kontrol edin.</target>
+        <target>İçe aktarma işlemi tamamlanamadı! Veritabanınızın güncel olduğunu ve içe aktarmaya çalıştığınız tema dosyasının kurulu Contao sürümünüzle uyumluluğu olduğunu denetleyin.</target>
       </trans-unit>
       <trans-unit id="46" resname="import_empty_source">
         <source>Please choose a template file!</source>
-        <target>Lütfen bir şablon dosyası seçin!</target>
+        <target>Lütfen bir tema dosyası seçin!</target>
       </trans-unit>
       <trans-unit id="47" resname="import_data_will_be_deleted">
         <source>Any existing data will be deleted!</source>
-        <target>Tüm varolan veriler silinecektir!</target>
+        <target>Var olan tüm veriler silinecek!</target>
       </trans-unit>
       <trans-unit id="48" resname="imported_on">
         <source>Template imported on %s.</source>
-        <target>Şablon %s yüklendi.</target>
+        <target>Tema %s içine aktarıldı.</target>
       </trans-unit>
       <trans-unit id="49" resname="templates">
         <source>Templates</source>
-        <target>Şablonlar</target>
+        <target>Temalar</target>
       </trans-unit>
       <trans-unit id="50" resname="do_not_truncate">
         <source>Do not truncate the tables</source>
@@ -201,27 +203,27 @@
       </trans-unit>
       <trans-unit id="51" resname="import_confirm">
         <source>Any existing data will be deleted! Do you really want to continue?</source>
-        <target>Tüm varolan veriler silinecek! Devam etmek istediğinize emin misiniz?</target>
+        <target>Var olan tüm veriler silinecek! İlerlemek istediğinize emin misiniz?</target>
       </trans-unit>
       <trans-unit id="52" resname="template_save">
         <source>Import template</source>
-        <target>Şablon yükle</target>
+        <target>Temayı içe aktar</target>
       </trans-unit>
       <trans-unit id="53" resname="admin_create">
         <source>Create an admin user</source>
-        <target>Yönetim kullanıcısı oluştur</target>
+        <target>Bir yönetici kullanıcı ekle</target>
       </trans-unit>
       <trans-unit id="54" resname="admin_create_explain">
         <source>Here you can create an admin user to log into the Contao back end.</source>
-        <target>Burada Contao arka ucuna giriş yapabilecek bir yönetici kullanıcı oluşturabilirsiniz.</target>
+        <target>Buradan Contao yönetim bölümünde oturum açabilrecek bir yönetici kullanıcı ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="55" resname="admin_confirm">
         <source>An admin user has been created.</source>
-        <target>Yönetim kullanıcısı oluşturuldu.</target>
+        <target>Yönetici kullanıcı eklendi.</target>
       </trans-unit>
       <trans-unit id="56" resname="admin_username">
         <source>Username</source>
-        <target>Kullanıcı ismi</target>
+        <target>Kullanıcı adı</target>
       </trans-unit>
       <trans-unit id="57" resname="admin_name">
         <source>Name</source>
@@ -229,15 +231,15 @@
       </trans-unit>
       <trans-unit id="58" resname="admin_email">
         <source>E-mail</source>
-        <target>E-Posta</target>
+        <target>E-posta</target>
       </trans-unit>
       <trans-unit id="59" resname="admin_save">
         <source>Create admin user</source>
-        <target>Yönetim kullanıcısı oluştur</target>
+        <target>Yönetici kullanıcı ekle</target>
       </trans-unit>
       <trans-unit id="60" resname="admin_error_extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
-        <target>Güvenlik nedeniyle şu karakterler burada kullanılamaz: #()/&lt;=&gt; </target>
+        <target>Güvenlik nedeniyle burada şu karakterler kullanılamaz: #&lt;&gt;()/= </target>
       </trans-unit>
       <trans-unit id="61" resname="admin_error_no_space">
         <source>The username must not contain any whitespace characters!</source>
@@ -249,15 +251,15 @@
       </trans-unit>
       <trans-unit id="63" resname="admin_error_password_match">
         <source>The passwords did not match!</source>
-        <target>Şifreler eşleşmedi!</target>
+        <target>Parola ile onayı aynı değil!</target>
       </trans-unit>
       <trans-unit id="64" resname="admin_error_password_user">
         <source>Your username and password must not be the same!</source>
-        <target>Kullanıcı ismi ve şifre aynı olmamalı!</target>
+        <target>Kullanıcı adı ile parola aynı olmamalıdır!</target>
       </trans-unit>
       <trans-unit id="65" resname="admin_error">
         <source>Please fill in all fields to create an admin user!</source>
-        <target>Lütfen yönetim kullanıcısı oluşturmak için tüm alanları doldurun!</target>
+        <target>Yönetici kullanıcı eklemek için lütfen tüm alanları doldurun!</target>
       </trans-unit>
       <trans-unit id="66" resname="congratulations">
         <source>Congratulations!</source>
@@ -265,7 +267,7 @@
       </trans-unit>
       <trans-unit id="67" resname="congratulations_explain">
         <source>You have successfully installed Contao.</source>
-        <target>Contao'yu başarıyla yüklediniz.</target>
+        <target>Contao kurulumunu tamamladınız.</target>
       </trans-unit>
       <trans-unit id="68" resname="installation_complete">
         <source>Installation complete</source>
@@ -273,11 +275,11 @@
       </trans-unit>
       <trans-unit id="69" resname="installation_complete_explain">
         <source>Now please go to the Contao back end and check the system settings.</source>
-        <target>Lütfen şimdi Contao arka ucuna giriş yaparak sistem ayarlarını kontrol ediniz.</target>
+        <target>Şimdi lütfen Contao yönetim bölümünde oturum açarak sistem ayarlarını denetleyin.</target>
       </trans-unit>
       <trans-unit id="70" resname="back_end">
         <source>Contao back end</source>
-        <target>Contao arka ucu</target>
+        <target>Contao yönetim bölümü</target>
       </trans-unit>
       <trans-unit id="71" resname="old_database">
         <source>The database is too old!</source>
@@ -285,7 +287,7 @@
       </trans-unit>
       <trans-unit id="72" resname="old_database_explanation">
         <source>You need at least Contao 3.2 to upgrade to Contao 4.</source>
-        <target>Contao 4 sürümüne en az Contao 3.2 sürümünden güncellenebilir.</target>
+        <target>Contao 4 sürümüne güncelleme en az Contao 3.2 sürümünden yapılabilir.</target>
       </trans-unit>
       <trans-unit id="73" resname="console_explanation">
         <source>A post installation task could not be completed!</source>
@@ -305,58 +307,59 @@
       </trans-unit>
       <trans-unit id="77" resname="unsupported_version_explain">
         <source>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</source>
-        <target>Contao en az MySQL 5.1.0 gerektirir, ama sizin %s versiyonunuz var. Lütfen veritabanı versiyonunuzu güncelleyin.</target>
+        <target>Contao için en az MySQL 5.1.0 sürümü gereklidir, ancak kurulu sürüm %s. Lütfen veritabanı sürümünüzü güncelleyin.</target>
       </trans-unit>
       <trans-unit id="78" resname="unsupported_collation">
         <source>The configured collation is not supported!</source>
-        <target>Konfigüre olan karşılaştırma desteklenmiyor.</target>
+        <target>Yapılandırılmış karşılaştırma desteklenmiyor.</target>
       </trans-unit>
       <trans-unit id="79" resname="unsupported_collation_explain">
         <source>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Konfigüre olmuş tanımlama&lt;code&gt;%s&lt;/code&gt; sunucunuzda mevcut değil. Lütfen kurun (önerilir) veya &lt;code&gt;config/config.yml&lt;/code&gt; dosyasına farklı bir karakter kümesi ve karşılaştırma ile yapılandırın.</target>
+        <target>Yapılandırılmış &lt;code&gt;%s&lt;/code&gt; karşılaştırması sunucunuzda kullanılamıyor. Lütfen bu karşılaştırmayı kurun (önerilir) ya da &lt;code&gt;config/config.yml&lt;/code&gt; dosyasında farklı bir karakter kümesi ile karşılaştırma yapılandırması ayarlayın.</target>
       </trans-unit>
       <trans-unit id="80" resname="unsupported_engine">
         <source>The configured database engine is not supported!</source>
-        <target>Konfigüre olan veritabanı motoru desteklenmiyor!</target>
+        <target>Yapılandırılmış veritabanı işleyici desteklenmiyor!</target>
       </trans-unit>
       <trans-unit id="81" resname="unsupported_engine_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Konfigüre olmuş veritabanı motoru &lt;code&gt;%s&lt;/code&gt; sunucunuzda mevcut değil. Lütfen kurun (önerilir) veya &lt;code&gt;config/config.yml&lt;/code&gt; dosyasına farklı bir veritabanı motoru yapılandırın.</target>
+        <target>Yapılandırılmış &lt;code&gt;%s&lt;/code&gt; veritabanı işleyici sunucunuzda kullanılamıyor. Lütfen bu işleyiciyi kurun (önerilir) ya da &lt;code&gt;config/config.yml&lt;/code&gt; dosyasında farklı bir veritabanı işleyici yapılandırması ayarlayın.</target>
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
-        <target>Geçersiz veritabanı motoru ve tanımlama kombinasyonu!</target>
+        <target>Veritabanı işleyici ile karşılaştırma kombinasyonu geçersiz!</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Konfigüre edilmiş veritabanı motoru &lt;code&gt;%s&lt;/code&gt; utf8mb4 desteklemiyor. Lütfen onun yerine InnoDB kullanın (önerilir) ya da farklı karakter ve karşılaştırma ayarlarını &lt;code&gt;config/config.yml&lt;/code&gt; dosyasına girin.</target>
+        <target>Yapılandırılmış &lt;code&gt;%s&lt;/code&gt; veritabanı işleyici utf8mb4 desteklemiyor. Lütfen yerine InnoDB kullanın (önerilir) ya da &lt;code&gt;config/config.yml&lt;/code&gt; dosyasında farklı karakter kümesi ile karşılaştırma yapılandırması ayarlayın.</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
-        <target>innodb_large_prefix seçeneği mevcut değil!</target>
+        <target>innodb_large_prefix seçeneği etkinleştirilmemiş!</target>
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt; seçeneği sunucunuzda açık değil. Lütfen seçeneği açınız (önerilir) ya da farklı karakter seti ve karşılaştırma ayarlarını &lt;code&gt;config/config.yml&lt;/code&gt; dosyasına girin.</target>
+        <target>Sunucunuzda &lt;code&gt;innodb_large_prefix&lt;/code&gt; seçeneği etkinleştirilmemiş. Lütfen etkinleştirin (önerilir) ya da farklı &lt;code&gt;config/config.yml&lt;/code&gt; dosyasında farklı karakter kümesi ile karşılaştırma yapılandırması ayarlayın. </target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>
-        <target>InnoDB düzgün ayarlı değil!</target>
+        <target>InnoDB doğru şekilde yapılandırmamış!</target>
       </trans-unit>
       <trans-unit id="87" resname="innodb_additional_explain">
         <source>Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the Barracuda file format and the &lt;code&gt;innodb_file_per_table&lt;/code&gt; option.</source>
-        <target>Uzun önekleri MySQL sürümü 5.7.7 öncesinde ve MariaDB sürümü 10.2 öncesinde kullanabilmek için Barracuda dosya formatı ve &lt;code&gt;innodb_file_per_table&lt;/code&gt; seçeneğini gerektirir.</target>
+        <target>MySQL 5.7.7 sürümü ve MariaDB 10.2 sürümü öncesinde large prefixes özelliğini kullanabilmek için dosya biçiminin Barracuda olması ve &lt;code&gt;innodb_file_per_table&lt;/code&gt; seçeneğinin etkinleştirilmiş olması gerekir.</target>
       </trans-unit>
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
-        <target>&lt;code&gt;DATABASE_URL&lt;/code&gt; ortam değişkeninde bulunan bağlantı URL’i kullanılarak veritabanına bağlanılamadı.</target>
+        <target>&lt;code&gt;DATABASE_URL&lt;/code&gt; ortam değişkeninde bulunan bağlantı adresi ile veritabanı bağlantısı kurulamadı.</target>
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
-        <target>Veritabanı sunucunuz müsamahasız modda çalışmıyor!</target>
+        <target>Veritabanı sunucunuz katı (strict) kipte çalışmıyor!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>MySQL sunucusunu katı kip dışında çalıştırmak, verilerin bozulmasına veya budanmasına neden olabilir. Lütfen &lt;code&gt;my.cnf&lt;/code&gt; dosyasında katı kipi etkinleştirin ya da &lt;code&gt;config/config.yml&lt;/code&gt; dosyasında bağlantı ayarlarını şu şekilde yapılandırın:</target>
       </trans-unit>
     </body>
   </file>

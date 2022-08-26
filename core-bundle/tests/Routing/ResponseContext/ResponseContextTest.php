@@ -106,10 +106,10 @@ class ResponseContextTest extends TestCase
 
         // Using some anonymous classes here, so we don't have to create nonsense classes implementing nonsense
         // interfaces here. We took the BundleInterface as that is very unlikely to change.
-        $serviceA = new class() extends Bundle implements BundleInterface {
+        $serviceA = new class() extends Bundle {
         };
 
-        $serviceB = new class() extends Bundle implements BundleInterface {
+        $serviceB = new class() extends Bundle {
         };
 
         $serviceAClassname = \get_class($serviceA);

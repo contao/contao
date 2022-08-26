@@ -15,13 +15,13 @@ namespace Contao\CoreBundle\Tests\Search\Indexer;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
-class DefaultIndexerTest extends ContaoTestCase
+class DefaultIndexerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 

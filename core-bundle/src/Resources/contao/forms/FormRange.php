@@ -19,8 +19,6 @@ namespace Contao;
  * @property integer $min
  * @property integer $max
  * @property integer $step
- *
- * @author Fritz Michael Gschwantner <https://github.com/fritzmg>
  */
 class FormRange extends Widget
 {

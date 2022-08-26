@@ -14,8 +14,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * Maintenance module "purge data".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PurgeData extends Backend implements MaintenanceModuleInterface
 {

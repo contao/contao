@@ -81,6 +81,14 @@
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
         <target>Tutaj możesz wprowadzić meta dane pliku. Aby dodać język, utwórz punkt startowy serwisu w strukturze stron.</target>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>Pole &quot;%s&quot; dla języka &quot;%s&quot; musi być zgodne z &quot;%s&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>Pole &quot;%s&quot; dla języka &quot;%s&quot; musi zawierać prawidłowy URL.</target>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
         <target>Wyślij plik</target>
@@ -170,8 +178,8 @@
         <target>Synchronizacja zakończona.</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;Wynik:&lt;/strong&gt; %s dodano | %s zmodyfikowano | %s niezmieniono | %s przeniesiono | %s usunięto</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Wynik:&lt;/strong&gt; %s dodano | %s zmodyfikowano | %4$s przeniesiono | %5$s usunięto</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

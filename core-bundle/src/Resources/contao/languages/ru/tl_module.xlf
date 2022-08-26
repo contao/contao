@@ -110,8 +110,8 @@
         <target>Пользовательская метка</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Вы можете ввести пользовательскую метку для выпадающего меню.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Вы можете ввести пользовательскую метку для выпадающего меню или обзорной ссылки.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -511,9 +511,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Выберите модуль для каждой корневой страницы.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Выберите модуль для &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

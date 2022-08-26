@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Stran z naslovom URL &quot;%s&quot; že obstaja!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Ta pripona URL bo povzročila podvajanje naslovov URL (npr. %s)!</target>
@@ -349,6 +352,12 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Pot predloge &quot;%s&quot; ne sme vsebovati naslednjih znakov: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Seštejte %d in %d.</target>
@@ -372,6 +381,10 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
         <target>Generira naslov (h1 - h6).</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Razno</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -447,9 +460,11 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a Markdown text.</source>
+        <target>Ustvari kodo HTML iz besedila Markdown.</target>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
+        <target>Predloga po meri</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
@@ -782,9 +797,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.0">
         <source>503 Service unavailable</source>
+        <target>503 Storitev ni na voljo</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Ko je vrhnja stran v vzdrževalnem načinu, se za vse zahteve prikaže stran z napako 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1303,8 +1320,7 @@
         <target>Napis</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licenca</target>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1567,8 +1583,7 @@
         <target>Bližnjice na tipkovnici, na voljo v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Več o načinu pohitritve dela preberite članek o &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2667,6 +2682,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Notranji urejevalnik CSS je zastarel in bo odstranjen v Contao 5.0! Prosimo, razmislite o izvozu obstoječih slogovnih predlog in ponovni vključitvi kot zunanje datoteke v postavitvi strani.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2730,9 +2746,13 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>URL za deljenje</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2940,8 +2960,7 @@
         <target>%dURI naslovov vnešenih v indeks. %dni bilo vnešenih.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d naslovov URI ni bilo obdelanih (če pogrešate točno določenega, preverite dnevnik debug)</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

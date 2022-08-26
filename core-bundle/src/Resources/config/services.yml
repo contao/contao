@@ -7,10 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
-
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - [setContainer, ['@service_container']]
@@ -99,8 +95,8 @@ services:
         class: Contao\CoreBundle\Cron\Cron
         public: true
         arguments:
-            - '@contao.repository.cron_job'
-            - '@doctrine.orm.entity_manager'
+            - !service_closure '@contao.repository.cron_job'
+            - !service_closure '@doctrine.orm.entity_manager'
             - '@?logger'
 
     contao.cron.legacy:
@@ -114,6 +110,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         public: true
@@ -124,6 +125,8 @@ services:
             - '@contao.csrf.token_storage'
             - ~
             - '%contao.csrf_token_name%'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
@@ -155,7 +158,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
-            - ~
+            - '@contao.filesystem.virtual.backups'
             - ~
             - '@contao.doctrine.backup.retention_policy'
 
@@ -173,6 +176,11 @@ services:
             - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
             - '@database_connection'
 
+    contao.doctrine.schema.mysql_innodb_row_size_calculator:
+        class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
+        arguments:
+            - '@database_connection'
+
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
         arguments:
@@ -186,11 +194,21 @@ services:
 
     contao.filesystem.dbafs_manager:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
-            - ~
+            - !tagged_iterator contao.public_file_uri_provider
+
+    contao.filesystem.public_uri.symlinked_local_files_provider:
+        class: Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider
+        arguments:
+            - '@contao.filesystem.adapter.files'
+            - '%contao.upload_path%'
+            - '@request_stack'
+        tags:
+            - { name: contao.public_file_uri_provider }
 
     contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
@@ -235,6 +253,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@contao.security.token_checker'
             - '@filesystem'
+            - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
             - '%contao.legacy_routing%'
@@ -948,6 +967,7 @@ services:
 
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
         arguments:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'
@@ -963,6 +983,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.template_locator'
             - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }
@@ -1007,10 +1028,14 @@ services:
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
+        alias: contao.csrf.token_manager
+        public: true # backwards compatibility
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio:
         alias: contao.image.studio
         public: true # backwards compatibility
@@ -1031,6 +1056,9 @@ services:
     Contao\CoreBundle\Routing\Page\PageRegistry:
         alias: contao.routing.page_registry
         public: true # backwards compatibility
+    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
+        alias: contao.routing.response_context_accessor
+        public: true  # backwards compatibility
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
@@ -1038,6 +1066,7 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
 
     # Backwards compatibility
     contao.cache.clear_internal:
@@ -1104,15 +1133,12 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.cron" instead.
 
-    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
-        alias: contao.csrf.token_manager
-        public: true
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface:
+        alias: contao.framework
         deprecated:
             package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.csrf.token_manager" instead.
-
-    Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.framework" instead.
 
     Contao\CoreBundle\Image\Studio\FigureRenderer:
         alias: contao.image.studio.figure_renderer
@@ -1121,14 +1147,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio.figure_renderer" instead.
-
-    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
-        alias: contao.routing.response_context_accessor
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.response_context_accessor" instead.
 
     Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
         alias: contao.routing.response_context_factory
@@ -1167,13 +1185,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.loader.template_locator" instead.
-
-    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
-        alias: contao.twig.filesystem_loader
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.filesystem_loader" instead.
 
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
         alias: contao.twig.filesystem_loader_warmer

@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\Image;
 use Contao\Input;
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_faq'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
@@ -224,8 +225,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_faq_category extends Backend
 {

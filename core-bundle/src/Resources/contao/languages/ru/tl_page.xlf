@@ -190,8 +190,8 @@
         <target>Пользовательский URL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Вы можете установить собственный канонический URL.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Вы можете установить собственный канонический URL наприм. https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -315,9 +315,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Макет подстраницы</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Вы можете выбрать другой макет для подстраниц.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -581,6 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Наследовать макет страницы</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -645,6 +648,10 @@
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
         <target>Следующие страницы имеют аналогичный алиас, который может конфликтовать с этой страницей. Если URL-адрес разрешен неправильно, попробуйте изменить приоритет маршрутов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Включите канонические URL-адреса в корневой странице веб-сайта, чтобы включить эту конфигурацию.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

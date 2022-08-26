@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.vars.1">
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Hier können Sie globale Variablen für die Stylesheets des Theme definieren (z.B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
+        <target>Hier können Sie globale Variablen für die Stylesheets des Theme definieren (z. B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>

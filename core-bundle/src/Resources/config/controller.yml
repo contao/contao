@@ -4,10 +4,12 @@ services:
 
     _instanceof:
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            tags:
-                - { name: container.service_subscriber, id: contao.csrf.token_manager }
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+        Contao\CoreBundle\Controller\AbstractController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
@@ -39,6 +41,7 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '@translator'
             - '%contao.backend.attributes%'
             - '%contao.backend.badge_title%'
         tags:

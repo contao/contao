@@ -34,9 +34,9 @@ use Twig\Source;
  *     cache keys/source contexts if a matching variant exists in the current
  *     theme's namespace.
  *
- *  3) When adding paths, there is an option to 'track templates'. If enabled
+ *  3) When adding paths, there is an option to "track templates". If enabled
  *     templates will be located and kept in a hierarchy. This allows us to
- *     support inheritance chains by dynamically rewriting 'extends'. Similar
+ *     support inheritance chains by dynamically rewriting "extends". Similar
  *     to the directory paths, the hierarchy is also cacheable and gets
  *     automatically restored at construct time.
  *
@@ -101,7 +101,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function addPath(string $path, string $namespace = 'Contao', bool $trackTemplates = false): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
-            throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
+            throw new LoaderError(sprintf('Tried to register an invalid Contao namespace "%s".', $namespace));
         }
 
         try {
@@ -127,7 +127,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function prependPath(string $path, string $namespace = 'Contao'): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
-            throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
+            throw new LoaderError(sprintf('Tried to register an invalid Contao namespace "%s".', $namespace));
         }
 
         try {
@@ -181,7 +181,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        return parent::getCacheKey($templateName);
+        // We prefix the cache key to make sure templates from the default
+        // Symfony loader won't be reused. Otherwise, we cannot reliably
+        // differentiate when to apply our input encoding tolerant escaper
+        // filters (see #4623).
+        return 'c'.parent::getCacheKey($templateName);
     }
 
     /**

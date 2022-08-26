@@ -18,8 +18,6 @@ use Contao\Model\Collection;
  *
  * @property string $news_template
  * @property mixed  $news_metaFields
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ModuleNews extends Module
 {
@@ -101,7 +99,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
+			$objTemplate->teaser = $objArticle->teaser;
 			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
 		}
 

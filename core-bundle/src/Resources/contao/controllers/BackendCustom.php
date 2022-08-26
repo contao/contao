@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Back end custom controller.
- *
- * @author Jim Schmid <https://github.com/sheeep>
  */
 class BackendCustom extends BackendMain
 {

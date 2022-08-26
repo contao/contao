@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\AutomatorCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,6 +23,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class AutomatorCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testHandlesAnInvalidSelection(): void
     {
         $command = $this->getCommand();

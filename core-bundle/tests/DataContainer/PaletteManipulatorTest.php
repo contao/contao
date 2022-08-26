@@ -15,10 +15,17 @@ namespace Contao\CoreBundle\Tests\DataContainer;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testPrependsAFieldToAPalette(): void
     {
         $pm = PaletteManipulator::create()
@@ -169,28 +176,19 @@ class PaletteManipulatorTest extends TestCase
             ->addField('name', 'name_legend', 'append')
         ;
 
-        $this->assertSame(
-            '{name_legend},name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('{name_legend},name', $pm->applyToString(''));
 
         $pm = PaletteManipulator::create()
             ->addField('name', 'name_legend', 'append')
         ;
 
-        $this->assertSame(
-            'name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('name', $pm->applyToString(''));
 
         $pm = PaletteManipulator::create()
             ->addField('name', 'name_legend', 'append', 'name_legend')
         ;
 
-        $this->assertSame(
-            '{name_legend},name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('{name_legend},name', $pm->applyToString(''));
     }
 
     public function testAddsAFieldToANamelessLegend(): void
@@ -296,10 +294,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', 'after', 'name_legend')
         ;
 
-        $this->assertSame(
-            '{name_legend},name,bar',
-            $pm->applyToString('{name_legend},name')
-        );
+        $this->assertSame('{name_legend},name,bar', $pm->applyToString('{name_legend},name'));
     }
 
     public function testCallsTheFallbackClosure(): void
@@ -403,15 +398,8 @@ class PaletteManipulatorTest extends TestCase
     {
         $pm = PaletteManipulator::create()->removeField(['foo', 'baz']);
 
-        $this->assertSame(
-            '',
-            $pm->applyToString('{foo_legend},baz;{config_legend},foo')
-        );
-
-        $this->assertSame(
-            '{foo_legend},bar',
-            $pm->applyToString('{foo_legend},bar,baz;{config_legend},foo')
-        );
+        $this->assertSame('', $pm->applyToString('{foo_legend},baz;{config_legend},foo'));
+        $this->assertSame('{foo_legend},bar', $pm->applyToString('{foo_legend},bar,baz;{config_legend},foo'));
     }
 
     public function testRemovesAnExistingFieldFromALegend(): void
@@ -444,10 +432,7 @@ class PaletteManipulatorTest extends TestCase
         $pm = PaletteManipulator::create()->removeField(['firstname']);
         $pm->applyToSubpalette('name', 'tl_test');
 
-        $this->assertSame(
-            'lastname',
-            $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']
-        );
+        $this->assertSame('lastname', $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
     }
 
     public function testRemovesFieldsBeforeAddingFields(): void
@@ -460,6 +445,56 @@ class PaletteManipulatorTest extends TestCase
         $this->assertSame(
             '{contact_legend},title,lastname',
             $pm->applyToString('{contact_legend},firstname,lastname')
+        );
+    }
+
+    public function testAddsLegendToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend', 'notexist_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz')
+        );
+    }
+
+    public function testAddsLegendToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz')
+        );
+    }
+
+    public function testAddsFieldToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo', 'notexist')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz')
+        );
+    }
+
+    public function testAddsFieldToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz')
         );
     }
 }

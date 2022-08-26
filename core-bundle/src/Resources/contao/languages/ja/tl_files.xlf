@@ -81,6 +81,14 @@
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
         <target>ファイルのメタデータを入力できます。言語を追加するには、サイト構造で合致するルートのページを作成してください。</target>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>言語&quot;%2$s&quot;の項目&quot;%1$s&quot;は&quot;%3$s&quot;に一致していなければなりません。</target>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>言語&quot;%2$s&quot;の項目&quot;%1$s&quot;は有効なURLを含んでいなければなりません。</target>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
         <target>ファイルをアップロード</target>
@@ -170,8 +178,8 @@
         <target>同期を完了しました</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;結果:&lt;/strong&gt; %s個を追加 | %s個を修正 | %s個は変更なし | %s個を移動 | %s個を削除</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;結果:&lt;/strong&gt; %s個を追加 | %s個を修正 | %4$s個を移動 | %5$s個を削除</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

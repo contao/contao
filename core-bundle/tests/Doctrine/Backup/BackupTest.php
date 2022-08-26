@@ -15,30 +15,15 @@ namespace Contao\CoreBundle\Tests\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class BackupTest extends ContaoTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        (new Filesystem())->dumpFile($this->getValidBackupPath(), 'foobar');
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        (new Filesystem())->remove($this->getValidBackupPath());
-    }
-
     public function testGetters(): void
     {
-        $backup = new Backup($this->getValidBackupPath());
+        $backup = new Backup('valid_backup_filename__20211101141254.sql');
+        $backup->setSize(6);
 
-        $this->assertSame($this->getValidBackupPath(), $backup->getFilepath());
+        $this->assertSame('valid_backup_filename__20211101141254.sql', $backup->getFilename());
         $this->assertSame('2021-11-01T14:12:54+00:00', $backup->getCreatedAt()->format(\DateTimeInterface::ATOM));
         $this->assertSame(6, $backup->getSize());
 
@@ -46,35 +31,31 @@ class BackupTest extends ContaoTestCase
             [
                 'createdAt' => '2021-11-01T14:12:54+00:00',
                 'size' => 6,
-                'path' => $this->getValidBackupPath(),
+                'name' => 'valid_backup_filename__20211101141254.sql',
             ],
             $backup->toArray()
         );
     }
 
-    public function testCreateNewAtPath(): void
+    public function testCreateNew(): void
     {
-        $backup = Backup::createNewAtPath($this->getTempDir());
-
-        $this->assertSame(0, $backup->getSize());
-
-        (new Filesystem())->remove($backup->getFilepath());
+        $this->assertSame(0, Backup::createNew()->getSize());
     }
 
     /**
      * @dataProvider invalidFileNameProvider
      */
-    public function testInvalidFileName(string $filepath): void
+    public function testInvalidFileName(string $filename): void
     {
         $this->expectException(BackupManagerException::class);
 
         $this->expectExceptionMessage(sprintf(
-            'The filepath "%s" does not match "%s"',
-            $filepath,
+            'The filename "%s" does not match "%s"',
+            $filename,
             Backup::VALID_BACKUP_NAME_REGEX
         ));
 
-        new Backup($filepath);
+        new Backup($filename);
     }
 
     public function invalidFileNameProvider(): \Generator
@@ -82,10 +63,6 @@ class BackupTest extends ContaoTestCase
         yield 'Invalid file extension' => ['foobar__20211101141254.gif'];
         yield 'Missing __' => ['foobar20211101141254.sql.gz'];
         yield 'Error in datetime' => ['foobar__2021110114125.sql.gz'];
-    }
-
-    private function getValidBackupPath(): string
-    {
-        return Path::join($this->getTempDir(), 'valid_backup_filename__20211101141254.sql');
+        yield 'Path' => ['directory/valid_backup_filename__20211101141254.sql'];
     }
 }

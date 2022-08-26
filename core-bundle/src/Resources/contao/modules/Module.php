@@ -80,8 +80,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $groups
  * @property string  $cssID
  * @property string  $hl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Module extends Frontend
 {
@@ -153,8 +151,8 @@ abstract class Module extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -374,8 +372,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -387,8 +383,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -462,16 +456,11 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
+		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
-		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
+		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objSubpage->description);
 
 		$arrRel = array();
-
-		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
-		{
-			$arrRel[] = 'nofollow';
-		}
 
 		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
@@ -486,6 +475,13 @@ abstract class Module extends Frontend
 		if (!empty($arrRel))
 		{
 			$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
+		}
+
+		// Tag the page
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_page.' . $objSubpage->id));
 		}
 
 		return $row;

@@ -18,8 +18,8 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class FrameworkAwareTraitTest extends TestCase
 {
-    use FrameworkAwareTrait;
     use ExpectDeprecationTrait;
+    use FrameworkAwareTrait;
 
     /**
      * @group legacy

@@ -248,7 +248,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -277,7 +277,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -321,14 +321,28 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
+        $connection = ConnectionFactory::create($parameters);
+
         $installTool = $this->container->get('contao_installation.install_tool');
-        $installTool->setConnection(ConnectionFactory::create($parameters));
+        $installTool->setConnection($connection);
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
             return $this->render('database.html.twig', array_merge(
                 $parameters,
                 ['database_error' => $this->trans('database_could_not_connect')]
             ));
+        }
+
+        $databaseVersion = null;
+
+        try {
+            $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
+        } catch (\Throwable $exception) {
+            // Ignore server version detection errors
+        }
+
+        if ($databaseVersion) {
+            $parameters['parameters']['database_version'] = $databaseVersion;
         }
 
         $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
@@ -418,7 +432,8 @@ class InstallationController implements ContainerAwareInterface
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 
-            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious());
+            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious()) {
+            }
 
             $this->context['import_error'] = $this->trans('import_exception')."\n".$rootException->getMessage();
 
@@ -511,14 +526,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $installTool->persistConfig('adminEmail', $email);
-
-        $installTool->persistAdminUser(
-            $username,
-            $name,
-            $email,
-            $password,
-            $request->getLocale()
-        );
+        $installTool->persistAdminUser($username, $name, $email, $password, $request->getLocale());
 
         return $this->getRedirectResponse();
     }

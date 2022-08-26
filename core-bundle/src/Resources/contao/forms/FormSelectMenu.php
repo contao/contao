@@ -19,8 +19,6 @@ namespace Contao;
  * @property array   $options
  * @property boolean $chosen
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to FormSelect in Contao 5.0
  */
 class FormSelectMenu extends Widget
@@ -193,7 +191,7 @@ class FormSelectMenu extends Widget
 		// Make sure there are no multiple options in single mode
 		elseif (\is_array($this->varValue))
 		{
-			$this->varValue = $this->varValue[0];
+			$this->varValue = $this->varValue[0] ?? null;
 		}
 
 		// Chosen

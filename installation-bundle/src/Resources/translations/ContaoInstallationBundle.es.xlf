@@ -130,11 +130,11 @@
         <target>Actualizar la base de datos</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Tenga en cuenta que el asistente de actualización sólo reconoce tablas que empiezan por &lt;code&gt; tl _ &lt;/ code&gt;.</target>
+        <source>Here you can update the database schema.</source>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
+        <target>La base de datos está actualizada. </target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -174,6 +174,7 @@
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
+        <target>Aquí puede importar un archivo &lt;code&gt;.sql&lt;/code&gt; desde el directorio de plantillas &lt;code&gt;templates&lt;/code&gt;. ¡Cualquier dato existente será eliminado! Si solo desea importar un tema, utilice el administrador de temas en el back-end de Contao. </target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>

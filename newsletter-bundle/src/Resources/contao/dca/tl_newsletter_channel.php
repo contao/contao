@@ -14,6 +14,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
@@ -26,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_newsletter', 'tl_newsletter_recipients'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
@@ -192,8 +193,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_newsletter_channel extends Backend
 {

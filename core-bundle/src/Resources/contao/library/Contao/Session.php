@@ -28,8 +28,6 @@ trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\Session" cla
  *     $session->set('foo', 'bar');
  *     echo $session->get('foo');
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  *             Use the session service instead.
  */

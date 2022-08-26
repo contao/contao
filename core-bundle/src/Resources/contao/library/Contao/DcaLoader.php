@@ -20,8 +20,6 @@ namespace Contao;
  *
  *     $dca = new DcaLoader('tl_user');
  *     $dca->load();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DcaLoader extends Controller
 {
@@ -67,7 +65,21 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
-		$this->loadDcaFiles($blnNoCache);
+		if (\func_num_args() > 0)
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s" with the $blnNoCache parameter has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+		}
+
+		try
+		{
+			$this->loadDcaFiles($blnNoCache);
+		}
+		catch (\Throwable $e)
+		{
+			unset(static::$arrLoaded['dcaFiles'][$this->strTable]);
+
+			throw $e;
+		}
 	}
 
 	/**
@@ -151,7 +163,7 @@ class DcaLoader extends Controller
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
-				if (isset($v['label']))
+				if (\array_key_exists('label', $v))
 				{
 					continue;
 				}
@@ -191,7 +203,7 @@ class DcaLoader extends Controller
 	 */
 	private function setDynamicPTable(): void
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']))
+		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']) || isset($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
 		{
 			return;
 		}

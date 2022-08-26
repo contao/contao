@@ -1,0 +1,175 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="pt">
+    <body>
+      <trans-unit id="tl_maintenance.cacheTables.0">
+        <source>Purge data</source>
+        <target>Apagar dados</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheTables.1">
+        <source>Please select the data you want to purge or rebuild.</source>
+        <target>Selecione os dados que pretende remover ou reconstruir.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.job">
+        <source>Job</source>
+        <target>Tarefa</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.description">
+        <source>Description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.clearCache">
+        <source>Purge data</source>
+        <target>Remover dados</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheCleared">
+        <source>The data has been purged</source>
+        <target>Dados removidos</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.updateHelp">
+        <source>Please enter your %s here.</source>
+        <target>Digite o seu %s aqui.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.0">
+        <source>Purge the search index</source>
+        <target>Limpar o índice de pesquisa</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.1">
+        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Truncata as tabelas &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; e &lt;code&gt;tl_search_term&lt;/code&gt;. Depois, é necessário reconstruir o índice de pesquisa (ver acima).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.0">
+        <source>Purge the undo table</source>
+        <target>Remove a tabela anterior em memória</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.1">
+        <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_undo&lt;/code&gt; a qual regista elementos removidos. Esta tarefa permanentemente remove esses registos de elementos.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.0">
+        <source>Purge the version table</source>
+        <target>Removea tabela de versões</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.1">
+        <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_version&lt;/code&gt; a qual contém versões anteriores de registos. Esta tarefa permanentemente remove esse conteúdo.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.0">
+        <source>Purge the system log</source>
+        <target>Limpar o log de sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.1">
+        <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Trunca a tabela &lt;code&gt;tl_log&lt;/code&gt; a qual guarda todos os logs de sistema. Esta tarefa permanentemente remove esses mesmos logs.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+        <target>Remove a lista de espera crawl</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Truncata a tabela &lt;code&gt;tl_crawl_queue&lt;/code&gt; armazena toda a informação da fila de processos de crawl.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.0">
+        <source>Purge the image cache</source>
+        <target>Limpar a cache de imagem</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.1">
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Remove as imagens geradas automaticamente e depois remove a cache partilhada, para que não existam links para recursos removidos.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+        <target>Purificar a cache de pré-visualização</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Remove as imagens de pré-visualização geradas automaticamente e depois limpa a cache partilhada, pelo que não existem ligações a recursos apagados.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.0">
+        <source>Purge the script cache</source>
+        <target>Limpar a cache de script</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.1">
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Remove ficheiros &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; automaticamente criados, recria as folhas de estilo internas e em seguida remove a cache partilhada.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.0">
+        <source>Purge the shared cache</source>
+        <target>Limpar cache partilhada</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.1">
+        <source>Removes the cached versions of the front end pages.</source>
+        <target>Remove versões em cache de páginas front end.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.0">
+        <source>Purge the temp folder</source>
+        <target>Limpa a pasta temporária</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.1">
+        <source>Removes the temporary files.</source>
+        <target>Remove ficheiros temporários.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.0">
+        <source>Recreate the XML files</source>
+        <target>Recriar ficheiros XML</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.1">
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Recria os ficheiros XML na pasta &lt;code&gt;partilhada&lt;/code&gt; e depois limpa a cache partilhada, pelo que não existem ligações a recursos eliminados.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.0">
+        <source>Recreate the symlinks</source>
+        <target>Recriar symlinks</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.1">
+        <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Recria os links simbólicos na pasta pública (raiz do documento).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+        <target>Crawler</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+        <target>Iniciar crawler</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+        <target>Funcionalidades ativadas</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>O crawler analisa todos os URLs que encontrar. Aqui pode decidir o que fazer com esses resultados.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+        <target>Membro Font End</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Iniciar sessão automaticamente num front end member para indexar páginas protegidas.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>O crawler está atualmente em processamento. Por favor aguarde que termine para verificar os resultados.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+        <target>Atualizar o índex de procura</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
+        <target>Procurar links inválidos</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

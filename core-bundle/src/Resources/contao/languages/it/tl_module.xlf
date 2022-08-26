@@ -110,8 +110,8 @@
         <target>Etichetta personalizzata</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Qui puoi inserire l'etichetta da usare per i &lt;em&gt;link rapidi&lt;/em&gt;</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Qui puoi introdurre un'etichetta personalizzata per il menu a tendina o il link di riepilogo.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Pagina panoramica</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Seleziona una pagina di panoramica per includere un collegamento nel modello.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -509,9 +511,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Seleziona un modulo per ogni pagina principale</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Scegliere un modulo per &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

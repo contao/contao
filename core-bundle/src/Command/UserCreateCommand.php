@@ -37,6 +37,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 class UserCreateCommand extends Command
 {
     protected static $defaultName = 'contao:user:create';
+    protected static $defaultDescription = 'Create a new Contao back end user.';
 
     private ContaoFramework $framework;
     private Connection $connection;
@@ -64,7 +65,6 @@ class UserCreateCommand extends Command
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Give admin permissions to the new user')
             ->addOption('group', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The groups to assign the user to')
             ->addOption('change-password', null, InputOption::VALUE_NONE, 'Require user to change the password on the first back end login')
-            ->setDescription('Create a new Contao back end user.')
         ;
     }
 
