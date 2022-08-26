@@ -585,7 +585,7 @@ class PageUrlListenerTest extends TestCase
             'foo',
             'foo',
             true,
-            true
+            true,
         ];
 
         yield 'in separate root with language prefix' => [
@@ -672,7 +672,7 @@ class PageUrlListenerTest extends TestCase
             'foo',
             'foo',
             false,
-            true
+            true,
         ];
 
         yield 'with separate url suffix' => [
@@ -1795,7 +1795,7 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
-     * @param PageRoute|int|false|null $route A page route, a number of calls to expect, false to throw parameters exception or null to never expect method to be called.
+     * @param PageRoute|int|false|null $route A page route, a number of calls to expect, false to throw parameters exception or null to never expect method to be called
      *
      * @return MockObject|RouterInterface
      */
