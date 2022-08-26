@@ -52,7 +52,7 @@ class GetDotEnvCommand extends Command
         $path = $this->projectDir.'/.env';
         $pathLocal = $path.'.local';
 
-        if (!file_exists($path) && !file_exists($pathLocal)) {
+        if (!file_exists($path)) {
             return 0;
         }
 
