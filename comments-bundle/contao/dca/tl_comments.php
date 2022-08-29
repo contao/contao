@@ -473,9 +473,9 @@ class tl_comments extends Backend
 	 */
 	public function sendNotifications($varValue)
 	{
-		if ($varValue)
+		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk(Input::get('id')));
+			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
 		}
 
 		return $varValue;

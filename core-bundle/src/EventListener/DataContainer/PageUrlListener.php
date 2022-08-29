@@ -240,6 +240,7 @@ class PageUrlListener
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
+                && $currentRoute->getHost() === $aliasRoute->getHost()
                 && 0 === ($currentRoute->getRequirements() <=> $aliasRoute->getRequirements())
             ) {
                 if ($throw) {

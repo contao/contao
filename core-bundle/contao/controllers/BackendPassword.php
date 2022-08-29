@@ -99,7 +99,7 @@ class BackendPassword extends Backend
 					}
 
 					$objUser = UserModel::findByPk($this->User->id);
-					$objUser->pwChange = '';
+					$objUser->pwChange = false;
 					$objUser->password = $passwordHasher->hash($pw);
 					$objUser->save();
 
