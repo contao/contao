@@ -16,40 +16,79 @@ use Contao\CoreBundle\Security\Authentication\AccessDecisionManager;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
-use Symfony\Bundle\SecurityBundle\Security\FirewallContext;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AccessDecisionManagerTest extends TestCase
 {
-    public function testUsesOriginalDecisionManagerIfNotContaoFirewall(): void
+    public function testUsesOriginalDecisionManagerOnWrongFirewallMap(): void
     {
         $accessDecisionManager = new AccessDecisionManager(
             $this->mockAccessDecisionManager(true),
             $this->mockAccessDecisionManager(false),
-            $this->mockFirewallContext('foobar')
+            new RequestStack(),
+            $this->createMock(FirewallMapInterface::class),
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    public function testUsesContaoDecisionManagerIfContaoBackendFirewall(): void
+    public function testUsesOriginalDecisionManagerIfNoRequestAvailable(): void
     {
         $accessDecisionManager = new AccessDecisionManager(
-            $this->mockAccessDecisionManager(false),
             $this->mockAccessDecisionManager(true),
-            $this->mockFirewallContext('contao_backend')
+            $this->mockAccessDecisionManager(false),
+            new RequestStack(),
+            $this->mockFirewallMap(null),
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    public function testUsesContaoDecisionManagerIfContaoFrontendFirewall(): void
+    public function testUsesOriginalDecisionManagerIfFirewallMapHasNoConfig(): void
     {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
+        $accessDecisionManager = new AccessDecisionManager(
+            $this->mockAccessDecisionManager(true),
+            $this->mockAccessDecisionManager(false),
+            $requestStack,
+            $this->mockFirewallMap(null),
+        );
+
+        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
+    }
+
+    public function testUsesContaoDecisionManagerIfContaoFrontendRequest(): void
+    {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
+
         $accessDecisionManager = new AccessDecisionManager(
             $this->mockAccessDecisionManager(false),
             $this->mockAccessDecisionManager(true),
-            $this->mockFirewallContext('contao_frontend')
+            $requestStack,
+            $this->mockFirewallMap('contao_frontend')
+        );
+
+        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
+    }
+
+    public function testUsesContaoDecisionManagerIfContaoBackendRequest(): void
+    {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
+
+        $accessDecisionManager = new AccessDecisionManager(
+            $this->mockAccessDecisionManager(false),
+            $this->mockAccessDecisionManager(true),
+            $requestStack,
+            $this->mockFirewallMap('contao_backend')
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
@@ -71,16 +110,27 @@ class AccessDecisionManagerTest extends TestCase
     }
 
     /**
-     * @return FirewallContext&MockObject
+     * @return FirewallMap&MockObject
      */
-    private function mockFirewallContext(string $name): FirewallContext
+    private function mockFirewallMap(?string $context): FirewallMap
     {
-        $context = $this->createMock(FirewallContext::class);
-        $context
-            ->method('getConfig')
-            ->willReturn(new FirewallConfig($name, ''))
+        $map = $this->createMock(FirewallMap::class);
+
+        if (null === $context) {
+            $map
+                ->method('getFirewallConfig')
+                ->willReturn(null)
+            ;
+
+            return $map;
+        }
+
+        $map
+            ->expects($this->once())
+            ->method('getFirewallConfig')
+            ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
         ;
 
-        return $context;
+        return $map;
     }
 }
