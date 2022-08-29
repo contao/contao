@@ -10,6 +10,9 @@ on:
     schedule:
         - cron: 0 13 * * MON,THU
 
+permissions:
+  contents: read
+
 jobs:
     coverage:
         name: Coverage
