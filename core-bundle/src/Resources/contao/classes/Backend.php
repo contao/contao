@@ -692,7 +692,7 @@ abstract class Backend extends Controller
 		$mode = Input::get('mode');
 
 		// For these actions the id parameter refers to the parent record
-		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		if (($act === 'paste' && $mode !== 'copy' && $mode !== 'cut') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
 		{
 			return $id;
 		}
