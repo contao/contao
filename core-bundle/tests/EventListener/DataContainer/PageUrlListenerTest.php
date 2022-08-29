@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
@@ -123,7 +124,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testChecksForDuplicatesWhenGeneratingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testChecksForDuplicatesWhenGeneratingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
         $currentRoute = new PageRoute($currentPage);
@@ -193,7 +194,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->mockConnection(),
             $pageRegistry,
-            $this->mockRouter($currentRoute),
+            $this->mockRouter($throwParametersException ? false : $currentRoute),
             new UrlMatcher()
         );
 
@@ -203,7 +204,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testChecksForDuplicatesWhenValidatingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testChecksForDuplicatesWhenValidatingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
         $currentRoute = new PageRoute($currentPage);
@@ -267,7 +268,7 @@ class PageUrlListenerTest extends TestCase
             $translator,
             $this->mockConnection(),
             $pageRegistry,
-            $this->mockRouter($currentRoute),
+            $this->mockRouter($throwParametersException ? false : $currentRoute),
             new UrlMatcher()
         );
 
@@ -556,6 +557,37 @@ class PageUrlListenerTest extends TestCase
             true,
         ];
 
+        yield 'in separate root without language prefix and requireItem' => [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 1,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+                'rootLanguage' => 'en',
+                'requireItem' => true,
+            ],
+            [[
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+                'rootLanguage' => 'en',
+                'requireItem' => true,
+            ]],
+            'foo',
+            'foo',
+            true,
+            true,
+        ];
+
         yield 'in separate root with language prefix' => [
             [
                 'id' => 1,
@@ -610,6 +642,37 @@ class PageUrlListenerTest extends TestCase
             'foo',
             'foo',
             false,
+        ];
+
+        yield 'in separate domain with requireItem' => [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 1,
+                'useFolderUrl' => false,
+                'domain' => '',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+                'rootLanguage' => 'en',
+                'requireItem' => true,
+            ],
+            [[
+                'id' => 2,
+                'title' => 'Foo',
+                'alias' => 'foo',
+                'rootId' => 2,
+                'useFolderUrl' => false,
+                'domain' => 'example.com',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+                'rootLanguage' => 'en',
+                'requireItem' => true,
+            ]],
+            'foo',
+            'foo',
+            false,
+            true,
         ];
 
         yield 'with separate url suffix' => [
@@ -1732,7 +1795,7 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
-     * @param PageRoute|int|null $route
+     * @param PageRoute|int|false|null $route A page route, a number of calls to expect, false to throw parameters exception or null to never expect method to be called
      *
      * @return MockObject|RouterInterface
      */
@@ -1744,6 +1807,12 @@ class PageUrlListenerTest extends TestCase
             $router
                 ->expects($this->never())
                 ->method('generate')
+            ;
+        } elseif (false === $route) {
+            $router
+                ->expects($this->atLeastOnce())
+                ->method('generate')
+                ->willThrowException($this->createMock(RouteParametersException::class))
             ;
         } elseif ($route instanceof PageRoute) {
             $path = '/'.$route->getPageModel()->alias;
