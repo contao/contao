@@ -121,15 +121,13 @@ class AccessDecisionManagerTest extends TestCase
                 ->method('getFirewallConfig')
                 ->willReturn(null)
             ;
-
-            return $map;
+        } else {
+            $map
+                ->expects($this->once())
+                ->method('getFirewallConfig')
+                ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
+            ;
         }
-
-        $map
-            ->expects($this->once())
-            ->method('getFirewallConfig')
-            ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
-        ;
 
         return $map;
     }
