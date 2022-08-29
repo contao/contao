@@ -146,7 +146,7 @@ class FormPassword extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		$this->confirmLabel = sprintf($GLOBALS['TL_LANG']['MSC']['confirmation'], $this->strLabel);
+		$this->confirmLabel = sprintf($GLOBALS['TL_LANG']['MSC']['confirm'][0], $this->strLabel);
 
 		return parent::parse($arrAttributes);
 	}

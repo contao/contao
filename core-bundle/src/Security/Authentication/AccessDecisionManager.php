@@ -12,29 +12,51 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
+    /**
+     * @internal Do not inherit from this class; decorate the "security.access.decision_manager" service instead
+     */
     public function __construct(
         private AccessDecisionManagerInterface $inner,
         private AccessDecisionManagerInterface $contaoAccessDecisionManager,
-        private ScopeMatcher $scopeMatcher,
         private RequestStack $requestStack,
+        private FirewallMapInterface $firewallMap,
     ) {
     }
 
     public function decide(TokenInterface $token, array $attributes, $object = null): bool
     {
-        $request = $this->requestStack->getMainRequest();
-
-        if (null === $request || !$this->scopeMatcher->isContaoRequest($request)) {
-            return $this->inner->decide($token, $attributes, $object);
+        if ($this->isContaoContext()) {
+            return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
         }
 
-        return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
+        return $this->inner->decide($token, $attributes, $object);
+    }
+
+    private function isContaoContext(): bool
+    {
+        $request = $this->requestStack->getMainRequest();
+
+        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+            return false;
+        }
+
+        $config = $this->firewallMap->getFirewallConfig($request);
+
+        if (!$config instanceof FirewallConfig) {
+            return false;
+        }
+
+        $context = $config->getContext();
+
+        return 'contao_frontend' === $context || 'contao_backend' === $context;
     }
 }
