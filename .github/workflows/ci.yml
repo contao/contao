@@ -11,7 +11,7 @@ on:
         - cron: 0 13 * * MON,THU
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
     coverage:
