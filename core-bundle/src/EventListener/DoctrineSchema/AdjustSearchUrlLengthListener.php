@@ -32,23 +32,27 @@ class AdjustSearchUrlLengthListener
 
     public function __invoke(GenerateSchemaEventArgs $event): void
     {
-        if (
-            !($schema = $event->getSchema())
-            || !$schema->hasTable('tl_search')
-            || !($table = $schema->getTable('tl_search'))
-            || !$table->hasColumn('url')
-            || !($column = $table->getColumn('url'))
-            || !$table->hasIndex('url')
-        ) {
+        $schema = $event->getSchema();
+
+        if (!$schema->hasTable('tl_search')) {
             return;
         }
+
+        $table = $schema->getTable('tl_search');
+
+        if (!$table->hasColumn('url') || !$table->hasIndex('url')) {
+            return;
+        }
+
+        $column = $table->getColumn('url');
 
         // Get maximum index size for this table
         $maxIndexSize = $this->getMaximumIndexSize($table);
 
         // Reduce maximum length if collation is not "ascii_bin"
         if ('ascii_bin' !== $column->getPlatformOption('collation')) {
-            $bytesPerChar = 'utf8mb4' === $table->getOption('charset') ? 4 : 3;
+            $charset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
+            $bytesPerChar = 'utf8mb4' === $charset ? 4 : 3;
             $maxIndexSize = floor($maxIndexSize / $bytesPerChar);
         }
 
@@ -64,14 +68,16 @@ class AdjustSearchUrlLengthListener
 
     private function getMaximumIndexSize(Table $table): int
     {
-        $engine = $table->getOption('engine');
+        $engine = $table->hasOption('engine') ? $table->getOption('engine') : 'InnoDB';
 
         if ('innodb' !== strtolower($engine)) {
             return 1000;
         }
 
+        $rowFormat = $table->hasOption('row_format') ? $table->getOption('row_format') : 'DYNAMIC';
+
         // The row format is not DYNAMIC or COMPRESSED
-        if (!\in_array($table->getOption('row_format'), ['DYNAMIC', 'COMPRESSED'], true)) {
+        if (!\in_array($rowFormat, ['DYNAMIC', 'COMPRESSED'], true)) {
             return 767;
         }
 

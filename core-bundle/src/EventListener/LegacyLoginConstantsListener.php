@@ -34,6 +34,10 @@ class LegacyLoginConstantsListener
 
     public function __invoke(RequestEvent $event): void
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $this->framework->setLoginConstants();
     }
 }
