@@ -407,16 +407,16 @@ class Form extends Hybrid
 			// Get the "reply to" address
 			if (!empty($arrSubmitted['email']))
 			{
-				$replyTo = $arrSubmitted['email'];
+				$replyTo = StringUtil::decodeEntities($arrSubmitted['email']);
 
 				// Add the name
 				if (!empty($arrSubmitted['name']))
 				{
-					$replyTo = '"' . $arrSubmitted['name'] . '" <' . $replyTo . '>';
+					$replyTo = '"' . StringUtil::decodeEntities($arrSubmitted['name']) . '" <' . $replyTo . '>';
 				}
 				elseif (!empty($arrSubmitted['firstname']) && !empty($arrSubmitted['lastname']))
 				{
-					$replyTo = '"' . $arrSubmitted['firstname'] . ' ' . $arrSubmitted['lastname'] . '" <' . $replyTo . '>';
+					$replyTo = '"' . StringUtil::decodeEntities($arrSubmitted['firstname']) . ' ' . StringUtil::decodeEntities($arrSubmitted['lastname']) . '" <' . $replyTo . '>';
 				}
 
 				$email->replyTo($replyTo);
@@ -431,7 +431,7 @@ class Form extends Hybrid
 			// Send copy to sender
 			if (!empty($arrSubmitted['cc']) && !empty($arrSubmitted['email']))
 			{
-				$email->sendCc($arrSubmitted['email']);
+				$email->sendCc(StringUtil::decodeEntities($arrSubmitted['email']));
 				unset($_SESSION['FORM_DATA']['cc']);
 			}
 
