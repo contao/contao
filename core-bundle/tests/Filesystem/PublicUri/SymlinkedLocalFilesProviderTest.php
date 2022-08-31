@@ -32,7 +32,7 @@ class SymlinkedLocalFilesProviderTest extends TestCase
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
-            ->method('getMainRequest')
+            ->method('getCurrentRequest')
             ->willReturn($request)
         ;
 
