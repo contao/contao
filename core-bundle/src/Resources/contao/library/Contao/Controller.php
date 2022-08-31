@@ -175,6 +175,14 @@ abstract class Controller extends System
 			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
 		}
 
+		// Add the matching bundle templates, e.g. in "override all" mode (see #5131)
+		$arrBundleMatches = array_unique(preg_grep('/' . $strGlobPrefix . '/', $arrBundleTemplates));
+
+		foreach ($arrBundleMatches as $strTemplate)
+		{
+			$arrTemplates[$strTemplate][] = 'root';
+		}
+
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
