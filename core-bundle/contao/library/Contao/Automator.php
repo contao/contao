@@ -14,6 +14,7 @@ use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Provide methods to run automated jobs.
@@ -360,12 +361,17 @@ class Automator extends System
 
 	/**
 	 * Generate the symlinks in the public folder
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 *             Use the contao:symlinks command instead.
 	 */
 	public function generateSymlinks()
 	{
-		$container = System::getContainer();
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() has been deprecated and will no longer work in Contao 6. Use the "contao:symlinks" command instead.');
 
+		$container = System::getContainer();
 		$webDir = Path::makeRelative($container->getParameter('contao.web_dir'), $container->getParameter('kernel.project_dir'));
+
 		$command = $container->get('contao.command.symlinks');
 		$status = $command->run(new ArgvInput(array('', $webDir)), new NullOutput());
 
