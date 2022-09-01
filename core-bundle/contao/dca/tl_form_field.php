@@ -364,7 +364,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_form_field', 'getFormFieldTemplates'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -707,25 +706,6 @@ class tl_form_field extends Backend
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Return all form field templates as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getFormFieldTemplates(DataContainer $dc)
-	{
-		if (Input::get('act') == 'overrideAll')
-		{
-			return $this->getTemplateGroup('form_');
-		}
-
-		$default = 'form_' . $dc->activeRecord->type;
-
-		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
 	}
 
 	/**
