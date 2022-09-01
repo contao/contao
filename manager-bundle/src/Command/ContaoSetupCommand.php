@@ -77,12 +77,12 @@ class ContaoSetupCommand extends Command
 
         $commands = [
             ['contao:install-web-dir', $this->webDir, '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=dev'],
-            ['cache:warmup', '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
             ['contao:symlinks', $this->webDir, '--env=prod'],
+            ['cache:clear', '--no-warmup', '--env=prod'],
+            ['cache:clear', '--no-warmup', '--env=dev'],
+            ['cache:warmup', '--env=prod'],
         ];
 
         $commandFlags = array_filter([
