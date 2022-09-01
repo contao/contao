@@ -365,7 +365,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$webDir = ltrim(str_replace($container->getParameter('kernel.project_dir'), '', $container->getParameter('contao.web_dir')), '/');
+		$webDir = Path::makeRelative($container->getParameter('contao.web_dir'), $container->getParameter('kernel.project_dir'));
 		$command = $container->get('contao.command.symlinks');
 		$status = $command->run(new ArgvInput(array('', $webDir)), new NullOutput());
 
