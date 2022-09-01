@@ -767,7 +767,7 @@ class tl_form_field extends Backend
 	{
 		if (Input::get('act') == 'overrideAll')
 		{
-			return $this->getTemplateGroup('form_');
+			return array_merge(['' => '-'], $this->getTemplateGroup('form_'));
 		}
 
 		$default = 'form_' . $dc->activeRecord->type;
