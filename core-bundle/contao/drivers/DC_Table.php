@@ -3205,99 +3205,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function submit()
 	{
-		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
+		if (Input::post('FORM_SUBMIT') != $this->strTable)
 		{
-			return;
-		}
-
-		if ($this->noReload)
-		{
-			// Data should not be submitted due to validation errors
-			$this->arrSubmit = array();
-
 			return;
 		}
 
 		$arrValues = $this->arrSubmit;
 		$this->arrSubmit = array();
 
-		// Call onbeforesubmit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
-			{
-				try
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrValues = $callback($arrValues, $this);
-					}
-
-					if (!\is_array($arrValues))
-					{
-						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
-					}
-				}
-				catch (\Exception $e)
-				{
-					$this->noReload = true;
-					Message::addError($e->getMessage());
-
-					return;
-				}
-			}
-		}
-
-		$arrTypes = array();
-		$blnVersionize = false;
-		$currentRecord = $this->getCurrentRecord();
-
-		foreach ($arrValues as $strField => $varValue)
-		{
-			$this->strField = $strField;
-			$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
-
-			// If the field is a fallback field, empty all other columns (see #6498)
-			if ($varValue && ($arrData['eval']['fallback'] ?? null))
-			{
-				$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-				$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
-
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$this->Database
-						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-						->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
-				}
-				else
-				{
-					$this->Database
-						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
-						->query('', array($varEmpty), $arrType);
-				}
-			}
-
-			$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null;
-
-			if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
-			{
-				$blnVersionize = true;
-			}
-
-			$this->varValue = StringUtil::deserialize($varValue);
-
-			if (\is_object($this->objActiveRecord))
-			{
-				$this->objActiveRecord->{$this->strField} = $this->varValue;
-			}
-		}
-
-		if (!empty($arrValues))
+		if (!$this->noReload && !empty($arrValues))
 		{
 			$arrValues['tstamp'] = time();
 
@@ -3306,7 +3222,91 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues['ptable'] = $this->ptable;
 			}
 
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $arrValues));
+			// Trigger the onbeforesubmit_callback
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
+			{
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
+				{
+					try
+					{
+						if (\is_array($callback))
+						{
+							$this->import($callback[0]);
+							$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+						}
+						elseif (\is_callable($callback))
+						{
+							$arrValues = $callback($arrValues, $this);
+						}
+
+						if (!\is_array($arrValues))
+						{
+							throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
+						}
+					}
+					catch (\Exception $e)
+					{
+						$this->noReload = true;
+						Message::addError($e->getMessage());
+
+						break;
+					}
+				}
+			}
+		}
+
+		// Check permissions
+		$currentRecord = $this->getCurrentRecord();
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $arrValues));
+
+		// Persist values
+		if (!$this->noReload && !empty($arrValues))
+		{
+			$arrTypes = array();
+			$blnVersionize = false;
+
+			foreach ($arrValues as $strField => $varValue)
+			{
+				$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField] ?? array();
+
+				// If the field is a fallback field, empty all other columns (see #6498)
+				if ($varValue && ($arrData['eval']['fallback'] ?? null))
+				{
+					$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql'] ?? array());
+					$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null));
+
+					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+					{
+						$this->Database
+							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=? WHERE pid=?")
+							->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
+					}
+					else
+					{
+						$this->Database
+							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=?")
+							->query('', array($varEmpty), $arrType);
+					}
+				}
+
+				$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
+
+				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+				{
+					$blnVersionize = true;
+				}
+
+				// Update the active record and current field/value (backwards compatibility)
+				$varValue = StringUtil::deserialize($varValue);
+				$this->varValue = $varValue;
+				$this->strField = $strField;
+
+				if (\is_object($this->objActiveRecord))
+				{
+					$this->objActiveRecord->{$strField} = $varValue;
+				}
+			}
 
 			$objUpdateStmt = $this->Database
 				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
@@ -3343,6 +3343,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// Create a new version
 		if ($this->blnCreateNewVersion)
 		{
 			$objVersions = new Versions($this->strTable, $this->intId);
