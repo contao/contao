@@ -3306,7 +3306,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues['ptable'] = $this->ptable;
 			}
 
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $this->arrSubmit));
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $arrValues));
 
 			$objUpdateStmt = $this->Database
 				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
