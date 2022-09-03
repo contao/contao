@@ -79,6 +79,9 @@ class DebugContaoTwigCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @param array<string,array<string, string>> $chains
+     */
     private function listTree(array $chains, SymfonyStyle $io): void
     {
         // Split identifier prefixes by '/' and arrange them in a prefix tree
@@ -86,17 +89,17 @@ class DebugContaoTwigCommand extends Command
 
         foreach ($chains as $identifier => $chain) {
             $parts = explode('/', $identifier);
-            $root = &$prefixTree;
+            $node = &$prefixTree;
 
             foreach ($parts as $part) {
                 /** @phpstan-ignore-next-line */
-                if (!isset($root[$part])) {
-                    $root[$part] = [];
+                if (!isset($node[$part])) {
+                    $node[$part] = [];
                 }
-                $root = &$root[$part];
+                $node = &$node[$part];
             }
 
-            $root = [...$root, ...$chain];
+            $node = [...$node, ...$chain];
         }
 
         // Recursively display tree nodes
@@ -151,6 +154,9 @@ class DebugContaoTwigCommand extends Command
         $displayNode($prefixTree);
     }
 
+    /**
+     * @param array<string,array<string, string>> $chains
+     */
     private function listDetailed(array $chains, SymfonyStyle $io): void
     {
         $nameCellStyle = new TableCellStyle(['fg' => 'yellow']);
