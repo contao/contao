@@ -108,8 +108,8 @@ class DebugContaoTwigCommand extends Command
             // sorted ascending by its key (identifier part)
             uksort(
                 $node,
-                static function ($keyA, $keyB) {
-                    if (0 !== ($leafNodes = ('/' === $keyB) <=> ('/' === $keyA))) {
+                static function ($keyA, $keyB) use ($node) {
+                    if (0 !== ($leafNodes = (\is_array($node[$keyA]) <=> \is_array($node[$keyB])))) {
                         return $leafNodes;
                     }
 

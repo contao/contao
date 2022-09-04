@@ -203,15 +203,15 @@ class DebugContaoTwigCommandTest extends TestCase
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->willReturn([
-                'content_element/text' => [
-                    '/path1/content_element/text.html.twig' => '@A/content_element/text.html.twig',
-                ],
                 'content_element/text/info' => [
                     '/path1/content_element/text/info.html.twig' => '@A/content_element/text/info.html.twig',
                 ],
                 'content_element/text/highlight' => [
                     '/path1/content_element/text/highlight.html.twig' => '@A/content_element/text/highlight.html.twig',
                     '/path2/content_element/text/highlight.html.twig' => '@B/content_element/text/highlight.html.twig',
+                ],
+                'content_element/text' => [
+                    '/path1/content_element/text.html.twig' => '@A/content_element/text.html.twig',
                 ],
             ])
         ;
