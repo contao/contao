@@ -13,6 +13,7 @@ use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DiffRenderer;
@@ -26,8 +27,10 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\TemplateLoader;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Twig\Error\LoaderError;
 
 System::loadLanguageFile('tl_files');
 
@@ -234,30 +237,139 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
+		$container = System::getContainer();
+
 		$arrAllTemplates = array();
 
+		// Add modern templates
+		$chains = $container->get('contao.twig.filesystem_loader')->getInheritanceChains();
+
+		foreach ($chains as $identifier => $chain)
+		{
+			if (!str_contains($identifier, '/'))
+			{
+				continue;
+			}
+
+			$parts = explode('/', $identifier);
+			$rootCategory = array_shift($parts);
+
+			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf(
+				'%s (%s.html.twig)',
+				implode('/', $parts),
+				$identifier
+			);
+
+			ksort($arrAllTemplates[$rootCategory]);
+		}
+
+		// Add legacy templates
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 
 		foreach ($files as $file)
 		{
-			$strRelpath = StringUtil::stripRootDir($file->getPathname());
+			$strRelpath = $file->getRelativePathname();
 			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
 		$strError = '';
 
-		// Copy an existing template
+		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$strOriginal = Input::post('original', true);
-
-			if (Validator::isInsecurePath($strOriginal))
+			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void
 			{
-				throw new RuntimeException('Invalid path ' . $strOriginal);
-			}
+				$filesystem = new Filesystem();
+				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
 
+				if ($filesystem->exists($targetFile))
+				{
+					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $targetFile);
+
+					return;
+				}
+
+				try
+				{
+					$info = $container->get('contao.twig.inspector')->inspectTemplate($template);
+				}
+				catch (InspectionException $e)
+				{
+					if ($e->getPrevious() instanceof LoaderError)
+					{
+						throw new RuntimeException('Invalid template ' . $template);
+					}
+
+					$strError = sprintf(
+						$GLOBALS['TL_LANG']['tl_templates']['containsErrors'],
+						$template,
+						$e->getPrevious()->getMessage()
+					);
+
+					return;
+				}
+
+				$content = $container->get('twig')->render('@Contao/backend/template_skeleton.html.twig', array(
+					'type' => str_starts_with('@Contao/component', $template) ? 'use' : 'extends',
+					'template' => $info,
+				));
+
+				$filesystem->dumpFile($targetFile, $content);
+			};
+
+			$createLegacyTemplate = function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
+			{
+				if (Validator::isInsecurePath($strOriginal))
+				{
+					throw new RuntimeException('Invalid path ' . $strOriginal);
+				}
+
+				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+				// Validate the target path
+				if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))
+				{
+					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
+				}
+				else
+				{
+					$blnFound = false;
+
+					// Validate the source path
+					foreach ($arrAllTemplates as $arrTemplates)
+					{
+						if (isset($arrTemplates[$strOriginal]))
+						{
+							$blnFound = true;
+							break;
+						}
+					}
+
+					if (!$blnFound)
+					{
+						$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strOriginal);
+					}
+					else
+					{
+						$strTarget .= '/' . basename($strOriginal);
+
+						// Check whether the target file exists
+						if (file_exists($projectDir . '/' . $strTarget))
+						{
+							$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $strTarget);
+						}
+						else
+						{
+							$this->import(Files::class, 'Files');
+							$this->Files->copy($strOriginal, $strTarget);
+						}
+					}
+				}
+			};
+
+			$strOriginal = Input::post('original', true);
 			$strTarget = Input::post('target', true);
 
 			if (Validator::isInsecurePath($strTarget))
@@ -265,47 +377,18 @@ class tl_templates extends Backend
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
 
-			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-			// Validate the target path
-			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))
+			if (str_starts_with($strOriginal, '@'))
 			{
-				$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
+				$createModernTemplate($strOriginal, $strTarget);
 			}
 			else
 			{
-				$blnFound = false;
+				$createLegacyTemplate($strOriginal, $strTarget);
+			}
 
-				// Validate the source path
-				foreach ($arrAllTemplates as $arrTemplates)
-				{
-					if (isset($arrTemplates[$strOriginal]))
-					{
-						$blnFound = true;
-						break;
-					}
-				}
-
-				if (!$blnFound)
-				{
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strOriginal);
-				}
-				else
-				{
-					$strTarget .= '/' . basename($strOriginal);
-
-					// Check whether the target file exists
-					if (file_exists($projectDir . '/' . $strTarget))
-					{
-						$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $strTarget);
-					}
-					else
-					{
-						$this->import(Files::class, 'Files');
-						$this->Files->copy($strOriginal, $strTarget);
-						$this->redirect($this->getReferer());
-					}
-				}
+			if (!$strError)
+			{
+				$this->redirect($this->getReferer());
 			}
 		}
 

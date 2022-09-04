@@ -997,6 +997,7 @@ services:
 
     contao.twig.inspector:
         class: Contao\CoreBundle\Twig\Inspector\Inspector
+        public: true
         arguments:
             - '@twig'
 
