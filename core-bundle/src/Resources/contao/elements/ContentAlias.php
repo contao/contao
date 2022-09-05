@@ -51,8 +51,17 @@ class ContentAlias extends ContentElement
 				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
+			// Tag the alias element
+			if ($this->objModel !== null)
+			{
+				System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			}
+
 			return $proxy->generate();
 		}
+
+		// Tag the included element (see #5248)
+		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objElement);
 
 		$objElement->origId = $objElement->origId ?: $objElement->id;
 		$objElement->id = $this->id;
