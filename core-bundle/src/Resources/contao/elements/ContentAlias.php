@@ -51,7 +51,7 @@ class ContentAlias extends ContentElement
 				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
-			// Tag the alias element
+			// Tag the alias element (see #5249)
 			if ($this->objModel !== null)
 			{
 				System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
