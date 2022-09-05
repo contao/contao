@@ -53,7 +53,21 @@ class ContentAlias extends ContentElement
 				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
+			// Tag the alias element (see #5249)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
+			}
+
 			return $proxy->generate();
+		}
+
+		// Tag the included element (see #5248)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_content.' . $this->cteAlias));
 		}
 
 		$objElement->origId = $objElement->origId ?: $objElement->id;
