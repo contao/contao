@@ -48,7 +48,7 @@ class DebugContaoTwigCommand extends Command
     {
         $this
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
-            ->addOption('tree', null, InputOption::VALUE_NONE, 'Display as a prefix-tree listing.')
+            ->addOption('tree', null, InputOption::VALUE_NONE, 'Display the templates as prefix tree.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
@@ -84,7 +84,7 @@ class DebugContaoTwigCommand extends Command
      */
     private function listTree(array $chains, SymfonyStyle $io): void
     {
-        // Split identifier prefixes by '/' and arrange them in a prefix tree
+        // Split identifier prefixes by "/" and arrange them in a prefix tree
         $prefixTree = [];
 
         foreach ($chains as $identifier => $chain) {
@@ -96,6 +96,7 @@ class DebugContaoTwigCommand extends Command
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }
+
                 $node = &$node[$part];
             }
 
@@ -129,6 +130,7 @@ class DebugContaoTwigCommand extends Command
                     // Display part of the template identifier. If this is the
                     // last bit, we also display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
+
                     $io->writeln(sprintf(
                         '%s<fg=green;options=bold>%s</>%s',
                         $currentPrefix,
@@ -143,6 +145,7 @@ class DebugContaoTwigCommand extends Command
 
                 // Display file and logical name
                 $io->writeln($currentPrefix.$label);
+
                 $io->writeln(sprintf(
                     '%s<fg=white>Original name:</> <fg=yellow>%s</>',
                     $currentPrefixWithNewline,
