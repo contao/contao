@@ -190,15 +190,18 @@ class ModuleBreadcrumb extends Module
 		// Active page
 		else
 		{
-			$items[] = array
-			(
-				'isRoot'   => false,
-				'isActive' => true,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
-				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
-				'link'     => $pages[0]->title,
-				'data'     => $pages[0]->row(),
-			);
+			if ($pages[0]->hide && !$this->showHidden)
+			{
+				$items[] = array
+				(
+					'isRoot'   => false,
+					'isActive' => true,
+					'href'     => $this->getPageFrontendUrl($pages[0]),
+					'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
+					'link'     => $pages[0]->title,
+					'data'     => $pages[0]->row(),
+				);
+			}
 		}
 
 		// HOOK: add custom logic
