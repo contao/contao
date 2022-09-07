@@ -3238,11 +3238,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$arrValues = $callback($arrValues, $this);
 						}
-
-						if (!\is_array($arrValues))
-						{
-							throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
-						}
 					}
 					catch (\Exception $e)
 					{
@@ -3250,6 +3245,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						Message::addError($e->getMessage());
 
 						break;
+					}
+
+					if (!\is_array($arrValues))
+					{
+						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
 					}
 				}
 			}
