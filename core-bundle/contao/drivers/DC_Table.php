@@ -617,7 +617,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return table
-		return $return . '</table>';
+		$return .= '</table>';
+
+		return $this->twig->render('@Contao/backend/crud/DC_Table/show.html.twig', [
+			'data' => $data,
+		]);
 	}
 
 	/**

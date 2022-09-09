@@ -1,0 +1,28 @@
+{% trans_default_domain "contao_default" %}
+
+<table class="tl_show">
+    {% for table, rows in data %}
+        {% for entries in rows %}
+            {# Separate multiple rows #}
+            {% if not loop.first or not loop.parent.loop.first %}
+                <tr>
+                    <td colspan="2" style="height:1em"></td>
+                </tr>
+            {% endif %}
+
+            {# Add the table name #}
+            <tr>
+                <td class="tl_folder_top tl_label">{{ 'MSC.table'|trans }}</td>
+                <td class="tl_folder_top">{{ table|raw }}</td>
+            </tr>
+
+            {# Display rows #}
+            {% for label, value in entries %}
+                <tr>
+                    <td class="tl_label">{{ label|raw }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+</table>
