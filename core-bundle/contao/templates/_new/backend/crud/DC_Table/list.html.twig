@@ -1,49 +1,11 @@
 {% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
 
 {# Message #}
-{% set message_groups = app.flashes(['contao.BE.error', 'contao.BE.confirm', 'contao.BE.new', 'contao.BE.info', 'contao.BE.raw'])|filter(v => v) %}
-
-{% if message_groups %}
-    <div class="tl_message">
-        {% for type, messages in message_groups %}
-            {% for message in messages %}
-                {% if type == 'contao.BE.raw' %}
-                    {{ message|raw }}
-                {% else %}
-                    <p class="tl_{{ type[10:] }}">{{ message }}</p>
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-    </div>
-{% endif %}
+{% include "@Contao/backend/crud/DC_Table/_message.html.twig" %}
 
 {# Buttons on top #}
-<div id="tl_buttons">
-    {# Back button #}
-    {% if buttons.back|default %}
-        {% set back_button_attributes = attrs()
-            .set('href', buttons.back.href)
-            .addClass('header_back')
-            .set('title', ('MSC.backBTTitle')|trans)
-            .set('accesskey', 'b')
-            .set('onclick', 'Backend.getScrollOffset()') %}
-        <a{{ back_button_attributes }}>{{ 'MSC.backBT'|trans }}</a>
-    {% endif %}
-
-    {# New button #}
-    {% if buttons.new|default %}
-        {% set new_button_attributes = attrs()
-            .set('href', buttons.new.href)
-            .addClass('header_new')
-            .setIfExists('title', buttons.new.title)
-            .set('accesskey', 'n')
-            .set('onclick', 'Backend.getScrollOffset()') %}
-        <a{{ new_button_attributes }}>{{ buttons.new.label|raw }}</a>
-    {% endif %}
-
-    {# Prerendered global buttons #}
-    {{ buttons.global_rendered|raw }}
-</div>
+{{ block('buttons') }}
 
 {# Rows #}
 {% if rows|default %}
@@ -139,24 +101,7 @@
                 {{ block('records_listing') }}
             </div>
             <div class="tl_formbody_submit" style="text-align:right">
-                <div class="tl_submit_container">
-                    {% if buttons.submit_rendered|length < 3 %}
-                        {{ buttons.submit_rendered|join(' ')|raw }}
-                    {% else %}
-                        {{ buttons.submit_rendered[0]|raw }}
-                        <div class="split-button">
-                            {{ buttons.submit_rendered[1]|raw }}
-                            <button type="button" id="sbtog">
-                                <img src="/system/themes/flexible/icons/navcol.svg" width="12" height="12" alt="">
-                            </button>
-                            <ul class="invisible">
-                                {% for button_rendered in buttons.submit_rendered[2:] %}
-                                    <li>{{ button_rendered|raw }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                </div>
+                {{ block('submit_buttons') }}
             </div>
         </form>
     {% endif %}

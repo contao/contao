@@ -1843,6 +1843,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
+		$context = [
+			'table' => $this->strTable,
+		];
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
@@ -1950,13 +1954,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$key = '';
 				$cls = '';
 				$legend = '';
+				$boxData = [];
 
 				if (isset($legends[$k]))
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
 					$legend = "\n" . '<legend data-toggle-fieldset="' . StringUtil::specialcharsAttribute(json_encode(array('id' => $key, 'table' => $this->strTable))) . '">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+
+					$boxData['legend'] = true;
 				}
+
+				$boxData['key'] = $key;
 
 				if (isset($fs[$this->strTable][$key]))
 				{
@@ -1967,10 +1976,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
+				$boxData['modifier'] = match(true) {
+					isset($fs[$this->strTable][$key]) && !$fs[$this->strTable][$key] => 'collapsed',
+					!isset($fs[$this->strTable][$key]) && $cls && $legend => $cls,
+					default => ''
+				};
+
 				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
 				$thisId = '';
 
 				// Build rows of the current box
+				$subpalette = null;
+				$subpaletteItems = [];
+
 				foreach ($v as $vv)
 				{
 					if ($vv == '[EOF]')
@@ -1999,6 +2017,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						$return .= "\n" . '</div>';
 
+						$boxData['rows'][] = [
+							'subpalette_items_rendered' => $subpaletteItems,
+							'subpalette' => $subpalette,
+						];
+
+						$subpalette = null;
+						$subpaletteItems = [];
+
 						continue;
 					}
 
@@ -2008,6 +2034,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+
+						$subpalette = $thisId;
 
 						continue;
 					}
@@ -2043,11 +2071,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$rowRendered = '';
+					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $rowRendered = $this->row($this->strPalette);
+
+					if($subpalette) {
+						$subpaletteItems[] = $rowRendered;
+					} else {
+						$boxData['rows'][] = [
+							'rendered' => $rowRendered,
+							'subpalette' => null,
+						];
+					}
 				}
 
 				$class = 'tl_box';
 				$return .= "\n" . '</fieldset>';
+
+				$context['boxes'][] = $boxData;
 			}
 
 			$this->submit();
@@ -2174,7 +2214,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Versions overview
 		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] ?? null))
 		{
-			$version = $objVersions->renderDropdown();
+			$version = $context['versions_rendered'] = $objVersions->renderDropdown();
 		}
 		else
 		{
@@ -2230,6 +2270,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$context['buttons']['submit_rendered'] = array_values($arrButtons);
+
 		if (\count($arrButtons) < 3)
 		{
 			$strButtons = implode(' ', $arrButtons);
@@ -2266,6 +2308,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strVersionField = '
 <input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
 		}
+		$context['version'] = $intLatestVersion;
 
 		$strBackUrl = $this->getReferer(true);
 
@@ -2278,6 +2321,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   history.pushState({}, "");
   window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
 </script>';
+			$context['add_history_entry'] = true;
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
@@ -2291,6 +2335,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
 
+		$context['errors'] = $this->noReload;
+
+		if(!Input::get('nb')) {
+			$context['buttons']['back']['href'] = html_entity_decode($strBackUrl);
+		}
+
+		$context['uploadable'] = $this->blnUploadable;
+		$context['on_submit'] = $this->onsubmit;
+
 		// Set the focus if there is an error
 		if ($this->noReload)
 		{
@@ -2303,7 +2356,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </script>';
 		}
 
-		return $return;
+		return $this->twig->render('@Contao/backend/crud/DC_Table/edit.html.twig', $context);
 	}
 
 	/**

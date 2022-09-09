@@ -1,0 +1,84 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+
+{# Version #}
+{{ versions_rendered|default|raw }}
+
+{# Errors #}
+{% if errors %}
+    <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+{% endif %}
+
+{# Message #}
+{% include "@Contao/backend/crud/DC_Table/_message.html.twig" %}
+
+{# Buttons on top #}
+{{ block('buttons') }}
+
+{# Edit form #}
+{% set form_attributes = attrs()
+    .set('id', table)
+    .addClass('tl_form tl_edit_form')
+    .set('method', 'post')
+    .set('enctype', uploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded')
+    .set('onsubmit', on_submit|join(' '), on_submit)
+%}
+<form{{ form_attributes }}>
+    <div class="tl_formbody_edit">
+        <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+        {% if version is not null %}
+            <input type="hidden" name="VERSION_NUMBER" value="{{ version }}">
+        {% endif %}
+
+        {# Boxes #}
+        {% for box in boxes %}
+            {% set fieldset_attributes = attrs()
+                .set('id', 'pal_' ~ box.key, box.key)
+                .addClass(loop.first ? 'tl_tbox' : 'tl_box')
+                .addClass(box.modifier, box.modifier)
+                .addClass('legend', legend|default) %}
+            <fieldset{{ fieldset_attributes }}>
+                {# Legend #}
+                {% if box.legend|default %}
+                    <legend data-toggle-fieldset="{{ {id: box.key, table}|json_encode|replace({'}': '&#125;'}) }}">
+                        {{- "#{table}.#{box.key}"|trans|raw -}}
+                    </legend>
+                {% endif %}
+
+                {# Rows #}
+                {% for row in box.rows %}
+                    {% if not row.subpalette %}
+                        {{ row.rendered|raw }}
+                    {% else %}
+                        <div id="{{ row.subpalette }}" class="subpal cf">
+                            {{ row.subpalette_items_rendered|join|raw }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+
+    </div>
+    <div class="tl_formbody_submit">
+        {{ block('submit_buttons') }}
+    </div>
+</form>
+
+{# Add history entry #}
+{% if add_history_entry|default %}
+    <script>
+        history.pushState({}, "");
+        window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
+    </script>
+{% endif %}
+
+{# Focus on first error #}
+{% if errors %}
+    <script>
+        window.addEvent('domready', function () {
+            var error = $('{{ table }}').getElement('label.error');
+            if (error) Backend.vScrollTo((error.getPosition().y - 20));
+        });
+    </script>
+{% endif %}
