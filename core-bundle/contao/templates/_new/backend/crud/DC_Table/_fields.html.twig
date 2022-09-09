@@ -1,0 +1,12 @@
+{# Recursively render subpalettes #}
+{% block field_groups %}
+    {% for key, node in root %}
+        {% if node is iterable %}
+            <div id="{{ key }}" class="subpal cf">
+                {% with {'root': node } %}{{ block('field_groups') }}{% endwith %}
+            </div>
+        {% else %}
+            {{ node|raw }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

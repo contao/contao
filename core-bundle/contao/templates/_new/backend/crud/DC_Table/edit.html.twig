@@ -1,5 +1,6 @@
 {% trans_default_domain "contao_default" %}
 {% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+{% use "@Contao/backend/crud/DC_Table/_fields.html.twig" %}
 
 {# Version #}
 {{ versions_rendered|default|raw }}
@@ -46,20 +47,13 @@
                     </legend>
                 {% endif %}
 
-                {# Rows #}
-                {% for row in box.rows %}
-                    {% if not row.subpalette %}
-                        {{ row.rendered|raw }}
-                    {% else %}
-                        <div id="{{ row.subpalette }}" class="subpal cf">
-                            {{ row.subpalette_items_rendered|join|raw }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                {# Field groups with subpalettes #}
+                {% with {'root': box.root } %}{{ block('field_groups') }}{% endwith %}
             </fieldset>
         {% endfor %}
-
     </div>
+
+    {# Submit buttons #}
     <div class="tl_formbody_submit">
         {{ block('submit_buttons') }}
     </div>

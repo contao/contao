@@ -1,15 +1,23 @@
 {% set message_groups = app.flashes(['contao.BE.error', 'contao.BE.confirm', 'contao.BE.new', 'contao.BE.info', 'contao.BE.raw'])|filter(v => v) %}
 
 {% if message_groups %}
-    <div class="tl_message">
-        {% for type, messages in message_groups %}
-            {% for message in messages %}
-                {% if type == 'contao.BE.raw' %}
-                    {{ message|raw }}
-                {% else %}
-                    <p class="tl_{{ type[10:] }}">{{ message }}</p>
-                {% endif %}
+    {% if wrapped is defined and not wrapped %}
+        {# Plain list of messages #}
+        {% block message %}
+            {% for type, messages in message_groups %}
+                {% for message in messages %}
+                    {% if type == 'contao.BE.raw' %}
+                        {{ message|raw }}
+                    {% else %}
+                        <p class="tl_{{ type[10:] }}">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </div>
+        {% endblock %}
+    {% else %}
+        {# Messages wrapped in container (default) #}
+        <div class="tl_message">
+            {{ block('message') }}
+        </div>
+    {% endif %}
 {% endif %}

@@ -1,0 +1,104 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+{% use "@Contao/backend/crud/DC_Table/_fields.html.twig" %}
+
+{# Errors #}
+{% if errors %}
+    <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+{% endif %}
+
+{# Buttons #}
+{{ block('buttons') }}
+
+{% if select_mode|default %}
+    {# Form to select fields #}
+    {% set form_attributes = attrs()
+        .set('action', app.request.requestUri ~ '&fields=1')
+        .set('id', table ~ '_all')
+        .addClass('tl_form tl_edit_form')
+        .set('method', 'post')
+    %}
+    <form{{ form_attributes }}>
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ table }}_all">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+
+            {# Errors #}
+            {% if not_all_fields_error %}
+                <p class="tl_error">{{ 'ERR.general'|trans }}</p>
+            {% endif %}
+
+            {# Fields #}
+            <div class="tl_tbox">
+                <div class="widget">
+                    <fieldset class="tl_checkbox_container">
+                        <legend{{ attrs().addClass('error', not_all_fields_error) }}>
+                            {{- 'MSC.all_fields.0'|trans }}<span class="mandatory">*</span>
+                        </legend>
+                        <input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this)">
+                        <label for="check_all" style="color:#a6a6a6"><em>{{ 'MSC.selectAll'|trans }}</em></label>
+                        <br>
+                        {% for field, label in options %}
+                            <input type="checkbox" name="all_fields[]" id="all_{{ field }}" class="tl_checkbox" value="{{ field }}">
+                            <label for="all_{{ field }}" class="tl_checkbox_label">
+                               {{- label|raw }} <span style="color:#999;padding-left:3px">[{{ field }}]</span>
+                            </label>
+                            <br>
+                        {% endfor %}
+                    </fieldset>
+                    {% if not_all_fields_error %}
+                        <p class="tl_error">{{ 'ERR.all_fields'|trans }}</p>
+                    {% elseif show_help and 'MSC.all_fields.1'|trans != 'MSC.all_fields.1' %}
+                        <p class="tl_help tl_tip">{{ 'MSC.all_fields.1'|trans }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="tl_formbody_submit">
+            {{ block('submit_buttons')}}
+        </div>
+    </form>
+{% else %}
+    {# Form to edit values #}
+    {% set form_attributes = attrs()
+        .set('id', table)
+        .addClass('tl_form tl_edit_form')
+        .set('method', 'post')
+        .set('enctype', uploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded')
+    %}
+    <form{{ form_attributes }}>
+        <div class="tl_formbody_edit nogrid">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+
+            {% for record in records %}
+                {# Message #}
+                {{ record.messages_rendered|raw }}
+
+                {# Field groups with subpalettes #}
+                {% set record_attrs = attrs()
+                    .addClass(loop.first ? 'tl_tbox' : 'tl_box')
+                    .addClass('cf')
+                %}
+                <div{{ record_attrs }}>
+                    {% with {'root': record.root } %}{{ block('field_groups') }}{% endwith %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Submit buttons #}
+        <div class="tl_formbody_submit">
+            {{ block('submit_buttons') }}
+        </div>
+    </form>
+
+    {# Focus on first error #}
+    {% if errors %}
+        <script>
+            window.addEvent('domready', function () {
+                var error = $('{{ table }}').getElement('label.error');
+                if (error) Backend.vScrollTo((error.getPosition().y - 20));
+            });
+        </script>
+    {% endif %}
+{% endif %}

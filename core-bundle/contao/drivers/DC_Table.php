@@ -1986,8 +1986,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$thisId = '';
 
 				// Build rows of the current box
-				$subpalette = null;
-				$subpaletteItems = [];
+				$currentNode = [];
+				$parentNodes = [];
 
 				foreach ($v as $vv)
 				{
@@ -2017,13 +2017,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						$return .= "\n" . '</div>';
 
-						$boxData['rows'][] = [
-							'subpalette_items_rendered' => $subpaletteItems,
-							'subpalette' => $subpalette,
-						];
-
-						$subpalette = null;
-						$subpaletteItems = [];
+						$currentNode = &$parentNodes[array_key_last($parentNodes)];
+						array_pop($parentNodes);
 
 						continue;
 					}
@@ -2035,7 +2030,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
 
-						$subpalette = $thisId;
+						$parentNodes[] = &$currentNode;
+						$currentNode[$thisId] = [];
+						$currentNode = &$currentNode[$thisId];
 
 						continue;
 					}
@@ -2074,15 +2071,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$rowRendered = '';
 					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $rowRendered = $this->row($this->strPalette);
 
-					if($subpalette) {
-						$subpaletteItems[] = $rowRendered;
-					} else {
-						$boxData['rows'][] = [
-							'rendered' => $rowRendered,
-							'subpalette' => null,
-						];
-					}
+					$currentNode[] = $rowRendered;
 				}
+
+				$boxData['root'] = $currentNode;
 
 				$class = 'tl_box';
 				$return .= "\n" . '</fieldset>';
@@ -2377,6 +2369,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
+		$context = [
+			'table' => $this->strTable,
+		];
+
 		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
@@ -2421,6 +2417,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Walk through each record
 				foreach ($ids as $id)
 				{
+					$recordData = [];
+
 					try
 					{
 						$currentRecord = $this->getCurrentRecord($id);
@@ -2499,6 +2497,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
 
+					$currentNode = [];
+					$parentNodes = [];
+
 					foreach ($this->strPalette as $v)
 					{
 						// Check whether field is excluded
@@ -2519,6 +2520,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$blnAjax = false;
 							$box .= "\n  " . '</div>';
 
+							$currentNode = &$parentNodes[array_key_last($parentNodes)];
+							array_pop($parentNodes);
+
 							continue;
 						}
 
@@ -2527,6 +2531,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
 							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+
+							$parentNodes[] = &$currentNode;
+							$currentNode[$thisId] = [];
+							$currentNode = &$currentNode[$thisId];
 
 							continue;
 						}
@@ -2584,7 +2592,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+						$rowRendered = '';
+						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $rowRendered = $this->row($this->strPalette);
+
+						$currentNode[] = $rowRendered;
 					}
 
 					// Save record
@@ -2596,6 +2607,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						continue;
 					}
+
+					$recordData['root'] = $currentNode;
+
+					// Render messages now to capture all messages generated so far
+					$recordData['messages_rendered'] = $this->twig->render('@Contao/backend/crud/DC_Table/_message.html.twig');
+
+					$context['records'][] = $recordData;
 
 					$return .= Message::generateUnwrapped() . '
 <div class="' . $class . ' cf">' . $box . '
@@ -2658,6 +2676,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
+			$context['buttons']['submit_rendered'] = array_values($arrButtons);
+
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -2677,6 +2697,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Add the form
+			$context['uploadable'] = $this->blnUploadable;
 			$return = '
 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
@@ -2707,6 +2728,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Else show a form to select the fields
 		else
 		{
+			$context['select_mode'] = true;
+
 			$options = '';
 			$fields = array();
 
@@ -2728,16 +2751,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Show all non-excluded fields
+			$context['options'] = [];
 			foreach ($fields as $field)
 			{
 				if ($field == 'pid' || $field == 'sorting' || ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null))))
 				{
 					$options .= '
   <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
+					$context['options'][$field] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0]
+						?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ?
+							$GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)
+						) ?? $field;
 				}
 			}
 
 			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+
+			$context['not_all_fields_error'] = $blnIsError;
+			$context['show_help'] = Config::get('showHelp');
 
 			// Return the select menu
 			$return .= '
@@ -2764,14 +2795,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
+			$context['buttons']['submit_rendered'] = [
+				'<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>'
+			];
 		}
 
 		// Return
-		return ($this->noReload ? '
+		$context['errors'] = $this->noReload;
+		$context['buttons']['back']['href'] = $this->getReferer();
+
+		$return = ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
+
+
+		return $this->twig->render('@Contao/backend/crud/DC_Table/edit_all.html.twig', $context);
 	}
 
 	/**
