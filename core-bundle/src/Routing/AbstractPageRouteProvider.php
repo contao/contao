@@ -217,6 +217,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $result = [];
 
         foreach ($languages as $language) {
+            $language = (string) $language;
+
             if (!$locales = LocaleUtil::getFallbacks($language)) {
                 continue;
             }
