@@ -102,6 +102,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected $arrSubmit = array();
 
+	private \Twig\Environment $twig;
+
 	/**
 	 * Initialize the object
 	 *
@@ -113,6 +115,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		parent::__construct();
 
 		$container = System::getContainer();
+
+		$this->twig = $container->get('twig');
 		$objSession = $container->get('request_stack')->getSession();
 
 		// Check the request token (see #4007)
