@@ -2895,6 +2895,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
+		$context = [
+			'table' => $this->strTable,
+		];
+
 		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
@@ -3036,7 +3040,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				// Disable auto-submit
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['submitOnChange'] = false;
-				$return .= $this->row();
+				$return .= $rowRendered = $this->row();
+				$context['rows_rendered'][] = $rowRendered;
 			}
 
 			// Close box
@@ -3065,6 +3070,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
+			$context['buttons']['submit_rendered'] = array_values($arrButtons);
+
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -3084,6 +3091,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Add the form
+			$context['uploadable'] = $this->blnUploadable;
 			$return = '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
@@ -3113,6 +3121,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Else show a form to select the fields
 		else
 		{
+			$context['select_mode'] = true;
+
 			$options = '';
 			$fields = array();
 
@@ -3134,16 +3144,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Show all non-excluded fields
+			$context['options'] = [];
 			foreach ($fields as $field)
 			{
 				if ($field == 'pid' || $field == 'sorting' || ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null))))
 				{
 					$options .= '
   <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
+					$context['options'][$field] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0]
+						?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ?
+						$GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)
+					) ?? $field;
 				}
 			}
 
 			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+
+			$context['not_all_fields_error'] = $blnIsError;
+			$context['show_help'] = Config::get('showHelp');
 
 			// Return the select menu
 			$return .= '
@@ -3169,14 +3187,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
+			$context['buttons']['submit_rendered'] = [
+				'<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>'
+			];
 		}
 
 		// Return
-		return ($this->noReload ? '
+		$context['errors'] = $this->noReload;
+		$context['buttons']['back']['href'] = $this->getReferer();
+
+		$return = ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
+
+		return $this->twig->render('@Contao/backend/crud/DC_Table/override_all.html.twig', $context);
 	}
 
 	/**

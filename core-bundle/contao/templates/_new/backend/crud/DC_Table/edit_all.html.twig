@@ -71,19 +71,21 @@
             <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
 
-            {% for record in records %}
-                {# Message #}
-                {{ record.messages_rendered|raw }}
+            {% block edit_form %}
+                {% for record in records %}
+                    {# Message #}
+                    {{ record.messages_rendered|raw }}
 
-                {# Field groups with subpalettes #}
-                {% set record_attrs = attrs()
-                    .addClass(loop.first ? 'tl_tbox' : 'tl_box')
-                    .addClass('cf')
-                %}
-                <div{{ record_attrs }}>
-                    {% with {'root': record.root } %}{{ block('field_groups') }}{% endwith %}
-                </div>
-            {% endfor %}
+                    {# Field groups with subpalettes #}
+                    {% set record_attrs = attrs()
+                        .addClass(loop.first ? 'tl_tbox' : 'tl_box')
+                        .addClass('cf')
+                    %}
+                    <div{{ record_attrs }}>
+                        {% with {'root': record.root } %}{{ block('field_groups') }}{% endwith %}
+                    </div>
+                {% endfor %}
+            {% endblock %}
         </div>
 
         {# Submit buttons #}
