@@ -1,0 +1,165 @@
+{% trans_default_domain "contao_default" %}
+
+{# Message #}
+{% set message_groups = app.flashes(['contao.BE.error', 'contao.BE.confirm', 'contao.BE.new', 'contao.BE.info', 'contao.BE.raw'])|filter(v => v) %}
+
+{% if message_groups %}
+    <div class="tl_message">
+        {% for type, messages in message_groups %}
+            {% for message in messages %}
+                {% if type == 'contao.BE.raw' %}
+                    {{ message|raw }}
+                {% else %}
+                    <p class="tl_{{ type[10:] }}">{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{# Buttons on top #}
+<div id="tl_buttons">
+    {# Back button #}
+    {% if buttons.back|default %}
+        {% set back_button_attributes = attrs()
+            .set('href', buttons.back.href)
+            .addClass('header_back')
+            .set('title', ('MSC.backBTTitle')|trans)
+            .set('accesskey', 'b')
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ back_button_attributes }}>{{ 'MSC.backBT'|trans }}</a>
+    {% endif %}
+
+    {# New button #}
+    {% if buttons.new|default %}
+        {% set new_button_attributes = attrs()
+            .set('href', buttons.new.href)
+            .addClass('header_new')
+            .setIfExists('title', buttons.new.title)
+            .set('accesskey', 'n')
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ new_button_attributes }}>{{ buttons.new.label|raw }}</a>
+    {% endif %}
+
+    {# Prerendered global buttons #}
+    {{ buttons.global_rendered|raw }}
+</div>
+
+{# Rows #}
+{% if rows|default %}
+    {% if not select_mode %}
+        {# Plain listing (no form) #}
+        {% block records_listing %}
+            <div class="tl_listing_container list_view" id="tl_listing"{{ picker.value_attribute }}>
+                {% if select_mode or picker.field_type == 'checkbox' %}
+                    <div class="tl_select_trigger">
+                        <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
+                        <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
+                    </div>
+                {% endif %}
+
+                {% set listing_attributes = attrs()
+                    .addClass('tl_listing')
+                    .addClass('showColumns', show_columns)
+                    .addClass('picker unselectable', picker.field_type)
+                %}
+                <table{{ listing_attributes }}>
+                    {#  Table header #}
+                    {% if listing_header|default %}
+                        <tr>
+                            {% for field, label in listing_header.fields %}
+                                {% set listing_header_attributes = attrs()
+                                    .addClass('tl_folder_tlist')
+                                    .addClass('col_' ~ field)
+                                    .addClass('ordered_by', field == first_order_by)
+                                %}
+                                <th{{ listing_header_attributes }}>{{ label|raw }}</th>
+                            {% endfor %}
+                            <th class="tl_folder_tlist tl_right_nowrap"></th>
+                        </tr>
+                    {% endif %}
+
+                    {# Rows #}
+                    {% set group_count = 0 %}
+                    {% for row in rows %}
+                        {% if row.sorting|default %}
+                            <tr>
+                                <td colspan="2" class="{{ loop.first ? 'tl_folder_tlist' : 'tl_folder_list' }}">{{ row.sorting }}</td>
+                            </tr>
+                            {% set group_count = 1 %}
+                        {% else %}
+                            {% set group_count = group_count + 1 %}
+                        {% endif %}
+
+                        {% set row_attributes = attrs()
+                            .addClass(cycle(['odd', 'even'], group_count))
+                            .addClass('draft', row.data.tstamp|default == '0')
+                            .addClass('click2edit toggle_select hover-row')
+                        %}
+                        <tr{{ row_attributes }}>
+                            {% for field, label in row.columns|default([]) %}
+                                {% set column_attributes = attrs()
+                                    .set('colspan', row.colspan)
+                                    .addClass('tl_file_list')
+                                    .addClass('col_' ~ field|u.match('/[^:]*/')[0])
+                                    .addClass('ordered_by', field == first_order_by)
+                                %}
+                                <td{{ column_attributes }}>{{ label|raw }}</td>
+                            {% else %}
+                                <td class="tl_file_list">{{ row.label|raw }}</td>
+                            {% endfor %}
+
+                            <td class="tl_file_list tl_right_nowrap">
+                                {% if select_mode %}
+                                    <input type="checkbox" name="IDS[]" id="ids_{{ row.data.id }}" class="tl_tree_checkbox" value="{{ row.data.id }}">
+                                {% else %}
+                                    {{ row.buttons_rendered|raw }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% if picker.field_type == 'radio' %}
+                    <div class="tl_radio_reset">
+                        <label for="tl_radio_reset" class="tl_radio_label">{{ 'MSC.resetSelected'|trans }}</label>
+                        <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
+                    </div>
+                {% endif %}
+
+                {# Pagination #}
+                {{ pagination_rendered|default }}
+            </div>
+        {% endblock %}
+    {% else %}
+        {# Listing wrapped in form #}
+        <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
+            <div class="tl_formbody_edit">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_select">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                {{ block('records_listing') }}
+            </div>
+            <div class="tl_formbody_submit" style="text-align:right">
+                <div class="tl_submit_container">
+                    {% if buttons.submit_rendered|length < 3 %}
+                        {{ buttons.submit_rendered|join(' ')|raw }}
+                    {% else %}
+                        {{ buttons.submit_rendered[0]|raw }}
+                        <div class="split-button">
+                            {{ buttons.submit_rendered[1]|raw }}
+                            <button type="button" id="sbtog">
+                                <img src="/system/themes/flexible/icons/navcol.svg" width="12" height="12" alt="">
+                            </button>
+                            <ul class="invisible">
+                                {% for button_rendered in buttons.submit_rendered[2:] %}
+                                    <li>{{ button_rendered|raw }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% else %}
+    <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
+{% endif %}
