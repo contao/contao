@@ -3,14 +3,12 @@
 {% use "@Contao/backend/crud/DC_Table/_fields.html.twig" %}
 
 {# Errors #}
-{% if errors %}
-    <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
-{% endif %}
+{{ block('errors') }}
 
 {# Buttons #}
-{{ block('buttons') }}
+{{ block('top_buttons') }}
 
-{% if select_mode|default %}
+{% if select_fields_mode|default %}
     {# Form to select fields #}
     {% set form_attributes = attrs()
         .set('action', app.request.requestUri ~ '&fields=1')
@@ -23,7 +21,7 @@
             <input type="hidden" name="FORM_SUBMIT" value="{{ table }}_all">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
 
-            {# Errors #}
+            {# Error in case there are missing fields  #}
             {% if not_all_fields_error %}
                 <p class="tl_error">{{ 'ERR.general'|trans }}</p>
             {% endif %}
@@ -95,12 +93,5 @@
     </form>
 
     {# Focus on first error #}
-    {% if errors %}
-        <script>
-            window.addEvent('domready', function () {
-                var error = $('{{ table }}').getElement('label.error');
-                if (error) Backend.vScrollTo((error.getPosition().y - 20));
-            });
-        </script>
-    {% endif %}
+    {{ block('focus_on_first_error_script') }}
 {% endif %}

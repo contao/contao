@@ -102,8 +102,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected $arrSubmit = array();
 
-	private \Twig\Environment $twig;
-
 	/**
 	 * Initialize the object
 	 *
@@ -287,6 +285,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return null;
+	}
+
+	/**
+	 * Enrichs the given context with common values and renders a template.
+	 */
+	private function render(string $viewPart, $context = []): string
+	{
+		$mode = Input::get('act');
+
+		$defaultContext = [
+			'table' => $this->table,
+			'select_mode' => $mode === 'select',
+			'paste_mode' => $mode === 'paste',
+			'uploadable' => $this->blnUploadable,
+			'has_errors' => $this->noReload,
+		];
+
+		return System::getContainer()->get('twig')->render(
+			"@Contao/backend/crud/DC_Table/$viewPart.html.twig",
+			array_merge($defaultContext, $context)
+		);
 	}
 
 	/**
@@ -619,9 +638,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return table
 		$return .= '</table>';
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/show.html.twig', [
-			'data' => $data,
-		]);
+		return $this->render('show', ['data' => $data]);
 	}
 
 	/**
@@ -1843,9 +1860,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
-		$context = [
-			'table' => $this->strTable,
-		];
+		$context = [];
 
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
@@ -2327,13 +2342,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
 
-		$context['errors'] = $this->noReload;
-
 		if(!Input::get('nb')) {
 			$context['buttons']['back']['href'] = html_entity_decode($strBackUrl);
 		}
 
-		$context['uploadable'] = $this->blnUploadable;
 		$context['on_submit'] = $this->onsubmit;
 
 		// Set the focus if there is an error
@@ -2348,7 +2360,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </script>';
 		}
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/edit.html.twig', $context);
+		return $this->render('edit', $context);
 	}
 
 	/**
@@ -2369,9 +2381,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$context = [
-			'table' => $this->strTable,
-		];
+		$context = [];
 
 		$this->import(BackendUser::class, 'User');
 
@@ -2611,7 +2621,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$recordData['root'] = $currentNode;
 
 					// Render messages now to capture all messages generated so far
-					$recordData['messages_rendered'] = $this->twig->render('@Contao/backend/crud/DC_Table/_message.html.twig');
+					$recordData['messages_rendered'] = $this->render('message');
 
 					$context['records'][] = $recordData;
 
@@ -2697,7 +2707,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Add the form
-			$context['uploadable'] = $this->blnUploadable;
 			$return = '
 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
@@ -2728,7 +2737,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Else show a form to select the fields
 		else
 		{
-			$context['select_mode'] = true;
+			$context['select_fields_mode'] = true;
 
 			$options = '';
 			$fields = array();
@@ -2801,7 +2810,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		$context['errors'] = $this->noReload;
 		$context['buttons']['back']['href'] = $this->getReferer();
 
 		$return = ($this->noReload ? '
@@ -2811,7 +2819,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>' . $return;
 
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/edit_all.html.twig', $context);
+		return $this->render('edit_all', $context);
 	}
 
 	/**
@@ -2895,9 +2903,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$context = [
-			'table' => $this->strTable,
-		];
+		$context = [];
 
 		$this->import(BackendUser::class, 'User');
 
@@ -3091,7 +3097,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Add the form
-			$context['uploadable'] = $this->blnUploadable;
 			$return = '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
@@ -3121,7 +3126,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Else show a form to select the fields
 		else
 		{
-			$context['select_mode'] = true;
+			$context['select_fields_mode'] = true;
 
 			$options = '';
 			$fields = array();
@@ -3193,7 +3198,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		$context['errors'] = $this->noReload;
 		$context['buttons']['back']['href'] = $this->getReferer();
 
 		$return = ($this->noReload ? '
@@ -3202,7 +3206,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/override_all.html.twig', $context);
+		return $this->render('override_all', $context);
 	}
 
 	/**
@@ -3802,9 +3806,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$return2 =  '
 <p class="tl_empty">Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</p>';
-			return $this->twig->render(
-				'@Contao/backend/crud/DC_Table/error.html.twig',
-				['error' => 'Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!']
+			return $this->render('error', [
+				'error' => 'Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!']
 			);
 		}
 
@@ -3813,9 +3816,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$return2 =  '
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
-			return $this->twig->render(
-				'@Contao/backend/crud/DC_Table/error.html.twig',
-				['error' => 'Table "' . $table . '" can not be shown as extended tree, because there is no parent table!']
+			return $this->render('error', [
+				'error' => 'Table "' . $table . '" can not be shown as extended tree, because there is no parent table!']
 			);
 		}
 
@@ -3958,8 +3960,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$context['tree_rendered'] = $tree;
 		$context['breadcrumb_rendered'] = $breadcrumb;
-		$context['select_mode'] = Input::get('act') == 'select';
-		$context['paste_mode'] = Input::get('act') == 'paste';
 		$context['has_clipboard_content'] = $blnClipboard;
 		$context['picker'] = [
 			'field_type' => $this->strPickerFieldType,
@@ -3979,7 +3979,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return2 = $return . '
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 
-			return $this->twig->render('@Contao/backend/crud/DC_Table/tree.html.twig', $context);
+			return $this->render('tree', $context);
 		}
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -4117,7 +4117,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/tree.html.twig', $context);
+		return $this->render('tree', $context);
 	}
 
 	/**
@@ -4518,9 +4518,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function parentView()
 	{
-		$context = [
-			'table' => $this->table,
-		];
+		$context = [];
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
@@ -4596,7 +4594,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									->execute($this->intCurrentPid);
 
 		$context['has_content'] = $objParent->numRows >= 1;
-		$context['select_mode'] = Input::get('act') == 'select';
 		$context['has_clipboard_content'] = $blnClipboard;
 		$context['picker'] = [
 			'field_type' => $this->strPickerFieldType,
@@ -4604,7 +4601,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		];
 		if ($objParent->numRows < 1)
 		{
-			return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
+			return $this->render('parent', $context);
 		}
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -4871,7 +4868,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return2 = $return . '
 <p class="tl_empty_parent_view">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>
 </div>';
-				return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
+				return $this->render('parent', $context);
 			}
 
 			// Render the child records
@@ -5163,7 +5160,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
+		return $this->render('parent', $context);
 	}
 
 	/**
@@ -5342,7 +5339,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>' : '') . '
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
-			$context['select_mode'] = Input::get('act') == 'select';
 			$context['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
 			$context['picker'] = [
 				'field_type' => $this->strPickerFieldType,
@@ -5591,7 +5587,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		return $this->twig->render('@Contao/backend/crud/DC_Table/list.html.twig', $context);
+		return $this->render('list', $context);
 	}
 
 	/**

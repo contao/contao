@@ -3,10 +3,10 @@
 {% use "@Contao/backend/crud/DC_Table/_picker.html.twig" %}
 
 {# Message #}
-{% include "@Contao/backend/crud/DC_Table/_message.html.twig" %}
+{% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
 
 {# Buttons #}
-{{ block('buttons') }}
+{{ block('top_buttons') }}
 
 {% if tree_rendered or paste_mode %}
     {% if not select_mode %}

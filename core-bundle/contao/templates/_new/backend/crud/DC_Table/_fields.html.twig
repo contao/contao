@@ -10,3 +10,21 @@
         {% endif %}
     {% endfor %}
 {% endblock %}
+
+{# Error handling #}
+{% block errors %}
+    {% if has_errors %}
+        <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+    {% endif %}
+{% endblock %}
+
+{% block focus_on_first_error_script %}
+    {% if has_errors %}
+        <script>
+            window.addEvent('domready', function () {
+                var error = $('{{ table }}').getElement('label.error');
+                if (error) Backend.vScrollTo((error.getPosition().y - 20));
+            });
+        </script>
+    {% endif %}
+{% endblock %}

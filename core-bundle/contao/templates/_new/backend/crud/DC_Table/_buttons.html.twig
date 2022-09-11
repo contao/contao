@@ -1,6 +1,6 @@
 {% trans_default_domain "contao_default" %}
 
-{% block buttons %}
+{% block top_buttons %}
     <div id="tl_buttons">
         {# Back button #}
         {% if buttons.back|default %}
@@ -140,7 +140,6 @@
         <img src="/system/themes/flexible/icons/pasteinto_.svg" width="16" height="16" alt="">
     {% endif %}
 {% endapply %}{% endblock %}
-
 
 {% block submit_buttons %}
     <div class="tl_submit_container">
