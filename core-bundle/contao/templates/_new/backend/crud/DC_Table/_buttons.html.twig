@@ -97,11 +97,11 @@
 
     {# Copy/move multiple button #}
     {% if row.buttons.copy_move_multiple|default %}
-        {% set row_copy_move_multiple_attributes = attrs()
+        {% set row_copy_move_multiple_button_attributes = attrs()
             .set('href', row.buttons.copy_move_multiple.href)
             .set('title', row.buttons.copy_move_multiple.title)
             .set('onclick', 'Backend.getScrollOffset()') %}
-        <a{{ row_copy_move_multiple_attributes }}>
+        <a{{ row_copy_move_multiple_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ row.buttons.copy_move_multiple.title }}">
         </a>
     {% endif %}
@@ -119,6 +119,27 @@
         </button>
     {% endif %}
 {% endblock %}
+
+{% block tree_paste_into_button %}{% apply spaceless %}
+    {# Prerendered button #}
+    {{ buttons.paste_into_rendered|default|raw }}
+
+    {# Paste into button #}
+    {% if buttons.paste_into|default %}
+        {% set paste_into_button_attributes = attrs()
+            .set('href', buttons.paste_into.href)
+            .set('title', buttons.paste_into.title)
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ paste_into_button_attributes }}>
+            <img src="/system/themes/flexible/icons/pasteinto.svg" width="16" height="16" alt="{{ buttons.paste_into.title }}">
+        </a>
+    {% endif %}
+
+    {# Disabled paste into marker #}
+    {% if buttons.paste_into_disabled|default %}
+        <img src="/system/themes/flexible/icons/pasteinto_.svg" width="16" height="16" alt="">
+    {% endif %}
+{% endapply %}{% endblock %}
 
 
 {% block submit_buttons %}

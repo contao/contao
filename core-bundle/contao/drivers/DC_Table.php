@@ -3748,6 +3748,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function treeView()
 	{
+		$context = [];
+
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
@@ -3798,15 +3800,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return if a mandatory field (id, pid, sorting) is missing
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->Database->fieldExists('id', $table) || !$this->Database->fieldExists('pid', $table) || !$this->Database->fieldExists('sorting', $table)))
 		{
-			return '
+			$return2 =  '
 <p class="tl_empty">Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</p>';
+			return $this->twig->render(
+				'@Contao/backend/crud/DC_Table/error.html.twig',
+				['error' => 'Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!']
+			);
 		}
 
 		// Return if there is no parent table
 		if (!$this->ptable && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 		{
-			return '
+			$return2 =  '
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
+			return $this->twig->render(
+				'@Contao/backend/crud/DC_Table/error.html.twig',
+				['error' => 'Table "' . $table . '" can not be shown as extended tree, because there is no parent table!']
+			);
 		}
 
 		$blnClipboard = false;
@@ -3851,6 +3861,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <a href="' . $this->addToUrl('act=paste&amp;mode=create') . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . ($blnClipboard ? '
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
 </div>';
+
+		if(Input::get('act') == 'select') {
+			$context['buttons']['back']['href'] = $this->getReferer();
+		} elseif(isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'])) {
+			$context['buttons']['back']['href'] = System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'];
+		}
+
+		if(Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) {
+			$context['buttons']['new'] = [
+				'href' => html_entity_decode($this->addToUrl('act=paste&amp;mode=create')),
+				'title' =>  $labelNew[1],
+				'label' =>  $labelNew[0],
+			];
+		}
+
+		if($blnClipboard) {
+			$context['buttons']['clipboard']['href'] = html_entity_decode($this->addToUrl('clipboard=1'));
+		} else {
+			$context['buttons']['global_rendered'] = $this->generateGlobalButtons();
+		}
 
 		$tree = '';
 		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
@@ -3926,6 +3956,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$breadcrumb = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
 
+		$context['tree_rendered'] = $tree;
+		$context['breadcrumb_rendered'] = $breadcrumb;
+		$context['select_mode'] = Input::get('act') == 'select';
+		$context['paste_mode'] = Input::get('act') == 'paste';
+		$context['has_clipboard_content'] = $blnClipboard;
+		$context['picker'] = [
+			'field_type' => $this->strPickerFieldType,
+			'value_attribute' => $this->getPickerValueAttribute(),
+		];
+		$context['extended'] = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED;
+		$context['label_rendered'] = $label;
+
 		// Return if there are no records
 		if (!$tree && Input::get('act') != 'paste')
 		{
@@ -3934,8 +3976,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= '<div class="tl_listing_container">' . $breadcrumb . '</div>';
 			}
 
-			return $return . '
+			$return2 = $return . '
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
+
+			return $this->twig->render('@Contao/backend/crud/DC_Table/tree.html.twig', $context);
 		}
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -3980,6 +4024,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
 				$_buttons = '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+				$context['buttons']['paste_into'] = [
+					'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+					'title' => $labelPasteInto[0],
+				];
 			}
 		}
 
@@ -4039,6 +4087,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
+			$context['buttons']['submit_rendered'] = array_values($arrButtons);
+
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -4067,7 +4117,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		return $return;
+		return $this->twig->render('@Contao/backend/crud/DC_Table/tree.html.twig', $context);
 	}
 
 	/**
