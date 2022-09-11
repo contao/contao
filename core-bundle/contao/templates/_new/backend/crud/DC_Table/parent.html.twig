@@ -1,0 +1,143 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+{% use "@Contao/backend/crud/DC_Table/_picker.html.twig" %}
+
+{# Message #}
+{% include "@Contao/backend/crud/DC_Table/_message.html.twig" %}
+
+{# Buttons #}
+{{ block('buttons') }}
+
+{% if has_content|default %}
+    {% if not select_mode %}
+        {# Plain listing (no form) #}
+        {% block records_listing %}
+            {# Paste hint #}
+            {% if has_clipboard_content %}
+                <div id="paste_hint" data-add-to-scroll-offset="20">
+                    <p>{{ 'MSC.selectNewPosition'|trans }}</p>
+                </div>
+            {% endif %}
+
+            {% set listing_attributes = attrs()
+                .addClass('tl_listing_container parent_view')
+                .addClass('picker unselectable', picker.field_type)
+                .set('id', 'tl_listing')
+                .mergeWith(picker.value_attribute)
+            %}
+            <div{{ listing_attributes }}>
+                <div class="tl_header click2edit toggle_select hover-div">
+                    {# Child table listing #}
+                    {% if header|default %}
+                        <div class="tl_content_right">
+                            {# Picker "select all" controls #}
+                            {% with {'wrapped': false} %}{{ block('picker_select_all') }}{% endwith %}
+
+                            {# Header row buttons #}
+                            {{ block('header_row_buttons') }}
+                        </div>
+
+                        {# Header #}
+                        <table class="tl_header_table">
+                            {% for label, value in header %}
+                                <tr>
+                                    <td><span class="tl_label">{{ label|raw }}:</span> </td>
+                                    <td>{{ value|raw }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </div>
+
+                {# Records #}
+                {% if rows|default %}
+                    {% if not sorting %}
+                        {# Rows (no sorting) #}
+                        {% block listing %}
+                            {% for row in rows %}
+                                {% if not sorting %}
+                                    {% block listing_item %}
+                                        {# Group header #}
+                                        {% if row.group_header|default %}
+                                            <div class="tl_content_header">{{ row.group_header|raw }}</div>
+                                        {% endif %}
+
+                                        {% set content_attributes = attrs()
+                                            .addClass('tl_content')
+                                            .addClass('wrapper_start', row.wrapper.start)
+                                            .addClass('wrapper_separator', row.wrapper.separator)
+                                            .addClass('wrapper_stop', row.wrapper.stop)
+                                            .addClass('indent indent_first', row.wrapper.indent)
+                                            .addClass('indent_first', row.wrapper.indent_first)
+                                            .addClass('indent_last', row.wrapper.indent_last)
+                                            .addClass('draft', row.data.tstamp|default == '0')
+                                            .addClass(child_record_class|default, child_record_class)
+                                            .addClass(cycle(['even', 'odd'], loop.index0))
+                                            .addClass('click2edit toggle_select hover-div')
+                                        %}
+                                        <div{{ content_attributes }}>
+                                            <div class="tl_content_right">
+                                                {% if select_mode %}
+                                                    <input type="checkbox" name="IDS[]" id="ids_{{ row.data.id }}" class="tl_tree_checkbox" value="{{ row.data.id }}">
+                                                {% else %}
+                                                    {# Row buttons #}
+                                                    {{ block('row_buttons') }}
+
+                                                    {# Picker input field #}
+                                                    {{ row.picker_input_rendered|default|raw }}
+                                                {% endif %}
+                                            </div>
+
+                                            {# Label #}
+                                            {% if row.record_rendered|default %}
+                                                    {{ row.record_rendered|raw }}
+                                            {% else %}
+                                                <div class="tl_content_left">
+                                                    {{ row.default_label_rendered|default|raw }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endblock %}
+                                {% else %}
+                                    <li id="li_{{ row.data.id }}">{{ block('listing_item') }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endblock %}
+                    {% else %}
+                        {# Rows with sorting #}
+                        <ul id="ul_{{ sorting }}">
+                            {{ block('listing') }}
+                        </ul>
+                        {% if sorting_script|default %}
+                            <script>
+                                Backend.makeParentViewSortable("ul_{{ sorting }}");
+                            </script>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <p class="tl_empty_parent_view">{{ 'MSC.noResult'|trans }}</p>
+                {% endif %}
+
+                {# Picker "reset selection" controls #}
+                {{ block('picker_reset') }}
+
+                {# Pagination #}
+                {{ pagination_rendered|default }}
+            </div>
+        {% endblock %}
+    {% else %}
+        {# Listing wrapped in form #}
+        <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
+            <div class="tl_formbody_edit">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_select">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                {{ block('records_listing') }}
+            </div>
+
+            {# Submit buttons #}
+            <div class="tl_formbody_submit" style="text-align:right">
+                {{ block('submit_buttons') }}
+            </div>
+        </form>
+    {% endif %}
+{% endif %}

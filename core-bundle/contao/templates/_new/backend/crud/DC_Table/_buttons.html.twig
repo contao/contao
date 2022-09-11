@@ -24,10 +24,102 @@
             <a{{ new_button_attributes }}>{{ buttons.new.label|raw }}</a>
         {% endif %}
 
+        {# Clipboard button #}
+        {% if buttons.clipboard|default %}
+            {% set clipboard_button_attributes = attrs()
+                .set('href', buttons.clipboard.href)
+                .addClass('header_clipboard')
+                .set('title', ('MSC.clearClipboard')|trans)
+                .set('accesskey', 'x') %}
+            <a{{ clipboard_button_attributes }}>{{ 'MSC.clearClipboard'|trans }}</a>
+        {% endif %}
+
         {# Prerendered global buttons #}
         {{ buttons.global_rendered|default|raw }}
     </div>
 {% endblock %}
+
+{% block header_row_buttons %}
+    {# Edit header button #}
+    {% if buttons.edit_header|default %}
+        {% set edit_header_button_attributes = attrs()
+            .set('href', buttons.edit_header.href)
+            .addClass('edit')
+            .set('title', buttons.edit_header.title) %}
+        <a{{ edit_header_button_attributes }}>
+            <img src="/system/themes/flexible/icons/edit.svg" width="16" height="16" alt="{{ buttons.edit_header.title }}">
+        </a>
+    {% endif %}
+
+    {# Prerendered row buttons #}
+    {{ buttons.row_rendered|default|raw }}
+
+    {# Paste after button #}
+    {% if buttons.paste_after|default %}
+        {% set paste_after_button_attributes = attrs()
+            .set('href', buttons.paste_after.href)
+            .set('title', buttons.paste_after.title)
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ paste_after_button_attributes }}>
+            <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ buttons.paste_after.title }}">
+        </a>
+    {% endif %}
+
+    {# Paste new button #}
+    {% if buttons.paste_new|default %}
+        {% set paste_new_button_attributes = attrs()
+            .set('href', buttons.paste_new.href)
+            .set('title', buttons.paste_new.title) %}
+        <a{{ paste_new_button_attributes }}>
+            <img src="/system/themes/flexible/icons/new.svg" width="16" height="16" alt="{{ buttons.paste_new.title }}">
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block row_buttons %}
+    {# Regular buttons #}
+    {{ row.buttons.regular_rendered|default|raw }}
+
+    {# Create new button #}
+    {% if row.buttons.new|default %}
+        {% set row_new_button_attributes = attrs()
+            .set('href', row.buttons.new.href)
+            .set('title', row.buttons.new.title) %}
+        <a{{ row_new_button_attributes }}>
+            <img src="/system/themes/flexible/icons/new.svg" width="16" height="16" alt="{{ row.buttons.new.title }}">
+        </a>
+    {% endif %}
+
+    {# Disabled paste marker #}
+    {% if row.buttons.paste_disabled|default %}
+        <img src="/system/themes/flexible/icons/pasteafter_.svg" width="16" height="16" alt="">
+    {% endif %}
+
+    {# Copy/move multiple button #}
+    {% if row.buttons.copy_move_multiple|default %}
+        {% set row_copy_move_multiple_attributes = attrs()
+            .set('href', row.buttons.copy_move_multiple.href)
+            .set('title', row.buttons.copy_move_multiple.title)
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ row_copy_move_multiple_attributes }}>
+            <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ row.buttons.copy_move_multiple.title }}">
+        </a>
+    {% endif %}
+
+    {# Drag handle #}
+    {% if row.buttons.drag_handle|default %}
+        {% set row_drag_handle_attributes = attrs()
+            .set('type', 'button')
+            .addClass('drag-handle')
+            .set('title', row.buttons.drag_handle.title)
+            .set('aria-hidden', 'true')
+        %}
+        <button{{row_drag_handle_attributes }}>
+            <img src="/system/themes/flexible/icons/drag.svg" width="16" height="16" alt="">
+        </button>
+    {% endif %}
+{% endblock %}
+
 
 {% block submit_buttons %}
     <div class="tl_submit_container">

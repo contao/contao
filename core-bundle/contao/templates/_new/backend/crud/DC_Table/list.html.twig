@@ -1,5 +1,6 @@
 {% trans_default_domain "contao_default" %}
 {% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+{% use "@Contao/backend/crud/DC_Table/_picker.html.twig" %}
 
 {# Message #}
 {% include "@Contao/backend/crud/DC_Table/_message.html.twig" %}
@@ -12,20 +13,21 @@
     {% if not select_mode %}
         {# Plain listing (no form) #}
         {% block records_listing %}
-            <div class="tl_listing_container list_view" id="tl_listing"{{ picker.value_attribute }}>
-                {% if select_mode or picker.field_type == 'checkbox' %}
-                    <div class="tl_select_trigger">
-                        <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
-                        <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
-                    </div>
-                {% endif %}
+           {% set listing_attributes = attrs()
+                .addClass('tl_listing_container listView')
+                .addClass('id', 'tl_listing')
+                .mergeWith(picker.value_attribute)
+            %}
+            <div{{listing_attributes }}>
+                {# Picker "select all" controls #}
+                {{ block('picker_select_all') }}
 
-                {% set listing_attributes = attrs()
+                {% set listing_table_attributes = attrs()
                     .addClass('tl_listing')
                     .addClass('showColumns', show_columns)
                     .addClass('picker unselectable', picker.field_type)
                 %}
-                <table{{ listing_attributes }}>
+                <table{{ listing_table_attributes }}>
                     {#  Table header #}
                     {% if listing_header|default %}
                         <tr>
@@ -81,12 +83,9 @@
                         </tr>
                     {% endfor %}
                 </table>
-                {% if picker.field_type == 'radio' %}
-                    <div class="tl_radio_reset">
-                        <label for="tl_radio_reset" class="tl_radio_label">{{ 'MSC.resetSelected'|trans }}</label>
-                        <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-                    </div>
-                {% endif %}
+
+                {# Picker "reset selection" controls #}
+                {{ block('picker_reset') }}
 
                 {# Pagination #}
                 {{ pagination_rendered|default }}

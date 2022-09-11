@@ -1,0 +1,25 @@
+{% trans_default_domain "contao_default" %}
+
+{% block picker_select_all %}
+    {% if select_mode or picker.field_type == 'checkbox' %}
+        {% if wrapped is not defined or not wrapped %}
+            {% block picker_select_all_inner %}
+                <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
+                <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
+            {% endblock %}
+        {% else %}
+            <div class="tl_select_trigger">
+                {{ block('picker_select_all_inner') }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block picker_reset %}
+    {% if picker.field_type == 'radio' %}
+        <div class="tl_radio_reset">
+            <label for="tl_radio_reset" class="tl_radio_label">{{ 'MSC.resetSelected'|trans }}</label>
+            <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
+        </div>
+    {% endif %}
+{% endblock %}

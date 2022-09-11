@@ -4468,6 +4468,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function parentView()
 	{
+		$context = [
+			'table' => $this->table,
+		];
+
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -4514,14 +4518,43 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
 </div>';
 
+		if(!Input::get('nb')) {
+			if($this->ptable) {
+				$context['buttons']['back']['href'] = $this->getReferer(false, $this->ptable);
+			} elseif(isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'])) {
+				$context['buttons']['back']['href'] = System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'];
+			}
+		}
+
+		if(Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) {
+			$context['buttons']['new'] = [
+				'href' => html_entity_decode($this->addToUrl(($blnHasSorting ? 'act=paste&mode=create' : 'act=create&mode=2&pid=' . $this->intId))),
+				'title' => $labelNew[1],
+				'label' => $labelNew[0],
+			];
+		}
+
+		if($blnClipboard) {
+			$context['buttons']['clipboard']['href'] = html_entity_decode($this->addToUrl('clipboard=1'));
+		} else {
+			$context['buttons']['global_rendered'] = $this->generateGlobalButtons();
+		}
+
 		// Get all details of the parent record
 		$objParent = $this->Database->prepare("SELECT * FROM " . $this->ptable . " WHERE id=?")
 									->limit(1)
 									->execute($this->intCurrentPid);
 
+		$context['has_content'] = $objParent->numRows >= 1;
+		$context['select_mode'] = Input::get('act') == 'select';
+		$context['has_clipboard_content'] = $blnClipboard;
+		$context['picker'] = [
+			'field_type' => $this->strPickerFieldType,
+			'value_attribute' => $this->getPickerValueAttribute(),
+		];
 		if ($objParent->numRows < 1)
 		{
-			return $return;
+			return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
 		}
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -4555,6 +4588,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <a href="' . preg_replace('/&(amp;)?table=[^& ]*/i', ($this->ptable ? '&amp;table=' . $this->ptable : ''), $this->addToUrl('act=edit' . (Input::get('nb') ? '&amp;nc=1' : ''))) . '" class="edit" title="' . StringUtil::specialchars(sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id)) . '">' . $imageEditHeader . '</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $objParent->id)))) ? '
 <a href="' . $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId) . '" title="' . StringUtil::specialchars($labelPasteNew[0]) . '">' . $imagePasteNew . '</a>' : ''))) . '
 </div>';
+
+			if(Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox') {
+				if($blnClipboard) {
+					$context['buttons']['paste_after'] = [
+						'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : ''))),
+						'title' => $labelPasteAfter[0],
+					];
+				} else if(!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $this->ptable)) {
+					$context['buttons']['edit_header'] = [
+						'href' => html_entity_decode(preg_replace('/&(amp;)?table=[^& ]*/i', ($this->ptable ? '&amp;table=' . $this->ptable : ''), $this->addToUrl('act=edit' . (Input::get('nb') ? '&amp;nc=1' : '')))),
+						'title' => sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id),
+					];
+					$context['buttons']['row_rendered'] = $this->generateHeaderButtons($objParent->row(), $this->ptable);
+				}
+
+				if($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $objParent->id)))) {
+					$context['buttons']['paste_new'] = [
+						'href' => html_entity_decode($this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId)),
+						'title' => $labelPasteNew[0],
+					];
+				}
+			}
 
 			// Format header fields
 			$add = array();
@@ -4691,6 +4746,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </table>
 </div>';
 
+			$context['header'] = $add;
 			$orderBy = array();
 			$firstOrderBy = array();
 
@@ -4762,9 +4818,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($objOrderBy->numRows < 1)
 			{
-				return $return . '
+				$return2 = $return . '
 <p class="tl_empty_parent_view">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>
 </div>';
+				return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
 			}
 
 			// Render the child records
@@ -4781,8 +4838,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <ul id="ul_' . $this->intCurrentPid . '">';
 			}
 
+			$context['sorting'] = $blnHasSorting ? $this->intCurrentPid : null;
+			$context['child_record_class'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] ?? null;
+
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
+				$rowData = [];
 				// Improve performance
 				static::setCurrentRecordCache($row[$i]['id'], $this->strTable, $row[$i]);
 
@@ -4810,6 +4871,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$return .= "\n\n" . '<div class="tl_content_header">' . $group . '</div>';
 						$strGroup = $group;
+						$rowData['group_header'] = $group;
 					}
 				}
 
@@ -4824,6 +4886,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$blnIndent = false;
 				}
+
+				$rowData['wrapper'] = [
+					'start' => $blnWrapperStart,
+					'separator' => $blnWrapperSeparator,
+					'stop' => $blnWrapperStop,
+					'indent' => $blnIndent,
+					'indent_first' => $blnIndentFirst,
+					'indent_last' => $blnIndentLast,
+					'level' => $intWrapLevel,
+				];
+
+				$rowData['data'] = $row[$i];
 
 				$return .= '
 <div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
@@ -4844,7 +4918,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Regular buttons
 				else
 				{
-					$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
+					$return .= $rowButtons = $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
+					$rowData['buttons']['regular_rendered'] = $rowButtons;
 
 					// Sortable table
 					if ($blnHasSorting)
@@ -4855,37 +4930,54 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $row[$i]['id']))))
 						{
 							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
+							$rowData['buttons']['new'] = [
+								'href' => html_entity_decode($this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : ''))),
+								'title' => sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']),
+							];
 						}
 
 						// Prevent circular references
 						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
 						{
 							$return .= ' ' . Image::getHtml('pasteafter_.svg');
+							$rowData['buttons']['paste_disabled'] = true;
 						}
 
 						// Copy/move multiple
 						elseif ($blnMultiboard)
 						{
 							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							$rowData['buttons']['copy_move_multiple'] = [
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'])),
+								'title' => sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']),
+							];
 						}
 
 						// Paste buttons
 						elseif ($blnClipboard)
 						{
 							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							$rowData['buttons']['paste_after'] = [
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id'])),
+								'title' => sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']),
+							];
 						}
 
 						// Drag handle
 						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
 						{
 							$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+							$rowData['buttons']['drag_handle'] = [
+								'title' => sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id']),
+							];
 						}
 					}
 
 					// Picker
 					if ($this->strPickerFieldType)
 					{
-						$return .= $this->getPickerInputField($row[$i]['id']);
+						$return .= $pickerInput = $this->getPickerInputField($row[$i]['id']);
+						$rowData['picker_input_rendered'] = $pickerInput;
 					}
 				}
 
@@ -4895,15 +4987,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
 					$this->import($strClass);
-					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+					$return .= '</div>' . ($record = $this->$strClass->$strMethod($row[$i])) . '</div>';
+					$rowData['record_rendered'] = $record;
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
-					$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+					$return .= '</div>' . ($record = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i])) . '</div>';
+					$rowData['record_rendered'] = $record;
 				}
 				else
 				{
-					$return .= '</div><div class="tl_content_left">' . $this->generateRecordLabel($row[$i]) . '</div></div>';
+					$return .= '</div><div class="tl_content_left">' . ($recordLabel = $this->generateRecordLabel($row[$i])) . '</div></div>';
+					$rowData['default_label_rendered'] = $recordLabel;
 				}
 
 				// Make items sortable
@@ -4912,6 +5007,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$return .= '
 </li>';
 				}
+
+				$context['rows'][] = $rowData;
 			}
 		}
 
@@ -4923,6 +5020,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <script>
   Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
 </script>';
+			$context['sorting_script'] = true;
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '
@@ -4934,7 +5032,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add another panel at the end of the page
 		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 		{
-			$return .= $this->paginationMenu();
+			$return .= $context['pagination_rendered'] = $this->paginationMenu();
 		}
 
 		// Close the form
@@ -4985,6 +5083,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
+			$context['buttons']['submit_rendered'] = array_values($arrButtons);
+
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -5013,7 +5113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		return $return;
+		return $this->twig->render('@Contao/backend/crud/DC_Table/parent.html.twig', $context);
 	}
 
 	/**
