@@ -237,11 +237,10 @@ class tl_templates extends Backend
 	 */
 	public function addNewTemplate()
 	{
-		$container = System::getContainer();
-
 		$arrAllTemplates = array();
 
 		// Add modern templates
+		$container = System::getContainer();
 		$chains = $container->get('contao.twig.filesystem_loader')->getInheritanceChains();
 
 		foreach ($chains as $identifier => $chain)
@@ -254,11 +253,7 @@ class tl_templates extends Backend
 			$parts = explode('/', $identifier);
 			$rootCategory = array_shift($parts);
 
-			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf(
-				'%s (%s.html.twig)',
-				implode('/', $parts),
-				$identifier
-			);
+			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf('%s [%s.html.twig]', implode('/', $parts), $identifier);
 
 			ksort($arrAllTemplates[$rootCategory]);
 		}
@@ -302,19 +297,18 @@ class tl_templates extends Backend
 						throw new RuntimeException('Invalid template ' . $template);
 					}
 
-					$strError = sprintf(
-						$GLOBALS['TL_LANG']['tl_templates']['containsErrors'],
-						$template,
-						$e->getPrevious()->getMessage()
-					);
+					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['hasErrors'], $template, $e->getPrevious()->getMessage());
 
 					return;
 				}
 
-				$content = $container->get('twig')->render('@Contao/backend/template_skeleton.html.twig', array(
-					'type' => str_starts_with('@Contao/component', $template) ? 'use' : 'extends',
-					'template' => $info,
-				));
+				$content = $container->get('twig')->render(
+					'@Contao/backend/template_skeleton.html.twig',
+					array(
+						'type' => str_starts_with('@Contao/component', $template) ? 'use' : 'extends',
+						'template' => $info,
+					)
+				);
 
 				$filesystem->dumpFile($targetFile, $content);
 			};
