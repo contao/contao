@@ -126,9 +126,9 @@ class TemplateLocator
             ->in($path)
             ->name('/(\.html\.twig|\.html5)$/')
             ->filter(
-                // Never list templates from theme directories unless the $path
-                // is a theme path. This makes sure you can still have theme
-                // directories within any directory that is a namespace root.
+                // Never list templates from theme directories unless $path is
+                // a theme path. This ensures that you can still have theme
+                // directories inside any directory that is a namespace root.
                 fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath())
             )
             ->sortByName()
