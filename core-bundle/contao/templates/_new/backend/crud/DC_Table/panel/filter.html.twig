@@ -1,0 +1,27 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="tl_filter tl_subpanel">
+    <strong>{{ 'MSC.filter'|trans }}:</strong>
+    {% for field in sorting_fields|default([]) %}
+        {% set select_attributes = attrs()
+            .set('name', field.name)
+            .set('id', field.name)
+            .addClass('tl_select tl_chosen')
+            .addClass('active', field.active)
+        %}
+        <select{{ select_attributes }}>
+            <option value="tl_{{ field.name }}">{{ field.label }}</option>
+            <option value="tl_{{ field.name }}">---</option>
+            {% for option in field.options|default([]) %}
+                {% set option_attributes = attrs()
+                    .set('value', option.value)
+                    .set('selected', 'selected', option.selected)
+                %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endfor %}
+        </select>
+
+        {#  Force a line-break after six elements (see #3777) #}
+        {% if loop.index % 6 == 0 %}<br>{% endif %}
+    {% endfor %}
+</div>

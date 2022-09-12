@@ -5719,6 +5719,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$options_sorter = array();
+		$options = [];
 
 		foreach ($searchFields as $field)
 		{
@@ -5734,6 +5735,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((isset($session['search'][$this->strTable]['field']) && $session['search'][$this->strTable]['field'] == $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options[$option_label . '_' . $field] = [
+				'value' => $field,
+				'selected' => isset($session['search'][$this->strTable]['field']) && $session['search'][$this->strTable]['field'] == $field,
+				'label' => $option_label,
+			];
 		}
 
 		// Sort by option values
@@ -5749,10 +5755,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 		});
+		uksort($options, static function ($a, $b)
+		{
+			$a = (new UnicodeString($a))->folded();
+			$b = (new UnicodeString($b))->folded();
+
+			if ($a->toString() === $b->toString())
+			{
+				return 0;
+			}
+
+			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+		});
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
-		return '
+		$context = [
+			'options' => array_values($options),
+			'active' => $active,
+			'value' => $session['search'][$this->strTable]['value'] ?? '',
+		];
+		$return = '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
 <select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
@@ -5761,6 +5784,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <span>=</span>
 <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
 </div>';
+
+		return $this->render('panel/search', $context);
 	}
 
 	/**
@@ -5831,6 +5856,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$options_sorter = array();
+		$options = [];
 
 		// Sorting fields
 		foreach ($sortingFields as $field)
@@ -5843,6 +5869,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$options_sorter[$options_label] = '  <option value="' . StringUtil::specialchars($field) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $field == str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '')) ? ' selected="selected"' : '') . '>' . $options_label . '</option>';
+			$options[$options_label] = [
+				'value' => $field,
+				'selected' => (!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $field == str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? ''),
+				'label' => $options_label,
+			];
 		}
 
 		// Sort by option values
@@ -5858,14 +5889,31 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 		});
+		uksort($options, static function ($a, $b)
+		{
+			$a = (new UnicodeString($a))->folded();
+			$b = (new UnicodeString($b))->folded();
 
-		return '
+			if ($a->toString() === $b->toString())
+			{
+				return 0;
+			}
+
+			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+		});
+
+		$context = [
+			'options' => array_values($options),
+		];
+		$return = '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
 <select name="tl_sort" id="tl_sort" class="tl_select tl_chosen">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
+
+		return $this->render('panel/sort', $context);
 	}
 
 	/**
@@ -5883,6 +5931,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 		$fields = '';
+		$context = [];
 
 		// Set limit from user input
 		if (\in_array(Input::post('FORM_SUBMIT'), array('tl_filters', 'tl_filters_limit')))
@@ -5978,12 +6027,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$options .= '
   <option value="' . $this_limit . '"' . Widget::optionSelected($this->limit, $this_limit) . '>' . ($i*Config::get('resultsPerPage')+1) . ' - ' . $upper_limit . '</option>';
+					$context['options'][] = [
+						'value' => $this_limit,
+						'selected' => Widget::optionSelected($this->limit, $this_limit) !== '',
+						'label' => sprintf('%s - %s', $i * Config::get('resultsPerPage') + 1, $upper_limit),
+					];
 				}
 
 				if (!$blnIsMaxResultsPerPage)
 				{
 					$options .= '
   <option value="all"' . Widget::optionSelected($this->limit, null) . '>' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</option>';
+					$context['options'][] = [
+						'value' => 'all',
+						'selected' => Widget::optionSelected($this->limit, null) !== '',
+						'label' => $GLOBALS['TL_LANG']['MSC']['filterAll'],
+					];
 				}
 			}
 
@@ -5997,12 +6056,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <select name="tl_limit" class="tl_select tl_chosen' . (($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '') . '" onchange="this.form.submit()">
   <option value="tl_limit">' . $GLOBALS['TL_LANG']['MSC']['filterRecords'] . '</option>' . $options . '
 </select> ';
+
+			$context['active'] = ($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage');
 		}
 
-		return '
+		$return = '
 <div class="tl_limit tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</strong> ' . $fields . '
 </div>';
+
+		return $this->render('panel/limit', $context);
 	}
 
 	/**
@@ -6021,6 +6084,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$sortingFields = array();
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
+		$context = [];
 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -6229,6 +6293,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 										->execute(...$arrValues);
 
 			// Begin select menu
+			$fieldData = [
+				'name' => $field,
+				'active' => isset($session['filter'][$filter][$field]),
+				'label' => \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null),
+			];
 			$fields .= '
 <select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
   <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
@@ -6355,6 +6424,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$options_sorter = array();
+				$optionsData = array();
 				$blnDate = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC));
 
 				// Options
@@ -6438,6 +6508,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
+					$optionsData[$option_label . '_' . $field] = [
+						'value' => $value,
+						'selected' => isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field],
+						'label' => $option_label,
+					];
 				}
 
 				// Sort by option values
@@ -6455,14 +6530,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 					});
+					uksort($optionsData, static function ($a, $b)
+					{
+						$a = (new UnicodeString($a))->folded();
+						$b = (new UnicodeString($b))->folded();
+
+						if ($a->toString() === $b->toString())
+						{
+							return 0;
+						}
+
+						return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+					});
 
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_INITIAL_LETTER_DESC, self::SORT_INITIAL_LETTERS_DESC, self::SORT_DESC)))
 					{
 						$options_sorter = array_reverse($options_sorter, true);
+						$optionsData = array_reverse($optionsData, true);
 					}
 				}
 
 				$fields .= "\n" . implode("\n", array_values($options_sorter));
+				$fieldData['options'] = array_values($optionsData);
 			}
 
 			// End select menu
@@ -6474,12 +6563,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$fields .= '<br>';
 			}
+			$context['sorting_fields'][] = $fieldData;
 		}
 
-		return '
+		$return = '
 <div class="tl_filter tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['filter'] . ':</strong> ' . $fields . '
 </div>';
+
+		return $this->render('panel/filter', $context);
 	}
 
 	/**

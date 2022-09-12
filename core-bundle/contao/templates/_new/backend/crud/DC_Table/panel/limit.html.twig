@@ -1,0 +1,23 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="tl_limit tl_subpanel">
+    <strong>{{ 'MSC.showOnly'|trans }}:</strong>
+    {% if options|default %}
+        {% set select_attributes = attrs()
+            .set('name', 'tl_limit')
+            .addClass('tl_select tl_chosen')
+            .addClass('active', active)
+            .set('onchange', 'this.form.submit()')
+        %}
+        <select{{ select_attributes }}>
+            <option value="tl_limit">{{ 'MSC.filterRecords'|trans }}</option>
+            {% for option in options %}
+                {% set option_attributes = attrs()
+                    .set('value', option.value)
+                    .set('selected', true, option.selected)
+                %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+</div>
