@@ -231,6 +231,15 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.form_field_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - form_
+        tags:
+            - { name: contao.callback, table: tl_form_field, target: fields.customTpl.options }
+
     contao.listener.image_size_options:
         class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
         arguments:
