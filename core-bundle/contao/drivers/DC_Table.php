@@ -339,7 +339,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function showAll()
 	{
-		$return = '';
 		$this->limit = '';
 
 		/** @var Session $objSession */
@@ -380,24 +379,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Render view
-		if ($this->treeView)
+		if (!$this->treeView && $this->ptable && Input::get('table') && $this->Database->fieldExists('pid', $this->strTable))
 		{
-			$return .= $this->panel();
-			$return .= $this->treeView();
+			$this->procedure[] = 'pid=?';
+			$this->values[] = $this->currentPid;
 		}
-		else
-		{
-			if ($this->ptable && Input::get('table') && $this->Database->fieldExists('pid', $this->strTable))
+
+		$context = array(
+			'panel_rendered' => $this->panel(),
+			'view_rendered' => match (true)
 			{
-				$this->procedure[] = 'pid=?';
-				$this->values[] = $this->currentPid;
+				$this->treeView => $this->treeView(),
+				($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT => $this->parentView(),
+				default => $this->listView()
 			}
+		);
 
-			$return .= $this->panel();
-			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView();
-		}
-
-		return $return;
+		return $this->render('show_all', $context);
 	}
 
 	/**
