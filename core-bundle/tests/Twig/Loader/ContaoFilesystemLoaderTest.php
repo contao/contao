@@ -557,7 +557,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $locator = $this->getTemplateLocator(
             $projectDir,
-            [],
+            ['templates/my/theme'],
             ['App' => 'class'],
             ['App' => ['path' => Path::join($projectDir, 'contao')]],
         );
