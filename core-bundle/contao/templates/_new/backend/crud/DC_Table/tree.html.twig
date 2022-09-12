@@ -1,80 +1,54 @@
 {% trans_default_domain "contao_default" %}
-{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
-{% use "@Contao/backend/crud/DC_Table/_picker.html.twig" %}
 
-{# Message #}
-{% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
-
-{# Buttons #}
-{{ block('top_buttons') }}
-
-{% if tree_rendered or paste_mode %}
-    {% if not select_mode %}
-        {# Plain tree view (no form) #}
-        {% block records_listing %}
-            {# Paste hint #}
-            {% if has_clipboard_content %}
-                <div id="paste_hint" data-add-to-scroll-offset="20">
-                    <p>{{ 'MSC.selectNewPosition'|trans }}</p>
-                </div>
-            {% endif %}
-
-            {# Tree #}
-            {% set tree_attributes = attrs()
-                .addClass('tl_listing_container tree_view')
-                .set('id', 'tl_listing')
-                .mergeWith(picker.value_attribute)
+{% set node_attributes = attrs()
+    .addClass(is_folder ? 'tl_folder' : 'tl_file')
+    .addClass('draft', is_draft)
+    .addClass('click2edit')
+    .addClass('toggle_select', is_toggleable)
+    .addClass('hover-div', is_hoverable)
+    .addClass('cf')
+%}
+<li{{ node_attributes }}>
+    <div class="tl_left" style="padding-left:{{ left_padding }}px">
+        {# Toggler #}
+        {% if toggler|default %}
+            {% set toggler_attributes = attrs()
+                .set('href', toggler)
+                .set('title', is_open ? 'MSC.collapseNode'|trans : 'MSC.expandNode'|trans)
+                .set('onclick', "Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,'#{node}_#{id}',#{level},#{sorting_mode})")
             %}
-            <div{{ tree_attributes }}>
-                {# Picker "select all" controls #}
-                {{ block('picker_select_all') }}
+            <a{{ toggler_attributes|replace({'&#039;' : '\''})|raw }}>
+                <img src="/system/themes/flexible/icons/{{ is_open ? 'folMinus.svg' : 'folPlus.svg' }}" width="18" height="18" alt="" style="margin-right:2px">
+            </a>
+        {% endif %}
 
-                {% set listing_attributes = attrs()
-                    .addClass('tl_listing')
-                    .addClass(extended ? 'tl_tree_xtnd' : 'tl_tree')
-                    .addClass('picker unselectable', picker.field_type)
-                %}
-                <ul{{ listing_attributes }}>
-                    <li class="tl_folder_top cf">
-                        <div class="tl_left">{{ label_rendered|raw }}</div>
-                        <div class="tl_right">
-                            {{- '&nbsp;' -}}
+        {# Record label #}
+        {{ record_label_rendered|raw }}
+    </div>
+    <div class="tl_right">
+        {# Todo split into individual parts later on #}
+        {{ buttons_rendered|raw }}
+    </div>
+</li>
 
-                            {#- Paste button -#}
-                            {{- block('tree_paste_into_button') -}}
-                        </div>
-                    </li>
+{# Records of the table itself #}
+{% for child_rendered in records_rendered|default([]) %}
+    {{ child_rendered|raw }}
+{% endfor %}
 
-                    {{ tree_rendered|raw }}
-                </ul>
-
-                {# Picker "reset selection" controls #}
-                {{ block('picker_reset') }}
-            </div>
+{# New submenu #}
+{% if submenu|default %}
+    {% if not submenu.parent %}
+        {% block submenu %}
+            {% for child_rendered in subtree_rendered|default([]) %}
+                {{ child_rendered|raw }}
+            {% endfor %}
         {% endblock %}
     {% else %}
-        {# Tree view wrapped in form #}
-        <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
-            <div class="tl_formbody_edit">
-                <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-                <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
-                {{ block('records_listing') }}
-            </div>
-
-            {# Submit buttons #}
-            <div class="tl_formbody_submit" style="text-align:right">
-                {{ block('submit_buttons') }}
-            </div>
-        </form>
+        <li class="parent" id="{{ node }}_{{ id }}">
+            <ul class="level_{{ level }}">
+                {{ block('submenu') }}
+            </ul>
+        </li>
     {% endif %}
-
-{% else %}
-    {# No records #}
-    {% if breadcrumb_rendered %}
-        <div class="tl_listing_container">
-            {{ breadcrumb_rendered|raw }}
-        </div>
-    {% endif %}
-
-    <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
 {% endif %}

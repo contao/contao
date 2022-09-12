@@ -3979,7 +3979,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return2 = $return . '
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 
-			return $this->render('tree', $context);
+			return $this->render('tree_view', $context);
 		}
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -4117,7 +4117,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		return $this->render('tree', $context);
+		return $this->render('tree_view', $context);
 	}
 
 	/**
@@ -4218,6 +4218,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
+		$context = [
+			'id' => $id,
+			'sorting_mode' => $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null,
+		];
+
 		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
 		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
 		// tree mode if both $table and $this->strTable point to the child table.
@@ -4233,6 +4238,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$session = $objSessionBag->all();
 		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+
+		$context['node'] = $node;
 
 		// Toggle nodes
 		if (Input::get('ptg'))
@@ -4305,6 +4312,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
+		$context['is_toggleable'] = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable;
+		$context['is_hoverable'] = $context['is_toggleable'] || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste');
+		$context['is_folder'] = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable;
+		$context['is_draft'] = (string) ($currentRecord['tstamp'] ?? null) === '0';
+		$context['left_padding'] = ($intMargin + $intSpacing + (empty($childs) ? 20 : 0));
+
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
@@ -4328,17 +4341,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$context['level'] = $level;
+		$context['is_open'] = $blnIsOpen;
+
 		if (!empty($childs))
 		{
 			$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
 			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\'' . $node . '_' . $id . '\',' . $level . ',' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? '') . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
+			$context['toggler'] = html_entity_decode($this->addToUrl('ptg=' . $id));
 		}
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails);
 
-		$return .= $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
+		$return .= $recordLabel = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
+		$context['record_label_rendered'] = $recordLabel;
 		$return .= '</div> <div class="tl_right">';
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
@@ -4445,6 +4463,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$context['buttons_rendered'] = $_buttons ?: '&nbsp;';
 		$return .= ($_buttons ?: '&nbsp;') . '</div></li>';
 
 		// Add the records of the table itself
@@ -4473,7 +4492,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[($j-1)] ?? null), 'nn'=>($ids[($j+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, false, ($j<(\count($ids)-1) || !empty($childs)), $blnNoRecursion, $arrFound);
+					$return .= $childRendered = $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[($j-1)] ?? null), 'nn'=>($ids[($j+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, false, ($j<(\count($ids)-1) || !empty($childs)), $blnNoRecursion, $arrFound);
+					$context['records_rendered'][] = $childRendered;
 				}
 			}
 		}
@@ -4483,6 +4503,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$blnAddParent = ($blnIsOpen || !empty($arrFound) || (!empty($childs) && $session[$node][$id] == 1));
 
+			$context['submenu']['parent'] = $blnAddParent;
 			if ($blnAddParent)
 			{
 				$return .= '<li class="parent" id="' . $node . '_' . $id . '"><ul class="level_' . $level . '">';
@@ -4495,7 +4516,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				for ($k=0, $c=\count($childs); $k<$c; $k++)
 				{
-					$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
+					$return .= $childRendered = $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
+					$context['subtree_rendered'][] = $childRendered;
 				}
 			}
 
@@ -4508,7 +4530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$objSessionBag->replace($session);
 
-		return $return;
+		return $this->render('tree', $context);
 	}
 
 	/**
