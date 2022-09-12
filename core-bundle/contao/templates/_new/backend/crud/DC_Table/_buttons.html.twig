@@ -120,9 +120,20 @@
     {% endif %}
 {% endblock %}
 
-{% block tree_paste_into_button %}{% apply spaceless %}
+{% block tree_paste_buttons %}{% apply spaceless %}
     {# Prerendered button #}
-    {{ buttons.paste_into_rendered|default|raw }}
+    {{ buttons.paste_rendered|default|raw }}
+
+    {# Paste after button #}
+    {% if buttons.paste_after|default %}
+        {% set paste_after_button_attributes = attrs()
+            .set('href', buttons.paste_after.href)
+            .set('title', buttons.paste_after.title)
+            .set('onclick', 'Backend.getScrollOffset()') %}
+        <a{{ paste_after_button_attributes }}>
+            <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ buttons.paste_after.title }}">
+        </a>
+    {% endif %}
 
     {# Paste into button #}
     {% if buttons.paste_into|default %}
@@ -133,6 +144,11 @@
         <a{{ paste_into_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteinto.svg" width="16" height="16" alt="{{ buttons.paste_into.title }}">
         </a>
+    {% endif %}
+
+    {# Disabled paste after marker #}
+    {% if buttons.paste_after_disabled|default %}
+        <img src="/system/themes/flexible/icons/pasteafter_.svg" width="16" height="16" alt="">
     {% endif %}
 
     {# Disabled paste into marker #}

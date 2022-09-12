@@ -3643,11 +3643,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
 				$this->import($strClass);
-				$context['buttons']['paste_into_rendered'] = $this->$strClass->$strMethod($this, array('id'=>0), $table, false, $arrClipboard);
+				$context['buttons']['paste_rendered'] = $this->$strClass->$strMethod($this, array('id'=>0), $table, false, $arrClipboard);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$context['buttons']['paste_into_rendered'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
+				$context['buttons']['paste_rendered'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
 			}
 			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
 			{
@@ -3937,24 +3937,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$context['record_label_rendered'] = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
-		$_buttons = '';
 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
 		if ($this->strTable == $table && !$isVisibleRootTrailPage)
 		{
-			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $childs, $previous, $next);
+			$context['row']['id'] = $id;
+
+			if (Input::get('act') != 'select')
+			{
+				$context['row']['buttons']['regular_rendered'] = $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $childs, $previous, $next);
+			}
 
 			if ($this->strPickerFieldType)
 			{
-				$_buttons .= $this->getPickerInputField($id);
+				$context['row']['picker_input_rendered'] = $this->getPickerInputField($id);
 			}
 		}
 
 		// Paste buttons (not for root trails)
 		if ($arrClipboard !== false && Input::get('act') != 'select' && !$isVisibleRootTrailPage)
 		{
-			$_buttons .= ' ';
-
 			// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
@@ -3962,19 +3964,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
 				$this->import($strClass);
-				$_buttons .= $this->$strClass->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$context['buttons']['paste_rendered'] = $this->$strClass->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$context['buttons']['paste_rendered'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
 			}
 			else
 			{
 				$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $id));
-
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $id));
 
 				// Regular tree
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
@@ -3982,7 +3981,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Disable buttons of the page and all its children on cut to avoid circular references
 					if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))))
 					{
-						$_buttons .= Image::getHtml('pasteafter_.svg') . ' ' . Image::getHtml('pasteinto_.svg') . ' ';
+						$context['buttons']['paste_after_disabled'] = true;
+						$context['buttons']['paste_into_disabled'] = true;
 					}
 					else
 					{
@@ -3990,20 +3990,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
+							$context['buttons']['paste_after_disabled'] = true;
 						}
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+							$context['buttons']['paste_after'] = array(
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : ''))),
+								'title' => sprintf($labelPasteAfter[1], $id),
+							);
 						}
 
 						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $id))))
 						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
+							$context['buttons']['paste_into_disabled'] = true;
 						}
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+							$context['buttons']['paste_into'] = array(
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : ''))),
+								'title' => sprintf($labelPasteInto[1], $id),
+							);
 						}
 					}
 				}
@@ -4016,11 +4022,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
+							$context['buttons']['paste_after_disabled'] = true;
 						}
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+							$context['buttons']['paste_after'] = array(
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : ''))),
+								'title' => sprintf($labelPasteAfter[1], $id),
+							);
 						}
 					}
 
@@ -4029,18 +4038,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>$id))))
 						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
+							$context['buttons']['paste_into_disabled'] = true;
 						}
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+							$context['buttons']['paste_into'] = array(
+								'href' => html_entity_decode($this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : ''))),
+								'title' => sprintf($labelPasteInto[1], $id),
+							);
 						}
 					}
 				}
 			}
 		}
-
-		$context['buttons_rendered'] = $_buttons ?: '&nbsp;';
 
 		// Add the records of the table itself
 		if ($table != $this->strTable)
@@ -4909,7 +4919,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Pagination
 			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 			{
-				$return .= $context['pagination_rendered'] = $this->paginationMenu();
+				$context['pagination_rendered'] = $this->paginationMenu();
 			}
 
 			if (Input::get('act') == 'select')

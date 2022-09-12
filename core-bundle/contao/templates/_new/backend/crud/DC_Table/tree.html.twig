@@ -1,4 +1,5 @@
 {% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
 
 {% set node_attributes = attrs()
     .addClass(is_folder ? 'tl_folder' : 'tl_file')
@@ -26,8 +27,20 @@
         {{ record_label_rendered|raw }}
     </div>
     <div class="tl_right">
-        {# Todo split into individual parts later on #}
-        {{ buttons_rendered|raw }}
+        {% if row|default %}
+            {% if select_mode %}
+                <input type="checkbox" name="IDS[]" id="ids_{{ row.id }}" class="tl_tree_checkbox" value="{{ row.id }}">
+            {% else %}
+                {# Row buttons #}
+                {{ block('row_buttons') }}
+            {% endif %}
+
+            {# Picker input field #}
+            {{ row.picker_input_rendered|default|raw }}
+        {% endif %}
+
+        {# Paste buttons #}
+        {{ block('tree_paste_buttons') }}
     </div>
 </li>
 
