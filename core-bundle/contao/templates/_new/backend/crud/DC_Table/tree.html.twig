@@ -37,8 +37,8 @@
 {% endfor %}
 
 {# New submenu #}
-{% if submenu|default %}
-    {% if not submenu.parent %}
+{% if add_submenu|default %}
+    {% if not add_parent %}
         {% block submenu %}
             {% for child_rendered in subtree_rendered|default([]) %}
                 {{ child_rendered|raw }}

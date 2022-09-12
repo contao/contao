@@ -8,7 +8,7 @@
 {# Buttons #}
 {{ block('top_buttons') }}
 
-{% if tree_rendered or paste_mode %}
+{% if tree_parts_rendered or paste_mode %}
     {% if not select_mode %}
         {# Plain tree view (no form) #}
         {% block records_listing %}
@@ -45,7 +45,7 @@
                         </div>
                     </li>
 
-                    {{ tree_rendered|raw }}
+                    {{ tree_parts_rendered|join|raw }}
                 </ul>
 
                 {# Picker "reset selection" controls #}
