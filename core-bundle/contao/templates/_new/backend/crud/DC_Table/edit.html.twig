@@ -27,9 +27,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
         <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
         {# Store the current version number (see #8412) #}
-        {% if version is not null %}
-            <input type="hidden" name="VERSION_NUMBER" value="{{ version }}">
-        {% endif %}
+        {{ block('version') }}
 
         {# Boxes #}
         {% for box in boxes %}

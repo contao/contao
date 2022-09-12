@@ -1873,6 +1873,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Build an array from boxes and rows
+		$context = array('version' => $intLatestVersion);
 		$this->strPalette = $this->getPalette();
 		$boxes = StringUtil::trimsplit(';', $this->strPalette);
 		$legends = array();
@@ -1916,13 +1917,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$fs = $objSessionBag->get('fieldset_states');
 
 			// Render boxes
-			$context = array();
-
 			foreach ($boxes as $k=>$v)
 			{
 				$boxContext = array();
-				$arrAjax = array();
-				$blnAjax = false;
 				$key = '';
 				$cls = '';
 
@@ -1946,31 +1943,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Build rows of the current box
 				$currentNode = array();
 				$parentNodes = array();
+				$ajaxNode = null;
 
 				foreach ($v as $vv)
 				{
 					if ($vv == '[EOF]')
 					{
-						if ($blnAjax && Environment::get('isAjaxRequest'))
+						if ($ajaxNode === $currentNode)
 						{
-							if ($ajaxId == $thisId)
-							{
-								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-								{
-									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-								}
+							$context['ajax_root'] = $ajaxNode;
 
-								return $arrAjax[$thisId];
-							}
-
-							if (\count($arrAjax) > 1)
-							{
-								$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
-								unset($arrAjax[$thisId]);
-								end($arrAjax);
-								$thisId = key($arrAjax);
-								$arrAjax[$thisId] .= $current;
-							}
+							return $this->render('edit_ajax', $context);
 						}
 
 						$currentNode = &$parentNodes[array_key_last($parentNodes)];
@@ -1982,12 +1965,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$arrAjax[$thisId] = '';
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-
 						$parentNodes[] = &$currentNode;
 						$currentNode[$thisId] = array();
 						$currentNode = &$currentNode[$thisId];
+
+						if ($ajaxId == $thisId && Environment::get('isAjaxRequest'))
+						{
+							$ajaxNode = &$currentNode;
+						}
 
 						continue;
 					}
@@ -2023,10 +2008,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$rowRendered = '';
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $rowRendered = $this->row($this->strPalette);
-
-					$currentNode[] = $rowRendered;
+					$currentNode[] = $this->row($this->strPalette);
 				}
 
 				$boxContext['root'] = $currentNode;
@@ -2210,7 +2192,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$context['buttons']['submit_rendered'] = array_values($arrButtons);
-		$context['version'] = $intLatestVersion;
 		$context['on_submit'] = $this->onsubmit;
 
 		$strBackUrl = $this->getReferer(true);
@@ -2360,9 +2341,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					// Begin current row
-					$strAjax = '';
-					$blnAjax = false;
-
 					$excludedFields = array();
 
 					// Store the active record (backwards compatibility)
@@ -2370,6 +2348,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$currentNode = array();
 					$parentNodes = array();
+					$ajaxNode = null;
 
 					foreach ($this->strPalette as $v)
 					{
@@ -2383,12 +2362,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($v == '[EOF]')
 						{
-							if ($blnAjax && Environment::get('isAjaxRequest'))
+							if ($ajaxNode === $currentNode)
 							{
-								return $strAjax;
-							}
+								$context['ajax_root'] = $ajaxNode;
 
-							$blnAjax = false;
+								return $this->render('edit_all_ajax', $context);
+							}
 
 							$currentNode = &$parentNodes[array_key_last($parentNodes)];
 							array_pop($parentNodes);
@@ -2399,11 +2378,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (preg_match('/^\[.*]$/', $v))
 						{
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-
 							$parentNodes[] = &$currentNode;
 							$currentNode[$thisId] = array();
 							$currentNode = &$currentNode[$thisId];
+
+							if ($ajaxId == $thisId && Environment::get('isAjaxRequest'))
+							{
+								$ajaxNode = &$currentNode;
+							}
 
 							continue;
 						}
@@ -2461,10 +2443,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$rowRendered = '';
-						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $rowRendered = $this->row($this->strPalette);
-
-						$currentNode[] = $rowRendered;
+						$currentNode[] = $this->row($this->strPalette);
 					}
 
 					// Save record

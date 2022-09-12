@@ -1,0 +1,5 @@
+{% use "@Contao/backend/crud/DC_Table/_fields.html.twig" %}
+
+{% with {'root': ajax_root } %}{{ block('field_groups') }}{% endwith %}
+
+{{ block('version') }}

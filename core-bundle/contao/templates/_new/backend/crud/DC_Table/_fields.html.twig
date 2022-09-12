@@ -11,6 +11,13 @@
     {% endfor %}
 {% endblock %}
 
+{# Version number #}
+{% block version %}
+    {% if version is not null %}
+        <input type="hidden" name="VERSION_NUMBER" value="{{ version }}">
+    {% endif %}
+{% endblock %}
+
 {# Error handling #}
 {% block errors %}
     {% if has_errors %}
