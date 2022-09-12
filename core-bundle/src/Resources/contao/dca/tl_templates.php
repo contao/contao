@@ -244,7 +244,18 @@ class tl_templates extends Contao\Backend
 			// Do not use "StringUtil::stripRootDir()" here, because for
 			// symlinked bundles, the path will be outside the project dir.
 			$strRelpath = Path::makeRelative($file->getPathname(), $projectDir);
-			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
+
+			$modulePatterns = array(
+				"vendor/(?'module'[^/]+/[^/]+)",
+				"\.\..*(?'module'[^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"system/modules/(?'module'[^/]+)"
+			);
+			preg_match('@^(?:'. implode('|', $modulePatterns)  .')/.*$@UJ', $strRelpath, $matches);
+
+			// Use the matched "module" group and fall back to the full
+			// directory path (e.g. "contao/templates" in the app).
+			$strModule = $matches['module'] ?? \dirname($strRelpath);
+
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
