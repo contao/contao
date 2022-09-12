@@ -6246,8 +6246,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$parentRecords = $this->Database->getParentRecords($id, $table, true);
 
-				// If $id already is a root page itself, there won't be any parent records. In this case, we have
-				// to add $id to the visible root trails.
+ 				// If $id already is a root page itself, there won't be any parent records.
+				// In this case, we have to add $id to the visible root trails.
 				if (empty($parentRecords))
 				{
 					$parentRecords = array($id);
