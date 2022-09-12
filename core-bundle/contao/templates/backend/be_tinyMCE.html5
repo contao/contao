@@ -18,27 +18,26 @@ window.tinymce && tinymce.init({
   branding: false,
   promotion: false,
   skin: 'tinymce-5',
-  setup: editor => {
+  setup: function(editor) {
     editor.getElement().removeAttribute('required');
-    document.querySelectorAll('[accesskey]').forEach(el => {
-      editor.addShortcut('access+' + el.accessKey, el.id, () => el.click());
+    document.querySelectorAll('[accesskey]').forEach(function(el) {
+      editor.addShortcut('access+' + el.accessKey, el.id, function() { el.click(); });
     });
   },
-  init_instance_callback: editor => {
-    console.log(document.activeElement.id);
+  init_instance_callback: function(editor) {
     if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
       editor.editorManager.get(editor.id).focus();
     }
-    editor.on('focus', () => Backend.getScrollOffset());
+    editor.on('focus', function() { Backend.getScrollOffset(); });
   },
 
   <?php $this->block('picker'); ?>
-    file_picker_callback: (callback, value, meta) => {
+    file_picker_callback: function(callback, value, meta) {
       Backend.openModalSelector({
         'id': 'tl_listing',
         'title': document.getElement('.tox-dialog__title').get('text'),
         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
-        'callback': (table, val) => callback(val.join(','))
+        'callback': function(table, val) { callback(val.join(',')); }
       });
     },
     file_picker_types: '<?= $this->fileBrowserTypes ?>',
