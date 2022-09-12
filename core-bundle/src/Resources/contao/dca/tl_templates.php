@@ -247,14 +247,14 @@ class tl_templates extends Contao\Backend
 
 			$modulePatterns = array(
 				"vendor/(?'module'[^/]+/[^/]+)",
-				"\.\..*(?'module'[^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"\\.\\..*(?'module'[^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
 				"system/modules/(?'module'[^/]+)"
 			);
-			preg_match('@^(?:'. implode('|', $modulePatterns)  .')/.*$@UJ', $strRelpath, $matches);
+			preg_match('@^(?:' . implode('|', $modulePatterns) . ')/.*$@UJ', $strRelpath, $matches);
 
 			// Use the matched "module" group and fall back to the full
 			// directory path (e.g. "contao/templates" in the app).
-			$strModule = $matches['module'] ?? \dirname($strRelpath);
+			$strModule = $matches['module'] ?? dirname($strRelpath);
 
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
