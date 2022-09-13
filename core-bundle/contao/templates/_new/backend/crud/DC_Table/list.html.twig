@@ -6,7 +6,9 @@
 {% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
 
 {# Buttons on top #}
-{{ block('top_buttons') }}
+<div id="tl_buttons">
+    {{ block('top_buttons') }}
+</div>
 
 {# Rows #}
 {% if rows|default %}

@@ -5,8 +5,10 @@
 {# Errors #}
 {{ block('errors') }}
 
-{# Buttons #}
-{{ block('top_buttons') }}
+{# Buttons on top #}
+<div id="tl_buttons">
+    {{ block('top_buttons') }}
+</div>
 
 {% if select_fields_mode|default %}
     {# Form to select fields #}
@@ -52,6 +54,8 @@
                 </div>
             </div>
         </div>
+
+        {# Submit buttons #}
         <div class="tl_formbody_submit">
             {{ block('submit_buttons')}}
         </div>

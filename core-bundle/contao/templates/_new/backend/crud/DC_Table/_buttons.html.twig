@@ -1,42 +1,43 @@
 {% trans_default_domain "contao_default" %}
 
 {% block top_buttons %}
-    <div id="tl_buttons">
-        {# Back button #}
-        {% if buttons.back|default %}
-            {% set back_button_attributes = attrs()
-                .set('href', buttons.back.href)
-                .addClass('header_back')
-                .set('title', ('MSC.backBTTitle')|trans)
-                .set('accesskey', 'b')
-                .set('onclick', 'Backend.getScrollOffset()') %}
-            <a{{ back_button_attributes }}>{{ 'MSC.backBT'|trans }}</a>
-        {% endif %}
+    {# Back button #}
+    {% if buttons.back|default %}
+        {% set back_button_attributes = attrs()
+            .set('href', buttons.back.href)
+            .addClass('header_back')
+            .set('title', ('MSC.backBTTitle')|trans)
+            .set('accesskey', 'b')
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
+        <a{{ back_button_attributes }}>{{ 'MSC.backBT'|trans }}</a>
+    {% endif %}
 
-        {# New button #}
-        {% if buttons.new|default %}
-            {% set new_button_attributes = attrs()
-                .set('href', buttons.new.href)
-                .addClass('header_new')
-                .setIfExists('title', buttons.new.title)
-                .set('accesskey', 'n')
-                .set('onclick', 'Backend.getScrollOffset()') %}
-            <a{{ new_button_attributes }}>{{ buttons.new.label|raw }}</a>
-        {% endif %}
+    {# New button #}
+    {% if buttons.new|default %}
+        {% set new_button_attributes = attrs()
+            .set('href', buttons.new.href)
+            .addClass('header_new')
+            .setIfExists('title', buttons.new.title)
+            .set('accesskey', 'n')
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
+        <a{{ new_button_attributes }}>{{ buttons.new.label|raw }}</a>
+    {% endif %}
 
-        {# Clipboard button #}
-        {% if buttons.clipboard|default %}
-            {% set clipboard_button_attributes = attrs()
-                .set('href', buttons.clipboard.href)
-                .addClass('header_clipboard')
-                .set('title', ('MSC.clearClipboard')|trans)
-                .set('accesskey', 'x') %}
-            <a{{ clipboard_button_attributes }}>{{ 'MSC.clearClipboard'|trans }}</a>
-        {% endif %}
+    {# Clipboard button #}
+    {% if buttons.clipboard|default %}
+        {% set clipboard_button_attributes = attrs()
+            .set('href', buttons.clipboard.href)
+            .addClass('header_clipboard')
+            .set('title', ('MSC.clearClipboard')|trans)
+            .set('accesskey', 'x')
+        %}
+        <a{{ clipboard_button_attributes }}>{{ 'MSC.clearClipboard'|trans }}</a>
+    {% endif %}
 
-        {# Prerendered global buttons #}
-        {{ buttons.global_rendered|default|raw }}
-    </div>
+    {# Prerendered global buttons #}
+    {{ buttons.global_rendered|default|raw }}
 {% endblock %}
 
 {% block header_row_buttons %}
@@ -45,7 +46,8 @@
         {% set edit_header_button_attributes = attrs()
             .set('href', buttons.edit_header.href)
             .addClass('edit')
-            .set('title', buttons.edit_header.title) %}
+            .set('title', buttons.edit_header.title)
+        %}
         <a{{ edit_header_button_attributes }}>
             <img src="/system/themes/flexible/icons/edit.svg" width="16" height="16" alt="{{ buttons.edit_header.title }}">
         </a>
@@ -59,7 +61,8 @@
         {% set paste_after_button_attributes = attrs()
             .set('href', buttons.paste_after.href)
             .set('title', buttons.paste_after.title)
-            .set('onclick', 'Backend.getScrollOffset()') %}
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
         <a{{ paste_after_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ buttons.paste_after.title }}">
         </a>
@@ -69,7 +72,8 @@
     {% if buttons.paste_new|default %}
         {% set paste_new_button_attributes = attrs()
             .set('href', buttons.paste_new.href)
-            .set('title', buttons.paste_new.title) %}
+            .set('title', buttons.paste_new.title)
+        %}
         <a{{ paste_new_button_attributes }}>
             <img src="/system/themes/flexible/icons/new.svg" width="16" height="16" alt="{{ buttons.paste_new.title }}">
         </a>
@@ -84,7 +88,8 @@
     {% if row.buttons.new|default %}
         {% set row_new_button_attributes = attrs()
             .set('href', row.buttons.new.href)
-            .set('title', row.buttons.new.title) %}
+            .set('title', row.buttons.new.title)
+        %}
         <a{{ row_new_button_attributes }}>
             <img src="/system/themes/flexible/icons/new.svg" width="16" height="16" alt="{{ row.buttons.new.title }}">
         </a>
@@ -100,7 +105,8 @@
         {% set row_copy_move_multiple_button_attributes = attrs()
             .set('href', row.buttons.copy_move_multiple.href)
             .set('title', row.buttons.copy_move_multiple.title)
-            .set('onclick', 'Backend.getScrollOffset()') %}
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
         <a{{ row_copy_move_multiple_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ row.buttons.copy_move_multiple.title }}">
         </a>
@@ -120,7 +126,7 @@
     {% endif %}
 {% endblock %}
 
-{% block tree_paste_buttons %}{% apply spaceless %}
+{% block tree_paste_buttons %}
     {# Prerendered button #}
     {{ buttons.paste_rendered|default|raw }}
 
@@ -129,7 +135,8 @@
         {% set paste_after_button_attributes = attrs()
             .set('href', buttons.paste_after.href)
             .set('title', buttons.paste_after.title)
-            .set('onclick', 'Backend.getScrollOffset()') %}
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
         <a{{ paste_after_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteafter.svg" width="16" height="16" alt="{{ buttons.paste_after.title }}">
         </a>
@@ -140,7 +147,8 @@
         {% set paste_into_button_attributes = attrs()
             .set('href', buttons.paste_into.href)
             .set('title', buttons.paste_into.title)
-            .set('onclick', 'Backend.getScrollOffset()') %}
+            .set('onclick', 'Backend.getScrollOffset()')
+        %}
         <a{{ paste_into_button_attributes }}>
             <img src="/system/themes/flexible/icons/pasteinto.svg" width="16" height="16" alt="{{ buttons.paste_into.title }}">
         </a>
@@ -155,7 +163,7 @@
     {% if buttons.paste_into_disabled|default %}
         <img src="/system/themes/flexible/icons/pasteinto_.svg" width="16" height="16" alt="">
     {% endif %}
-{% endapply %}{% endblock %}
+{% endblock %}
 
 {% block submit_buttons %}
     <div class="tl_submit_container">

@@ -5,8 +5,10 @@
 {# Message #}
 {% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
 
-{# Buttons #}
-{{ block('top_buttons') }}
+{# Buttons on top #}
+<div id="tl_buttons">
+    {{ block('top_buttons') }}
+</div>
 
 {% if tree_parts_rendered or paste_mode %}
     {% if not select_mode %}
@@ -38,10 +40,8 @@
                     <li class="tl_folder_top cf">
                         <div class="tl_left">{{ label_rendered|raw }}</div>
                         <div class="tl_right">
-                            {{- '&nbsp;' -}}
-
-                            {#- Paste button -#}
-                            {{- block('tree_paste_buttons') -}}
+                            {# Paste button #}
+                            {{ block('tree_paste_buttons') }}
                         </div>
                     </li>
 

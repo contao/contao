@@ -18,7 +18,7 @@
                 .set('title', is_open ? 'MSC.collapseNode'|trans : 'MSC.expandNode'|trans)
                 .set('onclick', "Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,'#{node}_#{id}',#{level},#{sorting_mode})")
             %}
-            <a{{ toggler_attributes|replace({'&#039;' : '\''})|raw }}>
+            <a{{ toggler_attributes }}>
                 <img src="/system/themes/flexible/icons/{{ is_open ? 'folMinus.svg' : 'folPlus.svg' }}" width="18" height="18" alt="" style="margin-right:2px">
             </a>
         {% endif %}

@@ -12,7 +12,9 @@
 {% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
 
 {# Buttons on top #}
-{{ block('top_buttons') }}
+<div id="tl_buttons">
+    {{ block('top_buttons') }}
+</div>
 
 {# Edit form #}
 {% set form_attributes = attrs()
@@ -35,11 +37,12 @@
                 .set('id', 'pal_' ~ box.key, box.key)
                 .addClass(loop.first ? 'tl_tbox' : 'tl_box')
                 .addClass(box.modifier, box.modifier)
-                .addClass('legend', legend|default) %}
+                .addClass('nolegend', box.legend is not defined or not box.legend)
+            %}
             <fieldset{{ fieldset_attributes }}>
                 {# Legend #}
                 {% if box.legend|default %}
-                    <legend data-toggle-fieldset="{{ {id: box.key, table}|json_encode|replace({'}': '&#125;'}) }}">
+                    <legend data-toggle-fieldset="{{ {id: box.key, table}|json_encode }}">
                         {{- "#{table}.#{box.key}"|trans|raw -}}
                     </legend>
                 {% endif %}
