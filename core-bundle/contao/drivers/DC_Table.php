@@ -3298,13 +3298,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				// Update the active record and current field/value (backwards compatibility)
-				$varValue = StringUtil::deserialize($varValue);
-				$this->varValue = $varValue;
-				$this->strField = $strField;
-
 				if (\is_object($this->objActiveRecord))
 				{
-					$this->objActiveRecord->{$strField} = $varValue;
+					$this->objActiveRecord->{$strField} = StringUtil::deserialize($varValue);
 				}
 			}
 
