@@ -246,15 +246,15 @@ class tl_templates extends Contao\Backend
 			$strRelpath = Path::makeRelative($file->getPathname(), $projectDir);
 
 			$modulePatterns = array(
-				"vendor/(?'module'[^/]+/[^/]+)",
-				"\\.\\..*(?'module'[^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
-				"system/modules/(?'module'[^/]+)"
+				"vendor/([^/]+/[^/]+)",
+				"\\.\\..*?([^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"system/modules/([^/]+)"
 			);
-			preg_match('@^(?:' . implode('|', $modulePatterns) . ')/.*$@UJ', $strRelpath, $matches);
+			preg_match('@^(?|' . implode('|', $modulePatterns) . ')/.*$@', $strRelpath, $matches);
 
 			// Use the matched "module" group and fall back to the full
 			// directory path (e.g. "contao/templates" in the app).
-			$strModule = $matches['module'] ?? dirname($strRelpath);
+			$strModule = $matches[1] ?? dirname($strRelpath);
 
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
