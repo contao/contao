@@ -45,8 +45,12 @@ class DC_TableTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $dataContainer = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-        $dataContainer->Database = $database;
+        $reflection = new \ReflectionClass(DC_Table::class);
+        $dataContainer = $reflection->newInstanceWithoutConstructor();
+
+        $method = $reflection->getMethod('import');
+        $method->setAccessible(true);
+        $method->invoke($dataContainer, $database, 'Database');
 
         /** @phpstan-ignore-next-line */
         $dataContainer->strTable = 'tl_test';
