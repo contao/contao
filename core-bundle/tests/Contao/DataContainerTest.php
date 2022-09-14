@@ -49,18 +49,6 @@ class DataContainerTest extends TestCase
                 ['foo', 0, 'bar'],
                 ['bar', '0bar', 'foo0', 'foo0bar', 'foobar', 'foo'],
             ],
-            [
-                ['foo', null, 'bar'],
-                ['bar', 'foobar', 'foo'],
-            ],
-            [
-                ['foo', false, 'bar'],
-                ['bar', 'foobar', 'foo'],
-            ],
-            [
-                ['foo', '', 'bar'],
-                ['bar', 'foobar', 'foo'],
-            ],
         ];
     }
 }

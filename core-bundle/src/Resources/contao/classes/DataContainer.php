@@ -701,11 +701,6 @@ abstract class DataContainer extends Backend
 
 		for ($i=0, $c=\count($names); $i<$c; $i++)
 		{
-			if ((string) $names[$i] === '')
-			{
-				continue;
-			}
-
 			$buffer = array();
 
 			foreach ($return as $k=>$v)
