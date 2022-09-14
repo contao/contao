@@ -250,6 +250,7 @@ class tl_templates extends Contao\Backend
 				"\\.\\..*?([^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
 				"system/modules/([^/]+)"
 			);
+
 			preg_match('@^(?|' . implode('|', $modulePatterns) . ')/.*$@', $strRelpath, $matches);
 
 			// Use the matched "module" group and fall back to the full
