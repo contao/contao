@@ -156,6 +156,7 @@
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/psr6-symfony-http-cache-store": "^3.0 || ^4.0",
         "twig/extra-bundle": "^3.0",
+        "twig/string-extra": "^v2.13 || ^3.0",
         "twig/twig": "^3.1",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
