@@ -1,0 +1,40 @@
+{# @var \Contao\CoreBundle\Twig\Inspector\TemplateInformation template #}
+{% block content_reference %}
+    {%- if type == 'extends' -%}
+        {% verbatim %}{% extends "{% endverbatim %}{{ template.name }}{% verbatim %}" %}{% endverbatim %}
+    {%- else -%}
+        {% verbatim %}{% use "{% endverbatim %}{{ template.name }}{% verbatim %}" %}{% endverbatim %}
+    {%- endif -%}
+{% endblock %}
+
+{% block info %}
+{%- verbatim %}
+{#
+  ** Add changes to the base template here. **
+
+  Hint: Try adjusting blocks and attributes instead of
+  overwriting the whole template. This way your version
+  can remain compatible with future changes to the base
+  template as well as adjustments made by extensions.{% endverbatim %}
+
+{%- if template.blocks %}
+{% set help_text_blocks %}{% verbatim %}
+  Currently available blocks:
+    ":blocks:"
+
+  Example:
+    {% block :demo_block: %}
+       {{ parent() }}
+       My additional content for ':demo_block:'…
+    {% endblock %}{% endverbatim %}
+{%- endset %}
+
+{{ help_text_blocks|replace({
+    ':blocks:': template.blocks|raw|join('", "')|u.wordwrap(50, "\n    "),
+    ':demo_block:': template.blocks|first
+})|raw }}
+{%- endif %}
+
+{% verbatim %}#}
+{% endverbatim -%}
+{% endblock %}
