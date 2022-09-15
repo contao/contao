@@ -3405,7 +3405,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$sValues[] = $trigger;
+						// Use string comparison to allow "0"
+						if ((string) $trigger !== '')
+						{
+							$sValues[] = (string) $trigger;
+						}
+
 						$key = $name . '_' . $trigger;
 
 						// Look for a subpalette
@@ -6385,7 +6390,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($this->root as $id)
 			{
-				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $this->Database->getParentRecords($id, $table, true)));
+				$parentRecords = $this->Database->getParentRecords($id, $table, true);
+
+				// If $id already is a root page itself, there won't be any parent records.
+				// In this case, we have to add $id to the visible root trails.
+				if (empty($parentRecords))
+				{
+					$parentRecords = array($id);
+				}
+
+				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $parentRecords));
 			}
 		}
 

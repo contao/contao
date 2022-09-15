@@ -65,12 +65,12 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $commandArguments = [
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
