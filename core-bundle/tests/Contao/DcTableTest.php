@@ -18,7 +18,7 @@ use Contao\Database\Result;
 use Contao\Database\Statement;
 use Contao\DC_Table;
 
-class DC_TableTest extends TestCase
+class DcTableTest extends TestCase
 {
     /**
      * @dataProvider getPalette
@@ -28,7 +28,6 @@ class DC_TableTest extends TestCase
         $result = new Result([$row], '');
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('limit')
             ->willReturn($statement)
@@ -52,8 +51,9 @@ class DC_TableTest extends TestCase
         $method->setAccessible(true);
         $method->invoke($dataContainer, $database, 'Database');
 
-        /** @phpstan-ignore-next-line */
-        $dataContainer->strTable = 'tl_test';
+        $table = $reflection->getProperty('strTable');
+        $table->setAccessible(true);
+        $table->setValue($dataContainer, 'tl_test');
 
         $GLOBALS['TL_DCA']['tl_test'] = $dca;
 
@@ -62,28 +62,26 @@ class DC_TableTest extends TestCase
 
     public function getPalette(): array
     {
-        return [
+        return [[
             [
-                [
-                    'palettes' => [
-                        '__selector__' => ['fieldA', 'fieldB', 'fieldC'],
-                        'default' => 'paletteDefault',
-                        'valueA' => 'paletteA',
-                        'valueAvalueC' => 'paletteAC',
-                    ],
-                    'fields' => [
-                        'fieldA' => ['inputType' => 'text'],
-                        'fieldB' => ['inputType' => 'text'],
-                        'fieldC' => ['inputType' => 'text'],
-                    ],
+                'palettes' => [
+                    '__selector__' => ['fieldA', 'fieldB', 'fieldC'],
+                    'default' => 'paletteDefault',
+                    'valueA' => 'paletteA',
+                    'valueAvalueC' => 'paletteAC',
                 ],
-                [
-                    'fieldA' => 'valueA',
-                    'fieldB' => null,
-                    'fieldC' => 'valueC',
+                'fields' => [
+                    'fieldA' => ['inputType' => 'text'],
+                    'fieldB' => ['inputType' => 'text'],
+                    'fieldC' => ['inputType' => 'text'],
                 ],
-                'paletteAC',
             ],
-        ];
+            [
+                'fieldA' => 'valueA',
+                'fieldB' => null,
+                'fieldC' => 'valueC',
+            ],
+            'paletteAC',
+        ]];
     }
 }
