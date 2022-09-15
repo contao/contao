@@ -17,9 +17,18 @@ use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
 use Contao\DC_Table;
+use Contao\System;
+use Symfony\Component\DependencyInjection\Container;
 
 class DcTableTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->createMock(Container::class));
+    }
+
     /**
      * @dataProvider getPalette
      */
