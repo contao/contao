@@ -1204,7 +1204,7 @@ table.tl_listing {
 	background-color: #fff;
 }
 
-.tl_content.draft > *, .tl_folder.draft > *, .tl_file.draft > *, .hover-row.draft > td, .hover-row.draft > td > * {
+.tl_content.draft > *, .tl_folder.draft > *, .tl_file.draft > *, .hover-row.draft > td {
 	opacity: 0.5;
 }
 

@@ -42,7 +42,7 @@
           <table>
             <?php foreach ($this->info as $key => $info): ?>
               <tr>
-                <th scope="row"><?= $this->labels[$key] ?></th>
+                <th scope="row"><?= $this->labels[$key] ?? $key ?></th>
                 <td><?= $info ?></td>
               </tr>
             <?php endforeach; ?>

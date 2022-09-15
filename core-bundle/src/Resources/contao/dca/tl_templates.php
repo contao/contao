@@ -258,14 +258,29 @@ class tl_templates extends Backend
 			ksort($arrAllTemplates[$rootCategory]);
 		}
 
-		// Add legacy templates
 		/** @var SplFileInfo[] $files */
 		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
+		// Add legacy templates
 		foreach ($files as $file)
 		{
-			$strRelpath = StringUtil::stripRootDir($file->getPathname());
-			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
+			// Do not use "StringUtil::stripRootDir()" here, because for
+			// symlinked bundles, the path will be outside the project dir.
+			$strRelpath = Path::makeRelative($file->getPathname(), $projectDir);
+
+			$modulePatterns = array(
+				"vendor/([^/]+/[^/]+)",
+				"\\.\\..*?([^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"system/modules/([^/]+)"
+			);
+
+			preg_match('@^(?|' . implode('|', $modulePatterns) . ')/.*$@', $strRelpath, $matches);
+
+			// Use the matched "module" group and fall back to the full
+			// directory path (e.g. "contao/templates" in the app).
+			$strModule = $matches[1] ?? dirname($strRelpath);
+
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 

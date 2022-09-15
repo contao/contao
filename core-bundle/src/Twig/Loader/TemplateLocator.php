@@ -61,7 +61,7 @@ class TemplateLocator
             // Note: We cannot use models or other parts of the Contao
             // framework here because this function will be called when the
             // container is built (see #3567)
-            $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
+            $themePaths = $this->connection->fetchFirstColumn("SELECT templates FROM tl_theme WHERE templates != ''");
         } catch (DriverException) {
             return [];
         }
