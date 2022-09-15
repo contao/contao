@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.9] (2022-09-15)
+
+**Fixed issues:**
+
+- [#5277] Fix the order of the palette combiner ([ausi])
+- [#5269] Don't return empty theme directories in the TemplateLocator ([m-vo])
+- [#5268] Fix page mounts not being applied correctly ([Toflar])
+- [#5260] Fix a PHP8 issue if the confirmation key is not translated ([aschempp])
+- [#5249] Fix cache tagging for aliased content elements ([fritzmg])
+- [#5240] Improve the order of operations during the Contao setup ([m-vo])
+- [#5234] Correctly list the templates in "override all" mode ([leofeyer])
+- [#5227] Fix the password field icon ([leofeyer])
+- [#5222] Use the firewall name instead of the scope to determine the access strategy ([aschempp])
+- [#5221] Correctly validate same page alias with required parameters on multiple domains ([aschempp])
+- [#5206] Deprecate the article-to-PDF functionality ([aschempp])
+- [#5194] Deprecate the Controller::setStaticUrls() method ([leofeyer])
+
 ## [4.13.8] (2022-08-17)
 
 **Fixed issues:**
@@ -463,6 +480,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.9]: https://github.com/contao/contao/releases/tag/4.13.9
 [4.13.8]: https://github.com/contao/contao/releases/tag/4.13.8
 [4.13.7]: https://github.com/contao/contao/releases/tag/4.13.7
 [4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
@@ -502,6 +520,18 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5277]: https://github.com/contao/contao/pull/5277
+[#5269]: https://github.com/contao/contao/pull/5269
+[#5268]: https://github.com/contao/contao/pull/5268
+[#5260]: https://github.com/contao/contao/pull/5260
+[#5249]: https://github.com/contao/contao/pull/5249
+[#5240]: https://github.com/contao/contao/pull/5240
+[#5234]: https://github.com/contao/contao/pull/5234
+[#5227]: https://github.com/contao/contao/pull/5227
+[#5222]: https://github.com/contao/contao/pull/5222
+[#5221]: https://github.com/contao/contao/pull/5221
+[#5206]: https://github.com/contao/contao/pull/5206
+[#5194]: https://github.com/contao/contao/pull/5194
 [#5185]: https://github.com/contao/contao/pull/5185
 [#4571]: https://github.com/contao/contao/pull/4571
 [#5099]: https://github.com/contao/contao/pull/5099
