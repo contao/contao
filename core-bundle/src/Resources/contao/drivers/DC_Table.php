@@ -117,6 +117,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->intId = Input::get('id');
 
+		if (!is_numeric($this->intId)) {
+			$this->intId = null;
+		} else {
+			$this->intId = (int) $this->intId;
+		}
+
 		// Clear the clipboard
 		if (isset($_GET['clipboard']))
 		{
@@ -1788,6 +1794,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 		if ($intId)
 		{
 			$this->intId = $intId;
+		}
+
+		if (!$this->intId || !is_numeric($this->intId)) {
+			throw new AccessDeniedException('Invalid ' . $this->strTable . ' ID.');
 		}
 
 		// Get the current record
