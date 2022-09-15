@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', function () {
             && input.offsetHeight
             && !['checkbox', 'radio', 'submit', 'image'].includes(input.type)
             && !input.closest('.chzn-search')
-            && (input.autocomplete === undefined || input.autocomplete === 'off' || !input.value)
+            && (!input.autocomplete || input.autocomplete === 'off' || !input.value)
         ) {
             input.focus();
             break;
