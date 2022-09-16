@@ -23,7 +23,7 @@ class FilesystemItemTest extends TestCase
     {
         $fileItem = new FilesystemItem(
             true,
-            'foo/bar.png',
+            'foo/bar.PNG',
             123450,
             1024,
             'image/png',
@@ -31,23 +31,15 @@ class FilesystemItemTest extends TestCase
         );
 
         $this->assertTrue($fileItem->isFile());
-        $this->assertSame('foo/bar.png', $fileItem->getPath());
-        $this->assertSame('foo/bar.png', (string) $fileItem);
+        $this->assertSame('foo/bar.PNG', $fileItem->getPath());
+        $this->assertSame('foo/bar.PNG', (string) $fileItem);
         $this->assertSame(123450, $fileItem->getLastModified());
         $this->assertSame(1024, $fileItem->getFileSize());
         $this->assertSame('image/png', $fileItem->getMimeType());
         $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
-
-        $directoryItem = new FilesystemItem(
-            false,
-            'foo/bar',
-            123450
-        );
-
-        $this->assertFalse($directoryItem->isFile());
-        $this->assertSame('foo/bar', $directoryItem->getPath());
-        $this->assertSame('foo/bar', (string) $directoryItem);
-        $this->assertSame(123450, $directoryItem->getLastModified());
+        $this->assertSame('PNG', $fileItem->getExtension());
+        $this->assertSame('png', $fileItem->getExtension(true));
+        $this->assertSame('bar.PNG', $fileItem->getName());
     }
 
     /**

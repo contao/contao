@@ -1,0 +1,13 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_list.html.twig" %}
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% set attributes = attrs(attributes|default).addClass("content-#{type}--cols-#{items_per_row|default(4)}") %}
+
+{% block content %}
+    {% with {items: images} %}{{ block('list_component') }}{% endwith %}
+{% endblock %}
+
+{% block list_item %}
+    {% with {figure: item} %}{{ block('figure_component') }}{% endwith %}
+{% endblock %}

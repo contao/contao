@@ -1,0 +1,416 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="MOD.content">
+        <source>Content</source>
+        <target>محتوا</target>
+      </trans-unit>
+      <trans-unit id="MOD.article.0">
+        <source>Articles</source>
+        <target>مقاله‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.article.1">
+        <source>Manage articles and content elements</source>
+        <target>مدیریت مقاله‌ها و المان‌های محتوایی</target>
+      </trans-unit>
+      <trans-unit id="MOD.form.0">
+        <source>Forms</source>
+        <target>فرم‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.form.1">
+        <source>Create custom forms and store or send the submitted data</source>
+        <target>ایجاد فرم‌های سفارشی و ذخیره یا ارسال اطلاعات دریافت شده</target>
+      </trans-unit>
+      <trans-unit id="MOD.design">
+        <source>Layout</source>
+        <target>چیدمان</target>
+      </trans-unit>
+      <trans-unit id="MOD.themes.0">
+        <source>Themes</source>
+        <target>پوسته‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.themes.1">
+        <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>مدیریت پوسته‌ها، ماژول‌های بخش کاربری، چیدمان برگه و یا اندازه تصویر</target>
+      </trans-unit>
+      <trans-unit id="MOD.page.0">
+        <source>Pages</source>
+        <target>برگه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.page.1">
+        <source>Set up the pages of your website(s)</source>
+      </trans-unit>
+      <trans-unit id="MOD.tpl_editor.0">
+        <source>Templates</source>
+        <target>قالب‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.tpl_editor.1">
+        <source>Add or edit custom templates</source>
+        <target>افزودن یا ویرایش قالب‌های سفارشی</target>
+      </trans-unit>
+      <trans-unit id="MOD.accounts">
+        <source>Accounts</source>
+      </trans-unit>
+      <trans-unit id="MOD.member.0">
+        <source>Members</source>
+        <target>اعضاء</target>
+      </trans-unit>
+      <trans-unit id="MOD.member.1">
+        <source>Manage member accounts (front end)</source>
+        <target>مدیریت حساب‌های اعضاء (بخش کاربری)</target>
+      </trans-unit>
+      <trans-unit id="MOD.mgroup.0">
+        <source>Member groups</source>
+        <target>گروه‌های اعضاء</target>
+      </trans-unit>
+      <trans-unit id="MOD.mgroup.1">
+        <source>Manage member groups (front end)</source>
+        <target>مدیریت گروه‌های اعضاء (بخش کاربری)</target>
+      </trans-unit>
+      <trans-unit id="MOD.user.0">
+        <source>Users</source>
+        <target>کاربران</target>
+      </trans-unit>
+      <trans-unit id="MOD.user.1">
+        <source>Manage user accounts (back end)</source>
+        <target>مدیریت حساب‌های کاربری (بخش مدیریت)</target>
+      </trans-unit>
+      <trans-unit id="MOD.group.0">
+        <source>User groups</source>
+        <target>گروه‌های کاربران</target>
+      </trans-unit>
+      <trans-unit id="MOD.group.1">
+        <source>Manage user groups (back end)</source>
+        <target>مدیریت گروه‌های کاربری (بخش مدیریت)</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>انتخاب دوگانه</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage double opt-in tokens</source>
+        <target>مدیریت توکن‌های double opt-in</target>
+      </trans-unit>
+      <trans-unit id="MOD.system">
+        <source>System</source>
+        <target>سامانه</target>
+      </trans-unit>
+      <trans-unit id="MOD.files.0">
+        <source>Files</source>
+        <target>پرونده‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.files.1">
+        <source>Manage files and folders</source>
+        <target>مدیریت پرونده و فولدرها</target>
+      </trans-unit>
+      <trans-unit id="MOD.log.0">
+        <source>System log</source>
+        <target>گزارش‌های سامانه</target>
+      </trans-unit>
+      <trans-unit id="MOD.log.1">
+        <source>Browse the system log</source>
+        <target>مرور لاگ سیستم</target>
+      </trans-unit>
+      <trans-unit id="MOD.settings.0">
+        <source>Settings</source>
+        <target>تنظیمات</target>
+      </trans-unit>
+      <trans-unit id="MOD.settings.1">
+        <source>Adjust the Contao configuration</source>
+        <target>تنظیم پیکربندی کنتائو</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+        <target>پیش‌نمایش لینک‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+      </trans-unit>
+      <trans-unit id="MOD.maintenance.0">
+        <source>Maintenance</source>
+        <target>نگهداشت</target>
+      </trans-unit>
+      <trans-unit id="MOD.maintenance.1">
+        <source>Crawl the website or purge generated data</source>
+        <target>خزیدن وب‌سایت یا پاک‌سازی داده‌های تولیدشده</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+        <target>امنیت</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+        <target>حساب کاربری خود را امن کنید</target>
+      </trans-unit>
+      <trans-unit id="MOD.undo.0">
+        <source>Restore</source>
+        <target>بازگردانی</target>
+      </trans-unit>
+      <trans-unit id="MOD.undo.1">
+        <source>Restore deleted records</source>
+        <target>بازگرداندن رکوردهای حذف شده</target>
+      </trans-unit>
+      <trans-unit id="MOD.login.0">
+        <source>User profile</source>
+        <target>نمایه‌ی کاربر</target>
+      </trans-unit>
+      <trans-unit id="MOD.login.1">
+        <source>Change your personal data or set a new password</source>
+        <target>تغییر اطلاعات شخصی و انتخاب گذرواژه جدید</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>المان‌های محتوایی</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>فیلدها</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_image_size">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_image_size_item">
+        <source>Media queries</source>
+        <target>مدیا کوئری‌ها</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>چیدمان‌های برگه</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>ماژول‌های بخش کاربری</target>
+      </trans-unit>
+      <trans-unit id="MOD.modules">
+        <source>Front end modules</source>
+        <target>ماژول‌های بخش کاربری</target>
+      </trans-unit>
+      <trans-unit id="MOD.layout">
+        <source>Page layouts</source>
+        <target>چیدمان‌های برگه</target>
+      </trans-unit>
+      <trans-unit id="MOD.image_sizes">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
+      </trans-unit>
+      <trans-unit id="MOD.theme_import">
+        <source>Theme import</source>
+        <target>وارد کردن پوسته</target>
+      </trans-unit>
+      <trans-unit id="MOD.theme_export">
+        <source>Theme export</source>
+        <target>خارج کردن پوسته</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigationMenu">
+        <source>Navigation</source>
+        <target>ناوبری</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigation.0">
+        <source>Navigation menu</source>
+        <target>منوی ناوبری</target>
+      </trans-unit>
+      <trans-unit id="FMD.navigation.1">
+        <source>Generates a navigation menu from the pages</source>
+      </trans-unit>
+      <trans-unit id="FMD.customnav.0">
+        <source>Custom navigation</source>
+        <target>ناوبری سفارشی</target>
+      </trans-unit>
+      <trans-unit id="FMD.customnav.1">
+        <source>Generates a custom navigation menu</source>
+        <target>منوی ناوبری سفارشی را ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.breadcrumb.0">
+        <source>Breadcrumb navigation</source>
+        <target>ناوبری مسیر پیموده شده</target>
+      </trans-unit>
+      <trans-unit id="FMD.breadcrumb.1">
+        <source>Generates a breadcrumb navigation menu</source>
+        <target>منوی ناوبری مسیر پیموده شده را ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicknav.0">
+        <source>Quick navigation</source>
+        <target>ناوبری سریع</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicknav.1">
+        <source>Generates a drop-down menu from the pages</source>
+      </trans-unit>
+      <trans-unit id="FMD.quicklink.0">
+        <source>Quick link</source>
+        <target>پیوند سریع</target>
+      </trans-unit>
+      <trans-unit id="FMD.quicklink.1">
+        <source>Generates a custom drop-down menu</source>
+        <target>منوی افتادنی سفارشی را ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.booknav.0">
+        <source>Book navigation</source>
+        <target>ناوبری کتاب</target>
+      </trans-unit>
+      <trans-unit id="FMD.booknav.1">
+        <source>Generates a book navigation menu</source>
+        <target>یک منوی ناوبری کتاب ایجاد می کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlenav.0">
+        <source>Article navigation</source>
+        <target>ناوبری مقاله</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlenav.1">
+        <source>Generates a pagination menu to navigate articles</source>
+        <target>یک منوی صفحه‌بندی برای ناوبری مقاله‌ها ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.sitemap.0">
+        <source>HTML sitemap</source>
+        <target>نقشه‌ی سایت HTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.sitemap.1">
+        <source>Generates a list of all pages</source>
+      </trans-unit>
+      <trans-unit id="FMD.user">
+        <source>User</source>
+        <target>کاربر</target>
+      </trans-unit>
+      <trans-unit id="FMD.login.0">
+        <source>Login form</source>
+        <target>فرم ورود</target>
+      </trans-unit>
+      <trans-unit id="FMD.login.1">
+        <source>Generates a login form</source>
+        <target>فرم ورود را ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.logout.0">
+        <source>Automatic logout</source>
+        <target>خروج خودکار</target>
+      </trans-unit>
+      <trans-unit id="FMD.logout.1">
+        <source>Automatically logs out a member</source>
+        <target>به صورت خودکار یک عضو را خارج کن</target>
+      </trans-unit>
+      <trans-unit id="FMD.personalData.0">
+        <source>Personal data</source>
+        <target>اطلاعات شخصی</target>
+      </trans-unit>
+      <trans-unit id="FMD.personalData.1">
+        <source>Generates a form to edit a member's personal data</source>
+        <target>یک فرم برای ویرایش اطلاعات شخصی عضو ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.registration.0">
+        <source>Registration</source>
+        <target>نام‌نویسی</target>
+      </trans-unit>
+      <trans-unit id="FMD.registration.1">
+        <source>Generates a member registration form</source>
+        <target>یک فرم ثبت‌نام عضو ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.changePassword.0">
+        <source>Change password</source>
+        <target>تغییر گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="FMD.changePassword.1">
+        <source>Generates a form to change the password</source>
+        <target>یک فرم برای تغییر گذرواژه ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.lostPassword.0">
+        <source>Lost password</source>
+        <target>فراموشی گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="FMD.lostPassword.1">
+        <source>Generates a form to request a new password</source>
+        <target>فرم درخواست گذرواژه جدید ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.closeAccount.0">
+        <source>Close account</source>
+        <target>بستن حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="FMD.closeAccount.1">
+        <source>Generates a form to delete a member account</source>
+        <target>فرم حذف حساب کاربری عضو را ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.application">
+        <source>Applications</source>
+        <target>برنامه‌های کاربردی</target>
+      </trans-unit>
+      <trans-unit id="FMD.form.0">
+        <source>Form</source>
+        <target>فرم</target>
+      </trans-unit>
+      <trans-unit id="FMD.form.1">
+        <source>Adds a form to the page</source>
+        <target>یک فرم به برگه اضافه می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.search.0">
+        <source>Search engine</source>
+        <target>موتور جستجو</target>
+      </trans-unit>
+      <trans-unit id="FMD.search.1">
+        <source>Adds a search form to the page</source>
+        <target>یک فرم  جستجو به برگه اضافه می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlelist.0">
+        <source>Article list</source>
+        <target>فهرست مقاله</target>
+      </trans-unit>
+      <trans-unit id="FMD.articlelist.1">
+        <source>Generates a list of articles of a column</source>
+        <target>فهرستی از مقاله‌های یک ستون ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>متفرقه</target>
+      </trans-unit>
+      <trans-unit id="FMD.randomImage.0">
+        <source>Random image</source>
+        <target>تصویر تصادفی</target>
+      </trans-unit>
+      <trans-unit id="FMD.randomImage.1">
+        <source>Adds a random image to the page</source>
+        <target>تصویر تصادفی به برگه اضافه می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.html.0">
+        <source>Custom HTML</source>
+        <target>HTML سفارشی</target>
+      </trans-unit>
+      <trans-unit id="FMD.html.1">
+        <source>Allows you to add custom HTML code</source>
+        <target>امکان افزودن کد HTML سفارشی را به شما می‌دهد</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+      </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>قالب اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>ماژولی برای درح در قالب اختصاصی تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="FMD.rssReader.0">
+        <source>RSS reader</source>
+        <target>آراس‌اس خوان</target>
+      </trans-unit>
+      <trans-unit id="FMD.rssReader.1">
+        <source>Adds an RSS feed to the page</source>
+        <target>یک خوراک آراس‌اس به برگه اضافه می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>احراز هویت دو عاملی</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+        <target>یک فرم برای تنظیم یا تغییر احراز هویت دومرحله‌ای ایجاد می‌کند</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.1">
+        <source>Generates different modules depending on the website root page</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -19,7 +19,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
@@ -30,7 +29,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -58,14 +56,12 @@ class ContaoCoreBundleTest extends TestCase
             AddEventAliasesPass::class,
             MakeServicesPublicPass::class,
             AddAssetsPackagesPass::class,
-            AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
             TaggedMigrationsPass::class,
             PickerProviderPass::class,
             RegisterPagesPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
-            RemembermeServicesPass::class,
             DataContainerCallbackPass::class,
             TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
@@ -85,7 +81,7 @@ class ContaoCoreBundleTest extends TestCase
         $security = $this->createMock(SecurityExtension::class);
         $security
             ->expects($this->once())
-            ->method('addSecurityListenerFactory')
+            ->method('addAuthenticatorFactory')
             ->with($this->callback(static fn ($param) => $param instanceof ContaoLoginFactory))
         ;
 

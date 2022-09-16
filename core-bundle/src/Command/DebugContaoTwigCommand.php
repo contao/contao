@@ -16,6 +16,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -27,14 +28,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @experimental
- */
+#[AsCommand(
+    name: 'debug:contao-twig',
+    description: 'Displays the Contao template hierarchy.'
+)]
 class DebugContaoTwigCommand extends Command
 {
-    protected static $defaultName = 'debug:contao-twig';
-    protected static $defaultDescription = 'Displays the Contao template hierarchy.';
-
     public function __construct(
         private TemplateHierarchyInterface $hierarchy,
         private ContaoFilesystemLoaderWarmer $cacheWarmer,
@@ -49,6 +48,7 @@ class DebugContaoTwigCommand extends Command
     {
         $this
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
+            ->addOption('tree', null, InputOption::VALUE_NONE, 'Display the templates as prefix tree.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
@@ -69,6 +69,99 @@ class DebugContaoTwigCommand extends Command
         }
 
         $io = new SymfonyStyle($input, $output);
+
+        if ($input->getOption('tree')) {
+            $this->listTree($chains, $io);
+        } else {
+            $this->listDetailed($chains, $io);
+        }
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * @param array<string,array<string, string>> $chains
+     */
+    private function listTree(array $chains, SymfonyStyle $io): void
+    {
+        // Split identifier prefixes by "/" and arrange them in a prefix tree
+        $prefixTree = [];
+
+        foreach ($chains as $identifier => $chain) {
+            $parts = explode('/', $identifier);
+            $node = &$prefixTree;
+
+            foreach ($parts as $part) {
+                /** @phpstan-ignore-next-line */
+                if (!isset($node[$part])) {
+                    $node[$part] = [];
+                }
+
+                $node = &$node[$part];
+            }
+
+            $node = [...$node, ...$chain];
+        }
+
+        // Recursively display tree nodes
+        $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use (&$displayNode, $io, $chains): void {
+            // Make sure leaf nodes (files) come first and everything else is
+            // sorted ascending by its key (identifier part)
+            uksort(
+                $node,
+                static function ($keyA, $keyB) use ($node) {
+                    if (0 !== ($leafNodes = (\is_array($node[$keyA]) <=> \is_array($node[$keyB])))) {
+                        return $leafNodes;
+                    }
+
+                    return $keyA <=> $keyB;
+                }
+            );
+
+            $count = \count($node);
+
+            foreach ($node as $label => $element) {
+                --$count;
+
+                $currentPrefix = $prefix.($count ? '├──' : '└──');
+                $currentPrefixWithNewline = $prefix.($count ? '│  ' : '   ');
+
+                if (\is_array($element)) {
+                    // Display part of the template identifier. If this is the
+                    // last bit, we also display the effective @Contao name.
+                    $identifier = ltrim("$namePrefix/$label", '/');
+
+                    $io->writeln(sprintf(
+                        '%s<fg=green;options=bold>%s</>%s',
+                        $currentPrefix,
+                        $label,
+                        isset($chains[$identifier]) ? " (<fg=yellow>@Contao/$identifier.html.twig</>)" : ''
+                    ));
+
+                    $displayNode($element, $currentPrefixWithNewline, $identifier);
+
+                    continue;
+                }
+
+                // Display file and logical name
+                $io->writeln($currentPrefix.$label);
+
+                $io->writeln(sprintf(
+                    '%s<fg=white>Original name:</> <fg=yellow>%s</>',
+                    $currentPrefixWithNewline,
+                    $element
+                ));
+            }
+        };
+
+        $displayNode($prefixTree);
+    }
+
+    /**
+     * @param array<string,array<string, string>> $chains
+     */
+    private function listDetailed(array $chains, SymfonyStyle $io): void
+    {
         $nameCellStyle = new TableCellStyle(['fg' => 'yellow']);
         $blockCellStyle = new TableCellStyle(['fg' => 'magenta']);
         $codeCellStyle = new TableCellStyle(['fg' => 'white']);
@@ -120,8 +213,6 @@ class DebugContaoTwigCommand extends Command
 
             $io->table(['Attribute', 'Value'], $rows);
         }
-
-        return Command::SUCCESS;
     }
 
     private function getThemeSlug(InputInterface $input): string|null
@@ -154,8 +245,8 @@ class DebugContaoTwigCommand extends Command
         $lines = explode("\n", $multilineValue);
         $rows = [];
 
-        for ($i = 0; $i < \count($lines); ++$i) {
-            $rows[] = [0 === $i ? $attribute : '', new TableCell($lines[$i], ['style' => $style])];
+        foreach ($lines as $i => $line) {
+            $rows[] = [0 === $i ? $attribute : '', new TableCell($line, ['style' => $style])];
         }
 
         return $rows;

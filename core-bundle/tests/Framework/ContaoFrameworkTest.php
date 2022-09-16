@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
@@ -34,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
@@ -171,83 +169,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame($errorReporting, error_reporting());
 
         error_reporting($errorReporting);
-    }
-
-    public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
-    {
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('/contao/install')
-        ;
-
-        $request = Request::create('/contao/login');
-        $request->attributes->set('_route', 'dummy');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $framework = new ContaoFramework(
-            $requestStack,
-            $urlGenerator,
-            $this->getTempDir(),
-            error_reporting()
-        );
-
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        $adapters = [
-            Config::class => $this->mockConfigAdapter(false),
-        ];
-
-        $ref = new \ReflectionObject($framework);
-        $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setValue($framework, $adapters);
-
-        $this->expectException(RedirectResponseException::class);
-
-        $framework->initialize();
-    }
-
-    /**
-     * @dataProvider getInstallRoutes
-     */
-    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
-    {
-        $request = Request::create('/contao/login');
-        $request->attributes->set('_route', $route);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $framework = new ContaoFramework(
-            $requestStack,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->getTempDir(),
-            error_reporting()
-        );
-
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        $adapters = [
-            Config::class => $this->mockConfigAdapter(false),
-        ];
-
-        $ref = new \ReflectionObject($framework);
-        $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setValue($framework, $adapters);
-
-        $framework->initialize();
-
-        $this->addToAssertionCount(1); // does not throw an exception
-    }
-
-    public function getInstallRoutes(): \Generator
-    {
-        yield 'contao_install' => ['contao_install'];
-        yield 'contao_install_redirect' => ['contao_install_redirect'];
     }
 
     public function testFailsIfTheContainerIsNotSet(): void
@@ -475,7 +396,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
         );

@@ -13,11 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -36,7 +37,6 @@ class TokenChecker
         private RequestStack $requestStack,
         private FirewallMapInterface $firewallMap,
         private TokenStorageInterface $tokenStorage,
-        private SessionInterface $session,
         private AuthenticationTrustResolverInterface $trustResolver,
         private VoterInterface $roleVoter,
     ) {
@@ -60,6 +60,20 @@ class TokenChecker
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
         return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
+    }
+
+    /**
+     * Checks if a front end guest user is "authenticated".
+     */
+    public function hasFrontendGuest(): bool
+    {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
+            return false;
+        }
+
+        return $session->has(FrontendPreviewAuthenticator::SESSION_NAME);
     }
 
     /**
@@ -95,15 +109,25 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request || !$request->attributes->get('_preview', false)) {
             return false;
         }
 
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
+        if (!$request->hasPreviousSession()) {
+            return false;
+        }
 
-        return $token instanceof FrontendPreviewToken && $token->showUnpublished();
+        $session = $request->getSession();
+
+        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return false;
+        }
+
+        $preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
+
+        return (bool) $preview['showUnpublished'];
     }
 
     private function getToken(string $context): TokenInterface|null
@@ -114,11 +138,11 @@ class TokenChecker
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
-        if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
+        if (!$token instanceof TokenInterface) {
             return null;
         }
 
-        if ($this->trustResolver->isAnonymous($token)) {
+        if (!$this->trustResolver->isAuthenticated($token) && !$this->trustResolver->isFullFledged($token) && !$this->trustResolver->isRememberMe($token)) {
             return null;
         }
 
@@ -127,7 +151,7 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): TokenInterface|null
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -144,20 +168,22 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if (!$this->session->isStarted()) {
-            $request = $this->requestStack->getMainRequest();
-
-            if (!$request || !$request->hasPreviousSession()) {
-                return null;
-            }
-        }
-
-        // This will start the session if Request::hasPreviousSession() was true
-        if (!$this->session->has($sessionKey)) {
+        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
             return null;
         }
 
-        $token = unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
+        $session = $request->getSession();
+
+        if (!$session->isStarted() && !$request->hasPreviousSession()) {
+            return null;
+        }
+
+        // This will start the session if Request::hasPreviousSession() was true
+        if (!$session->has($sessionKey)) {
+            return null;
+        }
+
+        $token = unserialize($session->get($sessionKey), ['allowed_classes' => true]);
 
         if (!$token instanceof TokenInterface) {
             return null;

@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\InsertTag\CommonMarkExtension;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\Template;
@@ -31,9 +33,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @ContentElement(category="texts")
- */
+#[AsContentElement(category: 'texts')]
 class MarkdownController extends AbstractContentElementController
 {
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
@@ -76,6 +76,7 @@ class MarkdownController extends AbstractContentElementController
             ],
         ]);
 
+        $environment->addExtension(new CommonMarkExtension($this->container->get('contao.insert_tag.parser')));
         $environment->addExtension(new CommonMarkCoreExtension());
 
         // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
@@ -111,5 +112,14 @@ class MarkdownController extends AbstractContentElementController
         }
 
         return (string) file_get_contents($path);
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.insert_tag.parser'] = InsertTagParser::class;
+
+        return $services;
     }
 }

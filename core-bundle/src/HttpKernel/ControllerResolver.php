@@ -25,7 +25,7 @@ class ControllerResolver implements ControllerResolverInterface
     {
     }
 
-    public function getController(Request $request): bool|callable|null
+    public function getController(Request $request): callable|false
     {
         if (
             $request->attributes->has('_controller')

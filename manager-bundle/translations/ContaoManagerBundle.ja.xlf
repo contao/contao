@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoManagerBundle.en.xlf" target-language="ja">
+    <body>
+      <trans-unit id="1" resname="debug_mode">
+        <source>Debug mode</source>
+        <target>デバッグモード</target>
+      </trans-unit>
+      <trans-unit id="2" resname="contao_manager_title">
+        <source>Manage updates and extensions and maintain the application</source>
+        <target>更新や機能拡張の管理とアプリケーションの保守</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

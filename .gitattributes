@@ -6,9 +6,9 @@
 /*/.github/ merge=ours
 
 # Only merge the source language files
-/*/src/Resources/contao/languages/*/*.xlf merge=ours
-/*/src/Resources/contao/languages/en/*.xlf merge=text
+/*/contao/languages/*/*.xlf merge=ours
+/*/contao/languages/en/*.xlf merge=text
 
 # Do not merge the minified theme files
-/*/src/Resources/contao/themes/flexible/*.min.css merge=ours
-/*/src/Resources/contao/themes/flexible/*.min.js merge=ours
+/*/contao/themes/flexible/*.min.css merge=ours
+/*/contao/themes/flexible/*.min.js merge=ours

@@ -1,0 +1,18 @@
+<?php
+
+// To use this script, please fill in your Google Analytics ID below
+// Example: 'G-XXXXXXX' (Google Analytics 4) or 'UA-XXXXX-X' (Universal Analytics)
+$GoogleAnalyticsId = 'XXXXX';
+
+// DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
+if ('XXXXX' != $GoogleAnalyticsId && !$this->hasAuthenticatedBackendUser()): ?>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= $GoogleAnalyticsId ?>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<?= $GoogleAnalyticsId ?>', {'anonymize_ip': true});
+</script>
+
+<?php endif; ?>

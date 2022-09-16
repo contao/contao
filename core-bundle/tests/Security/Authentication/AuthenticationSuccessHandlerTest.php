@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
-use Contao\System;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
@@ -125,71 +124,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testTriggersThePostLoginHook(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postLogin" hook has been deprecated %s.');
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('info')
-            ->with('User "foobar" has logged in')
-        ;
-
-        $parameters = [
-            '_always_use_target_path' => '0',
-            '_target_path' => base64_encode('http://localhost/target'),
-        ];
-
-        $request = new Request([], $parameters);
-
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
-        $user->username = 'foobar';
-        $user->lastLogin = time() - 3600;
-        $user->currentLogin = time() - 1800;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-        $systemAdapter
-            ->expects($this->once())
-            ->method('importStatic')
-            ->with(static::class)
-            ->willReturn($this)
-        ;
-
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $GLOBALS['TL_HOOKS']['postLogin'][] = [static::class, 'onPostLogin'];
-
-        $handler = $this->getHandler($framework, $logger);
-        $handler->onAuthenticationSuccess($request, $token);
-
-        unset($GLOBALS['TL_HOOKS']);
-    }
-
-    public function onPostLogin(): void
-    {
-        // Dummy method to test the postLogin hook
     }
 
     public function testUsesTheUrlOfThePage(): void

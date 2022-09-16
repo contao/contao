@@ -57,6 +57,9 @@ class TemplateLoaderTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.twig.filesystem_loader', $this->createMock(TemplateHierarchyInterface::class));
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
+
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_theme.php', '<?php $GLOBALS["TL_DCA"]["tl_theme"] = [];');
 
         System::setContainer($container);
     }
@@ -67,7 +70,7 @@ class TemplateLoaderTest extends TestCase
 
         TemplateLoader::reset();
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 
@@ -78,7 +81,7 @@ class TemplateLoaderTest extends TestCase
     {
         (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'));
 
-        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
 
         $this->assertSame(
             [
@@ -98,7 +101,7 @@ class TemplateLoaderTest extends TestCase
 
     public function testReturnsACustomTemplateInContaoTemplates(): void
     {
-        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
         TemplateLoader::addFile('mod_article_custom', 'contao/templates');
 
         $this->assertSame(
@@ -119,8 +122,8 @@ class TemplateLoaderTest extends TestCase
 
     public function testReturnsACustomTemplateInAnotherBundle(): void
     {
-        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
-        TemplateLoader::addFile('mod_article_custom', 'article-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
+        TemplateLoader::addFile('mod_article_custom', 'article-bundle/contao/templates/modules');
 
         $this->assertSame(
             [
@@ -140,9 +143,9 @@ class TemplateLoaderTest extends TestCase
 
     public function testReturnsMultipleRootTemplatesWithTheSamePrefix(): void
     {
-        TemplateLoader::addFile('ctlg_views', 'catalog-manager/src/Resources/contao/templates');
-        TemplateLoader::addFile('ctlg_view_master', 'catalog-manager/src/Resources/contao/templates');
-        TemplateLoader::addFile('ctlg_view_teaser', 'catalog-manager/src/Resources/contao/templates');
+        TemplateLoader::addFile('ctlg_views', 'catalog-manager/contao/templates');
+        TemplateLoader::addFile('ctlg_view_master', 'catalog-manager/contao/templates');
+        TemplateLoader::addFile('ctlg_view_teaser', 'catalog-manager/contao/templates');
 
         $this->assertSame(
             [
@@ -168,9 +171,9 @@ class TemplateLoaderTest extends TestCase
             Path::join($this->getTempDir(), 'templates/mod_article_list_custom.html5'),
         ]);
 
-        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
-        TemplateLoader::addFile('mod_article_list', 'core-bundle/src/Resources/contao/templates/modules');
-        TemplateLoader::addFile('mod_article_foo', 'article-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
+        TemplateLoader::addFile('mod_article_list', 'core-bundle/contao/templates/modules');
+        TemplateLoader::addFile('mod_article_foo', 'article-bundle/contao/templates/modules');
         TemplateLoader::addFile('mod_article_bar', 'contao/templates');
 
         $this->assertSame(
@@ -215,8 +218,8 @@ class TemplateLoaderTest extends TestCase
             'view_details' => 'Ctlg\ViewDetails',
         ];
 
-        TemplateLoader::addFile('ctlg_view', 'catalog-manager/src/Resources/contao/templates');
-        TemplateLoader::addFile('ctlg_view_details', 'catalog-manager/src/Resources/contao/templates');
+        TemplateLoader::addFile('ctlg_view', 'catalog-manager/contao/templates');
+        TemplateLoader::addFile('ctlg_view_details', 'catalog-manager/contao/templates');
 
         $this->assertSame(
             [
@@ -242,7 +245,7 @@ class TemplateLoaderTest extends TestCase
             Path::join($this->getTempDir(), '/templates/mod_article-custom.html5'),
         ]);
 
-        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Using hyphens in the template name "mod_article-custom" is not allowed, use snake_case instead.');
@@ -280,6 +283,38 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_custom' => 'mod_article_custom',
             ],
             Controller::getTemplateGroup('mod_article_')
+        );
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testReturnsAModernCustomTwigTemplate(): void
+    {
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $templateHierarchy
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'content_element/text' => ['some/path/content_element/text.html.twig' => '@Contao_Global/content_element/text.html.twig'],
+                'content_element/text/special' => ['some/path/content_element/text/special.html.twig' => '@Contao_Global/content_element/text/special.html.twig'],
+                'content_element/text_table' => ['some/path/content_element/text_table.html.twig' => '@Contao_Global/content_element/text_table.html.twig'],
+            ])
+        ;
+
+        System::getContainer()->set('contao.twig.filesystem_loader', $templateHierarchy);
+
+        $this->assertSame(
+            [
+                'content_element/text/special' => 'content_element/text/special',
+            ],
+            Controller::getTemplateGroup('content_element/text')
+        );
+
+        $this->assertSame(
+            [
+                'content_element/text/special' => 'content_element/text/special',
+            ],
+            Controller::getTemplateGroup('content_element/text_')
         );
     }
 }

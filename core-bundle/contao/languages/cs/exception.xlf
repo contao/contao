@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>Došlo k chybě</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>Co se stalo?</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>Jak můžu odstranit danou chybu?</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>Dozvědět se více</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>Pro přizpůsobení této poznámky vytvořte vlastní předlohu Twig, ta přepíše &lt;em&gt;%s&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>Došlo k chybě během spouštění tohoto skriptu. Něco nepracuje správným způsobem.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Otevřete současný soubor log ve složce &lt;code&gt;var/logs&lt;/code&gt; a najděte dané chybové hlášení (pravděpodobně jedno z posledních)</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Spouštění skriptu bylo pozastaveno, protože něco nefunguje správně. Daná chybová zpráva je skrytá u této poznámky z bezpečnostních důvodů a lze ji najít v souboru (viz výš). Pokud nerozumíte chybové zprávě nebo nevíte, jak lze daný problém opravit, navštivte &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránku podpory Contaa&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>Neplatný požadavek tokenu</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>Požadovaný token nemohl být ověřený.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click here&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
+        <target>Prosím klikněte znovu na &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;tento odkaz&lt;/a&gt;. Nepoužívejte prosím tlačítko pro krok zpět Vašeho prohlížeče. </target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>Chyba nastane, pokud je nastavený přenos POST bez platného potvrzovacího tokenu. V Contau 2.10 byla tato kontrola nahrazená tokenovým systémem. Přetrvává-li daný problém, nejspíš používáte nekompatibilní rozšíření třetích stran nebo není dobré zaktualizována instalace Vašeho Contaa.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Více informací najdete na &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránce podpory Contaa&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>Servis je nedostupný</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>Webová stránka je momentálně nedostupná. Vraťte se sem později. </target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+        <target>Nešlo vytvořit frontendovou URL</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>Nešlo vytvořit URL, protože má cesta povinné parametry, které nejsou zadány. Další informace (např. aliase novinky) se musí poskytnout.</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Cesty Symfony mohou mít rozličné parametry, které jsou platné použitím regulérních výrazů. Následující nastavení nešlo vyřešit:</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+        <target>Cesta</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>Jméno</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+        <target>Požadavek (Regex)</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>Výchozí hodnota</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+        <target>prázdný</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

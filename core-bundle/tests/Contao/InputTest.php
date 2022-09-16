@@ -36,7 +36,7 @@ class InputTest extends TestCase
 
         $this->backupServerEnvGetPost();
 
-        include __DIR__.'/../../src/Resources/contao/config/default.php';
+        include __DIR__.'/../../contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 
@@ -918,5 +918,24 @@ class InputTest extends TestCase
         $this->assertSame(['123', 'key2'], Input::getKeys());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->push(new Request($data, [], [], [], [], ['REQUEST_METHOD' => 'POST']));
+
+        $this->assertTrue(Input::isPost(), 'isPost() should return true, even if the post data was empty');
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testArrayValuesFromGetAndPost(): void
+    {
+        $data = ['key' => ['value1', 'value2']];
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request($data, $data, [], $data));
+
+        $this->assertSame(['value1', 'value2'], Input::get('key'));
+        $this->assertSame(['value1', 'value2'], Input::post('key'));
+        $this->assertSame(['value1', 'value2'], Input::cookie('key'));
     }
 }

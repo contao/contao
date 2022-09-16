@@ -1,0 +1,402 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar_events.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_calendar_events.title.0">
+        <source>Title</source>
+        <target>Rubrik</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title.1">
+        <source>Please enter the event title.</source>
+        <target>Ange en rubrik för händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.0">
+        <source>Event alias</source>
+        <target>Händelsealias</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.1">
+        <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
+        <target>Händelsealias är ett unik referensnamn som kan användas istället för händelsens numeriska ID-nummer när man refererar till händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.0">
+        <source>Author</source>
+        <target>Namn</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.1">
+        <source>Here you can change the author of the event.</source>
+        <target>Här kan du ändra författare för händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.0">
+        <source>Add time</source>
+        <target>Lägg till tid</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.1">
+        <source>Add a start and end time to the event.</source>
+        <target>Lägg till en start- och sluttid för händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.0">
+        <source>Start time</source>
+        <target>Starttid</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.1">
+        <source>Please enter the start time according to the global time format.</source>
+        <target>Ange en starttid i enlighet med det globala tidsformatet.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.0">
+        <source>End time</source>
+        <target>Sluttid</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.1">
+        <source>Leave blank to create an open-ended event.</source>
+        <target>Lämna tomt för att skapa ett ej tidsbegränsat evenemang.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.0">
+        <source>Start date</source>
+        <target>Startdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.1">
+        <source>Please enter the start date according to the global date format.</source>
+        <target>Ange ett startdatum för händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.0">
+        <source>End date</source>
+        <target>Slutdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.1">
+        <source>Leave blank to create a single day event.</source>
+        <target>Ange ett slutdatum för händelsen, eller lämna tomt för endagshändelser.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta titel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Här kan du lägga till en anpassad metatitel för att skriva över standard sidrubriken.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+        <target>Robot-tag</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Här kan du skriva över hur sökmotorer hanterar evenemanget.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>Metabeskrivning</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Här kan du lägga till en anpassad metabeskrivning för att skriva över standardsidebeskrivningen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.0">
+        <source>Location name</source>
+        <target>Platsnamn</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.1">
+        <source>Here you can enter the name of the event location.</source>
+        <target>Här kan du ange namnet på evenemangets plats.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+        <target>Platsadress</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+        <target>Här kan du ange adressen till evenemangets plats.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.0">
+        <source>Event teaser</source>
+        <target>Ingress</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.1">
+        <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>En ingress är en kort text som ska locka läsaren att klicka på &quot;Läs mer...&quot;-länken. Ingressen visas som sammanfattning i händelselistor.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.0">
+        <source>Event text</source>
+        <target>Händelsedetaljer</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.1">
+        <source>Here you can enter the event text.</source>
+        <target>Skriv in den detaljerade händelsetexten.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.0">
+        <source>Add an image</source>
+        <target>Lägg till bild</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.1">
+        <source>Add an image to the event.</source>
+        <target>Markera detta alternativ för att lägga till en bild i händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.0">
+        <source>Repeat event</source>
+        <target>Återkommande händelse</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.1">
+        <source>Create a recurring event.</source>
+        <target>Repetera aktuell händelse.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.0">
+        <source>Interval</source>
+        <target>Intervall</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.1">
+        <source>Here you can set the recurrence interval.</source>
+        <target>Ange tidsintervall.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.0">
+        <source>Recurrences</source>
+        <target>Repetitioner</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.1">
+        <source>Set to 0 for unlimited recurrences.</source>
+        <target>Ställ in på 0 för obegränsad återkommande.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEnd">
+        <source>End of recurring event</source>
+        <target>Slut för upprepad händelse</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>Bifoga fil</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.1">
+        <source>Add one or more downloadable files to the event.</source>
+        <target>Lägg till en eller flera nedladdningsbara filer till händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.0">
+        <source>Enclosures</source>
+        <target>Källfiler</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>Välj en eller flera filer från filarkivet som ska bifogas till svaret.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.0">
+        <source>Redirect target</source>
+        <target>Omdirigeringsmål</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.1">
+        <source>Here you can override the default redirect target.</source>
+        <target>Här kan du åsidosätta standard omdirigeringsmål.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.0">
+        <source>Use default</source>
+        <target>Använd standard</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the calendar.</source>
+        <target>Genom att klicka på &quot;läs mer...&quot; så kommer besökare att vidarebefodras till standardsidan för kalendern.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.0">
+        <source>Page</source>
+        <target>Intern sida</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an internal page.</source>
+        <target>Genom att klicka på &quot;läs mer...&quot; så kommer besökare att vidarebefodras till en intern sida.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.0">
+        <source>Article</source>
+        <target>Artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
+        <target>Genom att klicka på &quot;läs mer ...&quot; knappen, kommer besökarna att omdirigeras till en artikel.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.0">
+        <source>Custom URL</source>
+        <target>Anpassad URL</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>Genom att klicka på knappen &quot;läs mer ...&quot; kommer besökare att omdirigeras till anpassad URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.0">
+        <source>Link text</source>
+        <target>Länktitel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.1">
+        <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Här kan du åsidosätta standardlänktexten &quot;read more...&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Omdirigera till</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
+        <target>Vänligen välj en sida som besökare skall bli vidarebefordrade till.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.0">
+        <source>Article</source>
+        <target>Artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.1">
+        <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
+        <target>Välj den artikel som besökaren kommer att omdirigeras till när den klickar på händelsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.0">
+        <source>CSS class</source>
+        <target>Stilmallsklass</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.1">
+        <source>Here you can enter one or more classes.</source>
+        <target>Här kan du ange en eller flera stilmallsklasser (CSS-klass)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Avaktivera kommentarer</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Tillåt inte kommentarer från besökare för denna händelse.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+        <target>Feature-evenemang</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+        <target>Visa evenemanget i en utvald evenemangslista.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.0">
+        <source>Publish event</source>
+        <target>Publicerad</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.1">
+        <source>Make the event publicly visible on the website.</source>
+        <target>Markera detta alternativ för att publicera händelsen så att den visas för hemsidans besökare.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.0">
+        <source>Show from</source>
+        <target>Börja visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.1">
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Om du vill förhindra att evenemanget visas på webbplatsen före ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.0">
+        <source>Show until</source>
+        <target>Sluta visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.1">
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Om du vill förhindra att evenemanget visas på webbplatsen efter ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.0">
+        <source>Revision date</source>
+        <target>Ändringsdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum och tid för senaste ändringen.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title_legend">
+        <source>Title and author</source>
+        <target>Titel och upphovsman</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.date_legend">
+        <source>Date and time</source>
+        <target>Datum och tid</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details_legend">
+        <source>Event details</source>
+        <target>Visa händelsedetaljer</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.text_legend">
+        <source>Event text</source>
+        <target>Händelsedetaljer</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.image_legend">
+        <source>Image settings</source>
+        <target>Bildinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring_legend">
+        <source>Recurrence settings</source>
+        <target>Upprepningsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure_legend">
+        <source>Enclosures</source>
+        <target>Källfiler</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source_legend">
+        <source>Redirect target</source>
+        <target>Omdirigeringsmål</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Metadata</source>
+        <target>Metadata</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.expert_legend">
+        <source>Expert settings</source>
+        <target>Expertinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.publish_legend">
+        <source>Publish settings</source>
+        <target>Publiceringsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.days">
+        <source>day(s)</source>
+        <target>dag(ar)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.weeks">
+        <source>week(s)</source>
+        <target>vecka(or)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.months">
+        <source>month(s)</source>
+        <target>månad(er)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.years">
+        <source>year(s)</source>
+        <target>år</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.1">
+        <source>Create a new event</source>
+        <target>Skapa en ny händelse</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.show">
+        <source>Show the details of event ID %s</source>
+        <target>Visa detaljer för händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.edit">
+        <source>Edit event ID %s</source>
+        <target>Redigera händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.children">
+        <source>Edit the content elements of event ID %s</source>
+        <target>Redigera innehållselementen i händelse-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.copy">
+        <source>Duplicate event ID %s</source>
+        <target>Kopiera händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cut">
+        <source>Move event ID %s</source>
+        <target>Flytta händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.delete">
+        <source>Delete event ID %s</source>
+        <target>Ta bort händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle">
+        <source>Publish/unpublish event ID %s</source>
+        <target>Publicera / avpublicera händelse med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event ID %s</source>
+        <target>Feature / unfeature evenemangs-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pasteafter.0">
+        <source>Paste into this calendar</source>
+        <target>Klistra in i denna kalender</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

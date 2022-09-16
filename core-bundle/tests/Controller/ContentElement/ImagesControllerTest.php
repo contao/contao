@@ -39,7 +39,7 @@ class ImagesControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/image">
+            <div class="content-image">
                 <figure>
                     <img src="files/image1.jpg" alt="alt text">
                 </figure>
@@ -72,7 +72,7 @@ class ImagesControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/gallery">
+            <div class="content-gallery--cols-2 content-gallery">
                 <ul>
                     <li>
                         <figure>

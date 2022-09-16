@@ -84,7 +84,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it was a redirect' => [
-            Request::create('/foobar', 'GET'),
+            Request::create('/foobar'),
             new RedirectResponse('https://somewhere.else'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,

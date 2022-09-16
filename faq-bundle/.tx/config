@@ -3,36 +3,36 @@ host = https://www.transifex.com
 type = XLIFF
 
 [faq-bundle.v5_0-default]
-source_file = src/Resources/contao/languages/en/default.xlf
+source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
+file_filter = contao/languages/<lang>/default.xlf
 
 [faq-bundle.v5_0-modules]
-source_file = src/Resources/contao/languages/en/modules.xlf
+source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
+file_filter = contao/languages/<lang>/modules.xlf
 
 [faq-bundle.v5_0-tl_faq]
-source_file = src/Resources/contao/languages/en/tl_faq.xlf
+source_file = contao/languages/en/tl_faq.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_faq.xlf
+file_filter = contao/languages/<lang>/tl_faq.xlf
 
 [faq-bundle.v5_0-tl_faq_category]
-source_file = src/Resources/contao/languages/en/tl_faq_category.xlf
+source_file = contao/languages/en/tl_faq_category.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_faq_category.xlf
+file_filter = contao/languages/<lang>/tl_faq_category.xlf
 
 [faq-bundle.v5_0-tl_module]
-source_file = src/Resources/contao/languages/en/tl_module.xlf
+source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
+file_filter = contao/languages/<lang>/tl_module.xlf
 
 [faq-bundle.v5_0-tl_user]
-source_file = src/Resources/contao/languages/en/tl_user.xlf
+source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
+file_filter = contao/languages/<lang>/tl_user.xlf
 
 [faq-bundle.v5_0-tl_user_group]
-source_file = src/Resources/contao/languages/en/tl_user_group.xlf
+source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
+file_filter = contao/languages/<lang>/tl_user_group.xlf

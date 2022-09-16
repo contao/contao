@@ -35,7 +35,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->command = new InstallWebDirCommand($this->getTempDir());
         $this->command->setApplication($this->getApplication());
         $this->filesystem = new Filesystem();
-        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/public');
+        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../skeleton/public');
     }
 
     protected function tearDown(): void
@@ -102,7 +102,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/public/.htaccess',
-            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/skeleton/public/.htaccess')
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../skeleton/public/.htaccess')
         );
     }
 

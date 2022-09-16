@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @Callback(table="tl_page", target="fields.layout.options")
- * @Callback(table="tl_page", target="fields.subpageLayout.options")
- */
+#[AsCallback(table: 'tl_page', target: 'fields.layout.options')]
+#[AsCallback(table: 'tl_page', target: 'fields.subpageLayout.options')]
 class LayoutOptionsListener implements ResetInterface
 {
     private array|null $options = null;

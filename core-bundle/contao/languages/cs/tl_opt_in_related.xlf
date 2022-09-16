@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_opt_in_related.php" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="tl_opt_in_related.relTable">
+        <source>Related table</source>
+        <target>Související tabulka</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in_related.relId">
+        <source>Related ID</source>
+        <target>Související ID</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

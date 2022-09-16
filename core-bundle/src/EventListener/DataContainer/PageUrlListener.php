@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\Input;
@@ -46,9 +46,7 @@ class PageUrlListener
     ) {
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.alias.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -85,8 +83,8 @@ class PageUrlListener
 
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'] ?? null,
-            $currentRecord['id'] ?? null,
+            $currentRecord['title'] ?? '',
+            (int) ($currentRecord['id'] ?? null),
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -98,9 +96,7 @@ class PageUrlListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.urlPrefix.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.urlPrefix.save')]
     public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
         $currentRecord = $dc->getCurrentRecord();
@@ -141,9 +137,7 @@ class PageUrlListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.urlSuffix.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.urlSuffix.save')]
     public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
         $currentRecord = $dc->getCurrentRecord();
@@ -246,6 +240,7 @@ class PageUrlListener
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
+                && $currentRoute->getHost() === $aliasRoute->getHost()
                 && 0 === ($currentRoute->getRequirements() <=> $aliasRoute->getRequirements())
             ) {
                 if ($throw) {

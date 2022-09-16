@@ -68,10 +68,10 @@ final class Figure
     /**
      * Returns the lightbox result (if available).
      */
-    public function getLightbox(): LightboxResult
+    public function getLightbox(): LightboxResult|null
     {
         if (!$this->hasLightbox()) {
-            throw new \LogicException('This result container does not include a lightbox.');
+            return null;
         }
 
         /** @var LightboxResult */
@@ -88,10 +88,10 @@ final class Figure
     /**
      * Returns the main resource's metadata.
      */
-    public function getMetadata(): Metadata
+    public function getMetadata(): Metadata|null
     {
         if (!$this->hasMetadata()) {
-            throw new \LogicException('This result container does not include metadata.');
+            return null;
         }
 
         /** @var Metadata */
