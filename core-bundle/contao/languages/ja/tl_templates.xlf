@@ -33,6 +33,9 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>保存先のディレクトリ&quot;%s&quot;が不正です。</target>
       </trans-unit>
+      <trans-unit id="tl_templates.hasErrors">
+        <source>The template &quot;%s&quot; has errors and cannot be inspected: %s</source>
+      </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides &quot;%s&quot;.</source>
         <target>このテンプレートは&quot;%s&quot;を上書きします。</target>

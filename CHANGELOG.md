@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.2] (2022-09-16)
+
+**New features:**
+
+- [#5245] Add a tree view for the debug:contao-twig command ([m-vo])
+
+**Fixed issues:**
+
+- [#5247] Allow creating modern templates from within the back end ([m-vo])
+- [#5241] Fix several things when submitting data in DC_Table ([m-vo])
+- [#5266] Fix several autofocus issues in the back end ([leofeyer])
+- [#5254] Fix template options when using legacy elements ([fritzmg])
+- [#5242] Add implicit Twig namespace roots ([m-vo])
+- [#5235] Use the TemplateOptionsListener for form field templates ([leofeyer])
+- [#5237] Pass the contao.web_dir in the Automator::generateSymlinks() method ([leofeyer])
+- [#5243] Make modern custom templates selectable in the back end ([m-vo])
+- [#5246] Move the download templates to the correct location ([m-vo])
+- [#5238] Correctly check if the localconfig.php file is writeable ([leofeyer])
+- [#5236] Deprecate the User::isMemberOf() method ([leofeyer])
+- [#5192] Use getCurrentRequest() instead of getMainRequest() ([leofeyer])
+- [#5217] Fix the password field icon ([leofeyer])
+- [#5216] Allow to disable ChmodTable widget ([de-es])
+- [#5214] Use boolean instead of empty string ([bytehead])
+
 ## [5.0.1] (2022-08-19)
 
 **Fixed issues:**
@@ -331,6 +355,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.2]: https://github.com/contao/contao/releases/tag/5.0.2
 [5.0.1]: https://github.com/contao/contao/releases/tag/5.0.1
 [5.0.0]: https://github.com/contao/contao/releases/tag/5.0.0
 [5.0.0-RC4]: https://github.com/contao/contao/releases/tag/5.0.0-RC4
@@ -350,6 +375,22 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5245]: https://github.com/contao/contao/pull/5245
+[#5247]: https://github.com/contao/contao/pull/5247
+[#5241]: https://github.com/contao/contao/pull/5241
+[#5266]: https://github.com/contao/contao/pull/5266
+[#5254]: https://github.com/contao/contao/pull/5254
+[#5242]: https://github.com/contao/contao/pull/5242
+[#5235]: https://github.com/contao/contao/pull/5235
+[#5237]: https://github.com/contao/contao/pull/5237
+[#5243]: https://github.com/contao/contao/pull/5243
+[#5246]: https://github.com/contao/contao/pull/5246
+[#5238]: https://github.com/contao/contao/pull/5238
+[#5236]: https://github.com/contao/contao/pull/5236
+[#5192]: https://github.com/contao/contao/pull/5192
+[#5217]: https://github.com/contao/contao/pull/5217
+[#5216]: https://github.com/contao/contao/pull/5216
+[#5214]: https://github.com/contao/contao/pull/5214
 [#5207]: https://github.com/contao/contao/pull/5207
 [#5204]: https://github.com/contao/contao/pull/5204
 [#5205]: https://github.com/contao/contao/pull/5205

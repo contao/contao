@@ -27,7 +27,7 @@
         <source>Invalid source or target directory "%s"!</source>
       </trans-unit>
       <trans-unit id="tl_templates.hasErrors">
-        <source>The template "%s" has errors and cannot be inspected: "%s"</source>
+        <source>The template "%s" has errors and cannot be inspected: %s</source>
       </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides "%s".</source>
