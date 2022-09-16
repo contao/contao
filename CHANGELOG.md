@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.10] (2022-09-16)
+
+**Fixed issues:**
+
+- [#5284] Include mounted root pages in the topMostRootIds ([ausi])
+
 ## [4.13.9] (2022-09-15)
 
 **Fixed issues:**
@@ -480,6 +486,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.10]: https://github.com/contao/contao/releases/tag/4.13.10
 [4.13.9]: https://github.com/contao/contao/releases/tag/4.13.9
 [4.13.8]: https://github.com/contao/contao/releases/tag/4.13.8
 [4.13.7]: https://github.com/contao/contao/releases/tag/4.13.7
@@ -520,6 +527,7 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5284]: https://github.com/contao/contao/pull/5284
 [#5277]: https://github.com/contao/contao/pull/5277
 [#5269]: https://github.com/contao/contao/pull/5269
 [#5268]: https://github.com/contao/contao/pull/5268
