@@ -23,10 +23,7 @@ class DataContainerTest extends TestCase
     public function testCombiner(array $source, array $expected): void
     {
         $class = new \ReflectionClass(DC_Table::class);
-
         $method = $class->getMethod('combiner');
-        $method->setAccessible(true);
-
         $names = $method->invoke($class->newInstanceWithoutConstructor(), $source);
 
         $this->assertSame($expected, array_values($names));

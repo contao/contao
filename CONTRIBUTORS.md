@@ -29,15 +29,14 @@
  * Oliver Hoff ([backbone87](https://github.com/backbone87))
  * Dennis Bohn ([bohnmedia](https://github.com/bohnmedia))
  * Daniel Jahnsmüller ([Tastaturberuf](https://github.com/Tastaturberuf))
+ * ameotoko ([ameotoko](https://github.com/ameotoko))
  * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * Cliff Parnitzky ([cliffparnitzky](https://github.com/cliffparnitzky))
- * ameotoko ([ameotoko](https://github.com/ameotoko))
  * gmpf ([gmpf](https://github.com/gmpf))
  * Markus Nestmann
- * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
- * Daniele Sciannimanica
- * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
+ * de-es ([de-es](https://github.com/de-es))
+ * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Christian Eggeling ([amisso](https://github.com/amisso))
  * Stefan Heimes ([stefanheimes](https://github.com/stefanheimes))
  * Simon Wohler ([bekanntmacher](https://github.com/bekanntmacher))
@@ -47,7 +46,6 @@
  * Benjamin Hummel
  * kroka ([kroka](https://github.com/kroka))
  * Fabian Laule ([fabianlaule](https://github.com/fabianlaule))
- * de-es ([de-es](https://github.com/de-es))
  * Blair Winans ([blairwinans](https://github.com/blairwinans))
  * David Enke ([davidenke](https://github.com/davidenke))
  * Hendrik Obermayer ([henobi](https://github.com/henobi))
@@ -57,6 +55,8 @@
  * John Brand ([brandbrilliance](https://github.com/brandbrilliance))
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * Takahiro Kambe ([taca](https://github.com/taca))
+ * Daniele Sciannimanica
+ * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Olli ([Olli](https://github.com/Olli))
  * Patrick ([patrickjDE](https://github.com/patrickjDE))
  * Joe Ray Gregory ([may17](https://github.com/may17))
