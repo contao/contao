@@ -3783,7 +3783,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}
@@ -6390,16 +6390,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($this->root as $id)
 			{
-				$parentRecords = $this->Database->getParentRecords($id, $table, true);
-
-				// If $id already is a root page itself, there won't be any parent records.
-				// In this case, we have to add $id to the visible root trails.
-				if (empty($parentRecords))
-				{
-					$parentRecords = array($id);
-				}
-
-				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $parentRecords));
+				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $this->Database->getParentRecords($id, $table, true)));
 			}
 		}
 
