@@ -159,15 +159,25 @@ class InsertTagParser implements ResetInterface
         return $this->callLegacyClass($input, false);
     }
 
-    public function render(InsertTag|string $input): InsertTagResult
+    /**
+     * @deprecated Deprecated since Contao 5.1 to be removed in Contao 6. Use renderTag() instead.
+     */
+    public function render(string $input): string
+    {
+        trigger_deprecation('contao/core-bundle', '5.1', '"%s()" is deprecated. use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
+
+        return $this->renderTag($input)->getValue();
+    }
+
+    public function renderTag(InsertTag|string $input): InsertTagResult
     {
         if ($input instanceof InsertTag) {
             $tag = $input;
         } else {
             try {
                 $tag = $this->parseTag($input);
-            } catch (\InvalidArgumentException) {
-                // TODO: trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 6.0.');
+            } catch (\InvalidArgumentException $exception) {
+                trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 6.0.');
                 $tag = null;
             }
         }
@@ -349,7 +359,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (strtolower($name) !== $name) {
-            // TODO: trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $name);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $name);
             $name = strtolower($name);
         }
 
@@ -414,7 +424,7 @@ class InsertTagParser implements ResetInterface
                     continue;
                 }
 
-                $value .= $this->render($value)->getValue();
+                $value .= $this->renderTag($value)->getValue();
             }
 
             $resolvedParameters[] = $value;

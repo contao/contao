@@ -25,7 +25,7 @@ class InsertTagRuntimeTest extends TestCase
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('render')
+            ->method('renderTag')
             ->with('tag')
             ->willReturn(new InsertTagResult('replaced-tag'))
         ;
