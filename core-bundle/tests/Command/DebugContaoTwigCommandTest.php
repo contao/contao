@@ -196,6 +196,53 @@ class DebugContaoTwigCommandTest extends TestCase
         ];
     }
 
+    public function testOutputsHierarchyAsATree(): void
+    {
+        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'content_element/text/info' => [
+                    '/path1/content_element/text/info.html.twig' => '@A/content_element/text/info.html.twig',
+                ],
+                'content_element/text/highlight' => [
+                    '/path1/content_element/text/highlight.html.twig' => '@A/content_element/text/highlight.html.twig',
+                    '/path2/content_element/text/highlight.html.twig' => '@B/content_element/text/highlight.html.twig',
+                ],
+                'content_element/text' => [
+                    '/path1/content_element/text.html.twig' => '@A/content_element/text.html.twig',
+                ],
+            ])
+        ;
+
+        $command = $this->getCommand($hierarchy);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--tree' => true]);
+
+        $normalizedOutput = preg_replace("/\\s+\n/", "\n", $tester->getDisplay(true));
+
+        $expectedOutput = <<<'OUTPUT'
+            └──content_element
+               └──text (@Contao/content_element/text.html.twig)
+                  ├──/path1/content_element/text.html.twig
+                  │  Original name: @A/content_element/text.html.twig
+                  ├──highlight (@Contao/content_element/text/highlight.html.twig)
+                  │  ├──/path1/content_element/text/highlight.html.twig
+                  │  │  Original name: @A/content_element/text/highlight.html.twig
+                  │  └──/path2/content_element/text/highlight.html.twig
+                  │     Original name: @B/content_element/text/highlight.html.twig
+                  └──info (@Contao/content_element/text/info.html.twig)
+                     └──/path1/content_element/text/info.html.twig
+                        Original name: @A/content_element/text/info.html.twig
+
+            OUTPUT;
+
+        $this->assertSame($expectedOutput, $normalizedOutput);
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
     /**
      * @dataProvider provideThemeOptions
      */

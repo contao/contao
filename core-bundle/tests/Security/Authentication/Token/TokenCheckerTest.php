@@ -391,16 +391,10 @@ class TokenCheckerTest extends TestCase
         return $user;
     }
 
-    /**
-     * @return RequestStack&MockObject
-     */
     private function mockRequestStack(Request $request): RequestStack
     {
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->method('getMainRequest')
-            ->willReturn($request)
-        ;
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
         return $requestStack;
     }

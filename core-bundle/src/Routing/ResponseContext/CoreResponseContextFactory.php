@@ -89,7 +89,7 @@ class CoreResponseContextFactory
 
             // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getMainRequest()) {
+                if (!$request = $this->requestStack->getCurrentRequest()) {
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 

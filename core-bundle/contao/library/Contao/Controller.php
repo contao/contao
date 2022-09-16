@@ -118,7 +118,10 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+
+		$identifierPattern = str_contains($strPrefix, '/')
+			? sprintf('/^%s(\/[^\/]+)$/', preg_quote(rtrim($strPrefix, '_'), '/'))
+			: sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(

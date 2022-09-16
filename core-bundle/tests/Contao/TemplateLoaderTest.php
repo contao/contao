@@ -285,4 +285,36 @@ class TemplateLoaderTest extends TestCase
             Controller::getTemplateGroup('mod_article_')
         );
     }
+
+    /**
+     * @group legacy
+     */
+    public function testReturnsAModernCustomTwigTemplate(): void
+    {
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $templateHierarchy
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'content_element/text' => ['some/path/content_element/text.html.twig' => '@Contao_Global/content_element/text.html.twig'],
+                'content_element/text/special' => ['some/path/content_element/text/special.html.twig' => '@Contao_Global/content_element/text/special.html.twig'],
+                'content_element/text_table' => ['some/path/content_element/text_table.html.twig' => '@Contao_Global/content_element/text_table.html.twig'],
+            ])
+        ;
+
+        System::getContainer()->set('contao.twig.filesystem_loader', $templateHierarchy);
+
+        $this->assertSame(
+            [
+                'content_element/text/special' => 'content_element/text/special',
+            ],
+            Controller::getTemplateGroup('content_element/text')
+        );
+
+        $this->assertSame(
+            [
+                'content_element/text/special' => 'content_element/text/special',
+            ],
+            Controller::getTemplateGroup('content_element/text_')
+        );
+    }
 }
