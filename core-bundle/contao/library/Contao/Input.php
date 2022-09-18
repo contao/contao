@@ -37,27 +37,6 @@ class Input
 	private static array $arrUnusedRouteParameters = array();
 
 	/**
-	 * Parameters set via setGet() are stored by request
-	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
-	 */
-	private static \WeakMap $setGet;
-
-	/**
-	 * Parameters set via setPost() are stored by request
-	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
-	 */
-	private static \WeakMap $setPost;
-
-	/**
-	 * Parameters set via setCookie() are stored by request
-	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
-	 */
-	private static \WeakMap $setCookie;
-
-	/**
 	 * Clean the global GPC arrays
 	 */
 	public static function initialize()
@@ -173,18 +152,15 @@ class Input
 		{
 			$keys = $request->query->keys();
 
-			if (isset(static::$setGet) && static::$setGet->offsetExists($request))
+			foreach ($request->attributes->get('_contao_input')['setGet'] ?? array() as $key => $value)
 			{
-				foreach (static::$setGet->offsetGet($request) as $key => $value)
+				if ($value === null)
 				{
-					if ($value === null)
-					{
-						$keys = array_diff($keys, array($key));
-					}
-					else
-					{
-						$keys[] = $key;
-					}
+					$keys = array_diff($keys, array($key));
+				}
+				else
+				{
+					$keys[] = $key;
 				}
 			}
 
@@ -213,7 +189,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !$isBackend);
@@ -256,7 +232,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !$isBackend);
@@ -278,7 +254,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !$isBackend);
@@ -330,10 +306,9 @@ class Input
 
 		if ($request = static::getRequest())
 		{
-			static::$setGet ??= new \WeakMap();
-			$arrGet = static::$setGet->offsetExists($request) ? static::$setGet->offsetGet($request) : array();
-			$arrGet[$strKey] = $varValue;
-			static::$setGet->offsetSet($request, $arrGet);
+			$inputAttributes = $request->attributes->get('_contao_input', array());
+			$inputAttributes['setGet'][$strKey] = $varValue;
+			$request->attributes->set('_contao_input', $inputAttributes);
 		}
 
 		if ($varValue === null)
@@ -366,10 +341,9 @@ class Input
 
 		if ($request = static::getRequest())
 		{
-			static::$setPost ??= new \WeakMap();
-			$arrPost = static::$setPost->offsetExists($request) ? static::$setPost->offsetGet($request) : array();
-			$arrPost[$strKey] = $varValue;
-			static::$setPost->offsetSet($request, $arrPost);
+			$inputAttributes = $request->attributes->get('_contao_input', array());
+			$inputAttributes['setPost'][$strKey] = $varValue;
+			$request->attributes->set('_contao_input', $inputAttributes);
 		}
 
 		if ($varValue === null)
@@ -396,10 +370,9 @@ class Input
 
 		if ($request = static::getRequest())
 		{
-			static::$setCookie ??= new \WeakMap();
-			$arrCookie = static::$setCookie->offsetExists($request) ? static::$setCookie->offsetGet($request) : array();
-			$arrCookie[$strKey] = $varValue;
-			static::$setCookie->offsetSet($request, $arrCookie);
+			$inputAttributes = $request->attributes->get('_contao_input', array());
+			$inputAttributes['setCookie'][$strKey] = $varValue;
+			$request->attributes->set('_contao_input', $inputAttributes);
 		}
 
 		if ($varValue === null)
@@ -1085,7 +1058,7 @@ class Input
 	{
 		if ($request = static::getRequest())
 		{
-			$arrGet = (isset(static::$setGet) && static::$setGet->offsetExists($request)) ? static::$setGet->offsetGet($request) : array();
+			$arrGet = $request->attributes->get('_contao_input')['setGet'] ?? array();
 
 			if (\array_key_exists($strKey, $arrGet))
 			{
@@ -1113,7 +1086,7 @@ class Input
 	{
 		if ($request = static::getRequest())
 		{
-			$arrPost = (isset(static::$setPost) && static::$setPost->offsetExists($request)) ? static::$setPost->offsetGet($request) : array();
+			$arrPost = $request->attributes->get('_contao_input')['setPost'] ?? array();
 
 			if (\array_key_exists($strKey, $arrPost))
 			{
@@ -1141,7 +1114,7 @@ class Input
 	{
 		if ($request = static::getRequest())
 		{
-			$arrCookie = (isset(static::$setCookie) && static::$setCookie->offsetExists($request)) ? static::$setCookie->offsetGet($request) : array();
+			$arrCookie = $request->attributes->get('_contao_input')['setCookie'] ?? array();
 
 			if (\array_key_exists($strKey, $arrCookie))
 			{

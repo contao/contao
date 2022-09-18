@@ -884,6 +884,14 @@ class InputTest extends TestCase
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
 
+        // Duplicating the request should keep the setGet information intact
+        $stack->push($stack->getCurrentRequest()->duplicate());
+
+        $this->assertSame(['123', 'key2'], Input::getKeys());
+        $this->assertSame([123, 'key2'], array_keys($_GET));
+        $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->pop();
         $stack->pop();
         $stack->push(new Request($data, $data, [], [], [], ['REQUEST_METHOD' => 'POST']));
 
