@@ -213,7 +213,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !$isBackend);
@@ -256,7 +256,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !$isBackend);
@@ -278,7 +278,7 @@ class Input
 			return null;
 		}
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = static::getRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		return static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !$isBackend);
@@ -1160,6 +1160,6 @@ class Input
 
 	private static function getRequest(): Request|null
 	{
-		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCurrentRequest();
+		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getMainRequest();
 	}
 }
