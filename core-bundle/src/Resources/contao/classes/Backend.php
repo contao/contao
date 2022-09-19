@@ -1524,7 +1524,7 @@ abstract class Backend extends Controller
 			// Folders
 			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
+				$strFolders .= $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}
 
 			// Files

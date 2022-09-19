@@ -2648,7 +2648,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 				elseif (!empty($this->arrValidFileTypes) && !is_dir($this->strRootDir . '/' . $currentFolder . '/' . $file))
 				{
-					$objFile =  new File($currentFolder . '/' . $file);
+					$objFile = new File($currentFolder . '/' . $file);
 
 					if (!\in_array($objFile->extension, $this->arrValidFileTypes))
 					{
