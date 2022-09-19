@@ -1066,7 +1066,7 @@ abstract class Controller extends System
 		$left = $arrValues['left'];
 
 		// Try to shorten the definition
-		if ($top && $right  && $bottom  && $left)
+		if ($top && $right && $bottom && $left)
 		{
 			if ($top == $right && $top == $bottom && $top == $left)
 			{
