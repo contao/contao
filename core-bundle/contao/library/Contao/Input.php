@@ -152,6 +152,11 @@ class Input
 		{
 			$keys = $request->query->keys();
 
+			if ($request->attributes->has('auto_item'))
+			{
+				$keys[] = 'auto_item';
+			}
+
 			foreach ($request->attributes->get('_contao_input')['setGet'] ?? array() as $key => $value)
 			{
 				if ($value === null)
@@ -306,9 +311,23 @@ class Input
 
 		if ($request = static::getRequest())
 		{
-			$inputAttributes = $request->attributes->get('_contao_input', array());
-			$inputAttributes['setGet'][$strKey] = $varValue;
-			$request->attributes->set('_contao_input', $inputAttributes);
+			if ('auto_item' === $strKey)
+			{
+				if (null !== $varValue)
+				{
+					$request->attributes->set('auto_item', $varValue);
+				}
+				else
+				{
+					$request->attributes->remove('auto_item');
+				}
+			}
+			else
+			{
+				$inputAttributes = $request->attributes->get('_contao_input', array());
+				$inputAttributes['setGet'][$strKey] = $varValue;
+				$request->attributes->set('_contao_input', $inputAttributes);
+			}
 		}
 
 		if ($varValue === null)
@@ -1058,6 +1077,11 @@ class Input
 	{
 		if ($request = static::getRequest())
 		{
+			if ('auto_item' === $strKey && $request->attributes->has('auto_item'))
+			{
+				return $request->attributes->get('auto_item');
+			}
+
 			$arrGet = $request->attributes->get('_contao_input')['setGet'] ?? array();
 
 			if (\array_key_exists($strKey, $arrGet))
