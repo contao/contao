@@ -230,6 +230,11 @@ abstract class Widget extends Controller
 				break;
 
 			case 'value':
+				if (\is_float($varValue))
+				{
+					$varValue = StringUtil::numberToString($varValue);
+				}
+
 				$this->varValue = StringUtil::deserialize($varValue);
 
 				// Decrypt the value if it is encrypted
