@@ -232,10 +232,12 @@ abstract class Widget extends Controller
 			case 'value':
 				if (\is_float($varValue))
 				{
-					$varValue = StringUtil::numberToString($varValue);
+					$this->varValue = StringUtil::numberToString($varValue);
 				}
-
-				$this->varValue = StringUtil::deserialize($varValue);
+				else
+				{
+					$this->varValue = StringUtil::deserialize($varValue);
+				}
 
 				// Decrypt the value if it is encrypted
 				if ($this->arrConfiguration['encrypt'])
