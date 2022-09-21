@@ -1259,13 +1259,8 @@ class StringUtil
 			$precision = (int) \ini_get('precision');
 		}
 
-		if (
-			!preg_match(
-				'/^(-?)(\d)\.(\d+)e([+-]\d+)$/',
-				sprintf('%.' . ($precision - 1) . 'e', $number),
-				$match
-			)
-		) {
+		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))
+		{
 			throw new \InvalidArgumentException(sprintf('Unable to convert "%s" into a string representation.', $number));
 		}
 
