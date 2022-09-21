@@ -232,6 +232,7 @@ abstract class Widget extends Controller
 			case 'value':
 				if (\is_float($varValue))
 				{
+					// Prevent exponential notations (see #5296)
 					$this->varValue = StringUtil::numberToString($varValue);
 				}
 				else
