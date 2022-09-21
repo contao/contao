@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Symfony\Component\Filesystem\Path;
+use Webmozart\PathUtil\Path;
 
 Contao\System::loadLanguageFile('tl_files');
 
