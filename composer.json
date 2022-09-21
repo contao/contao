@@ -106,6 +106,7 @@
         "symfony/monolog-bridge": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/polyfill-php73": "^1.8",
+        "symfony/polyfill-php80": "^1.26",
         "symfony/process": "4.4.*",
         "symfony/proxy-manager-bridge": "4.4.*",
         "symfony/routing": "4.4.*",
