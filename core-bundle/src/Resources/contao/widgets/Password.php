@@ -90,6 +90,24 @@ class Password extends Widget
 	}
 
 	/**
+	 * Return a parameter
+	 *
+	 * @param string $strKey The parameter key
+	 *
+	 * @return mixed The parameter value
+	 */
+	public function __get($strKey)
+	{
+		// If there is a password, the field is no longer mandatory
+		if ($strKey == 'mandatory')
+		{
+			return !$this->varValue;
+		}
+
+		return parent::__get($strKey);
+	}
+
+	/**
 	 * Validate input and set value
 	 *
 	 * @param mixed $varInput
@@ -100,9 +118,9 @@ class Password extends Widget
 	{
 		$this->blnSubmitInput = false;
 
-		if ((!$varInput || $varInput == '*****') && $this->varValue)
+		if (!$varInput && $this->varValue)
 		{
-			return '*****';
+			return '';
 		}
 
 		// Check password length either from DCA or use Config as fallback (#1086)
@@ -140,12 +158,17 @@ class Password extends Widget
 	 */
 	public function generate()
 	{
+		// If there is a password, the field is no longer required
+		if ($this->varValue)
+		{
+			unset($this->arrAttributes['required']);
+		}
+
 		return sprintf(
-			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
+			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			$this->wizard,
 			(($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : '')
@@ -185,11 +208,10 @@ class Password extends Widget
 		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Password::generateConfirmation()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return sprintf(
-			'<input type="password" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s',
+			'<input type="password" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			((isset($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['confirm'][1] . '</p>' : '')
 		);

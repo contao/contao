@@ -57,25 +57,6 @@ class TextStore extends Widget
 	}
 
 	/**
-	 * Ignore the field if nothing has been entered
-	 *
-	 * @param mixed $varInput
-	 *
-	 * @return mixed
-	 */
-	protected function validator($varInput)
-	{
-		if ($varInput == '*****')
-		{
-			$this->blnSubmitInput = false;
-
-			return true;
-		}
-
-		return parent::validator($varInput);
-	}
-
-	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -83,11 +64,10 @@ class TextStore extends Widget
 	public function generate()
 	{
 		return sprintf(
-			'<input type="password" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+			'<input type="password" name="%s" id="ctrl_%s" class="tl_text%s" value=""%s onfocus="Backend.getScrollOffset()">%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->varValue ? '*****' : ''),
 			$this->getAttributes(),
 			$this->wizard
 		);
