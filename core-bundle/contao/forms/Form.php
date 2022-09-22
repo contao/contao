@@ -117,7 +117,16 @@ class Form extends Hybrid
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
-		$this->Template->confirmation = System::getContainer()->get('request_stack')->getSession()->get(self::SESSION_CONFIRMATION_KEY)?->getValue();
+
+		// Add confirmation to the template and remove it afterward
+		if (System::getContainer()->get('request_stack')->getSession()->has(self::SESSION_CONFIRMATION_KEY)) {
+			$confirmationData = System::getContainer()->get('request_stack')->getSession()->get(self::SESSION_CONFIRMATION_KEY)->getValue();
+
+			if (is_array($confirmationData) && (int) $this->id === (int) ($confirmationData['id'] ?? null)) {
+				$this->Template->confirmation = $confirmationData['message'];
+				System::getContainer()->get('request_stack')->getSession()->remove(self::SESSION_CONFIRMATION_KEY);
+			}
+		}
 
 		$arrLabels = array();
 		$arrFiles = array();
@@ -597,12 +606,12 @@ class Form extends Hybrid
 			{
 				$confirmationTemplate = new FrontendTemplate('form_confirmation');
 				$confirmationTemplate->setData($this->Template->getData());
-				$confirmationTemplate->message = $confirmationMessage;
+				$confirmationTemplate->confirmation = $confirmationMessage;
 
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, $confirmationMessage));
+			System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, ['id' => $this->id, 'message' => $confirmationMessage]));
 		}
 
 		// Redirect or reload if there is a target page

@@ -706,9 +706,12 @@ class InsertTags extends Controller
 
 				// Form confirmation message
 				case 'form_confirmation_message':
-					/** @var AutoExpiringAttribute|null $attribute */
-					$attribute = $request?->getSession()->get(Form::SESSION_CONFIRMATION_KEY);
-					$arrCache[$strTag] = $attribute?->getValue() ?? null;
+					if ($request?->getSession()->has(Form::SESSION_CONFIRMATION_KEY)) {
+						$arrCache[$strTag] = $request->getSession()->get(Form::SESSION_CONFIRMATION_KEY)?->getValue()['message'] ?? null;
+						$request->getSession()->remove(Form::SESSION_CONFIRMATION_KEY);
+					} else {
+						$arrCache[$strTag] = null;
+					}
 					break;
 
 				// Conditional tags (if, if not)
