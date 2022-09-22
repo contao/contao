@@ -10,8 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle front end forms.
@@ -36,6 +38,7 @@ use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
 	 * Model
@@ -81,15 +84,18 @@ class Form extends Hybrid
 			return $objTemplate->parse();
 		}
 
-		if ($this->customTpl)
+		// Use the custom template unless it is a back end request
+		if ($this->customTpl && (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)))
 		{
-			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$this->strTemplate = $this->customTpl;
+		}
 
-			// Use the custom template unless it is a back end request
-			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-			{
-				$this->strTemplate = $this->customTpl;
-			}
+		// Use the inline template in AJAX request
+		if ($request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+		{
+			$this->strTemplate = 'form_inline';
+
+			throw new ResponseException(new Response(parent::generate()));
 		}
 
 		return parent::generate();
@@ -105,12 +111,13 @@ class Form extends Hybrid
 		$arrSubmitted = array();
 
 		$this->loadDataContainer('tl_form_field');
-		$formId = $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
+		$formId = $this->getFormId();
 
 		$this->Template->fields = '';
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
+		$this->Template->confirmation = System::getContainer()->get('request_stack')->getSession()->get(self::SESSION_CONFIRMATION_KEY)?->getValue();
 
 		$arrLabels = array();
 		$arrFiles = array();
@@ -301,6 +308,14 @@ class Form extends Hybrid
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();
 		}
+	}
+
+	/**
+	 * Get the form ID.
+	 */
+	protected function getFormId(): string
+	{
+		return $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
 	}
 
 	/**
@@ -560,10 +575,39 @@ class Form extends Hybrid
 			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by a guest.');
 		}
 
+		$targetPageData = null;
+
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			$this->jumpToOrReload($objJumpTo->row());
+			$targetPageData = $objJumpTo->row();
+		}
+
+		// Set the confirmation message, if any
+		if ($this->objModel->confirmationMessage)
+		{
+			$confirmationMessage = $this->objModel->confirmationMessage;
+			$confirmationMessage = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmationMessage, $arrSubmitted);
+			$confirmationMessage = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmationMessage);
+
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Throw the response exception if it's an AJAX request
+			if ($request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
+			{
+				$confirmationTemplate = new FrontendTemplate('form_confirmation');
+				$confirmationTemplate->setData($this->Template->getData());
+				$confirmationTemplate->message = $confirmationMessage;
+
+				throw new ResponseException($confirmationTemplate->getResponse());
+			}
+
+			System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, $confirmationMessage));
+		}
+
+		// Redirect or reload if there is a target page
+		if ($targetPageData !== null) {
+			$this->jumpToOrReload($targetPageData);
 		}
 
 		$this->reload();

@@ -20,6 +20,12 @@
       <trans-unit id="tl_form.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
       </trans-unit>
+      <trans-unit id="tl_form.confirmationMessage.0">
+        <source>Confirmation message</source>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmationMessage.1">
+        <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. ##field_name##. The confirmation message is also available as the {{form_confirmation_message}} insert tag.</source>
+      </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
       </trans-unit>

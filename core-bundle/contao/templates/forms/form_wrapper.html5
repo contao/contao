@@ -6,19 +6,15 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="<?= $this->method ?>" enctype="<?= $this->enctype ?>"<?= $this->attributes ?><?= $this->novalidate ?>>
-    <div class="formbody">
-      <?php if ('get' != $this->method): ?>
-        <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formSubmit ?>">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-        <?php if ($this->maxFileSize): ?>
-          <input type="hidden" name="MAX_FILE_SIZE" value="<?= $this->maxFileSize ?>">
-        <?php endif; ?>
-      <?php endif; ?>
-      <?= $this->hidden ?>
-      <?= $this->fields ?>
-    </div>
-  </form>
+  <?php if ($this->confirmation): ?>
+    <?= $this->confirmation ?>
+  <?php else: ?>
+    <?php $this->insert('form_inline', $this->arrData) ?>
+  <?php endif; ?>
+
+  <?php if (!$this->action): ?>
+    <script src="bundles/contaocore/ajax-form.min.js"></script>
+  <?php endif; ?>
 
 </div>
 <!-- indexer::continue -->
