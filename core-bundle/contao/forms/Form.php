@@ -118,13 +118,17 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		// Add confirmation to the template and remove it afterward
-		if (System::getContainer()->get('request_stack')->getSession()->has(self::SESSION_CONFIRMATION_KEY)) {
-			$confirmationData = System::getContainer()->get('request_stack')->getSession()->get(self::SESSION_CONFIRMATION_KEY)->getValue();
+		$session = System::getContainer()->get('request_stack')->getSession();
 
-			if (is_array($confirmationData) && (int) $this->id === (int) ($confirmationData['id'] ?? null)) {
+		// Add confirmation to the template and remove it afterward
+		if ($session->has(self::SESSION_CONFIRMATION_KEY))
+		{
+			$confirmationData = $session->get(self::SESSION_CONFIRMATION_KEY)->getValue();
+
+			if (is_array($confirmationData) && (int) $this->id === (int) ($confirmationData['id'] ?? null))
+			{
 				$this->Template->confirmation = $confirmationData['message'];
-				System::getContainer()->get('request_stack')->getSession()->remove(self::SESSION_CONFIRMATION_KEY);
+				$session->remove(self::SESSION_CONFIRMATION_KEY);
 			}
 		}
 
