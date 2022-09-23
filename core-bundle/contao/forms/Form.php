@@ -615,7 +615,7 @@ class Form extends Hybrid
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, ['id' => $this->id, 'message' => $confirmationMessage]);
+			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $confirmationMessage));
 		}
 
 		// Redirect or reload if there is a target page
