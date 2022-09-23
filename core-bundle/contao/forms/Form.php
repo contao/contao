@@ -599,7 +599,7 @@ class Form extends Hybrid
 		if ($this->objModel->confirmationMessage)
 		{
 			$confirmationMessage = $this->objModel->confirmationMessage;
-			$confirmationMessage = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmationMessage, $arrSubmitted);
+			$confirmationMessage = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmationMessage, array_map([StringUtil::class, 'specialchars'], $arrSubmitted));
 			$confirmationMessage = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmationMessage);
 
 			$requestStack = System::getContainer()->get('request_stack');
