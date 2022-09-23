@@ -620,7 +620,8 @@ class Form extends Hybrid
 		}
 
 		// Redirect or reload if there is a target page
-		if ($targetPageData !== null) {
+		if ($targetPageData !== null)
+		{
 			$this->jumpToOrReload($targetPageData);
 		}
 
