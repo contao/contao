@@ -603,10 +603,11 @@ class Form extends Hybrid
 			$confirmationMessage = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmationMessage, $arrSubmitted);
 			$confirmationMessage = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmationMessage);
 
-			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$requestStack = System::getContainer()->get('request_stack');
+			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
+			if ($request && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
 			{
 				$confirmationTemplate = new FrontendTemplate('form_confirmation');
 				$confirmationTemplate->setData($this->Template->getData());
@@ -615,7 +616,7 @@ class Form extends Hybrid
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, ['id' => $this->id, 'message' => $confirmationMessage]));
+			$requestStack->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, ['id' => $this->id, 'message' => $confirmationMessage]));
 		}
 
 		// Redirect or reload if there is a target page
