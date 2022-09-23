@@ -118,17 +118,16 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$session = System::getContainer()->get('request_stack')->getSession();
+		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
 
 		// Add confirmation to the template and remove it afterward
-		if ($session->has(self::SESSION_CONFIRMATION_KEY))
+		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 		{
-			$confirmationData = $session->get(self::SESSION_CONFIRMATION_KEY)->getValue();
+			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
 
-			if (is_array($confirmationData) && (int) $this->id === (int) ($confirmationData['id'] ?? null))
+			if (isset($confirmationData['id']) && (int) $this->id === (int) $confirmationData['id'])
 			{
-				$this->Template->confirmation = $confirmationData['message'];
-				$session->remove(self::SESSION_CONFIRMATION_KEY);
+				$this->Template->confirmation = $flashBag->get()['message'];
 			}
 		}
 
@@ -616,7 +615,7 @@ class Form extends Hybrid
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			$requestStack->getSession()->set(self::SESSION_CONFIRMATION_KEY, new AutoExpiringAttribute(10, ['id' => $this->id, 'message' => $confirmationMessage]));
+			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, ['id' => $this->id, 'message' => $confirmationMessage]);
 		}
 
 		// Redirect or reload if there is a target page

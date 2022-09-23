@@ -706,10 +706,9 @@ class InsertTags extends Controller
 
 				// Form confirmation message
 				case 'form_confirmation_message':
-					if ($request?->getSession()->has(Form::SESSION_CONFIRMATION_KEY))
+					if ($request?->getSession()->getFlashBag()->has(Form::SESSION_CONFIRMATION_KEY))
 					{
-						$arrCache[$strTag] = $request->getSession()->get(Form::SESSION_CONFIRMATION_KEY)?->getValue()['message'] ?? null;
-						$request->getSession()->remove(Form::SESSION_CONFIRMATION_KEY);
+						$arrCache[$strTag] = $request->getSession()->getFlashBag()->get(Form::SESSION_CONFIRMATION_KEY)['message'] ?? null;
 					}
 					else
 					{
