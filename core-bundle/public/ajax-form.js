@@ -59,10 +59,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            addButtonEvents(form);
-        }
-
-        function addButtonEvents(form) {
             form.querySelectorAll('input[type="submit"], button[type="submit"]').forEach(el => {
                 el.addEventListener('click', e => triggeredButton = e.currentTarget);
             });
