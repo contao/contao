@@ -13,20 +13,29 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
-use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AsFrontendModule(category: 'miscellaneous')]
 class TemplateController extends AbstractFrontendModuleController
 {
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $data = StringUtil::deserialize($model->data, true);
 
-        $template->data = StringUtil::deserialize($model->data, true);
+        $template->set(
+            'keys',
+            array_combine(
+                array_column($data, 'key'),
+                array_column($data, 'value')
+            )
+        );
+
+        // Backwards compatibility
+        $template->set('data', $data);
 
         return $template->getResponse();
     }
