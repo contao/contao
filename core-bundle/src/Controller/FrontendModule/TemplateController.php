@@ -33,10 +33,6 @@ class TemplateController extends AbstractFrontendModuleController
                 array_column($data, 'value')
             )
         );
-
-        // Backwards compatibility
-        $template->set('data', $data);
-
         return $template->getResponse();
     }
 }

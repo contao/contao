@@ -34,9 +34,6 @@ class TemplateController extends AbstractContentElementController
             )
         );
 
-        // Backwards compatibility
-        $template->set('data', $data);
-
         return $template->getResponse();
     }
 }
