@@ -33,6 +33,7 @@ class TemplateController extends AbstractFrontendModuleController
                 array_column($data, 'value')
             )
         );
+
         return $template->getResponse();
     }
 }
