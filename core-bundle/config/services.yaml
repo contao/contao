@@ -982,6 +982,13 @@ services:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    contao.twig.finder_factory:
+        class: Contao\CoreBundle\Twig\Finder\FinderFactory
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.loader.theme_namespace'
+            - '@translator'
+
     contao.twig.formatter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
         arguments:
