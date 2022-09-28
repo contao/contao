@@ -3111,10 +3111,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql']);
 			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-			}
 			else
 			{
 				$varValue = serialize($varValue);
