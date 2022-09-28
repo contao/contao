@@ -1272,6 +1272,7 @@ abstract class Backend extends Controller
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
       var el = $("ctrl_' . $inputName . '");
+      el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
         this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
