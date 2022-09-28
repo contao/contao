@@ -473,7 +473,7 @@ class ModuleRegistration extends Module
 	protected function sendActivationMail($arrData)
 	{
 		$optIn = System::getContainer()->get('contao.opt_in');
-		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
+		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id']), 'tl_module'=>array($this->id)));
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
@@ -524,8 +524,15 @@ class ModuleRegistration extends Module
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 
-		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		// Find an unconfirmed token with only one related tl_member record
+		if (
+		    (!$optInToken = $optIn->find(Input::get('token')))
+			|| !$optInToken->isValid()
+			|| !isset($optInToken->getRelatedRecords()['tl_member'])
+			|| \count($arrRelated = $optInToken->getRelatedRecords()['tl_member']) != 1
+			|| \count($arrIds = current($arrRelated)) != 1
+			|| (!$objMember = MemberModel::findByPk($arrIds[0]))
+		)
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
