@@ -283,6 +283,11 @@ class ContaoFrameworkTest extends TestCase
         $this->assertArrayHasKey('parseTemplate', $GLOBALS['TL_HOOKS']);
         $this->assertArrayHasKey('isVisibleElement', $GLOBALS['TL_HOOKS']);
 
+        $getPageLayout = $GLOBALS['TL_HOOKS']['getPageLayout'];
+        $generatePage = $GLOBALS['TL_HOOKS']['generatePage'];
+        $parseTemplate = $GLOBALS['TL_HOOKS']['parseTemplate'];
+        $isVisibleElement = $GLOBALS['TL_HOOKS']['isVisibleElement'];
+
         // Test hooks with high priority are added before low and legacy hooks
         // Test legacy hooks are added before hooks with priority 0
         $this->assertSame(
@@ -291,7 +296,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onGetPageLayout'],
                 ['test.listener.b', 'onGetPageLayout'],
             ],
-            $GLOBALS['TL_HOOKS']['getPageLayout']
+            $getPageLayout
         );
 
         // Test hooks with negative priority are added at the end
@@ -301,7 +306,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.b', 'onGeneratePage'],
                 ['test.listener.a', 'onGeneratePage'],
             ],
-            $GLOBALS['TL_HOOKS']['generatePage']
+            $generatePage
         );
 
         // Test legacy hooks are kept when adding only hook listeners with high priority.
@@ -310,7 +315,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.a', 'onParseTemplate'],
                 ['test.listener.c', 'onParseTemplate'],
             ],
-            $GLOBALS['TL_HOOKS']['parseTemplate']
+            $parseTemplate
         );
 
         // Test legacy hooks are kept when adding only hook listeners with low priority.
@@ -319,7 +324,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onIsVisibleElement'],
                 ['test.listener.a', 'onIsVisibleElement'],
             ],
-            $GLOBALS['TL_HOOKS']['isVisibleElement']
+            $isVisibleElement
         );
     }
 
