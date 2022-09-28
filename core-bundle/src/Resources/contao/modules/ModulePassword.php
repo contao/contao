@@ -185,14 +185,13 @@ class ModulePassword extends Module
 
 		// Find an unconfirmed token with only one related tl_member record
 		if (
-		    (!$optInToken = $optIn->find(Input::get('token')))
+			(!$optInToken = $optIn->find(Input::get('token')))
 			|| !$optInToken->isValid()
 			|| !isset($optInToken->getRelatedRecords()['tl_member'])
 			|| \count($arrRelated = $optInToken->getRelatedRecords()['tl_member']) != 1
 			|| \count($arrIds = current($arrRelated)) != 1
 			|| (!$objMember = MemberModel::findByPk($arrIds[0]))
-		)
-		{
+		) {
 			$this->strTemplate = 'mod_message';
 
 			$this->Template = new FrontendTemplate($this->strTemplate);
