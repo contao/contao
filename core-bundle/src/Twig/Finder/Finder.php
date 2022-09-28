@@ -26,6 +26,7 @@ final class Finder implements \IteratorAggregate, \Countable
 {
     private string|null $identifier = null;
     private string|null $themeSlug = null;
+    private string|null $extension = null;
     private bool $variantsExclusive = false;
     private bool $variants = false;
 
@@ -55,12 +56,24 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Filter templates based on the file extension, e.g. "html.twig" or
+     * "json.twig".
+     */
+    public function extension(string $extension): self
+    {
+        $this->extension = $extension;
+
+        return $this;
+    }
+
+    /**
      * Filter templates based on the logical name or short name, e.g.
      * "@Contao/content_element/text.html.twig" or "content_element/text.html.twig".
      */
     public function name(string $name): self
     {
         $this->identifier = ContaoTwigUtil::getIdentifier($name);
+        $this->extension = ContaoTwigUtil::getExtension($name);
 
         return $this;
     }
@@ -161,9 +174,17 @@ final class Finder implements \IteratorAggregate, \Countable
                 continue;
             }
 
+            // The loader makes sure that all files grouped under one
+            // identifier have the same extension
+            $extension = ContaoTwigUtil::getExtension(array_key_first($chain));
+
+            if (null !== $this->extension && $this->extension !== $extension) {
+                continue;
+            }
+
             $this->sources[$identifier] = array_values($chain);
 
-            yield $identifier => "@Contao/$identifier.html.twig";
+            yield $identifier => $extension;
         }
     }
 

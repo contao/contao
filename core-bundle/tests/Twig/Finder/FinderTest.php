@@ -26,10 +26,11 @@ class FinderTest extends TestCase
         $finder = $this->getFinder();
 
         $expected = [
-            'ce_table' => '@Contao/ce_table.html.twig',
-            'content_element/text' => '@Contao/content_element/text.html.twig',
-            'content_element/text/foo' => '@Contao/content_element/text/foo.html.twig',
-            'content_element/text/bar' => '@Contao/content_element/text/bar.html.twig',
+            'ce_table' => 'html.twig',
+            'content_element/text' => 'html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
+            'json/thing' => 'json.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -42,7 +43,20 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
-            'content_element/text' => '@Contao/content_element/text.html.twig',
+            'content_element/text' => 'html.twig',
+        ];
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
+    public function testFindExtension(): void
+    {
+        $finder = $this->getFinder()
+            ->extension('json.twig')
+        ;
+
+        $expected = [
+            'json/thing' => 'json.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -55,7 +69,7 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
-            'content_element/text' => '@Contao/content_element/text.html.twig',
+            'content_element/text' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -69,9 +83,9 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
-            'content_element/text' => '@Contao/content_element/text.html.twig',
-            'content_element/text/foo' => '@Contao/content_element/text/foo.html.twig',
-            'content_element/text/bar' => '@Contao/content_element/text/bar.html.twig',
+            'content_element/text' => 'html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -85,8 +99,8 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
-            'content_element/text/foo' => '@Contao/content_element/text/foo.html.twig',
-            'content_element/text/bar' => '@Contao/content_element/text/bar.html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -101,10 +115,10 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
-            'content_element/text' => '@Contao/content_element/text.html.twig',
-            'content_element/text/foo' => '@Contao/content_element/text/foo.html.twig',
-            'content_element/text/bar' => '@Contao/content_element/text/bar.html.twig',
-            'content_element/text/baz' => '@Contao/content_element/text/baz.html.twig',
+            'content_element/text' => 'html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
+            'content_element/text/baz' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -112,7 +126,7 @@ class FinderTest extends TestCase
 
     public function testCount(): void
     {
-        $this->assertCount(4, $this->getFinder());
+        $this->assertCount(5, $this->getFinder());
     }
 
     public function testGetAsTemplateOptions(): void
@@ -157,6 +171,9 @@ class FinderTest extends TestCase
                         ],
                         'content_element/text/bar' => [
                             '/app/templates/content_element/text/bar.html.twig' => '@Contao_App/content_element/text/bar.html.twig',
+                        ],
+                        'json/thing' => [
+                            '/app/templates/json/thing.json.twig' => '@Contao_SomeJsonBundle/app/templates/json/thing.json.twig',
                         ],
                     ];
 

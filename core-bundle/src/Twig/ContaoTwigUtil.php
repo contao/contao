@@ -55,4 +55,14 @@ final class ContaoTwigUtil
 
         return 'html5' === Path::getExtension($parts[1] ?? '', true);
     }
+
+    /**
+     * Returns the file extension of a path including an optional .twig suffix.
+     */
+    public static function getExtension(string $path): string
+    {
+        preg_match('/\.([^.]+(?:\.twig)?)$/', $path, $matches);
+
+        return $matches[1] ?? '';
+    }
 }
