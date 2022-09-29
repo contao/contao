@@ -389,7 +389,7 @@ abstract class Widget extends Controller
 				return $this->strWizard;
 
 			case 'required':
-				return $this->arrConfiguration[$strKey];
+				return $this->arrConfiguration[$strKey] ?? null;
 
 			case 'forAttribute':
 				return $this->blnForAttribute;

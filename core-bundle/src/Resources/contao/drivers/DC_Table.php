@@ -3145,10 +3145,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql'] ?? array());
 			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-			}
 			else
 			{
 				$varValue = serialize($varValue);
@@ -3179,7 +3175,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
+		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
