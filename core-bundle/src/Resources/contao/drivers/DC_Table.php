@@ -3197,10 +3197,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql'] ?? array());
 			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-			}
 			else
 			{
 				$varValue = serialize($varValue);

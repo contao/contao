@@ -2406,10 +2406,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				{
 					$varValue = '';
 				}
-				elseif (isset($arrData['eval']['csv']))
-				{
-					$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-				}
 				else
 				{
 					$varValue = serialize($varValue);
