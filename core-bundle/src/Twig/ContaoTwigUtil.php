@@ -40,7 +40,9 @@ final class ContaoTwigUtil
      */
     public static function getIdentifier(string $name): string
     {
-        return preg_replace('%(?:@[^/]+/)?(.*)(?:\.html5|\.html\.twig)%', '$1', $name);
+        preg_match('/^(?:@[^\/]+\/)?(.*?)\.(?:(?:[^.]+\.)?twig|html5)$/', $name, $matches);
+
+        return $matches[1] ?? $name;
     }
 
     /**

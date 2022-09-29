@@ -98,8 +98,13 @@ class ContaoTwigUtilTest extends TestCase
             'bar',
         ];
 
-        yield 'Twig template' => [
+        yield 'HTML Twig template' => [
             'bar.html.twig',
+            'bar',
+        ];
+
+        yield 'JSON Twig template' => [
+            'bar.json.twig',
             'bar',
         ];
 
