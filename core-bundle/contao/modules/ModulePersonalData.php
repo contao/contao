@@ -170,6 +170,12 @@ class ModulePersonalData extends Module
 
 			$varValue = $this->User->$field;
 
+			// Convert CSV fields (see #4980)
+			if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+			{
+				$varValue = StringUtil::trimsplit($arrData['eval']['csv'], $varValue);
+			}
+
 			// Call the load_callback
 			if (\is_array($arrData['load_callback'] ?? null))
 			{
@@ -221,8 +227,14 @@ class ModulePersonalData extends Module
 					}
 				}
 
+				// Convert arrays (see #4980)
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				{
+					$varValue = implode($arrData['eval']['csv'], $varValue);
+				}
+
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}

@@ -925,6 +925,7 @@ abstract class Backend extends Controller
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
       var el = $("ctrl_' . $inputName . '");
+      el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
         this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
@@ -1161,7 +1162,7 @@ abstract class Backend extends Controller
 			// Folders
 			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
+				$strFolders .= $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}
 
 			// Files
