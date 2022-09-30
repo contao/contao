@@ -146,6 +146,12 @@
       <trans-unit id="tl_form.allowTags.1">
         <source>Allow HTML tags in form fields.</source>
       </trans-unit>
+      <trans-unit id="tl_form.ajax.0">
+        <source>Submit form via Ajax</source>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.1">
+        <source>Submit the form via Ajax instead of page reloading. Note: it works only with the POST method!</source>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
       </trans-unit>

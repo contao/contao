@@ -91,7 +91,7 @@ class Form extends Hybrid
 		}
 
 		// Use the inline template in AJAX request
-		if ($request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+		if ($this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 		{
 			$this->strTemplate = 'form_inline';
 
@@ -127,7 +127,7 @@ class Form extends Hybrid
 
 			if (isset($confirmationData['id']) && (int) $this->id === (int) $confirmationData['id'])
 			{
-				$this->Template->confirmation = $flashBag->get()['message'];
+				$this->Template->confirmation = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
 			}
 		}
 
@@ -313,6 +313,7 @@ class Form extends Hybrid
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
+		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
 		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -328,6 +329,14 @@ class Form extends Hybrid
 	protected function getFormId(): string
 	{
 		return $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
+	}
+
+	/**
+	 * Return true if the Ajax is enabled.
+	 */
+	protected function isAjaxEnabled(): bool
+	{
+		return $this->method === 'POST' && $this->ajax;
 	}
 
 	/**
@@ -606,7 +615,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
+			if ($request && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
 			{
 				$confirmationTemplate = new FrontendTemplate('form_confirmation');
 				$confirmationTemplate->setData($this->Template->getData());

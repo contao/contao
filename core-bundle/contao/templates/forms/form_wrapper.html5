@@ -12,7 +12,7 @@
     <?php $this->insert('form_inline', $this->arrData) ?>
   <?php endif; ?>
 
-  <?php if (!$this->action): ?>
+  <?php if ($this->ajax): ?>
     <?= Contao\Template::generateScriptTag('bundles/contaocore/ajax-form.min.js', false, null) ?>
   <?php endif; ?>
 
