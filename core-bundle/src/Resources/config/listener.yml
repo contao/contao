@@ -19,6 +19,15 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.administrator_email:
+        class: Contao\CoreBundle\EventListener\AdministratorEmailListener
+        arguments:
+            - '@translator'
+            - '@router'
+            - '@request_stack'
+        tags:
+            - { name: contao.hook, hook: getSystemMessages }
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:

@@ -396,6 +396,9 @@ h2.sub_headline {
 .tl_gerror,.tl_gerror a,.tl_error,.tl_error a {
 	color:#c33;
 }
+.tl_gerror a, .tl_error a {
+	text-decoration: underline;
+}
 .tl_confirm,.tl_confirm a {
 	color:#589b0e;
 }
