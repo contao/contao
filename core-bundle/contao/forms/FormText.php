@@ -256,7 +256,7 @@ class FormText extends Widget
 			$targetFormat = Date::getNumericDateFormat();
 
 			// Check if date format matches the HTML5 standard
-			if (self::HTML5_DATE_FORMAT !== $targetFormat && preg_match('~^' . Date::getRegexp(self::HTML5_DATE_FORMAT) . '$~i', $varInput))
+			if (self::HTML5_DATE_FORMAT !== $targetFormat && preg_match('~^' . Date::getRegexp(self::HTML5_DATE_FORMAT) . '$~i', $varInput ?? ''))
 			{
 				// Transform to defined date format (see #5918)
 				$date = \DateTimeImmutable::createFromFormat(self::HTML5_DATE_FORMAT, $varInput);
