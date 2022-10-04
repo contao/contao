@@ -1557,7 +1557,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Add a log entry unless we are deleting from tl_log itself
-			if ($this->strTable != 'tl_log')
+			if ($this->strTable != 'tl_log' && isset($data[$this->strTable][0]['id']))
 			{
 				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, TL_GENERAL);
 			}
