@@ -290,7 +290,8 @@ class Search
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $transliterator->transliterate($part);
+				// Limit length to 64 to fit in the database
+				$words[] = mb_substr($transliterator->transliterate($part), 0, 64, 'UTF-8');
 			}
 		}
 
