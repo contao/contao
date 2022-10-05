@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DC_Table;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
