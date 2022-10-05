@@ -55,8 +55,13 @@ class BackendPassword extends Backend
 		{
 			$pw = $request->request->get('password');
 
+			// Make sure the password gets evaluated against custom regex if they exist
+			// First rule, as these requirements are usually stronger than the default ones
+			if ($message = self::_evalRegexp($pw)) {
+				Message::addError($message);
+			}
 			// Password too short
-			if (mb_strlen($pw) < Config::get('minPasswordLength'))
+			elseif (mb_strlen($pw) < Config::get('minPasswordLength'))
 			{
 				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
 			}
@@ -126,6 +131,42 @@ class BackendPassword extends Backend
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 
 		return $objTemplate->getResponse();
+	}
+
+	/**
+	 * Evaluate custom regex. See https://github.com/contao/contao/issues/5316
+	 *
+	 * @param  string      The password
+	 * @return bool|string The error message, false otherwise
+	 */
+	private function _evalRegexp($pw)
+	{
+		// no custom regex available
+		if (!isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) || !\is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
+			return false;
+
+		// load user data container
+		$this->loadDataContainer('tl_user');
+		$dc = new \DC_Table('tl_user');
+		$dc->id = $this->User->id;
+
+		// load regex
+		$rgxp = $GLOBALS['TL_DCA']['tl_user']['fields']['password']['eval']['rgxp'];
+		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+		$widget->dataContainer = $dc;
+
+		// iterate over available regex hooks
+		foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback) {
+			$this->import($callback[0]);
+			$break = $this->{$callback[0]}->{$callback[1]}($rgxp, $pw, $widget);
+
+			// return the actual error message if it exists
+			if ($break === true && $widget->hasErrors()) {
+				return $widget->getErrorsAsString();
+			}
+		}
+
+		return false;
 	}
 }
 
