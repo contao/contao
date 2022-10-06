@@ -438,13 +438,9 @@ class Email
 				$this->strSender = $GLOBALS['TL_ADMIN_EMAIL'];
 				$this->strSenderName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 			}
-			elseif ($adminEmail = Config::get('adminEmail'))
-			{
-				list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail($adminEmail);
-			}
 			else
 			{
-				throw new \Exception('No administrator e-mail address has been set.');
+				list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 			}
 		}
 
