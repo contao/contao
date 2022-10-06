@@ -768,7 +768,7 @@ class Versions extends Controller
 	{
 		if ($this->strEditUrl !== null)
 		{
-			$return = str_replace(['%s', '%25s'], $this->intPid, $this->strEditUrl, $count);
+			$return = str_replace(array('%s', '%25s'), $this->intPid, $this->strEditUrl, $count);
 
 			if ($count > 0)
 			{
