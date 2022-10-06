@@ -58,7 +58,8 @@ class BackendPassword extends Backend
 
 			// Make sure the password gets evaluated against custom regex if they exist
 			// First rule, as these requirements are usually stronger than the default ones
-			if ($message = self::_evalRegexp($pw)) {
+			if ($message = self::_evalRegexp($pw))
+			{
 				Message::addError($message);
 			}
 			// Password too short
@@ -137,18 +138,20 @@ class BackendPassword extends Backend
 	/**
 	 * Evaluate custom regex. See https://github.com/contao/contao/issues/5316
 	 *
-	 * @param  string      The password
+	 * @param  string      $pw The password
 	 * @return bool|string The error message, false otherwise
 	 */
 	private function _evalRegexp($pw)
 	{
 		// no custom regex available
 		if (!isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) || !\is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
+		{
 			return false;
+		}
 
 		// load user data container
 		$this->loadDataContainer('tl_user');
-		$dc = new \DC_Table('tl_user');
+		$dc = new DC_Table('tl_user');
 		$dc->id = $this->User->id;
 
 		// load regex
@@ -157,12 +160,14 @@ class BackendPassword extends Backend
 		$widget->dataContainer = $dc;
 
 		// iterate over available regex hooks
-		foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback) {
+		foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
+		{
 			$this->import($callback[0]);
 			$break = $this->{$callback[0]}->{$callback[1]}($rgxp, $pw, $widget);
 
 			// return the actual error message if it exists
-			if ($break === true && $widget->hasErrors()) {
+			if ($break === true && $widget->hasErrors())
+			{
 				return $widget->getErrorsAsString();
 			}
 		}
