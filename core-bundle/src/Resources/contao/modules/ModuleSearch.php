@@ -199,8 +199,8 @@ class ModuleSearch extends Module
 			if ($this->perPage > 0)
 			{
 				$id = 'page_s' . $this->id;
-				$page = Input::get($id) ?? 1;
-				$per_page = Input::get('per_page') ?: $this->perPage;
+				$page = (int) (Input::get($id) ?? 1);
+				$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
 				// Do not index or cache the page if the page number is outside the range
 				if ($page < 1 || $page > max(ceil($count/$per_page), 1))

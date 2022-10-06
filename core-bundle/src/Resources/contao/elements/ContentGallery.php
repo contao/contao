@@ -192,7 +192,7 @@ class ContentGallery extends ContentElement
 		{
 			// Get the current page
 			$id = 'page_g' . $this->id;
-			$page = Input::get($id) ?? 1;
+			$page = (int) (Input::get($id) ?? 1);
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
