@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.34] (2022-09-15)
+
+**Fixed issues:**
+
+- [#5271] Fix the order of the palette combiner ([ausi])
+- [#5275] Fix the search field in Safari 16 ([leofeyer])
+- [#5276] Fix the opacity of draft elements ([leofeyer])
+- [#5270] Allow symlinked bundle paths in the template files listing ([m-vo])
+- [#5231] Do not use POST values directly for Reply-To and Cc ([fritzmg])
+- [#5226] Fix a CSS issue in the install tool database update screen ([leofeyer])
+- [#5208] Fix custom paste modes not working properly ([qzminski])
+- [#5225] Check the ID when sending comment notifications ([leofeyer])
+- [#5224] Use the correct label for the "confirm password" field ([leofeyer])
+- [#4930] Do not set HTTP header in Versions::addToTemplate ([fritzmg])
+
 ## [4.9.33] (2022-08-17)
 
 **Fixed issues:**
@@ -602,6 +617,7 @@ This project adheres to [Semantic Versioning].
 - [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
 - [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
 - [#2257] Only use floorToMinute() in DB queries ([leofeyer])
+- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
 - [#2248] Fix a type error in the back end menu listener ([leofeyer])
 - [#2244] Do not log 503 exceptions ([fritzmg])
 - [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
@@ -996,6 +1012,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.34]: https://github.com/contao/contao/releases/tag/4.9.34
 [4.9.33]: https://github.com/contao/contao/releases/tag/4.9.33
 [4.9.32]: https://github.com/contao/contao/releases/tag/4.9.32
 [4.9.31]: https://github.com/contao/contao/releases/tag/4.9.31
@@ -1070,6 +1087,16 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5271]: https://github.com/contao/contao/pull/5271
+[#5275]: https://github.com/contao/contao/pull/5275
+[#5276]: https://github.com/contao/contao/pull/5276
+[#5270]: https://github.com/contao/contao/pull/5270
+[#5231]: https://github.com/contao/contao/pull/5231
+[#5226]: https://github.com/contao/contao/pull/5226
+[#5208]: https://github.com/contao/contao/pull/5208
+[#5225]: https://github.com/contao/contao/pull/5225
+[#5224]: https://github.com/contao/contao/pull/5224
+[#4930]: https://github.com/contao/contao/pull/4930
 [#5013]: https://github.com/contao/contao/pull/5013
 [#5164]: https://github.com/contao/contao/pull/5164
 [#5130]: https://github.com/contao/contao/pull/5130
@@ -1508,6 +1535,7 @@ This project adheres to [Semantic Versioning].
 [#2264]: https://github.com/contao/contao/pull/2264
 [#2260]: https://github.com/contao/contao/pull/2260
 [#2257]: https://github.com/contao/contao/pull/2257
+[#2249]: https://github.com/contao/contao/pull/2249
 [#2248]: https://github.com/contao/contao/pull/2248
 [#2244]: https://github.com/contao/contao/pull/2244
 [#2221]: https://github.com/contao/contao/pull/2221

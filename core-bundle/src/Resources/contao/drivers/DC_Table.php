@@ -3111,10 +3111,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql']);
 			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-			}
 			else
 			{
 				$varValue = serialize($varValue);
@@ -3243,7 +3239,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 					else
 					{
-						$sValues[] = $trigger;
+						// Use string comparison to allow "0"
+						if ((string) $trigger !== '')
+						{
+							$sValues[] = (string) $trigger;
+						}
+
 						$key = $name . '_' . $trigger;
 
 						// Look for a subpalette

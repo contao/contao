@@ -461,9 +461,9 @@ class tl_comments extends Contao\Backend
 	 */
 	public function sendNotifications($varValue)
 	{
-		if ($varValue)
+		if ($varValue && ($id = Contao\Input::get('id')))
 		{
-			Contao\Comments::notifyCommentsSubscribers(Contao\CommentsModel::findByPk(Contao\Input::get('id')));
+			Contao\Comments::notifyCommentsSubscribers(Contao\CommentsModel::findByPk($id));
 		}
 
 		return $varValue;
