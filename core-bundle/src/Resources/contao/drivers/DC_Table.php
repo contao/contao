@@ -1515,6 +1515,17 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
+		// There is no actual data to be deleted (see #5336)
+		if (!$affected)
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
+		}
+
 		$this->import(BackendUser::class, 'User');
 
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
@@ -1557,7 +1568,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Add a log entry unless we are deleting from tl_log itself
-			if ($this->strTable != 'tl_log' && isset($data[$this->strTable][0]['id']))
+			if ($this->strTable != 'tl_log')
 			{
 				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, TL_GENERAL);
 			}
