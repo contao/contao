@@ -73,6 +73,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
     public function testReadsDotEnvLocalFile(): void
     {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), '');
         $this->filesystem->dumpFile($this->tempfile, 'FOO=BAR');
 
         $tester = new CommandTester($this->command);
@@ -127,6 +128,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
     public function testOutputsAllKeysIfNoArgumentIsGiven(): void
     {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), '');
         $this->filesystem->dumpFile($this->tempfile, "FOO=BAR\nBAR=BAZ");
 
         $tester = new CommandTester($this->command);
