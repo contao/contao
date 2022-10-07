@@ -182,7 +182,27 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function __get($strKey)
 	{
-		return $this->arrData[$strKey] ?? parent::__get($strKey);
+		if (!isset($this->arrData[$strKey]))
+		{
+			return parent::__get($strKey);
+		}
+
+		if (\in_array($strKey, array('username', 'name', 'email', 'language', 'backendTheme', 'uploader', 'password', 'groups', 'inherit', 'modules', 'themes', 'elements', 'fields', 'pagemounts', 'alpty', 'filemounts', 'fop', 'imageSizes', 'forms', 'formp', 'amg', 'start', 'stop', 'session', 'secret', 'backupCodes'), true))
+		{
+			return $this->arrData[$strKey];
+		}
+
+		if (\in_array($strKey, array('id', 'tstamp', 'dateAdded', 'lastLogin', 'currentLogin', 'loginAttempts', 'locked', 'trustedTokenVersion'), true))
+		{
+			return (int) $this->arrData[$strKey];
+		}
+
+		if (\in_array($strKey, array('showHelp', 'thumbnails', 'useRTE', 'useCE', 'pwChange', 'admin', 'disable', 'useTwoFactor'), true))
+		{
+			return (bool) $this->arrData[$strKey];
+		}
+
+		return Model::getClassFromTable($this->strTable)::convertToPhpValue($strKey, $this->arrData[$strKey]);
 	}
 
 	/**
@@ -263,13 +283,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
-			$strModelClass = Model::getClassFromTable($this->strTable);
-			$this->arrData = array();
-
-			foreach ($objResult->row() as $strKey => $varData)
-			{
-				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
-			}
+			$this->arrData = $objResult->row();
 
 			return true;
 		}
