@@ -1516,7 +1516,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// There is no actual data to be deleted (see #5336)
-		if (!$affected)
+		if (empty($data))
 		{
 			if (!$blnDoNotRedirect)
 			{
