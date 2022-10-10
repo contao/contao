@@ -661,7 +661,7 @@ abstract class Backend extends Controller
 			return null;
 		}
 
-		$id = Input::get('id');
+		$id = Input::get('id', true);
 		$pid = Input::get('pid');
 		$act = Input::get('act');
 		$mode = Input::get('mode');
