@@ -604,10 +604,16 @@ class MigrateCommandTest extends TestCase
         $connection
             ->method('fetchOne')
             ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
-                    'SELECT @@sql_mode' => $sqlMode,
-                    'SELECT @@version' => '8.0.0',
-                    default => false,
+                static function (string $query) use ($sqlMode) {
+                    switch ($query) {
+                        case 'SELECT @@sql_mode':
+                            return $sqlMode;
+                        case 'SELECT @@version':
+                            return '8.0.0';
+
+                        default:
+                            return false;
+                    }
                 }
             )
         ;
