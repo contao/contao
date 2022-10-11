@@ -2,7 +2,11 @@
 
 ## Version 4.* to 5.0
 
-## TL_ASSETS_URL and TL_FILES_URL
+### Contao 3 theme icons
+
+The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
+
+### TL_ASSETS_URL and TL_FILES_URL
 
 The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been removed. Use the assets or files context instead:
 

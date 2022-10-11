@@ -735,7 +735,7 @@ class Versions extends Controller
 	{
 		if ($this->strEditUrl !== null)
 		{
-			return sprintf($this->strEditUrl, $this->intPid);
+			return $this->strEditUrl;
 		}
 
 		$pairs = array();

@@ -1174,6 +1174,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$this->copyChilds($k, $insertID, $kk, $parentId);
 						}
+
+						if (\is_array($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] ?? null))
+						{
+							foreach ($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] as $callback)
+							{
+								$dc = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
+								$dc->table = $k;
+								$dc->id = $kk;
+
+								if (\is_array($callback))
+								{
+									$this->import($callback[0]);
+									$this->$callback[0]->$callback[1]($insertID, $dc);
+								}
+								elseif (\is_callable($callback))
+								{
+									$callback($insertID, $dc);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1572,6 +1592,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$affected++;
 			}
+		}
+
+		// There is no actual data to be deleted (see #5336)
+		if (empty($data))
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
 		}
 
 		$this->import(BackendUser::class, 'User');
