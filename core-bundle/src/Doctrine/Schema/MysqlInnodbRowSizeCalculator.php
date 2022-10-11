@@ -85,10 +85,12 @@ class MysqlInnodbRowSizeCalculator
     {
         static $size = null;
 
-        return $size ??= (int) (
-            $this->connection->executeQuery("SHOW STATUS LIKE 'innodb_page_size'")->fetchAssociative()['Value']
-            / 2 - 66
-        );
+        if (null === $size) {
+            $res = $this->connection->executeQuery("SHOW STATUS LIKE 'innodb_page_size'");
+            $size = (int) ($res->fetchAssociative()['Value'] / 2 - 66);
+        }
+
+        return $size;
     }
 
     public function measureMysqlColumnSizeBits(Column $column, string $charset): int
