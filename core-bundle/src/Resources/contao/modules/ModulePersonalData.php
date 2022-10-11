@@ -117,7 +117,7 @@ class ModulePersonalData extends Module
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		$arrSubmitted = array();

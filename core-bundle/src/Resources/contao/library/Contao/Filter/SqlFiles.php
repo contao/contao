@@ -20,7 +20,7 @@ class SqlFiles extends \RecursiveFilterIterator
 	 *
 	 * @return boolean True if the element is acceptable
 	 */
-	public function accept()
+	public function accept(): bool
 	{
 		if ($this->hasChildren())
 		{
