@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.35] (2022-10-11)
+
+**Fixed issues:**
+
+- [#5343] Backport the TinyMCE accesskey fix ([leofeyer])
+- [#5352] Fix `DC_Folder` ID not being determined correctly due to special characters ([fritzmg])
+- [#5336] Fix a potential error when trying to log the deleted record ([qzminski])
+- [#5330] Add an exception for a missing administrator email address ([fritzmg])
+- [#5348] Correctly pick fallback root page with domain ([aschempp])
+- [#5342] Hide the form field name if a widget does not submit input ([leofeyer])
+- [#5338] Backport localconfig file check to Contao 4.9 ([fritzmg])
+- [#5331] Do not show errors twice in console ([ausi])
+- [#5329] Fix "MySQL data too long" error in search ([ausi])
+- [#5325] Fix a potential PHP 8 warning in the backend help wizard ([qzminski])
+- [#5323] Handle CSV fields in the registration and personal data modules ([leofeyer])
+- [#4776] Remove invalid duplicate CSV handling ([aschempp])
+- [#5250] Fix cache tagging for aliased content elements ([fritzmg])
+- [#5296] Do not use exponential notation for float values ([ausi])
+- [#5298] Use `Webmozart\PathUtil\Path` instead of `Symfony\Component\Filesystem\Path` ([fritzmg])
+
 ## [4.9.34] (2022-09-15)
 
 **Fixed issues:**
@@ -1012,6 +1032,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.35]: https://github.com/contao/contao/releases/tag/4.9.35
 [4.9.34]: https://github.com/contao/contao/releases/tag/4.9.34
 [4.9.33]: https://github.com/contao/contao/releases/tag/4.9.33
 [4.9.32]: https://github.com/contao/contao/releases/tag/4.9.32
@@ -1087,6 +1108,21 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5343]: https://github.com/contao/contao/pull/5343
+[#5352]: https://github.com/contao/contao/pull/5352
+[#5336]: https://github.com/contao/contao/pull/5336
+[#5330]: https://github.com/contao/contao/pull/5330
+[#5348]: https://github.com/contao/contao/pull/5348
+[#5342]: https://github.com/contao/contao/pull/5342
+[#5338]: https://github.com/contao/contao/pull/5338
+[#5331]: https://github.com/contao/contao/pull/5331
+[#5329]: https://github.com/contao/contao/pull/5329
+[#5325]: https://github.com/contao/contao/pull/5325
+[#5323]: https://github.com/contao/contao/pull/5323
+[#4776]: https://github.com/contao/contao/pull/4776
+[#5250]: https://github.com/contao/contao/pull/5250
+[#5296]: https://github.com/contao/contao/pull/5296
+[#5298]: https://github.com/contao/contao/pull/5298
 [#5271]: https://github.com/contao/contao/pull/5271
 [#5275]: https://github.com/contao/contao/pull/5275
 [#5276]: https://github.com/contao/contao/pull/5276
