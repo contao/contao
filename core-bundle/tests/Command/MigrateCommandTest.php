@@ -25,9 +25,10 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -470,7 +471,7 @@ class MigrateCommandTest extends TestCase
             ->willReturn('8.0.29')
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createDefaultConnection();
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQL57Platform())
@@ -581,14 +582,6 @@ class MigrateCommandTest extends TestCase
             ->willReturn(new Schema())
         ;
 
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-            $connection
-                ->method('getDatabasePlatform')
-                ->willReturn($this->createMock(AbstractPlatform::class))
-            ;
-        }
-
         return new MigrateCommand(
             $migrations,
             $fileLocator,
@@ -597,9 +590,34 @@ class MigrateCommandTest extends TestCase
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class),
-            $connection,
+            $connection ?? $this->createDefaultConnection(),
             $installer ?? $this->createMock(Installer::class)
         );
+    }
+
+    /**
+     * @return Connection&MockObject
+     */
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(
+                static fn (string $query): string|false => match ($query) {
+                    'SELECT @@sql_mode' => $sqlMode,
+                    'SELECT @@version' => '8.0.0',
+                    default => false,
+                }
+            )
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver ?? new PdoDriver())
+        ;
+
+        return $connection;
     }
 
     /**
