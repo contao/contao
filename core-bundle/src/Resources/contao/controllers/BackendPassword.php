@@ -142,33 +142,26 @@ class BackendPassword extends Backend
 	 */
 	private function _evalRegexp($pw)
 	{
-		// no custom regex available
-		if (!isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) || !\is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
-		{
-			return false;
-		}
-
 		// load user data container
 		$this->loadDataContainer('tl_user');
 		$dc = new DC_Table('tl_user');
 		$dc->id = $this->User->id;
 
+		// no custom regex available
+		if (empty($GLOBALS['TL_DCA']['tl_user']['fields']['password']['eval']['rgxp']))
+		{
+			return false;
+		}
+
 		// load regex
-		$rgxp = $GLOBALS['TL_DCA']['tl_user']['fields']['password']['eval']['rgxp'];
 		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->dataContainer = $dc;
+		$widget->validate();
 
-		// iterate over available regex hooks
-		foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
+		// return the actual error message if it exists
+		if ($widget->hasErrors())
 		{
-			$this->import($callback[0]);
-			$break = $this->{$callback[0]}->{$callback[1]}($rgxp, $pw, $widget);
-
-			// return the actual error message if it exists
-			if ($break === true && $widget->hasErrors())
-			{
-				return $widget->getErrorsAsString();
-			}
+			return $widget->getErrorsAsString();
 		}
 
 		return false;
