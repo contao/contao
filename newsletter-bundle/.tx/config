@@ -2,47 +2,47 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[newsletter-bundle.v5_0-default]
+[newsletter-bundle.v5_1-default]
 source_file = contao/languages/en/default.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/default.xlf
 
-[newsletter-bundle.v5_0-modules]
+[newsletter-bundle.v5_1-modules]
 source_file = contao/languages/en/modules.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/modules.xlf
 
-[newsletter-bundle.v5_0-tl_member]
+[newsletter-bundle.v5_1-tl_member]
 source_file = contao/languages/en/tl_member.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_member.xlf
 
-[newsletter-bundle.v5_0-tl_module]
+[newsletter-bundle.v5_1-tl_module]
 source_file = contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_module.xlf
 
-[newsletter-bundle.v5_0-tl_newsletter]
+[newsletter-bundle.v5_1-tl_newsletter]
 source_file = contao/languages/en/tl_newsletter.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_newsletter.xlf
 
-[newsletter-bundle.v5_0-tl_newsletter_channel]
+[newsletter-bundle.v5_1-tl_newsletter_channel]
 source_file = contao/languages/en/tl_newsletter_channel.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_newsletter_channel.xlf
 
-[newsletter-bundle.v5_0-tl_newsletter_recipients]
+[newsletter-bundle.v5_1-tl_newsletter_recipients]
 source_file = contao/languages/en/tl_newsletter_recipients.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_newsletter_recipients.xlf
 
-[newsletter-bundle.v5_0-tl_user]
+[newsletter-bundle.v5_1-tl_user]
 source_file = contao/languages/en/tl_user.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_user.xlf
 
-[newsletter-bundle.v5_0-tl_user_group]
+[newsletter-bundle.v5_1-tl_user_group]
 source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_user_group.xlf
