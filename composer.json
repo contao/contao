@@ -319,7 +319,7 @@
         "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
         "rector": "@php tools/rector/vendor/bin/rector --config tools/rector/config/rector.php --ansi",
-        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
+        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json",
         "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }

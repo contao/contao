@@ -28,7 +28,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         '*/Fixtures/system/*',
-        '*/Resources/contao/*',
+        '*-bundle/contao/*',
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
