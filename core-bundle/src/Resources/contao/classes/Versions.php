@@ -768,7 +768,14 @@ class Versions extends Controller
 	{
 		if ($this->strEditUrl !== null)
 		{
-			return sprintf($this->strEditUrl, $this->intPid);
+			$return = str_replace(array('%s', '%25s'), $this->intPid, $this->strEditUrl, $count);
+
+			if ($count > 0)
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Using placeholders in the edit URL has been deprecated and will no longer work in Contao 5.');
+			}
+
+			return $return;
 		}
 
 		$pairs = array();

@@ -18,6 +18,9 @@ window.tinymce && tinymce.init({
   branding: false,
   setup: function(editor) {
     editor.getElement().removeAttribute('required');
+    document.querySelectorAll('[accesskey]').forEach(function(el) {
+      editor.addShortcut('access+' + el.accessKey, el.id, function() { el.click(); });
+    });
   },
   init_instance_callback: function(editor) {
     if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
