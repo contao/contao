@@ -1232,7 +1232,7 @@ class tl_content extends Backend
 		// Limit the element's height
 		if (!Config::get('doNotCollapse'))
 		{
-			$class .=  ' h40';
+			$class .= ' h40';
 		}
 
 		if ($arrRow['start'] && $arrRow['stop'])

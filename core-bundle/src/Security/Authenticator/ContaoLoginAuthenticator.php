@@ -102,7 +102,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool|null
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
@@ -158,12 +158,12 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $twoFactorToken;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response|null
     {
         return $this->successHandler->onAuthenticationSuccess($request, $token);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         return $this->failureHandler->onAuthenticationFailure($request, $exception);
     }

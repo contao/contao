@@ -66,9 +66,15 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $schemaManager = $this->connection->createSchemaManager();
+
         foreach ($this->getDatabaseColumns() as [$table, $column]) {
             $table = strtolower($table);
             $column = strtolower($column);
+
+            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)[$column])) {
+                continue;
+            }
 
             $values = $this->connection->fetchAllKeyValue(
                 "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'"

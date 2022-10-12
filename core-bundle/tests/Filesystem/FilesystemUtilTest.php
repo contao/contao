@@ -25,7 +25,7 @@ class FilesystemUtilTest extends TestCase
     /**
      * @dataProvider provideResources
      */
-    public function testListContentsFromSerialized(string|array $sources, array $expectedPaths): void
+    public function testListContentsFromSerialized(array|string $sources, array $expectedPaths): void
     {
         $storage = $this->createMock(VirtualFilesystemInterface::class);
         $storage

@@ -187,6 +187,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
@@ -272,7 +273,7 @@ class FigureBuilder
     /**
      * Sets the image resource from a path inside a VFS storage.
      */
-    public function fromStorage(VirtualFilesystemInterface $storage, string|Uuid $location): self
+    public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
         try {
             $stream = $storage->readStream($location);

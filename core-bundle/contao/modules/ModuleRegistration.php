@@ -234,8 +234,14 @@ class ModuleRegistration extends Module
 					}
 				}
 
+				// Convert arrays (see #4980)
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				{
+					$varValue = implode($arrData['eval']['csv'], $varValue);
+				}
+
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -422,7 +428,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent

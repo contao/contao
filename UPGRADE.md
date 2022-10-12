@@ -2,7 +2,11 @@
 
 ## Version 4.* to 5.0
 
-## TL_ASSETS_URL and TL_FILES_URL
+### Contao 3 theme icons
+
+The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
+
+### TL_ASSETS_URL and TL_FILES_URL
 
 The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been removed. Use the assets or files context instead:
 
@@ -263,6 +267,13 @@ $GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
 $GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['includes']['teaser'] = \Contao\ContentTeaser::class;
 ```
+
+The following content elements and modules were already implemented as fragment controllers before. As of Contao 5.0,
+they are Twig-only and also follow the new naming scheme:
+
+- `template` content element (`ce_template` → `content_element/template`)
+- `markdown` content element (`ce_markdown` → `content_element/markdown`)
+- `template` module (`mod_template` → `frontend_module/template`)
 
 ### Show to guests only
 

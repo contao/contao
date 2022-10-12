@@ -33,7 +33,7 @@ class FilesystemUtil
      *
      * @param string|array<string|null> $sources
      */
-    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, string|array $sources): FilesystemItemIterator
+    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string $sources): FilesystemItemIterator
     {
         $uuids = array_filter(StringUtil::deserialize($sources, true));
 

@@ -40,7 +40,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $hl
  * @property string       $content
  * @property string       $action
- * @property string       $enforceTwoFactor
+ * @property boolean      $enforceTwoFactor
  * @property string       $targetPath
  * @property string       $message
  * @property string       $href

@@ -47,7 +47,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null       $favicon
  * @property string|null       $robotsTxt
  * @property string            $mailerTransport
- * @property integer           $enableCanonical
+ * @property boolean           $enableCanonical
  * @property string            $canonicalLink
  * @property string            $canonicalKeepParams
  * @property string            $adminEmail
@@ -705,6 +705,11 @@ class PageModel extends Model
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
 			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
+
+			if (!isset($arrOptions['order']))
+			{
+				$arrOptions['order'] = "$t.dns DESC";
+			}
 		}
 
 		if (!static::isPreviewMode($arrOptions))
