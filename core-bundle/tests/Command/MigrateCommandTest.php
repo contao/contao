@@ -547,7 +547,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @dataProvider provideBadConfigurations
      */
-    public function testOutputsConfigurationErrors(array $configuration, string|array $expectedMessages): void
+    public function testOutputsConfigurationErrors(array $configuration, array|string $expectedMessages): void
     {
         $connection = $this->createMock(Connection::class);
         $connection

@@ -47,7 +47,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null       $favicon
  * @property string|null       $robotsTxt
  * @property string            $mailerTransport
- * @property integer           $enableCanonical
+ * @property boolean           $enableCanonical
  * @property string            $canonicalLink
  * @property string            $canonicalKeepParams
  * @property string            $adminEmail

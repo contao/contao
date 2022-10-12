@@ -88,17 +88,17 @@ class PageModelTest extends TestCase
 
     public function testCreatingPageModelFromArray(): void
     {
-        $pageModel = new PageModel(['id' => '1', 'alias' => 'alias']);
+        $pageModel = new PageModel(['id' => 1, 'alias' => 'alias']);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
     public function testCreatingPageModelFromDatabaseResult(): void
     {
-        $pageModel = new PageModel(new Result([['id' => '1', 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
+        $pageModel = new PageModel(new Result([['id' => 1, 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
@@ -107,7 +107,7 @@ class PageModelTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('execute')
-            ->willReturn(new Result([['id' => '1', 'alias' => 'alias']], ''))
+            ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
         ;
 
         $database = $this->createMock(Database::class);
@@ -121,7 +121,7 @@ class PageModelTest extends TestCase
 
         $pageModel = PageModel::findByPk(1);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
