@@ -80,7 +80,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
-    public function setMetadata(?Metadata $metadata): FigureBuilder
+    public function setMetadata(Metadata|null $metadata): FigureBuilder
     {
         $this->metadata = $metadata;
 
@@ -103,7 +103,7 @@ class FigureBuilderStub extends FigureBuilder
         return new Figure($this->imageMap[$this->path], $this->metadata, $this->linkAttributes);
     }
 
-    public function buildIfResourceExists(): ?Figure
+    public function buildIfResourceExists(): Figure|null
     {
         if (null === $this->path) {
             return null;

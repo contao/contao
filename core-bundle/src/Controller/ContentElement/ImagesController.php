@@ -87,7 +87,7 @@ class ImagesController extends AbstractContentElementController
     /**
      * @return string|array<string>
      */
-    private function getSources(ContentModel $model): string|array
+    private function getSources(ContentModel $model): array|string
     {
         if ('image' === $model->type) {
             return [$model->singleSRC];

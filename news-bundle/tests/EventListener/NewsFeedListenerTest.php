@@ -50,7 +50,7 @@ class NewsFeedListenerTest extends ContaoTestCase
     /**
      * @dataProvider featured
      */
-    public function testFetchesArticlesFromArchives(string $feedFeatured, ?bool $featuredOnly): void
+    public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
         $collection = [$this->mockClassWithProperties(NewsModel::class)];
         $insertTags = $this->createMock(InsertTagParser::class);

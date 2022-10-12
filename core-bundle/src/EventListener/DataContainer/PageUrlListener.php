@@ -290,7 +290,7 @@ class PageUrlListener
         }
 
         if (null !== ($requireItem = $input->post('requireItem'))) {
-            $pageModel->requireItem = $requireItem;
+            $pageModel->requireItem = (bool) $requireItem;
         }
 
         if ('root' === $pageModel->type) {
