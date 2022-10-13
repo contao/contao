@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'width=device-width,initial-scale=1.0,shrink-to-fit=no'"
 		),
 		'titleTag' => array
 		(
