@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
         <source>Please choose the reference page.</source>
+        <target>Wybierz stronę odniesienia.</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -94,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_module.pages.1">
         <source>Please choose one or more pages.</source>
+        <target>Wybierz jedną lub więcej stron.</target>
       </trans-unit>
       <trans-unit id="tl_module.showHidden.0">
         <source>Show hidden items</source>
@@ -501,6 +503,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every website root page.</source>
+        <target>Wybierz moduł dla każdego punktu startowego.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>

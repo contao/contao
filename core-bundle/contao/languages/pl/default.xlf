@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>Prefiks URL &quot;%s&quot; jest już używany przez inny punkt startowy z tą samą domeną!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -278,6 +279,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
+        <target>W strukturze stron na najwyższym poziomie są strony, które nie są punktami startowymi.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -357,9 +359,11 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Nie można przywrócić wersji %d, ponieważ nie jest już zgodna z obecną strukturą bazy danych. Proszę przywrócić dane ręcznie.</target>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+        <target>Czas zakończenia musi być późniejszy niż czas rozpoczęcia.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -771,6 +775,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
+        <target>Ten typ strony automatycznie przekierowuje odwiedzających na inną stronę.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -778,6 +783,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Ten typ strony wyznacza punkt startowy nowej witryny.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -817,6 +823,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Gdy strona główna witryny jest w trybie konserwacji, wszystkie żądania będą wyświetlać stronę błędu 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -2544,6 +2551,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
+        <target>Aby wprowadzić metadane pliku, musisz dodać stronę główną witryny.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2755,18 +2763,23 @@
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
+        <target>Kliknij, aby załadować video.</target>
       </trans-unit>
       <trans-unit id="MSC.dataTransmission">
         <source>Your IP address will be transmitted to %s.</source>
+        <target>Twój adres IP będzie wysłany do %s.</target>
       </trans-unit>
       <trans-unit id="MSC.showFrom">
         <source>visible from %s</source>
+        <target>widoczne od %s</target>
       </trans-unit>
       <trans-unit id="MSC.showTo">
         <source>visible until %s</source>
+        <target>widoczne do %s</target>
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+        <target>widoczne od %s do %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

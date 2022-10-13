@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.4] (2022-10-13)
+
 ## [5.0.3] (2022-10-11)
 
 **Fixed issues:**
@@ -366,6 +368,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.4]: https://github.com/contao/contao/releases/tag/5.0.4
 [5.0.3]: https://github.com/contao/contao/releases/tag/5.0.3
 [5.0.2]: https://github.com/contao/contao/releases/tag/5.0.2
 [5.0.1]: https://github.com/contao/contao/releases/tag/5.0.1

@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
+        <target>Skonfiguruj strony swojej witryny (witryn)</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Konta</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
         <source>Generates a navigation menu from the pages</source>
+        <target>Generuje menu nawigacyjne ze stron</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -236,6 +239,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the pages</source>
+        <target>Generuje rozwijane menu ze stron</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -267,6 +271,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages</source>
+        <target>Generuje listę wszystkich stron</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -414,6 +419,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
+        <target>Generuje różne moduły w zależności od punktu startowego</target>
       </trans-unit>
     </body>
   </file>

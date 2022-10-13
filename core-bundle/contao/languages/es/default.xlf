@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="ERR.submit">
         <source>The data could not be saved because an error occurred!</source>
+        <target>¡Los datos no se pudieron guardar porque ocurrió un error!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -190,6 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>¡El prefijo de URL &quot;%s&quot; ya está en uso en otra página raíz del sitio web con el mismo nombre de dominio!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -197,6 +199,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>¡Este alias genera un conflicto con la página &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -276,6 +279,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
+        <target>Hay páginas de nivel superior que no son páginas raíz del sitio web.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -351,12 +355,15 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Nombre de usuario desconocido: %s</target>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>La versión %d no se pudo restaurar porque ya no es compatible con la estructura de la base de datos actual. Restaure los datos manualmente.</target>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+        <target>La hora de finalización debe ser posterior a la hora de inicio.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -404,9 +411,11 @@
       </trans-unit>
       <trans-unit id="CTE.unfiltered_html.0">
         <source>Unfiltered HTML</source>
+        <target>HTML sin filtrar</target>
       </trans-unit>
       <trans-unit id="CTE.unfiltered_html.1">
         <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>Le permite agregar código HTML personalizado y sin filtrar.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -766,6 +775,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
+        <target>Este tipo de página redirige automáticamente a los visitantes a otra página.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -773,6 +783,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Este tipo de página marca el punto de partida de un nuevo sitio web.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -812,6 +823,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Cuando la página raíz de un sitio web está en modo de mantenimiento, todas las solicitudes mostrarán una página de error 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1331,6 +1343,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License URL</source>
+        <target>URL de licencia</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1354,9 +1367,11 @@
       </trans-unit>
       <trans-unit id="MSC.custom.0">
         <source>Custom dimensions</source>
+        <target>Dimensiones personalizadas</target>
       </trans-unit>
       <trans-unit id="MSC.custom.1">
         <source>The image will be resized to the given dimensions.</source>
+        <target>La imagen será redimensionada a las dimensiones dadas.</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1376,9 +1391,11 @@
       </trans-unit>
       <trans-unit id="MSC.crop.0">
         <source>Crop (important part)</source>
+        <target>Recortar (parte importante)</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
         <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>Conserva la parte importante de una imagen como se especifica en el administrador de archivos. Si es necesario, la imagen se recortará.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1586,6 +1603,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo mediante el uso de métodos &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;abreviados de teclado&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1757,6 +1775,7 @@
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
+        <target>Guardar y editar elementos secundarios</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -2532,6 +2551,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
+        <target>Debe agregar una página raíz del sitio web para ingresar los metadatos del archivo.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2655,9 +2675,11 @@
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>Hay al menos un grupo de usuarios que otorga acceso al elemento HTML sin filtrar. Dado que el código HTML de este elemento no se filtra, los usuarios de estos grupos implícitamente tienen control total sobre el sistema.</target>
       </trans-unit>
       <trans-unit id="MSC.userUnfilteredHtml">
         <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>Hay al menos un usuario normal con acceso al elemento HTML sin filtrar. Dado que el código HTML de ese elemento no se filtra, ¡estos usuarios implícitamente tienen control total sobre el sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2737,21 +2759,27 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Manual</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
+        <target>Por favor, haga clic para cargar el video.</target>
       </trans-unit>
       <trans-unit id="MSC.dataTransmission">
         <source>Your IP address will be transmitted to %s.</source>
+        <target>Su dirección IP será transmitida a %s.</target>
       </trans-unit>
       <trans-unit id="MSC.showFrom">
         <source>visible from %s</source>
+        <target>visible desde %s</target>
       </trans-unit>
       <trans-unit id="MSC.showTo">
         <source>visible until %s</source>
+        <target>visible hasta %s</target>
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+        <target>visible desde %s to %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2923,6 +2951,7 @@
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
+        <target>Edite los elementos secundarios del ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2958,6 +2987,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>Se omitieron los URI %d.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
