@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.12] (2022-10-13)
+
+**Fixed issues:**
+
+- [#5355] Backport the database configuration error checks ([m-vo])
+- [#5361] Fix the oncopy_callback ([fritzmg])
+
 ## [4.13.11] (2022-10-11)
 
 **Fixed issues:**
@@ -506,6 +513,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.12]: https://github.com/contao/contao/releases/tag/4.13.12
 [4.13.11]: https://github.com/contao/contao/releases/tag/4.13.11
 [4.13.10]: https://github.com/contao/contao/releases/tag/4.13.10
 [4.13.9]: https://github.com/contao/contao/releases/tag/4.13.9
@@ -548,6 +556,8 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5355]: https://github.com/contao/contao/pull/5355
+[#5361]: https://github.com/contao/contao/pull/5361
 [#5346]: https://github.com/contao/contao/pull/5346
 [#5350]: https://github.com/contao/contao/pull/5350
 [#5345]: https://github.com/contao/contao/pull/5345

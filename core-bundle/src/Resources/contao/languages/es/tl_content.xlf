@@ -847,6 +847,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
+        <target>Loop video</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
