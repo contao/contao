@@ -608,6 +608,7 @@ class MigrateCommandTest extends TestCase
                     switch ($query) {
                         case 'SELECT @@sql_mode':
                             return $sqlMode;
+
                         case 'SELECT @@version':
                             return '8.0.0';
 
