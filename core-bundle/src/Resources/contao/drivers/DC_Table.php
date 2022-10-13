@@ -1108,7 +1108,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								if (\is_array($callback))
 								{
 									$this->import($callback[0]);
-									$this->$callback[0]->$callback[1]($insertID, $dc);
+									$this->{$callback[0]}->{$callback[1]}($insertID, $dc);
 								}
 								elseif (\is_callable($callback))
 								{
