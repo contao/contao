@@ -81,6 +81,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'fields'                  => array('startTime'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'title',
 			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
 		),
 		'global_operations' => array
