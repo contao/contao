@@ -41,10 +41,25 @@ class PageUrlGenerator extends SymfonyUrlGenerator
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         if (
+            PageRoute::PAGE_BASED_ROUTE_NAME === $name
+            && \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
+            && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
+        ) {
+            $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
+            unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
+        } elseif (
+            PageRoute::PAGE_BASED_ROUTE_NAME === $name
+            && \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
+            && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof PageRoute
+        ) {
+            $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
+            unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
+        } elseif (
             RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name
             && \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
         ) {
+            trigger_deprecation('contao/core-bundle', '4.13.13', 'RouteObjectInterface::OBJECT_BASED_ROUTE_NAME should not be used to generate a page URL, use PageRoute::PAGE_BASED_ROUTE_NAME instead.');
             $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
             unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
         } elseif (
@@ -52,6 +67,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             && \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof PageRoute
         ) {
+            trigger_deprecation('contao/core-bundle', '4.13.13', 'RouteObjectInterface::OBJECT_BASED_ROUTE_NAME should not be used to generate a page URL, use PageRoute::PAGE_BASED_ROUTE_NAME instead.');
             $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
             unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
         } else {
