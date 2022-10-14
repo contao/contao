@@ -312,7 +312,7 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
+        "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --fix --ansi",
         "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
