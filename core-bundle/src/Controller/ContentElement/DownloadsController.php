@@ -71,9 +71,9 @@ class DownloadsController extends AbstractContentElementController
             $request,
             $this->filesStorage,
             function (FilesystemItem $item, array $context): Response|null {
-                // Only allow URIs that aren't older than 15 minutes
-                if ($context['time'] - time() > 600) {
-                    return new Response('The resource ');
+                // Only allow URIs that aren't older than 24 hours
+                if ($context['time'] - time() > 86400) {
+                    return new Response('The download URL has expired.');
                 }
 
                 // Make sure the file still exists
