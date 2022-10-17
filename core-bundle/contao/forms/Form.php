@@ -125,7 +125,7 @@ class Form extends Hybrid
 		{
 			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
 
-			if (isset($confirmationData['id']) && (int) $this->id === (int) $confirmationData['id'])
+			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
 			{
 				$this->Template->confirmation = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
 			}
@@ -615,7 +615,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId() && $targetPageData === null)
+			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_confirmation');
 				$confirmationTemplate->setData($this->Template->getData());

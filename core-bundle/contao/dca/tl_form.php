@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo,confirmationMessage;{config_legend},allowTags,ajax;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmationMessage;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Subpalettes
@@ -255,14 +255,14 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
-		'allowTags' => array
+		'ajax' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
-		'ajax' => array
+		'allowTags' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
