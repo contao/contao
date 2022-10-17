@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.children">
         <source>Edit the newsletters of channel ID %s</source>
+        <target>Editar los boletines del canal de ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>

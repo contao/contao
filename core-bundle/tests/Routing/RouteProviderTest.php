@@ -737,7 +737,7 @@ class RouteProviderTest extends TestCase
     public function testIgnoresRoutesWithoutRootId(): void
     {
         $page = $this->mockPage('de', 'foo');
-        $page->rootId = null;
+        $page->rootId = 0;
 
         $page
             ->expects($this->once())

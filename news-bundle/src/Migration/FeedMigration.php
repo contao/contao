@@ -89,7 +89,7 @@ class FeedMigration extends AbstractMigration
         return $this->createResult(true);
     }
 
-    private function findMatchingRootPage(array $feed): ?int
+    private function findMatchingRootPage(array $feed): int|null
     {
         $feedBase = preg_replace('/^https?:\/\//', '', $feed['feedBase']);
 

@@ -145,7 +145,7 @@ class ModuleListing extends Module
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
-		$page = (Input::get($id) !== null) ? (int) Input::get($id) : 1;
+		$page = (int) (Input::get($id) ?? 1);
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
 		// Thanks to Hagen Klemp (see #4485)

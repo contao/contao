@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.4] (2022-10-13)
+
+## [5.0.3] (2022-10-11)
+
+**Fixed issues:**
+
+- [#5303] Remove the old .gif theme images ([leofeyer])
+- [#5310] Fix and adjust the template content element/module ([m-vo])
+- [#5313] Fix the basic entities migration ([ausi])
+- [#5314] Fix a wrong comment ([Toflar])
+- [#5301] Do not use exponential notation for float values ([ausi])
+- [#5288] Store Input::setGet in the request attributes ([ausi])
+
 ## [5.0.2] (2022-09-16)
 
 **New features:**
@@ -355,6 +368,8 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.4]: https://github.com/contao/contao/releases/tag/5.0.4
+[5.0.3]: https://github.com/contao/contao/releases/tag/5.0.3
 [5.0.2]: https://github.com/contao/contao/releases/tag/5.0.2
 [5.0.1]: https://github.com/contao/contao/releases/tag/5.0.1
 [5.0.0]: https://github.com/contao/contao/releases/tag/5.0.0
@@ -375,6 +390,12 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5303]: https://github.com/contao/contao/pull/5303
+[#5310]: https://github.com/contao/contao/pull/5310
+[#5313]: https://github.com/contao/contao/pull/5313
+[#5314]: https://github.com/contao/contao/pull/5314
+[#5301]: https://github.com/contao/contao/pull/5301
+[#5288]: https://github.com/contao/contao/pull/5288
 [#5245]: https://github.com/contao/contao/pull/5245
 [#5247]: https://github.com/contao/contao/pull/5247
 [#5241]: https://github.com/contao/contao/pull/5241
