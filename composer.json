@@ -144,7 +144,7 @@
         "symfony/service-contracts": "^1.1 || ^2.0",
         "symfony/stopwatch": "^5.4 || ^6.0",
         "symfony/string": "^5.4 || ^6.0",
-        "symfony/translation": "^5.4 || ^6.0",
+        "symfony/translation": "^6.1",
         "symfony/translation-contracts": "^2.3",
         "symfony/twig-bridge": "^5.4 || ^6.0",
         "symfony/twig-bundle": "^5.4 || ^6.0",
