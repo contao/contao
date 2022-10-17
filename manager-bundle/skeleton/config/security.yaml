@@ -21,7 +21,7 @@ security:
 
             login_throttling:
                 max_attempts: 5
-                interval: 1 minute
+                interval: 5 minutes
 
             logout:
                 path: contao_backend_logout
@@ -37,7 +37,7 @@ security:
 
             login_throttling:
                 max_attempts: 5
-                interval: 1 minute
+                interval: 5 minutes
 
             remember_me:
                 secret: '%kernel.secret%'
