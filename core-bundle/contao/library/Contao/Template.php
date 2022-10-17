@@ -368,7 +368,7 @@ abstract class Template extends Controller
 
 		if (null !== $locale && $locale !== $translator->getLocale())
 		{
-			$container->get('translation.locale_switcher')->runWithLocale($locale, new TranslatorCallback($translator, $strId, $arrParams, $strDomain));
+			return $container->get('translation.locale_switcher')->runWithLocale($locale, new TranslatorCallback($translator, $strId, $arrParams, $strDomain));
 		}
 
 		return $translator->trans($strId, $arrParams, $strDomain);

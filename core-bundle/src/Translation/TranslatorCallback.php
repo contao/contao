@@ -14,13 +14,12 @@ class TranslatorCallback
         private array $parameters = [],
         private string|null $domain = null,
         private string|null $locale = null,
-    )
-    {
+    ) {
     }
 
-    public function __invoke(): void
+    public function __invoke(): string
     {
-        $this->translator->trans($this->id, $this->parameters, $this->domain, $this->locale);
+        return $this->translator->trans($this->id, $this->parameters, $this->domain, $this->locale);
     }
 
     public function getId(): string

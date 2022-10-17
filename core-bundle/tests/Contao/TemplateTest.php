@@ -424,36 +424,18 @@ class TemplateTest extends TestCase
         $translator = $this->createMock(Translator::class);
         $translator
             ->expects($this->exactly(1))
-            ->method('trans')
-            ->with('foo', [], 'contao_default')
-        ;
-
-        $translator
-            ->expects($this->exactly(2))
-            ->method('setLocale')
-            ->withConsecutive(['de'], ['en'])
-        ;
-
-        $translator
-            ->expects($this->exactly(1))
             ->method('getLocale')
             ->willReturn('en')
         ;
 
-        $switcher = new LocaleSwitcher('en', [$translator]);
-
-        $system = $this->mockAdapter(['loadLanguageFile']);
-        $system
+        $switcher = $this->createMock(LocaleSwitcher::class);
+        $switcher
             ->expects($this->exactly(1))
-            ->method('loadLanguageFile')
-            ->with('default', 'en')
+            ->method('runWithLocale')
         ;
-
-        $framework = $this->mockContaoFramework([System::class => $system]);
 
         System::getContainer()->set('translation.locale_switcher', $switcher);
         System::getContainer()->set('translator', $translator);
-        System::getContainer()->set('contao.framework', $framework);
 
         (new Filesystem())->dumpFile(Path::join($this->getTempDir(), 'templates/test_template.html5'), '');
 
