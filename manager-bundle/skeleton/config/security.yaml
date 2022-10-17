@@ -19,6 +19,10 @@ security:
             contao_login:
                 remember_me: false
 
+            login_throttling:
+                max_attempts: 5
+                interval: 1 minute
+
             logout:
                 path: contao_backend_logout
 
@@ -30,6 +34,10 @@ security:
 
             contao_login:
                 remember_me: true
+
+            login_throttling:
+                max_attempts: 5
+                interval: 1 minute
 
             remember_me:
                 secret: '%kernel.secret%'
