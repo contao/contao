@@ -929,6 +929,13 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.translation.locale_switcher:
+        class: Contao\CoreBundle\Translation\LocaleSwitcher
+        decorates: translation.locale_switcher
+        arguments:
+            - '@contao.translation.locale_switcher.inner'
+            - '@contao.framework'
+
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator

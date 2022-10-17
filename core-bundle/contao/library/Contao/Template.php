@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Translation\TranslatorCallback;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -360,9 +361,17 @@ abstract class Template extends Controller
 	 *
 	 * @return string
 	 */
-	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
+	public function trans($strId, array $arrParams=array(), $strDomain='contao_default', $locale=null)
 	{
-		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+		$container = System::getContainer();
+		$translator = $container->get('translator');
+
+		if (null !== $locale && $locale !== $translator->getLocale())
+		{
+			$container->get('translation.locale_switcher')->runWithLocale($locale, new TranslatorCallback($translator, $strId, $arrParams, $strDomain));
+		}
+
+		return $translator->trans($strId, $arrParams, $strDomain);
 	}
 
 	/**
