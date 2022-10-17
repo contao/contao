@@ -16,19 +16,11 @@ use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\StringUtil;
-use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class DownloadsControllerTest extends ContentElementTestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([MimeTypes::class]);
-
-        parent::tearDown();
-    }
-
     public function testOutputsSingleDownload(): void
     {
         $response = $this->renderWithModelData(
