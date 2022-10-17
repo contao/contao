@@ -30,6 +30,22 @@ use Symfony\Component\HttpKernel\UriSigner;
 
 class FileDownloadHelperTest extends TestCase
 {
+    private string $phpIniIgnoreUserAbort = '';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->phpIniIgnoreUserAbort = \ini_get('ignore_user_abort');
+    }
+
+    protected function tearDown(): void
+    {
+        ini_set('ignore_user_abort', $this->phpIniIgnoreUserAbort);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider provideInlineContext
      */
