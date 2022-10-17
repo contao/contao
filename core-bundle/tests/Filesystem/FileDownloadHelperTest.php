@@ -102,7 +102,6 @@ class FileDownloadHelperTest extends TestCase
         $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
 
         $adapter = new LocalFilesystemAdapter(Path::canonicalize(__DIR__.'/../Fixtures/files/data'));
-        $adapter->write('my_file.txt', 'foo', new Config());
 
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
@@ -113,7 +112,6 @@ class FileDownloadHelperTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('text/csv', $response->headers->get('Content-Type'));
         $this->assertSame('attachment; filename=data.csv', $response->headers->get('Content-Disposition'));
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
         $this->assertSame('1.1', $response->getProtocolVersion());
