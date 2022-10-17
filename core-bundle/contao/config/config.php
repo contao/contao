@@ -208,6 +208,10 @@ $GLOBALS['BE_MOD'] = array
 			'tables'                  => array('tl_preview_link'),
 			'javascript'              => 'bundles/contaocore/clipboard.min.js'
 		),
+		'url_rewrite' => array
+		(
+			'tables'                  => array('tl_url_rewrite'),
+		),
 		'opt_in' => array
 		(
 			'tables'                  => array('tl_opt_in'),

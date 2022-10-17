@@ -176,3 +176,9 @@ services:
             - '@contao.routing.page_registry'
         tags:
             - controller.service_arguments
+
+    Contao\CoreBundle\Controller\UrlRewriteController:
+        arguments:
+            - '@contao.insert_tag.parser'
+        tags:
+            - controller.service_arguments

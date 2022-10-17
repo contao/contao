@@ -674,6 +674,35 @@ services:
             - '@request_stack'
             - '@contao.insert_tag.parser'
 
+    contao.routing.rewrite_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - '@router.request_context'
+            - '@contao.routing.rewrite_nested_matcher'
+            - '@contao.routing.rewrite_url_generator'
+            - ''
+            - '@event_dispatcher'
+            - '@contao.routing.rewrite_route_provider'
+        tags:
+            - { name: router, priority: 80 }
+
+    contao.routing.rewrite_nested_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        arguments:
+            - '@contao.routing.rewrite_route_provider'
+            - '@contao.routing.url_matcher'
+
+    contao.routing.rewrite_route_provider:
+        class: Contao\CoreBundle\Routing\RewriteRouteProvider
+        arguments:
+            - '@database_connection'
+
+    contao.routing.rewrite_url_generator:
+        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        arguments:
+            - '@contao.routing.rewrite_route_provider'
+            - '@logger'
+
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
         arguments:
