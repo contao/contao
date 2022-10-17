@@ -63,6 +63,7 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
             - '@contao.filesystem.file_download_helper'
+            - '@router'
             - '@contao.image.preview_factory'
             - '@contao.image.studio'
             - '%kernel.project_dir%'

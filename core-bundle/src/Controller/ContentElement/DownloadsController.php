@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
@@ -36,17 +35,22 @@ use Contao\StringUtil;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 #[AsContentElement('download', category: 'files')]
 #[AsContentElement('downloads', category: 'files')]
 class DownloadsController extends AbstractContentElementController
 {
+    private const DOWNLOAD_ROUTE_NAME = 'contao_download';
+
     public function __construct(
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
         private readonly FileDownloadHelper $fileDownloadHelper,
+        private readonly RouterInterface $router,
         private readonly PreviewFactory $previewFactory,
         private readonly Studio $studio,
         private readonly string $projectDir,
@@ -54,13 +58,39 @@ class DownloadsController extends AbstractContentElementController
     ) {
     }
 
+    /**
+     * This endpoint allows to stream files via PHP. This is for instance
+     * needed if a file has no public URI.
+     */
+    #[Route('/_download', name: self::DOWNLOAD_ROUTE_NAME)]
+    public function downloadAction(Request $request): Response
+    {
+        $this->initializeContaoFramework();
+
+        return $this->fileDownloadHelper->handle(
+            $request,
+            $this->filesStorage,
+            function (FilesystemItem $item, array $context): Response|null {
+                // Only allow URIs that aren't older than 15 minutes
+                if ($context['time'] - time() > 600) {
+                    return new Response('The resource ');
+                }
+
+                // Make sure the file still exists
+                if (
+                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
+                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
+                ) {
+                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
+                }
+
+                return null;
+            }
+        );
+    }
+
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // TODO: Remove method and move logic into its own action, once we have
-        // a strategy how to handle permissions for downloads via a real route.
-        // See #4862 for more details.
-        $this->handleDownload($request);
-
         $filesystemItems = $this->getFilesystemItems($model);
 
         // Sort elements; relay to client-side logic if list should be randomized
@@ -84,7 +114,7 @@ class DownloadsController extends AbstractContentElementController
 
         $downloads = array_map(
             fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
+                'href' => $this->generateDownloadUrl($filesystemItem, $model),
                 'file' => $filesystemItem,
                 'show_file_previews' => $showPreviews,
                 'file_previews' => $this->getPreviews($filesystemItem, $model),
@@ -153,7 +183,7 @@ class DownloadsController extends AbstractContentElementController
      * have a public URI, a URL pointing to this controller's download action
      * will be generated, otherwise the direct download URL will be returned.
      */
-    private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
+    private function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model): string
     {
         $path = $filesystemItem->getPath();
         $inline = $model->inline;
@@ -162,15 +192,12 @@ class DownloadsController extends AbstractContentElementController
             return (string) $publicUri;
         }
 
-        // TODO: Use an exclusive route once we have a strategy how to handle
-        // permissions for it. Right now we use the current route and then
-        // throw a ResponseException to initiate the download.
-        $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
-        $context = ['id' => $model->id];
+        $context = ['id' => $model->id, 'time' => time()];
+        $url = $this->router->generate(self::DOWNLOAD_ROUTE_NAME, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $inline
-            ? $this->fileDownloadHelper->generateInlineUrl($currentUrl, $path, $context)
-            : $this->fileDownloadHelper->generateDownloadUrl($currentUrl, $path, $filesystemItem->getName(), $context);
+            ? $this->fileDownloadHelper->generateInlineUrl($url, $path, $context)
+            : $this->fileDownloadHelper->generateDownloadUrl($url, $path, $filesystemItem->getName(), $context);
     }
 
     /**
@@ -219,28 +246,6 @@ class DownloadsController extends AbstractContentElementController
             }
         } catch (UnableToGeneratePreviewException|MissingPreviewProviderException) {
             // ignore
-        }
-    }
-
-    private function handleDownload(Request $request): void
-    {
-        $response = $this->fileDownloadHelper->handle(
-            $request,
-            $this->filesStorage,
-            function (FilesystemItem $item, array $context): Response|null {
-                if (
-                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
-                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
-                ) {
-                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
-                }
-
-                return null;
-            }
-        );
-
-        if ($response instanceof StreamedResponse) {
-            throw new ResponseException($response);
         }
     }
 }

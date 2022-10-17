@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\StringUtil;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class DownloadsControllerTest extends ContentElementTestCase
@@ -132,6 +133,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             $security,
             $this->getDefaultStorage(),
             $fileDownloadHelper,
+            $this->createMock(RouterInterface::class),
             $this->createMock(PreviewFactory::class),
             $this->getDefaultStudio(),
             'project/dir',
