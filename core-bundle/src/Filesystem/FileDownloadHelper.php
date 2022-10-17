@@ -122,7 +122,7 @@ class FileDownloadHelper
 
         // Prefer sendfile for local resources
         if ('STDIO' === $metadata['stream_type'] && 'plainfile' === $metadata['wrapper_type'] && Path::isAbsolute($localPath = $metadata['uri'])) {
-            $response = (new BinaryFileResponse($localPath))->prepare($request);
+            $response = (new BinaryFileResponse($localPath));
         } else {
             $response = new StreamedResponse(
                 static function () use ($stream): void {

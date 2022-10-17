@@ -130,7 +130,6 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('attachment; filename=data.csv', $response->headers->get('Content-Disposition'));
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
-        $this->assertSame('1.1', $response->getProtocolVersion());
     }
 
     public function provideDownloadContext(): \Generator
