@@ -52,11 +52,12 @@ class TemplateOptionsListener
         }
 
         $identifier = $this->defaultIdentifiersByType[$type] ?? null;
+        $legacyDefaultIdentifier = $this->getLegacyDefaultIdentifier($type);
 
         // Handle legacy elements that aren't implemented as fragment
         // controllers or that still use the old template naming scheme
-        if (null === $identifier || !str_contains($identifier, '/')) {
-            $identifier = $this->getLegacyDefaultIdentifier($type) ?? $this->legacyTemplatePrefix.$type;
+        if ($legacyDefaultIdentifier || null === $identifier || !str_contains($identifier, '/')) {
+            $identifier = $legacyDefaultIdentifier ?? $this->legacyTemplatePrefix.$type;
 
             return [
                 ...($overrideAll ? ['' => '-'] : []),
@@ -99,9 +100,9 @@ class TemplateOptionsListener
     /**
      * Uses the reflection API to return the default template from a legacy class.
      */
-    private function getLegacyDefaultIdentifier(string $type): string|null
+    private function getLegacyDefaultIdentifier(string|null $type): string|null
     {
-        if (null === $this->legacyProxyClass || !method_exists($this->legacyProxyClass, 'findClass')) {
+        if (null === $type || null === $this->legacyProxyClass || !method_exists($this->legacyProxyClass, 'findClass')) {
             return null;
         }
 
