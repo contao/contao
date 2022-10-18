@@ -17,7 +17,9 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\PageModel;
+use Contao\User;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
@@ -34,6 +36,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -165,6 +168,17 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
+        ['username' => $username] = $this->getCredentials($request);
+
+        if (null !== $username) {
+            try {
+                $user = $this->userProvider->loadUserByIdentifier($username);
+
+                $exception = $this->checkLoginAttempts($user, $exception);
+            } catch (UserNotFoundException) {
+            }
+        }
+
         return $this->failureHandler->onAuthenticationFailure($request, $exception);
     }
 
@@ -240,5 +254,32 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         return $page;
+    }
+
+    private function checkLoginAttempts(User $user, AuthenticationException $exception): AuthenticationException
+    {
+        ++$user->loginAttempts;
+
+        if ($user->loginAttempts < 3) {
+            $user->save();
+
+            return $exception;
+        }
+
+        $lockedSeconds = ($user->loginAttempts - 2) * 60;
+
+        $user->locked = time() + $lockedSeconds;
+        $user->save();
+
+        $exception = new LockedException(
+            $lockedSeconds,
+            sprintf('User "%s" has been locked for %s seconds', $user->username, $lockedSeconds),
+            0,
+            $exception,
+        );
+
+        $exception->setUser($user);
+
+        return $exception;
     }
 }
