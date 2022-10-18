@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
+    use RouteIdTrait;
+
     public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
     {
     }
@@ -72,30 +74,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $models = $pages->getModels();
 
         return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
-    }
-
-    /**
-     * @return array<int>
-     */
-    protected function getPageIdsFromNames(array $names): array
-    {
-        $ids = [];
-
-        foreach ($names as $name) {
-            if (!str_starts_with($name, 'tl_page.')) {
-                continue;
-            }
-
-            [, $id] = explode('.', (string) $name);
-
-            if (!preg_match('/^[1-9]\d*$/', $id)) {
-                continue;
-            }
-
-            $ids[] = (int) $id;
-        }
-
-        return array_unique($ids);
     }
 
     protected function compareRoutes(Route $a, Route $b, array $languages = null): int
