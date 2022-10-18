@@ -114,9 +114,6 @@ class FileDownloadHelperTest extends TestCase
 
     public function testHandleLocalDownloadUrl(): void
     {
-        $helper = $this->getFileDownloadHelper();
-        $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
-
         $adapter = new LocalFilesystemAdapter(Path::canonicalize(__DIR__.'/../Fixtures/files/data'));
 
         $mountManager = new MountManager();
@@ -124,6 +121,8 @@ class FileDownloadHelperTest extends TestCase
 
         $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
 
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
         $response = $helper->handle(Request::create($url), $storage);
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);

@@ -126,10 +126,7 @@ class FileDownloadHelper
         } else {
             $response = new StreamedResponse(
                 static function () use ($stream): void {
-                    stream_copy_to_stream(
-                        $stream,
-                        fopen('php://output', 'w')
-                    );
+                    stream_copy_to_stream($stream, fopen('php://output', 'w'));
                 }
             );
         }
