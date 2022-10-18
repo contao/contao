@@ -10,30 +10,31 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['link']
+    static classes = ['collapsed']
 
     static values = {
         url: String,
-        category: String
+        category: String,
+        expandTitle: String,
+        collapseTitle: String,
     }
 
-    toggle (event) {
-        event.preventDefault();
-
+    toggle () {
         if (this.isCollapsed()) {
-            this.element.classList.remove('collapsed');
+            this.element.classList.remove(this.collapsedClass);
             this.linkTarget.setAttribute('aria-expanded', 'true');
-            this.linkTarget.setAttribute('title', Contao.lang.collapse);
+            this.linkTarget.setAttribute('title', this.collapseTitleValue);
             this.sendRequest(true)
         } else {
-            this.element.classList.add('collapsed');
+            this.element.classList.add(this.collapsedClass);
             this.linkTarget.setAttribute('aria-expanded', 'false');
-            this.linkTarget.setAttribute('title', Contao.lang.expand);
+            this.linkTarget.setAttribute('title', this.expandTitleValue);
             this.sendRequest(false)
         }
     }
 
     isCollapsed () {
-        return this.element.classList.contains('collapsed');
+        return this.element.classList.contains(this.collapsedClass);
     }
 
     sendRequest (collapsed) {
