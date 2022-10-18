@@ -181,7 +181,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] === 'form_confirmation_message' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] === 'form_message' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -705,7 +705,7 @@ class InsertTags extends Controller
 					break;
 
 				// Form confirmation message
-				case 'form_confirmation_message':
+				case 'form_message':
 					if ($request?->getSession()->getFlashBag()->has(Form::SESSION_CONFIRMATION_KEY))
 					{
 						$arrCache[$strTag] = $request->getSession()->getFlashBag()->get(Form::SESSION_CONFIRMATION_KEY)['message'] ?? null;
