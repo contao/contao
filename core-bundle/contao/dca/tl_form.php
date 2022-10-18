@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmationMessage;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Subpalettes
@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
-		'confirmationMessage' => array
+		'confirmation' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',

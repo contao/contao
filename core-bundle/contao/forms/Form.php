@@ -605,11 +605,11 @@ class Form extends Hybrid
 		}
 
 		// Set the confirmation message, if any
-		if ($this->objModel->confirmationMessage)
+		if ($this->objModel->confirmation)
 		{
-			$confirmationMessage = $this->objModel->confirmationMessage;
-			$confirmationMessage = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmationMessage, array_map(StringUtil::specialchars(...), $arrSubmitted));
-			$confirmationMessage = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmationMessage);
+			$confirmation = $this->objModel->confirmation;
+			$confirmation = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmation, array_map(StringUtil::specialchars(...), $arrSubmitted));
+			$confirmation = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmation);
 
 			$requestStack = System::getContainer()->get('request_stack');
 			$request = $requestStack->getCurrentRequest();
@@ -619,12 +619,12 @@ class Form extends Hybrid
 			{
 				$confirmationTemplate = new FrontendTemplate('form_confirmation');
 				$confirmationTemplate->setData($this->Template->getData());
-				$confirmationTemplate->confirmation = $confirmationMessage;
+				$confirmationTemplate->confirmation = $confirmation;
 
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $confirmationMessage));
+			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $confirmation));
 		}
 
 		// Redirect or reload if there is a target page
