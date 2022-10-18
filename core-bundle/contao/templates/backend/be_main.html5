@@ -34,7 +34,6 @@
       $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
       $objCombiner->add('assets/datepicker/js/datepicker.min.js');
       $objCombiner->add('bundles/contaocore/mootao.min.js');
-      $objCombiner->add('bundles/contaocore/metawizard.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
       $objCombiner->add('bundles/contaocore/autofocus.min.js');
       $objCombiner->add('bundles/contaocore/limit-height.min.js');
