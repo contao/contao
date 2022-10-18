@@ -874,6 +874,12 @@ services:
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
+    contao.security.frontend_jwt_authenticator:
+        class: Contao\CoreBundle\Security\Authenticator\JwtAuthenticator
+        arguments:
+            - '@contao.security.jwt_manager'
+            - '@contao.security.frontend_user_provider'
+
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         public: true
@@ -890,6 +896,11 @@ services:
         arguments:
             - '@contao.framework'
             - Contao\FrontendUser
+
+    contao.security.jwt_manager:
+        class: Contao\CoreBundle\Security\JwtManager
+        arguments:
+            - '%kernel.secret%'
 
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator

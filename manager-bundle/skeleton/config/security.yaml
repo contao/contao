@@ -35,6 +35,8 @@ security:
             user_checker: contao.security.user_checker
             switch_user: false
             login_throttling: ~
+            custom_authenticators:
+                - contao.security.frontend_jwt_authenticator
 
             contao_login:
                 remember_me: true
