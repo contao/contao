@@ -13,7 +13,7 @@
   <?php endif; ?>
 
   <?php if ($this->ajax): ?>
-    <?= Contao\Template::generateScriptTag('bundles/contaocore/ajax-form.min.js', false, null) ?>
+    <script src="<?= $this->asset('ajax-form.min.js', 'contao_core') ?>"></script>
   <?php endif; ?>
 
 </div>
