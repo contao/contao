@@ -172,8 +172,8 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         if (null !== $username) {
             try {
+                /** @var User $user */
                 $user = $this->userProvider->loadUserByIdentifier($username);
-
                 $exception = $this->checkLoginAttempts($user, $exception);
             } catch (UserNotFoundException) {
             }
