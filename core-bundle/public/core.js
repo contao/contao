@@ -29,6 +29,8 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
+		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+
 		var item = $(id),
 			parent = $(el).getParent('li');
 
