@@ -11,3 +11,6 @@
 
 # Functional tests
 /var/
+
+# Node
+/node_modules/

@@ -1,0 +1,9 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/bundles/contaocore/app.1122e21d.js"
+      ]
+    }
+  }
+}

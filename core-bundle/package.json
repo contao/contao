@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "NODE_ENV=development node_modules/.bin/encore dev --watch",
+        "prod": "env NODE_ENV=production node_modules/.bin/encore production"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.19.3",
+        "@babel/preset-env": "^7.19.4",
+        "@hotwired/stimulus": "^3.1.0",
+        "@symfony/stimulus-bridge": "^3.2.1",
+        "@symfony/webpack-encore": "^4.0.0",
+        "autoprefixer": "^10.4.12",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0"
+    }
+}

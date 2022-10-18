@@ -45,6 +45,7 @@
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>
+    <script src="<?= $this->asset('app.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
