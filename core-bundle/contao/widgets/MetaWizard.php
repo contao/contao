@@ -171,7 +171,7 @@ class MetaWizard extends Widget
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)
 			{
-				$item = '<li data-language="' . $lang . '" data-controller="metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button data-action="metawizard#delete:prevent">' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '"') . '</button></span>';
+				$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '"') . '</button></span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
@@ -180,11 +180,11 @@ class MetaWizard extends Widget
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{
-						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
+						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
 					}
 					else
 					{
-						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '  data-metawizard-target="input">';
+						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '  data-contao--metawizard-target="input">';
 					}
 
 					// DCA picker
