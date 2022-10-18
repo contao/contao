@@ -11,10 +11,10 @@
   <?php else: ?>
     <?php $this->insert('form_inline', $this->arrData) ?>
   <?php endif; ?>
-
-  <?php if ($this->ajax): ?>
-    <script src="<?= $this->asset('ajax-form.min.js', 'contao_core') ?>"></script>
-  <?php endif; ?>
-
 </div>
 <!-- indexer::continue -->
+
+<?php
+if ($this->ajax) {
+  $GLOBALS['TL_JAVASCRIPT'][] = $this->asset('ajax-form.min.js', 'contao_core');
+}
