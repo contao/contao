@@ -19,7 +19,7 @@ namespace Contao;
  * @property string            $type
  * @property int               $priority
  * @property string            $comment
- * @property bool              $inactive
+ * @property bool              $disable
  * @property string            $requestHost
  * @property string            $requestPath
  * @property array|string|null $requestRequirements

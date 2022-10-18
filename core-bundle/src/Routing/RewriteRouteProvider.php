@@ -23,7 +23,7 @@ class RewriteRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
-        $rewrites = $this->connection->executeQuery("SELECT * FROM tl_url_rewrite WHERE inactive=''");
+        $rewrites = $this->connection->executeQuery("SELECT * FROM tl_url_rewrite WHERE disable=''");
 
         foreach ($rewrites->iterateAssociative() as $rule) {
             $requirements = [];

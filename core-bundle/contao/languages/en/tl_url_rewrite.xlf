@@ -26,10 +26,10 @@
             <trans-unit id="tl_url_rewrite.comment.1">
                 <source>Please enter a comment (visible only in backend).</source>
             </trans-unit>
-            <trans-unit id="tl_url_rewrite.inactive.0">
+            <trans-unit id="tl_url_rewrite.disable.0">
                 <source>Deactivate the rule</source>
             </trans-unit>
-            <trans-unit id="tl_url_rewrite.inactive.1">
+            <trans-unit id="tl_url_rewrite.disable.1">
                 <source>Deactivate the rewrite rule. It will not be loaded into the router configuration.</source>
             </trans-unit>
             <trans-unit id="tl_url_rewrite.requestHost.0">
