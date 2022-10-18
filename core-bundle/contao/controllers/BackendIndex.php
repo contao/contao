@@ -56,7 +56,7 @@ class BackendIndex extends Backend
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
-            ['%minutes%' => $lockedMinutes] = $exception->getMessageData();
+			list('%minutes%' => $lockedMinutes) = $exception->getMessageData();
 			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $lockedMinutes));
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)

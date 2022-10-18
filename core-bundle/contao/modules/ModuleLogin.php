@@ -137,7 +137,7 @@ class ModuleLogin extends Module
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
-            ['%minutes%' => $lockedMinutes] = $exception->getMessageData();
+			list('%minutes%' => $lockedMinutes) = $exception->getMessageData();
 			$this->Template->hasError = true;
 			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $lockedMinutes);
 		}
