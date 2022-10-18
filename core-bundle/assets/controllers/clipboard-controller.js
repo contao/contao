@@ -9,11 +9,15 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    static values = {
+        content: String
+    }
+
     write (event) {
         event.preventDefault();
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(this.element.href).catch(this.clipboardFallback.bind(this));
+            navigator.clipboard.writeText(this.contentValue).catch(this.clipboardFallback.bind(this));
         } else {
             this.clipboardFallback();
         }
@@ -21,7 +25,7 @@ export default class extends Controller {
 
     clipboardFallback  () {
         const input = document.createElement('input');
-        input.value = this.element.href;
+        input.value = this.contentValue;
         document.body.appendChild(input);
         input.select();
         input.setSelectionRange(0, 99999);
