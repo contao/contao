@@ -9,6 +9,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class UrlRewriteController
@@ -29,7 +30,7 @@ class UrlRewriteController
         $responseCode = $rule['responseCode'];
 
         if (410 === $responseCode) {
-            return new Response(Response::$statusTexts[$responseCode], $responseCode);
+            throw new GoneHttpException();
         }
 
         if (null !== ($uri = $this->generateUri($request, $rule))) {

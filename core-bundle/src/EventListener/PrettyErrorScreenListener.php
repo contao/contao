@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -97,6 +98,14 @@ class PrettyErrorScreenListener
 
             case $exception instanceof NotFoundHttpException:
                 $this->renderErrorScreenByType(404, $event);
+                break;
+
+            case $exception instanceof GoneHttpException:
+                $this->renderErrorScreenByType(404, $event);
+
+                if ($response = $event->getResponse()) {
+                    $response->setStatusCode(Response::HTTP_GONE);
+                }
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
