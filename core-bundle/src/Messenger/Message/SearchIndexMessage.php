@@ -16,8 +16,8 @@ use Contao\CoreBundle\Search\Document;
 
 class SearchIndexMessage implements LowPrioMessageInterface
 {
-    public const ACTION_INDEX = 'index';
-    public const ACTION_DELETE = 'delete';
+    final public const ACTION_INDEX = 'index';
+    final public const ACTION_DELETE = 'delete';
 
     private function __construct(private Document $document, private string $action)
     {
