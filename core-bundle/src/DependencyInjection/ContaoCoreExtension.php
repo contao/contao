@@ -132,6 +132,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
+        $this->handleWorkerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
@@ -221,6 +222,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->mountLocalAdapter('var/backups', 'backups', 'backups')
             ->addVirtualFilesystem('backups', 'backups')
         ;
+    }
+
+    private function handleWorkerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.cron.messenger')) {
+            return;
+        }
+
+        $cron = $container->getDefinition('contao.cron.messenger');
+        $cron->setArgument(0, $config['worker']['console_path']);
+        $cron->setArgument(1, $config['worker']['quantity']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

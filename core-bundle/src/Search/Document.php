@@ -244,4 +244,22 @@ class Document
 
         return $found ? $newData : [];
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'uri' => $this->uri,
+            'statusCode' => $this->statusCode,
+            'headers' => $this->headers,
+            'body' => $this->body,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->uri = $data['uri'];
+        $this->statusCode = $data['statusCode'];
+        $this->headers = $data['headers'];
+        $this->body = $data['body'];
+    }
 }

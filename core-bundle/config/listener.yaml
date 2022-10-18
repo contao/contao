@@ -37,7 +37,6 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - '@contao.cron'
-            - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
         tags:
@@ -205,6 +204,7 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@messenger.receiver_locator'
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
@@ -463,7 +463,7 @@ services:
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
-            - '@contao.search.indexer'
+            - '@messenger.bus.default'
             - '%fragment.path%'
         tags:
             - kernel.event_listener

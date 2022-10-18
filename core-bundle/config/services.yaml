@@ -95,7 +95,11 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
+            - '@cache.app'
             - '@?logger'
+
+    contao.cron.messenger:
+        class: Contao\CoreBundle\Cron\MessengerCron
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -452,6 +456,17 @@ services:
         public: true
         arguments:
             - '@contao.menu.matcher'
+
+    contao.messenger.message_handler.search_index:
+        class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
+        arguments:
+            - '@contao.search.indexer'
+
+    contao.messenger.transport.cron_fallback_transportFactory:
+        class: Contao\CoreBundle\Messenger\Transport\CronFallbackTransportFactory
+        arguments:
+            - '@contao.cron'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver

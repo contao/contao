@@ -31,10 +31,26 @@ framework:
                 adapter: cache.app
             doctrine.system_cache_pool:
                 adapter: cache.system
+    messenger:
+        transports:
+            sync: 'sync://'
+            contao_prio_high: 'contao_cron_fallback://contao_prio_high_doctrine?fallback=sync'
+            contao_prio_normal: 'contao_cron_fallback://contao_prio_normal_doctrine?fallback=sync'
+            contao_prio_low: 'contao_cron_fallback://contao_prio_low_doctrine?fallback=sync'
+            contao_prio_high_doctrine: 'doctrine://default?table_name=contao_queue&queue_name=prio_high&auto_setup=false'
+            contao_prio_normal_doctrine: 'doctrine://default?table_name=contao_queue&queue_name=prio_normal&auto_setup=false'
+            contao_prio_low_doctrine: 'doctrine://default?table_name=contao_queue&queue_name=prio_low&auto_setup=false'
+        routing:
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_low
+            'Contao\CoreBundle\Messenger\Message\HighPrioMessageInterface': contao_prio_high
+            'Contao\CoreBundle\Messenger\Message\NormalPrioMessageInterface': contao_prio_normal
+            'Contao\CoreBundle\Messenger\Message\LowPrioMessageInterface': contao_prio_low
 
 # Contao configuration
 contao:
     preview_script: /preview.php
+    worker:
+        console_path: '%kernel.project_dir%/vendor/bin/contao-console'
 
 # Twig configuration
 twig:

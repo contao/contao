@@ -104,6 +104,7 @@ class Configuration implements ConfigurationInterface
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
+                ->append($this->addWorkerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
@@ -117,6 +118,24 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $treeBuilder;
+    }
+
+    private function addWorkerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('worker'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('console_path')
+                    ->info('The path to the Symfony console.')
+                    ->defaultValue('%kernel.project_dir%/bin/console')
+                ->end()
+                ->scalarNode('quantity')
+                    ->info('The number of workers to run. Use 0 to disable the worker.')
+                    ->defaultValue(1)
+                ->end()
+            ->end()
+        ;
     }
 
     private function addImageNode(): NodeDefinition
