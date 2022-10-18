@@ -1178,12 +1178,6 @@
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
       </trans-unit>

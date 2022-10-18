@@ -14,11 +14,11 @@ namespace Contao\CoreBundle\Tests\Security\User;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Exception\DisabledException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserCheckerTest extends TestCase
@@ -30,7 +30,6 @@ class UserCheckerTest extends TestCase
 
         $user = $this->createMock(BackendUser::class);
         $user->username = 'foo';
-        $user->locked = 0;
         $user->disable = false;
         $user->login = true;
         $user->start = '';
@@ -55,25 +54,10 @@ class UserCheckerTest extends TestCase
         $userChecker->checkPreAuth($this->createMock(UserInterface::class));
     }
 
-    public function testThrowsAnExceptionIfTheAccountIsLocked(): void
-    {
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->username = 'foo';
-        $user->locked = time() + 5;
-
-        $userChecker = new UserChecker($this->mockContaoFramework());
-
-        $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foo" is still locked for 5 seconds');
-
-        $userChecker->checkPreAuth($user);
-    }
-
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
-        $user->locked = 0;
         $user->disable = true;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
@@ -88,7 +72,6 @@ class UserCheckerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
-        $user->locked = 0;
         $user->disable = false;
         $user->login = false;
 
@@ -106,7 +89,6 @@ class UserCheckerTest extends TestCase
 
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
-        $user->locked = 0;
         $user->disable = false;
         $user->login = true;
         $user->start = (string) $time;
@@ -126,7 +108,6 @@ class UserCheckerTest extends TestCase
 
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
-        $user->locked = 0;
         $user->disable = false;
         $user->login = true;
         $user->start = '';

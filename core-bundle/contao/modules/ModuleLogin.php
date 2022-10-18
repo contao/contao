@@ -10,11 +10,11 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 /**
  * Front end module "login".
@@ -135,10 +135,11 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		if ($exception instanceof LockedException)
+		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
+            ['%minutes%' => $lockedMinutes] = $exception->getMessageData();
 			$this->Template->hasError = true;
-			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes());
+			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $lockedMinutes);
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{

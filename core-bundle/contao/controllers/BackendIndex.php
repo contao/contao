@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
@@ -20,6 +19,7 @@ use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 /**
  * Handle back end logins and logouts.
@@ -54,9 +54,10 @@ class BackendIndex extends Backend
 		$container = System::getContainer();
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
-		if ($exception instanceof LockedException)
+		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
+            ['%minutes%' => $lockedMinutes] = $exception->getMessageData();
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $lockedMinutes));
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{
