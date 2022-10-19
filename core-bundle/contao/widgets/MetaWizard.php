@@ -171,7 +171,7 @@ class MetaWizard extends Widget
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)
 			{
-				$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '"') . '</button></span>';
+				$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg') . '</button></span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
