@@ -11,7 +11,6 @@ Encore
     .enableVersioning()
 
     .addEntry('backend', './assets/backend.js')
-    .enableStimulusBridge('./assets/controllers.json')
 ;
 
 module.exports = Encore.getWebpackConfig();
