@@ -1,35 +1,25 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['link']
     static classes = ['collapsed']
 
     static values = {
         url: String,
-        category: String,
+        requestToken: String,
         expandTitle: String,
         collapseTitle: String,
     }
 
-    toggle () {
-        if (this.isCollapsed()) {
-            this.element.classList.remove(this.collapsedClass);
-            this.linkTarget.setAttribute('aria-expanded', 'true');
-            this.linkTarget.setAttribute('title', this.collapseTitleValue);
-            this.sendRequest(true)
-        } else {
-            this.element.classList.add(this.collapsedClass);
-            this.linkTarget.setAttribute('aria-expanded', 'false');
-            this.linkTarget.setAttribute('title', this.expandTitleValue);
-            this.sendRequest(false)
-        }
+    toggle ({ currentTarget, params: { category }}) {
+        const el = currentTarget.parentNode;
+        const collapsed = el.classList.toggle(this.collapsedClass);
+
+        currentTarget.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        currentTarget.setAttribute('title', collapsed ? this.expandTitleValue : this.collapseTitleValue);
+        this.sendRequest(category, collapsed)
     }
 
-    isCollapsed () {
-        return this.element.classList.contains(this.collapsedClass);
-    }
-
-    sendRequest (collapsed) {
+    sendRequest (category, collapsed) {
         fetch(this.urlValue, {
             method: 'POST',
             headers: {
@@ -37,9 +27,9 @@ export default class extends Controller {
             },
             body: new URLSearchParams({
                 action: 'toggleNavigation',
-                id: this.categoryValue,
+                id: category,
                 state: collapsed ? 1 : 0,
-                REQUEST_TOKEN: Contao.request_token
+                REQUEST_TOKEN: this.requestTokenValue
             })
         });
     }

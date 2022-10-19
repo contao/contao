@@ -58,7 +58,6 @@ class BackendMenuListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $modules = $user->navigation();
-        $path = $this->router->generate('contao_backend');
 
         foreach ($modules as $categoryName => $categoryData) {
             $categoryNode = $tree->getChild($categoryName);
@@ -68,16 +67,10 @@ class BackendMenuListener
                     ->createItem($categoryName)
                     ->setLabel($categoryData['label'])
                     ->setUri($categoryData['href'])
-                    ->setAttribute('data-controller', 'contao--toggle-navigation')
-                    ->setAttribute('data-contao--toggle-navigation-collapsed-class', 'collapsed')
-                    ->setAttribute('data-contao--toggle-navigation-url-value', $path)
-                    ->setAttribute('data-contao--toggle-navigation-category-value', $categoryName)
-                    ->setAttribute('data-contao--toggle-navigation-expand-title-value', $this->translator->trans('MSC.expandNode', [], 'contao_default'))
-                    ->setAttribute('data-contao--toggle-navigation-collapse-title-value', $this->translator->trans('MSC.collapseNode', [], 'contao_default'))
                     ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
                     ->setLinkAttribute('title', $categoryData['title'])
-                    ->setLinkAttribute('data-contao--toggle-navigation-target', 'link')
                     ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
+                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
                     ->setLinkAttribute('aria-controls', $categoryName)
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
