@@ -168,7 +168,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         try {
-            ['username' => $username] = $this->getCredentials($request);
+            $username = $this->getCredentials($request)['username'];
 
             if (null !== $username) {
                 /** @var User $user */
