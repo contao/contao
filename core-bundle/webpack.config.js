@@ -4,13 +4,13 @@ Encore
     .setOutputPath('public/')
     .setPublicPath('/bundles/contaocore')
     .setManifestKeyPrefix('')
-    // .cleanupOutputBeforeBuild()
+    .cleanupOutputBeforeBuild(['**/*', '!core.**', '!mootao.**'])
     .disableSingleRuntimeChunk()
 
     .enableSourceMaps()
     .enableVersioning()
 
-    .addEntry('app', './assets/app.js')
+    .addEntry('backend', './assets/backend.js')
     .enableStimulusBridge('./assets/controllers.json')
 ;
 

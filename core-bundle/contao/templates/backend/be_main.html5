@@ -35,16 +35,10 @@
       $objCombiner->add('assets/datepicker/js/datepicker.min.js');
       $objCombiner->add('bundles/contaocore/mootao.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
-      $objCombiner->add('bundles/contaocore/autofocus.min.js');
-      $objCombiner->add('bundles/contaocore/limit-height.min.js');
-      $objCombiner->add('bundles/contaocore/tips.min.js');
-      $objCombiner->add('bundles/contaocore/sectionwizard.min.js');
-      $objCombiner->add('bundles/contaocore/modulewizard.min.js');
-      $objCombiner->add('bundles/contaocore/toggle-fieldset.min.js');
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>
-    <script src="<?= $this->asset('app.js', 'contao_core') ?>"></script>
+    <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>

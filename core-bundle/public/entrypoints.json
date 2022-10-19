@@ -1,8 +1,8 @@
 {
   "entrypoints": {
-    "app": {
+    "backend": {
       "js": [
-        "/bundles/contaocore/app.6edbf89c.js"
+        "/bundles/contaocore/backend.fb0e3e21.js"
       ]
     }
   }
