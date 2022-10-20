@@ -156,12 +156,15 @@ Rimuove i file &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; gene
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLog">
         <source>Debug log</source>
+        <target>Log di debug</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Se si sono verificati errori o sono state saltate delle pagine, controllare il log di debug per ulteriori informazioni.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Scarica il log</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

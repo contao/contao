@@ -117,6 +117,7 @@
         "symfony/password-hasher": "^5.4",
         "symfony/polyfill-intl-idn": "^1.0",
         "symfony/polyfill-mbstring": "^1.0",
+        "symfony/polyfill-php80": "^1.26",
         "symfony/process": "^5.4",
         "symfony/property-access": "^5.4",
         "symfony/routing": "^5.4",

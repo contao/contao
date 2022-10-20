@@ -178,6 +178,7 @@ fieldset > div {
 	margin-bottom:-2px;
 }
 fieldset.tl_tbox,fieldset.tl_box {
+	min-width:0; /* see #4890 */
 	padding:6px 15px 0;
 	border:solid #f6f6f6;
 	border-width:26px 0 0;

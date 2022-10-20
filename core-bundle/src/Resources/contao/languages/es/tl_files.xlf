@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_files.metaRgxpError">
         <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
+        <target>El campo &quot;%s&quot; para el idioma &quot;%s&quot; debe coincidir con &quot;%s&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_files.licenseRgxpError">
         <source>Field &quot;%s&quot; for language &quot;%s&quot; must contain a valid URL.</source>
+        <target>El campo &quot;%s&quot; para el idioma &quot;%s&quot; debe contener una URL válida.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
@@ -177,6 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
         <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Resultado:&lt;/strong&gt; %s añadido | %s modificado | %4$s movido | %5$s eliminado</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

@@ -1096,6 +1096,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$this->copyChilds($k, $insertID, $kk, $parentId);
 						}
+
+						if (\is_array($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] ?? null))
+						{
+							foreach ($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] as $callback)
+							{
+								$dc = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
+								$dc->table = $k;
+								$dc->id = $kk;
+
+								if (\is_array($callback))
+								{
+									$this->import($callback[0]);
+									$this->{$callback[0]}->{$callback[1]}($insertID, $dc);
+								}
+								elseif (\is_callable($callback))
+								{
+									$callback($insertID, $dc);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1476,6 +1496,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$affected++;
 			}
+		}
+
+		// There is no actual data to be deleted (see #5336)
+		if (empty($data))
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
 		}
 
 		$this->import(BackendUser::class, 'User');
@@ -3150,7 +3181,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3196,10 +3227,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (empty($varValue) || !\is_array($varValue))
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql'] ?? array());
-			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
 			}
 			else
 			{
@@ -3333,7 +3360,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$sValues[] = $trigger;
+						// Use string comparison to allow "0"
+						if ((string) $trigger !== '')
+						{
+							$sValues[] = (string) $trigger;
+						}
+
 						$key = $name . '_' . $trigger;
 
 						// Look for a subpalette
@@ -3697,7 +3729,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}

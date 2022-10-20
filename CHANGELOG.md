@@ -2,6 +2,56 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.12] (2022-10-13)
+
+**Fixed issues:**
+
+- [#5355] Backport the database configuration error checks ([m-vo])
+- [#5361] Fix the oncopy_callback ([fritzmg])
+
+## [4.13.11] (2022-10-11)
+
+**Fixed issues:**
+
+- [#5346] Ignore invalid jumpTo pages in the FAQ back end module ([leofeyer])
+- [#5350] Fix an "unknown system variable" error ([ausi])
+- [#5345] Fix the version edit URL ([leofeyer])
+- [#5326] Fix the sitemap cache invalidation in the news module ([qzminski])
+- [#5344] Fix the LONG_TERM_SUPPORT constant ([leofeyer])
+- [#5341] Fix a possible non-numeric value issue ([leofeyer])
+- [#5337] Backport the localconfig file check to Contao 4.13 ([fritzmg])
+- [#5332] Fix return type of FilterIterator ([aschempp])
+- [#5318] Trigger the oncopy_callback for child records ([leofeyer])
+- [#5317] Disable spell checking in the password field toggle ([leofeyer])
+- [#5309] Backport support for nested template paths ([m-vo])
+- [#5312] Fix another "Undefined array key" issue ([leofeyer])
+- [#5306] Use real placeholders in password fields ([leofeyer])
+- [#5302] Fix an "Undefined array key" issue in the registration module ([leofeyer])
+- [#5291] Harden the unique field check ([leofeyer])
+
+## [4.13.10] (2022-09-16)
+
+**Fixed issues:**
+
+- [#5284] Include mounted root pages in the topMostRootIds ([ausi])
+
+## [4.13.9] (2022-09-15)
+
+**Fixed issues:**
+
+- [#5277] Fix the order of the palette combiner ([ausi])
+- [#5269] Don't return empty theme directories in the TemplateLocator ([m-vo])
+- [#5268] Fix page mounts not being applied correctly ([Toflar])
+- [#5260] Fix a PHP8 issue if the confirmation key is not translated ([aschempp])
+- [#5249] Fix cache tagging for aliased content elements ([fritzmg])
+- [#5240] Improve the order of operations during the Contao setup ([m-vo])
+- [#5234] Correctly list the templates in "override all" mode ([leofeyer])
+- [#5227] Fix the password field icon ([leofeyer])
+- [#5222] Use the firewall name instead of the scope to determine the access strategy ([aschempp])
+- [#5221] Correctly validate same page alias with required parameters on multiple domains ([aschempp])
+- [#5206] Deprecate the article-to-PDF functionality ([aschempp])
+- [#5194] Deprecate the Controller::setStaticUrls() method ([leofeyer])
+
 ## [4.13.8] (2022-08-17)
 
 **Fixed issues:**
@@ -463,6 +513,10 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.12]: https://github.com/contao/contao/releases/tag/4.13.12
+[4.13.11]: https://github.com/contao/contao/releases/tag/4.13.11
+[4.13.10]: https://github.com/contao/contao/releases/tag/4.13.10
+[4.13.9]: https://github.com/contao/contao/releases/tag/4.13.9
 [4.13.8]: https://github.com/contao/contao/releases/tag/4.13.8
 [4.13.7]: https://github.com/contao/contao/releases/tag/4.13.7
 [4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
@@ -502,6 +556,36 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5355]: https://github.com/contao/contao/pull/5355
+[#5361]: https://github.com/contao/contao/pull/5361
+[#5346]: https://github.com/contao/contao/pull/5346
+[#5350]: https://github.com/contao/contao/pull/5350
+[#5345]: https://github.com/contao/contao/pull/5345
+[#5326]: https://github.com/contao/contao/pull/5326
+[#5344]: https://github.com/contao/contao/pull/5344
+[#5341]: https://github.com/contao/contao/pull/5341
+[#5337]: https://github.com/contao/contao/pull/5337
+[#5332]: https://github.com/contao/contao/pull/5332
+[#5318]: https://github.com/contao/contao/pull/5318
+[#5317]: https://github.com/contao/contao/pull/5317
+[#5309]: https://github.com/contao/contao/pull/5309
+[#5312]: https://github.com/contao/contao/pull/5312
+[#5306]: https://github.com/contao/contao/pull/5306
+[#5302]: https://github.com/contao/contao/pull/5302
+[#5291]: https://github.com/contao/contao/pull/5291
+[#5284]: https://github.com/contao/contao/pull/5284
+[#5277]: https://github.com/contao/contao/pull/5277
+[#5269]: https://github.com/contao/contao/pull/5269
+[#5268]: https://github.com/contao/contao/pull/5268
+[#5260]: https://github.com/contao/contao/pull/5260
+[#5249]: https://github.com/contao/contao/pull/5249
+[#5240]: https://github.com/contao/contao/pull/5240
+[#5234]: https://github.com/contao/contao/pull/5234
+[#5227]: https://github.com/contao/contao/pull/5227
+[#5222]: https://github.com/contao/contao/pull/5222
+[#5221]: https://github.com/contao/contao/pull/5221
+[#5206]: https://github.com/contao/contao/pull/5206
+[#5194]: https://github.com/contao/contao/pull/5194
 [#5185]: https://github.com/contao/contao/pull/5185
 [#4571]: https://github.com/contao/contao/pull/4571
 [#5099]: https://github.com/contao/contao/pull/5099

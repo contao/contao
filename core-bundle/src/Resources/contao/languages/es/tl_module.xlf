@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Aquí puede introducir una etiqueta personalizada para el menú desplegable o el enlace de descripción general.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -514,6 +515,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>Elija el módulo para &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

@@ -692,7 +692,7 @@ abstract class Backend extends Controller
 		$mode = Input::get('mode');
 
 		// For these actions the id parameter refers to the parent record
-		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		if (($act === 'paste' && $mode !== 'copy' && $mode !== 'cut') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
 		{
 			return $id;
 		}
@@ -1272,6 +1272,7 @@ abstract class Backend extends Controller
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
       var el = $("ctrl_' . $inputName . '");
+      el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
         this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
@@ -1524,7 +1525,7 @@ abstract class Backend extends Controller
 			// Folders
 			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
+				$strFolders .= $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}
 
 			// Files

@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Aquí puede establecer una URL canónica personalizada como https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -650,6 +651,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Habilite las URL canónicas en la página raíz del sitio web para habilitar esta configuración.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
