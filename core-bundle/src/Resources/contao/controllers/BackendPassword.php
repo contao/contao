@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Password;
+use Contao\Widget;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,22 +57,27 @@ class BackendPassword extends Backend
 		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
+		Controller::loadDataContainer('tl_user');
+
+		$dc = new DC_Table('tl_user');
+		$dc->id = $this->User->id;
+		$dc->activeRecord = $this->User;
+
+		$widget = new Password(Widget::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+		$widget->template = 'be_widget_pwchange';
+		$widget->dataContainer = $dc;
+
 		$objTemplate = new BackendTemplate('be_password');
+		$objTemplate->widget = $widget->parse();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
+			$widget->validate();
 			$pw = $request->request->get('password');
-			$cnf = $request->request->get('confirm');
 
-			// The passwords do not match
-			if ($pw != $cnf)
+			if ($widget->hasErrors())
 			{
-				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
-			}
-			// Password too short
-			elseif (Utf8::strlen($pw) < Config::get('minPasswordLength'))
-			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
+				Message::addError($widget->getErrorAsString());
 			}
 			// Password and username are the same
 			elseif ($pw == $this->User->username)
