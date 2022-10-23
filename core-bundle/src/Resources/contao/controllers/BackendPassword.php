@@ -11,9 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Password;
-use Contao\Widget;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
