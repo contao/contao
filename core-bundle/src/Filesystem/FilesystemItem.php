@@ -171,7 +171,7 @@ class FilesystemItem
         return $this->extraMetadata;
     }
 
-    public function getUuid(): Uuid|null
+    public function getUuid(): ?Uuid
     {
         return $this->getExtraMetadata()['uuid'] ?? null;
     }
