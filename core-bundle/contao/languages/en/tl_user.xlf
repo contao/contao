@@ -66,7 +66,7 @@
         <source>Do not collapse content elements</source>
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.1">
-        <source>Do not collapse content elements in the back end list.</source>
+        <source>Do not collapse content elements in the back end preview.</source>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
