@@ -149,6 +149,8 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels()
 	{
+		System::loadLanguageFile($this->strTable);
+
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{
