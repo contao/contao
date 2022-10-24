@@ -452,8 +452,14 @@
       <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>
