@@ -49,6 +49,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'name'
 		),
 		'label' => array
 		(

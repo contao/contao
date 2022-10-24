@@ -68,6 +68,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'headline'
 		),
 		'label' => array
 		(
