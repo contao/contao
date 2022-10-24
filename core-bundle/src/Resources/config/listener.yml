@@ -320,6 +320,13 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.toggle_nodes_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
+        arguments:
+            - '@request_stack'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.two_factor.frontend:
         class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
         arguments:

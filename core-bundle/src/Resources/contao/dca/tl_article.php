@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'toggleNodes' => array
 			(
-				'href'                => '&amp;ptg=all',
+				'href'                => 'ptg=all',
 				'class'               => 'header_toggle',
 				'showOnSelect'        => true
 			),
