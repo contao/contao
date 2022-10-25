@@ -5467,7 +5467,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($v['sorting'] ?? null)
 			{
-				$sortingFields[] = $k;
+				if (\in_array($v['flag'] ?? null, array(self::SORT_INITIAL_LETTER_BOTH, self::SORT_INITIAL_LETTERS_BOTH, self::SORT_DAY_BOTH, self::SORT_MONTH_BOTH, self::SORT_YEAR_BOTH, self::SORT_BOTH))) {
+					$sortingFields[] = $k.' DESC';
+					$sortingFields[] = $k.' ASC';
+				} else {
+					$sortingFields[] = $k;
+				}
 			}
 		}
 
@@ -5518,8 +5523,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$options_sorter = array();
 
 		// Sorting fields
-		foreach ($sortingFields as $field)
+		foreach ($sortingFields as $value)
 		{
+			$field = str_replace(array(' ASC', ' DESC'), '', $value);
 			$options_label = ($lbl = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) ? $lbl : $GLOBALS['TL_LANG']['MSC'][$field] ?? $field;
 
 			if (\is_array($options_label))
@@ -5527,7 +5533,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$options_label = $options_label[0];
 			}
 
-			$options_sorter[$options_label] = '  <option value="' . StringUtil::specialchars($field) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $field == str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '')) ? ' selected="selected"' : '') . '>' . $options_label . '</option>';
+			if (str_ends_with($value, ' ASC')) {
+				$sortKey = $options_label.'|ASC';
+				$sessionValue = $session['sorting'][$this->strTable] ?? '';
+				$options_label .= ' ('.$GLOBALS['TL_LANG']['MSC']['ascending'].')';
+			} elseif (str_ends_with($value, ' DESC')) {
+				$sortKey = $options_label.'|DESC';
+				$options_label .= ' ('.$GLOBALS['TL_LANG']['MSC']['descending'].')';
+				$sessionValue = $session['sorting'][$this->strTable] ?? '';
+			} else {
+				$sortKey = $options_label;
+				$sessionValue = str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '');
+			}
+
+			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $value == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . '>' . $options_label . '</option>';
 		}
 
 		// Sort by option values

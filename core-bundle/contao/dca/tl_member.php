@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"

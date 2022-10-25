@@ -132,6 +132,36 @@ abstract class DataContainer extends Backend
 	public const SORT_DESC = 12;
 
 	/**
+	 * Sort by initial letter ascending and descending
+	 */
+	public const SORT_INITIAL_LETTER_BOTH = 13;
+
+	/**
+	 * Sort by initial two letters ascending and descending
+	 */
+	public const SORT_INITIAL_LETTERS_BOTH = 14;
+
+	/**
+	 * Sort by day ascending and descending
+	 */
+	public const SORT_DAY_BOTH = 15;
+
+	/**
+	 * Sort by month ascending and descending
+	 */
+	public const SORT_MONTH_BOTH = 16;
+
+	/**
+	 * Sort by year ascending and descending
+	 */
+	public const SORT_YEAR_BOTH = 17;
+
+	/**
+	 * Sort ascending and descending
+	 */
+	public const SORT_BOTH = 18;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
