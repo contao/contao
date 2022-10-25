@@ -41,9 +41,9 @@ class ToggleNodesLabelListener
             return;
         }
 
-        try {
-            $session = $this->requestStack->getCurrentRequest()->getSession();
-        } catch (SessionNotFoundException $e) {
+        $session = ($request = $this->requestStack->getCurrentRequest()) ? $request->getSession() : null;
+
+        if (null === $session) {
             return;
         }
 
