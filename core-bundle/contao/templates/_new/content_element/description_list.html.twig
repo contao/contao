@@ -1,0 +1,9 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    <dl>
+        {% for item in items %}
+            <{{ item.key }}>{{ item.value|insert_tag|raw }}</{{ item.key }}>
+        {% endfor %}
+    </dl>
+{% endblock %}

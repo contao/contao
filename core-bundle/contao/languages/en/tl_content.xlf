@@ -110,6 +110,12 @@
       <trans-unit id="tl_content.listitems.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
       </trans-unit>
+      <trans-unit id="tl_content.descriptionlistitems.0">
+        <source>Description list items</source>
+      </trans-unit>
+      <trans-unit id="tl_content.descriptionlistitems.1">
+        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
+      </trans-unit>
       <trans-unit id="tl_content.tableitems.0">
         <source>Table items</source>
       </trans-unit>
