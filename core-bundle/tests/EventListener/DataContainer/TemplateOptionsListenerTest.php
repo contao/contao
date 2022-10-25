@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentProxy;
+use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
 use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
@@ -60,7 +61,7 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testReturnsElementTemplates(): void
     {
-        $callback = $this->getTemplateOptionsListener('ce_', ContentProxy::class);
+        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class);
 
         $this->assertSame(
             [
@@ -81,7 +82,7 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testReturnsModuleTemplates(): void
     {
-        $callback = $this->getTemplateOptionsListener('mod_', ModuleProxy::class);
+        $callback = $this->getDefaultTemplateOptionsListener('mod_', ModuleProxy::class);
 
         $this->assertSame(
             ['' => 'frontend_module/foo [App]'],
@@ -138,7 +139,7 @@ class TemplateOptionsListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $callback = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $requestStack, $connection);
+        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class, $requestStack, $connection);
 
         $this->assertSame(
             $expectedOptions,
@@ -170,7 +171,49 @@ class TemplateOptionsListenerTest extends TestCase
         ];
     }
 
-    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
+    public function testUsesLegacyTemplatesForOptInLegacyContentElements(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter
+            ->method('getTemplateGroup')
+            ->with('ce_text_', [], 'ce_text')
+            ->willReturn(['' => '[result from legacy class]'])
+        ;
+
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+
+        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
+        $listener->setDefaultIdentifiersByType(['text' => 'content_element/text']);
+
+        $GLOBALS['TL_CTE']['texts']['text'] = ContentText::class;
+
+        $this->assertSame(
+            ['' => '[result from legacy class]'],
+            $listener($this->mockDataContainer('tl_content', ['type' => 'text']))
+        );
+    }
+
+    public function testUsesLegacyTemplatesIfDefined(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter
+            ->method('getTemplateGroup')
+            ->with('ce_custom_', [], 'ce_custom')
+            ->willReturn(['' => '[result from legacy class]'])
+        ;
+
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+
+        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
+        $listener->setDefaultIdentifiersByType(['example' => 'ce_custom']);
+
+        $this->assertSame(
+            ['' => '[result from legacy class]'],
+            $listener($this->mockDataContainer('tl_content', ['type' => 'example']))
+        );
+    }
+
+    private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
@@ -188,6 +231,23 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
+        $listener = $this->getTemplateOptionsListener($legacyTemplatePrefix, $legacyProxyClass, null, $requestStack, $connection, $hierarchy);
+
+        $listener->setDefaultIdentifiersByType([
+            'foo_element_type' => 'content_element/foo',
+            'foo_module_type' => 'frontend_module/foo',
+        ]);
+
+        return $listener;
+    }
+
+    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null,): TemplateOptionsListener
+    {
+        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
+        $connection ??= $this->createMock(Connection::class);
+        $framework ??= $this->mockFramework();
+        $requestStack ??= new RequestStack();
+
         $finder = new Finder(
             $hierarchy,
             $this->createMock(ThemeNamespace::class),
@@ -200,21 +260,15 @@ class TemplateOptionsListenerTest extends TestCase
             ->willReturn($finder)
         ;
 
-        $listener = new TemplateOptionsListener(
+        return new TemplateOptionsListener(
             $finderFactory,
-            $connection ?? $this->createMock(Connection::class),
-            $this->mockFramework(),
-            $requestStack ?? new RequestStack(),
+            $connection,
+            $framework,
+            $requestStack,
+            $hierarchy,
             $legacyTemplatePrefix,
             $legacyProxyClass
         );
-
-        $listener->setDefaultIdentifiersByType([
-            'foo_element_type' => 'content_element/foo',
-            'foo_module_type' => 'frontend_module/foo',
-        ]);
-
-        return $listener;
     }
 
     /**

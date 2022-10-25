@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,6 +32,7 @@ class TemplateOptionsListener
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
+        private readonly TemplateHierarchyInterface $hierarchy,
         private readonly string $legacyTemplatePrefix,
         private readonly string|null $legacyProxyClass = null,
     ) {
@@ -52,19 +54,9 @@ class TemplateOptionsListener
         }
 
         $identifier = $this->defaultIdentifiersByType[$type] ?? null;
-        $legacyDefaultIdentifier = $this->getLegacyDefaultIdentifier($type);
 
-        // Handle legacy elements that aren't implemented as fragment
-        // controllers or that still use the old template naming scheme
-        if ($legacyDefaultIdentifier || null === $identifier || !str_contains($identifier, '/')) {
-            $identifier = $legacyDefaultIdentifier ?? $this->legacyTemplatePrefix.$type;
-
-            return [
-                ...($overrideAll ? ['' => '-'] : []),
-                ...$this->framework
-                    ->getAdapter(Controller::class)
-                    ->getTemplateGroup($identifier.'_', [], $identifier),
-            ];
+        if (null !== ($legacyTemplateOptions = $this->handleLegacyTemplates($type, $identifier, $overrideAll))) {
+            return $legacyTemplateOptions;
         }
 
         $templateOptions = $this->finderFactory
@@ -82,7 +74,15 @@ class TemplateOptionsListener
         // 'ce_foo.html.twig' template - although this template will be
         // rendered for BC reasons, the template selection won't be possible.
         if (0 === \count($templateOptions)) {
-            throw new \LogicException(sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. Did you forget to create the default template?', $identifier));
+            $guessedType = $this->legacyTemplatePrefix.$type;
+
+            if (isset($this->hierarchy->getInheritanceChains()[$guessedType])) {
+                $help = sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
+            } else {
+                $help = 'Did you forget to create the default template?';
+            }
+
+            throw new \LogicException(sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. %s', $identifier, $help));
         }
 
         return $templateOptions;
@@ -95,6 +95,32 @@ class TemplateOptionsListener
     public function setDefaultIdentifiersByType(array $defaultIdentifiersByType): void
     {
         $this->defaultIdentifiersByType = $defaultIdentifiersByType;
+    }
+
+    /**
+     * Handle legacy elements that aren't implemented as fragment controllers
+     * or that still use the old template naming scheme.
+     */
+    private function handleLegacyTemplates(string $type, string|null $identifier, bool $overrideAll): array|null
+    {
+        $isModernIdentifier = $identifier && str_contains($identifier, '/');
+        $legacyDefaultIdentifier = $this->getLegacyDefaultIdentifier($type);
+
+        // Do not use the legacy logic for modern templates
+        if (null !== $identifier && $isModernIdentifier && !$legacyDefaultIdentifier) {
+            return null;
+        }
+
+        if (null === $identifier || $isModernIdentifier) {
+            $identifier = $legacyDefaultIdentifier ?? $this->legacyTemplatePrefix.$type;
+        }
+
+        return [
+            ...($overrideAll ? ['' => '-'] : []),
+            ...$this->framework
+                ->getAdapter(Controller::class)
+                ->getTemplateGroup($identifier.'_', [], $identifier),
+        ];
     }
 
     /**

@@ -215,6 +215,7 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - ce_
             - Contao\ContentProxy
         tags:
@@ -240,6 +241,7 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - form_
         tags:
             - { name: contao.callback, table: tl_form_field, target: fields.customTpl.options }
