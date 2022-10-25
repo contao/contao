@@ -201,7 +201,7 @@ class FormTextField extends Widget
 			case 'minval':
 				if ($this->rgxp == 'digit')
 				{
-					return $this->arrAttributes['min'];
+					return $this->arrAttributes['min'] ?? null;
 				}
 
 				return parent::__get($strKey);
@@ -210,7 +210,7 @@ class FormTextField extends Widget
 			case 'maxval':
 				if ($this->rgxp == 'digit')
 				{
-					return $this->arrAttributes['max'];
+					return $this->arrAttributes['max'] ?? null;
 				}
 
 				return parent::__get($strKey);
