@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
