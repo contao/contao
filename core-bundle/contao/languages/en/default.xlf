@@ -329,7 +329,7 @@
       <trans-unit id="CTE.description_list.0">
         <source>Description list</source>
       </trans-unit>
-      <trans-unit id="CTE.definition_list.1">
+      <trans-unit id="CTE.description_list.1">
         <source>Generates an ordered or unordered list.</source>
       </trans-unit>
       <trans-unit id="CTE.table.0">
