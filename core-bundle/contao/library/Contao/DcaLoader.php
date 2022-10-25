@@ -149,8 +149,6 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels()
 	{
-		System::loadLanguageFile($this->strTable);
-
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{
@@ -166,13 +164,11 @@ class DcaLoader extends Controller
 					continue;
 				}
 
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k]))
+				$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
+
+				if (!isset($GLOBALS['TL_LANG'][$this->strTable][$k]) && isset($GLOBALS['TL_LANG']['DCA'][$k]))
 				{
-					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
-				}
-				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
-				{
-					$v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
+					$GLOBALS['TL_LANG'][$this->strTable][$k] = $GLOBALS['TL_LANG']['DCA'][$k];
 				}
 			}
 
