@@ -391,10 +391,18 @@ abstract class Model
 	 *
 	 * @return array<string,array<string,string>>
 	 */
-	public static function getColumnCastTypes(): array
+	public static function getColumnCastTypes(bool $fromDatabase): array
 	{
 		$types = array();
-		$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
+
+		if ($fromDatabase)
+		{
+			$tables = System::getContainer()->get('database_connection')->createSchemaManager()->createSchema()->getTables();
+		}
+		else
+		{
+			$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
+		}
 
 		foreach ($tables as $table)
 		{
@@ -440,7 +448,7 @@ abstract class Model
 			}
 			else
 			{
-				self::$arrColumnCastTypes = self::getColumnCastTypes();
+				self::$arrColumnCastTypes = self::getColumnCastTypes(true);
 			}
 		}
 
