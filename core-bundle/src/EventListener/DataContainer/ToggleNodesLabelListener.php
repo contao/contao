@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -7,8 +9,6 @@
  *
  * @license LGPL-3.0-or-later
  */
-
-declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
@@ -30,10 +30,10 @@ class ToggleNodesLabelListener
         $this->requestStack = $requestStack;
     }
 
-    public function __invoke(string $table)
+    public function __invoke(string $table): void
     {
         if (
-            DataContainer::getDriverForTable($table) !== DC_Table::class
+            DC_Table::class !== DataContainer::getDriverForTable($table)
             || !isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])
             || isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'])
             || 'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
@@ -51,13 +51,13 @@ class ToggleNodesLabelListener
         $sessionBag = $session->getBag('contao_backend');
         $session = $sessionBag->all();
 
-        $node = $table . '_tree';
+        $node = $table.'_tree';
 
-        if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] == 6) {
-            $node = $table . '_' . ($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? '') . '_tree';
+        if (6 === (int) ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? 0)) {
+            $node = $table.'_'.($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? '').'_tree';
         }
 
-        if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1) {
+        if (empty($session[$node]) || !\is_array($session[$node]) || 1 !== (int) current($session[$node])) {
             $GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'] = &$GLOBALS['TL_LANG']['DCA']['expandNodes'];
         } else {
             $GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'] = &$GLOBALS['TL_LANG']['DCA']['collapseNodes'];
