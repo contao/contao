@@ -5469,8 +5469,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\in_array($v['flag'] ?? null, array(self::SORT_INITIAL_LETTER_BOTH, self::SORT_INITIAL_LETTERS_BOTH, self::SORT_DAY_BOTH, self::SORT_MONTH_BOTH, self::SORT_YEAR_BOTH, self::SORT_BOTH)))
 				{
-					$sortingFields[] = $k.' DESC';
-					$sortingFields[] = $k.' ASC';
+					$sortingFields[] = $k . ' DESC';
+					$sortingFields[] = $k . ' ASC';
 				}
 				else
 				{
@@ -5538,14 +5538,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (str_ends_with($value, ' ASC'))
 			{
-				$sortKey = $options_label.'|ASC';
+				$sortKey = $options_label . '|ASC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$options_label .= ' ('.$GLOBALS['TL_LANG']['MSC']['ascending'].')';
+				$options_label .= ' (' . $GLOBALS['TL_LANG']['MSC']['ascending'] . ')';
 			}
 			elseif (str_ends_with($value, ' DESC'))
 			{
-				$sortKey = $options_label.'|DESC';
-				$options_label .= ' ('.$GLOBALS['TL_LANG']['MSC']['descending'].')';
+				$sortKey = $options_label . '|DESC';
+				$options_label .= ' (' . $GLOBALS['TL_LANG']['MSC']['descending'] . ')';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
 			}
 			else
