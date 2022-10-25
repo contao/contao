@@ -26,7 +26,7 @@ class AdministratorEmailListener
     {
     }
 
-    public function __invoke(): ?string
+    public function __invoke(): string|null
     {
         if (Config::get('adminEmail')) {
             return null;
