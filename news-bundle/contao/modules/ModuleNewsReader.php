@@ -53,6 +53,11 @@ class ModuleNewsReader extends ModuleNews
 			return $objTemplate->parse();
 		}
 
+		if (null === Input::get('auto_item'))
+		{
+			return '';
+		}
+
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))

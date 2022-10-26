@@ -50,6 +50,11 @@ class ModuleFaqReader extends Module
 			return $objTemplate->parse();
 		}
 
+		if (null === Input::get('auto_item'))
+		{
+			return '';
+		}
+
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))

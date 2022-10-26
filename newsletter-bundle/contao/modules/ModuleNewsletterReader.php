@@ -48,6 +48,11 @@ class ModuleNewsletterReader extends Module
 			return $objTemplate->parse();
 		}
 
+		if (null === Input::get('auto_item'))
+		{
+			return '';
+		}
+
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))

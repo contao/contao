@@ -54,6 +54,11 @@ class ModuleEventReader extends Events
 			return $objTemplate->parse();
 		}
 
+		if (null === Input::get('auto_item'))
+		{
+			return '';
+		}
+
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
