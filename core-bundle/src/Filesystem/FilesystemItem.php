@@ -158,7 +158,7 @@ class FilesystemItem implements \Stringable
         return $this->extraMetadata;
     }
 
-    public function getUuid(): ?Uuid
+    public function getUuid(): Uuid|null
     {
         return $this->getExtraMetadata()['uuid'] ?? null;
     }

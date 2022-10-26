@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
-    public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
+    final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
 
     private PageModel $pageModel;
     private string|null $urlPrefix;
