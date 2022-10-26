@@ -27,6 +27,7 @@ use Contao\Model\Collection;
  * @property boolean           $thumbnails
  * @property boolean           $useRTE
  * @property boolean           $useCE
+ * @property boolean           $doNotCollapse
  * @property string            $password
  * @property boolean           $pwChange
  * @property boolean           $admin

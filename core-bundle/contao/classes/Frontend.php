@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,7 +138,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		return System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
+		return System::getContainer()->get('router')->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
 	}
 
 	/**

@@ -2765,7 +2765,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->strField = Input::get('field');
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['reverseToggle'] ?? false) !== true)
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
 		}
@@ -5418,7 +5418,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
 			}
 
-			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((isset($session['search'][$this->strTable]['field']) && $session['search'][$this->strTable]['field'] == $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
 		}
 
 		// Sort by option values

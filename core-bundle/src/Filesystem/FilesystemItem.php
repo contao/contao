@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @experimental
@@ -152,10 +153,14 @@ class FilesystemItem implements \Stringable
 
     public function getExtraMetadata(): array
     {
-        $this->assertIsFile(__FUNCTION__);
         $this->resolveIfClosure($this->extraMetadata);
 
         return $this->extraMetadata;
+    }
+
+    public function getUuid(): Uuid|null
+    {
+        return $this->getExtraMetadata()['uuid'] ?? null;
     }
 
     private function assertIsFile(string $method): void

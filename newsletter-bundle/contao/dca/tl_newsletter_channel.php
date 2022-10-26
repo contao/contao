@@ -61,7 +61,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'search,limit'
+			'panelLayout'             => 'search,limit',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
