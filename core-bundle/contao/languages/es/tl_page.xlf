@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="es">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="es">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -190,8 +190,7 @@
         <target>URL personalizada</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Aquí puede establecer una URL canónica personalizada.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -254,8 +253,7 @@
         <target>Prefijo de URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
-        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Ingrese un prefijo de URL (p. ej., el idioma) que se antepondrá a los alias de esta página raíz.</target>
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -416,22 +414,6 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
         <target>Ocultar la página en el menú de navegación.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-        <target>Mostrar sólo a los invitados</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-        <target>Ocultar la página si una miembro está conectado.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-        <target>Navegación por pestañas</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-        <target>Este número especifica la posición de elemento de navegación actual en el orden de las pestañas. Puede introducir un número entre 1 y 32767.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -636,10 +618,6 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Editar artículos de la página con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-        <target>Deshabilitar el modo de enrutamiento heredado para habilitar esta configuración.</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>

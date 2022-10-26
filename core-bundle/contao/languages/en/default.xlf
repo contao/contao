@@ -1502,6 +1502,15 @@
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
       </trans-unit>
@@ -2071,9 +2080,6 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
-      </trans-unit>
-      <trans-unit id="MSC.draft">
-        <source>Draft</source>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>

@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/tl_calendar.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="tl_calendar.title.0">
         <source>Title</source>
-        <target>Titolo</target>
+        <target>Nome del modulo</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title.1">
         <source>Please enter the calendar title.</source>
@@ -165,13 +165,9 @@
         <source>Edit calendar ID %s</source>
         <target>Modifica il calendario ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.editmeta">
-        <source>Edit the calendar settings</source>
-        <target>Modifica le impostazioni del calendario</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.editheader">
-        <source>Edit the settings of calendar ID %s</source>
-        <target>Modificare le impostazioni calendario ID% s</target>
+      <trans-unit id="tl_calendar.children">
+        <source>Edit the events of calendar ID %s</source>
+        <target>Modifica gli eventi del calendario ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy">
         <source>Duplicate calendar ID %s</source>

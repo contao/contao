@@ -73,50 +73,58 @@ class DefaultOperationsListener
         $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
-        if ($ctable) {
+        $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
+        $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
+
+        if ($canEdit) {
             $operations += [
                 'edit' => [
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                 ],
+            ];
+        }
+
+        if ($ctable) {
+            $operations += [
                 'children' => [
                     'href' => 'table='.$ctable,
                     'icon' => 'children.svg',
                 ],
             ];
-        } else {
-            $operations['edit'] = [
-                'href' => 'act=edit',
-                'icon' => 'edit.svg',
-                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
-            ];
         }
 
         if ($hasPtable || $isTreeMode) {
-            $operations['copy'] = [
-                'href' => 'act=paste&amp;mode=copy',
-                'icon' => 'copy.svg',
-                'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
-            ];
-
-            if ($isTreeMode) {
-                $operations['copyChilds'] = [
-                    'href' => 'act=paste&amp;mode=copy&amp;childs=1',
-                    'icon' => 'copychilds.svg',
+            if ($canCopy) {
+                $operations['copy'] = [
+                    'href' => 'act=paste&amp;mode=copy',
+                    'icon' => 'copy.svg',
                     'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->copyChildsCallback($table),
+                    'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
                 ];
+
+                if ($isTreeMode) {
+                    $operations['copyChilds'] = [
+                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
+                        'icon' => 'copychilds.svg',
+                        'attributes' => 'onclick="Backend.getScrollOffset()"',
+                        'button_callback' => $this->copyChildsCallback($table),
+                    ];
+                }
             }
 
-            $operations['cut'] = [
-                'href' => 'act=paste&amp;mode=cut',
-                'icon' => 'cut.svg',
-                'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
-            ];
-        } else {
+            if ($canSort) {
+                $operations['cut'] = [
+                    'href' => 'act=paste&amp;mode=cut',
+                    'icon' => 'cut.svg',
+                    'attributes' => 'onclick="Backend.getScrollOffset()"',
+                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                ];
+            }
+        } elseif ($canCopy) {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
@@ -124,14 +132,16 @@ class DefaultOperationsListener
             ];
         }
 
-        $operations['delete'] = [
-            'href' => 'act=delete',
-            'icon' => 'delete.svg',
-            'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-            'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
-        ];
+        if ($canDelete) {
+            $operations['delete'] = [
+                'href' => 'act=delete',
+                'icon' => 'delete.svg',
+                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
+                'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
+            ];
+        }
 
-        if (null !== ($toggleField = $this->getToggleField($table))) {
+        if ($canEdit && null !== ($toggleField = $this->getToggleField($table))) {
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',

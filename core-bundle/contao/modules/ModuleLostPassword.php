@@ -212,7 +212,7 @@ class ModuleLostPassword extends Module
 		$objVersions = new Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Define the form field
@@ -227,7 +227,7 @@ class ModuleLostPassword extends Module
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))

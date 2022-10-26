@@ -34,7 +34,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
-		'ptable'                      => 'tl_article',
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
@@ -63,6 +62,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType')
 		),
@@ -163,7 +163,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
+			'search'                  => true
 		),
 		'pid' => array
 		(
@@ -861,7 +862,7 @@ class tl_content extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
 										 ->execute($dc->currentPid);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -959,12 +960,9 @@ class tl_content extends Backend
 	{
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
-			foreach (array_keys($v) as $kk)
+			if (array_key_exists($element, $v))
 			{
-				if ($kk == $element)
-				{
-					return $k;
-				}
+				return $k;
 			}
 		}
 
@@ -998,6 +996,7 @@ class tl_content extends Backend
 			case 'download':
 			case 'downloads':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
+				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
 		}
 	}
@@ -1023,7 +1022,7 @@ class tl_content extends Backend
 			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
 									 ->execute();
 
-			$objSession = System::getContainer()->get('session');
+			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
 			$objSession->replace($session);
@@ -1050,7 +1049,7 @@ class tl_content extends Backend
 			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Prevent editing content elements with not allowed types
 		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
@@ -1204,7 +1203,7 @@ class tl_content extends Backend
 		}
 
 		// Add the protection status
-		if ($arrRow['protected'])
+		if ($arrRow['protected'] ?? null)
 		{
 			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
 			$groupNames = array();
@@ -1234,7 +1233,7 @@ class tl_content extends Backend
 		// Limit the element's height
 		if (!Config::get('doNotCollapse'))
 		{
-			$class .=  ' h40';
+			$class .= ' h40';
 		}
 
 		if ($arrRow['start'] && $arrRow['stop'])
@@ -1649,6 +1648,6 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_article.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="tl_article.title.0">
         <source>Title</source>
@@ -33,14 +33,6 @@
         <source>Please choose the layout section you want the article to be displayed in.</source>
         <target>Prosím přiřaďte článek do sloupce, záhlaví, zápatí nebo vlastní sekce, aby se zobrazil ve Vámi požadované sekci.</target>
       </trans-unit>
-      <trans-unit id="tl_article.keywords.0">
-        <source>Meta keywords</source>
-        <target>Klíčová slova</target>
-      </trans-unit>
-      <trans-unit id="tl_article.keywords.1">
-        <source>Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).</source>
-        <target>Zde můžete zadat seznam klíčových slov oddělených čárkou. Klíčová slova, nicméně, již nejsou relevantní pro většinu vyhledávačů (včetně Google).</target>
-      </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
         <target>Styl ukázky články CSS/ID</target>
@@ -72,14 +64,6 @@
       <trans-unit id="tl_article.printable.1">
         <source>Here you can choose which options are available.</source>
         <target>Tisknout článek jako PDF (kaskádový styl s typem print)</target>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.0">
-        <source>Show to guests only</source>
-        <target>Ukázat pouze hostům</target>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.1">
-        <source>Hide the article if a member is logged in.</source>
-        <target>Skrýt článek, pokud je člen přihlášený.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
         <source>Article template</source>
@@ -150,8 +134,8 @@
         <target>Název a autor</target>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
-        <source>Section and keywords</source>
-        <target>Klíčová slova pro hledání</target>
+        <source>Section</source>
+        <target>Oddělení</target>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>
@@ -209,9 +193,9 @@
         <source>Edit article ID %s</source>
         <target>Upravit článek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader">
-        <source>Edit the settings of article ID %s</source>
-        <target>Upravit nastavení ID %s článku</target>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Upravit obsah elementu článku ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>

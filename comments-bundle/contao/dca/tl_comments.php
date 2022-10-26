@@ -70,7 +70,8 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'comment'
 		),
 		'label' => array
 		(
@@ -202,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -294,7 +295,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))
@@ -333,7 +334,7 @@ class tl_comments extends Backend
 	public function notifyOfReply(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
-		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
+		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifiedReply)
 		{
 			return;
 		}
@@ -348,8 +349,8 @@ class tl_comments extends Backend
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
 				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
@@ -473,9 +474,9 @@ class tl_comments extends Backend
 	 */
 	public function sendNotifications($varValue)
 	{
-		if ($varValue)
+		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk(Input::get('id')));
+			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
 		}
 
 		return $varValue;

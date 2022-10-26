@@ -39,20 +39,10 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'onload_callback' => array
 		(
 			array('tl_news', 'checkPermission'),
-			array('tl_news', 'generateFeed')
-		),
-		'oncut_callback' => array
-		(
-			array('tl_news', 'scheduleUpdate')
-		),
-		'ondelete_callback' => array
-		(
-			array('tl_news', 'scheduleUpdate')
 		),
 		'onsubmit_callback' => array
 		(
 			array('tl_news', 'adjustTime'),
-			array('tl_news', 'scheduleUpdate')
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
@@ -78,6 +68,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'headline'
 		),
 		'label' => array
 		(
@@ -180,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
@@ -566,7 +557,7 @@ class tl_news extends Backend
 				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
 											 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
@@ -821,68 +812,6 @@ class tl_news extends Backend
 	}
 
 	/**
-	 * Check for modified news feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('session');
-		$session = $objSession->get('news_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$this->import(News::class, 'News');
-
-		foreach ($session as $id)
-		{
-			$this->News->generateFeedsByArchive($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('news_feed_updater', null);
-	}
-
-	/**
-	 * Schedule a news feed update
-	 *
-	 * This method is triggered when a single news item or multiple news
-	 * items are modified (edit/editAll), moved (cut/cutAll) or deleted
-	 * (delete/deleteAll). Since duplicated items are unpublished by default,
-	 * it is not necessary to schedule updates on copyAll as well.
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function scheduleUpdate(DataContainer $dc)
-	{
-		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->pid || Input::get('act') == 'copy')
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('session');
-
-		// Store the ID in the session
-		$session = $objSession->get('news_feed_updater');
-		$session[] = $dc->activeRecord->pid;
-		$objSession->set('news_feed_updater', array_unique($session));
-	}
-
-	/**
 	 * @param DataContainer $dc
 	 *
 	 * @return array
@@ -890,6 +819,12 @@ class tl_news extends Backend
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
+
+		if ($archiveModel === null)
+		{
+			return $tags;
+		}
+
 		$pageModel = PageModel::findWithDetails($archiveModel->jumpTo);
 
 		if ($pageModel === null)

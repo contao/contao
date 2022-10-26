@@ -1,0 +1,27 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% block content %}
+    {% if as_editor_view %}
+        {% block editor_view %}
+            <ul>
+                {% for source_file in source_files %}
+                    <li>
+                        <span>{{ source_file.name }}</span>
+                        <span class="size">({{ source_file.fileSize|format_bytes }})</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endblock %}
+    {% else %}
+        {{ block('figure_component') }}
+    {% endif %}
+{% endblock %}
+
+{% block media %}
+    <{{ figure.media.type }}{{ figure.media.attributes }}>
+        {% for source_attributes in figure.media.sources %}
+            <source{{ source_attributes }}>
+        {% endfor %}
+    </{{ figure.media.type }}>
+{% endblock %}

@@ -102,7 +102,7 @@ class OptInModel extends Model
 		$objDatabase = Database::getInstance();
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) ORDER BY $t.createdOn DESC")
-								 ->execute($strTable, $arrIds);
+								 ->execute($strTable);
 
 		if ($objResult->numRows < 1)
 		{

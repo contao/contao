@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoManagerBundle.en.xlf" target-language="tr">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoManagerBundle.en.xlf" target-language="tr">
     <body>
       <trans-unit id="1" resname="debug_mode">
         <source>Debug mode</source>
@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="2" resname="contao_manager_title">
         <source>Manage updates and extensions and maintain the application</source>
-        <target>Güncellemeleri ve uzantıları yönetin ve uygulamayı sürdürün</target>
+        <target>Güncellemeleri ve eklentileri yöneterek uygulamayı bakımlı tutun</target>
       </trans-unit>
     </body>
   </file>

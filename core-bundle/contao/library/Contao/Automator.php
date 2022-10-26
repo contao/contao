@@ -14,6 +14,7 @@ use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Provide methods to run automated jobs.
@@ -364,9 +365,10 @@ class Automator extends System
 	public function generateSymlinks()
 	{
 		$container = System::getContainer();
+		$webDir = Path::makeRelative($container->getParameter('contao.web_dir'), $container->getParameter('kernel.project_dir'));
 
 		$command = $container->get('contao.command.symlinks');
-		$status = $command->run(new ArgvInput(array()), new NullOutput());
+		$status = $command->run(new ArgvInput(array('', $webDir)), new NullOutput());
 
 		if ($status > 0)
 		{

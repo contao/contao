@@ -4,7 +4,7 @@ declare(ticks=1,strict_types=1);
 
 use Contao\DC_Table;
 
-$GLOBALS['TL_DCA']['tl_test'] = [
+$GLOBALS['TL_DCA']['tl_test_with_declare5'] = [
     'config' => [
         'dataContainer' => DC_Table::class,
         'sql' => [

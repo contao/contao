@@ -92,14 +92,12 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetLightboxFailsIfNotSet(): void
+    public function testGetLightboxReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getLightbox();
+        $this->assertNull($figure->getLightbox());
     }
 
     public function testGetMetadata(): void
@@ -134,14 +132,12 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetMetadataFailsIfNotSet(): void
+    public function testGetMetadataReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getMetadata();
+        $this->assertNull($figure->getMetadata());
     }
 
     /**

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -66,11 +67,13 @@ class TokenChecker
      */
     public function hasFrontendGuest(): bool
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
             return false;
         }
 
-        return $request->getSession()->has(FrontendPreviewAuthenticator::SESSION_NAME);
+        return $session->has(FrontendPreviewAuthenticator::SESSION_NAME);
     }
 
     /**
@@ -106,7 +109,7 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request || !$request->attributes->get('_preview', false)) {
             return false;
@@ -148,7 +151,7 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): TokenInterface|null
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -165,7 +168,7 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
             return null;
         }
 

@@ -119,7 +119,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             return $this->defaultLocales;
         }
 
-        $page = $this->requestStack->getMainRequest()?->attributes->get('pageModel');
+        $page = $this->requestStack->getCurrentRequest()?->attributes->get('pageModel');
 
         if (!$page instanceof PageModel) {
             return [];

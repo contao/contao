@@ -75,9 +75,6 @@ class PageRegular extends Frontend
 
 		System::loadLanguageFile('default');
 
-		// Static URLs
-		$this->setStaticUrls();
-
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
 

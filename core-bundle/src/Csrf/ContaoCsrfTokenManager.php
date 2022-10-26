@@ -65,7 +65,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     public function isTokenValid(CsrfToken $token): bool
     {
         if (
-            ($request = $this->requestStack->getMainRequest())
+            ($request = $this->requestStack->getCurrentRequest())
             && 'POST' === $request->getRealMethod()
             && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {

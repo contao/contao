@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_theme.name.0">
         <source>Theme title</source>
@@ -41,21 +41,13 @@
         <source>Here you can choose a screenshot of the theme.</source>
         <target>Kies hier een schermafdruk van het thema.</target>
       </trans-unit>
-      <trans-unit id="tl_theme.vars.0">
-        <source>Global variables</source>
-        <target>Global variabelen</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars.1">
-        <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Hier kunt u de global variabelen voor de style sheets van het thema bepalen (bijv. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Bronbestanden</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto files to be imported.</source>
-        <target>Kies één of meer .cto bestanden uit de bestands directory.</target>
+        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <target>Hier kunt u een of meer .cto of .sql bestanden uploaden die moeten worden geïmporteerd.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -72,10 +64,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Configuratie</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars_legend">
-        <source>Global variables</source>
-        <target>Global variabelen</target>
       </trans-unit>
       <trans-unit id="tl_theme.theme_imported">
         <source>Theme &quot;%s&quot; has been imported.</source>
@@ -128,6 +116,34 @@
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>
         <target>Importeer een thema</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Importeer een voorbeeldwebsite</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren. Alle bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, selecteert u hier geen bestand.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Importtype</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Hier kunt u het importtype selecteren.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Volledige SQL import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Alleen gegevens</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Alleen gegevens zonder tabel leeg te maken</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>

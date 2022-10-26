@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
+    final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
+
     private PageModel $pageModel;
     private string|null $urlPrefix;
     private string|null $urlSuffix;
@@ -130,7 +132,7 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): object|null
     {
         return $this->content;
     }

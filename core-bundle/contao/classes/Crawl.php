@@ -125,7 +125,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			}
 			else
 			{
-				$session = System::getContainer()->get('session');
+				$session = System::getContainer()->get('request_stack')->getSession();
 				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
 
 				// Closing the session is necessary here as otherwise we run into our own session lock

@@ -12,7 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\BadRequestException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -28,6 +29,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
@@ -132,7 +134,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		parent::__construct();
 
 		$container = System::getContainer();
-		$objSession = $container->get('session');
+		$objSession = $container->get('request_stack')->getSession();
 
 		// Check the request token (see #4007)
 		if (Input::get('act') !== null)
@@ -281,7 +283,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	public function showAll()
 	{
 		$return = '';
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
@@ -624,13 +626,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * Create a new folder
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function create()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
 		$this->import(Files::class, 'Files');
@@ -644,7 +645,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('id' => $id, 'pid' => $strFolder)));
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -661,13 +662,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $source
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function cut($source=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		$strFolder = Input::get('pid', true);
@@ -693,10 +694,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -772,22 +773,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Move all selected files and folders
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function cutAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			$this->redirect($this->getReferer());
+			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -815,13 +816,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $destination
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
+	 * @throws UnprocessableEntityHttpException
 	 */
 	public function copy($source=null, $destination=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		$strFolder = Input::get('pid', true);
@@ -853,7 +854,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new UnprocessableEntityHttpException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
 		$this->denyAccessUnlessGranted(
@@ -866,7 +867,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))
 		);
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -959,22 +960,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Move all selected files and folders
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copyAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			$this->redirect($this->getReferer());
+			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -1001,13 +1002,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $source
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function delete($source=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		$blnDoNotRedirect = ($source !== null);
@@ -1083,16 +1083,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Delete all files and folders that are currently shown
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function deleteAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1152,7 +1152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			$objSession = System::getContainer()->get('session');
+			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
 			$objSession->set('CLIPBOARD', $arrClipboard);
@@ -1233,7 +1233,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				if ($blnIsAjax)
 				{
-					$objSession = System::getContainer()->get('session');
+					$objSession = System::getContainer()->get('request_stack')->getSession();
 
 					if ($objSession->isStarted())
 					{
@@ -1643,7 +1643,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function editAll()
 	{
@@ -1651,12 +1651,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$security = System::getContainer()->get('security.helper');
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
 		$session = $objSession->all();
@@ -1963,7 +1963,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
+	 * @throws UnprocessableEntityHttpException
+	 * @throws NotFoundException
 	 */
 	public function source()
 	{
@@ -1971,12 +1973,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (is_dir($this->strRootDir . '/' . $this->intId))
 		{
-			throw new InternalServerErrorException('Folder "' . $this->intId . '" cannot be edited.');
+			throw new UnprocessableEntityHttpException('Folder "' . $this->intId . '" cannot be edited.');
 		}
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId))
 		{
-			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
+			throw new NotFoundException('File "' . $this->intId . '" does not exist.');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $this->intId)));
@@ -2321,7 +2323,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Set the new value so the input field can show it
 			if (Input::get('act') == 'editAll')
 			{
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				if (($index = array_search($this->strPath . '/' . $this->varValue . $this->strExtension, $session['CURRENT']['IDS'])) !== false)
@@ -2368,10 +2370,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				{
 					$varValue = '';
 				}
-				elseif (isset($arrData['eval']['csv']))
-				{
-					$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-				}
 				else
 				{
 					$varValue = serialize($varValue);
@@ -2402,7 +2400,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Make sure unique fields are unique
-			if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2486,7 +2484,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -2522,7 +2520,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
 		// Get the session data and toggle the nodes
@@ -2618,7 +2616,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 				elseif (!empty($this->arrValidFileTypes) && !is_dir($this->strRootDir . '/' . $currentFolder . '/' . $file))
 				{
-					$objFile =  new File($currentFolder . '/' . $file);
+					$objFile = new File($currentFolder . '/' . $file);
 
 					if (!\in_array($objFile->extension, $this->arrValidFileTypes))
 					{
@@ -2659,10 +2657,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
+			$folderAlt = $protected ? $GLOBALS['TL_LANG']['MSC']['folderCP'] : $GLOBALS['TL_LANG']['MSC']['folderC'];
 
 			// Add the current folder
 			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
-			$return .= Image::getHtml($folderImg) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
+			$return .= Image::getHtml($folderImg, $folderAlt) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
@@ -2777,15 +2776,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset'));
+			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
 
 			// No popup links for protected files and templates (see #700)
 			if ($blnProtected || $this->strTable == 'tl_templates')
 			{
-				$return .= Image::getHtml($objFile->icon) . ' ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 			else
 			{
-				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $iconAlt) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons
@@ -2817,7 +2817,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected function searchMenu()
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -3041,7 +3041,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
-			$strNode = System::getContainer()->get('session')->getBag('contao_backend')->get('tl_files_node');
+			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
 
 			// If the files node is not within the current path, remove it (see #856)
 			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)

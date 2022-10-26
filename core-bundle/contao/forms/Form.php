@@ -218,7 +218,11 @@ class Form extends Hybrid
 
 				if ($objWidget instanceof UploadableWidgetInterface)
 				{
-					$arrFiles[$objField->name] = $objWidget->value;
+					if ($objWidget->value)
+					{
+						$arrFiles[$objField->name] = $objWidget->value;
+					}
+
 					$hasUpload = true;
 				}
 
@@ -321,10 +325,7 @@ class Form extends Hybrid
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
 		// so it can be used on any forward page using the {{form_session_data::<form-field-name>}} insert tag
-		if ($request = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			$request->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
-		}
+		System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
 
 		// Send form data via e-mail
 		if ($this->sendViaEmail)
@@ -388,22 +389,22 @@ class Form extends Hybrid
 			}
 
 			// Set the admin e-mail as "from" address
-			$email->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
+			$email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+			$email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 
 			// Get the "reply to" address
-			if (!empty(Input::post('email', true)))
+			if (!empty($arrSubmitted['email']))
 			{
-				$replyTo = Input::post('email', true);
+				$replyTo = $arrSubmitted['email'];
 
 				// Add the name
-				if (!empty(Input::post('name')))
+				if (!empty($arrSubmitted['name']))
 				{
-					$replyTo = '"' . Input::post('name') . '" <' . $replyTo . '>';
+					$replyTo = '"' . $arrSubmitted['name'] . '" <' . $replyTo . '>';
 				}
-				elseif (!empty(Input::post('firstname')) && !empty(Input::post('lastname')))
+				elseif (!empty($arrSubmitted['firstname']) && !empty($arrSubmitted['lastname']))
 				{
-					$replyTo = '"' . Input::post('firstname') . ' ' . Input::post('lastname') . '" <' . $replyTo . '>';
+					$replyTo = '"' . $arrSubmitted['firstname'] . ' ' . $arrSubmitted['lastname'] . '" <' . $replyTo . '>';
 				}
 
 				$email->replyTo($replyTo);
@@ -416,9 +417,9 @@ class Form extends Hybrid
 			}
 
 			// Send copy to sender
-			if (!empty($arrSubmitted['cc']))
+			if (!empty($arrSubmitted['cc']) && !empty($arrSubmitted['email']))
 			{
-				$email->sendCc(Input::post('email', true));
+				$email->sendCc($arrSubmitted['email']);
 			}
 
 			// Attach XML file

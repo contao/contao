@@ -273,7 +273,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function loadDataContainer($strTable, $blnNoCache = false): never
+    public static function loadDataContainer($strTable): never
     {
         self::throwOnAccess();
     }
@@ -290,14 +290,6 @@ final class FragmentTemplate extends Template
      * @internal
      */
     public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey = 'enclosure'): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function setStaticUrls(): never
     {
         self::throwOnAccess();
     }

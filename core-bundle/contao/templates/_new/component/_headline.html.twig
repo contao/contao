@@ -8,22 +8,22 @@
 
     Optional variables:
         @var string tag_name
-        @var \Contao\CoreBundle\String\HtmlAttributes headline.attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes attributes
 
     Note:
-        You can either group all variables in an object named "list" or
+        You can either group all variables in an object named "headline" or
         all directly in the context. Grouping under an object has precedence.
 #}
 
 {% block headline_component %}
-    {% set list = headline|default(_context) %}
-    {% set tag_name = headline.tag_name|default('h2') %}
+    {% set headline = headline|default(_context) %}
+    {% set tag_name = headline.tag_name|default('h1') %}
 
-    <{{ headline.tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
+    <{{ tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
     {%- block headline_inner %}
         {%- apply spaceless %}
             {{ headline.text|insert_tag_raw }}
         {% endapply -%}
     {% endblock -%}
-    </{{ headline.tag_name }}>
+    </{{ tag_name }}>
 {% endblock %}

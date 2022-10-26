@@ -40,7 +40,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $hl
  * @property string       $content
  * @property string       $action
- * @property string       $enforceTwoFactor
+ * @property boolean      $enforceTwoFactor
  * @property string       $targetPath
  * @property string       $message
  * @property string       $href
@@ -310,7 +310,7 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return a route relative to the base URL
+	 * Generate a URL for the given route
 	 *
 	 * @param string $strName   The route name
 	 * @param array  $arrParams The route parameters

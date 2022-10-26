@@ -58,6 +58,15 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\DownloadsController:
+        arguments:
+            - '@security.helper'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.filesystem.file_download_helper'
+            - '@contao.image.preview_factory'
+            - '@contao.image.studio'
+            - '%kernel.project_dir%'
+
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
@@ -66,7 +75,6 @@ services:
         arguments:
             - '@contao.image.studio'
             - '@contao.insert_tag.parser'
-            - '@request_stack'
 
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:
@@ -78,9 +86,15 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\PlayerController:
+        arguments:
+            - '@contao.filesystem.virtual.files'
+
     Contao\CoreBundle\Controller\ContentElement\TableController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TeaserController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TextController:
         arguments:

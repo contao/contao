@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" target-language="fr">
+  <file datatype="php" original="contao/languages/en/tl_news_archive.php" source-language="en" target-language="fr">
     <body>
       <trans-unit id="tl_news_archive.title.0">
         <source>Title</source>
@@ -14,8 +14,7 @@
         <target>Page de redirection</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
-        <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Choisir la page vers laquelle les visiteurs seront réorientés en cliquant sur une actualité.</target>
+        <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
@@ -117,10 +116,6 @@
         <source>Access protection</source>
         <target>Protection d'accès</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-        <target>Flux RSS/Atom</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
         <target>Administrateur système</target>
@@ -157,13 +152,8 @@
         <source>Edit news archive ID %s</source>
         <target>Éditer l'archive d'actualités ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.editheader">
-        <source>Edit the settings of news archive ID %s</source>
-        <target>Éditer les paramètres de l'archive d'actualités ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.editmeta">
-        <source>Edit the news archive settings</source>
-        <target>Éditer les paramètres de l'archive d'actualités</target>
+      <trans-unit id="tl_news_archive.children">
+        <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>

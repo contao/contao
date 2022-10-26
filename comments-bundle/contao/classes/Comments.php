@@ -59,7 +59,7 @@ class Comments extends Frontend
 
 			// Get the current page
 			$id = 'page_c' . $key . $intParent; // see #4141
-			$page = Input::get($id) ?? 1;
+			$page = (int) (Input::get($id) ?? 1);
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
@@ -273,7 +273,7 @@ class Comments extends Frontend
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		// Do not index or cache the page with the confirmation message
 		if ($session->isStarted())
@@ -359,8 +359,8 @@ class Comments extends Frontend
 
 			// Prepare the notification mail
 			$objEmail = new Email();
-			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
@@ -671,8 +671,8 @@ class Comments extends Frontend
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
 				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);

@@ -325,7 +325,7 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		$objSession = static::getContainer()->get('session');
+		$objSession = static::getContainer()->get('request_stack')->getSession();
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
@@ -570,7 +570,7 @@ abstract class System
 	 */
 	public static function urlEncode($strPath)
 	{
-		return str_replace('%2F', '/', rawurlencode($strPath));
+		return str_replace('%2F', '/', rawurlencode((string) $strPath));
 	}
 
 	/**

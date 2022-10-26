@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="pl">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
@@ -93,14 +93,6 @@
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
         <target>Zezwolenie dla atrybutów &lt;code&gt;*&lt;/code&gt; może być wykorzystane do ataków XSS. Rób to tylko, jeśli wszyscy użytkownicy panelu są zaufani!</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.0">
-        <source>Disable request tokens</source>
-        <target>Wyłącz sprawdzanie poprawności URL (referer check)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted (insecure!).</source>
-        <target>Nie sprawdzaj tokenu przy wysyłaniu formularza (niebezpieczne!).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
         <target>Poprawne typy pobieranych plików</target>
@@ -108,22 +100,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Wprowadź oddzielone przecinkami rozszerzenia plików, które chcesz udostępniać do pobierania w swoim serwisie. Z przyczyn bezpieczeństwa pobieranie plików ograniczone jest do katalogu &quot;tl_files&quot; i jego podkatalogów.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.0">
-        <source>Maximum GD image width</source>
-        <target>Maksymalna długość obrazka GD</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.1">
-        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-        <target>Wprowadź maksymalną długość dla obrazka, którą biblioteka GD powinna przetworzyć.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.0">
-        <source>Maximum GD image height</source>
-        <target>Maksymalna wysokość obrazka GD</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.1">
-        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-        <target>Wprowadź maksymalną wysokość dla obrazka, którą biblioteka GD powinna przetworzyć.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>

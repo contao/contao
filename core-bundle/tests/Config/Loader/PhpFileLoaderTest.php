@@ -71,7 +71,7 @@ class PhpFileLoaderTest extends TestCase
         $expects = <<<'EOF'
 
             namespace Foo\Bar {
-            $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = \Contao\DC_Table::class;
+            $GLOBALS['TL_DCA']['tl_test_with_namespace1']['config']['dataContainer'] = \Contao\DC_Table::class;
             }
 
             EOF;
@@ -87,7 +87,7 @@ class PhpFileLoaderTest extends TestCase
         $expects = <<<'EOF'
 
             namespace {
-            $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = \Contao\DC_Table::class;
+            $GLOBALS['TL_DCA']['tl_test_with_namespace2']['config']['dataContainer'] = \Contao\DC_Table::class;
             }
 
             EOF;
@@ -122,9 +122,9 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testStripsDeclareStrictTypes(string $file): void
     {
-        $content = <<<'EOF'
+        $content = <<<EOF
 
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            \$GLOBALS['TL_DCA']['$file'] = ['config' => ['dataContainer' => \\Contao\\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 
@@ -136,14 +136,11 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider loadWithDeclareStatementsStrictType
-     */
     public function testIgnoresDeclareStatementsInComments(): void
     {
         $content = <<<'EOF'
 
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            $GLOBALS['TL_DCA']['tl_test_with_declare3'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 
@@ -166,10 +163,10 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testPreservesOtherDeclareDefinitions(string $file): void
     {
-        $content = <<<'EOF'
+        $content = <<<EOF
 
             declare (ticks=1);
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            \$GLOBALS['TL_DCA']['$file'] = ['config' => ['dataContainer' => \\Contao\\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 

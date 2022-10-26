@@ -12,21 +12,9 @@
       <directory>./newsletter-bundle/src</directory>
     </include>
     <exclude>
-      <directory>./calendar-bundle/src/Resources</directory>
-      <directory>./comments-bundle/src/Resources</directory>
-      <directory>./core-bundle/src/Resources</directory>
-      <directory>./faq-bundle/src/Resources</directory>
-      <directory>./maker-bundle/src/Resources</directory>
-      <directory>./manager-bundle/src/Resources</directory>
-      <directory>./news-bundle/src/Resources</directory>
-      <directory>./newsletter-bundle/src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>
-      <!-- exclude files with symbols and side effects -->
-      <file>./core-bundle/src/EventListener/UserAwareTrait.php</file>
-      <file>./core-bundle/src/Exception/ServiceUnavailableException.php</file>
-      <file>./core-bundle/src/Framework/ScopeAwareTrait.php</file>
     </exclude>
   </coverage>
   <php>

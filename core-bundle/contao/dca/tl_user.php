@@ -62,7 +62,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'name'
 		),
 		'label' => array
 		(
@@ -121,12 +122,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('inherit', 'admin'),
-		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
-		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
-		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
+		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
+		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -218,6 +219,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
+		),
+		'doNotCollapse' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'password' => array
 		(
@@ -511,7 +518,7 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
@@ -610,9 +617,9 @@ class tl_user extends Backend
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_')
+			Image::getUrl($image),
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_')
 		);
 
 		return $args;
@@ -754,7 +761,7 @@ class tl_user extends Backend
 				if (in_array('purge_session', $arrPurge))
 				{
 					/** @var AttributeBagInterface $objSessionBag */
-					$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+					$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 					$objSessionBag->clear();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
@@ -955,6 +962,6 @@ class tl_user extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '"data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '"data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

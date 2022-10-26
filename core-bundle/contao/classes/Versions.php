@@ -652,14 +652,8 @@ class Versions extends Controller
 								->execute(...$params);
 
 		$intLast   = ceil($objTotal->count / 30);
-		$intPage   = Input::get('vp') ?? 1;
+		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
 		$intOffset = ($intPage - 1) * 30;
-
-		// Validate the page number
-		if ($intPage < 1 || ($intLast > 0 && $intPage > $intLast))
-		{
-			header('HTTP/1.1 404 Not Found');
-		}
 
 		// Create the pagination menu
 		$objPagination = new Pagination($objTotal->count, 30, 7, 'vp', new BackendTemplate('be_pagination'));
@@ -671,6 +665,7 @@ class Versions extends Controller
 								   ->execute(...$params);
 
 		$security = System::getContainer()->get('security.helper');
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		while ($objVersions->next())
 		{
@@ -697,7 +692,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -740,7 +735,7 @@ class Versions extends Controller
 	{
 		if ($this->strEditUrl !== null)
 		{
-			return sprintf($this->strEditUrl, $this->intPid);
+			return $this->strEditUrl;
 		}
 
 		$pairs = array();

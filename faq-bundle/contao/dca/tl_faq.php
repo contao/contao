@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
+use Contao\Environment;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\Input;
@@ -57,6 +58,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions')
 		),
@@ -132,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
@@ -436,7 +438,7 @@ class tl_faq extends Backend
 				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
 										 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
@@ -537,12 +539,10 @@ class tl_faq extends Backend
 
 		if (!$objTarget = PageModel::findByPk($jumpTo))
 		{
-			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
+			return StringUtil::ampersand(Environment::get('request'));
 		}
 
-		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl('/%s'));
-
-		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
+		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 	}
 
 	/**

@@ -2,7 +2,7 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[manager-bundle.v5_0-ContaoManagerBundle]
+[manager-bundle.v5_1-ContaoManagerBundle]
 source_file = translations/ContaoManagerBundle.en.xlf
 source_lang = en
 file_filter = translations/ContaoManagerBundle.<lang>.xlf

@@ -9,18 +9,18 @@
        template name (e.g. "content_element/text") as a class #}
     {% set attributes = attrs(attributes|default)
         .setIfExists('id', element_html_id)
-        .addClass([element_css_classes, template])
+        .addClass([element_css_classes, "content-#{type}"])
     %}
 
     {# Wrapper element around headline and content #}
     <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
-        {% block inner %}
+        {%- block inner %}
             {% if headline.text %}
                 {{ block('headline_component') }}
             {% endif %}
 
             {% block content %}{% endblock %}
-        {% endblock %}
+        {% endblock -%}
     </{{ block('wrapper_tag') }}>
 {% endblock %}
 

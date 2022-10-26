@@ -92,10 +92,13 @@ class TemplateOptionsListenerTest extends TestCase
             ContentProxy::class
         );
 
-        $callback->setCustomTemplates(['fragment_element' => 'ce_custom_fragment_template']);
+        $callback->setCustomTemplates([
+            'fragment_element' => 'content_element/fragment',
+            'legacy_element' => 'content_element/legacy',
+        ]);
 
         $this->assertSame(
-            ['' => 'ce_custom_fragment_template'],
+            ['' => 'content_element/fragment'],
             $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element']))
         );
 
@@ -114,10 +117,13 @@ class TemplateOptionsListenerTest extends TestCase
             ModuleProxy::class
         );
 
-        $callback->setCustomTemplates(['fragment_module' => 'mod_custom_fragment_template']);
+        $callback->setCustomTemplates([
+            'fragment_module' => 'frontend_module/fragment',
+            'legacy_module' => 'frontend_module/legacy',
+        ]);
 
         $this->assertSame(
-            ['' => 'mod_custom_fragment_template'],
+            ['' => 'frontend_module/fragment'],
             $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module']))
         );
 
@@ -158,12 +164,14 @@ class TemplateOptionsListenerTest extends TestCase
             ->willReturnMap([
                 ['ce_', ['ce_all' => 'ce_all']],
                 ['ce_fragment_element_', [], 'ce_fragment_element', ['' => 'ce_fragment_element']],
-                ['ce_custom_fragment_template_', [], 'ce_custom_fragment_template', ['' => 'ce_custom_fragment_template']],
                 ['ce_custom_legacy_template_', [], 'ce_custom_legacy_template', ['' => 'ce_custom_legacy_template']],
                 ['mod_', ['mod_all' => 'mod_all']],
                 ['mod_fragment_module_', [], 'mod_fragment_module', ['' => 'mod_fragment_module']],
-                ['mod_custom_fragment_template_', [], 'mod_custom_fragment_template', ['' => 'mod_custom_fragment_template']],
                 ['mod_custom_legacy_template_', [], 'mod_custom_legacy_template', ['' => 'mod_custom_legacy_template']],
+                ['content_element/fragment_', [], 'content_element/fragment', ['' => 'content_element/fragment']],
+                ['content_element/legacy_', [], 'content_element/legacy', ['' => 'content_element/legacy']],
+                ['frontend_module/fragment_', [], 'frontend_module/fragment', ['' => 'frontend_module/fragment']],
+                ['frontend_module/legacy_', [], 'frontend_module/legacy', ['' => 'frontend_module/legacy']],
             ])
         ;
 

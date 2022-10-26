@@ -118,7 +118,10 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+
+		$identifierPattern = str_contains($strPrefix, '/')
+			? sprintf('/^%s(\/[^\/]+)$/', preg_quote(rtrim($strPrefix, '_'), '/'))
+			: sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -467,18 +470,6 @@ abstract class Controller extends System
 		if (!static::isVisibleElement($objRow))
 		{
 			return '';
-		}
-
-		// Print the article as PDF
-		if (Input::get('pdf') !== null && $objRow->printable && Input::get('pdf') == $objRow->id)
-		{
-			$options = StringUtil::deserialize($objRow->printable);
-
-			if (\is_array($options) && \in_array('pdf', $options))
-			{
-				$objArticle = new ModuleArticle($objRow);
-				$objArticle->generatePdf();
-			}
 		}
 
 		$objRow->headline = $objRow->title;
@@ -1167,13 +1158,12 @@ abstract class Controller extends System
 	/**
 	 * Load a set of DCA files
 	 *
-	 * @param string  $strTable   The table name
-	 * @param boolean $blnNoCache If true, the cache will be bypassed
+	 * @param string $strTable The table name
 	 */
-	public static function loadDataContainer($strTable, $blnNoCache=false)
+	public static function loadDataContainer($strTable)
 	{
 		$loader = new DcaLoader($strTable);
-		$loader->load($blnNoCache);
+		$loader->load();
 	}
 
 	/**
@@ -1438,20 +1428,6 @@ abstract class Controller extends System
 		}
 
 		$objTemplate->enclosure = $arrEnclosures;
-	}
-
-	/**
-	 * Set the static URL constants
-	 */
-	public static function setStaticUrls()
-	{
-		if (\defined('TL_FILES_URL'))
-		{
-			return;
-		}
-
-		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
-		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
 	}
 
 	/**

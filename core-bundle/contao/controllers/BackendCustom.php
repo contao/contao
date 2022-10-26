@@ -50,7 +50,7 @@ class BackendCustom extends BackendMain
 		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . ContaoCoreBundle::getVersion();
 
 		// Ajax request
-		if (Input::isPost() && Environment::get('isAjaxRequest'))
+		if (Input::post('action') && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();

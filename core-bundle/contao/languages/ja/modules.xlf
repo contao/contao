@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="ja">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en" target-language="ja">
     <body>
       <trans-unit id="MOD.content">
         <source>Content</source>
@@ -34,12 +34,12 @@
         <target>テーマ、フロントエンドモジュール、ページのレイアウト、画像サイズを管理</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-        <target>サイト構造</target>
+        <source>Pages</source>
+        <target>ページ</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
-        <target>ウェブサイトのサイト構造を設定</target>
+        <source>Set up the pages of your website(s)</source>
+        <target>ウェブサイトのページを設定します。</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,8 +50,8 @@
         <target>独自のテンプレートの追加や編集</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
-        <source>Account manager</source>
-        <target>アカウント管理</target>
+        <source>Accounts</source>
+        <target>アカウント</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -98,8 +98,8 @@
         <target>システム</target>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-        <target>ファイル管理</target>
+        <source>Files</source>
+        <target>ファイル</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -185,18 +185,6 @@
         <source>Front end modules</source>
         <target>フロントエンドモジュール</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-        <target>書式定義</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>スタイルシート</target>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-        <target>スタイルシート</target>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>フロントエンドモジュール</target>
@@ -226,8 +214,8 @@
         <target>ナビゲーションメニュー</target>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
-        <target>サイト構造からナビゲーションメニューを生成</target>
+        <source>Generates a navigation menu from the pages</source>
+        <target>ページからナビゲーションメニューを生成</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -250,8 +238,8 @@
         <target>クイックナビゲーション</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
-        <target>サイト構造からドロップダウンメニューを生成</target>
+        <source>Generates a drop-down menu from the pages</source>
+        <target>ページからドロップダウンメニューを生成</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -282,8 +270,8 @@
         <target>HTMLのサイトマップ</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
-        <target>サイト構造のすべてのページのリストを生成</target>
+        <source>Generates a list of all pages</source>
+        <target>すべてのページの一覧を生成</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -393,6 +381,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>独自のHTMLコードを追加</target>
       </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>フィルターしないHTML</target>
+      </trans-unit>
+      <trans-unit id="FMD.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>独自の、フィルターしないHTMLコードを追加</target>
+      </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
         <target>独自のテンプレート</target>
@@ -419,11 +415,11 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
-        <target>ルートページに依存するモジュール</target>
+        <target>ルートページに応じたモジュール</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
-        <source>Generates different modules depending on the root page</source>
-        <target>ルートページに依存する異なるモジュールを生成</target>
+        <source>Generates different modules depending on the website root page</source>
+        <target>ウェブサイトのルートのページに応じた異なるモジュールを生成</target>
       </trans-unit>
     </body>
   </file>

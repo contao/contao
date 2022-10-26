@@ -338,24 +338,6 @@ class DbafsTest extends TestCase
         $dbafs->setExtraMetadata('some/invalid/path', []);
     }
 
-    public function testSetExtraMetadataThrowsIfRecordIsADirectory(): void
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => Uuid::v1()->toBinary(), 'path' => 'some/directory', 'type' => 'folder'],
-            )
-        ;
-
-        $dbafs = $this->getDbafs($connection);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under "some/directory".');
-
-        $dbafs->setExtraMetadata('some/directory', []);
-    }
-
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
     {
         $uuid = $this->generateUuid(1);
@@ -1054,13 +1036,15 @@ class DbafsTest extends TestCase
             ])
         ;
 
+        $uuid = $this->generateUuid(1);
+
         $connection
             ->expects($this->once())
             ->method('fetchAssociative')
             ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
             ->willReturn([
                 'id' => 1,
-                'uuid' => $uuid = $this->generateUuid(1)->toBinary(),
+                'uuid' => $uuid->toBinary(),
                 'path' => 'files/baz',
                 'type' => 'file',
             ])
@@ -1172,11 +1156,71 @@ class DbafsTest extends TestCase
 
         // Prime internal cache to test if it gets updated and still points to
         // this resource
-        $this->assertSame($uuid, $dbafs->getRecord('baz')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz')->getUuid()->toRfc4122());
 
         $dbafs->sync();
 
-        $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz2')->getUuid()->toRfc4122());
+    }
+
+    public function testSyncWithMove(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllNumeric')
+            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->willReturn([
+                ['a', 'ee61', 'fdc43e4749862887eb87d5dde07c5cd8', 1, null],
+                ['b', 'ab54', 'd41d8cd98f00b204e9800998ecf8427e', 1, null],
+                ['a/file', 'cc12', 'acbd18db4cc2f85cedef654fccc4a4d8', 0, null],
+            ])
+        ;
+
+        $expected = [
+            [
+                ['path' => 'a'],
+                ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
+            ],
+            [
+                ['path' => 'a/file'],
+                ['path' => 'b/file', 'pid' => 'ab54'], // updated path and uuid of "files/b"
+            ],
+            [
+                ['path' => 'b'],
+                ['hash' => 'fdc43e4749862887eb87d5dde07c5cd8'],
+            ],
+        ];
+
+        $connection
+            ->expects($this->exactly(3))
+            ->method('update')
+            ->willReturnCallback(
+                function (string $table, array $updates, array $criteria) use (&$expected): void {
+                    $this->assertSame('tl_files', $table);
+                    $this->assertArrayHasKey('tstamp', $updates);
+
+                    unset($updates['tstamp']);
+
+                    [$expectedCriteria, $expectedUpdates] = array_shift($expected);
+
+                    $this->assertSame($expectedCriteria, $criteria);
+                    $this->assertSame($expectedUpdates, $updates);
+                }
+            )
+        ;
+
+        $filesystem = new VirtualFilesystem(
+            $this->getMountManagerWithRootAdapter(),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory('a');
+        $filesystem->createDirectory('b');
+        $filesystem->write('b/file', 'foo');
+
+        $dbafs = $this->getDbafs($connection, $filesystem);
+        $dbafs->sync();
     }
 
     public function testSyncWithoutChanges(): void
@@ -1232,7 +1276,6 @@ class DbafsTest extends TestCase
                 ->willReturnCallback(
                     static function (RetrieveDbafsMetadataEvent $event) {
                         $event->set('foo', 'bar');
-                        $event->set('uuid', $event->getUuid());
 
                         return $event;
                     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en" target-language="ru">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="ru">
     <body>
       <trans-unit id="tl_theme.name.0">
         <source>Theme title</source>
@@ -41,21 +41,13 @@
         <source>Here you can choose a screenshot of the theme.</source>
         <target>Вы можете выбрать скриншот темы.</target>
       </trans-unit>
-      <trans-unit id="tl_theme.vars.0">
-        <source>Global variables</source>
-        <target>Глобальные переменные</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars.1">
-        <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Вы можете определить глобальные переменные для стилей темы (напр. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; или &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
         <target>Исходные файлы</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto files to be imported.</source>
-        <target>Вы можете загрузить один или несколько файлов .cto для импорта.</target>
+        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <target>Вы можете загрузить один или несколько файлов .cto, или .sql для импорта.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -72,10 +64,6 @@
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
         <target>Конфигурация</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars_legend">
-        <source>Global variables</source>
-        <target>Глобальные переменные</target>
       </trans-unit>
       <trans-unit id="tl_theme.theme_imported">
         <source>Theme &quot;%s&quot; has been imported.</source>
@@ -128,6 +116,34 @@
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>
         <target>Импорт темы</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Импорт примера веб-сайта</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Вы можете импортировать файл &lt;code&gt;.sql&lt;/code&gt;. Любые существующие данные будут удалены! Если хотите импортировать только тему, не выбирайте файл здесь.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Тип импорта</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Вы можете выбрать тип импорта.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Полный импорт SQL</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Только данные</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Только данные без усечения таблиц</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>

@@ -98,14 +98,14 @@ class ModuleChangePassword extends Module
 		$objMember = MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #8301)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		/** @var FormPassword $objNewPassword */

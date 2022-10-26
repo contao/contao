@@ -123,6 +123,15 @@ class FilesystemItemIterator implements \IteratorAggregate
         return new self($listLimited($this->listing));
     }
 
+    public function first(): FilesystemItem|null
+    {
+        foreach ($this->listing as $item) {
+            return $item;
+        }
+
+        return null;
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */

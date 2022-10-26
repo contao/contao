@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="ja">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="ja">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -187,11 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.0">
         <source>Custom URL</source>
-        <target>独自のURL</target>
+        <target>特定のURL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>基準のURLに独自の値を設定します。</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>https://example.com/ の様な独自の標準のURLを設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -254,8 +254,8 @@
         <target>URLのプリフィックス</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
-        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>このルートページでエイリアスの先頭に付加するURLのプリフィックス(例えば言語)を入力してください。</target>
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>このウェブサイトのルートの下のすべてのページのエイリアスの先頭に追加するURLのプリフィックス(例えば、言語)を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -416,22 +416,6 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
         <target>ナビゲーションメニューのページを表示しません。</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-        <target>ゲストだけに表示</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-        <target>ログインしているメンバーにページを表示しません。</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-        <target>タブのインデックス</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-        <target>タブ移動の順番でナビゲーション項目の位置です。</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -636,10 +620,6 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>ID %sのページのアーティクルを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-        <target>古いルーティング方式を無効にして、この構成を有効にします。</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
