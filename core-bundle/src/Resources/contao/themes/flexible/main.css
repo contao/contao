@@ -1586,7 +1586,7 @@ ul.sgallery li {
 		font-weight:500;
 	}
 }
-.tl_metawizard_img {
+.tl_metawizard .lang button {
 	position:absolute;
 	right:0;
 	top:-1px;

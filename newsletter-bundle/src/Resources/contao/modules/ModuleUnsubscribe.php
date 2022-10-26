@@ -277,8 +277,8 @@ class ModuleUnsubscribe extends Module
 
 		// Confirmation e-mail
 		$objEmail = new Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
 		$objEmail->text = StringUtil::parseSimpleTokens($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
