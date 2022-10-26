@@ -199,7 +199,7 @@ class ModuleFaqReader extends Module
 		$arrNotifies = array();
 
 		// Notify the system administrator
-		if ($objCategory->notify != 'notify_author')
+		if ($objCategory->notify != 'notify_author' && isset($GLOBALS['TL_ADMIN_EMAIL']))
 		{
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
