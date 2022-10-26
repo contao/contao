@@ -16,18 +16,21 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
+use Symfony\Component\Uid\Uuid;
 
 class FilesystemItemTest extends TestCase
 {
     public function testSetAndGetAttributes(): void
     {
+        $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
+
         $fileItem = new FilesystemItem(
             true,
             'foo/bar.PNG',
             123450,
             1024,
             'image/png',
-            ['foo' => 'bar']
+            ['foo' => 'bar', 'uuid' => $uuid]
         );
 
         $this->assertTrue($fileItem->isFile());
@@ -40,6 +43,8 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('PNG', $fileItem->getExtension());
         $this->assertSame('png', $fileItem->getExtension(true));
         $this->assertSame('bar.PNG', $fileItem->getName());
+        $this->assertSame('bar', $fileItem->getExtraMetadata()['foo']);
+        $this->assertSame('2fcae369-c955-4b43-bcf9-d069f9d25542', $fileItem->getUuid()->toRfc4122());
     }
 
     /**
@@ -65,11 +70,6 @@ class FilesystemItemTest extends TestCase
         yield 'mime type' => [
             'getMimeType',
             'Cannot call getMimeType() on a non-file filesystem item.',
-        ];
-
-        yield 'extra metadata' => [
-            'getExtraMetadata',
-            'Cannot call getExtraMetadata() on a non-file filesystem item.',
         ];
     }
 

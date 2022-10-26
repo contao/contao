@@ -154,12 +154,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     public function setExtraMetadata(string $path, array $metadata): void
     {
-        if (null === ($record = $this->getRecord($path))) {
+        if (null === $this->getRecord($path)) {
             throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
-        }
-
-        if (!$record->isFile()) {
-            throw new \LogicException(sprintf('Can only set extra metadata for files, directory given under "%s".', $path));
         }
 
         $row = [
@@ -219,6 +215,9 @@ class Dbafs implements DbafsInterface, ResetInterface
             $record['path'] = $newPath;
             unset($this->records[$path]);
             $this->records[$newPath] = $record;
+
+            $this->pathById[array_search($path, $this->pathById, true)] = $newPath;
+            $this->pathByUuid[array_search($path, $this->pathByUuid, true)] = $newPath;
         }
 
         foreach (array_keys($changeSet->getItemsToDelete()) as $identifier) {
@@ -256,13 +255,15 @@ class Dbafs implements DbafsInterface, ResetInterface
      */
     private function toFilesystemItem(array $record): FilesystemItem
     {
+        $uuid = array_search($record['path'], $this->pathByUuid, true);
+
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
             isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
             isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
             $record['mimeType'] ?? null,
-            $record['extra']
+            array_merge($record['extra'], ['uuid' => Uuid::fromBinary($uuid)])
         );
     }
 
