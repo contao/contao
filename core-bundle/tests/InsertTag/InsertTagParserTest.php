@@ -56,6 +56,8 @@ class InsertTagParserTest extends TestCase
 
         $this->assertSame('<br>', $parser->render('br'));
 
+        $this->assertSame('', $parser->render('env::empty-insert-tag'));
+
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single raw chunk');
 
         $parser->render('br}}foo{{br');
