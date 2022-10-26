@@ -1457,7 +1457,7 @@
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
       </trans-unit>
-      <trans-unit id="MSC.fileC">
+      <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
       </trans-unit>
       <trans-unit id="MSC.loadingData">

@@ -2829,7 +2829,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
-			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['fileC'], strtoupper($objFile->extension));
+			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
 
 			// No popup links for protected files, templates and in the popup file manager
 			if ($blnProtected || $this->strTable == 'tl_templates' || Input::get('popup'))
