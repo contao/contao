@@ -201,7 +201,7 @@ class ModuleNewsReader extends ModuleNews
 		$arrNotifies = array();
 
 		// Notify the system administrator
-		if ($objArchive->notify != 'notify_author')
+		if ($objArchive->notify != 'notify_author' && isset($GLOBALS['TL_ADMIN_EMAIL']))
 		{
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
