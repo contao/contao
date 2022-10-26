@@ -241,7 +241,7 @@ class TemplateOptionsListenerTest extends TestCase
         return $listener;
     }
 
-    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null,): TemplateOptionsListener
+    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null): TemplateOptionsListener
     {
         $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
         $connection ??= $this->createMock(Connection::class);
