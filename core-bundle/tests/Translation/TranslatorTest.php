@@ -220,6 +220,53 @@ class TranslatorTest extends TestCase
         $this->assertInstanceOf(MessageCatalogue::class, $catalogues[1]);
     }
 
+    public function testRestoresPreviousTranslationsInGlobals(): void
+    {
+        $originalTranslator = $this->createMock(BaseTranslator::class);
+        $originalTranslator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $originalTranslator
+            ->expects($this->exactly(2))
+            ->method('getLocale')
+            ->willReturn('en')
+        ;
+
+        $originalTranslator
+            ->method('getCatalogue')
+            ->willReturnCallback(
+                function ($locale) {
+                    $catalogue = $this->createMock(MessageCatalogueInterface::class);
+                    $catalogue
+                        ->method('getLocale')
+                        ->willReturn($locale ?? 'de')
+                    ;
+
+                    return $catalogue;
+                }
+            )
+        ;
+
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('loadLanguageFile')
+            ->withConsecutive(['default', 'de'], ['default', 'en'])
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('initialize')
+        ;
+
+        $translator = $this->createTranslator($originalTranslator, $framework);
+        $translator->setLocale('en');
+        $translator->trans('foobar', [], 'contao_default', 'de');
+    }
+
     private function createTranslator(TranslatorInterface $translator = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): Translator
     {
         if (null === $translator) {
