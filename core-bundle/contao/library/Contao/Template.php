@@ -364,15 +364,7 @@ abstract class Template extends Controller
 	 */
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default', $locale=null)
 	{
-		$container = System::getContainer();
-		$translator = $container->get('translator');
-
-		if (null !== $locale && $locale !== $translator->getLocale())
-		{
-			return $container->get('translation.locale_switcher')->runWithLocale($locale, new TranslatorCallback($translator, $strId, $arrParams, $strDomain));
-		}
-
-		return $translator->trans($strId, $arrParams, $strDomain);
+		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain, $locale);
 	}
 
 	/**

@@ -38,7 +38,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'security.logout_url_generator',
         'security.password_hasher_factory',
         'security.token_storage',
-        'translation.locale_switcher',
         'twig',
         'uri_signer',
     ];

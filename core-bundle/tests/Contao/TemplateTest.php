@@ -19,13 +19,11 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
@@ -417,29 +415,5 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate('test_template');
         $template->setData(['requestToken' => null]);
         $this->assertSame('false, NULL', $template->parse());
-    }
-
-    public function testTransUsesLocaleSwitcher(): void
-    {
-        $translator = $this->createMock(Translator::class);
-        $translator
-            ->expects($this->exactly(1))
-            ->method('getLocale')
-            ->willReturn('en')
-        ;
-
-        $switcher = $this->createMock(LocaleSwitcher::class);
-        $switcher
-            ->expects($this->exactly(1))
-            ->method('runWithLocale')
-        ;
-
-        System::getContainer()->set('translation.locale_switcher', $switcher);
-        System::getContainer()->set('translator', $translator);
-
-        (new Filesystem())->dumpFile(Path::join($this->getTempDir(), 'templates/test_template.html5'), '');
-
-        $template = new FrontendTemplate('test_template');
-        $template->trans('foo', [], 'contao_default', 'de');
     }
 }
