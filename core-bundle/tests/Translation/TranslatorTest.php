@@ -109,7 +109,13 @@ class TranslatorTest extends TestCase
             ->method('initialize')
         ;
 
-        $translator = new Translator($this->createMock(BaseTranslator::class), $framework);
+        $originalTranslator = $this->createMock(BaseTranslator::class);
+        $originalTranslator
+            ->method('getLocale')
+            ->willReturn('en')
+        ;
+
+        $translator = new Translator($originalTranslator, $framework);
 
         $this->assertSame('MSC.foo', $translator->trans('MSC.foo', [], 'contao_default'));
 
@@ -145,7 +151,7 @@ class TranslatorTest extends TestCase
     {
         $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getLocale')
             ->willReturn('de')
         ;
@@ -166,5 +172,37 @@ class TranslatorTest extends TestCase
         $translator = new Translator($originalTranslator, $framework);
 
         $this->assertSame('MSC.foo', $translator->trans('MSC.foo', [], 'contao_default'));
+    }
+
+    public function testRestoresPreviousTranslationsInGlobals(): void
+    {
+        $originalTranslator = $this->createMock(BaseTranslator::class);
+        $originalTranslator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $originalTranslator
+            ->expects($this->exactly(2))
+            ->method('getLocale')
+            ->willReturn('en')
+        ;
+
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('loadLanguageFile')
+            ->withConsecutive(['default', 'de'], ['default', 'en'])
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('initialize')
+        ;
+
+        $translator = new Translator($originalTranslator, $framework);
+        $translator->setLocale('en');
+        $translator->trans('foobar', [], 'contao_default', 'de');
     }
 }
