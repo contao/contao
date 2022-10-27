@@ -652,11 +652,10 @@ class Search
 		/** @var Connection $connection */
 		$connection = $connection ?? System::getContainer()->get('database_connection');
 
-		$result = $connection->prepare('SELECT id FROM tl_search WHERE url=:url')
-			->executeQuery(array('url' => $strUrl))
-		;
+		$stmt = $connection->prepare('SELECT id FROM tl_search WHERE url=:url');
+		$stmt->execute(array('url' => $strUrl));
 
-		foreach ($result->fetchAllAssociativeIndexed() as $id)
+		foreach ($stmt->fetchAllAssociative() as $id)
 		{
 			$connection->delete('tl_search', array('id' => $id));
 			$connection->delete('tl_search_index', array('pid' => $id));
