@@ -4,6 +4,6 @@
   <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->label ?>" required>
 </div>
 <div class="widget">
-  <label for="confirm"><?= Contao\System::getContainer()->get('translator')->trans('MSC.confirm.0', [], 'contao_default') ?></label>
-  <input type="password" name="password_confirm" id="confirm" class="tl_text" value="" autocomplete="new-password" placeholder="<?= Contao\System::getContainer()->get('translator')->trans('MSC.confirm.0', [], 'contao_default') ?>" required>
+  <label for="confirm"><?= $this->confirmLabel ?></label>
+  <input type="password" name="password_confirm" id="confirm" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->confirmLabel ?>" required>
 </div>

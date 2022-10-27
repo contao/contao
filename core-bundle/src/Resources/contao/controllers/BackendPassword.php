@@ -51,8 +51,10 @@ class BackendPassword extends Backend
 	 */
 	public function run()
 	{
+		$container = System::getContainer();
+
 		/** @var Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		Controller::loadDataContainer('tl_user');
 
@@ -63,6 +65,7 @@ class BackendPassword extends Backend
 		$widget = new Password(Widget::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->template = 'be_widget_pwchange';
 		$widget->dataContainer = $dc;
+		$widget->confirmLabel = $container->get('translator')->trans('MSC.confirm.0', [], 'contao_default');
 
 		$objTemplate = new BackendTemplate('be_password');
 		$objTemplate->widget = $widget->parse();
@@ -70,6 +73,10 @@ class BackendPassword extends Backend
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
 			$widget->validate();
+
+			// Remove any messages added by the Password widget itself
+			Message::reset();
+
 			$pw = $request->request->get('password');
 
 			if ($widget->hasErrors())
@@ -84,7 +91,7 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
+				$encoder = $container->get('security.encoder_factory')->getEncoder(BackendUser::class);
 
 				// Make sure the password has been changed
 				if ($encoder->isPasswordValid($this->User->password, $pw, null))
