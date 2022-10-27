@@ -65,7 +65,7 @@ class BackendPassword extends Backend
 		$widget = new Password(Widget::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->template = 'be_widget_pwchange';
 		$widget->dataContainer = $dc;
-		$widget->confirmLabel = $container->get('translator')->trans('MSC.confirm.0', [], 'contao_default');
+		$widget->confirmLabel = $container->get('translator')->trans('MSC.confirm.0', array(), 'contao_default');
 
 		$objTemplate = new BackendTemplate('be_password');
 		$objTemplate->widget = $widget->parse();
