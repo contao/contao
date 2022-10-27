@@ -162,7 +162,7 @@ class ImageFactory implements ImageFactoryInterface
                 try {
                     $importantPart = $this->createImportantPart($image);
                 } catch (CoordinatesOutOfBoundsException $exception) {
-                    throw new CoordinatesOutOfBoundsException($exception->getMessage()." for file \"$path\"", $exception->getCode(), $exception);
+                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
                 }
             }
 
