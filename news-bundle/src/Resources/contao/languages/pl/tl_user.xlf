@@ -10,12 +10,12 @@
         <target>Zaznacz archiwa aktualności, które mają być dostępne dla redaktora.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Zezwolenia aktualności</target>
+        <source>News archive permissions</source>
+        <target>Uprawnienia archiwum aktualności</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Tu możesz zdefiniować zezwolenia aktualności.</target>
+        <source>Here you can define the news archive permissions.</source>
+        <target>Tutaj możesz ustalić uprawnienia archiwum aktualności.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

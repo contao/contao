@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to edit the local configuration file.
@@ -259,8 +260,10 @@ class DC_File extends DataContainer implements \editable
 
 		$this->import(Files::class, 'Files');
 
+		$configFile = Path::join(System::getContainer()->getParameter('kernel.project_dir'), 'system/config/localconfig.php');
+
 		// Check whether the target file is writeable
-		if (!$this->Files->is_writeable('system/config/localconfig.php'))
+		if (file_exists($configFile) && !is_writable($configFile))
 		{
 			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
 		}

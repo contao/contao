@@ -1142,7 +1142,7 @@ abstract class Controller extends System
 		}
 
 		// Remove the request token and referer ID
-		unset($pairs['rt'], $pairs['ref']);
+		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
 		foreach ($arrUnset as $key)
 		{

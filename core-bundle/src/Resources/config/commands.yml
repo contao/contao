@@ -47,6 +47,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
+            - '@database_connection'
             - '@?contao.installer'
 
     contao.command.resize_images:

@@ -221,6 +221,28 @@ class ModuleBreadcrumb extends Module
 		}
 
 		$this->Template->items = $items;
+
+		// Tag the pages
+		if (!System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			return;
+		}
+
+		$tags = array();
+
+		foreach ($items as $item)
+		{
+			if (isset($item['data']['id']))
+			{
+				$tags[] = 'contao.db.tl_page.' . $item['data']['id'];
+			}
+		}
+
+		if (!empty($tags))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
+		}
 	}
 }
 

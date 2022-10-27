@@ -16,6 +16,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -51,6 +54,11 @@ class MigrateCommand extends Command
     private $framework;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * @var ?Installer
      */
     private $installer;
@@ -60,12 +68,13 @@ class MigrateCommand extends Command
      */
     private $io;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Connection $connection, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
         $this->framework = $framework;
+        $this->connection = $connection;
         $this->installer = $installer;
 
         parent::__construct();
@@ -119,6 +128,10 @@ class MigrateCommand extends Command
 
         if ($asJson && !$dryRun && $input->isInteractive()) {
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
+        }
+
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
         }
 
         if ($input->getOption('migrations-only')) {
@@ -465,5 +478,41 @@ class MigrateCommand extends Command
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new \JsonException(json_last_error_msg());
         }
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
+        $currentPlatform = \get_class($this->connection->getDatabasePlatform());
+        $driver = $this->connection->getDriver();
+
+        if (
+            !$driverConnection instanceof ServerInfoAwareConnection
+            || !$driver instanceof VersionAwarePlatformDriver
+        ) {
+            return true;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = \get_class($driver->createDatabasePlatformForVersion($version));
+
+        if ($correctPlatform === $currentPlatform) {
+            return true;
+        }
+
+        $message = sprintf('Wrong database version configured, please set it to "%s"', $version);
+
+        if ($currentVersion = $this->connection->getParams()['serverVersion'] ?? null) {
+            $message .= sprintf(', currently set to "%s"', $currentVersion);
+        }
+
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }

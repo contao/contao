@@ -355,9 +355,11 @@
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
+        <target>Uw databaseserver wordt niet uitgevoerd in de strikte modus!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>Het uitvoeren van MySQL in de niet-strikte modus kan corrupte of afgekapte gegevens veroorzaken. Schakel de strikte modus in uw &lt;code&gt;my.cnf&lt;/code&gt; bestand in of configureer de verbindingsopties in het bestand &lt;code&gt;config/config.yml&lt;/code&gt; als volgt:</target>
       </trans-unit>
     </body>
   </file>

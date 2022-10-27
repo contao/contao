@@ -312,9 +312,18 @@ class Versions extends Controller
 			}
 		}
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($data)
-					   ->execute($this->intPid);
+		try
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+						   ->set($data)
+						   ->execute($this->intPid);
+		}
+		catch (\Exception $e)
+		{
+			System::log(sprintf('Could not restore version %d of %s.%d: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()), __METHOD__, TL_ERROR);
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['versionNotRestored'], $intVersion));
+			Controller::reload();
+		}
 
 		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
@@ -661,14 +670,8 @@ class Versions extends Controller
 								->execute($objUser->id);
 
 		$intLast   = ceil($objTotal->count / 30);
-		$intPage   = Input::get('vp') ?? 1;
+		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
 		$intOffset = ($intPage - 1) * 30;
-
-		// Validate the page number
-		if ($intPage < 1 || ($intLast > 0 && $intPage > $intLast))
-		{
-			header('HTTP/1.1 404 Not Found');
-		}
 
 		// Create the pagination menu
 		$objPagination = new Pagination($objTotal->count, 30, 7, 'vp', new BackendTemplate('be_pagination'));

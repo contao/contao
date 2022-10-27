@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Webmozart\PathUtil\Path;
+
 Contao\System::loadLanguageFile('tl_files');
 
 $GLOBALS['TL_DCA']['tl_templates'] = array
@@ -235,11 +237,26 @@ class tl_templates extends Contao\Backend
 
 		/** @var SplFileInfo[] $files */
 		$files = Contao\System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 		foreach ($files as $file)
 		{
-			$strRelpath = Contao\StringUtil::stripRootDir($file->getPathname());
-			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
+			// Do not use "StringUtil::stripRootDir()" here, because for
+			// symlinked bundles, the path will be outside the project dir.
+			$strRelpath = Path::makeRelative($file->getPathname(), $projectDir);
+
+			$modulePatterns = array(
+				"vendor/([^/]+/[^/]+)",
+				"\\.\\..*?([^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"system/modules/([^/]+)"
+			);
+
+			preg_match('@^(?|' . implode('|', $modulePatterns) . ')/.*$@', $strRelpath, $matches);
+
+			// Use the matched "module" group and fall back to the full
+			// directory path (e.g. "contao/templates" in the app).
+			$strModule = $matches[1] ?? dirname($strRelpath);
+
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
@@ -261,8 +278,6 @@ class tl_templates extends Contao\Backend
 			{
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
-
-			$projectDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
 			// Validate the target path
 			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))

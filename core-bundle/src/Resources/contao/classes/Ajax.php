@@ -268,7 +268,7 @@ class Ajax extends Backend
 			case 'reloadPagetree':
 			case 'reloadFiletree':
 			case 'reloadPicker':
-				$intId = Input::get('id');
+				$intId = Input::get('id', true);
 				$strField = $dc->inputName = Input::post('name');
 
 				// Handle the keys in "edit multiple" mode
@@ -297,7 +297,7 @@ class Ajax extends Backend
 					{
 						$varValue = Config::get($strField);
 					}
-					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
+					elseif ($intId && $this->Database->tableExists($dc->table))
 					{
 						$idField = 'id';
 
@@ -313,7 +313,7 @@ class Ajax extends Backend
 						// The record does not exist
 						if ($objRow->numRows < 1)
 						{
-							$this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
+							$this->log('A record with the ID "' . Input::encodeSpecialChars($intId) . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
 
 							throw new BadRequestHttpException('Bad request');
 						}

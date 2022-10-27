@@ -603,9 +603,16 @@ class StringUtilTest extends TestCase
      */
     public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
     {
+        $prevSubstituteCharacter = mb_substitute_character();
+
+        // Enforce substitute character for these tests (see #5011)
+        mb_substitute_character(0x3F);
+
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
         $this->assertSame($expected, $result);
+
+        mb_substitute_character($prevSubstituteCharacter);
     }
 
     public function validEncodingsProvider(): \Generator
@@ -613,21 +620,21 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
             'ISO-8859-1',
-            utf8_decode('𝚏ōȏճăᴦ'),
+            '??????',
             'UTF-8',
         ];
 
         yield 'From ISO-8859-1 to UTF-8' => [
             '𝚏ōȏճăᴦ',
             'UTF-8',
-            utf8_encode('𝚏ōȏճăᴦ'),
+            'ðÅÈÕ³Äá´¦',
             'ISO-8859-1',
         ];
 
         yield 'From UTF-8 to ASCII' => [
             '𝚏ōȏճăᴦbaz',
             'ASCII',
-            'baz',
+            '??????baz',
             'UTF-8',
         ];
 
@@ -722,5 +729,52 @@ class StringUtilTest extends TestCase
     {
         yield 'Array' => [[]];
         yield 'Non-stringable object' => [new \stdClass()];
+    }
+
+    /**
+     * @dataProvider numberToStringProvider
+     */
+    public function testNumberToString($source, $expected, $precision = null): void
+    {
+        $this->assertSame($expected, StringUtil::numberToString($source, $precision));
+    }
+
+    public function numberToStringProvider(): \Generator
+    {
+        yield [0, '0'];
+        yield [1, '1'];
+        yield [-0, '0'];
+        yield [-1, '-1'];
+        yield [0.0, '0'];
+        yield [1.0, '1'];
+        yield [-0.0, '0'];
+        yield [-1.0, '-1'];
+        yield [0.00000000000000000000000000000000000000000000001, '0.00000000000000000000000000000000000000000000001'];
+        yield [1000000000000000000000000000000000000000000000000, '1000000000000000000000000000000000000000000000000'];
+        yield [123456789012345678901234567890, '123456789012350000000000000000'];
+        yield [PHP_INT_MAX, '9223372036854775807'];
+        yield [PHP_INT_MAX, '9223400000000000000', 5];
+        yield [(float) PHP_INT_MAX, '9223372036854800000'];
+        yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
+        yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
+        yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+    }
+
+    /**
+     * @dataProvider numberToStringFailsProvider
+     */
+    public function testNumberToStringFails($source, $exception): void
+    {
+        $this->expectException($exception);
+
+        StringUtil::numberToString($source);
+    }
+
+    public function numberToStringFailsProvider(): \Generator
+    {
+        yield [INF, \InvalidArgumentException::class];
+        yield [NAN, \InvalidArgumentException::class];
+        yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
+        yield ['string', \TypeError::class];
     }
 }

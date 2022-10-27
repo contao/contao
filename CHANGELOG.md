@@ -2,6 +2,101 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.35] (2022-10-11)
+
+**Fixed issues:**
+
+- [#5343] Backport the TinyMCE accesskey fix ([leofeyer])
+- [#5352] Fix `DC_Folder` ID not being determined correctly due to special characters ([fritzmg])
+- [#5336] Fix a potential error when trying to log the deleted record ([qzminski])
+- [#5330] Add an exception for a missing administrator email address ([fritzmg])
+- [#5348] Correctly pick fallback root page with domain ([aschempp])
+- [#5342] Hide the form field name if a widget does not submit input ([leofeyer])
+- [#5338] Backport localconfig file check to Contao 4.9 ([fritzmg])
+- [#5331] Do not show errors twice in console ([ausi])
+- [#5329] Fix "MySQL data too long" error in search ([ausi])
+- [#5325] Fix a potential PHP 8 warning in the backend help wizard ([qzminski])
+- [#5323] Handle CSV fields in the registration and personal data modules ([leofeyer])
+- [#4776] Remove invalid duplicate CSV handling ([aschempp])
+- [#5250] Fix cache tagging for aliased content elements ([fritzmg])
+- [#5296] Do not use exponential notation for float values ([ausi])
+- [#5298] Use `Webmozart\PathUtil\Path` instead of `Symfony\Component\Filesystem\Path` ([fritzmg])
+
+## [4.9.34] (2022-09-15)
+
+**Fixed issues:**
+
+- [#5271] Fix the order of the palette combiner ([ausi])
+- [#5275] Fix the search field in Safari 16 ([leofeyer])
+- [#5276] Fix the opacity of draft elements ([leofeyer])
+- [#5270] Allow symlinked bundle paths in the template files listing ([m-vo])
+- [#5231] Do not use POST values directly for Reply-To and Cc ([fritzmg])
+- [#5226] Fix a CSS issue in the install tool database update screen ([leofeyer])
+- [#5208] Fix custom paste modes not working properly ([qzminski])
+- [#5225] Check the ID when sending comment notifications ([leofeyer])
+- [#5224] Use the correct label for the "confirm password" field ([leofeyer])
+- [#4930] Do not set HTTP header in Versions::addToTemplate ([fritzmg])
+
+## [4.9.33] (2022-08-17)
+
+**Fixed issues:**
+
+- [#5013] Do not insert fields that do not exist in the DB ([aschempp])
+- [#5164] Fix check for existing label in DcaLoader ([ausi])
+- [#5130] Only set login constants in master request ([fritzmg])
+- [#5155] Deprecate Calendar::addEvent() ([ausi])
+- [#5143] Do not run the DC constructor inside the picker widget ([ausi])
+- [#5132] Check for column options in AdjustSearchUrlLengthListener ([fritzmg])
+- [#5154] Allow empty key for subpalette suffix based on select ([dennisbohn])
+- [#5145] Fix typo in tl_comments ([ausi])
+
+## [4.9.32] (2022-08-12)
+
+**Fixed issues:**
+
+- [#5123] Remove the "draft" overlay ([leofeyer])
+- [#5121] Remove leftover code in the DataContainer class ([fritzmg])
+- [#4628] Automatically reduce tl_search.url length ([fritzmg])
+- [#4887] Update the Google Analytics tracking snippet ([ameotoko])
+- [#5072] Backport lazy services for CronJob repository ([aschempp])
+- [#5101] Check database version in migrate command ([ausi])
+- [#4777] Fix the missing cache tag invalidation in tree view ([Toflar])
+- [#5075] Do not include "index" in folderUrl ([aschempp])
+- [#4968] Set login constants in request listener ([fritzmg])
+- [#5032] Allow null for PaletteManipulator parent ([fritzmg])
+- [#5077] Fix indeterministic order for non-unique filters in DC_Table ([Toflar])
+- [#5010] Fix adjustTime in tl_calendar_events ([fritzmg])
+- [#5102] Make sure the framework is initialized when accessing config ([aschempp])
+- [#5058] Fix illegal string offsets in the translator ([ausi])
+- [#4964] Fix PHP 8 warning in ModuleRegistration ([ameotoko])
+- [#4975] Fix tl_member source translations for city and state ([zoglo])
+- [#4966] Use cache_suffix for TinyMCE ([fritzmg])
+- [#4366] Revise drafts only when navigating back ([ausi])
+- [#4895] Fix an error in page forward if the $_GET parameter is an array ([qzminski])
+
+## [4.9.31] (2022-07-05)
+
+**Fixed issues:**
+
+- [#4865] Correctly check ptable when moving records ([aschempp])
+- [#4864] Fix inconsistency when copying child records ([aschempp])
+- [#4906] Improve deprecation warning for DCA FQCN ([aschempp])
+- [#4894] Display an error message if the version cannot be restored ([qzminski])
+- [#4880] Adjust the video file type sorting in the media element ([leofeyer])
+- [#4867] Do not update the search index on redirects ([Toflar])
+- [#4879] Do not call `kernel.terminate` on fresh cache entries ([Toflar])
+- [#4858] Fix 0 to nbsp conversion in the listing module ([bezin])
+- [#4853] Determine the InnoDB index length only once per schema ([ausi])
+- [#4845] Fix the crawl logs view ([leofeyer])
+- [#4828] Correctly clear style sheets on 404 ([aschempp])
+- [#4832] Prevent unlimited recurrences in the event list ([leofeyer])
+- [#4574] Fix the impersonation message ([cliffparnitzky])
+- [#4819] Deprecate CURRENT_ID ([ausi])
+- [#4809] Add a migration for bad playerColor data ([ausi])
+- [#4814] Fix preview toolbar always showing error ([fritzmg])
+- [#4804] Fix SearchIndexSubscriber not respecting noindex hint ([Toflar])
+- [#4802] Ignore website roots with empty language in the meta wizard ([fritzmg])
+
 ## [4.9.30] (2022-06-03)
 
 **Fixed issues:**
@@ -542,6 +637,7 @@ This project adheres to [Semantic Versioning].
 - [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
 - [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
 - [#2257] Only use floorToMinute() in DB queries ([leofeyer])
+- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
 - [#2248] Fix a type error in the back end menu listener ([leofeyer])
 - [#2244] Do not log 503 exceptions ([fritzmg])
 - [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
@@ -936,6 +1032,11 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.35]: https://github.com/contao/contao/releases/tag/4.9.35
+[4.9.34]: https://github.com/contao/contao/releases/tag/4.9.34
+[4.9.33]: https://github.com/contao/contao/releases/tag/4.9.33
+[4.9.32]: https://github.com/contao/contao/releases/tag/4.9.32
+[4.9.31]: https://github.com/contao/contao/releases/tag/4.9.31
 [4.9.30]: https://github.com/contao/contao/releases/tag/4.9.30
 [4.9.29]: https://github.com/contao/contao/releases/tag/4.9.29
 [4.9.28]: https://github.com/contao/contao/releases/tag/4.9.28
@@ -1005,7 +1106,78 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
+[zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5343]: https://github.com/contao/contao/pull/5343
+[#5352]: https://github.com/contao/contao/pull/5352
+[#5336]: https://github.com/contao/contao/pull/5336
+[#5330]: https://github.com/contao/contao/pull/5330
+[#5348]: https://github.com/contao/contao/pull/5348
+[#5342]: https://github.com/contao/contao/pull/5342
+[#5338]: https://github.com/contao/contao/pull/5338
+[#5331]: https://github.com/contao/contao/pull/5331
+[#5329]: https://github.com/contao/contao/pull/5329
+[#5325]: https://github.com/contao/contao/pull/5325
+[#5323]: https://github.com/contao/contao/pull/5323
+[#4776]: https://github.com/contao/contao/pull/4776
+[#5250]: https://github.com/contao/contao/pull/5250
+[#5296]: https://github.com/contao/contao/pull/5296
+[#5298]: https://github.com/contao/contao/pull/5298
+[#5271]: https://github.com/contao/contao/pull/5271
+[#5275]: https://github.com/contao/contao/pull/5275
+[#5276]: https://github.com/contao/contao/pull/5276
+[#5270]: https://github.com/contao/contao/pull/5270
+[#5231]: https://github.com/contao/contao/pull/5231
+[#5226]: https://github.com/contao/contao/pull/5226
+[#5208]: https://github.com/contao/contao/pull/5208
+[#5225]: https://github.com/contao/contao/pull/5225
+[#5224]: https://github.com/contao/contao/pull/5224
+[#4930]: https://github.com/contao/contao/pull/4930
+[#5013]: https://github.com/contao/contao/pull/5013
+[#5164]: https://github.com/contao/contao/pull/5164
+[#5130]: https://github.com/contao/contao/pull/5130
+[#5155]: https://github.com/contao/contao/pull/5155
+[#5143]: https://github.com/contao/contao/pull/5143
+[#5132]: https://github.com/contao/contao/pull/5132
+[#5154]: https://github.com/contao/contao/pull/5154
+[#5145]: https://github.com/contao/contao/pull/5145
+[#5123]: https://github.com/contao/contao/pull/5123
+[#5121]: https://github.com/contao/contao/pull/5121
+[#4628]: https://github.com/contao/contao/pull/4628
+[#4887]: https://github.com/contao/contao/pull/4887
+[#5072]: https://github.com/contao/contao/pull/5072
+[#5101]: https://github.com/contao/contao/pull/5101
+[#4777]: https://github.com/contao/contao/pull/4777
+[#5075]: https://github.com/contao/contao/pull/5075
+[#4968]: https://github.com/contao/contao/pull/4968
+[#5032]: https://github.com/contao/contao/pull/5032
+[#5077]: https://github.com/contao/contao/pull/5077
+[#5010]: https://github.com/contao/contao/pull/5010
+[#5102]: https://github.com/contao/contao/pull/5102
+[#5058]: https://github.com/contao/contao/pull/5058
+[#4964]: https://github.com/contao/contao/pull/4964
+[#4975]: https://github.com/contao/contao/pull/4975
+[#4966]: https://github.com/contao/contao/pull/4966
+[#4366]: https://github.com/contao/contao/pull/4366
+[#4895]: https://github.com/contao/contao/pull/4895
+[#4865]: https://github.com/contao/contao/pull/4865
+[#4864]: https://github.com/contao/contao/pull/4864
+[#4906]: https://github.com/contao/contao/pull/4906
+[#4894]: https://github.com/contao/contao/pull/4894
+[#4880]: https://github.com/contao/contao/pull/4880
+[#4867]: https://github.com/contao/contao/pull/4867
+[#4879]: https://github.com/contao/contao/pull/4879
+[#4858]: https://github.com/contao/contao/pull/4858
+[#4853]: https://github.com/contao/contao/pull/4853
+[#4845]: https://github.com/contao/contao/pull/4845
+[#4828]: https://github.com/contao/contao/pull/4828
+[#4832]: https://github.com/contao/contao/pull/4832
+[#4574]: https://github.com/contao/contao/pull/4574
+[#4819]: https://github.com/contao/contao/pull/4819
+[#4809]: https://github.com/contao/contao/pull/4809
+[#4814]: https://github.com/contao/contao/pull/4814
+[#4804]: https://github.com/contao/contao/pull/4804
+[#4802]: https://github.com/contao/contao/pull/4802
 [#4766]: https://github.com/contao/contao/pull/4766
 [#4711]: https://github.com/contao/contao/pull/4711
 [#4718]: https://github.com/contao/contao/pull/4718
@@ -1399,6 +1571,7 @@ This project adheres to [Semantic Versioning].
 [#2264]: https://github.com/contao/contao/pull/2264
 [#2260]: https://github.com/contao/contao/pull/2260
 [#2257]: https://github.com/contao/contao/pull/2257
+[#2249]: https://github.com/contao/contao/pull/2249
 [#2248]: https://github.com/contao/contao/pull/2248
 [#2244]: https://github.com/contao/contao/pull/2244
 [#2221]: https://github.com/contao/contao/pull/2221

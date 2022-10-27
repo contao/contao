@@ -321,6 +321,10 @@
         <source>Unknown username: %s</source>
         <target>Unbekannter Nutzername: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Version %d konnte nicht wiederhergestellt werden, da sie nicht mehr mit der aktuellen Datenbankstruktur kompatibel ist. Bitte stellen Sie die Daten manuell wieder her.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -2886,8 +2890,8 @@
         <target>%d URL(s) erfolgreich indexiert. %d fehlgeschlagen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URL(s) wurde(n) übersprungen (wenn Sie eine URL vermissen, prüfen Sie das Debug-Log).</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d URL(s) wurde(n) übersprungen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

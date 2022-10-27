@@ -718,6 +718,11 @@ class PageModel extends Model
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
 			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback='1'");
+
+			if (!isset($arrOptions['order']))
+			{
+				$arrOptions['order'] = "$t.dns DESC";
+			}
 		}
 
 		if (!static::isPreviewMode($arrOptions))
@@ -934,7 +939,7 @@ class PageModel extends Model
 					{
 						// If $folderUrl is not yet set, use the alias of the first
 						// parent page if it is not a root page (see #2129)
-						if (!$folderUrl && $objParentPage->alias)
+						if (!$folderUrl && $objParentPage->alias && $objParentPage->alias !== 'index' && $objParentPage->alias !== '/')
 						{
 							$folderUrl = $objParentPage->alias . '/';
 						}
