@@ -54,6 +54,12 @@ class ModuleEventReader extends Events
 			return $objTemplate->parse();
 		}
 
+		// Return an empty string if "auto_item" is not set to combine list and reader on same page
+		if (Input::get('auto_item') === null)
+		{
+			return '';
+		}
+
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
