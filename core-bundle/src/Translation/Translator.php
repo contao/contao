@@ -58,20 +58,23 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             $locale = $this->translator->getLocale();
         }
 
+        $contaoDomain = substr($domain, 7);
+
         $this->framework->initialize();
-        $this->loadLanguageFile(substr($domain, 7), $locale);
+        $this->loadLanguageFile($contaoDomain, $locale);
 
         $translated = $this->getFromGlobals($id);
 
-        if (null === $translated) {
-            return $id;
-        }
-
-        if (!empty($parameters)) {
+        if (!empty($parameters) && null !== $translated) {
             $translated = vsprintf($translated, $parameters);
         }
 
-        return $translated;
+        // Restore previous translations in $GLOBALS['TL_LANG'] (#5371)
+        if ($locale !== $this->getLocale()) {
+            $this->loadLanguageFile($contaoDomain, $this->getLocale());
+        }
+
+        return $translated ?? $id;
     }
 
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
