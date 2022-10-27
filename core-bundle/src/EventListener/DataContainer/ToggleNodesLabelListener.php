@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\DataContainer;
-use Contao\DC_Table;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -32,10 +30,12 @@ class ToggleNodesLabelListener
     public function __invoke(string $table): void
     {
         if (
-            DC_Table::class !== DataContainer::getDriverForTable($table)
-            || !isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])
+            !isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])
             || isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'])
-            || 'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
+            || (
+                'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
+                && 'tg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
+            )
             || null === ($request = $this->requestStack->getCurrentRequest())
             || null === ($session = $request->getSession())
         ) {
