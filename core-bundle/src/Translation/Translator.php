@@ -58,8 +58,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             $locale = $this->translator->getLocale();
         }
 
-        $this->framework->initialize();
         $contaoDomain = substr($domain, 7);
+
+        $this->framework->initialize();
         $this->loadLanguageFile($contaoDomain, $locale);
 
         $translated = $this->getFromGlobals($id);
