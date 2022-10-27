@@ -241,7 +241,7 @@ class TranslatorTest extends TestCase
                     $catalogue = $this->createMock(MessageCatalogueInterface::class);
                     $catalogue
                         ->method('getLocale')
-                        ->willReturn($locale ?? 'de')
+                        ->willReturn($locale ?? 'en')
                     ;
 
                     return $catalogue;
