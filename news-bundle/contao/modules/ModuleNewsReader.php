@@ -53,7 +53,8 @@ class ModuleNewsReader extends ModuleNews
 			return $objTemplate->parse();
 		}
 
-		if (null === Input::get('auto_item'))
+		// Return an empty string if "auto_item" is not set to combine list and reader on same page
+		if (Input::get('auto_item') === null)
 		{
 			return '';
 		}
