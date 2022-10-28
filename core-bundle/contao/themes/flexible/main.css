@@ -1211,6 +1211,7 @@ table.tl_listing {
 .parent_view > ul {
 	margin: 0;
 	padding: 0;
+	list-style: none;
 	background: #f3f3f5;
 }
 
@@ -2579,6 +2580,12 @@ fieldset.collapsed > legend {
 
 .tl_listing .odd .tl_undo_preview .limit_toggler {
 	background-color: var(--table-odd);
+}
+
+#picker-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 /* Tablet */
