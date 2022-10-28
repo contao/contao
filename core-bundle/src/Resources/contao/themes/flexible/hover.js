@@ -221,8 +221,6 @@ var Theme = {
 	 * Hide the menu on scroll
 	 */
 	hideMenuOnScroll: function() {
-		if (!('ontouchmove' in window)) return;
-
 		var wh = window.getSize().y,
 			dh = window.getScrollSize().y - wh,
 			anchor = 0;
