@@ -38,6 +38,6 @@ class MemberActivationMailListener
             return;
         }
 
-        $event->setSimpleToken('channels', implode("\n", $channels));
+        $event->addSimpleToken('channels', implode("\n", $channels));
     }
 }

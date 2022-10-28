@@ -65,9 +65,16 @@ class MemberActivationMailEvent extends Event
         return $this;
     }
 
-    public function setSimpleToken(string $token, string $value): self
+    public function addSimpleToken(string $token, string $value): self
     {
         $this->simpleTokens[$token] = $value;
+
+        return $this;
+    }
+
+    public function removeSimpleToken(string $token): self
+    {
+        unset($this->simpleTokens[$token]);
 
         return $this;
     }
@@ -77,14 +84,21 @@ class MemberActivationMailEvent extends Event
         return $this->simpleTokens;
     }
 
-    public function setSendOptInToken(bool $sendOptInToken): self
+    public function disableSendingTheOptInToken(): self
     {
-        $this->sendOptInToken = $sendOptInToken;
+        $this->sendOptInToken = false;
 
         return $this;
     }
 
-    public function getSendOptInToken(): bool
+    public function enableSendingTheOptInToken(): self
+    {
+        $this->sendOptInToken = true;
+
+        return $this;
+    }
+
+    public function shouldSendOptInToken(): bool
     {
         return $this->sendOptInToken;
     }
