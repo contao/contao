@@ -50,13 +50,11 @@ class RemoveDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $path = $this->projectDir.'/.env';
+        $dotenv = new DotenvDumper($path.'.local');
         $key = $input->getArgument('key');
-        $file = $this->projectDir.'/.env';
-        $fileLocal = $file.'.local';
 
-        $dotenv = new DotenvDumper($fileLocal);
-
-        if (file_exists($file) && isset((new Dotenv(false))->parse(file_get_contents($file))[$key])) {
+        if (file_exists($path) && isset((new Dotenv(false))->parse(file_get_contents($path))[$key])) {
             $dotenv->setParameter($key, '');
         } else {
             $dotenv->unsetParameter($key);
