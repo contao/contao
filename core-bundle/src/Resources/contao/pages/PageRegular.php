@@ -832,7 +832,7 @@ class PageRegular extends Frontend
 			(
 				'@context' => array('contao' => 'https://schema.contao.org/'),
 				'@type' => 'contao:Page',
-				'contao:title' => $objPage->pageTitle ?: $objPage->title,
+				'contao:title' => StringUtil::decodeEntities(strip_tags(StringUtil::stripInsertTags($objPage->pageTitle ?: $objPage->title))),
 				'contao:pageId' => (int) $objPage->id,
 				'contao:noSearch' => $noSearch,
 				'contao:protected' => (bool) $objPage->protected,
