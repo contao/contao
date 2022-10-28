@@ -1541,13 +1541,14 @@ label.tl_change_selected {
 }
 
 .selector_container > ul {
-	margin-bottom: 1px;
+	margin: 0 0 1px;
+	padding: 0;
 	list-style-type: none;
 	overflow: hidden;
 }
 
 .selector_container > ul > li {
-	margin-right: 9px;
+	margin: 0 9px 0 0;
 	padding: 2px 0;
 }
 
