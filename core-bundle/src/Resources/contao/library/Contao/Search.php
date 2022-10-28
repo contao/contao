@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -782,33 +783,31 @@ class Search
 	 *
 	 * @param string $strUrl The URL to be removed
 	 */
-	public static function removeEntry($strUrl)
+	public static function removeEntry($strUrl, Connection $connection = null)
 	{
-		$objDatabase = Database::getInstance();
+		$connection = $connection ?? System::getContainer()->get('database_connection');
 
-		$objResult = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
-								 ->execute($strUrl);
+		$result = $connection
+			->prepare('SELECT id FROM tl_search WHERE url=:url')
+			->executeQuery(array('url' => $strUrl));
 
-		while ($objResult->next())
+		foreach ($result->fetchAllAssociativeIndexed() as $id)
 		{
 			// Decrement document frequency counts
-			$objDatabase
+			$connection
 				->prepare("
 					UPDATE tl_search_term
-					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = :id
 					SET documentFrequency = GREATEST(1, documentFrequency) - 1
 				")
-				->execute($objResult->id);
+				->executeQuery(array('id' => $id));
 
-			$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
-						->execute($objResult->id);
-
-			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						->execute($objResult->id);
+			$connection->delete('tl_search', array('id' => $id));
+			$connection->delete('tl_search_index', array('pid' => $id));
 		}
 
 		// Remove obsolete terms
-		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+		$connection->executeQuery("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 	}
 
 	/**
