@@ -785,10 +785,10 @@ class Search
 	 */
 	public static function removeEntry($strUrl, Connection $connection = null)
 	{
-		/** @var Connection $connection */
 		$connection = $connection ?? System::getContainer()->get('database_connection');
 
-		$result = $connection->prepare('SELECT id FROM tl_search WHERE url=:url')
+		$result = $connection
+			->prepare('SELECT id FROM tl_search WHERE url=:url')
 			->executeQuery(array('url' => $strUrl));
 
 		foreach ($result->fetchAllAssociativeIndexed() as $id)

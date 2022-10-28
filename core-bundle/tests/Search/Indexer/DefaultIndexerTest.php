@@ -255,6 +255,7 @@ class DefaultIndexerTest extends TestCase
     public function testDeletesADocument(): void
     {
         $connection = $this->createMock(Connection::class);
+
         $searchAdapter = $this->mockAdapter(['removeEntry']);
         $searchAdapter
             ->expects($this->once())
