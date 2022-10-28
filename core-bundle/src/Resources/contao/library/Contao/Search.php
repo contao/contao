@@ -788,17 +788,19 @@ class Search
 		$connection = $connection ?? System::getContainer()->get('database_connection');
 
 		$result = $connection
-			->executeQuery('SELECT id FROM tl_search WHERE url=:url', array('url' => $strUrl));
+			->prepare('SELECT id FROM tl_search WHERE url = :url')
+			->executeQuery(array(':url' => $strUrl));
 
 		foreach ($result->fetchFirstColumn() as $id)
 		{
 			// Decrement document frequency counts
 			$connection
-				->executeStatement("
+				->prepare("
 					UPDATE tl_search_term
 					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = :id
 					SET documentFrequency = GREATEST(1, documentFrequency) - 1
-				", array('id' => $id));
+				")
+				->executeQuery(array(':id' => $id));
 
 			$connection->delete('tl_search', array('id' => $id));
 			$connection->delete('tl_search_index', array('pid' => $id));
