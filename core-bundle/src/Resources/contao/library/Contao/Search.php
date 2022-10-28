@@ -655,7 +655,7 @@ class Search
 		$stmt = $connection->prepare('SELECT id FROM tl_search WHERE url=:url');
 		$stmt->execute(array('url' => $strUrl));
 
-		foreach ($stmt->fetchAllAssociative() as $id)
+		foreach ($stmt->fetchFirstColumn() as $id)
 		{
 			$connection->delete('tl_search', array('id' => $id));
 			$connection->delete('tl_search_index', array('pid' => $id));
