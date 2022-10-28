@@ -145,7 +145,13 @@ trait TemplateInheritance
 		// Replace insert tags
 		if ($this instanceof FrontendTemplate)
 		{
-			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+			$container = System::getContainer();
+			$request = $container->get('request_stack')->getCurrentRequest();
+
+			if (!$request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$strBuffer = $container->get('contao.insert_tag.parser')->replace($strBuffer);
+			}
 		}
 
 		// Add start and end markers in debug mode
