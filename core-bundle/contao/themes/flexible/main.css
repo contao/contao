@@ -2124,6 +2124,12 @@ ul.sortable button[disabled]:hover {
 	border-bottom: 1px solid #ddd;
 }
 
+#picker-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 #picker-menu li {
 	display: inline-block;
 	padding: 8px 0;
@@ -2580,12 +2586,6 @@ fieldset.collapsed > legend {
 
 .tl_listing .odd .tl_undo_preview .limit_toggler {
 	background-color: var(--table-odd);
-}
-
-#picker-menu > ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
 }
 
 /* Tablet */
