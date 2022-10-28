@@ -63,16 +63,10 @@ class Version440Update extends AbstractMigration
             if (!empty($scripts) && \is_array($scripts)) {
                 $scripts[] = 'js_autofocus';
 
-                $stmt = $this->connection->prepare('
-                    UPDATE
-                        tl_layout
-                    SET
-                        scripts = :scripts
-                    WHERE
-                        id = :id
-                ');
-
-                $stmt->executeStatement([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout['id']]);
+                $this->connection->executeStatement(
+                    'UPDATE tl_layout SET scripts = :scripts WHERE id = :id',
+                    ['scripts' => serialize(array_values(array_unique($scripts))), 'id' => $layout['id']]
+                );
             }
         }
 

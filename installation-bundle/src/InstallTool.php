@@ -384,14 +384,35 @@ class InstallTool
             '=' => '&#61;',
         ];
 
-        $statement->executeStatement([
-            ':time' => time(),
-            ':name' => strtr($name, $replace),
-            ':email' => $email,
-            ':username' => strtr($username, $replace),
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':language' => $language,
-        ]);
+        $this->connection->executeStatement(
+            "
+                INSERT INTO tl_user
+                    (
+                        tstamp,
+                        name,
+                        email,
+                        username,
+                        password,
+                        language,
+                        backendTheme,
+                        `admin`,
+                        showHelp,
+                        useRTE,
+                        useCE,
+                        thumbnails,
+                        dateAdded
+                    )
+                 VALUES
+                    (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
+            ",
+            [
+                'time' => time(),
+                'name' => strtr($name, $replace),
+                'email' => $email,
+                'username' => strtr($username, $replace),
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'language' => $language,
+            ]);
     }
 
     /**

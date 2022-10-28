@@ -75,16 +75,10 @@ class RemoveJsHighlightMigration extends AbstractMigration
                 if (false !== $key) {
                     unset($scripts[$key]);
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_layout
-                        SET
-                            scripts = :scripts
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_layout SET scripts = :scripts WHERE id = :id',
+                        ['scripts' => serialize(array_values($scripts)), 'id' => $layout['id']]
+                    );
                 }
             }
         }

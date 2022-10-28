@@ -66,7 +66,7 @@ class CeAccessMigrationTest extends TestCase
         $stmt
             ->expects($this->once())
             ->method('executeStatement')
-            ->with([':elements' => 'a:1:{i:0;s:4:"text";}', ':fields' => 'a:1:{i:0;s:4:"text";}'])
+            ->with(['elements' => 'a:1:{i:0;s:4:"text";}', 'fields' => 'a:1:{i:0;s:4:"text";}'])
         ;
 
         $connection = $this->createMock(Connection::class);

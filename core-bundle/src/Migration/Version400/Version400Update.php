@@ -80,16 +80,10 @@ class Version400Update extends AbstractMigration
                         $scripts[] = 'js_slider';
                         unset($jquery[$key]);
 
-                        $stmt = $this->connection->prepare('
-                            UPDATE
-                                tl_layout
-                            SET
-                                jquery = :jquery
-                            WHERE
-                                id = :id
-                        ');
-
-                        $stmt->executeStatement([':jquery' => serialize(array_values($jquery)), ':id' => $layout['id']]);
+                        $this->connection->executeStatement(
+                            'UPDATE tl_layout SET jquery = :jquery WHERE id = :id',
+                            ['jquery' => serialize(array_values($jquery)), 'id' => $layout['id']]
+                        );
                     }
                 }
             }
@@ -105,32 +99,20 @@ class Version400Update extends AbstractMigration
                         $scripts[] = 'js_slider';
                         unset($mootools[$key]);
 
-                        $stmt = $this->connection->prepare('
-                            UPDATE
-                                tl_layout
-                            SET
-                                mootools = :mootools
-                            WHERE
-                                id = :id
-                        ');
-
-                        $stmt->executeStatement([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
+                        $this->connection->executeStatement(
+                            'UPDATE tl_layout SET mootools = :mootools WHERE id = :id',
+                            ['mootools' => serialize(array_values($mootools)), 'id' => $layout['id']]
+                        );
                     }
                 }
             }
 
             // Enable the js_slider template
             if (!empty($scripts)) {
-                $stmt = $this->connection->prepare('
-                    UPDATE
-                        tl_layout
-                    SET
-                        scripts = :scripts
-                    WHERE
-                        id = :id
-                ');
-
-                $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
+                $this->connection->executeStatement(
+                    'UPDATE tl_layout SET scripts = :scripts WHERE id = :id',
+                    ['scripts' => serialize(array_values($scripts)), 'id' => $layout['id']]
+                );
             }
         }
 
@@ -154,16 +136,10 @@ class Version400Update extends AbstractMigration
                     $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_layout
-                        SET
-                            mootools = :mootools
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_layout SET mootools = :mootools WHERE id = :id',
+                        ['mootools' => serialize(array_values($mootools)), 'id' => $layout['id']]
+                    );
                 }
             }
         }
@@ -187,16 +163,10 @@ class Version400Update extends AbstractMigration
                 if (false !== $key) {
                     unset($framework[$key]);
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_layout
-                        SET
-                            framework = :framework
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':framework' => serialize(array_values($framework)), ':id' => $layout['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_layout SET framework = :framework WHERE id = :id',
+                        ['framework' => serialize(array_values($framework)), 'id' => $layout['id']]
+                    );
                 }
             }
         }

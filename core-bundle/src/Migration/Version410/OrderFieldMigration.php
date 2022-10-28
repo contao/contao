@@ -121,23 +121,18 @@ class OrderFieldMigration extends AbstractMigration
 
             $items = array_merge(array_values(array_filter($order)), array_values($items));
 
-            $this->connection
-                ->prepare("
-                    UPDATE
-                        $tableQuoted
-                    SET
-                        $fieldQuoted = :items,
-                        $orderFieldQuoted = ''
-                    WHERE
-                        $fieldQuoted = :field
-                        AND $orderFieldQuoted = :orderField
-                ")
-                ->executeStatement([
-                    ':items' => serialize($items),
-                    ':field' => $row[$field],
-                    ':orderField' => $row[$orderField],
-                ])
-            ;
+            $this->connection->executeStatement(
+                "
+                    UPDATE $tableQuoted
+                    SET $fieldQuoted = :items, $orderFieldQuoted = ''
+                    WHERE $fieldQuoted = :field AND $orderFieldQuoted = :orderField
+                ",
+                [
+                    'items' => serialize($items),
+                    'field' => $row[$field],
+                    'orderField' => $row[$orderField],
+                ]
+            );
         }
 
         $this->connection->executeStatement("ALTER TABLE $tableQuoted DROP $orderFieldQuoted");
