@@ -747,7 +747,16 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+
+					try
+					{
+						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					}
+					catch (\Exception $e)
+					{
+						Message::addError($e->getMessage());
+						$image = Image::getPath('placeholder.svg');
+					}
 				}
 				else
 				{

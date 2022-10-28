@@ -44,7 +44,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
+<body id="top" class="<?= $this->ua ?> be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
