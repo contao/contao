@@ -85,6 +85,28 @@ class SearchTest extends FunctionalTestCase
         $this->assertSame(2, Search::searchFor('ａｂｃ')->count());
     }
 
+    /**
+     * @group legacy
+     */
+    public function testRemoveEntry(): void
+    {
+        $this->expectDeprecation('%ssearchFor%shas been deprecated%s');
+
+        $this->indexPage('page1', 'Page1 Content');
+        $this->indexPage('page2', 'Page2 Content');
+        $this->indexPage('page3', 'Page3 Content');
+
+        $this->assertSame(3, Search::searchFor('Page*')->count());
+
+        Search::removeEntry('https://contao.wip/page1');
+
+        $this->assertSame(2, Search::searchFor('Page*')->count());
+
+        Search::removeEntry('https://contao.wip/page3');
+
+        $this->assertSame(1, Search::searchFor('Page*')->count());
+    }
+
     private function indexPage(string $url, string $content): void
     {
         Search::indexPage([
