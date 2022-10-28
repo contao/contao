@@ -1211,6 +1211,7 @@ table.tl_listing {
 .parent_view > ul {
 	margin: 0;
 	padding: 0;
+	list-style: none;
 	background: #f3f3f5;
 }
 
@@ -2121,6 +2122,12 @@ ul.sortable button[disabled]:hover {
 #picker-menu {
 	padding: 9px 6px 0;
 	border-bottom: 1px solid #ddd;
+}
+
+#picker-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 #picker-menu li {
