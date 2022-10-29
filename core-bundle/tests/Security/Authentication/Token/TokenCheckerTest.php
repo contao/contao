@@ -18,6 +18,8 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -59,7 +61,8 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $hasRoles = \count($roles);
@@ -111,7 +114,8 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         if (FrontendUser::class === $class) {
@@ -138,7 +142,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
@@ -155,7 +160,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
@@ -179,13 +185,30 @@ class TokenCheckerTest extends TestCase
             ;
         }
 
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('fetchAssociative')
+            ->willReturn([
+                'url' => 'https://localhost/',
+                'showUnpublished' => $token instanceof FrontendPreviewToken && $token->showUnpublished(),
+                'restrictToUrl' => '',
+            ])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('executeQuery')
+            ->willReturn($result)
+        ;
+
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack($request),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $connection,
         );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
@@ -193,9 +216,9 @@ class TokenCheckerTest extends TestCase
 
     public function getPreviewModeData(): \Generator
     {
-        yield [new FrontendPreviewToken(null, true), false, false];
-        yield [new FrontendPreviewToken(null, true), true, true];
-        yield [new FrontendPreviewToken(null, false), true, false];
+        yield [new FrontendPreviewToken(null, true, 1), false, false];
+        yield [new FrontendPreviewToken(null, true, 1), true, true];
+        yield [new FrontendPreviewToken(null, false, 1), true, false];
         yield [new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider'), true, false];
     }
 
@@ -219,7 +242,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertFalse($tokenChecker->hasFrontendUser());
@@ -246,7 +270,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertFalse($tokenChecker->hasBackendUser());
@@ -279,7 +304,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -295,7 +321,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getBackendUsername());
@@ -311,7 +338,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -370,19 +398,19 @@ class TokenCheckerTest extends TestCase
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('isStarted')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('has')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturn(serialize($token))
         ;

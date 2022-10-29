@@ -54,7 +54,7 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, true);
         $serialized = $token->__serialize();
-        $expected = [true, [$token->getUser(), true, null, [], []]];
+        $expected = [true, [$token->getUser(), true, null, [], []], null];
 
         $this->assertSame($expected, $serialized);
 

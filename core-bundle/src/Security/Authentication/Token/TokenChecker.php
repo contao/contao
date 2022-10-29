@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,11 +36,13 @@ class TokenChecker
     private SessionInterface $session;
     private AuthenticationTrustResolverInterface $trustResolver;
     private VoterInterface $roleVoter;
+    private Connection $connection;
+    private array $previewLinks;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter)
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter, Connection $connection)
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
@@ -47,6 +50,7 @@ class TokenChecker
         $this->session = $session;
         $this->trustResolver = $trustResolver;
         $this->roleVoter = $roleVoter;
+        $this->connection = $connection;
     }
 
     /**
@@ -98,13 +102,35 @@ class TokenChecker
     }
 
     /**
+     * Tells whether the front end preview can be accessed.
+     */
+    public function isPreviewAllowed(): bool
+    {
+        if ($this->hasBackendUser()) {
+            return true;
+        }
+
+        $token = $this->getToken(self::FRONTEND_FIREWALL);
+
+        if (!$token instanceof FrontendPreviewToken) {
+            return false;
+        }
+
+        if (null === $token->getPreviewLinkId()) {
+            return false;
+        }
+
+        return $this->validatePreviewLink($token);
+    }
+
+    /**
      * Tells whether the front end preview can show unpublished fragments.
      */
     public function isPreviewMode(): bool
     {
         $request = $this->requestStack->getMainRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false)) {
+        if (null === $request || !$request->attributes->get('_preview', false) || !$this->isPreviewAllowed()) {
             return false;
         }
 
@@ -171,5 +197,40 @@ class TokenChecker
         }
 
         return $token;
+    }
+
+    private function validatePreviewLink(FrontendPreviewToken $token): bool
+    {
+        $id = $token->getPreviewLinkId();
+
+        if (!isset($this->previewLinks[$id])) {
+            $this->previewLinks[$id] = $this->connection->executeQuery(
+                "SELECT url, showUnpublished, restrictToUrl FROM tl_preview_link
+                WHERE id = :id AND published = '1' AND expiresAt > UNIX_TIMESTAMP()",
+                ['id' => $id],
+            )->fetchAssociative();
+        }
+
+        $previewLink = $this->previewLinks[$id];
+
+        if (!$previewLink) {
+            return false;
+        }
+
+        if ((bool) $previewLink['showUnpublished'] !== $token->showUnpublished()) {
+            return false;
+        }
+
+        if (!$previewLink['restrictToUrl']) {
+            return true;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+
+        if ($request && strtok($request->getUri(), '?') === strtok($previewLink['url'], '?')) {
+            return true;
+        }
+
+        return false;
     }
 }
