@@ -246,7 +246,7 @@ The following content element types have been rewritten as fragment controllers 
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
 use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
-`contao/config/config.php`:
+`system/config/localconfig.php`:
 
 ```php
 // Restore legacy content elements
