@@ -2,7 +2,7 @@
 
 {% block picker_select_all %}
     {% if select_mode or picker.field_type == 'checkbox' %}
-        {% if wrapped is not defined or not wrapped %}
+        {% if wrapped is defined and not wrapped %}
             {% block picker_select_all_inner %}
                 <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
                 <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
