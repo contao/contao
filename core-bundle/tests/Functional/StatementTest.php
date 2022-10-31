@@ -16,7 +16,6 @@ use Contao\Database;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoMysqlDriver;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
@@ -43,14 +42,6 @@ class StatementTest extends FunctionalTestCase
 
         $connection = System::getContainer()->get('database_connection');
         $driver = $connection->getDriver();
-        $isMysqli = $driver instanceof MysqliDriver;
-
-        $errorReporting = error_reporting();
-
-        // Prevent "mysqli_stmt::bind_param()" warnings in PHP 7
-        if ($isMysqli && PHP_VERSION_ID < 80000) {
-            error_reporting($errorReporting & ~E_WARNING);
-        }
 
         $db = Database::getInstance();
 
@@ -66,11 +57,6 @@ class StatementTest extends FunctionalTestCase
         }
 
         $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
-
-        // Restore the error reporting level
-        if ($isMysqli && PHP_VERSION_ID < 80000) {
-            error_reporting($errorReporting);
-        }
     }
 
     /**
