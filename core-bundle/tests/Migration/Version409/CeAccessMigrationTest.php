@@ -19,7 +19,6 @@ use Contao\FormTextField;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
-use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
 class CeAccessMigrationTest extends TestCase
@@ -62,13 +61,6 @@ class CeAccessMigrationTest extends TestCase
             ->willReturn([])
         ;
 
-        $stmt = $this->createMock(Statement::class);
-        $stmt
-            ->expects($this->once())
-            ->method('executeStatement')
-            ->with(['elements' => 'a:1:{i:0;s:4:"text";}', 'fields' => 'a:1:{i:0;s:4:"text";}'])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -77,14 +69,8 @@ class CeAccessMigrationTest extends TestCase
         ;
 
         $connection
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('executeStatement')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('prepare')
-            ->willReturn($stmt)
         ;
 
         $migration = new CeAccessMigration($connection, $this->mockContaoFramework());

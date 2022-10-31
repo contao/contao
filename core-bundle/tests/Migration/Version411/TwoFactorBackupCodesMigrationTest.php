@@ -16,7 +16,6 @@ use Contao\CoreBundle\Migration\Version411\TwoFactorBackupCodesMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
-use Doctrine\DBAL\Statement;
 
 class TwoFactorBackupCodesMigrationTest extends TestCase
 {
@@ -134,13 +133,6 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
             ->willReturn(['backupcodes' => []])
         ;
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(4))
-            ->method('executeStatement')
-            ->willReturn(1)
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -150,8 +142,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
         $connection
             ->expects($this->exactly(4))
-            ->method('prepare')
-            ->willReturn($statement)
+            ->method('executeStatement')
         ;
 
         $connection

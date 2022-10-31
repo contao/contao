@@ -352,28 +352,6 @@ class InstallTool
 
     public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
-        $statement = $this->connection->prepare("
-            INSERT INTO
-                tl_user
-                    (
-                        tstamp,
-                        name,
-                        email,
-                        username,
-                        password,
-                        language,
-                        backendTheme,
-                        `admin`,
-                        showHelp,
-                        useRTE,
-                        useCE,
-                        thumbnails,
-                        dateAdded
-                    )
-                 VALUES
-                    (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
-        ");
-
         $replace = [
             '#' => '&#35;',
             '<' => '&#60;',
