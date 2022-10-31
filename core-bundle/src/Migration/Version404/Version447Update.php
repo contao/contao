@@ -95,10 +95,9 @@ class Version447Update extends AbstractMigration
             $subscriptions = $this->connection->fetchAllAssociative(
                 "
                     SELECT *
-                      FROM tl_newsletter_recipients
-                     WHERE pid = :pid
-                       AND email = :email
-                     ORDER BY active = '1' DESC, addedOn != '' DESC, id
+                    FROM tl_newsletter_recipients
+                    WHERE pid = :pid AND email = :email
+                    ORDER BY active = '1' DESC, addedOn != '' DESC, id
                 ",
                 ['pid' => $duplicate['pid'], 'email' => $duplicate['email']]
             );
