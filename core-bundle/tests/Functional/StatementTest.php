@@ -48,7 +48,7 @@ class StatementTest extends FunctionalTestCase
         $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute(1, 2, 3, 4, 5, 6)->first()->fetchField());
         $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute([1, 2, 3, 4, 5, 6])->first()->fetchField());
 
-        $this->expectExceptionMessageMatches('/number of variables must match the number of parameters|number of bound variables does not match number of tokens/i');
+        $this->expectExceptionMessageMatches("/number of variables must match the number of parameters|number of bound variables does not match number of tokens|number of variables doesn't match number of parameters in prepared statement/i");
 
         $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
     }
