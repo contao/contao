@@ -378,10 +378,9 @@ trait TemplateInheritance
 
 		$contextFactory = $container->get('contao.twig.interop.context_factory');
 
-		$context = $this instanceof Template ?
-			$contextFactory->fromContaoTemplate($this) :
-			$contextFactory->fromClass($this)
-		;
+		$context = $this instanceof Template
+			? $contextFactory->fromContaoTemplate($this)
+			: $contextFactory->fromClass($this);
 
 		return $twig->render($templateCandidate, $context);
 	}
