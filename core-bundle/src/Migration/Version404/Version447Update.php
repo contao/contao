@@ -93,9 +93,13 @@ class Version447Update extends AbstractMigration
 
             // Find the oldest, active subscription preferring real subscriptions over imported ones
             $subscriptions = $this->connection->fetchAllAssociative(
-                "SELECT * FROM tl_newsletter_recipients
-                WHERE pid = :pid AND email = :email
-                ORDER BY active = '1' DESC, addedOn != '' DESC, id",
+                "
+                    SELECT *
+                      FROM tl_newsletter_recipients
+                     WHERE pid = :pid
+                       AND email = :email
+                     ORDER BY active = '1' DESC, addedOn != '' DESC, id
+                ",
                 ['pid' => $duplicate['pid'], 'email' => $duplicate['email']]
             );
 
