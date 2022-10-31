@@ -45,18 +45,17 @@ class StatementTest extends FunctionalTestCase
 
         $db = Database::getInstance();
 
-        $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute(2)->first()->fetchField());
-        $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute([2])->first()->fetchField());
-        $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute(1, 2)->first()->fetchField());
-        $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute([1, 2])->first()->fetchField());
-        $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute(1, 2, 3, 4, 5, 6)->first()->fetchField());
-        $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute([1, 2, 3, 4, 5, 6])->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT 1')->execute(2)->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT 1')->execute([2])->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT ?')->execute(1, 2)->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT ?')->execute([1, 2])->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT ?')->execute(1, 2, 3, 4, 5, 6)->first()->fetchField());
+        $this->assertSame('1', (string) @$db->prepare('SELECT ?')->execute([1, 2, 3, 4, 5, 6])->first()->fetchField());
 
         if ($driver instanceof PdoMysqlDriver) {
             $this->expectExceptionMessageMatches('/number of bound variables does not match number of tokens/i');
+            $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
         }
-
-        $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
     }
 
     /**
