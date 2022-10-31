@@ -77,6 +77,17 @@ class FaviconControllerTest extends TestCase
         $this->assertSame('image/svg+xml', $response->headers->get('Content-Type'));
     }
 
+    public function testPngFavicon(): void
+    {
+        $controller = $this->getController('images/favicon.png');
+
+        $request = Request::create('/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/png', $response->headers->get('Content-Type'));
+    }
+
     private function getController(string $iconPath): FaviconController
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
