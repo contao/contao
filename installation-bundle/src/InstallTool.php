@@ -390,7 +390,8 @@ class InstallTool
                 'username' => strtr($username, $replace),
                 'password' => password_hash($password, PASSWORD_DEFAULT),
                 'language' => $language,
-            ]);
+            ]
+        );
     }
 
     /**

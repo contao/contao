@@ -340,13 +340,18 @@ class Version480Update extends AbstractMigration
                 $updateData['height'] = min(1 - $updateData['y'], $file['importantPartHeight'] / $imageSize[1]);
             }
 
-            $this->connection->executeStatement('
-                UPDATE
-                    tl_files
-                SET
-                    importantPartX = :x, importantPartY = :y, importantPartWidth = :width, importantPartHeight = :height
-                WHERE
-                    id = :id',
+            $this->connection->executeStatement(
+                '
+                    UPDATE
+                        tl_files
+                    SET
+                        importantPartX = :x,
+                        importantPartY = :y,
+                        importantPartWidth = :width,
+                        importantPartHeight = :height
+                    WHERE
+                        id = :id
+                ',
                 $updateData
             );
         }
