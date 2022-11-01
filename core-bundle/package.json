@@ -1,8 +1,10 @@
 {
     "private": true,
     "scripts": {
-        "dev": "NODE_ENV=development node_modules/.bin/encore dev --watch",
-        "prod": "env NODE_ENV=production node_modules/.bin/encore production"
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
     },
     "devDependencies": {
         "@babel/core": "^7.19.3",
