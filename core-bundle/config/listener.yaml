@@ -5,9 +5,11 @@ services:
     contao.listener.administrator_email:
         class: Contao\CoreBundle\EventListener\AdministratorEmailListener
         arguments:
+            - '@contao.framework'
             - '@translator'
             - '@router'
             - '@request_stack'
+            - '@security.helper'
         tags:
             - { name: contao.hook, hook: getSystemMessages }
 
