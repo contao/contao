@@ -560,6 +560,15 @@ jobs:
                   echo " - ${{ env.GITHUB_SHA_SHORT }}"
                   # output e.g. : ffac537e
 
+            - name: Print github variables
+              run: |
+                  echo ${{github.ref}}
+                  echo ${{github.head_ref}}
+                  echo ${{github.ref_name}}
+                  echo ${{github.repository}}
+                  echo ${{github.repository_owner}}
+                  echo ${{github.repositoryUrl}}
+
             # We need to use the pr branch to run Cypress tests
             - name: Composer install branch
               env:
