@@ -123,6 +123,28 @@ Then run the functional tests via the `run` command:
 composer run functional-tests
 ```
 
+## End to end tests with Cypress
+
+Install Cypress and copy `cypress.config.dev.js` from `vendor/contao/contao/cypress.config.dev.js` to root and rename to ``cypress.config.js`.
+
+
+```bash
+npm install cypress platform --save-dev
+cp vendor/contao/contao/cypress.config.dev.js ./cypress.config.js
+```
+
+Run e2e tests without ui.
+
+```bash
+npx cypress run
+```
+
+Run e2e tests with Cypress test suite.
+
+```bash
+npx cypress open
+```
+
 ## License
 
 Contao is licensed under the terms of the LGPLv3.
