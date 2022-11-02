@@ -1726,13 +1726,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($this->strPalette as $v)
 				{
-					// Check whether field is excluded
-					if (DataContainer::isFieldExcluded($this->strTable, $this->strField) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+					if (!\in_array($v, $fields))
 					{
 						continue;
 					}
 
-					if (!\in_array($v, $fields))
+					// Check whether field is excluded
+					if (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
 					{
 						continue;
 					}
