@@ -193,6 +193,18 @@ class Database
 	}
 
 	/**
+	 * Execute a statement and return the number of affected rows
+	 *
+	 * @param string $strQuery The query string
+	 *
+	 * @return int The number of affected rows
+	 */
+	public function executeStatement(string $strQuery): int
+	{
+		return (int) $this->resConnection->executeStatement($strQuery);
+	}
+
+	/**
 	 * Execute a raw query and return a Result object
 	 *
 	 * @param string $strQuery The query string
