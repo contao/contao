@@ -24,7 +24,10 @@ class DatabaseTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Database::class]);
+        // Reset database instance
+        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
+        $property->setAccessible(true);
+        $property->setValue([]);
 
         parent::tearDown();
     }
