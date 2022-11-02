@@ -507,3 +507,64 @@ jobs:
               run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
               env:
                   GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}
+
+    cypress:
+        runs-on: ubuntu-latest
+        name: cypress
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Install Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Symfony CLI
+              run:  |
+                  wget https://get.symfony.com/cli/installer -O - | bash
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Inject slug/short variables
+              uses: rlespinasse/github-slug-action@v3.x
+
+            # We need to use the pr branch to run Cypress tests
+            - name: Composer install branch
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+              run: |
+                  composer create-project --no-install contao/managed-edition app 5.x-dev
+                  cd app
+                  echo "DATABASE_URL=mysql://root:root@localhost:3306/contao_test" > .env
+                  composer remove contao/* --no-update
+                  composer config repositories.pr vcs https://github.com/${{ env.GITHUB_REPOSITORY_OWNER_PART }}/${{ env.GITHUB_REPOSITORY_NAME_PART }}
+                  composer require contao/contao:dev-${{ env.GITHUB_HEAD_REF_SLUG }}
+                  composer install --no-progress --prefer-dist --optimize-autoloader
+                  /home/runner/.symfony5/bin/symfony server:start --no-tls --daemon
+
+            - name: Run Cypress
+              uses: cypress-io/github-action@v4
+              with:
+                  env: CONTAO_CONSOLE=app/vendor/bin/contao-console
+
+            - name: Upload video 📼
+              uses: actions/upload-artifact@v2
+              if: always()
+              with:
+                  name: Test videos
+                  path: tests/cypress/videos
+                  retention-days: 14
