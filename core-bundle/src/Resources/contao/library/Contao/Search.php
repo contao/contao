@@ -193,7 +193,7 @@ class Search
 		}
 
 		// Prevent deadlocks
-		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
+		$objDatabase->executeStatement("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
 		try
 		{
@@ -283,7 +283,7 @@ class Search
 				->execute(array_map('strval', array_keys($arrIndex)));
 
 			// Remove obsolete terms
-			$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+			$objDatabase->executeStatement("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 
 			$objTermIds = $objDatabase
 				->prepare("
@@ -322,7 +322,7 @@ class Search
 		}
 		finally
 		{
-			$objDatabase->query("UNLOCK TABLES");
+			$objDatabase->executeStatement("UNLOCK TABLES");
 		}
 
 		self::updateVectorLengths((int) $intInsertId);
@@ -360,7 +360,7 @@ class Search
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
 		// Set or update vector length
-		$objDatabase->query("
+		$objDatabase->executeStatement("
 			UPDATE tl_search
 			INNER JOIN (
 				SELECT
