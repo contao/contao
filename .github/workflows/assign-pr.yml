@@ -12,6 +12,7 @@ jobs:
     assign-pr:
         name: Assign
         runs-on: ubuntu-latest
+        continue-on-error: true
         steps:
             - name: Assign the author
               uses: toshimaru/auto-author-assign@v1.4.0
