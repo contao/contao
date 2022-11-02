@@ -54,10 +54,16 @@ class Database
 	protected $blnDisableAutocommit = false;
 
 	/**
-	 * Cache
+	 * listFields Cache
 	 * @var array
 	 */
 	protected $arrCache = array();
+
+	/**
+	 * listTables Cache
+	 * @var array
+	 */
+	protected $arrTablesCache = array();
 
 	/**
 	 * Establish the database connection
@@ -246,7 +252,7 @@ class Database
 	 */
 	public function listTables($strDatabase=null, $blnNoCache=false)
 	{
-		if ($blnNoCache || !isset($this->arrCache[$strDatabase]))
+		if ($blnNoCache || !isset($this->arrTablesCache[$strDatabase]))
 		{
 			$strOldDatabase = $this->resConnection->getDatabase();
 
@@ -256,7 +262,7 @@ class Database
 				$this->setDatabase($strDatabase);
 			}
 
-			$this->arrCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
+			$this->arrTablesCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
 
 			// Restore the database
 			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
@@ -265,7 +271,7 @@ class Database
 			}
 		}
 
-		return $this->arrCache[$strDatabase];
+		return $this->arrTablesCache[$strDatabase];
 	}
 
 	/**
