@@ -33,22 +33,16 @@ use Doctrine\DBAL\Exception\DriverException;
 class Database
 {
 	/**
-	 * Object instances (Singleton)
-	 * @var array
+	 * Object instance (Singleton)
+	 * @var Database
 	 */
-	protected static $arrInstances = array();
+	protected static $objInstance;
 
 	/**
 	 * Connection ID
 	 * @var Connection
 	 */
 	protected $resConnection;
-
-	/**
-	 * Disable autocommit
-	 * @var boolean
-	 */
-	protected $blnDisableAutocommit = false;
 
 	/**
 	 * Cache
@@ -72,14 +66,6 @@ class Database
 	}
 
 	/**
-	 * Close the database connection
-	 */
-	public function __destruct()
-	{
-		$this->resConnection = null;
-	}
-
-	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone()
@@ -95,6 +81,8 @@ class Database
 	 */
 	public function __get($strKey)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, $strKey);
+
 		if ($strKey == 'error')
 		{
 			$info = $this->resConnection->errorInfo();
@@ -106,42 +94,13 @@ class Database
 	}
 
 	/**
-	 * Instantiate the Database object (Factory)
-	 *
-	 * @param array $arrCustomConfig A configuration array
+	 * Instantiate the Database object (Singleton)
 	 *
 	 * @return Database The Database object
 	 */
-	public static function getInstance(array $arrCustomConfig=null)
+	public static function getInstance()
 	{
-		$arrConfig = array();
-
-		if (\is_array($arrCustomConfig))
-		{
-			$container = System::getContainer();
-
-			$arrDefaultConfig = array
-			(
-				'dbHost'     => $container->hasParameter('database_host') ? $container->getParameter('database_host') : null,
-				'dbPort'     => $container->hasParameter('database_port') ? $container->getParameter('database_port') : null,
-				'dbUser'     => $container->hasParameter('database_user') ? $container->getParameter('database_user') : null,
-				'dbPass'     => $container->hasParameter('database_password') ? $container->getParameter('database_password') : null,
-				'dbDatabase' => $container->hasParameter('database_name') ? $container->getParameter('database_name') : null,
-			);
-
-			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
-		}
-
-		// Sort the array before generating the key
-		ksort($arrConfig);
-		$strKey = md5(implode('', $arrConfig));
-
-		if (!isset(static::$arrInstances[$strKey]))
-		{
-			static::$arrInstances[$strKey] = new static($arrConfig);
-		}
-
-		return static::$arrInstances[$strKey];
+		return static::$objInstance ??= new static();
 	}
 
 	/**
