@@ -9,7 +9,7 @@ $GLOBALS['TL_CSS'][] = 'assets/tablesort/css/tablesort.min.css|static';
 <script>
   window.addEvent('domready', function() {
     $$('.ce_table .sortable').each(function(table) {
-      new TableSort(table, '<?= $GLOBALS['TL_LANG']['MSC']['thousandsSeparator'] ?>', '<?= $GLOBALS['TL_LANG']['MSC']['decimalSeparator'] ?>');
+      new TableSort(table, '<?= $this->trans('MSC.thousandsSeparator') ?>', '<?= $this->trans('MSC.decimalSeparator') ?>');
     });
   });
 </script>
