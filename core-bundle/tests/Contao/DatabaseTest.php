@@ -55,7 +55,7 @@ class DatabaseTest extends ContaoTestCase
                 false,
                 ['Field' => 'columnname', 'Type' => 'varchar(255)'],
                 false,
-                false,
+                false
             )
         ;
 
