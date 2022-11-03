@@ -17,9 +17,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\PageModel;
-use Contao\User;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
@@ -167,17 +165,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
-        try {
-            $username = $this->getCredentials($request)['username'];
-
-            if (null !== $username) {
-                /** @var User $user */
-                $user = $this->userProvider->loadUserByIdentifier($username);
-                $exception = $this->checkLoginAttempts($user, $exception);
-            }
-        } catch (\Exception) {
-        }
-
         return $this->failureHandler->onAuthenticationFailure($request, $exception);
     }
 
@@ -253,32 +240,5 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         return $page;
-    }
-
-    private function checkLoginAttempts(User $user, AuthenticationException $exception): AuthenticationException
-    {
-        ++$user->loginAttempts;
-
-        if ($user->loginAttempts < 3) {
-            $user->save();
-
-            return $exception;
-        }
-
-        $lockedSeconds = ($user->loginAttempts - 2) * 60;
-
-        $user->locked = time() + $lockedSeconds;
-        $user->save();
-
-        $exception = new LockedException(
-            $lockedSeconds,
-            sprintf('User "%s" has been locked for %s seconds', $user->username, $lockedSeconds),
-            0,
-            $exception,
-        );
-
-        $exception->setUser($user);
-
-        return $exception;
     }
 }
