@@ -28,6 +28,8 @@ class TemplateLocator
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
     private Filesystem $filesystem;
+    private array|null $themeDirectories = null;
+    private string $globalTemplateDirectory;
 
     /**
      * @param array<string, string>                $bundles
@@ -41,6 +43,7 @@ class TemplateLocator
         private Connection $connection,
     ) {
         $this->filesystem = new Filesystem();
+        $this->globalTemplateDirectory = Path::join($this->projectDir, 'templates');
     }
 
     /**
@@ -58,7 +61,7 @@ class TemplateLocator
             // Note: We cannot use models or other parts of the Contao
             // framework here because this function will be called when the
             // container is built (see #3567)
-            $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
+            $themePaths = $this->connection->fetchFirstColumn("SELECT templates FROM tl_theme WHERE templates != ''");
         } catch (DriverException) {
             return [];
         }
@@ -72,7 +75,7 @@ class TemplateLocator
             $directories[$slug] = $absolutePath;
         }
 
-        return $directories;
+        return $this->themeDirectories = $directories;
     }
 
     /**
@@ -116,10 +119,18 @@ class TemplateLocator
             return [];
         }
 
+        $isThemePath = $this->isThemePath($path);
+
         $finder = (new Finder())
             ->files()
             ->in($path)
             ->name('/(\.html\.twig|\.html5)$/')
+            ->filter(
+                // Never list templates from theme directories unless $path is
+                // a theme path. This ensures that you can still have theme
+                // directories inside any directory that is a namespace root.
+                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath())
+            )
             ->sortByName()
         ;
 
@@ -178,6 +189,29 @@ class TemplateLocator
 
     private function isNamespaceRoot(string $path): bool
     {
+        // Implicitly treat the global template directory and every theme
+        // folder as namespace roots
+        $defaultRoots = [
+            $this->globalTemplateDirectory,
+            ...($this->themeDirectories ?? $this->findThemeDirectories()),
+        ];
+
+        if (\in_array($path, $defaultRoots, true)) {
+            return true;
+        }
+
+        // Require a marker file everywhere else
         return $this->filesystem->exists(Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT));
+    }
+
+    private function isThemePath(string $path): bool
+    {
+        foreach ($this->themeDirectories ?? $this->findThemeDirectories() as $themeBasePath) {
+            if ($themeBasePath === $path || Path::isBasePath($themeBasePath, $path)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

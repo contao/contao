@@ -348,7 +348,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
      *
      * @return Security&MockObject
      */
-    private function mockSecurity(bool $canShare = false, ?string $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security
+    private function mockSecurity(bool $canShare = false, string|null $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security
     {
         $user = null;
 

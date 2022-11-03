@@ -389,22 +389,22 @@ class Form extends Hybrid
 			}
 
 			// Set the admin e-mail as "from" address
-			$email->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
+			$email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+			$email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 
 			// Get the "reply to" address
-			if (!empty(Input::post('email', true)))
+			if (!empty($arrSubmitted['email']))
 			{
-				$replyTo = Input::post('email', true);
+				$replyTo = $arrSubmitted['email'];
 
 				// Add the name
-				if (!empty(Input::post('name')))
+				if (!empty($arrSubmitted['name']))
 				{
-					$replyTo = '"' . Input::post('name') . '" <' . $replyTo . '>';
+					$replyTo = '"' . $arrSubmitted['name'] . '" <' . $replyTo . '>';
 				}
-				elseif (!empty(Input::post('firstname')) && !empty(Input::post('lastname')))
+				elseif (!empty($arrSubmitted['firstname']) && !empty($arrSubmitted['lastname']))
 				{
-					$replyTo = '"' . Input::post('firstname') . ' ' . Input::post('lastname') . '" <' . $replyTo . '>';
+					$replyTo = '"' . $arrSubmitted['firstname'] . ' ' . $arrSubmitted['lastname'] . '" <' . $replyTo . '>';
 				}
 
 				$email->replyTo($replyTo);
@@ -417,9 +417,9 @@ class Form extends Hybrid
 			}
 
 			// Send copy to sender
-			if (!empty($arrSubmitted['cc']))
+			if (!empty($arrSubmitted['cc']) && !empty($arrSubmitted['email']))
 			{
-				$email->sendCc(Input::post('email', true));
+				$email->sendCc($arrSubmitted['email']);
 			}
 
 			// Attach XML file

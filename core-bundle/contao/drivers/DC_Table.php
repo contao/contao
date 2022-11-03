@@ -1153,6 +1153,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$this->copyChilds($k, $insertID, $kk, $parentId);
 						}
+
+						if (\is_array($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] ?? null))
+						{
+							foreach ($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] as $callback)
+							{
+								$dc = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
+								$dc->table = $k;
+								$dc->id = $kk;
+
+								if (\is_array($callback))
+								{
+									$this->import($callback[0]);
+									$this->{$callback[0]}->{$callback[1]}($insertID, $dc);
+								}
+								elseif (\is_callable($callback))
+								{
+									$callback($insertID, $dc);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1551,6 +1571,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$affected++;
 			}
+		}
+
+		// There is no actual data to be deleted (see #5336)
+		if (empty($data))
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
 		}
 
 		$this->import(BackendUser::class, 'User');
@@ -2591,7 +2622,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->strField = Input::get('field');
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['reverseToggle'] ?? false) !== true)
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
 		}
@@ -2935,10 +2966,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$varValue = Widget::getEmptyStringOrNullByFieldType($arrData['sql'] ?? array());
 			}
-			elseif (isset($arrData['eval']['csv']))
-			{
-				$varValue = implode($arrData['eval']['csv'], $varValue); // see #2890
-			}
 			else
 			{
 				$varValue = serialize($varValue);
@@ -2969,7 +2996,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
+		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -2995,99 +3022,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function submit()
 	{
-		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
+		if (Input::post('FORM_SUBMIT') != $this->strTable)
 		{
-			return;
-		}
-
-		if ($this->noReload)
-		{
-			// Data should not be submitted due to validation errors
-			$this->arrSubmit = array();
-
 			return;
 		}
 
 		$arrValues = $this->arrSubmit;
 		$this->arrSubmit = array();
 
-		// Call onbeforesubmit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
-			{
-				try
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrValues = $callback($arrValues, $this);
-					}
-
-					if (!\is_array($arrValues))
-					{
-						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
-					}
-				}
-				catch (\Exception $e)
-				{
-					$this->noReload = true;
-					Message::addError($e->getMessage());
-
-					return;
-				}
-			}
-		}
-
-		$arrTypes = array();
-		$blnVersionize = false;
-		$currentRecord = $this->getCurrentRecord();
-
-		foreach ($arrValues as $strField => $varValue)
-		{
-			$this->strField = $strField;
-			$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
-
-			// If the field is a fallback field, empty all other columns (see #6498)
-			if ($varValue && ($arrData['eval']['fallback'] ?? null))
-			{
-				$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-				$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
-
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$this->Database
-						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-						->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
-				}
-				else
-				{
-					$this->Database
-						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
-						->query('', array($varEmpty), $arrType);
-				}
-			}
-
-			$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null;
-
-			if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
-			{
-				$blnVersionize = true;
-			}
-
-			$this->varValue = StringUtil::deserialize($varValue);
-
-			if (\is_object($this->objActiveRecord))
-			{
-				$this->objActiveRecord->{$this->strField} = $this->varValue;
-			}
-		}
-
-		if (!empty($arrValues))
+		if (!$this->noReload && !empty($arrValues))
 		{
 			$arrValues['tstamp'] = time();
 
@@ -3096,7 +3039,87 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues['ptable'] = $this->ptable;
 			}
 
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $this->arrSubmit));
+			// Trigger the onbeforesubmit_callback
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
+			{
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
+				{
+					try
+					{
+						if (\is_array($callback))
+						{
+							$this->import($callback[0]);
+							$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+						}
+						elseif (\is_callable($callback))
+						{
+							$arrValues = $callback($arrValues, $this);
+						}
+					}
+					catch (\Exception $e)
+					{
+						$this->noReload = true;
+						Message::addError($e->getMessage());
+
+						break;
+					}
+
+					if (!\is_array($arrValues))
+					{
+						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
+					}
+				}
+			}
+		}
+
+		// Check permissions
+		$currentRecord = $this->getCurrentRecord();
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $arrValues));
+
+		// Persist values
+		if (!$this->noReload && !empty($arrValues))
+		{
+			$arrTypes = array();
+			$blnVersionize = false;
+
+			foreach ($arrValues as $strField => $varValue)
+			{
+				$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField] ?? array();
+
+				// If the field is a fallback field, empty all other columns (see #6498)
+				if ($varValue && ($arrData['eval']['fallback'] ?? null))
+				{
+					$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql'] ?? array());
+					$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null));
+
+					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+					{
+						$this->Database
+							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=? WHERE pid=?")
+							->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
+					}
+					else
+					{
+						$this->Database
+							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=?")
+							->query('', array($varEmpty), $arrType);
+					}
+				}
+
+				$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
+
+				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+				{
+					$blnVersionize = true;
+				}
+
+				// Update the active record and current field/value (backwards compatibility)
+				if (\is_object($this->objActiveRecord))
+				{
+					$this->objActiveRecord->{$strField} = StringUtil::deserialize($varValue);
+				}
+			}
 
 			$objUpdateStmt = $this->Database
 				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
@@ -3117,7 +3140,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+		if (!$this->noReload && \is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
 			{
@@ -3133,6 +3156,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// Create a new version
 		if ($this->blnCreateNewVersion)
 		{
 			$objVersions = new Versions($this->strTable, $this->intId);
@@ -3198,7 +3222,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$sValues[] = $trigger;
+						// Use string comparison to allow "0"
+						if ((string) $trigger !== '')
+						{
+							$sValues[] = (string) $trigger;
+						}
+
 						$key = $name . '_' . $trigger;
 
 						// Look for a subpalette
@@ -3593,7 +3622,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}
@@ -5090,7 +5119,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$optionsContext[$option_label . '_' . $field] = array(
 				'value' => $field,
-				'selected' => isset($session['search'][$this->strTable]['field']) && $session['search'][$this->strTable]['field'] == $field,
+				'selected' => ($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field,
 				'label' => $option_label,
 			);
 		}

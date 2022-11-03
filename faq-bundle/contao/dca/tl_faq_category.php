@@ -60,7 +60,8 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'search,limit'
+			'panelLayout'             => 'search,limit',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(

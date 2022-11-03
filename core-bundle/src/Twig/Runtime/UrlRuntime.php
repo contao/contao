@@ -31,6 +31,6 @@ final class UrlRuntime implements RuntimeExtensionInterface
             return $url;
         }
 
-        return $this->requestStack->getMainRequest()?->getBasePath().'/'.$url;
+        return $this->requestStack->getCurrentRequest()?->getBasePath().'/'.$url;
     }
 }

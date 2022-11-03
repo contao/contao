@@ -37,10 +37,11 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v2
+              uses: codecov/codecov-action@v3
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
+                  token: ${{ secrets.CODECOV_TOKEN }}
 
     windows:
         name: Windows
@@ -103,7 +104,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
+              run: tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
 
     ecs-legacy:
         name: ECS Legacy
@@ -223,10 +224,10 @@ jobs:
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Run the require checker for contao/contao
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json --ansi
 
             - name: Run the require checker for contao/core-bundle
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json --ansi
 
     service-linter:
         name: Service Linter

@@ -75,7 +75,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env)
+    protected function doLeaveNode(Node $node, Environment $env): Node|null
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {
             foreach ($this->escaperFilterNodes as [$escaperFilterNode, $strategy]) {

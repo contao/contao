@@ -1097,4 +1097,36 @@ class StringUtil
 
 		return $strValue;
 	}
+
+	public static function numberToString(float|int $number, int|null $precision = null): string
+	{
+		if (\is_int($number))
+		{
+			if (null === $precision)
+			{
+				return (string) $number;
+			}
+
+			$number = (float) $number;
+		}
+
+		if ($precision === null)
+		{
+			$precision = (int) \ini_get('precision');
+		}
+
+		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))
+		{
+			throw new \InvalidArgumentException(sprintf('Unable to convert "%s" into a string representation.', $number));
+		}
+
+		$significantDigits = rtrim($match[2] . $match[3], '0');
+		$shiftBy = (int) $match[4] + 1;
+
+		$signPart = $match[1];
+		$wholePart = substr(str_pad($significantDigits, $shiftBy, '0'), 0, max(0, $shiftBy)) ?: '0';
+		$decimalPart = str_repeat('0', max(0, -$shiftBy)) . substr($significantDigits, max(0, $shiftBy));
+
+		return rtrim("$signPart$wholePart.$decimalPart", '.');
+	}
 }

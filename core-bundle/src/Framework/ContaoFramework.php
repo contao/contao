@@ -88,7 +88,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             throw new \LogicException('The service container has not been set.');
         }
 
-        $this->request = $this->requestStack->getMainRequest();
+        $this->request = $this->requestStack->getCurrentRequest();
 
         $this->initializeFramework();
     }

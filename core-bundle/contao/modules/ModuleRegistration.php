@@ -234,8 +234,14 @@ class ModuleRegistration extends Module
 					}
 				}
 
+				// Convert arrays (see #4980)
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				{
+					$varValue = implode($arrData['eval']['csv'], $varValue);
+				}
+
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -422,7 +428,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
@@ -596,9 +602,16 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendAdminNotification($intId, $arrData)
 	{
+		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
+
+		if (!isset($GLOBALS['TL_ADMIN_EMAIL']))
+		{
+			return;
+		}
+
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
@@ -623,7 +636,5 @@ class ModuleRegistration extends Module
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
-
-		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }

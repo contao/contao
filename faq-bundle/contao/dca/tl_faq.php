@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
+use Contao\Environment;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\Input;
@@ -57,6 +58,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions')
 		),
@@ -537,7 +539,7 @@ class tl_faq extends Backend
 
 		if (!$objTarget = PageModel::findByPk($jumpTo))
 		{
-			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
+			return StringUtil::ampersand(Environment::get('request'));
 		}
 
 		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));

@@ -27,7 +27,7 @@ class ContaoContext implements ContextInterface
 
     public function getBasePath(): string
     {
-        if (null === ($request = $this->requestStack->getMainRequest())) {
+        if (null === ($request = $this->requestStack->getCurrentRequest())) {
             return '';
         }
 
@@ -49,7 +49,7 @@ class ContaoContext implements ContextInterface
             return $page->loadDetails()->rootUseSSL;
         }
 
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request) {
             return false;
@@ -68,7 +68,7 @@ class ContaoContext implements ContextInterface
 
     private function getPageModel(): PageModel|null
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if ($request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
             return $pageModel;

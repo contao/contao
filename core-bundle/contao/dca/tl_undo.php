@@ -50,7 +50,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('tstamp DESC'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'data'
 		),
 		'label' => array
 		(
