@@ -1202,7 +1202,7 @@ class tl_content extends Backend
 		}
 
 		// Add the protection status
-		if ($arrRow['protected'])
+		if ($arrRow['protected'] ?? null)
 		{
 			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
 			$groupNames = array();

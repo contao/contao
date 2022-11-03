@@ -389,8 +389,8 @@ class Form extends Hybrid
 			}
 
 			// Set the admin e-mail as "from" address
-			$email->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
+			$email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+			$email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 
 			// Get the "reply to" address
 			if (!empty($arrSubmitted['email']))

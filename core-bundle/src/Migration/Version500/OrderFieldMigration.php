@@ -101,23 +101,18 @@ class OrderFieldMigration extends AbstractMigration
                 StringUtil::deserialize($row[$field], true),
             )));
 
-            $this->connection
-                ->prepare("
-                    UPDATE
-                        $tableQuoted
-                    SET
-                        $fieldQuoted = :items,
-                        $orderFieldQuoted = ''
-                    WHERE
-                        $fieldQuoted = :field
-                        AND $orderFieldQuoted = :orderField
-                ")
-                ->executeStatement([
-                    ':items' => serialize($items),
-                    ':field' => $row[$field],
-                    ':orderField' => $row[$orderField],
-                ])
-            ;
+            $this->connection->executeStatement(
+                "
+                    UPDATE $tableQuoted
+                    SET $fieldQuoted = :items, $orderFieldQuoted = ''
+                    WHERE $fieldQuoted = :field AND $orderFieldQuoted = :orderField
+                ",
+                [
+                    'items' => serialize($items),
+                    'field' => $row[$field],
+                    'orderField' => $row[$orderField],
+                ]
+            );
         }
 
         $this->connection->executeStatement("ALTER TABLE $tableQuoted DROP $orderFieldQuoted");

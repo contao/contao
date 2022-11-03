@@ -59,17 +59,12 @@ header, footer, nav, section, aside, main, article, figure, figcaption {
 	display: block;
 }
 
-body, button, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, figure, form, fieldset, legend, p, blockquote, table {
+body, h1, h2, h3, h4, p, figure, blockquote, dl {
 	margin: 0;
-	padding: 0;
 }
 
 img {
 	border: 0;
-}
-
-ul, li {
-	list-style: none;
 }
 
 table {
@@ -79,7 +74,6 @@ table {
 }
 
 th, td {
-	padding: 0;
 	text-align: left;
 }
 
@@ -90,6 +84,13 @@ input, select, button, label, img, a.tl_submit, .tl_select {
 button {
 	cursor: pointer;
 }
+
+nav ul, nav li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 
 /* Font */
 body {
@@ -625,6 +626,12 @@ a.tl_submit {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
+}
+
+.split-button ul, .split-button li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 /* Placeholders */
