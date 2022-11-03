@@ -28,6 +28,7 @@
                 .mergeWith(picker.value_attribute)
             %}
             <div{{ tree_attributes }}>
+                {{ breadcrumb_rendered|raw }}
                 {# Picker "select all" controls #}
                 {{ block('picker_select_all') }}
 
