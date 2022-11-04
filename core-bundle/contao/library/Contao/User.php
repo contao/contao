@@ -381,7 +381,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	public function setPassword(?string $password): self
+	public function setPassword(#[\SensitiveParameter] ?string $password): self
 	{
 		$this->password = $password;
 
