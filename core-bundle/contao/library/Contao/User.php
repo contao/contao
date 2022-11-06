@@ -43,6 +43,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property boolean           $thumbnails
  * @property boolean           $useRTE
  * @property boolean           $useCE
+ * @property boolean           $doNotCollapse
  * @property string            $password
  * @property boolean           $pwChange
  * @property boolean           $admin

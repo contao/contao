@@ -37,10 +37,11 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v2
+              uses: codecov/codecov-action@v3
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
+                  token: ${{ secrets.CODECOV_TOKEN }}
 
     windows:
         name: Windows

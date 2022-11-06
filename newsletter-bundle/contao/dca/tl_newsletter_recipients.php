@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
 		),
