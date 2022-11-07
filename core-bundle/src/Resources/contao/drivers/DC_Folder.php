@@ -1698,7 +1698,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				foreach ($this->strPalette as $v)
 				{
 					// Check whether field is excluded
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['exclude'] ?? null)
+					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
 					{
 						continue;
 					}
@@ -2685,10 +2685,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
+			$folderAlt = $protected ? $GLOBALS['TL_LANG']['MSC']['folderCP'] : $GLOBALS['TL_LANG']['MSC']['folderC'];
 
 			// Add the current folder
 			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
-			$return .= Image::getHtml($folderImg) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
+			$return .= Image::getHtml($folderImg, $folderAlt) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
@@ -2818,15 +2819,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset'));
+			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
 
 			// No popup links for protected files and templates (see #700)
 			if ($blnProtected || $this->strTable == 'tl_templates')
 			{
-				$return .= Image::getHtml($objFile->icon) . ' ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 			else
 			{
-				$return .= '<a href="' . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $iconAlt) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons

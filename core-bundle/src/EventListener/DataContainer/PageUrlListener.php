@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
@@ -215,7 +216,7 @@ class PageUrlListener
 
         try {
             $currentUrl = $this->urlGenerator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

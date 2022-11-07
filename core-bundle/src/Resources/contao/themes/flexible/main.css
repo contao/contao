@@ -1602,11 +1602,10 @@ ul.sgallery li {
 	font-weight:600;
 	position:relative;
 }
-.tl_metawizard .lang img {
+.tl_metawizard .lang button {
 	position:absolute;
 	right:0;
 	top:-1px;
-	cursor:pointer;
 }
 
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {

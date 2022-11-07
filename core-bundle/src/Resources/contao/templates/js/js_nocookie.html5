@@ -8,7 +8,7 @@
       if ('formbody' !== c.className) return;
       t = document.createElement('p');
       t.className = 'error nocookie';
-      t.innerHTML = '<?= str_replace("'", "\\'", $GLOBALS['TL_LANG']['ERR']['formCookieWarning']) ?>';
+      t.innerHTML = '<?= str_replace("'", "\\'", $this->trans('ERR.formCookieWarning')) ?>';
       c.insertBefore(t, c.firstChild);
     }
   })();

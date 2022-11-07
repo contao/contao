@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\Image\DeferredResizerInterface;
+use Contao\Image\Exception\CoordinatesOutOfBoundsException;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
@@ -121,7 +122,11 @@ class ImageFactory implements ImageFactoryInterface
 
         if (!\is_object($path) || !$path instanceof ImageInterface) {
             if (null === $importantPart) {
-                $importantPart = $this->createImportantPart($image);
+                try {
+                    $importantPart = $this->createImportantPart($image);
+                } catch (CoordinatesOutOfBoundsException $exception) {
+                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
+                }
             }
 
             $image->setImportantPart($importantPart);

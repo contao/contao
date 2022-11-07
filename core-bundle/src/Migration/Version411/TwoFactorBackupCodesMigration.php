@@ -72,13 +72,13 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
                 $backupCodes[$key] = password_hash($backupCode, PASSWORD_DEFAULT);
             }
 
-            $this->connection
-                ->prepare("UPDATE $table SET backupCodes = :backupCodes WHERE id = :id")
-                ->executeStatement([
-                    ':backupCodes' => json_encode($backupCodes),
-                    ':id' => $row['id'],
-                ])
-            ;
+            $this->connection->executeStatement(
+                "UPDATE $table SET backupCodes = :backupCodes WHERE id = :id",
+                [
+                    'backupCodes' => json_encode($backupCodes),
+                    'id' => $row['id'],
+                ]
+            );
         }
     }
 

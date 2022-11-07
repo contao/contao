@@ -338,24 +338,6 @@ class DbafsTest extends TestCase
         $dbafs->setExtraMetadata('some/invalid/path', []);
     }
 
-    public function testSetExtraMetadataThrowsIfRecordIsADirectory(): void
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => Uuid::v1()->toBinary(), 'path' => 'some/directory', 'type' => 'folder'],
-            )
-        ;
-
-        $dbafs = $this->getDbafs($connection);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under "some/directory".');
-
-        $dbafs->setExtraMetadata('some/directory', []);
-    }
-
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
     {
         $uuid = $this->generateUuid(1);
@@ -1056,13 +1038,15 @@ class DbafsTest extends TestCase
             ])
         ;
 
+        $uuid = $this->generateUuid(1);
+
         $connection
             ->expects($this->once())
             ->method('fetchAssociative')
             ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
             ->willReturn([
                 'id' => 1,
-                'uuid' => $uuid = $this->generateUuid(1)->toBinary(),
+                'uuid' => $uuid->toBinary(),
                 'path' => 'files/baz',
                 'type' => 'file',
             ])
@@ -1174,11 +1158,11 @@ class DbafsTest extends TestCase
 
         // Prime internal cache to test if it gets updated and still points to
         // this resource
-        $this->assertSame($uuid, $dbafs->getRecord('baz')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz')->getUuid()->toRfc4122());
 
         $dbafs->sync();
 
-        $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz2')->getUuid()->toRfc4122());
     }
 
     public function testSyncWithMove(): void
@@ -1326,7 +1310,6 @@ class DbafsTest extends TestCase
                 ->willReturnCallback(
                     static function (RetrieveDbafsMetadataEvent $event) {
                         $event->set('foo', 'bar');
-                        $event->set('uuid', $event->getUuid());
 
                         return $event;
                     }

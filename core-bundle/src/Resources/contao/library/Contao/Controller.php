@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -1298,7 +1299,7 @@ abstract class Controller extends System
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
+		$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
 
 		// Remove path from absolute URLs
 		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
