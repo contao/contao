@@ -262,7 +262,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     private function getTemplateName(Model $model, string|null $fallbackTemplateName): string
     {
         // If set, use the custom template unless it is a back end request
-        if ($model->customTpl && !$this->isBackendScope()) {
+        if ($model->customTpl && $this->container->get('contao.twig.filesystem_loader')->exists("@Contao/$model->customTpl.html.twig")) {
             return $model->customTpl;
         }
 
