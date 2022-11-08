@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
@@ -158,7 +159,7 @@ class FilesystemItemTest extends TestCase
 
         $this->assertNull($item->getLastModified());
         $this->assertSame(0, $item->getFileSize());
-        $this->assertSame('', $item->getMimeType());
+        $this->assertSame('', $item->getMimeType(false));
 
         $invocationCounts = [
             'lastModified' => 0,
@@ -194,6 +195,22 @@ class FilesystemItemTest extends TestCase
         foreach ($invocationCounts as $property => $invocationCount) {
             $this->assertSame(1, $invocationCount, "invocation count of $property()");
         }
+    }
+
+    public function testThrowsIfMimeTypeIsNotDefined(): void
+    {
+        $item = new FilesystemItem(
+            true,
+            'some/file.txt',
+            null,
+            null,
+            static fn () => throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt')
+        );
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set "$throwOnError" to false to suppress the exception and get an empty string instead.');
+
+        $item->getMimeType();
     }
 
     public function testWithMetadataIfNotDefinedDoesNotOverwriteExistingValues(): void

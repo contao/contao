@@ -156,10 +156,21 @@ class FilesystemItem
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(): string
+    public function getMimeType(bool $throwOnError = true): string
     {
         $this->assertIsFile(__FUNCTION__);
-        $this->resolveIfClosure($this->mimeType);
+        $exception = null;
+
+        try {
+            $this->resolveIfClosure($this->mimeType);
+        } catch (VirtualFilesystemException $e) {
+            $this->mimeType = null;
+            $exception = $e;
+        }
+
+        if ($throwOnError && null === $this->mimeType) {
+            throw VirtualFilesystemException::unableToRetrieveMetadata($this->path, $exception, 'A mime type could not be detected. Set "$throwOnError" to false to suppress the exception and get an empty string instead.');
+        }
 
         return $this->mimeType ?? '';
     }
