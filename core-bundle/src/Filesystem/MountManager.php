@@ -402,7 +402,7 @@ class MountManager
     {
         $prefix = $path;
 
-        if ($path) {
+        if ('' !== $path) {
             // Find adapter with the longest (= most specific) matching prefix
             do {
                 if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
