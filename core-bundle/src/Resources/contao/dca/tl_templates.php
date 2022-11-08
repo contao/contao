@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 Contao\System::loadLanguageFile('tl_files');
@@ -266,12 +267,6 @@ class tl_templates extends Contao\Backend
 		if (Contao\Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
 			$strOriginal = Contao\Input::post('original', true);
-
-			if (Contao\Validator::isInsecurePath($strOriginal))
-			{
-				throw new RuntimeException('Invalid path ' . $strOriginal);
-			}
-
 			$strTarget = Contao\Input::post('target', true);
 
 			if (Contao\Validator::isInsecurePath($strTarget))
@@ -313,8 +308,10 @@ class tl_templates extends Contao\Backend
 					}
 					else
 					{
-						$this->import('Contao\Files', 'Files');
-						$this->Files->copy($strOriginal, $strTarget);
+						(new Filesystem())->copy(
+							Path::makeAbsolute($strOriginal, $projectDir),
+							Path::makeAbsolute($strTarget, $projectDir)
+						);
 						$this->redirect($this->getReferer());
 					}
 				}
