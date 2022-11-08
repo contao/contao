@@ -204,7 +204,9 @@ class FilesystemItemTest extends TestCase
             'some/file.txt',
             null,
             null,
-            static fn () => throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt')
+            static function (): void {
+                throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
+            }
         );
 
         $this->expectException(VirtualFilesystemException::class);
