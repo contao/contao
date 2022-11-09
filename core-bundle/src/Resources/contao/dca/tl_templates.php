@@ -336,7 +336,7 @@ class tl_templates extends Contao\Backend
 		// Show form
 		return ($strError ? '
 <div class="tl_message">
-<p class="tl_error">' . $strError . '</p>
+<p class="tl_error">' . Contao\StringUtil::specialchars($strError) . '</p>
 </div>' : '') . '
 
 <div id="tl_buttons">
