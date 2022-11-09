@@ -480,6 +480,8 @@ class Input
 	 *
 	 * @see FrontendTemplate::compile()
 	 *
+	 * @phpstan-impure
+	 *
 	 * @return list<string>
 	 */
 	public static function getUnusedRouteParameters(): array
