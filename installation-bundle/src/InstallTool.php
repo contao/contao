@@ -352,9 +352,19 @@ class InstallTool
 
     public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
-        $statement = $this->connection->prepare("
-            INSERT INTO
-                tl_user
+        $replace = [
+            '#' => '&#35;',
+            '<' => '&#60;',
+            '>' => '&#62;',
+            '(' => '&#40;',
+            ')' => '&#41;',
+            '\\' => '&#92;',
+            '=' => '&#61;',
+        ];
+
+        $this->connection->executeStatement(
+            "
+                INSERT INTO tl_user
                     (
                         tstamp,
                         name,
@@ -372,26 +382,16 @@ class InstallTool
                     )
                  VALUES
                     (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
-        ");
-
-        $replace = [
-            '#' => '&#35;',
-            '<' => '&#60;',
-            '>' => '&#62;',
-            '(' => '&#40;',
-            ')' => '&#41;',
-            '\\' => '&#92;',
-            '=' => '&#61;',
-        ];
-
-        $statement->executeStatement([
-            ':time' => time(),
-            ':name' => strtr($name, $replace),
-            ':email' => $email,
-            ':username' => strtr($username, $replace),
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':language' => $language,
-        ]);
+            ",
+            [
+                'time' => time(),
+                'name' => strtr($name, $replace),
+                'email' => $email,
+                'username' => strtr($username, $replace),
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'language' => $language,
+            ]
+        );
     }
 
     /**

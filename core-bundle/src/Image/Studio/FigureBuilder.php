@@ -656,9 +656,9 @@ class FigureBuilder
 
             $target = urldecode($target);
 
-            $filePath = Path::isAbsolute($target) ?
-                Path::canonicalize($target) :
-                Path::makeAbsolute($target, $this->projectDir);
+            $filePath = Path::isAbsolute($target)
+                ? Path::canonicalize($target)
+                : Path::makeAbsolute($target, $this->projectDir);
 
             if (!is_file($filePath)) {
                 $filePath = null;

@@ -193,11 +193,12 @@ class Search
 		}
 
 		// Prevent deadlocks
-		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
+		$objDatabase->executeStatement("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
 		try
 		{
-			$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+			$objIndex = $objDatabase
+				->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
 				->limit(1)
 				->execute($arrSet['checksum'], $arrSet['pid']);
 
@@ -208,7 +209,8 @@ class Search
 				{
 					self::removeEntry($arrSet['url']);
 
-					$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					$objDatabase
+						->prepare("UPDATE tl_search %s WHERE id=?")
 						->set($arrSet)
 						->execute($objIndex->id);
 				}
@@ -217,14 +219,16 @@ class Search
 				return false;
 			}
 
-			$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
+			$objIndex = $objDatabase
+				->prepare("SELECT id FROM tl_search WHERE url=?")
 				->limit(1)
 				->execute($arrSet['url']);
 
 			// Add the page to the tl_search table
 			if ($objIndex->numRows)
 			{
-				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+				$objDatabase
+					->prepare("UPDATE tl_search %s WHERE id=?")
 					->set($arrSet)
 					->execute($objIndex->id);
 
@@ -232,7 +236,8 @@ class Search
 			}
 			else
 			{
-				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+				$objInsertStmt = $objDatabase
+					->prepare("INSERT INTO tl_search %s")
 					->set($arrSet)
 					->execute();
 
@@ -270,7 +275,8 @@ class Search
 				->execute($intInsertId);
 
 			// Remove the existing index
-			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+			$objDatabase
+				->prepare("DELETE FROM tl_search_index WHERE pid=?")
 				->execute($intInsertId);
 
 			// Add new terms and increment frequency counts of existing terms
@@ -280,10 +286,10 @@ class Search
 					VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
 					ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
 				")
-				->execute(array_map('strval', array_keys($arrIndex)));
+				->execute(...array_map('strval', array_keys($arrIndex)));
 
 			// Remove obsolete terms
-			$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+			$objDatabase->executeStatement("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 
 			$objTermIds = $objDatabase
 				->prepare("
@@ -291,7 +297,7 @@ class Search
 					FROM tl_search_term
 					WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
 				")
-				->execute(array_map('strval', array_keys($arrIndex)));
+				->execute(...array_map('strval', array_keys($arrIndex)));
 
 			$arrTermIds = array();
 
@@ -317,12 +323,13 @@ class Search
 			}
 
 			// Create the new index
-			$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-				->execute($arrValues);
+			$objDatabase
+				->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
+				->execute(...$arrValues);
 		}
 		finally
 		{
-			$objDatabase->query("UNLOCK TABLES");
+			$objDatabase->executeStatement("UNLOCK TABLES");
 		}
 
 		self::updateVectorLengths((int) $intInsertId);
@@ -360,7 +367,7 @@ class Search
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
 		// Set or update vector length
-		$objDatabase->query("
+		$objDatabase->executeStatement("
 			UPDATE tl_search
 			INNER JOIN (
 				SELECT
@@ -772,7 +779,7 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-		$objResult = $objResultStmt->execute($arrValues);
+		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
 		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);

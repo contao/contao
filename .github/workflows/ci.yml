@@ -261,10 +261,15 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-            - name: Run the functional tests
+            - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+            - name: Run the functional tests with MySQLi
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     reverse:
         name: PHP 8.1 Reverse Order
@@ -351,10 +356,15 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-            - name: Run the functional tests
+            - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+            - name: Run the functional tests with MySQLi
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     bundles:
         name: Bundles

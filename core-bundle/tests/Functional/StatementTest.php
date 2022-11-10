@@ -16,6 +16,8 @@ use Contao\Database;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoMysqlDriver;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class StatementTest extends FunctionalTestCase
@@ -37,9 +39,18 @@ class StatementTest extends FunctionalTestCase
      */
     public function testExecuteStatementBackwardsCompatibility(): void
     {
-        $db = Database::getInstance();
-
         $this->expectDeprecation('%sPassing more parameters than "?" tokens has been deprecated%s');
+
+        $connection = System::getContainer()->get('database_connection');
+        $driver = $connection->getDriver();
+        $errorReporting = error_reporting();
+
+        // Silence MySQLi errors in PHP 7.4
+        if (\PHP_VERSION_ID < 80000 && $driver instanceof MysqliDriver) {
+            error_reporting($errorReporting & ~E_WARNING);
+        }
+
+        $db = Database::getInstance();
 
         $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute(2)->first()->fetchField());
         $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute([2])->first()->fetchField());
@@ -48,9 +59,13 @@ class StatementTest extends FunctionalTestCase
         $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute(1, 2, 3, 4, 5, 6)->first()->fetchField());
         $this->assertSame('1', (string) $db->prepare('SELECT ?')->execute([1, 2, 3, 4, 5, 6])->first()->fetchField());
 
-        $this->expectExceptionMessageMatches('/number of variables must match the number of parameters|number of bound variables does not match number of tokens/i');
+        // Restore the error reporting level
+        error_reporting($errorReporting);
 
-        $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
+        if ($driver instanceof PdoMysqlDriver) {
+            $this->expectExceptionMessageMatches('/number of bound variables does not match number of tokens/i');
+            $db->prepare('SELECT ?, ?, ?')->execute(1, 2)->fetchRow();
+        }
     }
 
     /**

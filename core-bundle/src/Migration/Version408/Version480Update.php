@@ -177,16 +177,10 @@ class Version480Update extends AbstractMigration
                 if (\is_array($jquery) && false !== ($i = array_search('j_mediaelement', $jquery, true))) {
                     unset($jquery[$i]);
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_layout
-                        SET
-                            jquery = :jquery
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':jquery' => serialize(array_values($jquery)), ':id' => $row['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_layout SET jquery = :jquery WHERE id = :id',
+                        ['jquery' => serialize(array_values($jquery)), 'id' => $row['id']]
+                    );
                 }
             }
 
@@ -196,16 +190,10 @@ class Version480Update extends AbstractMigration
                 if (\is_array($scripts) && false !== ($i = array_search('js_mediaelement', $scripts, true))) {
                     unset($scripts[$i]);
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_layout
-                        SET
-                            scripts = :scripts
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $row['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_layout SET scripts = :scripts WHERE id = :id',
+                        ['scripts' => serialize(array_values($scripts)), 'id' => $row['id']]
+                    );
                 }
             }
         }
@@ -322,9 +310,7 @@ class Version480Update extends AbstractMigration
                 $imageSize = (new File($file['path']))->imageViewSize;
             }
 
-            $updateData = [
-                ':id' => $file['id'],
-            ];
+            $updateData = ['id' => $file['id']];
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
                 if (
@@ -334,10 +320,10 @@ class Version480Update extends AbstractMigration
                     continue;
                 }
 
-                $updateData[':x'] = 0;
-                $updateData[':y'] = 0;
-                $updateData[':width'] = 0;
-                $updateData[':height'] = 0;
+                $updateData['x'] = 0;
+                $updateData['y'] = 0;
+                $updateData['width'] = 0;
+                $updateData['height'] = 0;
 
                 $this->resultMessages[] = sprintf(
                     'Deleted invalid important part [%s,%s,%s,%s] from image "%s".',
@@ -348,14 +334,14 @@ class Version480Update extends AbstractMigration
                     $file['path']
                 );
             } else {
-                $updateData[':x'] = min(1, $file['importantPartX'] / $imageSize[0]);
-                $updateData[':y'] = min(1, $file['importantPartY'] / $imageSize[1]);
-                $updateData[':width'] = min(1 - $updateData[':x'], $file['importantPartWidth'] / $imageSize[0]);
-                $updateData[':height'] = min(1 - $updateData[':y'], $file['importantPartHeight'] / $imageSize[1]);
+                $updateData['x'] = min(1, $file['importantPartX'] / $imageSize[0]);
+                $updateData['y'] = min(1, $file['importantPartY'] / $imageSize[1]);
+                $updateData['width'] = min(1 - $updateData['x'], $file['importantPartWidth'] / $imageSize[0]);
+                $updateData['height'] = min(1 - $updateData['y'], $file['importantPartHeight'] / $imageSize[1]);
             }
 
-            $this->connection
-                ->prepare('
+            $this->connection->executeStatement(
+                '
                     UPDATE
                         tl_files
                     SET
@@ -365,9 +351,9 @@ class Version480Update extends AbstractMigration
                         importantPartHeight = :height
                     WHERE
                         id = :id
-                ')
-                ->executeStatement($updateData)
-            ;
+                ',
+                $updateData
+            );
         }
 
         // If there are still invalid values left, reset them
@@ -457,19 +443,13 @@ class Version480Update extends AbstractMigration
                 continue;
             }
 
-            $stmt = $this->connection->prepare('
-                UPDATE
-                    tl_module
-                SET
-                    contextLength = :context
-                WHERE
-                    id = :id
-            ');
-
-            $stmt->executeStatement([
-                ':id' => $row['id'],
-                ':context' => serialize([$row['contextLength'], $row['totalLength']]),
-            ]);
+            $this->connection->executeStatement(
+                'UPDATE tl_module SET contextLength = :context WHERE id = :id',
+                [
+                    'id' => $row['id'],
+                    'context' => serialize([$row['contextLength'], $row['totalLength']]),
+                ]
+            );
         }
 
         $this->connection->executeStatement('ALTER TABLE tl_module DROP COLUMN totalLength');

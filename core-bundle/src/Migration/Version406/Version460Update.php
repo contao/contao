@@ -99,16 +99,10 @@ class Version460Update extends AbstractMigration
 
         // Remove all activation tokens older than one day to prevent accidental
         // deletion of existing member accounts
-        $stmt = $this->connection->prepare("
-            UPDATE
-                tl_member
-            SET
-                activation = ''
-            WHERE
-                activation != '' AND dateAdded < :dateAdded
-        ");
-
-        $stmt->executeStatement([':dateAdded' => strtotime('-1 day')]);
+        $this->connection->executeStatement(
+            "UPDATE tl_member SET activation = '' WHERE activation != '' AND dateAdded < :dateAdded",
+            ['dateAdded' => strtotime('-1 day')]
+        );
 
         // Update the video element settings (see contao/core-bundle#1348)
         $this->connection->executeStatement('
@@ -137,45 +131,27 @@ class Version460Update extends AbstractMigration
         foreach ($elements as $element) {
             switch ($element['type']) {
                 case 'player':
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_content
-                        SET
-                            playerOptions = :options
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':options' => serialize(['player_autoplay']), ':id' => $element['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_content SET playerOptions = :options WHERE id = :id',
+                        ['options' => serialize(['player_autoplay']), 'id' => $element['id']]
+                    );
                     break;
 
                 case 'youtube':
                     $options = StringUtil::deserialize($element['youtubeOptions']);
                     $options[] = 'youtube_autoplay';
 
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_content
-                        SET
-                            youtubeOptions = :options
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':options' => serialize($options), ':id' => $element['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_content SET youtubeOptions = :options WHERE id = :id',
+                        ['options' => serialize($options), 'id' => $element['id']]
+                    );
                     break;
 
                 case 'vimeo':
-                    $stmt = $this->connection->prepare('
-                        UPDATE
-                            tl_content
-                        SET
-                            vimeoOptions = :options
-                        WHERE
-                            id = :id
-                    ');
-
-                    $stmt->executeStatement([':options' => serialize(['vimeo_autoplay']), ':id' => $element['id']]);
+                    $this->connection->executeStatement(
+                        'UPDATE tl_content SET vimeoOptions = :options WHERE id = :id',
+                        ['options' => serialize(['vimeo_autoplay']), 'id' => $element['id']]
+                    );
                     break;
             }
         }

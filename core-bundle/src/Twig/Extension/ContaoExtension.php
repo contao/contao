@@ -165,8 +165,9 @@ final class ContaoExtension extends AbstractExtension
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type ?
-                        $chunk : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    $parts[] = ChunkedText::TYPE_RAW === $type
+                        ? $chunk
+                        : twig_escape_filter($env, $chunk, $strategy, $charset);
                 }
 
                 return implode('', $parts);
