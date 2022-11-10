@@ -65,7 +65,10 @@ Composer will automatically clone the Git repo into the `vendor/contao/contao` f
 running `vendor/bin/contao-setup` on the command line.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
-from within your application. To create a pull request, you first have to create a fork on Github. In your `vendor/contao/contao` folder you add a new git remote (`git add remote NAME FORK-URL`) to your fork. Now, you create a new branch (`git checkout -b fix/bug`) to fix the bug. After fixing the bug, push it to your fork (`git push NAME`) and create a pull request at Github.
+from within your application. To create a pull request, you first have to create a fork on Github. In your
+`vendor/contao/contao` folder you add a new git remote (`git add remote NAME FORK-URL`) to your fork. Now, you create a
+new branch (`git checkout -b fix/bug`) to fix the bug. After fixing the bug, push it to your fork (`git push NAME`) and
+create a pull request at Github.
 
 ## Running scripts
 
