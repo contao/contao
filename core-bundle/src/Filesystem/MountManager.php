@@ -400,10 +400,10 @@ class MountManager
 
     private function getAdapterAndPath(string $path): array
     {
-        $prefix = $path;
-
         if ('' !== $path) {
             // Find adapter with the longest (= most specific) matching prefix
+            $prefix = $path;
+
             do {
                 if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
                     return [$adapter, Path::makeRelative($path, $prefix), $prefix];
