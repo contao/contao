@@ -75,9 +75,6 @@ class BackendPassword extends Backend
 		{
 			$widget->validate();
 
-			// Remove the confirmation message added by the widget
-			Message::reset();
-
 			$pw = $request->request->get('password');
 
 			if ($widget->hasErrors())
