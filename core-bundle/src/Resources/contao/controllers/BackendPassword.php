@@ -65,7 +65,8 @@ class BackendPassword extends Backend
 		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->template = 'be_widget_pw_change';
 		$widget->dataContainer = $dc;
-		$widget->confirmLabel = $container->get('translator')->trans('MSC.confirm.0', array(), 'contao_default');
+		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
+		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
 		$objTemplate = new BackendTemplate('be_password');
 		$objTemplate->widget = $widget->parse();
@@ -143,8 +144,6 @@ class BackendPassword extends Backend
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
 		return $objTemplate->getResponse();
 	}

@@ -1,9 +1,9 @@
 
 <div class="widget">
-  <label for="password"><?= $this->label ?></label>
-  <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->label ?>" required>
+  <label for="password"><?= $this->password ?></label>
+  <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->password ?>" required>
 </div>
 <div class="widget">
-  <label for="password_confirm"><?= $this->confirmLabel ?></label>
-  <input type="password" name="password_confirm" id="password_confirm" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->confirmLabel ?>" required>
+  <label for="password_confirm"><?= $this->confirm ?></label>
+  <input type="password" name="password_confirm" id="password_confirm" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->confirm ?>" required>
 </div>
