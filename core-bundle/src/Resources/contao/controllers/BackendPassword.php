@@ -62,7 +62,7 @@ class BackendPassword extends Backend
 		$dc->id = $this->User->id;
 		$dc->activeRecord = $this->User;
 
-		$widget = new Password(Widget::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->template = 'be_widget_pwchange';
 		$widget->dataContainer = $dc;
 		$widget->confirmLabel = $container->get('translator')->trans('MSC.confirm.0', array(), 'contao_default');
@@ -74,7 +74,7 @@ class BackendPassword extends Backend
 		{
 			$widget->validate();
 
-			// Remove any messages added by the Password widget itself
+			// Remove the confirmation message added by the widget
 			Message::reset();
 
 			$pw = $request->request->get('password');
@@ -100,8 +100,6 @@ class BackendPassword extends Backend
 				}
 				else
 				{
-					$this->loadDataContainer('tl_user');
-
 					// Trigger the save_callback
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
 					{
