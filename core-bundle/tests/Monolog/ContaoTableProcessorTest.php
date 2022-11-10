@@ -32,11 +32,6 @@ class ContaoTableProcessorTest extends TestCase
     {
         $processor = $this->getContaoTableProcessor();
 
-        /** @phpstan-var Record $record */
-        $record = [];
-
-        $this->assertEmpty($processor($record));
-
         $record = [
             'message' => '',
             'context' => ['contao' => false],
