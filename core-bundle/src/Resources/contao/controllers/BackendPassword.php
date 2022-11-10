@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,25 +51,35 @@ class BackendPassword extends Backend
 	 */
 	public function run()
 	{
+		$container = System::getContainer();
+
 		/** @var Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		Controller::loadDataContainer('tl_user');
+
+		$dc = new DC_Table('tl_user');
+		$dc->id = $this->User->id;
+		$dc->activeRecord = $this->User;
+
+		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+		$widget->template = 'be_widget_chpw';
+		$widget->dataContainer = $dc;
+		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
+		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
 		$objTemplate = new BackendTemplate('be_password');
+		$objTemplate->widget = $widget->parse();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
-			$pw = $request->request->get('password');
-			$cnf = $request->request->get('confirm');
+			$widget->validate();
 
-			// The passwords do not match
-			if ($pw != $cnf)
+			$pw = $request->request->get('password');
+
+			if ($widget->hasErrors())
 			{
-				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
-			}
-			// Password too short
-			elseif (Utf8::strlen($pw) < Config::get('minPasswordLength'))
-			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
+				Message::addError($widget->getErrorAsString());
 			}
 			// Password and username are the same
 			elseif ($pw == $this->User->username)
@@ -80,7 +89,7 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
+				$encoder = $container->get('security.encoder_factory')->getEncoder(BackendUser::class);
 
 				// Make sure the password has been changed
 				if ($encoder->isPasswordValid($this->User->password, $pw, null))
@@ -89,8 +98,6 @@ class BackendPassword extends Backend
 				}
 				else
 				{
-					$this->loadDataContainer('tl_user');
-
 					// Trigger the save_callback
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
 					{
@@ -134,8 +141,6 @@ class BackendPassword extends Backend
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
 		return $objTemplate->getResponse();
 	}
