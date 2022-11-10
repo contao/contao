@@ -266,7 +266,6 @@ class tl_templates extends Contao\Backend
 		// Copy an existing template
 		if (Contao\Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$strOriginal = Contao\Input::post('original', true);
 			$strTarget = Contao\Input::post('target', true);
 
 			if (Contao\Validator::isInsecurePath($strTarget))
@@ -282,6 +281,7 @@ class tl_templates extends Contao\Backend
 			else
 			{
 				$blnFound = false;
+				$strOriginal = Contao\Input::post('original', true);
 
 				// Validate the source path
 				foreach ($arrAllTemplates as $arrTemplates)
