@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -165,6 +166,130 @@ class TokenCheckerTest extends TestCase
         );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
+    }
+
+    /**
+     * @dataProvider getPreviewAllowedData
+     */
+    public function testChecksIfAccessingThePreviewIsAllowed(TokenInterface $token, ?array $previewLinkRow, ?string $url, bool $expect): void
+    {
+        $request = new Request();
+
+        if ($url) {
+            $request = Request::create($url);
+        }
+
+        $session = $this->mockSessionWithToken($token);
+
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('fetchAssociative')
+            ->willReturn($previewLinkRow)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('executeQuery')
+            ->willReturn($result)
+        ;
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack($request),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(FrontendUser::class),
+            $session,
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $connection,
+        );
+
+        $this->assertSame($expect, $tokenChecker->isPreviewAllowed());
+    }
+
+    public function getPreviewAllowedData(): \Generator
+    {
+        yield 'Valid preview' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => true,
+                'restrictToUrl' => '',
+            ],
+            null,
+            true,
+        ];
+
+        yield 'Valid preview restricted to URL' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/page1?foo=bar',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://localhost/page1?bar=baz',
+            true,
+        ];
+
+        yield 'Invalid preview restricted to different URL' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/page2',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://localhost/page1',
+            false,
+        ];
+
+        yield 'Not a frontend preview token' => [
+            $this->createMock(AbstractToken::class),
+            null,
+            null,
+            false,
+        ];
+
+        yield 'Missing preview link ID' => [
+            new FrontendPreviewToken(null, true, null),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => true,
+                'restrictToUrl' => '',
+            ],
+            null,
+            false,
+        ];
+
+        yield 'Missing DB row' => [new FrontendPreviewToken(null, true, 1), null, null, false];
+
+        yield 'showUnpublished mismatch' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => false,
+                'restrictToUrl' => '',
+            ],
+            null,
+            false,
+        ];
+    }
+
+    public function testAccessingThePreviewIsAllowedForBackendUser(): void
+    {
+        /*
+        $session = $this->mockSessionWithToken($token);
+        */
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $this->createMock(SessionInterface::class),
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
+        );
+
+        $this->assertTrue($tokenChecker->isPreviewAllowed());
     }
 
     /**

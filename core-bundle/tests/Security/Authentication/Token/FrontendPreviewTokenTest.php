@@ -50,21 +50,34 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertTrue($token->showUnpublished());
     }
 
+    public function testReturnsThePreviewLinkId(): void
+    {
+        $token = new FrontendPreviewToken(null, false);
+
+        $this->assertNull($token->getPreviewLinkId());
+
+        $token = new FrontendPreviewToken(null, false, 123);
+
+        $this->assertSame(123, $token->getPreviewLinkId());
+    }
+
     public function testSerializesItself(): void
     {
-        $token = new FrontendPreviewToken(null, true);
+        $token = new FrontendPreviewToken(null, true, 123);
         $serialized = $token->__serialize();
-        $expected = [true, [$token->getUser(), true, null, [], []], null];
+        $expected = [true, [$token->getUser(), true, null, [], []], 123];
 
         $this->assertSame($expected, $serialized);
 
         $token = new FrontendPreviewToken(null, false);
 
         $this->assertFalse($token->showUnpublished());
+        $this->assertNull($token->getPreviewLinkId());
 
         $token->__unserialize($expected);
 
         $this->assertTrue($token->showUnpublished());
+        $this->assertSame(123, $token->getPreviewLinkId());
     }
 
     public function testDoesNotReturnCredentials(): void
