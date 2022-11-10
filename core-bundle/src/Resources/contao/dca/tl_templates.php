@@ -312,6 +312,7 @@ class tl_templates extends Contao\Backend
 							Path::makeAbsolute($strOriginal, $projectDir),
 							Path::makeAbsolute($strTarget, $projectDir)
 						);
+
 						$this->redirect($this->getReferer());
 					}
 				}
