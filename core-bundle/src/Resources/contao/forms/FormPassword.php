@@ -137,6 +137,7 @@ class FormPassword extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
+
 			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 			return $encoder->encodePassword($varInput, null);

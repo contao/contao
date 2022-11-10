@@ -132,7 +132,6 @@ class Password extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
 			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
 
