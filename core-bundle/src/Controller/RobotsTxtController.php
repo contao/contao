@@ -47,10 +47,8 @@ class RobotsTxtController
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->getHost(),
-            ['fallbackToEmpty' => true]
-        );
+        /** @var PageModel|null $rootPage */
+        $rootPage = $pageModel->findPublishedFallbackByHostname($request->getHost(), ['fallbackToEmpty' => true]);
 
         if (null === $rootPage) {
             return new Response('', Response::HTTP_NOT_FOUND);
