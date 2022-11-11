@@ -65,7 +65,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             $translated = vsprintf($translated, $parameters);
         }
 
-        // Restore previous translations in $GLOBALS['TL_LANG'] (#5371)
+        // Restore previous translations in $GLOBALS['TL_LANG'] (see #5371)
         if (null !== $locale && $locale !== $this->getLocale()) {
             $system = $this->framework->getAdapter(System::class);
             $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
