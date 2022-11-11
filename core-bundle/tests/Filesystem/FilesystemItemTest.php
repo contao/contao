@@ -207,7 +207,7 @@ class FilesystemItemTest extends TestCase
             'some/file.txt',
             null,
             null,
-            static function (): void {
+            static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
             }
         );
@@ -225,7 +225,7 @@ class FilesystemItemTest extends TestCase
             'some/file.txt',
             null,
             null,
-            static function (): void {
+            static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
             }
         );
