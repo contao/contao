@@ -120,7 +120,7 @@ class TokenChecker
             return false;
         }
 
-        return $this->validatePreviewLink($token);
+        return $this->isValidPreviewLink($token);
     }
 
     /**
