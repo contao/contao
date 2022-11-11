@@ -169,7 +169,7 @@ class FilesystemItem
         }
 
         if (null === $this->mimeType && null === $default) {
-            throw VirtualFilesystemException::unableToRetrieveMetadata($this->path, $exception, 'A mime type could not be detected. Set the "$default" argument to suppress the exception.');
+            throw VirtualFilesystemException::unableToRetrieveMetadata($this->path, $exception, 'A mime type could not be detected. Set the "$default" argument to suppress this exception.');
         }
 
         return $this->mimeType ?? $default;

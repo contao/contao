@@ -210,7 +210,7 @@ class FilesystemItemTest extends TestCase
         );
 
         $this->expectException(VirtualFilesystemException::class);
-        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set the "$default" argument to suppress the exception.');
+        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set the "$default" argument to suppress this exception.');
 
         $item->getMimeType();
     }

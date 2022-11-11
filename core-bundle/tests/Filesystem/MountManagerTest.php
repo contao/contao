@@ -493,7 +493,7 @@ class MountManagerTest extends TestCase
 
     public function testSetsLazyMetadataIfAdapterDidNotProvideDetailsWhenListing(): void
     {
-        // We mock an adapter that does not set metadata when listing
+        // Mock an adapter that does not set metadata when listing
         $adapter = $this->createMock(FilesystemAdapter::class);
         $adapter
             ->method('listContents')
@@ -517,15 +517,7 @@ class MountManagerTest extends TestCase
         $adapter
             ->method('mimeType')
             ->with('bar/test.zip')
-            ->willReturn(
-                new FileAttributes(
-                    'bar/test.zip',
-                    null,
-                    null,
-                    null,
-                    'application/zip'
-                )
-            )
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
         ;
 
         $mountManager = new MountManager([]);
