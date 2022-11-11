@@ -113,7 +113,7 @@ class RootPageDependentModulesControllerTest extends TestCase
     public function testReturnsEmptyResponseWhenNoModulesConfigured(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->rootId = '1';
+        $page->rootId = 1;
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $module->rootPageDependentModules = serialize([]);
@@ -134,7 +134,7 @@ class RootPageDependentModulesControllerTest extends TestCase
     public function testPopulatesTheTemplateWithTheModule(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->rootId = '1';
+        $page->rootId = 1;
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $module->rootPageDependentModules = serialize([1 => '10']);

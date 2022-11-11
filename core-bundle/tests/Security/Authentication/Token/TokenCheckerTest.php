@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -25,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -59,7 +61,8 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $hasRoles = \count($roles);
@@ -111,7 +114,8 @@ class TokenCheckerTest extends TestCase
             $tokenStorage,
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         if (FrontendUser::class === $class) {
@@ -138,7 +142,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
@@ -155,10 +160,140 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
+    }
+
+    /**
+     * @dataProvider getPreviewAllowedData
+     */
+    public function testChecksIfAccessingThePreviewIsAllowed(TokenInterface $token, ?array $previewLinkRow, ?string $url, bool $expect): void
+    {
+        $request = new Request();
+
+        if ($url) {
+            $request = Request::create($url);
+        }
+
+        $session = $this->mockSessionWithToken($token);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn($previewLinkRow)
+        ;
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack($request),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(FrontendUser::class),
+            $session,
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $connection,
+        );
+
+        $this->assertSame($expect, $tokenChecker->canAccessPreview());
+    }
+
+    public function getPreviewAllowedData(): \Generator
+    {
+        yield 'Valid preview' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => true,
+                'restrictToUrl' => '',
+            ],
+            null,
+            true,
+        ];
+
+        yield 'Valid preview restricted to URL' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/page1?foo=bar',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://localhost/page1?bar=baz',
+            true,
+        ];
+
+        yield 'Valid preview restricted to URL (formatted differently)' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://example.com:443/page1',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://example.com/page1?foo=bar',
+            true,
+        ];
+
+        yield 'Invalid preview restricted to different URL' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/page2',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://localhost/page1',
+            false,
+        ];
+
+        yield 'Not a frontend preview token' => [
+            $this->createMock(AbstractToken::class),
+            null,
+            null,
+            false,
+        ];
+
+        yield 'Missing preview link ID' => [
+            new FrontendPreviewToken(null, true, null),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => true,
+                'restrictToUrl' => '',
+            ],
+            null,
+            false,
+        ];
+
+        yield 'Missing DB row' => [new FrontendPreviewToken(null, true, 1), null, null, false];
+
+        yield 'showUnpublished mismatch' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => false,
+                'restrictToUrl' => '',
+            ],
+            null,
+            false,
+        ];
+    }
+
+    public function testAccessingThePreviewIsAllowedForBackendUser(): void
+    {
+        /*
+        $session = $this->mockSessionWithToken($token);
+        */
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $this->createMock(SessionInterface::class),
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
+        );
+
+        $this->assertTrue($tokenChecker->canAccessPreview());
     }
 
     /**
@@ -179,13 +314,24 @@ class TokenCheckerTest extends TestCase
             ;
         }
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn([
+                'url' => 'https://localhost/',
+                'showUnpublished' => $token instanceof FrontendPreviewToken && $token->showUnpublished(),
+                'restrictToUrl' => '',
+            ])
+        ;
+
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack($request),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $connection,
         );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
@@ -193,9 +339,9 @@ class TokenCheckerTest extends TestCase
 
     public function getPreviewModeData(): \Generator
     {
-        yield [new FrontendPreviewToken(null, true), false, false];
-        yield [new FrontendPreviewToken(null, true), true, true];
-        yield [new FrontendPreviewToken(null, false), true, false];
+        yield [new FrontendPreviewToken(null, true, 1), false, false];
+        yield [new FrontendPreviewToken(null, true, 1), true, true];
+        yield [new FrontendPreviewToken(null, false, 1), true, false];
         yield [new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider'), true, false];
     }
 
@@ -219,7 +365,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertFalse($tokenChecker->hasFrontendUser());
@@ -246,7 +393,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertFalse($tokenChecker->hasBackendUser());
@@ -279,7 +427,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -295,7 +444,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getBackendUsername());
@@ -311,7 +461,8 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter()
+            $this->getRoleVoter(),
+            $this->createMock(Connection::class),
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -370,19 +521,19 @@ class TokenCheckerTest extends TestCase
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('isStarted')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('has')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturn(serialize($token))
         ;

@@ -431,7 +431,6 @@ abstract class DataContainer extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
-
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -514,6 +513,12 @@ abstract class DataContainer extends Backend
 					try
 					{
 						$this->save($varValue);
+
+						// Confirm password changes
+						if ($objWidget instanceof Password)
+						{
+							Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+						}
 					}
 					catch (ResponseException $e)
 					{

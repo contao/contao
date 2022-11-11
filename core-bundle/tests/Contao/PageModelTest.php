@@ -122,9 +122,9 @@ class PageModelTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 4.9: %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s');
 
         $databaseResultData = [
-            ['id' => '1', 'alias' => 'alias1', 'subpages' => '0'],
-            ['id' => '2', 'alias' => 'alias2', 'subpages' => '3'],
-            ['id' => '3', 'alias' => 'alias3', 'subpages' => '42'],
+            ['id' => 1, 'alias' => 'alias1', 'subpages' => 0],
+            ['id' => 2, 'alias' => 'alias2', 'subpages' => 3],
+            ['id' => 3, 'alias' => 'alias3', 'subpages' => 42],
         ];
 
         $statement = $this->createMock(Statement::class);

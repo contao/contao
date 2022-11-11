@@ -129,7 +129,6 @@ class Password extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
 			$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 

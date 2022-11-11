@@ -843,6 +843,7 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~
+            - '@database_connection'
 
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator

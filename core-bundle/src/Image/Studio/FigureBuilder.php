@@ -195,6 +195,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
