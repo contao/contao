@@ -199,7 +199,7 @@ class TokenChecker
         return $token;
     }
 
-    private function validatePreviewLink(FrontendPreviewToken $token): bool
+    private function isValidPreviewLink(FrontendPreviewToken $token): bool
     {
         $id = $token->getPreviewLinkId();
 
