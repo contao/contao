@@ -1698,7 +1698,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				foreach ($this->strPalette as $v)
 				{
 					// Check whether field is excluded
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['exclude'] ?? null)
+					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
 					{
 						continue;
 					}

@@ -195,6 +195,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
@@ -656,9 +657,9 @@ class FigureBuilder
 
             $target = urldecode($target);
 
-            $filePath = Path::isAbsolute($target) ?
-                Path::canonicalize($target) :
-                Path::makeAbsolute($target, $this->projectDir);
+            $filePath = Path::isAbsolute($target)
+                ? Path::canonicalize($target)
+                : Path::makeAbsolute($target, $this->projectDir);
 
             if (!is_file($filePath)) {
                 $filePath = null;

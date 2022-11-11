@@ -79,7 +79,7 @@ label[for="username"] {
 	text-indent:-999em;
 	z-index:1;
 }
-label[for="password"],label[for="confirm"] {
+label[for="password"],label[for="password_confirm"] {
 	position:absolute;
 	top:10px;
 	right:7px;

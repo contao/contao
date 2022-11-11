@@ -80,16 +80,10 @@ class Version430Update extends AbstractMigration
                     ];
                 }
 
-                $stmt = $this->connection->prepare('
-                    UPDATE
-                        tl_layout
-                    SET
-                        sections = :sections
-                    WHERE
-                        id = :id
-                ');
-
-                $stmt->executeStatement([':sections' => serialize(array_values($set)), ':id' => $layout['id']]);
+                $this->connection->executeStatement(
+                    'UPDATE tl_layout SET sections = :sections WHERE id = :id',
+                    ['sections' => serialize(array_values($set)), 'id' => $layout['id']]
+                );
             }
         }
 

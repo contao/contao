@@ -96,14 +96,10 @@ class Version410Update extends AbstractMigration
         ');
 
         // Grant access to all existing image sizes at group level
-        $stmt = $this->connection->prepare('
-            UPDATE
-                tl_user_group
-            SET
-                imageSizes = :options
-        ');
-
-        $stmt->executeStatement([':options' => serialize($options)]);
+        $this->connection->executeStatement(
+            'UPDATE tl_user_group SET imageSizes = :options',
+            ['options' => serialize($options)]
+        );
 
         return $this->createResult(true);
     }

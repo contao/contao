@@ -2697,10 +2697,10 @@ var Backend =
 	 * @author Yanick Witschi
 	 */
 	autoFocusFirstInputField: function() {
-		var edit = document.id('main').getElement('.tl_formbody_edit');
+		var edit = document.querySelector('#main .tl_formbody_edit');
 		if (!edit) return;
 
-		var inputs = edit
+		var inputs = $(edit)
 			.getElements('input, textarea')
 			.filter(function(item) {
 				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
@@ -2758,7 +2758,7 @@ var Backend =
 					partElement.setStyle('display', null);
 				}
 				Object.each(values, function(value, key) {
-					inputElements[key].set('value', value.toFixed(15));
+					inputElements[key].set('value', value === '' ? '' : Number(value).toFixed(15));
 				});
 			},
 			start = function(event) {

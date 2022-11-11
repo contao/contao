@@ -57,18 +57,13 @@ class CeAccessMigration extends AbstractMigration
                 fields BLOB DEFAULT NULL
         ');
 
-        $stmt = $this->connection->prepare('
-            UPDATE
-                tl_user_group
-            SET
-                elements = :elements,
-                fields = :fields
-        ');
-
-        $stmt->executeStatement([
-            ':elements' => serialize(array_keys(array_merge(...array_values($GLOBALS['TL_CTE'])))),
-            ':fields' => serialize(array_keys($GLOBALS['TL_FFL'])),
-        ]);
+        $this->connection->executeStatement(
+            'UPDATE tl_user_group SET elements = :elements, fields = :fields',
+            [
+                'elements' => serialize(array_keys(array_merge(...array_values($GLOBALS['TL_CTE'])))),
+                'fields' => serialize(array_keys($GLOBALS['TL_FFL'])),
+            ]
+        );
 
         return $this->createResult(true);
     }

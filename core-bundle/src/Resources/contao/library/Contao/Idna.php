@@ -38,7 +38,7 @@ class Idna
 			return '';
 		}
 
-		if (($encoded = idn_to_ascii($strDomain)) === false)
+		if (($encoded = idn_to_ascii($strDomain, IDNA_NONTRANSITIONAL_TO_ASCII)) === false)
 		{
 			return '';
 		}
