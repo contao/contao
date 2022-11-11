@@ -159,7 +159,7 @@ class FilesystemItemTest extends TestCase
 
         $this->assertNull($item->getLastModified());
         $this->assertSame(0, $item->getFileSize());
-        $this->assertSame('', $item->getMimeType(false));
+        $this->assertSame('', $item->getMimeType(''));
 
         $invocationCounts = [
             'lastModified' => 0,
@@ -210,9 +210,24 @@ class FilesystemItemTest extends TestCase
         );
 
         $this->expectException(VirtualFilesystemException::class);
-        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set "$throwOnError" to false to suppress the exception and get an empty string instead.');
+        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set the "$default" argument to suppress the exception.');
 
         $item->getMimeType();
+    }
+
+    public function testReturnsDefaultMimeTypeIfSpecified(): void
+    {
+        $item = new FilesystemItem(
+            true,
+            'some/file.txt',
+            null,
+            null,
+            static function (): void {
+                throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
+            }
+        );
+
+        $this->assertSame('text/plain', $item->getMimeType('text/plain'));
     }
 
     public function testWithMetadataIfNotDefinedDoesNotOverwriteExistingValues(): void
