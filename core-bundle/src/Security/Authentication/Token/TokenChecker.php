@@ -17,6 +17,7 @@ use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -236,6 +237,6 @@ class TokenChecker
 
         $request = $this->requestStack->getMainRequest();
 
-        return $request && strtok($request->getUri(), '?') === strtok($previewLink['url'], '?');
+        return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
     }
 }

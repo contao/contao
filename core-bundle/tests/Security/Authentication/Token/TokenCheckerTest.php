@@ -223,6 +223,17 @@ class TokenCheckerTest extends TestCase
             true,
         ];
 
+        yield 'Valid preview restricted to URL (formatted differently)' => [
+            new FrontendPreviewToken(null, true, 1),
+            [
+                'url' => 'https://example.com:443/page1',
+                'showUnpublished' => true,
+                'restrictToUrl' => '1',
+            ],
+            'https://example.com/page1?foo=bar',
+            true,
+        ];
+
         yield 'Invalid preview restricted to different URL' => [
             new FrontendPreviewToken(null, true, 1),
             [
