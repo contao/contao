@@ -156,7 +156,7 @@ class FilesystemItem
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(string|null $default = null): string
+    public function getMimeType(string $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
         $exception = null;
