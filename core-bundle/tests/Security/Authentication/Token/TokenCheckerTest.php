@@ -203,7 +203,7 @@ class TokenCheckerTest extends TestCase
             $connection,
         );
 
-        $this->assertSame($expect, $tokenChecker->isPreviewAllowed());
+        $this->assertSame($expect, $tokenChecker->canAccessPreview());
     }
 
     public function getPreviewAllowedData(): \Generator
@@ -289,7 +289,7 @@ class TokenCheckerTest extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $this->assertTrue($tokenChecker->isPreviewAllowed());
+        $this->assertTrue($tokenChecker->canAccessPreview());
     }
 
     /**

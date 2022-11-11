@@ -104,7 +104,7 @@ class TokenChecker
     /**
      * Tells whether the front end preview can be accessed.
      */
-    public function isPreviewAllowed(): bool
+    public function canAccessPreview(): bool
     {
         if ($this->hasBackendUser()) {
             return true;
@@ -130,7 +130,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getMainRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false) || !$this->isPreviewAllowed()) {
+        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 

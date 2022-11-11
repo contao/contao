@@ -54,7 +54,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->expects($this->once())
-            ->method('isPreviewAllowed')
+            ->method('canAccessPreview')
             ->willReturn(false)
         ;
 
