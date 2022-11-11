@@ -143,12 +143,23 @@ class FilesystemItem implements \Stringable
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(): string
+    public function getMimeType(string $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
-        $this->resolveIfClosure($this->mimeType);
+        $exception = null;
 
-        return $this->mimeType ?? '';
+        try {
+            $this->resolveIfClosure($this->mimeType);
+        } catch (VirtualFilesystemException $e) {
+            $this->mimeType = null;
+            $exception = $e;
+        }
+
+        if (null === $this->mimeType && null === $default) {
+            throw VirtualFilesystemException::unableToRetrieveMetadata($this->path, $exception, 'A mime type could not be detected. Set the "$default" argument to suppress this exception.');
+        }
+
+        return $this->mimeType ?? $default;
     }
 
     public function getExtraMetadata(): array
