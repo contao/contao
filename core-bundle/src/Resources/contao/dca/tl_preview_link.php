@@ -134,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'datim', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'published' => array
