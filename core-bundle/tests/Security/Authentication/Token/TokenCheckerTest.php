@@ -19,7 +19,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -181,16 +180,10 @@ class TokenCheckerTest extends TestCase
 
         $session = $this->mockSessionWithToken($token);
 
-        $result = $this->createMock(Result::class);
-        $result
-            ->method('fetchAssociative')
-            ->willReturn($previewLinkRow)
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('executeQuery')
-            ->willReturn($result)
+            ->method('fetchAssociative')
+            ->willReturn($previewLinkRow)
         ;
 
         $tokenChecker = new TokenChecker(
@@ -310,20 +303,14 @@ class TokenCheckerTest extends TestCase
             ;
         }
 
-        $result = $this->createMock(Result::class);
-        $result
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->method('fetchAssociative')
             ->willReturn([
                 'url' => 'https://localhost/',
                 'showUnpublished' => $token instanceof FrontendPreviewToken && $token->showUnpublished(),
                 'restrictToUrl' => '',
             ])
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('executeQuery')
-            ->willReturn($result)
         ;
 
         $tokenChecker = new TokenChecker(

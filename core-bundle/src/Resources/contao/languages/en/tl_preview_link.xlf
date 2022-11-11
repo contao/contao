@@ -18,7 +18,7 @@
         <source>Restrict access to specified URL</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
-        <source>Allow access only to a single page as opposed to the whole website.</source>
+        <source>Allow access only to the specified URL instead of the entire website.</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>

@@ -204,11 +204,20 @@ class TokenChecker
         $id = $token->getPreviewLinkId();
 
         if (!isset($this->previewLinks[$id])) {
-            $this->previewLinks[$id] = $this->connection->executeQuery(
-                "SELECT url, showUnpublished, restrictToUrl FROM tl_preview_link
-                WHERE id = :id AND published = '1' AND expiresAt > UNIX_TIMESTAMP()",
+            $this->previewLinks[$id] = $this->connection->fetchAssociative(
+                "
+                    SELECT
+                        url,
+                        showUnpublished,
+                        restrictToUrl
+                    FROM tl_preview_link
+                    WHERE
+                        id = :id
+                        AND published = '1'
+                        AND expiresAt > UNIX_TIMESTAMP()
+                ",
                 ['id' => $id],
-            )->fetchAssociative();
+            );
         }
 
         $previewLink = $this->previewLinks[$id];
@@ -227,10 +236,6 @@ class TokenChecker
 
         $request = $this->requestStack->getMainRequest();
 
-        if ($request && strtok($request->getUri(), '?') === strtok($previewLink['url'], '?')) {
-            return true;
-        }
-
-        return false;
+        return $request && strtok($request->getUri(), '?') === strtok($previewLink['url'], '?');
     }
 }
