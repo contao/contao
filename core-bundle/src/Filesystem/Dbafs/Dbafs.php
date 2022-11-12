@@ -143,15 +143,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         $path = Path::join($this->dbPathPrefix, $path);
         $table = $this->connection->quoteIdentifier($this->table);
 
+        $searchLiteral = '' !== $path ? "$path/%" : '%';
+
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                ["$path/%"]
+                [$searchLiteral]
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                ["$path/%", "$path/%/%"]
+                [$searchLiteral, "$searchLiteral/%"]
             );
         }
 
