@@ -790,16 +790,16 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
-                    // Yield file
-                    yield $searchPath => self::RESOURCE_FILE;
-
-                    continue;
-                }
-
                 // Analyze parent path
                 $analyzedPaths = array_merge($analyzedPaths, $analyzeDirectory(Path::getDirectory($searchPath)));
                 $isDir = $analyzedPaths[$searchPath] ??= false;
+            }
+
+            if (!$isDir && !$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
+                // Yield existing file
+                yield $searchPath => self::RESOURCE_FILE;
+
+                continue;
             }
 
             if ($isDir) {
