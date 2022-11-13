@@ -800,6 +800,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 continue;
             }
+
             if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
                 // Yield existing file
                 yield $searchPath => self::RESOURCE_FILE;
