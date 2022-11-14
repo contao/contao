@@ -27,6 +27,7 @@ use Contao\File;
 use Contao\Files;
 use Contao\Image\ImageInterface;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
@@ -149,7 +150,7 @@ class FigureRendererTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class)));
         $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);

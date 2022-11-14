@@ -25,6 +25,7 @@ use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,7 +44,7 @@ class BackendCsvImportControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class)));
 
         System::setContainer($container);
     }

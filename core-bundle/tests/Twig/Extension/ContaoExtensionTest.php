@@ -29,6 +29,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -238,7 +239,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class)));
 
         System::setContainer($container);
 
@@ -259,7 +260,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class)));
 
         System::setContainer($container);
 
@@ -300,7 +301,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class)));
 
         System::setContainer($container);
 

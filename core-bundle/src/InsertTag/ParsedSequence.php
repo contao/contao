@@ -58,4 +58,15 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
     {
         return new \ArrayIterator($this->sequence);
     }
+
+    public function serialize(): string
+    {
+        $serialized = '';
+
+        foreach ($this as $item) {
+            $serialized .= \is_string($item) ? $item : $item->serialize();
+        }
+
+        return $serialized;
+    }
 }

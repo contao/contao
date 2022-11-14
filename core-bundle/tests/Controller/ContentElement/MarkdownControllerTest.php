@@ -21,6 +21,7 @@ use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -173,6 +174,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }

@@ -52,6 +52,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
@@ -114,6 +115,7 @@ class ContentElementTestCase extends TestCase
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $environment);
         $container->set('contao.framework', $this->getDefaultFramework());
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         $controller->setContainer($container);
         System::setContainer($container);

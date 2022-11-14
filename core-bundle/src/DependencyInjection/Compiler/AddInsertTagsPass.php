@@ -42,7 +42,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                         throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
                     }
 
-                    $method = $this->getMethod($attributes['method'], 'contao.block_insert_tag' === $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
+                    $method = $this->getMethod($attributes['method'], $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
 
                     $priorities[] = $attributes['priority'];
                     $subscriptions[] = new Definition(
@@ -65,12 +65,40 @@ class AddInsertTagsPass implements CompilerPassInterface
                 $definition->addMethodCall('contao.block_insert_tag' === $serviceTag ? 'addBlockSubscription' : 'addSubscription', [$subscription]);
             }
         }
+
+        $serviceIds = $container->findTaggedServiceIds('contao.insert_tag_flag');
+        $flags = [];
+        $priorities = [];
+
+        foreach ($serviceIds as $serviceId => $tags) {
+            foreach ($tags as $attributes) {
+                if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
+                    throw new InvalidDefinitionException(sprintf('Invalid insert tag flag name "%s"', $attributes['name'] ?? ''));
+                }
+
+                $method = $this->getMethod($attributes['method'], 'contao.insert_tag_flag', $container->findDefinition($serviceId)->getClass(), $serviceId);
+
+                $priorities[] = $attributes['priority'];
+                $flags[] = [
+                    $attributes['name'],
+                    new Reference($serviceId),
+                    $method,
+                ];
+            }
+        }
+
+        // Order by priorities
+        array_multisort($priorities, $flags);
+
+        foreach ($flags as $flag) {
+            $definition->addMethodCall('addFlagCallback', $flag);
+        }
     }
 
-    private function getMethod(string|null $method, bool $isBlock, string $class, string $serviceId): string
+    private function getMethod(string|null $method, string $serviceTag, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
-        $invalid = sprintf('The contao.insert_tag definition for service "%s" is invalid. ', $serviceId);
+        $invalid = sprintf('The %s definition for service "%s" is invalid. ', $serviceTag, $serviceId);
 
         $method = $method ?: '__invoke';
 
@@ -88,7 +116,7 @@ class AddInsertTagsPass implements CompilerPassInterface
             throw new InvalidDefinitionException($invalid);
         }
 
-        $expectedReturnType = $isBlock ? ParsedSequence::class : InsertTagResult::class;
+        $expectedReturnType = 'contao.block_insert_tag' === $serviceTag ? ParsedSequence::class : InsertTagResult::class;
 
         if ($expectedReturnType !== (string) $ref->getReturnType()) {
             $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, (string) $ref->getReturnType());

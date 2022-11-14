@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
+use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -23,16 +26,32 @@ use Symfony\Contracts\Service\ResetInterface;
  *
  * Formal syntax (EBNF):
  *
- *     InsertTag    ::= "{{" Name Parameter * Flag * "}}"
- *     Name         ::= [a-z#x80-#xFF] [a-z0-9_#x80-#xFF] *
- *     Parameter    ::= "::" ( KeyValuePair | Value )
- *     Flag         ::= "|" [^{}|] *
+ *        InsertTag ::= "{{" Name Parameter * Flag * "}}"
+ *             Name ::= [a-z#x80-#xFF] [a-z0-9_#x80-#xFF] *
+ *        Parameter ::= "::" ( KeyValuePair | Value )
+ *             Flag ::= "|" [^{}|] *
  *     KeyValuePair ::= Key "=" Value
- *     Key          ::= [^{}|=] *
- *     Value        ::= ( [^{}|] | InsertTag ) *
+ *              Key ::= [^{}|=] *
+ *            Value ::= ( [^{}|] | InsertTag ) *
  */
 class InsertTagParser implements ResetInterface
 {
+    private const TAG_REGEX = /** @lang RegExp */ '
+        (?<it>                 # Named capturing group "it"
+            {{                 # Starts with two opening curly braces
+            [a-z0-9\x80-\xFF]  # The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+            (?>[^{}]|(?&it))*  # Match any character not curly brace or a nested insert tag
+            }}                 # Ends with two closing curly braces
+        )';
+
+    private const PARAMETER_REGEX = /** @lang RegExp */ '
+        ::                        # Starts with double colon
+        (?:
+            [^{}|:]               # Match any character not curly brace, pipe or colon
+            |:(?!:)               # Or a single colon (not followed by another colon)
+            |'.self::TAG_REGEX.'  # Or an insert tag
+        )*';
+
     /**
      * @var array<string,InsertTagSubscription>
      */
@@ -43,7 +62,12 @@ class InsertTagParser implements ResetInterface
      */
     private array $blockSubscriptions = [];
 
-    public function __construct(private ContaoFramework $framework, private InsertTags|null $insertTags = null)
+    /**
+     * @var array<string,\Closure(InsertTagFlag,InsertTagResult):InsertTagResult>
+     */
+    private array $flagCallbacks = [];
+
+    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger, private InsertTags|null $insertTags = null)
     {
     }
 
@@ -57,6 +81,11 @@ class InsertTagParser implements ResetInterface
     {
         unset($this->subscriptions[$subscription->name]);
         $this->blockSubscriptions[$subscription->name] = $subscription;
+    }
+
+    public function addFlagCallback(string $name, object $service, string $method): void
+    {
+        $this->flagCallbacks[$name] = $service->$method(...);
     }
 
     public function replace(ParsedSequence|string $input): string
@@ -90,7 +119,9 @@ class InsertTagParser implements ResetInterface
 
     public function replaceChunked(string $input): ChunkedText
     {
-        return $this->callLegacyClass($input, true);
+        return new ChunkedText([$this->replace($input)]);
+
+        //return $this->callLegacyClass($input, true);
     }
 
     public function replaceInline(ParsedSequence|string $input): string
@@ -98,6 +129,8 @@ class InsertTagParser implements ResetInterface
         if (!$input instanceof ParsedSequence) {
             $input = $this->parse($input);
         }
+
+        $input = $this->handleLegacyTagsHook($input, false);
 
         $return = '';
         $wrapStart = null;
@@ -137,12 +170,7 @@ class InsertTagParser implements ResetInterface
                 continue;
             }
 
-            try {
-                $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
-            } catch (\Throwable) {
-                // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
-                $return .= $item->serialize();
-            }
+            $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
         }
 
         // Missing end tag
@@ -151,12 +179,14 @@ class InsertTagParser implements ResetInterface
             $return .= $this->replaceInline(new ParsedSequence($wrapContent));
         }
 
-        return (string) $this->callLegacyClass($return, false);
+        return $return;
     }
 
     public function replaceInlineChunked(string $input): ChunkedText
     {
-        return $this->callLegacyClass($input, false);
+        return new ChunkedText([$this->replaceInline($input)]);
+
+        //return $this->callLegacyClass($input, false);
     }
 
     /**
@@ -216,7 +246,32 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        return $subscription->service->{$subscription->method}($tag);
+        $result = $subscription->service->{$subscription->method}($tag);
+
+        foreach ($tag->getFlags() as $flag) {
+            if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
+                $result = $callback($flag, $result);
+            } else {
+                $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @internal
+     */
+    public function renderFlagForLegacyResult(string $flag, string $result): string|false
+    {
+        if (!$callback = $this->flagCallbacks[strtolower($flag)] ?? null) {
+            return false;
+        }
+
+        return $callback(
+            new InsertTagFlag($flag),
+            new InsertTagResult($result, OutputType::html),
+        )->getValue();
     }
 
     private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null
@@ -236,21 +291,14 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (
-            !preg_match_all(
-                <<<'EOD'
-                    (
-                        {{                # Starts with two opening curly braces
-                        [a-z0-9\x80-\xFF] # The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-                        (?>[^{}]|(?R))*   # Match any character not curly brace or a nested insert tag
-                        }}                # Ends with two closing curly braces
-                    )x
-                    EOD,
-                $input,
-                $matches,
-                PREG_OFFSET_CAPTURE,
-            )
-        ) {
+        if (null === $this->insertTags) {
+            $this->framework->initialize();
+            $this->insertTags = new InsertTags();
+        }
+
+        $input = $this->insertTags->encodeHtmlAttributes($input);
+
+        if (!preg_match_all('('.self::TAG_REGEX.')x', $input, $matches, PREG_OFFSET_CAPTURE)) {
             return new ParsedSequence([$input]);
         }
 
@@ -285,41 +333,13 @@ class InsertTagParser implements ResetInterface
 
         $parameters = explode('::', $insertTag, 2);
         $name = array_shift($parameters);
-        $queryOnly = !$parameters && preg_match('/\?.+(?:=|&#61;)/s', $name);
-
-        if ($queryOnly) {
-            [$name, $parameters[0]] = preg_split('/(?=\?)/', $name, 2);
-        }
 
         if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $name)) {
             throw new \InvalidArgumentException(sprintf('Invalid insert tag name "%s"', $name));
         }
 
-        $insertTagRegex = /** @lang RegExp */ <<<'EOD'
-            (?<it>                 # Named capturing group "it"
-                {{                 # Starts with two opening curly braces
-                [a-z0-9\x80-\xFF]  # The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-                (?>[^{}]|(?&it))*  # Match any character not curly brace or a nested insert tag
-                }}                 # Ends with two closing curly braces
-            )
-            EOD;
-
         if ($parameters) {
-            preg_match_all(
-                <<<EOD
-                    (
-                        ::
-                        (?:
-                            [^{}|:]                # Match any character not curly brace, pipe or colon
-                            |:(?!:)                # Or a single colon (not followed by another colon)
-                            |$insertTagRegex       # Or an insert tag
-                        )*
-                        |.                         # Match anything else to detect syntax errors
-                    )xs
-                    EOD,
-                '::'.$parameters[0],
-                $parameterMatches,
-            );
+            preg_match_all('('.self::PARAMETER_REGEX.'|.)xs', '::'.$parameters[0], $parameterMatches);
 
             foreach ($parameterMatches[0] ?? [''] as $index => $parameterMatch) {
                 if (!str_starts_with($parameterMatch, '::')) {
@@ -328,39 +348,19 @@ class InsertTagParser implements ResetInterface
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
             }
 
-            /** @var array<int,ParsedSequence> $parameters */
+            /** @var list<ParsedSequence> $parameters */
             $parameters = array_map($this->parse(...), $parameterMatches[0]);
-
-            /* Discarded idea of query parameters in insert tags
-
-            $paramSequence = [];
-            $querySequence = [];
-
-            foreach ($parameters[array_key_last($parameters)] as $sequenceItem) {
-                if ($querySequence) {
-                    $querySequence[] = $sequenceItem;
-                } elseif (\is_string($sequenceItem) && preg_match('/\?.+(?:=|&#61;)/s', $sequenceItem)) {
-                    $chunks = explode('?', $sequenceItem, 2);
-                    $paramSequence[] = $chunks[0];
-                    $querySequence[] = $chunks[1];
-                } else {
-                    $paramSequence[] = $sequenceItem;
-                }
-            }
-
-            if ($queryOnly) {
-                $parameters = [];
-            } else {
-                $parameters[array_key_last($parameters)] = new ParsedSequence($paramSequence);
-            }
-
-            $parameters += $this->parseQuery(new ParsedSequence($querySequence));
-            */
         }
 
         if (strtolower($name) !== $name) {
             trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $name);
             $name = strtolower($name);
+        }
+
+        foreach ($flags as $flag) {
+            if (strtolower($flag) !== $flag) {
+                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $flag);
+            }
         }
 
         $tag = new ParsedInsertTag(
@@ -496,6 +496,82 @@ class InsertTagParser implements ResetInterface
             $this->insertTags = new InsertTags();
         }
 
-        return $this->insertTags->replaceInternal($input, $allowEsiTags);
+        return $this->insertTags->replaceInternal($input, $allowEsiTags, $this);
+    }
+
+    private function handleLegacyTagsHook(ParsedSequence $input, bool $allowEsiTags): ParsedSequence
+    {
+        if (empty($GLOBALS['TL_HOOKS']['replaceInsertTags'])) {
+            //return $input; enable once all insert tags are moved over
+        }
+
+        $hasLegacyTags = false;
+
+        foreach ($input as $item) {
+            if (!\is_string($item) && !$this->hasInsertTag($item->getName())) {
+                $hasLegacyTags = true;
+                break;
+            }
+
+            if (\is_string($item) && str_contains($item, '{{')) {
+                $hasLegacyTags = true;
+                break;
+            }
+        }
+
+        if (!$hasLegacyTags) {
+            return $input;
+        }
+
+        return $this->parse((string) $this->callLegacyClass($input->serialize(), $allowEsiTags));
+    }
+
+    /**
+     * @internal
+     */
+    public function hasInsertTag(string $name): bool
+    {
+        return
+            isset($this->subscriptions[$name])
+            || isset($this->blockSubscriptions[$name])
+        ;
+    }
+
+    private function handleLegacyFlagsHook(InsertTagResult $result, InsertTagFlag $flag, InsertTag $tag): InsertTagResult
+    {
+        // Set up as variables as they may be used by reference in the hooks
+        $flags = array_map(static fn ($flag) => $flag->getName(), $tag->getFlags());
+        $tags = ['', substr($tag->serialize(), 2, -2), ''];
+        $rit = 0;
+        $cnt = 3;
+        $system = $this->framework->getAdapter(System::class);
+
+        foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] ?? [] as $callback) {
+            $hookResult = $system->importStatic($callback[0])->{$callback[1]}(
+                $flag->getName(),
+                $tag->getName().$tag->getParameters()->serialize(),
+                $result->getValue(),
+                $flags,
+                false,
+                $tags,
+                [],
+                $rit,
+                $cnt,
+            );
+
+            // Replace the tag and stop the loop
+            if (false !== $hookResult) {
+                return new InsertTagResult(
+                    (string) $hookResult,
+                    OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
+                    $result->getExpiresAt(),
+                    $result->getCacheTags(),
+                );
+            }
+        }
+
+        $this->logger->error('Unknown insert tag flag "'.$flag->getName().'" in '.$tag->serialize().' on page '.$this->framework->getAdapter(Environment::class)->get('uri'));
+
+        return $result;
     }
 }

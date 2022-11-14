@@ -22,6 +22,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class InsertTagsTest extends TestCase
@@ -36,6 +37,8 @@ class InsertTagsTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('contao.insert_tag.parser', $this->createMock(InsertTagParser::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
 
         System::setContainer($container);
@@ -61,12 +64,12 @@ class InsertTagsTest extends TestCase
         }
 
         if ('infinite-recursion' === $tagParts[0]) {
-            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false);
+            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, $this->createMock(InsertTagParser::class));
         }
 
         if ('infinite-try-catch' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false);
+                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, $this->createMock(InsertTagParser::class));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
@@ -76,12 +79,12 @@ class InsertTagsTest extends TestCase
 
         if ('infinite-retry' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
+                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, $this->createMock(InsertTagParser::class));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
                 if ((int) $tagParts[1] >= 100) {
-                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
+                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, $this->createMock(InsertTagParser::class));
                 }
 
                 throw $exception;
@@ -98,7 +101,10 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
+
+        System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
+
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
@@ -270,7 +276,7 @@ class InsertTagsTest extends TestCase
 
         $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
         $output = $insertTagParser->replaceInline($input);
 
         $this->assertSame('<figure>foo</figure>', $output);
@@ -376,7 +382,7 @@ class InsertTagsTest extends TestCase
 
         $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
         $output = $insertTagParser->replaceInline($input);
 
         $this->assertSame('', $output);
@@ -408,7 +414,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $output = (string) (new InsertTags())->replaceInternal($source, false);
+        $output = (string) (new InsertTags())->replaceInternal($source, false, $this->createMock(InsertTagParser::class));
 
         $this->assertSame($expected, $output);
     }
@@ -475,7 +481,7 @@ class InsertTagsTest extends TestCase
 
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $insertTags);
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $insertTags);
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
@@ -710,7 +716,9 @@ class InsertTagsTest extends TestCase
 
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $insertTags);
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $insertTags);
+
+        System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
             new IfLanguageInsertTag(),
@@ -981,7 +989,9 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
+
+        System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
@@ -993,7 +1003,7 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
@@ -1005,7 +1015,7 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
         $this->assertSame('[{]infinite-try-catch::65[}]', $output);
@@ -1015,7 +1025,7 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');

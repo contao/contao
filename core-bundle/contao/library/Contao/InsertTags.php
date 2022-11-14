@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -49,6 +50,8 @@ class InsertTags extends Controller
 	 */
 	protected static $strAllowedTagsRegex;
 
+	private InsertTagParser $parser;
+
 	/**
 	 * Make the constructor public
 	 */
@@ -69,8 +72,10 @@ class InsertTags extends Controller
 	/**
 	 * @internal
 	 */
-	public function replaceInternal(string $strBuffer, bool $blnCache): ChunkedText
+	public function replaceInternal(string $strBuffer, bool $blnCache, InsertTagParser $parser): ChunkedText
 	{
+		$this->parser = $parser;
+
 		if (self::$intRecursionCount > self::MAX_NESTING_LEVEL)
 		{
 			throw new \RuntimeException(sprintf('Maximum insert tag nesting level of %s reached', self::MAX_NESTING_LEVEL));
@@ -156,7 +161,7 @@ class InsertTags extends Controller
 
 			if (!$blnCache || !str_starts_with(strtolower($tags[$_rit+1]), 'fragment::'))
 			{
-				$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+				$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache, $this->parser);
 			}
 
 			$strTag = $tags[$_rit+1];
@@ -1087,23 +1092,26 @@ class InsertTags extends Controller
 
 				// HOOK: pass unknown tags to callback functions
 				default:
-					if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
+					if (!$this->parser->hasInsertTag(strtolower($elements[0])))
 					{
-						foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
+						if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
-
-							// Replace the tag and stop the loop
-							if ($varValue !== false)
+							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
-								$arrCache[$strTag] = $varValue;
-								break 2;
+								$this->import($callback[0]);
+								$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
+
+								// Replace the tag and stop the loop
+								if ($varValue !== false)
+								{
+									$arrCache[$strTag] = $varValue;
+									break 2;
+								}
 							}
 						}
-					}
 
-					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+						$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+					}
 
 					// Do not use the cache
 					unset($arrCache[$strTag]);
@@ -1206,8 +1214,14 @@ class InsertTags extends Controller
 							// ignore
 							break;
 
-						// HOOK: pass unknown flags to callback functions
 						default:
+							if (false !== $varValue = $this->parser->renderFlagForLegacyResult($flag, $arrCache[$strTag]))
+							{
+								$arrCache[$strTag] = $varValue;
+								break;
+							}
+
+							// HOOK: pass unknown flags to callback functions
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
@@ -1232,7 +1246,7 @@ class InsertTags extends Controller
 
 			if (isset($arrCache[$strTag]))
 			{
-				$arrCache[$strTag] = (string) $this->replaceInternal($arrCache[$strTag], $blnCache);
+				$arrCache[$strTag] = (string) $this->replaceInternal($arrCache[$strTag], $blnCache, $this->parser);
 			}
 
 			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
@@ -1273,11 +1287,13 @@ class InsertTags extends Controller
 	/**
 	 * Add the specialchars flag to all insert tags used in HTML attributes
 	 *
+	 * @internal
+	 *
 	 * @param string $html
 	 *
 	 * @return string The html with the encoded insert tags
 	 */
-	private function encodeHtmlAttributes($html)
+	public function encodeHtmlAttributes($html)
 	{
 		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
 		{

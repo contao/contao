@@ -397,6 +397,10 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@monolog.logger.contao.error'
+
+    contao.insert_tag.flag.string_util:
+        class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag

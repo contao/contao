@@ -24,6 +24,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -150,7 +151,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

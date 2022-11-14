@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 
 class MetadataTest extends TestCase
 {
@@ -29,7 +30,7 @@ class MetadataTest extends TestCase
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class)));
 
         System::setContainer($container);
 
