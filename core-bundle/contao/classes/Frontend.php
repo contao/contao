@@ -163,7 +163,7 @@ abstract class Frontend extends Controller
 
 		if ($intId > 0 && ($intId != $objPage->id || $blnForceRedirect) && ($objNextPage = PageModel::findPublishedById($intId)) !== null)
 		{
-			$this->redirect($objNextPage->getFrontendUrl($strParams));
+			$this->redirect($objNextPage->getAbsoluteUrl($strParams));
 		}
 
 		$this->reload();
