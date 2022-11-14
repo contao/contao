@@ -154,7 +154,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * @param string|array<string> $classes
      */
-    public function addClass(string|array $classes, mixed $condition = true): self
+    public function addClass(array|string $classes, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;
@@ -183,7 +183,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * @param string|array<string> $classes
      */
-    public function removeClass(string|array $classes, mixed $condition = true): self
+    public function removeClass(array|string $classes, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;

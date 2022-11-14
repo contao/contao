@@ -132,7 +132,7 @@ class NewsFeedListener
         return $controller->convertRelativeUrls($description, $item->getLink());
     }
 
-    private function getAuthor(NewsModel $article): ?AuthorInterface
+    private function getAuthor(NewsModel $article): AuthorInterface|null
     {
         /** @var UserModel $authorModel */
         if ($authorModel = $article->getRelated('author')) {

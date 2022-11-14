@@ -68,6 +68,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'headline'
 		),
 		'label' => array
 		(
@@ -818,6 +819,12 @@ class tl_news extends Backend
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
+
+		if ($archiveModel === null)
+		{
+			return $tags;
+		}
+
 		$pageModel = PageModel::findWithDetails($archiveModel->jumpTo);
 
 		if ($pageModel === null)

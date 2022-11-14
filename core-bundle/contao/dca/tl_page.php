@@ -84,7 +84,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
-			'panelLayout'             => 'filter;search'
+			'panelLayout'             => 'filter;search',
+			'defaultSearchField'      => 'pageTitle'
 		),
 		'label' => array
 		(
@@ -403,7 +404,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'favicon' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg,png'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array

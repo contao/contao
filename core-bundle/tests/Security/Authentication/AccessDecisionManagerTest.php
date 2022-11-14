@@ -112,7 +112,7 @@ class AccessDecisionManagerTest extends TestCase
     /**
      * @return FirewallMap&MockObject
      */
-    private function mockFirewallMap(?string $context): FirewallMap
+    private function mockFirewallMap(string|null $context): FirewallMap
     {
         $map = $this->createMock(FirewallMap::class);
 

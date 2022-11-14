@@ -597,9 +597,9 @@ class MigrateCommand extends Command
                         InnoDB is not configured properly!
                         Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the "Barracuda" file format and the "innodb_file_per_table" option.
 
-                            innodb_large_prefix = 1
-                            innodb_file_format = Barracuda
-                            innodb_file_per_table = 1
+                        innodb_large_prefix = 1
+                        innodb_file_format = Barracuda
+                        innodb_file_per_table = 1
                         EOF;
             }
         }

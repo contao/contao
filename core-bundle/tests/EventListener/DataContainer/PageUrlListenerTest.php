@@ -1763,7 +1763,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return RouterInterface&MockObject
      */
-    private function mockRouter(PageRoute|false|int|null $route = null): RouterInterface
+    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 
@@ -1791,7 +1791,7 @@ class PageUrlListenerTest extends TestCase
                 ->expects($this->atLeastOnce())
                 ->method('generate')
                 ->with(
-                    RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                    PageRoute::PAGE_BASED_ROUTE_NAME,
                     [RouteObjectInterface::ROUTE_OBJECT => $route],
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
@@ -1802,7 +1802,7 @@ class PageUrlListenerTest extends TestCase
                 ->expects($this->exactly($route))
                 ->method('generate')
                 ->with(
-                    RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                    PageRoute::PAGE_BASED_ROUTE_NAME,
                     $this->isType('array'),
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )

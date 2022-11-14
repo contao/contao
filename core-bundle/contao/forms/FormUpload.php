@@ -200,7 +200,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			}
 		}
 
-		// Store file in the session and optionally on the server
+		// Store the file on the server if enabled
 		if (!$this->hasErrors())
 		{
 			$this->varValue = $_FILES[$this->strName];

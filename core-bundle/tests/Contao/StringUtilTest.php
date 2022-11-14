@@ -450,4 +450,50 @@ class StringUtilTest extends TestCase
             '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
         ];
     }
+
+    /**
+     * @dataProvider numberToStringProvider
+     */
+    public function testNumberToString(float|int $source, string $expected, int|null $precision = null): void
+    {
+        $this->assertSame($expected, StringUtil::numberToString($source, $precision));
+    }
+
+    public function numberToStringProvider(): \Generator
+    {
+        yield [0, '0'];
+        yield [1, '1'];
+        yield [-0, '0'];
+        yield [-1, '-1'];
+        yield [0.0, '0'];
+        yield [1.0, '1'];
+        yield [-0.0, '0'];
+        yield [-1.0, '-1'];
+        yield [0.00000000000000000000000000000000000000000000001, '0.00000000000000000000000000000000000000000000001'];
+        yield [1000000000000000000000000000000000000000000000000, '1000000000000000000000000000000000000000000000000'];
+        yield [123456789012345678901234567890, '123456789012350000000000000000'];
+        yield [PHP_INT_MAX, '9223372036854775807'];
+        yield [PHP_INT_MAX, '9223400000000000000', 5];
+        yield [(float) PHP_INT_MAX, '9223372036854800000'];
+        yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
+        yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
+        yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+    }
+
+    /**
+     * @dataProvider numberToStringFailsProvider
+     */
+    public function testNumberToStringFails(float|int $source, string $exception): void
+    {
+        $this->expectException($exception);
+
+        StringUtil::numberToString($source);
+    }
+
+    public function numberToStringFailsProvider(): \Generator
+    {
+        yield [INF, \InvalidArgumentException::class];
+        yield [NAN, \InvalidArgumentException::class];
+        yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
+    }
 }

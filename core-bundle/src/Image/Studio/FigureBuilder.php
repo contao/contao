@@ -187,6 +187,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
@@ -272,7 +273,7 @@ class FigureBuilder
     /**
      * Sets the image resource from a path inside a VFS storage.
      */
-    public function fromStorage(VirtualFilesystemInterface $storage, string|Uuid $location): self
+    public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
         try {
             $stream = $storage->readStream($location);
@@ -527,7 +528,18 @@ class FigureBuilder
             return null;
         }
 
-        return $this->doBuild();
+        $figure = $this->doBuild();
+
+        try {
+            // Make sure the resource can be processed
+            $figure->getImage()->getOriginalDimensions();
+        } catch (\Throwable $e) {
+            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+
+            return null;
+        }
+
+        return $figure;
     }
 
     /**
@@ -672,9 +684,9 @@ class FigureBuilder
 
             $target = urldecode($target);
 
-            $filePath = Path::isAbsolute($target) ?
-                Path::canonicalize($target) :
-                Path::makeAbsolute($target, $this->projectDir);
+            $filePath = Path::isAbsolute($target)
+                ? Path::canonicalize($target)
+                : Path::makeAbsolute($target, $this->projectDir);
 
             if (!is_file($filePath)) {
                 $filePath = null;

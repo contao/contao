@@ -83,6 +83,7 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class));
 
         $this->assertSame('<br>', $parser->render('br'));
+        $this->assertSame('', $parser->render('env::empty-insert-tag'));
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single raw chunk');
         $this->expectDeprecation('%sInvalid insert tag name%s');

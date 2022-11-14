@@ -62,6 +62,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType')
 		),
@@ -1202,7 +1203,7 @@ class tl_content extends Backend
 		}
 
 		// Add the protection status
-		if ($arrRow['protected'])
+		if ($arrRow['protected'] ?? null)
 		{
 			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
 			$groupNames = array();
@@ -1232,7 +1233,7 @@ class tl_content extends Backend
 		// Limit the element's height
 		if (!Config::get('doNotCollapse'))
 		{
-			$class .=  ' h40';
+			$class .= ' h40';
 		}
 
 		if ($arrRow['start'] && $arrRow['stop'])

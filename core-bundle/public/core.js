@@ -1812,7 +1812,7 @@ var Backend =
 					partElement.setStyle('display', null);
 				}
 				Object.each(values, function(value, key) {
-					inputElements[key].set('value', value);
+					inputElements[key].set('value', value === '' ? '' : Number(value).toFixed(15));
 				});
 			},
 			start = function(event) {

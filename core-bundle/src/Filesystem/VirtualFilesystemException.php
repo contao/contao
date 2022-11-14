@@ -140,11 +140,11 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToRetrieveMetadata(string $path, \Throwable $previous = null): self
+    public static function unableToRetrieveMetadata(string $path, \Throwable $previous = null, string $reason = ''): self
     {
         return new self(
             $path,
-            sprintf('Unable to retrieve metadata from "%s".', $path),
+            sprintf('Unable to retrieve metadata from "%s"%s', $path, $reason ? ": $reason" : '.'),
             self::UNABLE_TO_RETRIEVE_METADATA,
             $previous
         );

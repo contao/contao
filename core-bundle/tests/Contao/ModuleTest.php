@@ -75,15 +75,15 @@ class ModuleTest extends TestCase
     public function testGetPublishedSubpagesWithoutGuestsByPid(): void
     {
         $databaseResultFirstQuery = [
-            ['id' => '1', 'hasSubpages' => '0'],
-            ['id' => '2', 'hasSubpages' => '1'],
-            ['id' => '3', 'hasSubpages' => '1'],
+            ['id' => 1, 'hasSubpages' => 0],
+            ['id' => 2, 'hasSubpages' => 1],
+            ['id' => 3, 'hasSubpages' => 1],
         ];
 
         $databaseResultSecondQuery = [
-            ['id' => '1', 'alias' => 'alias1'],
-            ['id' => '2', 'alias' => 'alias2'],
-            ['id' => '3', 'alias' => 'alias3'],
+            ['id' => 1, 'alias' => 'alias1'],
+            ['id' => 2, 'alias' => 'alias2'],
+            ['id' => 3, 'alias' => 'alias3'],
         ];
 
         $statement = $this->createMock(Statement::class);
@@ -140,8 +140,8 @@ class ModuleTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

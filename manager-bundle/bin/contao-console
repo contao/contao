@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 
 set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
+@ini_set('display_errors', '0');
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);

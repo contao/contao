@@ -16,15 +16,15 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 /**
  * Provide methods to render content element "listing".
  *
- * @property string $list_table
- * @property string $list_info
- * @property string $list_info_layout
- * @property string $list_info_where
- * @property string $list_fields
- * @property string $list_sort
- * @property string $list_where
- * @property string $list_search
- * @property string $list_layout
+ * @property string      $list_table
+ * @property string|null $list_info
+ * @property string      $list_info_layout
+ * @property string|null $list_info_where
+ * @property string|null $list_fields
+ * @property string|null $list_sort
+ * @property string|null $list_where
+ * @property string|null $list_search
+ * @property string      $list_layout
  */
 class ModuleListing extends Module
 {
@@ -75,8 +75,8 @@ class ModuleListing extends Module
 
 		$this->strTemplate = $this->list_layout ?: 'list_default';
 
-		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_where);
-		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
+		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $this->list_where);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $this->list_info_where);
 
 		return parent::generate();
 	}
@@ -145,7 +145,7 @@ class ModuleListing extends Module
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
-		$page = (Input::get($id) !== null) ? (int) Input::get($id) : 1;
+		$page = (int) (Input::get($id) ?? 1);
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
 		// Thanks to Hagen Klemp (see #4485)
