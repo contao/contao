@@ -271,16 +271,26 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     private function getTemplateName(Model $model, string|null $fallbackTemplateName): string
     {
-        // If set, use the custom template unless it is a back end request
-        if ($model->customTpl && !$this->isBackendScope()) {
-            return $model->customTpl;
+        $exists = fn (string $template): bool => $this->container
+            ->get('contao.twig.filesystem_loader')
+            ->exists("@Contao/$template.html.twig")
+        ;
+
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate) ?
+            !$this->isBackendScope() :
+            $exists($variantTemplate)
+        ;
+
+        // Prefer using a custom variant template if defined and applicable
+        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
+            return $variantTemplate;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;
 
         // Always use the defined name for legacy templates and for modern
         // templates that exist (= those that do not need to have a fallback)
-        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $this->container->get('contao.twig.filesystem_loader')->exists("@Contao/$definedTemplateName.html.twig"))) {
+        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $exists($definedTemplateName))) {
             return $definedTemplateName;
         }
 
