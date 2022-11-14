@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
@@ -265,6 +266,11 @@ abstract class ContaoTestCase extends TestCase
         $token
             ->method('getUser')
             ->willReturn($this->createMock($class))
+        ;
+
+        $token
+            ->method('getRoleNames')
+            ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);

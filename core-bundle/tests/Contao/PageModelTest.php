@@ -443,8 +443,8 @@ class PageModelTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

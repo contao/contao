@@ -495,7 +495,8 @@ class CommandCompilerTest extends TestCase
 
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn($fromSchema)
         ;
 

@@ -33,8 +33,14 @@ class CommandCompiler
     public function compileCommands(bool $skipDropStatements = false): array
     {
         $schemaManager = $this->connection->createSchemaManager();
-        $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
+
+        // Backwards compatibility with doctrine/dbal < 3.5
+        if (method_exists($schemaManager, 'introspectSchema')) {
+            $fromSchema = $schemaManager->introspectSchema();
+        } else {
+            $fromSchema = $schemaManager->createSchema();
+        }
 
         // If tables or columns should be preserved, we copy the missing
         // definitions over to the $toSchema, so that no DROP commands
