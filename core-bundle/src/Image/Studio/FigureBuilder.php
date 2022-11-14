@@ -512,7 +512,18 @@ class FigureBuilder
             return null;
         }
 
-        return $this->doBuild();
+        $figure = $this->doBuild();
+
+        try {
+            // Make sure the resource can be processed
+            $figure->getImage()->getOriginalDimensions();
+        } catch (\Throwable $e) {
+            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+
+            return null;
+        }
+
+        return $figure;
     }
 
     /**
