@@ -101,9 +101,9 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
-                if (!empty($attributes['template'])) {
-                    $templates[$attributes['type']] = $attributes['template'];
-                }
+                $attributes['template'] = $attributes['template'] ?? substr($tag, 7).'/'.$attributes['type'];
+
+                $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -140,7 +140,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addGlobalsMapListener($globals, $container);
 
         if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setCustomTemplates', [$templates]);
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
         }
     }
 

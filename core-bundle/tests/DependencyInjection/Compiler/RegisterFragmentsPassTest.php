@@ -296,6 +296,62 @@ class RegisterFragmentsPassTest extends TestCase
         $pass->process($container);
     }
 
+    /**
+     * @dataProvider provideTemplateNames
+     */
+    public function testSetsTemplatesInTemplatesOptionsListener(?string $template, array $expectedCustomTemplates): void
+    {
+        $contentController = new Definition('App\Controller\TextController');
+        $contentController->addTag('contao.content_element', array_filter(['template' => $template]));
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+        $container->setDefinition('contao.listener.element_template_options', $templateOptionsListener = new Definition());
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(
+            ContentElementReference::TAG_NAME,
+            null,
+            null,
+            'contao.listener.element_template_options'
+        );
+
+        $pass->process($container);
+
+        $this->assertCount(1, $calls = $templateOptionsListener->getMethodCalls());
+        $this->assertSame('setDefaultIdentifiersByType', $calls[0][0]);
+        $this->assertSame([$expectedCustomTemplates], $calls[0][1]);
+    }
+
+    public function provideTemplateNames(): \Generator
+    {
+        yield 'legacy template' => [
+            'ce_text',
+            ['text' => 'ce_text'],
+        ];
+
+        yield 'legacy template, alternative name' => [
+            'ce_foo',
+            ['text' => 'ce_foo'],
+        ];
+
+        yield 'template inferred from type' => [
+            null,
+            ['text' => 'content_element/text'],
+        ];
+
+        yield 'modern template' => [
+            'content_element/text',
+            ['text' => 'content_element/text'],
+        ];
+
+        yield 'modern template, alternative name' => [
+            'content_element/foobar',
+            ['text' => 'content_element/foobar'],
+        ];
+    }
+
     public function testDoesNothingIfThereIsNoFragmentRegistry(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
