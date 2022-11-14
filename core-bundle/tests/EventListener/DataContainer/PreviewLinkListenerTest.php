@@ -222,34 +222,6 @@ class PreviewLinkListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    public function testUpdatesTheExpiresAtField(): void
-    {
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('executeStatement')
-            ->with(
-                'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-                [$dc->id]
-            )
-        ;
-
-        $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $connection,
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
-            ''
-        );
-
-        $listener->updateExpiresAt($dc);
-    }
-
     /**
      * @return Security&MockObject
      */

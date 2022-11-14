@@ -85,5 +85,10 @@ class VirtualFilesystemExceptionTest extends TestCase
             VirtualFilesystemException::unableToRetrieveMetadata('foo/bar', $previous),
             'Unable to retrieve metadata from "foo/bar".',
         ];
+
+        yield 'unable to retrieve metadata with reason' => [
+            VirtualFilesystemException::unableToRetrieveMetadata('foo/bar', $previous, 'The adapter is to blame.'),
+            'Unable to retrieve metadata from "foo/bar": The adapter is to blame.',
+        ];
     }
 }

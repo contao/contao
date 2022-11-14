@@ -299,7 +299,7 @@ class RegisterFragmentsPassTest extends TestCase
     /**
      * @dataProvider provideTemplateNames
      */
-    public function testSetsTemplatesInTempaltesOptionsListener(string|null $template, array $expectedCustomTemplates): void
+    public function testSetsTemplatesInTemplatesOptionsListener(string|null $template, array $expectedCustomTemplates): void
     {
         $contentController = new Definition('App\Controller\TextController');
         $contentController->addTag('contao.content_element', array_filter(['template' => $template]));
@@ -318,7 +318,7 @@ class RegisterFragmentsPassTest extends TestCase
         $pass->process($container);
 
         $this->assertCount(1, $calls = $templateOptionsListener->getMethodCalls());
-        $this->assertSame('setCustomTemplates', $calls[0][0]);
+        $this->assertSame('setDefaultIdentifiersByType', $calls[0][0]);
         $this->assertSame([$expectedCustomTemplates], $calls[0][1]);
     }
 

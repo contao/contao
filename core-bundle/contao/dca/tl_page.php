@@ -403,7 +403,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'favicon' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg,png'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array
