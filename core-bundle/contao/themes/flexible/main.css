@@ -1211,6 +1211,7 @@ table.tl_listing {
 .parent_view > ul {
 	margin: 0;
 	padding: 0;
+	list-style: none;
 	background: #f3f3f5;
 }
 
@@ -1541,13 +1542,14 @@ label.tl_change_selected {
 }
 
 .selector_container > ul {
-	margin-bottom: 1px;
+	margin: 0 0 1px;
+	padding: 0;
 	list-style-type: none;
 	overflow: hidden;
 }
 
 .selector_container > ul > li {
-	margin-right: 9px;
+	margin: 0 9px 0 0;
 	padding: 2px 0;
 }
 
@@ -1928,11 +1930,10 @@ ul.sgallery li {
 	position: relative;
 }
 
-.tl_metawizard .lang img {
+.tl_metawizard .lang button {
 	position: absolute;
 	right: 0;
 	top: -1px;
-	cursor: pointer;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -2121,6 +2122,12 @@ ul.sortable button[disabled]:hover {
 #picker-menu {
 	padding: 9px 6px 0;
 	border-bottom: 1px solid #ddd;
+}
+
+#picker-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 #picker-menu li {

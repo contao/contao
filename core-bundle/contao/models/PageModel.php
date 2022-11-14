@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -1093,7 +1094,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1128,7 +1129,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1176,7 +1177,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
