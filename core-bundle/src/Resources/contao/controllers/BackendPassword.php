@@ -75,6 +75,7 @@ class BackendPassword extends Backend
 		{
 			$widget->validate();
 
+			// $widget->value returns the password hash, so get the value from the request object
 			$pw = $request->request->get('password');
 
 			if ($widget->hasErrors())
