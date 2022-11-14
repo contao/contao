@@ -209,13 +209,14 @@ var Theme = {
 	 * Hide the menu on scroll
 	 */
 	hideMenuOnScroll: function() {
-		if (!('ontouchmove' in window)) return;
-
 		var wh = window.getSize().y,
 			dh = window.getScrollSize().y - wh,
 			anchor = 0;
 
-		if (wh >= dh) return;
+		if (!('ontouchmove' in window) || wh >= dh) {
+			$('header').removeClass('down');
+			return;
+		}
 
 		window
 			.addEvent('touchmove', function() {
