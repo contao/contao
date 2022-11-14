@@ -157,6 +157,7 @@ class DbafsTest extends FunctionalTestCase
         $dbafs->useLastModified();
 
         static::resetDatabaseSchema();
+
         return [$filesystem, $dbafs, $adapter];
     }
 }
