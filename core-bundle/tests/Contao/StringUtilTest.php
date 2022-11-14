@@ -496,7 +496,7 @@ class StringUtilTest extends TestCase
         yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
     }
 
-    public function testResolveReferences(): void
+    public function testResolvesReferencesInArrays(): void
     {
         $ref = ['a'];
 
