@@ -62,7 +62,7 @@ class DatabaseTest extends ContaoTestCase
         ;
 
         $connection
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

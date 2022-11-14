@@ -327,7 +327,7 @@ class tl_templates extends Backend
 				$filesystem->dumpFile($targetFile, $content);
 			};
 
-			$createLegacyTemplate = function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
+			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
 			{
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 

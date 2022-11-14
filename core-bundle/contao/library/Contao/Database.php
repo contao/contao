@@ -209,7 +209,7 @@ class Database
 				$this->setDatabase($strDatabase);
 			}
 
-			$this->arrTablesCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
+			$this->arrTablesCache[$strDatabase] = $this->resConnection->createSchemaManager()->listTableNames();
 
 			// Restore the database
 			if ($strDatabase !== null && $strDatabase != $strOldDatabase)

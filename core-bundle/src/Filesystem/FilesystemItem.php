@@ -84,7 +84,7 @@ class FilesystemItem implements \Stringable
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
      */
-    public function withMetadataIfNotDefined($lastModified, $fileSize, $mimeType): self
+    public function withMetadataIfNotDefined(\Closure|int|null $lastModified, \Closure|int|null $fileSize, \Closure|string|null $mimeType): self
     {
         return new self(
             $this->isFile,
