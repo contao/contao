@@ -191,8 +191,6 @@ class Crawl extends Backend implements \executable
 					throw new ResponseException($response);
 				}
 
-				$template->debugLogHref = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=debug');
-
 				$subscriberLogHrefs = array();
 
 				foreach (array_keys($results) as $name)
@@ -201,6 +199,7 @@ class Crawl extends Backend implements \executable
 				}
 
 				$template->subscriberLogHrefs = $subscriberLogHrefs;
+				$template->debugLogHref = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=debug');
 
 				return $template->parse();
 			}
