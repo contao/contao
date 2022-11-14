@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{url_legend},url;{config_legend},expiresInDays,showUnpublished,createdAt,expiresAt;{publishing_legend},published',
+		'default'                     => '{url_legend},url;{config_legend},showUnpublished,restrictToUrl,expiresAt,createdAt;{publishing_legend},published',
 	),
 
 	// Fields
@@ -91,23 +91,21 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
 			'sql'                     => "varchar(2048) NOT NULL default ''",
 		),
-		'expiresInDays' => array
-		(
-			'exclude'                 => false,
-			'filter'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('1', '7', '30'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_preview_link']['expire_options'],
-			'eval'                    => array('mandatory'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 1"
-		),
 		'showUnpublished' => array
 		(
 			'exclude'                 => false,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'restrictToUrl' => array
+		(
+			'exclude'                 => false,
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'createdAt' => array
 		(
@@ -125,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'readonly'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'datim', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'published' => array
