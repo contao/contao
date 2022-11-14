@@ -15,6 +15,7 @@ use Contao\Database\Statement;
 use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
+use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Filesystem\Path;
 
@@ -391,20 +392,30 @@ abstract class Model
 	 *
 	 * @return array<string,array<string,string>>
 	 */
-	public static function getColumnCastTypes(bool $fromDatabase): array
+	public static function getColumnCastTypesFromDatabase(): array
+	{
+		return static::getColumnCastTypesFromSchema(
+			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
+		);
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @return array<string,array<string,string>>
+	 */
+	public static function getColumnCastTypesFromDca(): array
+	{
+		return static::getColumnCastTypesFromSchema(
+			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
+		);
+	}
+
+	private static function getColumnCastTypesFromSchema(Schema $schema): array
 	{
 		$types = array();
 
-		if ($fromDatabase)
-		{
-			$tables = System::getContainer()->get('database_connection')->createSchemaManager()->createSchema()->getTables();
-		}
-		else
-		{
-			$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
-		}
-
-		foreach ($tables as $table)
+		foreach ($schema->getTables() as $table)
 		{
 			foreach ($table->getColumns() as $column)
 			{
@@ -448,7 +459,7 @@ abstract class Model
 			}
 			else
 			{
-				self::$arrColumnCastTypes = self::getColumnCastTypes(true);
+				self::$arrColumnCastTypes = self::getColumnCastTypesFromDatabase();
 			}
 		}
 

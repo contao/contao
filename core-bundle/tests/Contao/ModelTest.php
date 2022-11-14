@@ -74,7 +74,7 @@ class ModelTest extends TestCase
                     'dca_only' => Types::INTEGER,
                 ],
             ],
-            Model::getColumnCastTypes(false),
+            Model::getColumnCastTypesFromDca(),
         );
     }
 
@@ -94,7 +94,7 @@ class ModelTest extends TestCase
                     'database_only' => Types::INTEGER,
                 ],
             ],
-            Model::getColumnCastTypes(true),
+            Model::getColumnCastTypesFromDatabase(),
         );
     }
 
