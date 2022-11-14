@@ -370,8 +370,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         foreach ($templatesByNamespace as $namespace => $templates) {
             foreach ($templates as $shortName => $path) {
                 $identifier = ContaoTwigUtil::getIdentifier($shortName);
-                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true) ?
-                    'html.twig/html5' : $extension;
+
+                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
+                    ? 'html.twig/html5'
+                    : $extension;
 
                 // Make sure all files grouped under a certain identifier share the same type
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {

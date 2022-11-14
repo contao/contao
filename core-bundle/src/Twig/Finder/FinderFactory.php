@@ -29,7 +29,7 @@ class FinderFactory
     }
 
     /**
-     * Create a new template finder instance.
+     * Creates a new template finder instance.
      */
     public function create(): Finder
     {

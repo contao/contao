@@ -38,9 +38,7 @@ class FinderTest extends TestCase
 
     public function testFindIdentifier(): void
     {
-        $finder = $this->getFinder()
-            ->identifier('content_element/text')
-        ;
+        $finder = $this->getFinder()->identifier('content_element/text');
 
         $expected = [
             'content_element/text' => 'html.twig',
@@ -51,9 +49,7 @@ class FinderTest extends TestCase
 
     public function testFindExtension(): void
     {
-        $finder = $this->getFinder()
-            ->extension('json.twig')
-        ;
+        $finder = $this->getFinder()->extension('json.twig');
 
         $expected = [
             'json/thing' => 'json.twig',
@@ -64,9 +60,7 @@ class FinderTest extends TestCase
 
     public function testFindName(): void
     {
-        $finder = $this->getFinder()
-            ->name('@Contao/content_element/text.html.twig')
-        ;
+        $finder = $this->getFinder()->name('@Contao/content_element/text.html.twig');
 
         $expected = [
             'content_element/text' => 'html.twig',

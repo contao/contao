@@ -110,7 +110,6 @@ class TemplateOptionsListenerTest extends TestCase
         $requestStack->push($request);
 
         $result = $this->createMock(Result::class);
-
         $result
             ->method('rowCount')
             ->willReturn(null !== $commonType ? 1 : 2)
@@ -141,10 +140,7 @@ class TemplateOptionsListenerTest extends TestCase
 
         $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class, $requestStack, $connection);
 
-        $this->assertSame(
-            $expectedOptions,
-            $callback($this->mockDataContainer('tl_foo'))
-        );
+        $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_foo')));
     }
 
     public function provideOverrideAllScenarios(): \Generator

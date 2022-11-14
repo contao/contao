@@ -46,7 +46,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Filter templates based on the identifier, e.g. "content_element/text".
+     * Filters templates based on the identifier, e.g. "content_element/text".
      */
     public function identifier(string $identifier): self
     {
@@ -56,8 +56,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Filter templates based on the file extension, e.g. "html.twig" or
-     * "json.twig".
+     * Filters templates based on the file extension, e.g. "html.twig" or "json.twig".
      */
     public function extension(string $extension): self
     {
@@ -67,7 +66,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Filter templates based on the logical name or short name, e.g.
+     * Filters templates based on the logical name or short name, e.g.
      * "@Contao/content_element/text.html.twig" or "content_element/text.html.twig".
      */
     public function name(string $name): self
@@ -79,7 +78,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Also include variant templates, e.g: "content_element/text/special" when
+     * Also includes variant templates, e.g: "content_element/text/special" when
      * filtering for "content_element/text". If $exclusive is set to true, only
      * the variants will be output.
      */
@@ -92,7 +91,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Also include templates of a certain theme. Only one theme at a time can
+     * Also includes templates of a certain theme. Only one theme at a time can
      * be queried.
      */
     public function withTheme(string $themeSlug): self
@@ -103,7 +102,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Return the result as template options.
+     * Returns the result as template options.
      *
      * @return array<string, string>
      */

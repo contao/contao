@@ -42,14 +42,13 @@ class TemplateOptionsListener
     {
         $overrideAll = $this->isOverrideAll();
 
-        $type = $overrideAll ?
-            $this->getCommonOverrideAllType($dc) :
-            $dc->getCurrentRecord()['type'] ?? null
-        ;
+        $type = $overrideAll
+            ? $this->getCommonOverrideAllType($dc)
+            : $dc->getCurrentRecord()['type'] ?? null;
 
         if (null === $type) {
             // Add a blank option that allows to reset all custom templates to
-            // the default one when in 'overrideAll' mode
+            // the default one when in "overrideAll" mode
             return $overrideAll ? ['' => '-'] : [];
         }
 
@@ -69,9 +68,9 @@ class TemplateOptionsListener
 
         // We will end up with no templates if the logic assumes a non-legacy
         // template but the user did not add any or uses the old prefix. For
-        // example a 'foo' content element fragment controller (without an
+        // example a "foo" content element fragment controller (without an
         // explicit definition of a template in the service tag) used with a
-        // 'ce_foo.html.twig' template - although this template will be
+        // "ce_foo.html.twig" template - although this template will be
         // rendered for BC reasons, the template selection won't be possible.
         if (0 === \count($templateOptions)) {
             $guessedType = $this->legacyTemplatePrefix.$type;
@@ -89,8 +88,9 @@ class TemplateOptionsListener
     }
 
     /**
-     * Called by the @see \Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass
-     * for all fragment controllers.
+     * Called by the RegisterFragmentsPass for all fragment controllers.
+     *
+     * @see \Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass
      */
     public function setDefaultIdentifiersByType(array $defaultIdentifiersByType): void
     {
@@ -98,7 +98,7 @@ class TemplateOptionsListener
     }
 
     /**
-     * Handle legacy elements that aren't implemented as fragment controllers
+     * Handles legacy elements that aren't implemented as fragment controllers
      * or that still use the old template naming scheme.
      */
     private function handleLegacyTemplates(string $type, string|null $identifier, bool $overrideAll): array|null
