@@ -228,7 +228,7 @@ class InsertTagParser implements ResetInterface
         $chunked = iterator_to_array($this->replaceInlineChunked('{{'.$input.'}}'));
 
         if (!$chunked) {
-            return '';
+            return new InsertTagResult('', OutputType::text);
         }
 
         if (1 !== \count($chunked) || ChunkedText::TYPE_RAW !== $chunked[0][0] || !\is_string($chunked[0][1])) {
@@ -236,31 +236,6 @@ class InsertTagParser implements ResetInterface
         }
 
         return new InsertTagResult($chunked[0][1], OutputType::html);
-    }
-
-    private function renderSubscription(InsertTag $tag): InsertTagResult|null
-    {
-        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
-            return null;
-        }
-
-        if ($subscription->resolveNestedTags) {
-            $tag = $this->resolveNestedTags($tag);
-        } else {
-            $tag = $this->unresolveTag($tag);
-        }
-
-        $result = $subscription->service->{$subscription->method}($tag);
-
-        foreach ($tag->getFlags() as $flag) {
-            if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
-                $result = $callback($flag, $result);
-            } else {
-                $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -276,21 +251,6 @@ class InsertTagParser implements ResetInterface
             new InsertTagFlag($flag),
             new InsertTagResult($result, OutputType::html),
         )->getValue();
-    }
-
-    private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null
-    {
-        if (!$subscription = $this->blockSubscriptions[$tag->getName()] ?? null) {
-            return null;
-        }
-
-        if ($subscription->resolveNestedTags) {
-            $tag = $this->resolveNestedTags($tag);
-        } else {
-            $tag = $this->unresolveTag($tag);
-        }
-
-        return $subscription->service->{$subscription->method}($tag, $content);
     }
 
     public function parse(string $input): ParsedSequence
@@ -378,6 +338,62 @@ class InsertTagParser implements ResetInterface
         }
 
         return $this->resolveNestedTags($tag);
+    }
+
+    public function reset(): void
+    {
+        InsertTags::reset();
+    }
+
+    /**
+     * @internal
+     */
+    public function hasInsertTag(string $name): bool
+    {
+        return
+            isset($this->subscriptions[$name])
+            || isset($this->blockSubscriptions[$name])
+        ;
+    }
+
+    private function renderSubscription(InsertTag $tag): InsertTagResult|null
+    {
+        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
+            return null;
+        }
+
+        if ($subscription->resolveNestedTags) {
+            $tag = $this->resolveNestedTags($tag);
+        } else {
+            $tag = $this->unresolveTag($tag);
+        }
+
+        $result = $subscription->service->{$subscription->method}($tag);
+
+        foreach ($tag->getFlags() as $flag) {
+            if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
+                $result = $callback($flag, $result);
+            } else {
+                $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
+            }
+        }
+
+        return $result;
+    }
+
+    private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null
+    {
+        if (!$subscription = $this->blockSubscriptions[$tag->getName()] ?? null) {
+            return null;
+        }
+
+        if ($subscription->resolveNestedTags) {
+            $tag = $this->resolveNestedTags($tag);
+        } else {
+            $tag = $this->unresolveTag($tag);
+        }
+
+        return $subscription->service->{$subscription->method}($tag, $content);
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag
@@ -488,11 +504,6 @@ class InsertTagParser implements ResetInterface
         return $attributes;
     }
 
-    public function reset(): void
-    {
-        InsertTags::reset();
-    }
-
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
         if (null === $this->insertTags) {
@@ -528,17 +539,6 @@ class InsertTagParser implements ResetInterface
         }
 
         return $this->parse((string) $this->callLegacyClass($input->serialize(), $allowEsiTags));
-    }
-
-    /**
-     * @internal
-     */
-    public function hasInsertTag(string $name): bool
-    {
-        return
-            isset($this->subscriptions[$name])
-            || isset($this->blockSubscriptions[$name])
-        ;
     }
 
     private function handleLegacyFlagsHook(InsertTagResult $result, InsertTagFlag $flag, InsertTag $tag): InsertTagResult
