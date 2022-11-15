@@ -1997,6 +1997,18 @@
         <source>Collapse node</source>
         <target>Bereich schließen</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Öffentlicher Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Geschützter Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s-Datei</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Die Daten werden geladen</target>

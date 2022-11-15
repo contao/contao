@@ -1997,6 +1997,18 @@
         <source>Collapse node</source>
         <target>ノードを折り畳み</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>公開フォルダー</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>保護されたフォルダー</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%sファイル</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>データを読み込み中</target>
