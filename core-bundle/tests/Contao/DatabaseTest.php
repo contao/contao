@@ -41,7 +41,6 @@ class DatabaseTest extends ContaoTestCase
         ;
 
         $result = $this->createMock(ResultStatement::class);
-
         $result
             ->method('columnCount')
             ->willReturn(1)
@@ -60,7 +59,6 @@ class DatabaseTest extends ContaoTestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabase')
             ->willReturn('samename')

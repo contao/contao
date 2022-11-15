@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>Maximální velikost souboru k uploadu je %s kB!</target>
+        <target>Maximální velikost souboru k uploadu je %s (nastavení Contaa nebo v php.ini)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -543,7 +543,7 @@
       </trans-unit>
       <trans-unit id="CTE.alias.0">
         <source>Content element</source>
-        <target>Alias (přezdívka)</target>
+        <target>Obsahový element</target>
       </trans-unit>
       <trans-unit id="CTE.alias.1">
         <source>Includes another content element.</source>
@@ -1931,6 +1931,15 @@
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
         <target>Sbalit</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
