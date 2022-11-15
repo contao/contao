@@ -25,57 +25,82 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 class DbafsTest extends FunctionalTestCase
 {
+    private VirtualFilesystem $filesystem;
+    private Dbafs $dbafs;
+    private FilesystemAdapter $adapter;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->filesystem = new VirtualFilesystem(
+            (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
+            $dbafsManager = new DbafsManager()
+        );
+
+        $container = $this->createClient()->getContainer();
+
+        $this->dbafs = new Dbafs(
+            new HashGenerator('md5', true),
+            $container->get('database_connection'),
+            $container->get('event_dispatcher'),
+            $this->filesystem,
+            'tl_files'
+        );
+
+        $dbafsManager->register($this->dbafs, '');
+        $this->dbafs->useLastModified();
+
+        static::resetDatabaseSchema();
+    }
+
     public function testAlterFilesystemAndSync(): void
     {
-        [$filesystem, $dbafs, $adapter] = $this->setupFilesystemAndDbafs();
-
         // Expect no changes initially
-        $this->assertTrue($dbafs->sync()->isEmpty());
+        $this->assertTrue($this->dbafs->sync()->isEmpty());
 
         // Write to the virtual filesystem; expect automatic syncing, thus no
         // changes when syncing
-        $filesystem->write('file1', '1');
-        $filesystem->createDirectory('foo');
-        $filesystem->write('foo/file2', '2');
+        $this->filesystem->write('file1', '1');
+        $this->filesystem->createDirectory('foo');
+        $this->filesystem->write('foo/file2', '2');
 
-        $this->assertTrue($dbafs->sync()->isEmpty());
+        $this->assertTrue($this->dbafs->sync()->isEmpty());
 
         // Directly write to the adapter; expect changes when syncing
-        $adapter->move('file1', 'foo/file1', new Config());
-        $adapter->write('file3', '3', new Config());
+        $this->adapter->move('file1', 'foo/file1', new Config());
+        $this->adapter->write('file3', '3', new Config());
 
-        $this->assertFile1MovedAndFile3Created($dbafs->sync());
+        $this->assertFile1MovedAndFile3Created($this->dbafs->sync());
 
         // Partial sync of foo directory, then full sync
-        $adapter->delete('foo/file1');
-        $adapter->delete('file3');
+        $this->adapter->delete('foo/file1');
+        $this->adapter->delete('file3');
 
-        $this->assertFile1Deleted($dbafs->sync('foo/**'));
-        $this->assertFile3Deleted($dbafs->sync());
+        $this->assertFile1Deleted($this->dbafs->sync('foo/**'));
+        $this->assertFile3Deleted($this->dbafs->sync());
     }
 
     public function testAutomaticallySyncsFiles(): void
     {
-        [$filesystem] = $this->setupFilesystemAndDbafs();
-
         // Adding a file should automatically update the Dbafs
-        $filesystem->write('a', '');
+        $this->filesystem->write('a', '');
 
-        $contents = $filesystem->listContents('')->toArray();
+        $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(1, $contents);
         $this->assertSame('a', $contents[0]->getPath());
 
         // Moving a file should automatically update the Dbafs
-        $filesystem->move('a', 'b');
+        $this->filesystem->move('a', 'b');
 
-        $contents = $filesystem->listContents('')->toArray();
+        $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(1, $contents);
         $this->assertSame('b', $contents[0]->getPath());
 
         // Deleting a file should automatically update the Dbafs
-        $filesystem->delete('b');
+        $this->filesystem->delete('b');
 
-        $contents = $filesystem->listContents('')->toArray();
+        $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(0, $contents);
     }
 
@@ -127,34 +152,5 @@ class DbafsTest extends FunctionalTestCase
             ],
             $changeSet->getItemsToDelete()
         );
-    }
-
-    /**
-     * @return array{0: VirtualFilesystem, 1: Dbafs, 2:FilesystemAdapter}
-     */
-    private function setupFilesystemAndDbafs(): array
-    {
-        $client = $this->createClient();
-        $container = $client->getContainer();
-
-        $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount($adapter = new InMemoryFilesystemAdapter()),
-            $dbafsManager = new DbafsManager()
-        );
-
-        $dbafs = new Dbafs(
-            new HashGenerator('md5', true),
-            $container->get('database_connection'),
-            $container->get('event_dispatcher'),
-            $filesystem,
-            'tl_files'
-        );
-
-        $dbafsManager->register($dbafs, '');
-        $dbafs->useLastModified();
-
-        static::resetDatabaseSchema();
-
-        return [$filesystem, $dbafs, $adapter];
     }
 }
