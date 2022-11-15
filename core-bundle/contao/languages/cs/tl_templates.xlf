@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.hasErrors">
         <source>The template &quot;%s&quot; has errors and cannot be inspected: %s</source>
+        <target>Předloha &quot;%s&quot; obsahu chyby a nedá se zkontrolovat:%s</target>
       </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides &quot;%s&quot;.</source>

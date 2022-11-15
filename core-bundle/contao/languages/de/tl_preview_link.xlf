@@ -17,6 +17,14 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Unveröffentlichte Seiten und Elemente anzeigen, wenn dieser Link geteilt wird.</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+        <target>Zugriff auf angegebene URL beschränken</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Den Zugriff nur auf die angegebene URL statt auf die gesamte Website erlauben.</target>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Erstellt am</target>
@@ -32,14 +40,6 @@
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
         <target>Der Benutzer, der den Vorschaulink erstellt hat.</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Läuft ab nach</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Wählen Sie aus, wie lange der Vorschaulink verfügbar sein soll.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>

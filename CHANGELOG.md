@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.5] (2022-11-15)
+
+**Fixed issues:**
+
+- [#5428] Read column types from database if cache is missing ([ausi])
+- [#5487] Render variant templates in the back end ([m-vo])
+- [#5457] Add a helper method to dereference arrays ([ausi])
+- [#5315] Add a template finder service for Twig and fix custom template selection ([m-vo])
+- [#5496] Fix and improve mime type handling in the VFS ([ausi])
+- [#5495] Check the preview link validity on every request ([ausi])
+- [#5490] Pass the unmodified row to the onshow callback ([ausi])
+- [#5472] Remove dead code from the Database class ([ausi])
+- [#5463] Correctly check for excluded field in DC_Folder ([aschempp])
+- [#5446] Fix issues in images content element if no images are defined ([fritzmg])
+- [#5444] Fix issues introduced by CSS reset changes in the back end ([fritzmg])
+- [#5441] Don’t replace insert tags in the backend ([ausi])
+- [#5436] Fix reader modules when `auto_item` is empty ([fritzmg])
+- [#5420] Fix the reverse toggle operation ([aschempp])
+- [#5408] Reintroduce missing locking mechanism ([bytehead])
+- [#5370] Fix the CSS reset in the back end ([leofeyer])
+- [#5402] Fix the listing modules ([leofeyer])
+
 ## [5.0.4] (2022-10-13)
 
 ## [5.0.3] (2022-10-11)
@@ -354,7 +376,6 @@ This project adheres to [Semantic Versioning].
 - [#4613] Fix access of global DropZone class ([Toflar])
 - [#4598] Remove leftover contao.encryption_key occurences ([bytehead])
 - [#4589] Re-introduce autowiring aliases for subscribed services ([fritzmg])
-- [#4587] Add missing service argument for Version410Update ([fritzmg])
 - [#4555] Correctly build Twig logical name from fragment template name ([m-vo])
 - [#4517] Fix miscellaneous minor issues ([leofeyer])
 - [#4446] Support nested paths when generating Twig IDE autocompletion file ([m-vo])
@@ -368,6 +389,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.5]: https://github.com/contao/contao/releases/tag/5.0.5
 [5.0.4]: https://github.com/contao/contao/releases/tag/5.0.4
 [5.0.3]: https://github.com/contao/contao/releases/tag/5.0.3
 [5.0.2]: https://github.com/contao/contao/releases/tag/5.0.2
@@ -390,6 +412,23 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5428]: https://github.com/contao/contao/pull/5428
+[#5487]: https://github.com/contao/contao/pull/5487
+[#5457]: https://github.com/contao/contao/pull/5457
+[#5315]: https://github.com/contao/contao/pull/5315
+[#5496]: https://github.com/contao/contao/pull/5496
+[#5495]: https://github.com/contao/contao/pull/5495
+[#5490]: https://github.com/contao/contao/pull/5490
+[#5472]: https://github.com/contao/contao/pull/5472
+[#5463]: https://github.com/contao/contao/pull/5463
+[#5446]: https://github.com/contao/contao/pull/5446
+[#5444]: https://github.com/contao/contao/pull/5444
+[#5441]: https://github.com/contao/contao/pull/5441
+[#5436]: https://github.com/contao/contao/pull/5436
+[#5420]: https://github.com/contao/contao/pull/5420
+[#5408]: https://github.com/contao/contao/pull/5408
+[#5370]: https://github.com/contao/contao/pull/5370
+[#5402]: https://github.com/contao/contao/pull/5402
 [#5303]: https://github.com/contao/contao/pull/5303
 [#5310]: https://github.com/contao/contao/pull/5310
 [#5313]: https://github.com/contao/contao/pull/5313
@@ -692,7 +731,6 @@ This project adheres to [Semantic Versioning].
 [#4613]: https://github.com/contao/contao/pull/4613
 [#4598]: https://github.com/contao/contao/pull/4598
 [#4589]: https://github.com/contao/contao/pull/4589
-[#4587]: https://github.com/contao/contao/pull/4587
 [#4555]: https://github.com/contao/contao/pull/4555
 [#4517]: https://github.com/contao/contao/pull/4517
 [#4446]: https://github.com/contao/contao/pull/4446

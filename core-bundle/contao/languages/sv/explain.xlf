@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
         <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>Contao stöder alla datum- och tidsformat som kan tolkas med PHP-funktionen date(). Men för att säkerställa att alla indata kan omvandlas till en UNIX-tidsstämpel kan du bara använda numeriska datum- och tidsformat (j, d, m, n, y, Y, g, G, h, H, i, s) i back-end-sidan. &lt;br&gt;&lt;br&gt;&lt;strong&gt;Du kan ange olika front-end-format på webbplatsens rotsidor.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt; Här är några exempel på giltiga datum- och tidsformat&lt;/em&gt;:</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>
