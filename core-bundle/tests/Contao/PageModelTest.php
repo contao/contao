@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -28,6 +27,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -42,22 +42,26 @@ class PageModelTest extends TestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
-            ->willReturn(new Schema())
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('contao.doctrine.schema_provider', $schemaProvider);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
