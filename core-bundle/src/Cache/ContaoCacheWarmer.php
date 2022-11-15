@@ -205,7 +205,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/column-types.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypes(), true))
+            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true))
         );
     }
 
