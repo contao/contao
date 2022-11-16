@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.6] (2022-11-16)
+
+**Fixed issues:**
+
+- [#5507] Fix the module template options listener ([fritzmg])
+
 ## [5.0.5] (2022-11-15)
 
 **Fixed issues:**
@@ -389,6 +395,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.6]: https://github.com/contao/contao/releases/tag/5.0.6
 [5.0.5]: https://github.com/contao/contao/releases/tag/5.0.5
 [5.0.4]: https://github.com/contao/contao/releases/tag/5.0.4
 [5.0.3]: https://github.com/contao/contao/releases/tag/5.0.3
@@ -412,6 +419,7 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5507]: https://github.com/contao/contao/pull/5507
 [#5428]: https://github.com/contao/contao/pull/5428
 [#5487]: https://github.com/contao/contao/pull/5487
 [#5457]: https://github.com/contao/contao/pull/5457
