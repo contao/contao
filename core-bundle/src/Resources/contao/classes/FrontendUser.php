@@ -237,7 +237,7 @@ class FrontendUser extends User
 		}
 
 		// Get the group login page
-		if ($this->groups[0] > 0)
+		if (($this->groups[0] ?? 0) > 0)
 		{
 			$objGroup = MemberGroupModel::findPublishedById($this->groups[0]);
 
