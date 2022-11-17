@@ -137,9 +137,9 @@ class TimePeriod extends Widget
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
-				StringUtil::specialchars($arrUnit['value']),
+				StringUtil::specialchars($arrUnit['value'] ?? ''),
 				$this->isSelected($arrUnit),
-				$arrUnit['label']
+				$arrUnit['label'] ?? '-'
 			);
 		}
 
@@ -153,7 +153,7 @@ class TimePeriod extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			StringUtil::specialchars($this->varValue['value']),
+			StringUtil::specialchars($this->varValue['value'] ?? ''),
 			$this->getAttributes(),
 			$this->strName,
 			$this->getAttribute('disabled'),
