@@ -138,7 +138,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
 			if (!($arrData['eval']['feEditable'] ?? null) || !class_exists($strClass))
