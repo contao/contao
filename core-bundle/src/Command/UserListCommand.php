@@ -140,7 +140,7 @@ class UserListCommand extends Command
         }
 
         if ([] === $columns) {
-            return $users->fetchAll();
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
         $data = [];
