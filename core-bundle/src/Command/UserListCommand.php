@@ -53,7 +53,7 @@ class UserListCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('admins')) {
+        if ($input->getOption('admins') && 'json' !== $input->getOption('format')) {
             $io->note('Only showing admin accounts');
         }
 
