@@ -37,6 +37,13 @@ class PreviewLinkListenerTest extends TestCase
         ClockMock::register(PreviewLinkListener::class);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testRemovesTheBackendModuleWithoutPreviewScript(): void
     {
         $GLOBALS['BE_MOD']['system'] = ['preview_link' => ['foo']];
