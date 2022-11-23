@@ -1189,7 +1189,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " ORDER BY sorting, id")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1206,7 +1206,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$newPID = $pid;
 
-					$objSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE pid=?")
+					$objSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?'))
 												 ->execute($pid);
 
 					// Select sorting value of the first record
@@ -1217,7 +1217,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " ORDER BY sorting, id")
 															->execute($pid);
 
 							$count = 2;
@@ -1258,49 +1258,45 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$newPID = $objSorting->pid;
 						$curSorting = $objSorting->sorting;
 
-						// Do not proceed without a parent ID
-						if (is_numeric($newPID))
+						$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " AND sorting>?")
+														 ->execute($newPID, $curSorting);
+
+						// Select sorting value of the next record
+						if ($objNextSorting->sorting !== null)
 						{
-							$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE pid=? AND sorting>?")
-															 ->execute($newPID, $curSorting);
+							$nxtSorting = $objNextSorting->sorting;
 
-							// Select sorting value of the next record
-							if ($objNextSorting->sorting !== null)
+							// Resort if the new sorting value is no integer or bigger than a MySQL integer
+							if ((($curSorting + $nxtSorting) % 2) != 0 || $nxtSorting >= 4294967295)
 							{
-								$nxtSorting = $objNextSorting->sorting;
+								$count = 1;
 
-								// Resort if the new sorting value is no integer or bigger than a MySQL integer
-								if ((($curSorting + $nxtSorting) % 2) != 0 || $nxtSorting >= 4294967295)
+								$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
+																->execute($newPID);
+
+								while ($objNewSorting->next())
 								{
-									$count = 1;
+									$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
+												   ->execute(($count++ * 128), $objNewSorting->id);
 
-									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
-																	->execute($newPID);
-
-									while ($objNewSorting->next())
+									if ($objNewSorting->sorting == $curSorting)
 									{
-										$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-													   ->execute(($count++ * 128), $objNewSorting->id);
-
-										if ($objNewSorting->sorting == $curSorting)
-										{
-											$newSorting = ($count++ * 128);
-										}
+										$newSorting = ($count++ * 128);
 									}
 								}
-
-								// Else new sorting = (current sorting + next sorting) / 2
-								else
-								{
-									$newSorting = (($curSorting + $nxtSorting) / 2);
-								}
 							}
 
-							// Else new sorting = (current sorting + 128)
+							// Else new sorting = (current sorting + next sorting) / 2
 							else
 							{
-								$newSorting = ($curSorting + 128);
+								$newSorting = (($curSorting + $nxtSorting) / 2);
 							}
+						}
+
+						// Else new sorting = (current sorting + 128)
+						else
+						{
+							$newSorting = ($curSorting + 128);
 						}
 					}
 
@@ -1312,8 +1308,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
+				if (!$newPID)
+				{
+					$newPID = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields']['pid']['sql'] ?? array()) === null ? null : 0;
+				}
+
 				// Set new sorting and new parent ID
-				$this->set['pid'] = (int) $newPID;
+				$this->set['pid'] = $newPID;
 				$this->set['sorting'] = (int) $newSorting;
 			}
 		}
