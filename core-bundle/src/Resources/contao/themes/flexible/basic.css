@@ -366,11 +366,6 @@ select[multiple] {
 .tl_select[multiple],.tl_mselect[multiple],.tl_select_column[multiple],.tl_select_unit[multiple],.tl_select_interval[multiple] {
 	background-image:none;
 }
-@-moz-document url-prefix() {
-	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
-		padding-left:2px;
-	}
-}
 @supports (display:-ms-grid) {
 	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
 		padding:5px 18px 5px 2px;
