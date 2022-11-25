@@ -26,7 +26,7 @@ class ContentAccordion extends ContentElement
 	 */
 	protected function compile()
 	{
-		$this->Template->text = StringUtil::encodeEmail($this->text);
+		$this->Template->text = StringUtil::encodeEmail((string) $this->text);
 		$this->Template->addImage = false;
 		$this->Template->addBefore = false;
 
