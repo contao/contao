@@ -1189,7 +1189,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " ORDER BY sorting, id")
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1206,7 +1206,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$newPID = $pid;
 
-					$objSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?'))
+					$objSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
 												 ->execute($pid);
 
 					// Select sorting value of the first record
@@ -1217,7 +1217,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " ORDER BY sorting, id")
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
 															->execute($pid);
 
 							$count = 2;
@@ -1258,7 +1258,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$newPID = $objSorting->pid;
 						$curSorting = $objSorting->sorting;
 
-						$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID == 0 ? '(pid=? OR pid IS NULL)' : 'pid=?') . " AND sorting>?")
+						$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
 														 ->execute($newPID, $curSorting);
 
 						// Select sorting value of the next record
