@@ -172,8 +172,6 @@ class ToggleNodesLabelListenerTest extends TestCase
         $this->assertSame('collapseNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
-
-
     public function testSetsCollapseLabelIfSessionIs1InMode6(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['ptable'] = 'tl_bar';
