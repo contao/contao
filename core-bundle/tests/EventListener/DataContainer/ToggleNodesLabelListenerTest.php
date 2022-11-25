@@ -50,7 +50,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     public function testDoesNothingIfOperationHasLabel(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'label' => 'foo'
+            'label' => 'foo',
         ];
 
         $requestStack = $this->createMock(RequestStack::class);
@@ -66,7 +66,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     public function testDoesNothingIfOperationHasUnsupportedHref(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'foo=bar'
+            'href' => 'foo=bar',
         ];
 
         $requestStack = $this->createMock(RequestStack::class);
@@ -82,7 +82,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     public function testDoesNothingIfRequestIsNull(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $requestStack = $this->createMock(RequestStack::class);
@@ -99,7 +99,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     public function testDoesNothingIfSessionIsNull(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $requestStack = $this->mockRequestStackWithSession(null);
@@ -112,7 +112,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['sorting']['mode'] = 5;
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $session = $this->mockSessionWithData([]);
@@ -128,7 +128,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['sorting']['mode'] = 5;
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $session = $this->mockSessionWithData(['tl_foobar_tree' => 'foo']);
@@ -144,7 +144,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['sorting']['mode'] = 5;
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $session = $this->mockSessionWithData(['tl_foobar_tree' => [0]]);
@@ -160,7 +160,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['list']['sorting']['mode'] = 5;
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $session = $this->mockSessionWithData(['tl_foobar_tree' => [1]]);
@@ -179,7 +179,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_foobar']['config']['ptable'] = 'tl_bar';
         $GLOBALS['TL_DCA']['tl_foobar']['list']['sorting']['mode'] = 6;
         $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all'
+            'href' => 'tg=all',
         ];
 
         $session = $this->mockSessionWithData(['tl_foobar_tl_bar_tree' => [1]]);
