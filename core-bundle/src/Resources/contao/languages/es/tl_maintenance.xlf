@@ -159,12 +159,15 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLog">
         <source>Debug log</source>
+        <target>Registro de depuración</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Si se produjeron errores o se omitieron páginas, consulte el registro de depuración para obtener más información.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Descargar registro</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

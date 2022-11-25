@@ -323,6 +323,7 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Nie można przywrócić wersji %d, ponieważ nie jest już zgodna z obecną strukturą bazy danych. Proszę przywrócić dane ręcznie.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1931,6 +1932,15 @@
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
         <target>Zwiń węzeł</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>

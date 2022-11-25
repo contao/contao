@@ -323,6 +323,7 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Version %d kunde inte återställas eftersom den inte längre är kompatibel med den aktuella databasstrukturen. Vänligen återställ data manuellt.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1932,6 +1933,18 @@
         <source>Collapse node</source>
         <target>Stäng nod</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Offentlig mapp</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Skyddad mapp</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s fil</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Laddar data</target>
@@ -2890,6 +2903,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>%d URI(er) hoppades över.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

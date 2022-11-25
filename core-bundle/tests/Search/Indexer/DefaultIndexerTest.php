@@ -173,20 +173,22 @@ class DefaultIndexerTest extends ContaoTestCase
 
     public function testDeletesADocument(): void
     {
+        $connection = $this->createMock(Connection::class);
+
         $searchAdapter = $this->mockAdapter(['removeEntry']);
         $searchAdapter
             ->expects($this->once())
             ->method('removeEntry')
-            ->with('https://example.com')
+            ->with('https://example.com', $connection)
         ;
 
         $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
         $framework
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('initialize')
         ;
 
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class));
+        $indexer = new DefaultIndexer($framework, $connection);
         $indexer->delete(new Document(new Uri('https://example.com'), 200, [], ''));
     }
 

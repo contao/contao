@@ -1928,6 +1928,15 @@
         <source>Collapse node</source>
         <target>收起节点</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>加载数据</target>

@@ -2,6 +2,34 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.36] (2022-11-15)
+
+**Fixed issues:**
+
+- [#5500] Display results when reloading finished crawler ([ausi])
+- [#5486] Correctly copy templates from symlinked sources ([m-vo])
+- [#5415] Use password widget for pwChange ([fritzmg])
+- [#5489] Do not confirm password changes in the widget ([leofeyer])
+- [#5460] Warning: Undefined array key "PATH_TRANSLATED" ([dennisbohn])
+- [#5475] Handle cross-website-root redirects in the Frontend::jumpToOrReload method ([qzminski])
+- [#5474] Fix bug with cache in Database::listTables() ([ausi])
+- [#5464] Fix button accessibility for TableWizard ([aschempp])
+- [#5462] Correctly check for excluded field in DC_Folder ([aschempp])
+- [#5455] Allow PNG favicons ([ausi])
+- [#5445] Fix the back end top navigation disappearing on mobile devices ([leofeyer])
+- [#5447] Decode entities in the page title in the JSON-LD data ([leofeyer])
+- [#5450] Fix bug in Search::removeEntry() ([ausi])
+- [#5440] Do not boot Contao framework in DefaultIndexer::delete() ([Toflar])
+- [#4840] Add class to back end login ([netzarbeiter])
+- [#5212] Write dotenv parameters to .env.local ([ausi])
+- [#5439] Stop using `$GLOBALS['TL_LANG']` in templates ([leofeyer])
+- [#5435] Restore previous translations in `$GLOBALS['TL_LANG']` ([fritzmg])
+- [#5421] Handle errors with important parts ([aschempp])
+- [#5437] Fix error "toFixed is not a function" ([ausi])
+- [#5409] Add icon alt text to file tree ([aschempp])
+- [#5411] Use button element for metawizard ([aschempp])
+- [#5412] Fix the TL_ADMIN_MAIL usage ([leofeyer])
+
 ## [4.9.35] (2022-10-11)
 
 **Fixed issues:**
@@ -1032,6 +1060,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.36]: https://github.com/contao/contao/releases/tag/4.9.36
 [4.9.35]: https://github.com/contao/contao/releases/tag/4.9.35
 [4.9.34]: https://github.com/contao/contao/releases/tag/4.9.34
 [4.9.33]: https://github.com/contao/contao/releases/tag/4.9.33
@@ -1097,6 +1126,7 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
 [Mynyx]: https://github.com/Mynyx
+[netzarbeiter]: https://github.com/netzarbeiter
 [patrickjDE]: https://github.com/patrickjDE
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
@@ -1108,6 +1138,29 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5500]: https://github.com/contao/contao/pull/5500
+[#5486]: https://github.com/contao/contao/pull/5486
+[#5415]: https://github.com/contao/contao/pull/5415
+[#5489]: https://github.com/contao/contao/pull/5489
+[#5460]: https://github.com/contao/contao/pull/5460
+[#5475]: https://github.com/contao/contao/pull/5475
+[#5474]: https://github.com/contao/contao/pull/5474
+[#5464]: https://github.com/contao/contao/pull/5464
+[#5462]: https://github.com/contao/contao/pull/5462
+[#5455]: https://github.com/contao/contao/pull/5455
+[#5445]: https://github.com/contao/contao/pull/5445
+[#5447]: https://github.com/contao/contao/pull/5447
+[#5450]: https://github.com/contao/contao/pull/5450
+[#5440]: https://github.com/contao/contao/pull/5440
+[#4840]: https://github.com/contao/contao/pull/4840
+[#5212]: https://github.com/contao/contao/pull/5212
+[#5439]: https://github.com/contao/contao/pull/5439
+[#5435]: https://github.com/contao/contao/pull/5435
+[#5421]: https://github.com/contao/contao/pull/5421
+[#5437]: https://github.com/contao/contao/pull/5437
+[#5409]: https://github.com/contao/contao/pull/5409
+[#5411]: https://github.com/contao/contao/pull/5411
+[#5412]: https://github.com/contao/contao/pull/5412
 [#5343]: https://github.com/contao/contao/pull/5343
 [#5352]: https://github.com/contao/contao/pull/5352
 [#5336]: https://github.com/contao/contao/pull/5336

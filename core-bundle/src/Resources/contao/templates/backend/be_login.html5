@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body class="<?= $this->ua ?> be_login">
 
   <?php $this->block('container'); ?>
     <div id="container">

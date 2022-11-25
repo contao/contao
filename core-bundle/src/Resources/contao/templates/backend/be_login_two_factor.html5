@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body class="<?= $this->ua ?> be_login_two_factor">
 
   <?php $this->block('container'); ?>
     <div id="container">

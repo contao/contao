@@ -18,6 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * @internal
@@ -49,14 +50,16 @@ class RemoveDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $file = $this->projectDir.'/.env';
+        $path = $this->projectDir.'/.env';
+        $dotenv = new DotenvDumper($path.'.local');
+        $key = $input->getArgument('key');
 
-        if (!file_exists($file)) {
-            return 0;
+        if (file_exists($path) && isset((new Dotenv(false))->parse(file_get_contents($path))[$key])) {
+            $dotenv->setParameter($key, '');
+        } else {
+            $dotenv->unsetParameter($key);
         }
 
-        $dotenv = new DotenvDumper($file);
-        $dotenv->unsetParameter($input->getArgument('key'));
         $dotenv->dump();
 
         return 0;

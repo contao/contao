@@ -159,12 +159,15 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLog">
         <source>Debug log</source>
+        <target>Felsökningslogg</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Om fel uppstod eller sidor hoppades över, kontrollera felsökningsloggen för mer information.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Ladda ner logg</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

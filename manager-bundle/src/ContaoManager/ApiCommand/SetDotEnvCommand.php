@@ -18,6 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @internal
@@ -50,9 +51,15 @@ class SetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $dotenv = new DotenvDumper($this->projectDir.'/.env');
+        $path = $this->projectDir.'/.env';
+
+        $dotenv = new DotenvDumper($path.'.local');
         $dotenv->setParameter($input->getArgument('key'), $input->getArgument('value'));
         $dotenv->dump();
+
+        if (!file_exists($path)) {
+            (new Filesystem())->touch($path);
+        }
 
         return 0;
     }

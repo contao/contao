@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Doctrine\DBAL\Driver\Connection;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -646,20 +647,18 @@ class Search
 	 *
 	 * @param string $strUrl The URL to be removed
 	 */
-	public static function removeEntry($strUrl)
+	public static function removeEntry($strUrl, Connection $connection = null)
 	{
-		$objDatabase = Database::getInstance();
+		/** @var Connection $connection */
+		$connection = $connection ?? System::getContainer()->get('database_connection');
 
-		$objResult = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
-								 ->execute($strUrl);
+		$stmt = $connection->prepare('SELECT id FROM tl_search WHERE url=:url');
+		$stmt->execute(array('url' => $strUrl));
 
-		while ($objResult->next())
+		foreach ($stmt->fetchFirstColumn() as $id)
 		{
-			$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
-						->execute($objResult->id);
-
-			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						->execute($objResult->id);
+			$connection->delete('tl_search', array('id' => $id));
+			$connection->delete('tl_search_index', array('pid' => $id));
 		}
 	}
 
