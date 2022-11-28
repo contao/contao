@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
+        <target>アクセスを特定のURLに制限</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>ウェブサイト全体の代わりに特定のURLにだけアクセスを許可します。</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
