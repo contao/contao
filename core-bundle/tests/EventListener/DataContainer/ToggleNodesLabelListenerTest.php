@@ -104,6 +104,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $listener = new ToggleNodesLabelListener($requestStack);
         $listener('tl_foobar');
 
+        /** @var array $GLOBALS */
         $this->assertSame('expandNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
@@ -120,6 +121,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $listener = new ToggleNodesLabelListener($requestStack);
         $listener('tl_foobar');
 
+        /** @var array $GLOBALS */
         $this->assertSame('expandNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
@@ -136,6 +138,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $listener = new ToggleNodesLabelListener($requestStack);
         $listener('tl_foobar');
 
+        /** @var array $GLOBALS */
         $this->assertSame('expandNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
@@ -152,6 +155,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $listener = new ToggleNodesLabelListener($requestStack);
         $listener('tl_foobar');
 
+        /** @var array $GLOBALS */
         $this->assertSame('collapseNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
@@ -169,6 +173,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $listener = new ToggleNodesLabelListener($requestStack);
         $listener('tl_foobar');
 
+        /** @var array $GLOBALS */
         $this->assertSame('collapseNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
