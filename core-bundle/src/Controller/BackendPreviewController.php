@@ -26,9 +26,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * This controller handles the back end preview call and redirects to the
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
- *
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_allow_preview" = true})
  */
+#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewController
 {
     public function __construct(
@@ -39,15 +38,15 @@ class BackendPreviewController
     ) {
     }
 
-    /**
-     * @Route("/preview", name="contao_backend_preview")
-     */
+    #[Route('/preview', name: 'contao_backend_preview')]
     public function __invoke(Request $request): Response
     {
         // Skip the redirect if there is no preview script, otherwise we will
         // end up in an endless loop (see #1511)
-        if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
-            return new RedirectResponse($this->previewScript.$request->getRequestUri());
+        if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
+            $qs = $request->getQueryString();
+
+            return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo().($qs ? '?'.$qs : ''));
         }
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {

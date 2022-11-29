@@ -21,6 +21,8 @@ use Doctrine\DBAL\Schema\Table;
 
 class DcaSchemaProvider
 {
+    private int|null $defaultIndexLength = null;
+
     /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
@@ -33,6 +35,8 @@ class DcaSchemaProvider
      */
     public function appendToSchema(Schema $schema): void
     {
+        $this->defaultIndexLength = null;
+
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
@@ -47,10 +51,12 @@ class DcaSchemaProvider
                 if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', (string) $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('charset', $match[1]);
                     $table->addOption('collate', $match[1].'_general_ci');
+                    $table->addOption('collation', $match[1].'_general_ci');
                 }
 
                 if (preg_match('/COLLATE ([^ ]+)/i', (string) $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('collate', $match[1]);
+                    $table->addOption('collation', $match[1]);
                 }
             }
 
@@ -341,6 +347,10 @@ class DcaSchemaProvider
             return 1000;
         }
 
+        if (null !== $this->defaultIndexLength) {
+            return $this->defaultIndexLength;
+        }
+
         $largePrefix = $this->doctrine
             ->getConnection()
             ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")
@@ -348,7 +358,7 @@ class DcaSchemaProvider
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
         if (false === $largePrefix || '' === $largePrefix['Value']) {
-            return 3072;
+            return $this->defaultIndexLength = 3072;
         }
 
         [$ver] = explode('-', (string) $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
@@ -360,12 +370,12 @@ class DcaSchemaProvider
 
         // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
         if (version_compare($ver, $vok, '>=')) {
-            return 3072;
+            return $this->defaultIndexLength = 3072;
         }
 
         // The innodb_large_prefix option is disabled
         if (!\in_array(strtolower((string) $largePrefix['Value']), ['1', 'on'], true)) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
         $filePerTable = $this->doctrine
@@ -375,7 +385,7 @@ class DcaSchemaProvider
 
         // The innodb_file_per_table option is disabled
         if (!\in_array(strtolower((string) $filePerTable['Value']), ['1', 'on'], true)) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
         $fileFormat = $this->doctrine
@@ -385,10 +395,10 @@ class DcaSchemaProvider
 
         // The InnoDB file format is not Barracuda
         if ('' !== $fileFormat['Value'] && 'barracuda' !== strtolower((string) $fileFormat['Value'])) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
-        return 3072;
+        return $this->defaultIndexLength = 3072;
     }
 
     private function isCaseSensitive(array $config): bool

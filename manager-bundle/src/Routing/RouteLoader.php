@@ -52,7 +52,7 @@ class RouteLoader implements RouteLoaderInterface
             new RouteCollection()
         );
 
-        // Load the routing.yml file if it exists
+        // Load the routing.yaml file if it exists
         if ($configFile = $this->getConfigFile()) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
@@ -73,12 +73,14 @@ class RouteLoader implements RouteLoaderInterface
 
     private function getConfigFile(): string|null
     {
-        foreach (['routes.yaml', 'routes.yml'] as $file) {
-            $path = Path::join($this->projectDir, 'config', $file);
+        if (file_exists($path = Path::join($this->projectDir, 'config/routes.yaml'))) {
+            return $path;
+        }
 
-            if (file_exists($path)) {
-                return $path;
-            }
+        if (file_exists($path = Path::join($this->projectDir, 'config/routes.yml'))) {
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a routes.yml file has been deprecated and will no longer work in Contao 6.0. Use a routes.yaml file instead.');
+
+            return $path;
         }
 
         return null;

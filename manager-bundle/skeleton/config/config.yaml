@@ -1,0 +1,108 @@
+imports:
+    - { resource: parameters.yaml }
+    - { resource: security.yaml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
+
+# Framework configuration
+framework:
+    assets: true
+    esi: { enabled: true }
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%env(APP_SECRET)%'
+    router:
+        utf8: true
+        resource: contao_manager.routing.route_loader::loadFromPlugins
+        type: service
+        strict_requirements: '%kernel.debug%'
+    csrf_protection: ~
+    lock: ~
+    default_locale: '%locale%'
+    session:
+        handler_id: ~
+        cookie_secure: auto
+    fragments: { path: /_fragment }
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
+
+# Contao configuration
+contao:
+    preview_script: /preview.php
+
+# Twig configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine configuration
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver: pdo_mysql
+                url: '%env(DATABASE_URL)%'
+                charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
+                    engine: InnoDB
+                    row_format: DYNAMIC
+        types:
+            binary_string:
+                class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
+    orm:
+        auto_mapping: true
+        auto_generate_proxy_classes: false
+        naming_strategy: doctrine.orm.naming_strategy.default
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+
+# Security configuration
+nelmio_security:
+    content_type:
+        nosniff: true
+    referrer_policy:
+        enabled: true
+        policies:
+            - no-referrer-when-downgrade
+            - strict-origin-when-cross-origin
+    xss_protection:
+        enabled: true
+        mode_block: true
+
+# FOS HttpCache configuration
+fos_http_cache:
+    proxy_client:
+        symfony:
+            use_kernel_dispatcher: true
+    cache_manager:
+        enabled: true
+    tags:
+        enabled: true
+        annotations:
+            enabled: false
+        max_header_value_length: 4096
+
+# Scheb 2FA configuration
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+        manager: contao.security.two_factor.trusted_device_manager
+    backup_codes:
+        enabled: true
+        manager: contao.security.two_factor.backup_code_manager

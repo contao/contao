@@ -447,4 +447,54 @@ class PaletteManipulatorTest extends TestCase
             $pm->applyToString('{contact_legend},firstname,lastname')
         );
     }
+
+    public function testAddsLegendToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend', 'notexist_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz')
+        );
+    }
+
+    public function testAddsLegendToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz')
+        );
+    }
+
+    public function testAddsFieldToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo', 'notexist')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz')
+        );
+    }
+
+    public function testAddsFieldToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz')
+        );
+    }
 }

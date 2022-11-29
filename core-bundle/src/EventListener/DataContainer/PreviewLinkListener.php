@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -46,9 +46,7 @@ class PreviewLinkListener
     ) {
     }
 
-    /**
-     * @Hook("initializeSystem")
-     */
+    #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
         if (empty($this->previewScript)) {
@@ -56,9 +54,7 @@ class PreviewLinkListener
         }
     }
 
-    /**
-     * @Hook("loadDataContainer")
-     */
+    #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
         if ('tl_preview_link' === $table && empty($this->previewScript)) {
@@ -68,9 +64,8 @@ class PreviewLinkListener
 
     /**
      * Only allow to create new records if a front end preview URL is given.
-     *
-     * @Callback(table="tl_preview_link", target="config.onload")
      */
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function createFromUrl(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -124,7 +119,7 @@ class PreviewLinkListener
         }
 
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = $input->get('showUnpublished') ? '1' : '';
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = time();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
@@ -132,9 +127,8 @@ class PreviewLinkListener
 
     /**
      * Adds a hint and modifies the edit view buttons.
-     *
-     * @Callback(table="tl_preview_link", target="config.onload")
      */
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function adjustEditView(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -165,22 +159,7 @@ class PreviewLinkListener
         }
     }
 
-    /**
-     * Updates tl_preview_link.expiresAt based on expiresInDays selection.
-     *
-     * @Callback(table="tl_preview_link", target="config.onsubmit")
-     */
-    public function updateExpiresAt(DataContainer $dc): void
-    {
-        $this->connection->executeStatement(
-            'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-            [$dc->id]
-        );
-    }
-
-    /**
-     * @Callback(table="tl_preview_link", target="list.label.label")
-     */
+    #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {
         if ($row['expiresAt'] < time()) {
@@ -194,9 +173,7 @@ class PreviewLinkListener
         return $args;
     }
 
-    /**
-     * @Callback(table="tl_preview_link", target="list.operations.share.button")
-     */
+    #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {

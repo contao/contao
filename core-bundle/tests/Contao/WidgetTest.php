@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
@@ -29,6 +30,7 @@ class WidgetTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
+        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'gif', 'png']);
 

@@ -144,7 +144,7 @@ class TemplateLocatorTest extends TestCase
 
     public function testFindsTemplates(): void
     {
-        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle/templates');
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
         $locator = $this->getTemplateLocator('/project/dir');
 
         $expectedTemplates = [
@@ -165,6 +165,37 @@ class TemplateLocatorTest extends TestCase
         ];
 
         $this->assertSame($expectedTemplates, $locator->findTemplates($path));
+    }
+
+    public function testFindsTemplatesWithImplicitNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/implicit-roots');
+        $locator = $this->getTemplateLocator($projectDir, ['templates/my/theme']);
+
+        $expectedTemplates = [
+            'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+        ];
+
+        $expectedThemeTemplates = [
+            'content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
+        ];
+
+        $this->assertEmpty(
+            $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
+            'expect single depth without implicit root'
+        );
+
+        $this->assertSame(
+            $expectedTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates')),
+            'expect templates with directory structure but no theme templates'
+        );
+
+        $this->assertSame(
+            $expectedThemeTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
+            'expect theme templates with directory structure'
+        );
     }
 
     public function testFindsNoTemplatesIfPathDoesNotExist(): void

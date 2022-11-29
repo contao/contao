@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CalendarBundle\Tests\EventListener;
+namespace Contao\CalendarBundle\Tests\Cron;
 
 use Contao\Calendar;
 use Contao\CalendarBundle\Cron\GenerateFeedsCron;

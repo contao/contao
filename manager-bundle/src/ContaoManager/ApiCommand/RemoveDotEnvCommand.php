@@ -14,20 +14,20 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Dotenv\DotenvDumper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'dot-env:remove',
+    description: 'Removes a parameter from the .env file.'
+)]
 class RemoveDotEnvCommand extends Command
 {
-    protected static $defaultName = 'dot-env:remove';
-    protected static $defaultDescription = 'Removes a parameter from the .env file.';
-
     private string $projectDir;
 
     public function __construct(Application $application)
@@ -44,15 +44,20 @@ class RemoveDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $file = Path::join($this->projectDir, '.env');
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(false);
 
-        if (!file_exists($file)) {
-            return 0;
+        $path = Path::join($this->projectDir, '.env');
+        $dumper = new DotenvDumper($path.'.local');
+        $key = $input->getArgument('key');
+
+        if (file_exists($path) && isset($dotenv->parse(file_get_contents($path))[$key])) {
+            $dumper->setParameter($key, '');
+        } else {
+            $dumper->unsetParameter($key);
         }
 
-        $dotenv = new DotenvDumper($file);
-        $dotenv->unsetParameter($input->getArgument('key'));
-        $dotenv->dump();
+        $dumper->dump();
 
         return 0;
     }

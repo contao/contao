@@ -18,6 +18,7 @@ use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ResizerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
@@ -35,16 +36,12 @@ use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * Resize deferred images that have not been processed yet.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:resize-images',
+    description: 'Resizes deferred images that have not been processed yet.'
+)]
 class ResizeImagesCommand extends Command
 {
-    protected static $defaultName = 'contao:resize-images';
-    protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
-
     private DeferredResizerInterface|null $resizer;
     private Filesystem $filesystem;
     private int $terminalWidth;
@@ -142,6 +139,8 @@ class ResizeImagesCommand extends Command
                 }
 
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
+
+                return 0;
             }
 
             return Command::FAILURE;

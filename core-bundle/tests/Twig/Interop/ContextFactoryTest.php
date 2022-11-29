@@ -30,6 +30,9 @@ class ContextFactoryTest extends TestCase
         $object = new \stdClass();
         $object->x = 'y';
 
+        // Work around https://github.com/phpstan/phpstan/issues/8078
+        $closure = static fn (): string => 'evaluated Closure';
+
         $data = [
             'foo' => 'bar',
             'a' => [1, 2],
@@ -37,7 +40,7 @@ class ContextFactoryTest extends TestCase
             'lazy1' => static fn (): string => 'evaluated',
             'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
             'lazy3' => static fn (): array => [1, 2],
-            'lazy4' => (static fn (): string => 'evaluated Closure')(...),
+            'lazy4' => $closure(...),
             'value' => 'strtolower', // do not confuse with callable
         ];
 

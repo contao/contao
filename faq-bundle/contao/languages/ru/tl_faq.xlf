@@ -1,0 +1,178 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="tl_faq.question.0">
+        <source>Question</source>
+        <target>Вопрос</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.question.1">
+        <source>Please enter the question.</source>
+        <target>Введите вопрос.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.0">
+        <source>FAQ alias</source>
+        <target>Алиас вопроса</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.1">
+        <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
+        <target>Алиас вопроса является уникальной ссылкой на вопрос, которую можно вызывать взамен ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.0">
+        <source>Author</source>
+        <target>Автор</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.1">
+        <source>Here you can change the author of the FAQ.</source>
+        <target>Вы можете изменить автора вопроса.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.0">
+        <source>Answer</source>
+        <target>Ответ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.1">
+        <source>Please enter the answer.</source>
+        <target>Введите ответ.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.0">
+        <source>Add an image</source>
+        <target>Добавить изображение</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.1">
+        <source>Add an image to the FAQ.</source>
+        <target>Добавить изображение к ответу.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Мета-название</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Вы можете добавить собственный мета-заголовок, чтобы перезаписать заголовок страницы по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Вы можете перезаписать способ обработки вопросов и ответов поисковыми системами.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Мета-описание</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Вы можете добавить собственное мета-описание, чтобы перезаписать описание страницы по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>Добавить вложения</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.1">
+        <source>Add one or more downloadable files to the FAQ.</source>
+        <target>Добавить вложение к ответу.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.0">
+        <source>Enclosures</source>
+        <target>Вложения</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>Выберите файлы, которые хотите вложить.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Отключить комментарии</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Отключить комментарии для данного вопроса.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.0">
+        <source>Publish the FAQ</source>
+        <target>Опубликовать в вопросах и ответах</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.1">
+        <source>Make the FAQ publicly visible on the website.</source>
+        <target>Сделать вопрос видимым на веб-сайте.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.title_legend">
+        <source>Title and author</source>
+        <target>Название и автор</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer_legend">
+        <source>Answer</source>
+        <target>Ответ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>Метаданные</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.image_legend">
+        <source>Image settings</source>
+        <target>Настройки изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure_legend">
+        <source>Enclosures</source>
+        <target>Вложения</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Экспертные настройки</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.publish_legend">
+        <source>Publish settings</source>
+        <target>Настройки публикации</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.1">
+        <source>Create a new question</source>
+        <target>Создать новый вопрос</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.show">
+        <source>Show the details of question ID %s</source>
+        <target>Показать детали вопроса ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.edit">
+        <source>Edit question ID %s</source>
+        <target>Редактировать вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.copy">
+        <source>Duplicate question ID %s</source>
+        <target>Дублировать вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.cut">
+        <source>Move question ID %s</source>
+        <target>Переместить вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.delete">
+        <source>Delete question ID %s</source>
+        <target>Удалить вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle">
+        <source>Publish/unpublish question ID %s</source>
+        <target>Опубликовать/изъять вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.1">
+        <source>Paste after question ID %s</source>
+        <target>Вставить после вопроса ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.0">
+        <source>Create a new question at the top</source>
+        <target>Создать новый вопрос вверху</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.1">
+        <source>Create a new question after question ID %s</source>
+        <target>Создать новый вопрос после вопроса ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
@@ -35,7 +36,7 @@ class InputTest extends TestCase
 
         $this->backupServerEnvGetPost();
 
-        include __DIR__.'/../../src/Resources/contao/config/default.php';
+        include __DIR__.'/../../contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 
@@ -49,6 +50,8 @@ class InputTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
+        $container->set('request_stack', new RequestStack());
+        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
 
         System::setContainer($container);
     }
@@ -881,6 +884,14 @@ class InputTest extends TestCase
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
 
+        // Duplicating the request should keep the setGet information intact
+        $stack->push($stack->getCurrentRequest()->duplicate());
+
+        $this->assertSame(['123', 'key2'], Input::getKeys());
+        $this->assertSame([123, 'key2'], array_keys($_GET));
+        $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->pop();
         $stack->pop();
         $stack->push(new Request($data, $data, [], [], [], ['REQUEST_METHOD' => 'POST']));
 
@@ -915,5 +926,54 @@ class InputTest extends TestCase
         $this->assertSame(['123', 'key2'], Input::getKeys());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->push(new Request($data, [], [], [], [], ['REQUEST_METHOD' => 'POST']));
+
+        $this->assertTrue(Input::isPost(), 'isPost() should return true, even if the post data was empty');
+    }
+
+    public function testAutoItemAttribute(): void
+    {
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
+
+        $this->assertSame([], Input::getKeys());
+
+        Input::setGet('auto_item', 'foo');
+
+        $this->assertSame(['auto_item'], Input::getKeys());
+        $this->assertSame('foo', Input::get('auto_item'));
+        $this->assertSame('foo', $stack->getCurrentRequest()->attributes->get('auto_item'));
+        $this->assertSame('foo', $_GET['auto_item']);
+
+        Input::setGet('key', 'value');
+
+        $this->assertSame(['auto_item', 'key'], Input::getKeys());
+        $this->assertSame('value', Input::get('key'));
+        $this->assertFalse($stack->getCurrentRequest()->attributes->has('key'));
+        $this->assertSame('value', $stack->getCurrentRequest()->attributes->get('_contao_input')['setGet']['key']);
+        $this->assertSame('value', $_GET['key']);
+
+        Input::setGet('auto_item', null);
+
+        $this->assertSame(['key'], Input::getKeys());
+        $this->assertNull(Input::get('auto_item'));
+        $this->assertFalse($stack->getCurrentRequest()->attributes->has('auto_item'));
+        $this->assertArrayNotHasKey('auto_item', $_GET);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testArrayValuesFromGetAndPost(): void
+    {
+        $data = ['key' => ['value1', 'value2']];
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request($data, $data, [], $data));
+
+        $this->assertSame(['value1', 'value2'], Input::get('key'));
+        $this->assertSame(['value1', 'value2'], Input::post('key'));
+        $this->assertSame(['value1', 'value2'], Input::cookie('key'));
     }
 }

@@ -20,6 +20,7 @@ use Monolog\Logger as BaseLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -42,11 +43,12 @@ use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
+#[AsCommand(
+    name: 'contao:crawl',
+    description: 'Crawls the Contao root pages with the desired subscribers.'
+)]
 class CrawlCommand extends Command
 {
-    protected static $defaultName = 'contao:crawl';
-    protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
-
     private Escargot|null $escargot = null;
 
     public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)

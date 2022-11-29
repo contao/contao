@@ -1,9 +1,0 @@
-{% if lazy|default(true) %}
-    {# Lazy load, see https://web.dev/defer-non-critical-css/ #}
-    <link rel="preload" href="{{ file }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="{{ file }}">
-    </noscript>
-{% else %}
-    <link rel="stylesheet" href="{{ file }}">
-{% endif %}

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -34,21 +34,24 @@ class RootPageDependentSelectListener
     ) {
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.options")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.options')]
     public function optionsCallback(DataContainer $dc): array
     {
         $options = [];
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
         $hasTypes = \count($types) > 0;
+        $pid = $dc->getCurrentRecord()['pid'] ?? null;
+
+        if (null === $pid) {
+            return [];
+        }
 
         $rows = $this->connection->executeQuery(
             "SELECT m.id, m.name, m.type
             FROM tl_module m
             WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
-            [$dc->activeRecord->pid]
+            [$pid]
         );
 
         foreach ($rows->iterateAssociative() as $module) {
@@ -62,9 +65,7 @@ class RootPageDependentSelectListener
         return $options;
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
     public function saveCallback(mixed $value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
@@ -83,9 +84,7 @@ class RootPageDependentSelectListener
         return serialize($newValues);
     }
 
-    /**
-     * @Callback(table="tl_module", target="fields.rootPageDependentModules.wizard")
-     */
+    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.wizard')]
     public function wizardCallback(DataContainer $dc): string
     {
         $wizards = [];

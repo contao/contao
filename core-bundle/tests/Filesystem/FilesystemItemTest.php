@@ -13,41 +13,38 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
+use Symfony\Component\Uid\Uuid;
 
 class FilesystemItemTest extends TestCase
 {
     public function testSetAndGetAttributes(): void
     {
+        $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
+
         $fileItem = new FilesystemItem(
             true,
-            'foo/bar.png',
+            'foo/bar.PNG',
             123450,
             1024,
             'image/png',
-            ['foo' => 'bar']
+            ['foo' => 'bar', 'uuid' => $uuid]
         );
 
         $this->assertTrue($fileItem->isFile());
-        $this->assertSame('foo/bar.png', $fileItem->getPath());
-        $this->assertSame('foo/bar.png', (string) $fileItem);
+        $this->assertSame('foo/bar.PNG', $fileItem->getPath());
+        $this->assertSame('foo/bar.PNG', (string) $fileItem);
         $this->assertSame(123450, $fileItem->getLastModified());
         $this->assertSame(1024, $fileItem->getFileSize());
         $this->assertSame('image/png', $fileItem->getMimeType());
-        $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
-
-        $directoryItem = new FilesystemItem(
-            false,
-            'foo/bar',
-            123450
-        );
-
-        $this->assertFalse($directoryItem->isFile());
-        $this->assertSame('foo/bar', $directoryItem->getPath());
-        $this->assertSame('foo/bar', (string) $directoryItem);
-        $this->assertSame(123450, $directoryItem->getLastModified());
+        $this->assertSame('PNG', $fileItem->getExtension());
+        $this->assertSame('png', $fileItem->getExtension(true));
+        $this->assertSame('bar.PNG', $fileItem->getName());
+        $this->assertSame('bar', $fileItem->getExtraMetadata()['foo']);
+        $this->assertSame('2fcae369-c955-4b43-bcf9-d069f9d25542', $fileItem->getUuid()->toRfc4122());
     }
 
     /**
@@ -73,11 +70,6 @@ class FilesystemItemTest extends TestCase
         yield 'mime type' => [
             'getMimeType',
             'Cannot call getMimeType() on a non-file filesystem item.',
-        ];
-
-        yield 'extra metadata' => [
-            'getExtraMetadata',
-            'Cannot call getExtraMetadata() on a non-file filesystem item.',
         ];
     }
 
@@ -170,7 +162,7 @@ class FilesystemItemTest extends TestCase
 
         $this->assertNull($item->getLastModified());
         $this->assertSame(0, $item->getFileSize());
-        $this->assertSame('', $item->getMimeType());
+        $this->assertSame('', $item->getMimeType(''));
 
         $invocationCounts = [
             'lastModified' => 0,
@@ -206,6 +198,39 @@ class FilesystemItemTest extends TestCase
         foreach ($invocationCounts as $property => $invocationCount) {
             $this->assertSame(1, $invocationCount, "invocation count of $property()");
         }
+    }
+
+    public function testThrowsIfMimeTypeIsNotDefined(): void
+    {
+        $item = new FilesystemItem(
+            true,
+            'some/file.txt',
+            null,
+            null,
+            static function (): never {
+                throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
+            }
+        );
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectExceptionMessage('Unable to retrieve metadata from "some/file.txt": A mime type could not be detected. Set the "$default" argument to suppress this exception.');
+
+        $item->getMimeType();
+    }
+
+    public function testReturnsDefaultMimeTypeIfSpecified(): void
+    {
+        $item = new FilesystemItem(
+            true,
+            'some/file.txt',
+            null,
+            null,
+            static function (): never {
+                throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
+            }
+        );
+
+        $this->assertSame('text/plain', $item->getMimeType('text/plain'));
     }
 
     public function testWithMetadataIfNotDefinedDoesNotOverwriteExistingValues(): void

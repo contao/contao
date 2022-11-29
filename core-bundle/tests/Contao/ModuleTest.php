@@ -26,7 +26,8 @@ use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleTest extends TestCase
@@ -35,29 +36,31 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
         ;
 
         $connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
 
@@ -66,7 +69,7 @@ class ModuleTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
 
         $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class, System::class, Config::class]);
 
@@ -76,15 +79,15 @@ class ModuleTest extends TestCase
     public function testGetPublishedSubpagesWithoutGuestsByPid(): void
     {
         $databaseResultFirstQuery = [
-            ['id' => '1', 'hasSubpages' => '0'],
-            ['id' => '2', 'hasSubpages' => '1'],
-            ['id' => '3', 'hasSubpages' => '1'],
+            ['id' => 1, 'hasSubpages' => 0],
+            ['id' => 2, 'hasSubpages' => 1],
+            ['id' => 3, 'hasSubpages' => 1],
         ];
 
         $databaseResultSecondQuery = [
-            ['id' => '1', 'alias' => 'alias1'],
-            ['id' => '2', 'alias' => 'alias2'],
-            ['id' => '3', 'alias' => 'alias3'],
+            ['id' => 1, 'alias' => 'alias1'],
+            ['id' => 2, 'alias' => 'alias2'],
+            ['id' => 3, 'alias' => 'alias3'],
         ];
 
         $statement = $this->createMock(Statement::class);
@@ -141,8 +144,8 @@ class ModuleTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

@@ -1,0 +1,105 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_newsletter_channel.php" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_newsletter_channel.title.0">
+        <source>Title</source>
+        <target>Titre</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title.1">
+        <source>Please enter the title of the channel.</source>
+        <target>Saisir le titre de la liste de diffusion.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Page de redirection</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.1">
+        <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
+        <target>Sélectionner la page vers laquelle les visiteurs seront redirigés après avoir cliqué sur un bulletin d'information.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>Modèle d'e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can select an e-mail template.</source>
+        <target>Vous pouvez choisir un modèle d'email.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Envoi d'e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>Vous pouvez remplacer la méthode d'envoi d'email utilisée pour cette liste de diffusion.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
+        <target>Adresse e-mail de l'expéditeur</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
+        <target>Saisir l'adresse e-mail de l'expéditeur.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>Nom de l'expéditeur</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
+        <target>Ici, vous pouvez saisir un nom optionnel pour l'expéditeur.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.0">
+        <source>Revision date</source>
+        <target>Date de révision</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Date et heure de la dernière révision</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title_legend">
+        <source>Title and redirect</source>
+        <target>Titre et redirection</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>Paramètres des modèles</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
+        <target>Paramètres de l'expéditeur</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.0">
+        <source>New</source>
+        <target>Nouveau</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.1">
+        <source>Create a new channel</source>
+        <target>Créer une nouvelle liste de diffusion.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.show">
+        <source>Show the details of channel ID %s</source>
+        <target>Afficher les détails de la liste de diffusion ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.edit">
+        <source>Edit channel ID %s</source>
+        <target>Éditer la liste de diffusion ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.children">
+        <source>Edit the newsletters of channel ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.copy">
+        <source>Duplicate channel ID %s</source>
+        <target>Dupliquer la liste de diffusion ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.delete">
+        <source>Delete channel ID %s</source>
+        <target>Supprimer la liste de diffusion ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.recipients">
+        <source>Edit the recipients of channel ID %s</source>
+        <target>Éditer les destinataires de la liste de diffusion ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

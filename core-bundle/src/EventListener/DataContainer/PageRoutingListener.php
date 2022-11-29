@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -28,9 +28,7 @@ class PageRoutingListener
     {
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.routePath.input_field")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.routePath.input_field')]
     public function generateRoutePath(DataContainer $dc): string
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
@@ -47,9 +45,7 @@ class PageRoutingListener
         );
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.routeConflicts.input_field")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.routeConflicts.input_field')]
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -122,7 +118,7 @@ class PageRoutingListener
         $path = $route->getPath();
 
         foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+            $path = preg_replace('/{!?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
         }
 
         return $path;

@@ -18,7 +18,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
@@ -29,7 +28,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -69,7 +67,7 @@ class ContaoCoreBundle extends Bundle
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ContaoLoginFactory());
+        $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
         $container->addCompilerPass(
             new AddEventAliasesPass([
@@ -85,7 +83,6 @@ class ContaoCoreBundle extends Bundle
 
         $container->addCompilerPass(new MakeServicesPublicPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());
-        $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
@@ -109,7 +106,6 @@ class ContaoCoreBundle extends Bundle
             )
         );
 
-        $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new TranslationDataCollectorPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
@@ -138,5 +134,10 @@ class ContaoCoreBundle extends Bundle
         }
 
         return $version;
+    }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
     }
 }

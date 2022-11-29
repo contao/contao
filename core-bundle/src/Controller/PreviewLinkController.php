@@ -22,19 +22,16 @@ use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(defaults={"_scope" = "frontend", "_allow_preview" = true})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend', '_allow_preview' => true])]
 class PreviewLinkController
 {
     public function __construct(private FrontendPreviewAuthenticator $previewAuthenticator, private UriSigner $uriSigner, private Connection $connection)
     {
     }
 
-    /**
-     * @Route("/_contao/preview/{id}", name="contao_preview_link", requirements={"id"="\d+"})
-     */
+    #[Route('/_contao/preview/{id}', name: 'contao_preview_link', requirements: ['id' => '\d+'])]
     public function __invoke(Request $request, int $id): RedirectResponse
     {
         if (!$this->uriSigner->checkRequest($request)) {
@@ -42,7 +39,7 @@ class PreviewLinkController
         }
 
         $link = $this->connection->fetchAssociative(
-            "SELECT * FROM tl_preview_link WHERE id=? AND published='1' AND expiresAt>UNIX_TIMESTAMP()",
+            'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
             [$id]
         );
 
@@ -50,7 +47,7 @@ class PreviewLinkController
             throw new NotFoundHttpException('Preview link not found.');
         }
 
-        $this->previewAuthenticator->authenticateFrontendGuest((bool) $link['showUnpublished']);
+        $this->previewAuthenticator->authenticateFrontendGuest((bool) $link['showUnpublished'], $id);
 
         return new RedirectResponse($link['url']);
     }

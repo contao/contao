@@ -128,6 +128,29 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertFalse($iterator->all(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'foo')));
     }
 
+    public function testLimit(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'file1'),
+            new FilesystemItem(true, 'file2'),
+            new FilesystemItem(true, 'file3'),
+        ]);
+
+        $this->assertSameItems(['file1', 'file2'], $iterator->limit(2)->toArray());
+        $this->assertSameItems(['file1', 'file2', 'file3'], $iterator->limit(4)->toArray());
+        $this->assertSameItems([], $iterator->limit(0)->toArray());
+    }
+
+    public function testLimitThrowsOutOfRangeException(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->expectException(\OutOfRangeException::class);
+        $this->expectDeprecationMessage('Illegal limit value "-1", must be greater or equal to zero.');
+
+        $iterator->limit(-1);
+    }
+
     /**
      * @dataProvider provideInvalidItems
      */
@@ -147,6 +170,37 @@ class FilesystemItemIteratorTest extends TestCase
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
     }
 
+    public function testIterateMultipleTimesWithGenerator(): void
+    {
+        $iterator = new FilesystemItemIterator($this->generateItems());
+
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+    }
+
+    public function testFirst(): void
+    {
+        $iterator = new FilesystemItemIterator(
+            new \ArrayIterator([
+                $first = new FilesystemItem(true, 'foo'),
+                new FilesystemItem(true, 'bar'),
+            ])
+        );
+
+        $this->assertSame($first, $iterator->first());
+        $this->assertSame($first, $iterator->first());
+
+        $this->assertSameItems(['foo', 'bar'], $iterator->toArray());
+    }
+
+    public function testFirstWithEmptySet(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->assertNull($iterator->first());
+        $this->assertSame([], $iterator->toArray());
+    }
+
     /**
      * @param array<string>         $expected
      * @param array<FilesystemItem> $actual
@@ -154,5 +208,11 @@ class FilesystemItemIteratorTest extends TestCase
     private function assertSameItems(array $expected, array $actual): void
     {
         $this->assertSame($expected, array_map(static fn (FilesystemItem $item): string => $item->getPath(), $actual));
+    }
+
+    private function generateItems(): \Generator
+    {
+        yield new FilesystemItem(true, 'foo');
+        yield new FilesystemItem(true, 'bar');
     }
 }

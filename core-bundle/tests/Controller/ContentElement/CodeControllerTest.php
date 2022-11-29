@@ -28,11 +28,13 @@ class CodeControllerTest extends ContentElementTestCase
                 'headline' => ['unit' => 'h1', 'value' => 'Some Code'],
                 'cssID' => serialize(['my-id', 'my-class']),
             ],
-            responseContextData: $responseContextData
+            null,
+            false,
+            $responseContextData
         );
 
         $expectedOutput = <<<'HTML'
-            <div id="my-id" class="my-class content_element/code">
+            <div id="my-id" class="my-class content-code">
                 <h1>Some Code</h1>
                 <pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span></span>{}</code></pre>
             </div>
@@ -41,9 +43,9 @@ class CodeControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
 
         $expectedHeadCode = <<<'HTML'
-            <link rel="preload" href="vendor/scrivo/highlight_php/styles/foundation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+            <link rel="preload" href="/foundation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
             <noscript>
-                <link rel="stylesheet" href="vendor/scrivo/highlight_php/styles/foundation.css">
+                <link rel="stylesheet" href="/foundation.css">
             </noscript>
             HTML;
 
@@ -64,18 +66,19 @@ class CodeControllerTest extends ContentElementTestCase
                 'headline' => ['unit' => 'h1', 'value' => 'Some Code'],
                 'cssID' => serialize(['my-id', 'my-class']),
             ],
-            asEditorView: true,
-            responseContextData: $responseContextData
+            null,
+            true,
+            $responseContextData
         );
 
         $expectedOutput = <<<'HTML'
-            <div id="my-id" class="my-class content_element/code">
+            <div id="my-id" class="my-class content-code">
                 <h1>Some Code</h1>
                 <pre>&lt;?php class Foo{}</pre>
             </div>
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertEmpty($responseContextData[DocumentLocation::head->value]);
+        $this->assertEmpty($responseContextData);
     }
 }

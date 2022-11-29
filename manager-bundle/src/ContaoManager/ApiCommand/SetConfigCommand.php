@@ -14,19 +14,18 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Api\ManagerConfig;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'config:set',
+    description: 'Sets the Contao Manager configuration from a JSON string.'
+)]
 class SetConfigCommand extends Command
 {
-    protected static $defaultName = 'config:set';
-    protected static $defaultDescription = 'Sets the Contao Manager configuration from a JSON string.';
-
     private ManagerConfig $managerConfig;
 
     public function __construct(Application $application)

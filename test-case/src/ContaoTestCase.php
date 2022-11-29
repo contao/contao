@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
@@ -267,6 +268,11 @@ abstract class ContaoTestCase extends TestCase
             ->willReturn($this->createMock($class))
         ;
 
+        $token
+            ->method('getRoleNames')
+            ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
+        ;
+
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
@@ -382,33 +388,33 @@ abstract class ContaoTestCase extends TestCase
     {
         switch (true) {
             // The core-bundle is in the vendor folder of the monorepo
-            case file_exists(__DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../../../../core-bundle/contao/config/default.php'):
+                include __DIR__.'/../../../../core-bundle/contao/config/default.php';
                 break;
 
             // The test-case is in the vendor-bin folder
-            case file_exists(__DIR__.'/../../../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../../../core-bundle/src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../../../../../../core-bundle/contao/config/default.php'):
+                include __DIR__.'/../../../../../../core-bundle/contao/config/default.php';
                 break;
 
             // The core-bundle is in the vendor folder of the managed edition
-            case file_exists(__DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../../../../../core-bundle/contao/config/default.php'):
+                include __DIR__.'/../../../../../core-bundle/contao/config/default.php';
                 break;
 
             // The core-bundle is the root package and the test-case folder is in vendor/contao
-            case file_exists(__DIR__.'/../../../../src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../../../../contao/config/default.php'):
+                include __DIR__.'/../../../../contao/config/default.php';
                 break;
 
             // Another bundle is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../core-bundle/src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../../core-bundle/contao/config/default.php'):
+                include __DIR__.'/../../core-bundle/contao/config/default.php';
                 break;
 
             // The test-case is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php';
+            case file_exists(__DIR__.'/../vendor/contao/core-bundle/contao/config/default.php'):
+                include __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php';
                 break;
 
             default:

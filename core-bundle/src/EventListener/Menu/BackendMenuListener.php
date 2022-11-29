@@ -71,12 +71,16 @@ class BackendMenuListener
                     ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
                     ->setLinkAttribute('title', $categoryData['title'])
                     ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
+                    ->setLinkAttribute('aria-controls', $categoryName)
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
                 ;
 
                 if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
+                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
+                } else {
+                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
                 }
 
                 $tree->addChild($categoryNode);
@@ -120,15 +124,9 @@ class BackendMenuListener
 
         $tree->addChild($manual);
 
-        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
-
         $alerts = $event->getFactory()
             ->createItem('alerts')
-            ->setLabel($this->getAlertsLabel($systemMessages))
-            ->setUri($this->router->generate('contao_backend_alerts'))
-            ->setLinkAttribute('class', 'icon-alert')
-            ->setLinkAttribute('title', $systemMessages)
-            ->setLinkAttribute('onclick', "Backend.openModalIframe({'title':'".StringUtil::specialchars(str_replace("'", "\\'", $systemMessages))."','url':this.href});return false")
+            ->setLabel($this->getAlertsLabel())
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
         ;
@@ -137,9 +135,10 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel($this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username)
+            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
-            ->setLabelAttribute('class', 'h2')
+            ->setExtra('safe_label', true)
+            ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
         ;
 
@@ -177,7 +176,7 @@ class BackendMenuListener
 
         $buger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -186,16 +185,26 @@ class BackendMenuListener
         $tree->addChild($buger);
     }
 
-    private function getAlertsLabel(string $systemMessages): string
+    private function getAlertsLabel(): string
     {
+        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
+
+        $label = sprintf(
+            '<a href="%s" class="icon-alert" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+            $this->router->generate('contao_backend_alerts'),
+            htmlspecialchars($systemMessages),
+            StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
+            $systemMessages
+        );
+
         $adapter = $this->framework->getAdapter(Backend::class);
         $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
 
         if ($count > 0) {
-            $systemMessages .= ' <sup>'.$count.'</sup>';
+            $label .= '<sup>'.$count.'</sup>';
         }
 
-        return $systemMessages;
+        return $label;
     }
 
     private function getRefererId(): string

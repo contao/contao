@@ -19,9 +19,11 @@ use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
+use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemReader;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
@@ -302,7 +304,7 @@ class MountManagerTest extends TestCase
 
             // Make sure to read from the iterator, so that the exception will get thrown
             if ('listContents' === $method) {
-                [...$result];
+                iterator_to_array($result);
             }
         } catch (VirtualFilesystemException $e) {
             $this->assertSame($flysystemException, $e->getPrevious());
@@ -487,6 +489,44 @@ class MountManagerTest extends TestCase
                 'files/media/extra/videos/funny.mov (file)',
             ],
         ];
+    }
+
+    public function testSetsLazyMetadataIfAdapterDidNotProvideDetailsWhenListing(): void
+    {
+        // Mock an adapter that does not set metadata when listing
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->method('listContents')
+            ->willReturnCallback(
+                function (string $path, bool $mode): iterable {
+                    $this->assertSame(FilesystemReader::LIST_SHALLOW, $mode);
+
+                    if ('' === $path) {
+                        return [new DirectoryAttributes('bar')];
+                    }
+
+                    if ('bar' === $path) {
+                        return [new FileAttributes('bar/test.zip')];
+                    }
+
+                    $this->fail('Uncovered listing path.');
+                }
+            )
+        ;
+
+        $adapter
+            ->method('mimeType')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
+        ;
+
+        $mountManager = new MountManager([]);
+        $mountManager->mount($adapter, 'foo');
+
+        $item = iterator_to_array($mountManager->listContents('foo/bar'))[0];
+
+        $this->assertSame('foo/bar/test.zip', $item->getPath());
+        $this->assertSame('application/zip', $item->getMimeType());
     }
 
     public function testCopyAndMove(): void

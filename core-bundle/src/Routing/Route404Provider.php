@@ -38,7 +38,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $collection = new RouteCollection();
         $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
@@ -52,9 +52,12 @@ class Route404Provider extends AbstractPageRouteProvider
         return $collection;
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -84,9 +87,9 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames($names = null): iterable
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -119,7 +122,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     private function getNotFoundRoutes(): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
@@ -157,7 +160,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage),
+            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,

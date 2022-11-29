@@ -89,7 +89,7 @@ class CoreResponseContextFactory
 
             // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getMainRequest()) {
+                if (!$request = $this->requestStack->getCurrentRequest()) {
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
@@ -108,9 +108,9 @@ class CoreResponseContextFactory
             ->set(
                 new ContaoPageSchema(
                     $title ?: '',
-                    (int) $pageModel->id,
-                    (bool) $pageModel->noSearch,
-                    (bool) $pageModel->protected,
+                    $pageModel->id,
+                    $pageModel->noSearch,
+                    $pageModel->protected,
                     array_map('intval', array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode()
                 )

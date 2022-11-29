@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -35,9 +36,8 @@ use Twig\Error\Error as TwigError;
  *    loading and force back end scope)
  * b) Provide the member usernames for the datalist
  * c) Process the switch action (i.e. log in a specific front end user).
- *
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_allow_preview" = true})
  */
+#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewSwitchController
 {
     public function __construct(
@@ -48,14 +48,13 @@ class BackendPreviewSwitchController
         private TwigEnvironment $twig,
         private RouterInterface $router,
         private ContaoCsrfTokenManager $tokenManager,
+        private TranslatorInterface $translator,
         private array $backendAttributes = [],
         private string $backendBadgeTitle = '',
     ) {
     }
 
-    /**
-     * @Route("/preview_switch", name="contao_backend_switch")
-     */
+    #[Route('/preview_switch', name: 'contao_backend_switch')]
     public function __invoke(Request $request): Response
     {
         $user = $this->security->getUser();
@@ -69,9 +68,7 @@ class BackendPreviewSwitchController
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
-            $this->authenticatePreview($request);
-
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $this->authenticatePreview($request);
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
@@ -96,7 +93,7 @@ class BackendPreviewSwitchController
                 [
                     'do' => 'preview_link',
                     'act' => 'create',
-                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'showUnpublished' => $showUnpublished,
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
                     'nb' => '1', // Do not show the "Save & Close" button
                 ]
@@ -122,21 +119,33 @@ class BackendPreviewSwitchController
         }
     }
 
-    private function authenticatePreview(Request $request): void
+    private function authenticatePreview(Request $request): Response
     {
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             $frontendUsername = $request->request->get('user');
+
+            // Logout the current logged-in user if an empty user is submitted
+            if ('' === $frontendUsername && null !== $this->tokenChecker->getFrontendUsername()) {
+                $this->previewAuthenticator->removeFrontendAuthentication();
+                $frontendUsername = null;
+            }
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if ($frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished);
+            if (!$this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished)) {
+                $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
+
+                return new Response($message, Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     private function getMembersDataList(BackendUser $user, Request $request): array
@@ -162,8 +171,8 @@ class BackendPreviewSwitchController
                 tl_member
             WHERE
                 username LIKE ? $andWhereGroups
-                AND login='1'
-                AND disable!='1'
+                AND login=1
+                AND disable=0
                 AND (start='' OR start<='$time')
                 AND (stop='' OR stop>'$time')
             ORDER BY

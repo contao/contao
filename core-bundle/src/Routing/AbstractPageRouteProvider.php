@@ -128,7 +128,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
             $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
-            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === \Locale::getPrimaryLanguage($pageB->rootLanguage)) {
+            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === LocaleUtil::getPrimaryLanguage($pageB->rootLanguage)) {
                 // If both pages have the same language without region and neither region has a priority,
                 // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
                 $langA = $pageA->rootSorting;

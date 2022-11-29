@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -21,6 +22,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -68,11 +70,12 @@ class ContaoExtensionTest extends TestCase
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(3, $tokenParsers);
+        $this->assertCount(4, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
-        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[2]);
+        $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
+        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
     }
 
     public function testAddsTheFunctions(): void
@@ -80,12 +83,14 @@ class ContaoExtensionTest extends TestCase
         $expectedFunctions = [
             'include' => ['all'],
             'attrs' => [],
+            'figure' => [],
             'contao_figure' => ['html'],
             'picture_config' => [],
             'insert_tag' => [],
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
+            'prefix_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -107,7 +112,7 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(6, $filters);
+        $this->assertCount(7, $filters);
 
         $expectedFilters = [
             'escape',
@@ -116,6 +121,7 @@ class ContaoExtensionTest extends TestCase
             'insert_tag_raw',
             'highlight',
             'highlight_auto',
+            'format_bytes',
         ];
 
         foreach ($filters as $filter) {
@@ -163,7 +169,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -342,7 +352,6 @@ class ContaoExtensionTest extends TestCase
         yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
         yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
         yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
-        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**
@@ -361,6 +370,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy);
+        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
     }
 }

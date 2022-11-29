@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Util\CachingTraversable;
+
 /**
  * @implements \IteratorAggregate<int, FilesystemItem>
  */
@@ -22,6 +24,9 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function __construct(private iterable $listing)
     {
+        if (!\is_array($listing)) {
+            $this->listing = new CachingTraversable($listing);
+        }
     }
 
     /**
@@ -95,6 +100,36 @@ class FilesystemItemIterator implements \IteratorAggregate
         }
 
         return true;
+    }
+
+    public function limit(int $numberOfElements): self
+    {
+        if ($numberOfElements < 0) {
+            throw new \OutOfRangeException(sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
+        }
+
+        $listLimited = static function (iterable $listing) use ($numberOfElements): \Generator {
+            $count = 0;
+
+            foreach ($listing as $item) {
+                if (++$count > $numberOfElements) {
+                    return;
+                }
+
+                yield $item;
+            }
+        };
+
+        return new self($listLimited($this->listing));
+    }
+
+    public function first(): FilesystemItem|null
+    {
+        foreach ($this->listing as $item) {
+            return $item;
+        }
+
+        return null;
     }
 
     /**

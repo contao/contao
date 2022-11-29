@@ -30,6 +30,9 @@ use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -39,7 +42,7 @@ class DebugPagesCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class, Config::class]);
 
@@ -62,10 +65,25 @@ class DebugPagesCommandTest extends TestCase
      */
     public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
     {
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('database_connection', $connection);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
 

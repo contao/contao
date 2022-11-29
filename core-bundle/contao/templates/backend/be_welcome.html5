@@ -1,0 +1,65 @@
+
+<div id="tl_soverview">
+
+  <div id="tl_messages">
+    <h2><?= $this->systemMessages ?></h2>
+    <?= $this->messages ?>
+    <p><?= $this->loginMsg ?></p>
+  </div>
+
+  <div id="tl_shortcuts">
+    <h2><?= $this->shortcuts ?></h2>
+    <p><?= $this->shortcutsLink ?></p>
+  </div>
+
+  <div id="tl_versions">
+    <h2><?= $this->trans('MSC.latestChanges') ?></h2>
+    <?php if (!empty($this->versions)): ?>
+      <table class="tl_listing">
+      <thead>
+        <tr>
+          <th><?= $this->trans('MSC.date') ?></th>
+          <th><?= $this->trans('MSC.user') ?></th>
+          <th><?= $this->trans('MSC.table') ?></th>
+          <th>ID</th>
+          <th><?= $this->trans('MSC.description') ?></th>
+          <th><?= $this->trans('MSC.version') ?></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($this->versions as $version): ?>
+          <tr class="click2edit hover-row">
+            <td><?= $version['date'] ?></td>
+            <td><?= $version['username'] ?: '-' ?></td>
+            <td><?= $version['shortTable'] ?></td>
+            <td><?= $version['pid'] ?></td>
+            <td><?= $version['description'] ?: '-' ?></td>
+            <td><?= $version['active'] ? '<strong>'.$version['version'].'</strong>' : $version['version'] ?></td>
+            <td>
+              <?php if ($version['deleted']): ?>
+                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.restore')) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
+              <?php else: ?>
+                <?php if ($version['editUrl']): ?>
+                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
+                <?php else: ?>
+                  <?= Contao\Image::getHtml('edit_.svg', '', 'style="padding:0 2px"') ?>
+                <?php endif; ?>
+                <?php if ($version['to'] > 1): ?>
+                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Contao\Image::getHtml('diff.svg') ?></a>
+                <?php else: ?>
+                  <?= Contao\Image::getHtml('diff_.svg') ?>
+                <?php endif; ?>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+      </table>
+      <?= $this->pagination ?>
+    <?php else: ?>
+      <p><?= $this->trans('MSC.noVersions') ?></p>
+    <?php endif; ?>
+  </div>
+
+</div>

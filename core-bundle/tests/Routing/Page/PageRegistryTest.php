@@ -30,7 +30,7 @@ class PageRegistryTest extends TestCase
             'alias' => 'bar',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
-            'requireItem' => '',
+            'requireItem' => false,
             'language' => 'en',
             'rootLanguage' => 'en',
         ]);
@@ -50,7 +50,7 @@ class PageRegistryTest extends TestCase
             'alias' => 'bar',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
-            'requireItem' => '1',
+            'requireItem' => true,
             'language' => 'en',
             'rootLanguage' => 'en',
         ]);

@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
+    final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
+
     private PageModel $pageModel;
     private string|null $urlPrefix;
     private string|null $urlSuffix;
@@ -41,7 +43,7 @@ class PageRoute extends Route implements RouteObjectInterface
                 '_token_check' => true,
                 '_controller' => 'Contao\FrontendIndex::renderPage',
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage),
+                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
                 '_format' => 'html',
                 '_canonical_route' => 'tl_page.'.$pageModel->id,
             ],
@@ -130,7 +132,7 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): object|null
     {
         return $this->content;
     }

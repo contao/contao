@@ -25,7 +25,7 @@ class RouteProvider extends AbstractPageRouteProvider
 {
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
@@ -53,9 +53,12 @@ class RouteProvider extends AbstractPageRouteProvider
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -81,9 +84,9 @@ class RouteProvider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames($names = null): iterable
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
@@ -241,6 +244,14 @@ class RouteProvider extends AbstractPageRouteProvider
                     return -1;
                 }
 
+                if ('/' === $a->getPath() && '/' !== $b->getPath()) {
+                    return -1;
+                }
+
+                if ('/' === $b->getPath() && '/' !== $a->getPath()) {
+                    return 1;
+                }
+
                 return $this->compareRoutes($a, $b, $languages);
             }
         );
@@ -260,6 +271,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $models = $pages->getModels();
         }
 
+        /** @var Collection|array<PageModel> $pages */
         $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {

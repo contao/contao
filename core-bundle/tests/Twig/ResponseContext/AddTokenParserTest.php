@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\ResponseContext;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -42,7 +43,15 @@ class AddTokenParserTest extends TestCase
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
+
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
         $environment->render('template.html.twig');

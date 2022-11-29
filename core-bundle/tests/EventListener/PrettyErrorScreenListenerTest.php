@@ -146,7 +146,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_401',
             'rootLanguage' => '',
-            'protected' => '1',
+            'protected' => true,
             'groups' => '',
         ]);
 

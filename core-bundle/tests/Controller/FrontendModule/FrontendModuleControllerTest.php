@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class FrontendModuleControllerTest extends TestCase
 {
@@ -82,6 +83,14 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('exists')
+            ->with('@Contao/mod_bar.html.twig')
+            ->willReturn(true)
+        ;
+
+        $this->container->set('contao.twig.filesystem_loader', $loader);
         $this->container->set('request_stack', new RequestStack());
 
         $controller = $this->getTestController();
@@ -184,7 +193,7 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('main', $template['section']);
         $this->assertSame('foo-id', $template['element_html_id']);
         $this->assertSame('foo-class bar-class baz-class', $template['element_css_classes']);
-        $this->assertSame(['text' => 'foo', 'tagName' => 'h3'], $template['headline']);
+        $this->assertSame(['text' => 'foo', 'tag_name' => 'h3'], $template['headline']);
         $this->assertSame($model->row(), $template['data']);
     }
 

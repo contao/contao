@@ -20,24 +20,31 @@
         "source": "https://github.com/contao/news-bundle",
         "docs": "https://docs.contao.org"
     },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://to.contao.org/donate"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "contao/core-bundle": "self.version",
+        "debril/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^2.4",
-        "symfony/config": "^5.4",
-        "symfony/dependency-injection": "^5.4",
+        "symfony/config": "^5.4 || ^6.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0",
         "symfony/deprecation-contracts": "^2.1 || ^3.0",
-        "symfony/http-foundation": "^5.4",
-        "symfony/http-kernel": "^5.4",
+        "symfony/http-foundation": "^5.4 || ^6.0",
+        "symfony/http-kernel": "^5.4 || ^6.0",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^5.4"
+        "symfony/yaml": "^5.4 || ^6.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
         "phpunit/phpunit": "^9.5",
-        "symfony/http-client": "^5.4",
-        "symfony/phpunit-bridge": "^5.4"
+        "symfony/http-client": "^5.4 || ^6.0",
+        "symfony/phpunit-bridge": "^5.4 || ^6.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -48,13 +55,13 @@
             "Contao\\NewsBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao/"
+            "contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config/",
-            "src/Resources/contao/dca/",
-            "src/Resources/contao/languages/",
-            "src/Resources/contao/templates/"
+            "contao/config/",
+            "contao/dca/",
+            "contao/languages/",
+            "contao/templates/"
         ]
     },
     "autoload-dev": {

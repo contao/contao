@@ -16,7 +16,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
@@ -26,7 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownControllerTest extends TestCase
+class MarkdownControllerTest extends ContentElementTestCase
 {
     protected function tearDown(): void
     {
@@ -42,6 +42,30 @@ class MarkdownControllerTest extends TestCase
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '# Headline';
+
+        $controller = new MarkdownController();
+        $controller->setContainer($container);
+        $controller(new Request(), $contentModel, 'main');
+    }
+
+    public function testInsertTagsInLinksAreCorrectlyReplaced(): void
+    {
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('{{news_url::42}}')
+            ->willReturn('https://contao.org/news-alias that-needs-encoding.html')
+        ;
+
+        $container = $this->mockContainer('<p><a rel="noopener noreferrer" target="_blank" class="external-link" href="https://contao.org/news-alias%20that-needs-encoding.html">My text for my link</a></p>'."\n");
+        $container->set('contao.insert_tag.parser', $insertTagParser);
+
+        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel->markdownSource = 'sourceText';
+        $contentModel->code = '[My text for my link]({{news_url::42}})';
+
+        System::setContainer($container);
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
@@ -111,6 +135,29 @@ class MarkdownControllerTest extends TestCase
         $controller(new Request(), $contentModel, 'main');
 
         $fs->remove($tempTestFile);
+    }
+
+    public function testOutputsMarkdownAsHtml(): void
+    {
+        $response = $this->renderWithModelData(
+            new MarkdownController(),
+            [
+                'type' => 'markdown',
+                'code' => "## Headline\n * my\n * list",
+            ]
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-markdown">
+                <h2>Headline</h2>
+                    <ul>
+                        <li>my</li>
+                        <li>list</li>
+                    </ul>
+                </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container

@@ -45,11 +45,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * Merges these instance's attributes with those of another
      * instance/string/array of attributes.
      *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function mergeWith(self|iterable|string|null $attributes = null): self
+    public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
     {
-        if (empty($attributes)) {
+        if (empty($attributes) || !$this->test($condition)) {
             return $this;
         }
 
@@ -88,9 +90,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, \Stringable|bool|int|string|null $value = true, \Stringable|bool|int|string|null $condition = true): self
+    public function set(string $name, \Stringable|bool|int|string|null $value = true, mixed $condition = true): self
     {
-        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
+        if (!$this->test($condition)) {
             return $this;
         }
 
@@ -111,7 +113,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         // Normalize class names
         if ('class' === $name) {
-            $this->addClass();
+            $this->addClass('');
         }
 
         return $this;
@@ -134,9 +136,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
-    public function unset(string $name, \Stringable|bool|int|string|null $condition = true): self
+    public function unset(string $name, mixed $condition = true): self
     {
-        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
+        if (!$this->test($condition)) {
             return $this;
         }
 
@@ -145,11 +147,26 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
-    public function addClass(string ...$classes): self
+    /**
+     * Add a single class ("foo") or multiple from a class string ("foo bar baz").
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
+     */
+    public function addClass(array|string $classes, mixed $condition = true): self
     {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
         $this->attributes['class'] = implode(
             ' ',
-            array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
+            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes))
         );
 
         if (empty($this->attributes['class'])) {
@@ -159,13 +176,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
-    public function removeClass(string ...$classes): self
+    /**
+     * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
+     */
+    public function removeClass(array|string $classes, mixed $condition = true): self
     {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
         $this->attributes['class'] = implode(
             ' ',
             array_diff(
                 $this->split($this->attributes['class'] ?? ''),
-                $this->split(implode(' ', $classes))
+                $this->split($classes)
             )
         );
 
@@ -229,6 +261,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     public function jsonSerialize(): mixed
     {
         return $this->attributes;
+    }
+
+    /**
+     * Returns true if the argument is truthy.
+     */
+    private function test(mixed $condition): bool
+    {
+        if ($condition instanceof \Stringable) {
+            $condition = $condition->__toString();
+        }
+
+        return (bool) $condition;
     }
 
     /**

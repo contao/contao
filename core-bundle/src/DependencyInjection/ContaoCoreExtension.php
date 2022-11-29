@@ -28,7 +28,7 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Imagine\Exception\RuntimeException;
+use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -36,6 +36,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -86,7 +87,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function load(array $configs, ContainerBuilder $container): void
     {
         if ('UTF-8' !== $container->getParameter('kernel.charset')) {
-            trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
+            throw new RuntimeException(sprintf('Using the charset "%s" is not supported, use "UTF-8" instead', $container->getParameter('kernel.charset')));
         }
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
@@ -94,12 +95,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('commands.yml');
-        $loader->load('controller.yml');
-        $loader->load('listener.yml');
-        $loader->load('migrations.yml');
-        $loader->load('services.yml');
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+        $loader->load('commands.yaml');
+        $loader->load('controller.yaml');
+        $loader->load('listener.yaml');
+        $loader->load('migrations.yaml');
+        $loader->load('services.yaml');
 
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
@@ -191,7 +192,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yml');
+            $loader->load('services_debug.yaml');
         }
     }
 
@@ -364,7 +365,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException) {
+            } catch (ImagineRuntimeException) {
                 continue;
             }
 
@@ -381,10 +382,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $tokenChecker = $container->getDefinition('contao.security.token_checker');
-        $tokenChecker->replaceArgument(5, new Reference('security.access.simple_role_voter'));
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
-            $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
+            $tokenChecker->replaceArgument(4, new Reference('security.access.role_hierarchy_voter'));
+        } else {
+            $tokenChecker->replaceArgument(4, new Reference('security.access.simple_role_voter'));
         }
     }
 

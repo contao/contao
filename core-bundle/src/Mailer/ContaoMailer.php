@@ -54,7 +54,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $attributes = $this->requestStack->getCurrentRequest()->attributes;
+        $attributes = $request->attributes;
 
         if (!$attributes->has('pageModel')) {
             return;
@@ -99,5 +99,14 @@ final class ContaoMailer implements MailerInterface
         }
 
         $message->from($from);
+
+        // Also override "Return-Path" and "Sender" if set (see #4712)
+        if (null !== $message->getReturnPath()) {
+            $message->returnPath($from);
+        }
+
+        if (null !== $message->getSender()) {
+            $message->sender($from);
+        }
     }
 }

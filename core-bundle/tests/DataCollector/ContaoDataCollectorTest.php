@@ -85,6 +85,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -124,6 +125,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 

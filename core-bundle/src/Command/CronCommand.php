@@ -13,17 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Cron\Cron;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'contao:cron',
+    description: 'Runs cron jobs on the command line.'
+)]
 class CronCommand extends Command
 {
-    protected static $defaultName = 'contao:cron';
-    protected static $defaultDescription = 'Runs cron jobs on the command line.';
-
     public function __construct(private Cron $cron)
     {
         parent::__construct();

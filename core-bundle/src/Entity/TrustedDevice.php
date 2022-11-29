@@ -51,7 +51,7 @@ class TrustedDevice
 
     public function __construct(User $user)
     {
-        $this->userId = (int) $user->id;
+        $this->userId = $user->id;
         $this->created = new \DateTime();
         $this->userClass = $user::class;
     }

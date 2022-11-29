@@ -1,0 +1,24 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1539680233
+      title: Root with special chars
+      alias: root-with-special-chars
+      urlSuffix: .html
+      type: root
+      language: en
+      dns: root-with-special-chars.local
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: Höme
+      alias: höme
+      type: regular
+      published: 1

@@ -112,7 +112,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return $this->getDataContainer() === DataContainer::getDriverForTable($table)
+        $dcName = $this->getDataContainer();
+
+        return ($dcName === DataContainer::getDriverForTable($table) || $dcName === $GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
             && 0 !== \count($this->getModulesForTable($table));
     }
 
@@ -141,10 +143,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         if ($fieldType = $config->getExtra('fieldType')) {
             $attributes['fieldType'] = $fieldType;
-        }
-
-        if ($source = $config->getExtra('source')) {
-            $attributes['preserveRecord'] = $source;
         }
 
         if ($value = $config->getValue()) {

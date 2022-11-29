@@ -1,0 +1,28 @@
+
+<div class="layout_latest arc_<?= $this->archive->id ?> block<?= $this->class ?>">
+
+  <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
+
+  <?php if ($this->addImage): ?>
+    <?php $this->insert('image', $this->arrData); ?>
+  <?php endif; ?>
+
+  <h2><?= $this->linkHeadline ?></h2>
+
+  <div class="ce_text block">
+    <?= $this->teaser ?>
+  </div>
+
+  <?php if ($this->hasText || $this->hasTeaser): ?>
+    <p class="more"><?= $this->more ?></p>
+  <?php endif; ?>
+
+</div>
+
+<?php
+
+// This template is used as a news list template by default, so we only add
+// JSON-LD data in case this is a news article without a reader
+if (!$this->hasReader) {
+    $this->addSchemaOrg($this->getSchemaOrgData());
+}

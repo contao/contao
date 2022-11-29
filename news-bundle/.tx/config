@@ -2,47 +2,42 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[news-bundle.v4_13-default]
-source_file = src/Resources/contao/languages/en/default.xlf
+[news-bundle.v5_1-default]
+source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
+file_filter = contao/languages/<lang>/default.xlf
 
-[news-bundle.v4_13-modules]
-source_file = src/Resources/contao/languages/en/modules.xlf
+[news-bundle.v5_1-modules]
+source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
+file_filter = contao/languages/<lang>/modules.xlf
 
-[news-bundle.v4_13-tl_layout]
-source_file = src/Resources/contao/languages/en/tl_layout.xlf
+[news-bundle.v5_1-tl_layout]
+source_file = contao/languages/en/tl_layout.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_layout.xlf
+file_filter = contao/languages/<lang>/tl_layout.xlf
 
-[news-bundle.v4_13-tl_module]
-source_file = src/Resources/contao/languages/en/tl_module.xlf
+[news-bundle.v5_1-tl_module]
+source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
+file_filter = contao/languages/<lang>/tl_module.xlf
 
-[news-bundle.v4_13-tl_news]
-source_file = src/Resources/contao/languages/en/tl_news.xlf
+[news-bundle.v5_1-tl_news]
+source_file = contao/languages/en/tl_news.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_news.xlf
+file_filter = contao/languages/<lang>/tl_news.xlf
 
-[news-bundle.v4_13-tl_news_archive]
-source_file = src/Resources/contao/languages/en/tl_news_archive.xlf
+[news-bundle.v5_1-tl_news_archive]
+source_file = contao/languages/en/tl_news_archive.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_news_archive.xlf
+file_filter = contao/languages/<lang>/tl_news_archive.xlf
 
-[news-bundle.v4_13-tl_news_feed]
-source_file = src/Resources/contao/languages/en/tl_news_feed.xlf
+[news-bundle.v5_1-tl_user]
+source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_news_feed.xlf
+file_filter = contao/languages/<lang>/tl_user.xlf
 
-[news-bundle.v4_13-tl_user]
-source_file = src/Resources/contao/languages/en/tl_user.xlf
+[news-bundle.v5_1-tl_user_group]
+source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
-
-[news-bundle.v4_13-tl_user_group]
-source_file = src/Resources/contao/languages/en/tl_user_group.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
+file_filter = contao/languages/<lang>/tl_user_group.xlf

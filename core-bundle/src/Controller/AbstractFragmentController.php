@@ -94,7 +94,17 @@ abstract class AbstractFragmentController extends AbstractController implements 
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
                 $legacyTemplate->setData($template->getData());
 
-                $response = $legacyTemplate->getResponse();
+                try {
+                    $response = $legacyTemplate->getResponse();
+                } catch (\Exception $e) {
+                    // Enhance the exception if a modern template name is defined
+                    // but still delegate to the legacy framework
+                    if (null !== ($definedTemplateName = $this->options['template'] ?? null) && preg_match('/^Could not find template "\S+"$/', $e->getMessage())) {
+                        throw new \LogicException(sprintf('Could neither find template "%s" nor the legacy fallback template "%s". Did you forget to create a default template or manually define the "template" property of the controller\'s service tag/attribute?', $definedTemplateName, $templateName), 0, $e);
+                    }
+
+                    throw $e;
+                }
 
                 if (null !== $preBuiltResponse) {
                     return $preBuiltResponse->setContent($response->getContent());
@@ -129,9 +139,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addHeadlineToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Headline data is
-     * always added to the context of modern fragment templates.
+     * @internal The addHeadlineToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Headline
+     *           data is always added to the context of modern fragment
+     *           templates.
      */
     protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
@@ -143,9 +154,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addCssAttributesToTemplate() method is considered internal
-     * in Contao 5 and won't be accessible anymore in Contao 6. Attributes data
-     * is always added to the context of modern fragment templates.
+     * @internal The addCssAttributesToTemplate() method is considered internal
+     *           in Contao 5 and won't be accessible anymore in Contao 6.
+     *           Attributes data is always added to the context of modern
+     *           fragment templates.
      */
     protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
     {
@@ -161,9 +173,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addPropertiesToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Custom properties
-     * are always added to the context of modern fragment templates.
+     * @internal The addPropertiesToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Custom
+     *           properties are always added to the context of modern fragment
+     *           templates.
      */
     protected function addPropertiesToTemplate(Template $template, array $properties): void
     {
@@ -175,9 +188,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addSectionToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Section data is
-     * always added to the context of modern fragment templates.
+     * @internal The addSectionToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Section
+     *           data is always added to the context of modern fragment
+     *           templates.
      */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
@@ -189,9 +203,9 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * Returns the type from the class name.
      *
-     * @internal the getType() method is considered internal in Contao 5 and
-     * won't be accessible anymore in Contao 6. Retrieve the type from the
-     * fragment options instead.
+     * @internal The getType() method is considered internal in Contao 5 and
+     *           won't be accessible anymore in Contao 6. Retrieve the type
+     *           from the fragment options instead.
      */
     protected function getType(): string
     {
@@ -257,16 +271,26 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     private function getTemplateName(Model $model, string|null $fallbackTemplateName): string
     {
-        // If set, use the custom template unless it is a back end request
-        if ($model->customTpl && !$this->isBackendScope()) {
-            return $model->customTpl;
+        $exists = fn (string $template): bool => $this->container
+            ->get('contao.twig.filesystem_loader')
+            ->exists("@Contao/$template.html.twig")
+        ;
+
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate) ?
+            !$this->isBackendScope() :
+            $exists($variantTemplate)
+        ;
+
+        // Prefer using a custom variant template if defined and applicable
+        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
+            return $variantTemplate;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;
 
         // Always use the defined name for legacy templates and for modern
         // templates that exist (= those that do not need to have a fallback)
-        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $this->container->get('contao.twig.filesystem_loader')->exists("@Contao/$definedTemplateName.html.twig"))) {
+        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $exists($definedTemplateName))) {
             return $definedTemplateName;
         }
 

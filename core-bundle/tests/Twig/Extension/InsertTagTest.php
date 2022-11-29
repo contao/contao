@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -82,7 +83,14 @@ class InsertTagTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+
+        $environment->setExtensions([
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            ),
+        ]);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker

@@ -1,0 +1,66 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1568196756
+      title: Root ZH
+      alias: root-zh
+      urlSuffix: .html
+      type: root
+      language: zh
+      dns: root-zh.local
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1568196317
+      title: Main-zh
+      alias: main
+      type: regular
+      published: 1
+
+    - id: 3
+      pid: 0
+      sorting: 256
+      tstamp: 1568196339
+      title: Root FR
+      alias: foot-fr
+      urlSuffix: .html
+      type: root
+      language: fr
+      dns: root-fr.local
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 4
+      pid: 3
+      sorting: 128
+      tstamp: 1568196353
+      title: Main-fr
+      alias: main
+      type: regular
+      published: 1
+
+    - id: 5
+      pid: 4
+      sorting: 128
+      tstamp: 1568196371
+      title: Sub-fr
+      alias: main/sub-fr
+      type: regular
+      published: 1
+
+    - id: 6
+      pid: 2
+      sorting: 128
+      tstamp: 1568196388
+      title: Sub-zh
+      alias: main/sub-zh
+      type: regular
+      published: 1

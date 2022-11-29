@@ -1,0 +1,49 @@
+imports:
+    - { resource: config.yaml }
+
+# Framework configuration
+framework:
+    profiler: { only_exceptions: false }
+
+# Doctrine configuration
+doctrine:
+    orm:
+        auto_generate_proxy_classes: true
+
+# Web profiler configuration
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+# Monolog configuration
+monolog:
+    handlers:
+        contao:
+            type: service
+            id: contao.monolog.handler
+        main:
+            type: rotating_file
+            max_files: 10
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!doctrine', '!event', '!php']
+        console:
+            type: console
+            bubble: false
+            verbosity_levels:
+                VERBOSITY_VERBOSE: INFO
+                VERBOSITY_VERY_VERBOSE: DEBUG
+            channels: ['!doctrine']
+        console_very_verbose:
+            type: console
+            bubble: false
+            verbosity_levels:
+                VERBOSITY_VERBOSE: NOTICE
+                VERBOSITY_VERY_VERBOSE: NOTICE
+                VERBOSITY_DEBUG: DEBUG
+            channels: [doctrine]
+
+# FOS HttpCache configuration
+fos_http_cache:
+    invalidation:
+        enabled: false

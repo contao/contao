@@ -73,14 +73,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return self::$projectDir;
     }
 
-    /**
-     * @deprecated since Symfony 4.2, use getProjectDir() instead
-     */
-    public function getRootDir(): string
-    {
-        return Path::join($this->getProjectDir(), 'app');
-    }
-
     public function getCacheDir(): string
     {
         return Path::join($this->getProjectDir(), 'var/cache', $this->getEnvironment());
@@ -166,7 +158,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $plugin->registerContainerConfiguration($loader, $config);
         }
 
-        // Reload the parameters.yml file
+        // Reload the parameters.yaml file
         if ($parametersFile) {
             $loader->load($parametersFile);
         }
@@ -177,13 +169,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($configFile);
         }
 
-        // Automatically load the services.yml file if it exists
+        // Automatically load the services.yaml file if it exists
         if ($servicesFile = $this->getConfigFile('services')) {
             $loader->load($servicesFile);
         }
 
         if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
-            $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
+            $loader->load(__DIR__.'/../../skeleton/config/services.php');
         }
     }
 
@@ -312,10 +304,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $projectDir = $this->getProjectDir();
 
-        foreach (['.yaml', '.yml'] as $ext) {
-            if (file_exists($path = Path::join($projectDir, 'config', $file.$ext))) {
-                return $path;
-            }
+        if (file_exists($path = Path::join($projectDir, 'config', $file.'.yaml'))) {
+            return $path;
+        }
+
+        if (file_exists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
+            trigger_deprecation('contao/manager-bundle', '5.0', sprintf('Using a %s.yml file has been deprecated and will no longer work in Contao 6.0. Use a %s.yaml file instead', $file, $file));
+
+            return $path;
         }
 
         return null;
@@ -367,7 +363,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 $_ENV[$k] ??= isset($_SERVER[$k]) && !str_starts_with($k, 'HTTP_') ? $_SERVER[$k] : $v;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
-            (new Dotenv(false))->loadEnv($filePath, 'APP_ENV', $defaultEnv);
+            (new Dotenv())->usePutenv(false)->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

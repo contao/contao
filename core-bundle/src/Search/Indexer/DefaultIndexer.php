@@ -88,7 +88,7 @@ class DefaultIndexer implements IndexerInterface
             $search->indexPage([
                 'url' => (string) $document->getUri(),
                 'content' => $document->getBody(),
-                'protected' => $meta['protected'] ? '1' : '',
+                'protected' => (bool) $meta['protected'],
                 'groups' => $meta['groups'],
                 'pid' => $meta['pageId'],
                 'title' => $meta['title'],
@@ -102,10 +102,8 @@ class DefaultIndexer implements IndexerInterface
 
     public function delete(Document $document): void
     {
-        $this->framework->initialize();
-
         $search = $this->framework->getAdapter(Search::class);
-        $search->removeEntry((string) $document->getUri());
+        $search->removeEntry((string) $document->getUri(), $this->connection);
     }
 
     public function clear(): void

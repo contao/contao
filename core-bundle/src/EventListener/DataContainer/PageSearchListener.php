@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
@@ -27,12 +27,10 @@ class PageSearchListener
     {
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.alias.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->alias) {
+        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
             return $value;
         }
 
@@ -41,12 +39,10 @@ class PageSearchListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.noSearch.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.noSearch.save')]
     public function onSaveNoSearch(string $value, DataContainer $dc): string
     {
-        if (!$value || $value === $dc->activeRecord->noSearch) {
+        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
             return $value;
         }
 
@@ -55,12 +51,10 @@ class PageSearchListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.robots.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->robots || !str_starts_with($value, 'noindex')) {
+        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
             return $value;
         }
 
@@ -69,9 +63,7 @@ class PageSearchListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="config.ondelete", priority=16)
-     */
+    #[AsCallback(table: 'tl_page', target: 'config.ondelete', priority: 16)]
     public function onDelete(DataContainer $dc): void
     {
         if (!$dc->id) {

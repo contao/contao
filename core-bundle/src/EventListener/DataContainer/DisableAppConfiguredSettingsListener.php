@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Callback(table="tl_settings", target="config.onload")
- */
+#[AsCallback(table: 'tl_settings', target: 'config.onload')]
 class DisableAppConfiguredSettingsListener
 {
     public function __construct(private TranslatorInterface $translator, private ContaoFramework $framework, private array $localConfig)
@@ -41,6 +39,7 @@ class DisableAppConfiguredSettingsListener
 
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['helpwizard'] = false;
+            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['chosen'] = false;
         }
     }
 

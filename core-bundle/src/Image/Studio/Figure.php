@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\Controller;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\File;
@@ -25,10 +24,8 @@ use Contao\Template;
  * use the provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
- *
- * @final This class will be made final in Contao 5.
  */
-class Figure
+final class Figure
 {
     /**
      * Creates a figure container.
@@ -71,10 +68,10 @@ class Figure
     /**
      * Returns the lightbox result (if available).
      */
-    public function getLightbox(): LightboxResult
+    public function getLightbox(): LightboxResult|null
     {
         if (!$this->hasLightbox()) {
-            throw new \LogicException('This result container does not include a lightbox.');
+            return null;
         }
 
         /** @var LightboxResult */
@@ -91,10 +88,10 @@ class Figure
     /**
      * Returns the main resource's metadata.
      */
-    public function getMetadata(): Metadata
+    public function getMetadata(): Metadata|null
     {
         if (!$this->hasMetadata()) {
-            throw new \LogicException('This result container does not include metadata.');
+            return null;
         }
 
         /** @var Metadata */
@@ -203,7 +200,7 @@ class Figure
      *       when using Twig templates! Instead, add this object to your
      *       template's context and directly access the specific data you need.
      *
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
+     * @param string|array|null $margin              Deprecated, does not have any effect!
      * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
      * @param bool              $includeFullMetadata Make all metadata available in the first dimension of the returned data set (key-value pairs)
      */
@@ -239,20 +236,6 @@ class Figure
             return $mapping;
         };
 
-        // Create a CSS margin property from an array or serialized string
-        $createMargin = static function ($margin): string {
-            if (!$margin) {
-                return '';
-            }
-
-            $values = array_merge(
-                ['top' => '', 'right' => '', 'bottom' => '', 'left' => '', 'unit' => ''],
-                StringUtil::deserialize($margin, true)
-            );
-
-            return Controller::generateMargin($values);
-        };
-
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
         $fileInfoImageSize = (new File($image->getImageSrc(true)))->imageSize;
@@ -275,7 +258,6 @@ class Figure
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
-                'margin' => $createMargin($margin),
                 'addBefore' => 'below' !== $floating,
                 'addImage' => true,
             ],
@@ -343,11 +325,11 @@ class Figure
      *       template's context and directly access the specific data you need.
      *
      * @param Template|object   $template            The template to apply the data to
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's "margin" property
+     * @param string|array|null $margin              Deprecated, does not have any effect!
      * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
      * @param bool              $includeFullMetadata Make all metadata entries directly available in the template
      */
-    public function applyLegacyTemplateData(object $template, array|string $margin = null, string $floating = null, bool $includeFullMetadata = true): void
+    public function applyLegacyTemplateData(object $template, array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): void
     {
         $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetadata);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);

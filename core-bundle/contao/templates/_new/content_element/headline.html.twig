@@ -1,0 +1,8 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_headline.html.twig" %}
+
+{% block wrapper_tag %}{{ headline.tag_name|default('h1') }}{% endblock %}
+
+{% block inner %}
+    {{- block('headline_inner') -}}
+{% endblock %}

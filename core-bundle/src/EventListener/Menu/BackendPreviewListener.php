@@ -100,10 +100,6 @@ class BackendPreviewListener
 
     private function getIdFromRequest(Request $request): int
     {
-        if (!$request->query->has('table')) {
-            return (int) $request->query->get('id');
-        }
-
-        return (int) $request->getSession()->get('CURRENT_ID');
+        return (int) ($request->query->get('id') ?? $request->query->get('pid'));
     }
 }

@@ -1,0 +1,15 @@
+<?php
+
+// Add the tablesorter style sheet
+$GLOBALS['TL_CSS'][] = 'assets/tablesort/css/tablesort.min.css|static';
+
+?>
+
+<script src="<?= $this->asset('js/tablesort.min.js', 'contao-components/tablesort') ?>"></script>
+<script>
+  window.addEvent('domready', function() {
+    $$('.ce_table .sortable').each(function(table) {
+      new TableSort(table, '<?= $this->trans('MSC.thousandsSeparator') ?>', '<?= $this->trans('MSC.decimalSeparator') ?>');
+    });
+  });
+</script>

@@ -8,14 +8,13 @@
 
 ## About
 
-Contao is a powerful open source CMS that allows you to create professional
-websites and scalable web applications. Visit the [project website][1] for more
-information.
+Contao is a powerful open source CMS that allows you to create professional websites and scalable web applications.
+Visit the [project website][1] for more information.
 
 ## Purpose
 
-The purpose of this package is to develop the Contao bundles. Use it if you
-e.g. want to create a pull request or if you want to report an issue.
+The purpose of this package is to develop the Contao bundles. Use it if you e.g. want to create a pull request or if you
+want to report an issue.
 
 The monorepo is automatically split into separate packages:
 
@@ -23,33 +22,29 @@ The monorepo is automatically split into separate packages:
  * [CommentsBundle](https://github.com/contao/comments-bundle)
  * [CoreBundle](https://github.com/contao/core-bundle)
  * [FaqBundle](https://github.com/contao/faq-bundle)
- * [InstallationBundle](https://github.com/contao/installation-bundle)
  * [ListingBundle](https://github.com/contao/listing-bundle)
  * [MakerBundle](https://github.com/contao/maker-bundle)
  * [ManagerBundle](https://github.com/contao/manager-bundle)
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
-**Please do not use `contao/contao` in production**! Use the split packages
-instead.
+**Please do not use `contao/contao` in production**! Use the split packages instead.
 
 ## Development
 
-To create a pull request and to test your changes within a running Contao
-application, it is the easiest to use the [Contao Managed Edition][2]. Start by
-installing it in your current directory:
+To create a pull request and to test your changes within a running Contao application, it is the easiest to use the
+[Contao Managed Edition][2]. Start by installing it in your current directory:
 
 ```bash
 composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
-Replace `<directory>` with the directory you want to install the Managed
-Edition in (use `.` for the current one). Replace `<branch>` with `5.x-dev` if
-you want to add a new feature or with `<lts-version>.x-dev` (currently
-`4.9.x-dev`) if you want to fix a bug.
+Replace `<directory>` with the directory you want to install the Managed Edition in (use `.` for the current one).
+Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently `4.9.x-dev`)
+if you want to fix a bug.
 
-Then adjust the `require` section in your `composer.json` file, so Composer
-loads the monorepo instead of the individual bundles:
+Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
+bundles:
 
 ```json
 "require": {
@@ -58,8 +53,7 @@ loads the monorepo instead of the individual bundles:
 },
 ```
 
-Again, use `5.x-dev` if you want to add a new feature or `<lts-version>.x-dev`
-if you want to fix a bug.
+Again, use `5.x-dev` if you want to add a new feature or `<lts-version>.x-dev` if you want to fix a bug.
 
 Next, install the dependencies:
 
@@ -67,12 +61,11 @@ Next, install the dependencies:
 composer update
 ```
 
-Composer will automatically clone the Git repo into the `vendor/contao/contao`
-folder. You can finish your setup by opening
-`https://your-domain.local/contao/install` in your browser.
+Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
+running `contao:setup` on the command line.
 
-All the changes you make in `vendor/contao/contao` are tracked via Git, so
-you can submit your pull request directly from within your application.
+All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
+from within your application.
 
 ## Running scripts
 
@@ -100,8 +93,7 @@ composer run require-checker
 composer run monorepo-tools
 ```
 
-If you want to pass additional flags to the underlying commands, you can use
-the `--` argument:
+If you want to pass additional flags to the underlying commands, you can use the `--` argument:
 
 ```bash
 composer run unit-tests -- --filter CoreBundle
@@ -116,8 +108,8 @@ To set up the functional tests, create a database named `contao_test`:
 mysql -e "CREATE DATABASE contao_test"
 ```
 
-If your database uses credentials, copy the file `core-bundle/phpunit.xml.dist`
-to `core-bundle/phpunit.xml` and adjust the following line:
+If your database uses credentials, copy the file `core-bundle/phpunit.xml.dist` to `core-bundle/phpunit.xml` and adjust
+the following line:
 
 ```xml
 <php>

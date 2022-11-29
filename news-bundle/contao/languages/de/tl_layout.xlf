@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_layout.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_layout.newsfeeds.0">
+        <source>News feeds</source>
+        <target>News-Feeds</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.newsfeeds.1">
+        <source>Please select the news feeds you want to add to the layout.</source>
+        <target>Bitte wählen Sie die News-Feeds aus, die Sie dem Layout hinzufügen möchten.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

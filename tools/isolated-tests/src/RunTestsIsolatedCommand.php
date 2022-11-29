@@ -26,18 +26,12 @@ class RunTestsIsolatedCommand extends Command
     protected static $defaultName = 'contao:run-tests-isolated';
     protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
 
-    /**
-     * @var string|false
-     */
-    private $phpPath;
+    private string|false $phpPath;
 
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
         parent::__construct();
 
-        $this->projectDir = $projectDir;
         $this->phpPath = (new PhpExecutableFinder())->find();
     }
 
@@ -80,7 +74,6 @@ class RunTestsIsolatedCommand extends Command
         }
 
         $phpunit = $this->projectDir.'/vendor/bin/phpunit';
-
         $listOutput = new BufferedOutput();
 
         $this->executeCommand(array_merge($php, [$phpunit, '--list-tests']), $listOutput);
@@ -88,7 +81,7 @@ class RunTestsIsolatedCommand extends Command
         $tests = [[], [], []];
 
         foreach (preg_split('/\r?\n/', $listOutput->fetch()) as $line) {
-            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', $line, $matches)) {
+            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', (string) $line, $matches)) {
                 $tests[0][] = $matches[1];
 
                 if ($depth > 1) {
@@ -113,7 +106,7 @@ class RunTestsIsolatedCommand extends Command
         foreach ($tests as $test) {
             // Skip if the whole class, or the test with all data sets failed already
             foreach ($failedTests as $failedTest) {
-                if (0 === strncmp($test, $failedTest, \strlen($failedTest))) {
+                if (str_starts_with($test, $failedTest)) {
                     continue 2;
                 }
             }
@@ -128,7 +121,7 @@ class RunTestsIsolatedCommand extends Command
 
                 // Clear previously written line
                 $output->write("\e[1A\e[K");
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 $failedTests[] = $test;
                 $output->writeln($buffer->fetch());
             }
@@ -154,12 +147,7 @@ class RunTestsIsolatedCommand extends Command
 
         // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);
-
-        $process->run(
-            static function (string $type, string $buffer) use ($output): void {
-                $output->write($buffer);
-            }
-        );
+        $process->run(static fn (string $type, string $buffer) => $output->write($buffer));
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
@@ -168,18 +156,11 @@ class RunTestsIsolatedCommand extends Command
 
     private function getVerbosityFlag(OutputInterface $output): string
     {
-        switch ($output->getVerbosity()) {
-            case OutputInterface::VERBOSITY_DEBUG:
-                return '-vvv';
-
-            case OutputInterface::VERBOSITY_VERY_VERBOSE:
-                return '-vv';
-
-            case OutputInterface::VERBOSITY_VERBOSE:
-                return '-v';
-
-            default:
-                return '';
-        }
+        return match ($output->getVerbosity()) {
+            OutputInterface::VERBOSITY_DEBUG => '-vvv',
+            OutputInterface::VERBOSITY_VERY_VERBOSE => '-vv',
+            OutputInterface::VERBOSITY_VERBOSE => '-v',
+            default => '',
+        };
     }
 }

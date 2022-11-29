@@ -16,45 +16,39 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/src
         - %currentWorkingDirectory%/core-bundle/tests
 
-    dynamicConstantNames:
-        - BE_USER_LOGGED_IN
-
     universalObjectCratesClasses:
         - Contao\Model
         - Contao\Template
 
     excludePaths:
-        - %currentWorkingDirectory%/core-bundle/src/Resources/*
         - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*
         - %currentWorkingDirectory%/core-bundle/tests/Functional/app/*
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
         -
-            # Ignore the forward compatible phpDoc comment of the Symfony token classes
-            message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
-
-        -
-            # Ignore unused properties in the deprecated LogoutHandler
-            message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
-
-        -
             # Ignore the unexpected type hint required for the tagged_locator
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
             path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
 
         -
-            # Ignore the errors due to PHPStan not understanding the @param-out annotation
-            # TODO: remove once https://github.com/phpstan/phpstan/issues/4372 has been fixed
-            message: '#Undefined variable: \$responseContextData#'
-            path: %currentWorkingDirectory%/core-bundle/tests/Controller
+            # Ignore global operations in the DefaultOperationsListenerTest class
+            message: "#Call to method PHPUnit\\\\Framework\\\\Assert::assertArrayHasKey\\(\\) with 'operations' and array\\{sorting: .+\\}\\} will always evaluate to false\\.#"
+            path: %currentWorkingDirectory%/core-bundle/tests/EventListener/DataContainer/DefaultOperationsListenerTest.php
+
+        -
+            # Ignore global operations in the PreviewLinkListenerTest class
+            message: '#Call to method PHPUnit\\Framework\\Assert::assertFalse\(\) with true will always evaluate to false\.#'
+            path: %currentWorkingDirectory%/core-bundle/tests/EventListener/DataContainer/PreviewLinkListenerTest.php
+
+        -
+            # Ignore global operations in the ContaoFrameworkTest class
+            message: "#Call to method PHPUnit\\\\Framework\\\\Assert::assertSame\\(\\) with array\\{array\\{'test.listener.+\\}\\} and mixed will always evaluate to false\\.#"
+            path: %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
+    rememberPossiblyImpureFunctionValues: false

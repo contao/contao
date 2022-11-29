@@ -1,0 +1,85 @@
+services:
+    contao_maker.config.xliff_merger:
+        class: Contao\MakerBundle\Config\XliffMerger
+
+    contao_maker.generator.class:
+        class: Contao\MakerBundle\Generator\ClassGenerator
+        arguments:
+            - '@maker.generator'
+
+    contao_maker.generator.dca:
+        class: Contao\MakerBundle\Generator\DcaGenerator
+        arguments:
+            - '@maker.file_manager'
+            - '%kernel.project_dir%'
+
+    contao_maker.generator.language_file:
+        class: Contao\MakerBundle\Generator\LanguageFileGenerator
+        arguments:
+            - '@maker.file_manager'
+            - '@contao_maker.config.xliff_merger'
+            - '%kernel.project_dir%'
+
+    contao_maker.generator.template:
+        class: Contao\MakerBundle\Generator\TemplateGenerator
+        arguments:
+            - '@maker.generator'
+
+    contao_maker.maker.make_content_element:
+        class: Contao\MakerBundle\Maker\MakeContentElement
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.template'
+            - '@contao_maker.generator.class'
+            - '@contao_maker.generator.dca'
+            - '@contao_maker.generator.language_file'
+            - '%kernel.project_dir%'
+        tags:
+            - maker.command
+
+    contao_maker.maker.make_dca_callback:
+        class: Contao\MakerBundle\Maker\MakeDcaCallback
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.class'
+            - '@contao.resource_finder'
+            - '@contao_maker.reflection.signature_generator'
+            - '@contao_maker.reflection.import_extractor'
+        tags:
+            - maker.command
+
+    contao_maker.maker.make_event_listener:
+        class: Contao\MakerBundle\Maker\MakeEventListener
+        arguments:
+            - '@contao_maker.generator.class'
+            - '@contao_maker.reflection.signature_generator'
+            - '@contao_maker.reflection.import_extractor'
+        tags:
+            - maker.command
+
+    contao_maker.maker.make_frontend_module:
+        class: Contao\MakerBundle\Maker\MakeFrontendModule
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.template'
+            - '@contao_maker.generator.class'
+            - '@contao_maker.generator.dca'
+            - '@contao_maker.generator.language_file'
+            - '%kernel.project_dir%'
+        tags:
+            - maker.command
+
+    contao_maker.maker.make_hook:
+        class: Contao\MakerBundle\Maker\MakeHook
+        arguments:
+            - '@contao_maker.generator.class'
+            - '@contao_maker.reflection.signature_generator'
+            - '@contao_maker.reflection.import_extractor'
+        tags:
+            - maker.command
+
+    contao_maker.reflection.import_extractor:
+        class: Contao\MakerBundle\Reflection\ImportExtractor
+
+    contao_maker.reflection.signature_generator:
+        class: Contao\MakerBundle\Reflection\SignatureGenerator

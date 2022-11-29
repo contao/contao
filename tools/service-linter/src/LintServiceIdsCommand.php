@@ -24,8 +24,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class LintServiceIdsCommand extends Command
 {
-    public string $projectDir;
-
     protected static $defaultName = 'contao:lint-service-ids';
     protected static $defaultDescription = 'Checks the Contao service IDs.';
 
@@ -65,11 +63,9 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
-    public function __construct(string $projectDir)
+    public function __construct(public string $projectDir)
     {
         parent::__construct();
-
-        $this->projectDir = $projectDir;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -131,8 +127,8 @@ class LintServiceIdsCommand extends Command
                 if (
                     !\is_string($config) // autowiring aliases
                     && !isset($config['alias'])
-                    && false !== strpos($serviceId, '\\')
-                    && 'Controller' !== substr($serviceId, -10)
+                    && str_contains((string) $serviceId, '\\')
+                    && !str_ends_with($serviceId, 'Controller')
                 ) {
                     $hasError = true;
 
@@ -209,7 +205,7 @@ class LintServiceIdsCommand extends Command
         }
 
         // The second chunk is the bundle name (e.g. CoreBundle).
-        if ('_bundle' !== substr($chunks[0], -7)) {
+        if (!str_ends_with($chunks[0], '_bundle')) {
             return null;
         }
 
@@ -224,7 +220,7 @@ class LintServiceIdsCommand extends Command
         foreach ($chunks as $i => &$chunk) {
             $chunk = self::$renameNamespaces[$chunk] ?? $chunk;
 
-            if (!$chunk || ($i > 1 && false !== strpos($name, $chunk))) {
+            if (!$chunk || ($i > 1 && str_contains($name, (string) $chunk))) {
                 unset($chunks[$i]);
             }
         }
@@ -233,8 +229,8 @@ class LintServiceIdsCommand extends Command
 
         // Strip prefixes from the name.
         foreach (self::$stripPrefixes as $prefix) {
-            if (0 === strncmp($name, $prefix, \strlen($prefix))) {
-                $name = substr($name, \strlen($prefix));
+            if (str_starts_with($name, $prefix)) {
+                $name = substr($name, \strlen((string) $prefix));
             }
         }
 

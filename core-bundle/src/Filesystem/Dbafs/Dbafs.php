@@ -129,15 +129,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         $path = Path::join($this->dbPathPrefix, $path);
         $table = $this->connection->quoteIdentifier($this->table);
 
+        $searchLiteral = '' !== $path ? "$path/%" : '%';
+
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                ["$path/%"]
+                [$searchLiteral]
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                ["$path/%", "$path/%/%"]
+                [$searchLiteral, "$searchLiteral/%"]
             );
         }
 
@@ -154,12 +156,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     public function setExtraMetadata(string $path, array $metadata): void
     {
-        if (null === ($record = $this->getRecord($path))) {
+        if (null === $this->getRecord($path)) {
             throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
-        }
-
-        if (!$record->isFile()) {
-            throw new \LogicException(sprintf('Can only set extra metadata for files, directory given under "%s".', $path));
         }
 
         $row = [
@@ -219,6 +217,9 @@ class Dbafs implements DbafsInterface, ResetInterface
             $record['path'] = $newPath;
             unset($this->records[$path]);
             $this->records[$newPath] = $record;
+
+            $this->pathById[array_search($path, $this->pathById, true)] = $newPath;
+            $this->pathByUuid[array_search($path, $this->pathByUuid, true)] = $newPath;
         }
 
         foreach (array_keys($changeSet->getItemsToDelete()) as $identifier) {
@@ -256,13 +257,15 @@ class Dbafs implements DbafsInterface, ResetInterface
      */
     private function toFilesystemItem(array $record): FilesystemItem
     {
+        $uuid = array_search($record['path'], $this->pathByUuid, true);
+
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
             isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
             isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
             $record['mimeType'] ?? null,
-            $record['extra']
+            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
         );
     }
 
@@ -603,7 +606,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if (null !== ($newPath = $changedValues[ChangeSet::ATTR_PATH] ?? null)) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($newPath);
-                $dataToUpdate['pid'] = $getParentUuid($pathIdentifier);
+                $dataToUpdate['pid'] = $getParentUuid($newPath);
             }
 
             if (null !== ($newHash = $changedValues[ChangeSet::ATTR_HASH] ?? null)) {
@@ -765,13 +768,6 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
-                    // Yield file
-                    yield $searchPath => self::RESOURCE_FILE;
-
-                    continue;
-                }
-
                 // Analyze parent path
                 $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
                 $isDir = $analyzedPaths[$searchPath] ??= false;
@@ -779,6 +775,13 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if ($isDir) {
                 yield from $traverseRecursively($searchPath, $shallow);
+
+                continue;
+            }
+
+            if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
+                // Yield existing file
+                yield $searchPath => self::RESOURCE_FILE;
 
                 continue;
             }
