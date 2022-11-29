@@ -2,6 +2,7 @@ name: CI
 
 on:
     pull_request: ~
+    pull_request_target:
     push:
         branches:
             - 5.x
@@ -9,6 +10,8 @@ on:
             - '*'
     schedule:
         - cron: 0 13 * * MON,THU
+
+permissions: read-all
 
 jobs:
     coverage:
@@ -35,10 +38,11 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v2
+              uses: codecov/codecov-action@v3
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
+                  token: ${{ secrets.CODECOV_TOKEN }}
 
     windows:
         name: Windows
@@ -82,7 +86,6 @@ jobs:
         name: ECS
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
-        permissions: write-all
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -95,10 +98,6 @@ jobs:
 
             - name: Checkout
               uses: actions/checkout@v3
-              with:
-                  repository: ${{ github.event.pull_request.head.repo.full_name }}
-                  ref: ${{ github.head_ref }}
-                  token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Install the dependencies
               run: |
@@ -107,9 +106,9 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
 
             - name: Commit the changes
               uses: stefanzweifel/git-auto-commit-action@v4
@@ -207,10 +206,10 @@ jobs:
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Run the require checker for contao/contao
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json --ansi
 
             - name: Run the require checker for contao/core-bundle
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json --ansi
 
     service-linter:
         name: Service Linter
@@ -269,10 +268,15 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-            - name: Run the functional tests
+            - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+            - name: Run the functional tests with MySQLi
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     reverse:
         name: PHP 8.1 Reverse Order
@@ -359,10 +363,15 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-            - name: Run the functional tests
+            - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+            - name: Run the functional tests with MySQLi
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     bundles:
         name: Bundles
@@ -392,17 +401,13 @@ jobs:
                               $data["repositories"][0]["type"] = "path";
                               $data["repositories"][0]["url"] = "../core-bundle";
                           }
-                          if ("contao/installation-bundle" !== $data["name"]) {
-                              $data["repositories"][1]["type"] = "path";
-                              $data["repositories"][1]["url"] = "../installation-bundle";
-                          }
                           if ("contao/news-bundle" !== $data["name"]) {
-                              $data["repositories"][2]["type"] = "path";
-                              $data["repositories"][2]["url"] = "../news-bundle";
+                              $data["repositories"][1]["type"] = "path";
+                              $data["repositories"][1]["url"] = "../news-bundle";
                           }
                           if ("contao/test-case" !== $data["name"]) {
-                              $data["repositories"][3]["type"] = "path";
-                              $data["repositories"][3]["url"] = "../test-case";
+                              $data["repositories"][2]["type"] = "path";
+                              $data["repositories"][2]["url"] = "../test-case";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
