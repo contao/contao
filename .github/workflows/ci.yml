@@ -106,9 +106,9 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --fix --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --fix --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --fix --no-progress-bar --ansi
 
             - name: Commit the changes
               uses: stefanzweifel/git-auto-commit-action@v4
