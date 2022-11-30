@@ -11,8 +11,6 @@ on:
     schedule:
         - cron: 0 13 * * MON,THU
 
-permissions: read-all
-
 jobs:
     coverage:
         name: Coverage
