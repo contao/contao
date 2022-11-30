@@ -252,7 +252,7 @@ class Picker extends Widget
 
 		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
-		return $label ?: $arrRow['id'];
+		return $label ?: $arrRow['id'] ?? '';
 	}
 
 	protected function getRelatedTable(): string
@@ -264,7 +264,7 @@ class Picker extends Widget
 
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
-		return (string) $arrRelations[$this->strField]['table'];
+		return (string) ($arrRelations[$this->strField]['table'] ?? '');
 	}
 
 	/**
