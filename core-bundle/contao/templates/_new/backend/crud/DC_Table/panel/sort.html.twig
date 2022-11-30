@@ -1,0 +1,14 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="tl_sorting tl_subpanel">
+    <strong>{{ 'MSC.sortBy'|trans }}:</strong>
+    <select name="tl_sort" id="tl_sort" class="tl_select tl_chosen">
+        {% for option in options %}
+            {% set option_attributes = attrs()
+                .set('value', option.value)
+                .set('selected', 'selected', option.selected)
+            %}
+            <option{{ option_attributes }}>{{ option.label }}</option>
+        {% endfor %}
+    </select>
+</div>

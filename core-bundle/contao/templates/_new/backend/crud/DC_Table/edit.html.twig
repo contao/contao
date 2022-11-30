@@ -1,0 +1,71 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+{% use "@Contao/backend/crud/DC_Table/_fields.html.twig" %}
+
+{# Version #}
+{{ versions_rendered|default|raw }}
+
+{# Errors #}
+{{ block('errors') }}
+
+{# Message #}
+{% include "@Contao/backend/crud/DC_Table/message.html.twig" %}
+
+{# Buttons on top #}
+<div id="tl_buttons">
+    {{ block('top_buttons') }}
+</div>
+
+{# Edit form #}
+{% set form_attributes = attrs()
+    .set('id', table)
+    .addClass('tl_form tl_edit_form')
+    .set('method', 'post')
+    .set('enctype', uploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded')
+    .set('onsubmit', on_submit|join(' '), on_submit)
+%}
+<form{{ form_attributes }}>
+    <div class="tl_formbody_edit">
+        <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+        {# Store the current version number (see #8412) #}
+        {{ block('version') }}
+
+        {# Boxes #}
+        {% for box in boxes %}
+            {% set fieldset_attributes = attrs()
+                .set('id', 'pal_' ~ box.key, box.key)
+                .addClass(loop.first ? 'tl_tbox' : 'tl_box')
+                .addClass(box.modifier, box.modifier)
+                .addClass('nolegend', box.legend is not defined or not box.legend)
+            %}
+            <fieldset{{ fieldset_attributes }}>
+                {# Legend #}
+                {% if box.legend|default %}
+                    <legend data-toggle-fieldset="{{ {id: box.key, table}|json_encode }}">
+                        {{- "#{table}.#{box.key}"|trans|raw -}}
+                    </legend>
+                {% endif %}
+
+                {# Field groups with subpalettes #}
+                {% with {'root': box.root } %}{{ block('field_groups') }}{% endwith %}
+            </fieldset>
+        {% endfor %}
+    </div>
+
+    {# Submit buttons #}
+    <div class="tl_formbody_submit">
+        {{ block('submit_buttons') }}
+    </div>
+</form>
+
+{# Add history entry #}
+{% if add_history_entry|default %}
+    <script>
+        history.pushState({}, "");
+        window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
+    </script>
+{% endif %}
+
+{# Focus on first error #}
+{{ block('focus_on_first_error_script') }}

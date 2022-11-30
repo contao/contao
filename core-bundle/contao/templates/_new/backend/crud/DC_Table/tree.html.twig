@@ -1,0 +1,67 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/backend/crud/DC_Table/_buttons.html.twig" %}
+
+{% set node_attributes = attrs()
+    .addClass(is_folder ? 'tl_folder' : 'tl_file')
+    .addClass('draft', is_draft)
+    .addClass('click2edit')
+    .addClass('toggle_select', is_toggleable)
+    .addClass('hover-div', is_hoverable)
+    .addClass('cf')
+%}
+<li{{ node_attributes }}>
+    <div class="tl_left" style="padding-left:{{ left_padding }}px">
+        {# Toggler #}
+        {% if toggler|default %}
+            {% set toggler_attributes = attrs()
+                .set('href', toggler)
+                .set('title', is_open ? 'MSC.collapseNode'|trans : 'MSC.expandNode'|trans)
+                .set('onclick', "Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,'#{node}_#{id}',#{level},#{sorting_mode})")
+            %}
+            <a{{ toggler_attributes }}>
+                <img src="/system/themes/flexible/icons/{{ is_open ? 'folMinus.svg' : 'folPlus.svg' }}" width="18" height="18" alt="" style="margin-right:2px">
+            </a>
+        {% endif %}
+
+        {# Record label #}
+        {{ record_label_rendered|raw }}
+    </div>
+    <div class="tl_right">
+        {% if row|default %}
+            {% if select_mode %}
+                <input type="checkbox" name="IDS[]" id="ids_{{ row.id }}" class="tl_tree_checkbox" value="{{ row.id }}">
+            {% else %}
+                {# Row buttons #}
+                {{ block('row_buttons') }}
+            {% endif %}
+
+            {# Picker input field #}
+            {{ row.picker_input_rendered|default|raw }}
+        {% endif %}
+
+        {# Paste buttons #}
+        {{ block('tree_paste_buttons') }}
+    </div>
+</li>
+
+{# Records of the table itself #}
+{% for child_rendered in records_rendered|default([]) %}
+    {{ child_rendered|raw }}
+{% endfor %}
+
+{# New submenu #}
+{% if add_submenu|default %}
+    {% if not add_parent %}
+        {% block submenu %}
+            {% for child_rendered in subtree_rendered|default([]) %}
+                {{ child_rendered|raw }}
+            {% endfor %}
+        {% endblock %}
+    {% else %}
+        <li class="parent" id="{{ node }}_{{ id }}">
+            <ul class="level_{{ level }}">
+                {{ block('submenu') }}
+            </ul>
+        </li>
+    {% endif %}
+{% endif %}

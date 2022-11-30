@@ -1,0 +1,8 @@
+{% extends "@Contao/backend/crud/DC_Table/edit_all.html.twig" %}
+
+{% block edit_form %}
+    {# Fields #}
+    <div class="tl_tbox">
+        {{ rows_rendered|join|raw }}
+    </div>
+{% endblock %}

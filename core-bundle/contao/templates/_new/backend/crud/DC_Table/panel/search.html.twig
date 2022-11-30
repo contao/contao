@@ -1,0 +1,28 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="tl_search tl_subpanel">
+    <strong>{{ 'MSC.search'|trans }}:</strong>
+    {% set select_attributes = attrs()
+        .set('name', 'tl_field')
+        .addClass('tl_select tl_chosen')
+        .addClass('active', active)
+    %}
+    <select{{ select_attributes }}>
+        {% for option in options %}
+            {% set option_attributes = attrs()
+                .set('value', option.value)
+                .set('selected', 'selected', option.selected)
+            %}
+            <option{{ option_attributes }}>{{ option.label }}</option>
+        {% endfor %}
+    </select>
+    <span>=</span>
+    {% set input_attributes = attrs()
+        .set('type', 'search')
+        .set('name', 'tl_value')
+        .addClass('tl_text')
+        .addClass('active', active)
+        .set('value', value)
+    %}
+    <input{{ input_attributes}}>
+</div>
