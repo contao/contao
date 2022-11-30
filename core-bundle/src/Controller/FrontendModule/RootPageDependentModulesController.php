@@ -37,8 +37,15 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             return new Response('');
         }
 
+        $moduleModel = $this->container->get('contao.framework')->getAdapter(ModuleModel::class);
+        $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
+
+        $cssID = StringUtil::deserialize($module->cssID, true);
+        $cssID[1] = trim(sprintf('%s %s', $cssID[1], implode(' ', $model->classes)));
+        $module->cssID = $cssID;
+
         $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
-        $content = $controller->getFrontendModule($modules[$pageModel->rootId]);
+        $content = $controller->getFrontendModule($module);
 
         $this->tagResponse($model);
 
