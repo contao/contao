@@ -2277,7 +2277,7 @@ class StyleSheets extends Backend
 	 */
 	protected function generateBase64Image($strImage, $arrParent)
 	{
-		if ($arrParent['embedImages'] > 0 && file_exists($this->strRootDir . '/' . $strImage))
+		if (($arrParent['embedImages'] ?? 0) > 0 && file_exists($this->strRootDir . '/' . $strImage))
 		{
 			$objImage = new File($strImage);
 			$strMime = $objImage->extension;
