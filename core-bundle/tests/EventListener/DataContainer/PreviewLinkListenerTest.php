@@ -168,6 +168,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testEnablesCreateOperationWithPreviewUrl(): void
     {
+        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
         ];
