@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.14] (2022-11-28)
+
+**Fixed issues:**
+
+- [#5518] Correctly handle missing inputType in DCA ([aschempp])
+- [#5532] Make sure text content is always a string ([aschempp])
+- [#5333] Correctly handle invalid path in DC_Folder ([aschempp])
+- [#5524] Fixed potential PHP8 issues in picker widget ([aschempp])
+- [#5520] Improve the stability of the JSON export for the "user list" command ([richardhj])
+- [#5517] Handle possibly missing variable ([aschempp])
+- [#5511] Fix undefined array key access ([bytehead])
+- [#5510] Fix PHP8 issues in TimePeriod widget ([aschempp])
+
 ## [4.13.13] (2022-11-15)
 
 **Fixed issues:**
@@ -534,6 +547,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.14]: https://github.com/contao/contao/releases/tag/4.13.14
 [4.13.13]: https://github.com/contao/contao/releases/tag/4.13.13
 [4.13.12]: https://github.com/contao/contao/releases/tag/4.13.12
 [4.13.11]: https://github.com/contao/contao/releases/tag/4.13.11
@@ -578,6 +592,14 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#5518]: https://github.com/contao/contao/pull/5518
+[#5532]: https://github.com/contao/contao/pull/5532
+[#5333]: https://github.com/contao/contao/pull/5333
+[#5524]: https://github.com/contao/contao/pull/5524
+[#5520]: https://github.com/contao/contao/pull/5520
+[#5517]: https://github.com/contao/contao/pull/5517
+[#5511]: https://github.com/contao/contao/pull/5511
+[#5510]: https://github.com/contao/contao/pull/5510
 [#5498]: https://github.com/contao/contao/pull/5498
 [#5499]: https://github.com/contao/contao/pull/5499
 [#5485]: https://github.com/contao/contao/pull/5485

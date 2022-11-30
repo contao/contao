@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
+        <target>Ограничить доступ к указанному URL</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Разрешить доступ только к указанному URL-адресу, а не ко всему веб-сайту.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
