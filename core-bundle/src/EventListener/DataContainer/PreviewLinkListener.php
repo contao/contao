@@ -153,18 +153,6 @@ class PreviewLinkListener
         }
     }
 
-    /**
-     * Updates tl_preview_link.expiresAt based on expiresInDays selection.
-     */
-    #[AsCallback(table: 'tl_preview_link', target: 'config.onsubmit')]
-    public function updateExpiresAt(DataContainer $dc): void
-    {
-        $this->connection->executeStatement(
-            'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-            [$dc->id]
-        );
-    }
-
     #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {

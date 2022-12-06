@@ -129,15 +129,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         $path = Path::join($this->dbPathPrefix, $path);
         $table = $this->connection->quoteIdentifier($this->table);
 
+        $searchLiteral = '' !== $path ? "$path/%" : '%';
+
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                ["$path/%"]
+                [$searchLiteral]
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                ["$path/%", "$path/%/%"]
+                [$searchLiteral, "$searchLiteral/%"]
             );
         }
 
@@ -766,13 +768,6 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
-                    // Yield file
-                    yield $searchPath => self::RESOURCE_FILE;
-
-                    continue;
-                }
-
                 // Analyze parent path
                 $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
                 $isDir = $analyzedPaths[$searchPath] ??= false;
@@ -780,6 +775,13 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if ($isDir) {
                 yield from $traverseRecursively($searchPath, $shallow);
+
+                continue;
+            }
+
+            if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
+                // Yield existing file
+                yield $searchPath => self::RESOURCE_FILE;
 
                 continue;
             }

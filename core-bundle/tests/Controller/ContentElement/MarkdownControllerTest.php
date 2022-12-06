@@ -137,6 +137,29 @@ class MarkdownControllerTest extends ContentElementTestCase
         $fs->remove($tempTestFile);
     }
 
+    public function testOutputsMarkdownAsHtml(): void
+    {
+        $response = $this->renderWithModelData(
+            new MarkdownController(),
+            [
+                'type' => 'markdown',
+                'code' => "## Headline\n * my\n * list",
+            ]
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-markdown">
+                <h2>Headline</h2>
+                    <ul>
+                        <li>my</li>
+                        <li>list</li>
+                    </ul>
+                </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
     {
         $template = $this->createMock(FrontendTemplate::class);
@@ -175,28 +198,5 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         return $container;
-    }
-
-    public function testOutputsMarkdownAsHtml(): void
-    {
-        $response = $this->renderWithModelData(
-            new MarkdownController(),
-            [
-                'type' => 'markdown',
-                'code' => "## Headline\n * my\n * list",
-            ]
-        );
-
-        $expectedOutput = <<<'HTML'
-            <div class="content-markdown">
-                <h2>Headline</h2>
-                    <ul>
-                        <li>my</li>
-                        <li>list</li>
-                    </ul>
-                </div>
-            HTML;
-
-        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 }

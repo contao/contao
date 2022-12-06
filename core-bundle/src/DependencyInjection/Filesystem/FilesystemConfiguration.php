@@ -124,10 +124,9 @@ class FilesystemConfiguration
      */
     public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
     {
-        $path = Path::isAbsolute($filesystemPath) ?
-            Path::canonicalize($filesystemPath) :
-            Path::join('%kernel.project_dir%', $filesystemPath)
-        ;
+        $path = Path::isAbsolute($filesystemPath)
+            ? Path::canonicalize($filesystemPath)
+            : Path::join('%kernel.project_dir%', $filesystemPath);
 
         $path = $this->container->getParameterBag()->resolveValue($path);
 

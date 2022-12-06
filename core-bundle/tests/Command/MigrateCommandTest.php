@@ -244,9 +244,7 @@ class MigrateCommandTest extends TestCase
             ->method('compileCommands')
             ->willReturnCallback(
                 static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
-                    return $doNotDropColumns ?
-                        array_shift($returnedCommandsWithoutDrops) :
-                        array_shift($returnedCommands);
+                    return $doNotDropColumns ? array_shift($returnedCommandsWithoutDrops) : array_shift($returnedCommands);
                 }
             )
         ;

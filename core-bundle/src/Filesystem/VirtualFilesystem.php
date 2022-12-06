@@ -360,10 +360,9 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
     private function resolve(Uuid|string $location): string
     {
-        $path = $location instanceof Uuid ?
-            Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix)) :
-            Path::canonicalize($location)
-        ;
+        $path = $location instanceof Uuid
+            ? Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix))
+            : Path::canonicalize($location);
 
         if (Path::isAbsolute($path)) {
             throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));

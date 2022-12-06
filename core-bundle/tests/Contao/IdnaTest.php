@@ -20,6 +20,7 @@ class IdnaTest extends TestCase
     public function testEncodesUnicodeDomain(): void
     {
         $this->assertSame('xn--fbar-5qaa.de', Idna::encode('fööbar.de'));
+        $this->assertSame('xn--fu-hia.de', Idna::encode('fuß.de'));
         $this->assertSame('', Idna::encode(''));
         $this->assertSame('', Idna::encode(sprintf('f%sbär.de', str_repeat('o', 53))));
     }
@@ -27,6 +28,7 @@ class IdnaTest extends TestCase
     public function testDecodesPunycodeDomain(): void
     {
         $this->assertSame('fööbar.de', Idna::decode('xn--fbar-5qaa.de'));
+        $this->assertSame('fuß.de', Idna::decode('xn--fu-hia.de'));
         $this->assertSame('', Idna::decode(''));
         $this->assertSame('', Idna::decode(sprintf('xn--f%sbr-tve.de', str_repeat('o', 56))));
     }
