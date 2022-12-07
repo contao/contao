@@ -19,6 +19,7 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -82,7 +83,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -112,7 +113,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -142,7 +143,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -157,7 +158,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -200,7 +201,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '',
             'rootLanguage' => 'en',
         ]);
@@ -214,7 +215,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -254,7 +255,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'requireItem' => '1',
             'rootLanguage' => 'en',
@@ -269,7 +270,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -309,7 +310,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'forward',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -323,7 +324,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -377,7 +378,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'error_404',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -391,7 +392,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -443,7 +444,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'protected' => '',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -459,7 +460,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'protected' => '1',
-            'groups' => [],
+            'groups' => 'a:1:{i:0;s:1:"1";}',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -469,14 +470,31 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
+        $page3 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 45,
+            'pid' => 43,
+            'type' => 'regular',
+            'protected' => '1',
+            'groups' => 'a:1:{i:0;s:1:"2";}',
+            'published' => '1',
+            'rootLanguage' => 'en',
+        ]);
+
+        $page3
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com/en/page3.html')
+        ;
+
         $pages = [
-            42 => [$page1, $page2],
+            42 => [$page1, $page2, $page3],
             43 => null,
+            45 => null,
             21 => null,
         ];
 
-        $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->getContainer($framework, [44 => false]);
+        $framework = $this->mockFrameworkWithPages($pages, [43 => null, 45 => null]);
+        $container = $this->getContainer($framework, [2]);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -488,6 +506,7 @@ class SitemapControllerTest extends TestCase
 
         $expectedUrls = [
             'https://www.foobar.com/en/page1.html',
+            'https://www.foobar.com/en/page3.html',
         ];
 
         $this->assertSame($this->getExpectedSitemapContent($expectedUrls), $response->getContent());
@@ -500,7 +519,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'protected' => '',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -538,7 +557,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'protected' => '',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -575,7 +594,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'robots' => 'index,follow',
             'rootLanguage' => 'en',
@@ -591,7 +610,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 42,
             'type' => 'regular',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'robots' => 'noindex,nofollow',
             'rootLanguage' => 'en',
@@ -632,7 +651,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'protected' => '',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -648,7 +667,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 21,
             'type' => 'regular',
             'protected' => '',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -704,7 +723,7 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'custom1',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -718,7 +737,7 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'custom2',
-            'groups' => [],
+            'groups' => '',
             'published' => '1',
             'rootLanguage' => 'en',
         ]);
@@ -883,9 +902,12 @@ class SitemapControllerTest extends TestCase
             ;
         } else {
             $authorizationChecker
-                ->expects($this->exactly(\count($isGranted)))
+                ->expects($this->any())
                 ->method('isGranted')
-                ->willReturnOnConsecutiveCalls(...$isGranted)
+                ->willReturnCallback(function(string $attribute, array $pageGroups) use ($isGranted) {
+                    $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
+                    return \count(array_intersect(array_map('intval', $pageGroups), $isGranted)) > 0;
+                });
             ;
         }
 
