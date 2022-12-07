@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\CronJob;
+use Contao\CoreBundle\Cron\ProcessCollection;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
@@ -21,9 +22,18 @@ use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\Process\Process;
 
 class CronTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        ClockMock::register(Cron::class);
+    }
+
     public function testExecutesAddedCronJob(): void
     {
         $cronjob = $this->createMock(TestCronJob::class);
@@ -95,6 +105,56 @@ class CronTest extends TestCase
         $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
+    }
+
+    public function testRunsAsyncCrons(): void
+    {
+        ClockMock::withClockMock(true);
+
+        $process1 = $this->mockProcess();
+        $process2 = $this->mockProcess();
+        $process3 = $this->mockProcess();
+
+        $cronjob1 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronjob')->getMock();
+        $cronjob1
+            ->expects($this->once())
+            ->method('processMethod')
+            ->willReturn(ProcessCollection::fromSingle($process1, 'process-1'))
+        ;
+        $cronjob2 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronjob')->getMock();
+        $cronjob2
+            ->expects($this->once())
+            ->method('processesMethod')
+            // Re-using "process-1" here on purpose to test that it does not get confused/merged with "process-1" from
+            // cronjob1
+            ->willReturn((new ProcessCollection())->add($process2, 'process-1')->add($process3, 'process-2'))
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(6))
+            ->method('debug')
+            ->withConsecutive(
+                ['Starting async cron job "TestCronjob::processMethod" with process "process-1".'],
+                ['Starting async cron job "TestCronjob::processesMethod" with process "process-1".'],
+                ['Starting async cron job "TestCronjob::processesMethod" with process "process-2".'],
+                ['Finished async cron job "TestCronjob::processMethod" with process "process-1".'],
+                ['Finished async cron job "TestCronjob::processesMethod" with process "process-1".'],
+                ['Finished async cron job "TestCronjob::processesMethod" with process "process-2".'],
+            )
+        ;
+
+        $cron = new Cron(
+            fn () => $this->createMock(CronJobRepository::class),
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $logger
+        );
+
+        $cron->addCronJob(new CronJob($cronjob1, '* * * * *', 'processMethod'));
+        $cron->addCronJob(new CronJob($cronjob2, '* * * * *', 'processesMethod'));
+        $cron->run(Cron::SCOPE_CLI);
+
+        ClockMock::withClockMock(false);
     }
 
     public function testUpdatesCronEntities(): void
@@ -279,5 +339,21 @@ class CronTest extends TestCase
         $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI, true);
+    }
+
+    private function mockProcess(): Process
+    {
+        $process = $this->createMock(Process::class);
+        $process
+            ->expects($this->once())
+            ->method('start')
+        ;
+        $process
+            ->expects($this->exactly(3))
+            ->method('isRunning')
+            ->willReturnOnConsecutiveCalls(true, true, false)
+        ;
+
+        return $process;
     }
 }

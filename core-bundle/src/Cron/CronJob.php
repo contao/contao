@@ -29,13 +29,29 @@ class CronJob
         }
     }
 
-    public function __invoke(string $scope): void
+    public function __invoke(string $scope): ProcessCollection|null
     {
         if (\is_callable($this->service)) {
-            ($this->service)($scope);
-        } else {
-            $this->service->{$this->method}($scope);
+            return ($this->service)($scope);
         }
+
+        return $this->service->{$this->method}($scope);
+    }
+
+    public function isAsync(): bool
+    {
+        if (\is_callable($this->service)) {
+            return false;
+        }
+
+        $ref = new \ReflectionMethod($this->getService(), $this->getMethod());
+        $returnType = $ref->getReturnType();
+
+        if (!$returnType instanceof \ReflectionNamedType) {
+            return false;
+        }
+
+        return ProcessCollection::class === $returnType->getName();
     }
 
     public function getService(): object

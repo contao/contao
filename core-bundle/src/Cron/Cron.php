@@ -135,11 +135,80 @@ class Cron
             $repository->unlockTable();
         }
 
-        // Execute all cron jobs to be run
-        foreach ($cronJobsToBeRun as $cron) {
+        $this->executeCrons($cronJobsToBeRun, $scope);
+    }
+
+    /**
+     * @param array<CronJob> $crons
+     */
+    private function executeCrons(array $crons, string $scope): void
+    {
+        // If on CLI, we can support async processes for those crons that return a ProcessCollection
+        $sync = [];
+        $async = [];
+
+        foreach ($crons as $cron) {
+            // Cannot run crons async if not on CLI
+            if (self::SCOPE_CLI !== $scope) {
+                $sync[] = $cron;
+                continue;
+            }
+
+            // Checks if the return value is an instance of ProcessCollection
+            if ($cron->isAsync()) {
+                $async[] = $cron;
+            } else {
+                $sync[] = $cron;
+            }
+        }
+
+        $processes = [];
+
+        // Start async processes first
+        foreach ($async as $cron) {
+            /** @var ProcessCollection $collection */
+            $collection = $cron(self::SCOPE_CLI);
+
+            foreach ($collection->all() as $name => $process) {
+                $this->logger?->debug(sprintf(
+                    'Starting async cron job "%s" with process "%s".',
+                    $cron->getName(),
+                    $name
+                ));
+
+                $process->start();
+                $processes[] = [
+                    'cron' => $cron,
+                    'processName' => $name,
+                    'process' => $process,
+                ];
+            }
+        }
+
+        // Run sync crons
+        foreach ($sync as $cron) {
             $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
             $cron($scope);
+        }
+
+        // Wait for async crons to complete
+        while (0 !== \count($processes)) {
+            sleep(5);
+
+            foreach ($processes as $k => $process) {
+                if ($process['process']->isRunning()) {
+                    continue;
+                }
+
+                $this->logger?->debug(sprintf(
+                    'Finished async cron job "%s" with process "%s".',
+                    $process['cron']->getName(),
+                    $process['processName']
+                ));
+
+                unset($processes[$k]);
+            }
         }
     }
 }
