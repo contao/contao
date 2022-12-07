@@ -135,12 +135,12 @@ class CronTest extends TestCase
             ->expects($this->exactly(6))
             ->method('debug')
             ->withConsecutive(
-                ['Starting async cron job "TestCronjob::processMethod" with process "process-1".'],
-                ['Starting async cron job "TestCronjob::processesMethod" with process "process-1".'],
-                ['Starting async cron job "TestCronjob::processesMethod" with process "process-2".'],
-                ['Finished async cron job "TestCronjob::processMethod" with process "process-1".'],
-                ['Finished async cron job "TestCronjob::processesMethod" with process "process-1".'],
-                ['Finished async cron job "TestCronjob::processesMethod" with process "process-2".'],
+                ['Starting async cron job "TestCronJob::processMethod" with process "process-1".'],
+                ['Starting async cron job "TestCronJob::processesMethod" with process "process-1".'],
+                ['Starting async cron job "TestCronJob::processesMethod" with process "process-2".'],
+                ['Finished async cron job "TestCronJob::processMethod" with process "process-1".'],
+                ['Finished async cron job "TestCronJob::processesMethod" with process "process-1".'],
+                ['Finished async cron job "TestCronJob::processesMethod" with process "process-2".'],
             )
         ;
 
