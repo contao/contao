@@ -1,4 +1,4 @@
-# Contao 4 manager bundle
+# Contao 5 manager bundle
 
 [![](https://img.shields.io/packagist/v/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)
 [![](https://img.shields.io/packagist/dt/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)

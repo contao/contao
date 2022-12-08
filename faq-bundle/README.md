@@ -1,9 +1,9 @@
-# Contao 4 FAQ bundle
+# Contao 5 FAQ bundle
 
 [![](https://img.shields.io/packagist/v/contao/faq-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/faq-bundle)
 [![](https://img.shields.io/packagist/dt/contao/faq-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/faq-bundle)
 
-The faq bundle adds FAQ functionality to Contao 4.
+The faq bundle adds FAQ functionality to Contao 5.
 
 Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
 maintain. Visit the [project website][1] for more information.

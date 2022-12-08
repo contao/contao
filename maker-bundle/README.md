@@ -1,4 +1,4 @@
-# Contao 4 maker bundle
+# Contao 5 maker bundle
 
 [![](https://img.shields.io/packagist/v/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
 [![](https://img.shields.io/packagist/dt/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
