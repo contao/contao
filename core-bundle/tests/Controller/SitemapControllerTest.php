@@ -742,9 +742,9 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
-     * @param array<bool> $isGranted
+     * @param array<int> $allowedPageIds
      */
-    private function getContainer(ContaoFramework $framework, array $isGranted = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, array $allowedPageIds = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -762,7 +762,7 @@ class SitemapControllerTest extends TestCase
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
 
-        if (null === $isGranted) {
+        if (null === $allowedPageIds) {
             $authorizationChecker
                 ->method('isGranted')
                 ->willReturn(true)
@@ -771,10 +771,10 @@ class SitemapControllerTest extends TestCase
             $authorizationChecker
                 ->method('isGranted')
                 ->willReturnCallback(
-                    function (string $attribute, array $pageGroups) use ($isGranted) {
+                    function (string $attribute, array $pageGroups) use ($allowedPageIds) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
 
-                        return \count(array_intersect(array_map('intval', $pageGroups), $isGranted)) > 0;
+                        return \count(array_intersect(array_map('intval', $pageGroups), $allowedPageIds)) > 0;
                     }
                 )
             ;
