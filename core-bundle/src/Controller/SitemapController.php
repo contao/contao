@@ -18,7 +18,6 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

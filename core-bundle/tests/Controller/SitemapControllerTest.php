@@ -769,12 +769,14 @@ class SitemapControllerTest extends TestCase
             ;
         } else {
             $authorizationChecker
-                ->expects($this->any())
                 ->method('isGranted')
-                ->willReturnCallback(function(string $attribute, array $pageGroups) use ($isGranted) {
-                    $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
-                    return \count(array_intersect(array_map('intval', $pageGroups), $isGranted)) > 0;
-                });
+                ->willReturnCallback(
+                    function (string $attribute, array $pageGroups) use ($isGranted) {
+                        $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
+
+                        return \count(array_intersect(array_map('intval', $pageGroups), $isGranted)) > 0;
+                    }
+                )
             ;
         }
 
@@ -808,7 +810,8 @@ class SitemapControllerTest extends TestCase
 
         if (null !== $absoluteUrls) {
             $parameters = [];
-            foreach(array_keys($absoluteUrls) as $suffix) {
+
+            foreach (array_keys($absoluteUrls) as $suffix) {
                 $parameters[] = [$suffix];
             }
 
