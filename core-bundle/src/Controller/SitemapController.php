@@ -133,7 +133,10 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($pageModels as $pageModel) {
-            if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($pageModel->groups, true))) {
+            // Load details in order to inherit permission settings (see #5556)
+            $pageModel->loadDetails();
+
+            if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
                 continue;
             }
 
