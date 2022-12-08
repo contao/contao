@@ -816,7 +816,7 @@ class SitemapControllerTest extends TestCase
                 ->expects($this->exactly(\count($absoluteUrls)))
                 ->method('getAbsoluteUrl')
                 ->withConsecutive(...$parameters)
-                ->willReturnOnConsecutiveCalls(...$absoluteUrls)
+                ->willReturnOnConsecutiveCalls(...array_values($absoluteUrls))
             ;
         } else {
             $page
