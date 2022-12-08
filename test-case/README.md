@@ -1,9 +1,9 @@
-# Contao 5 test case
+# Contao test case
 
 Contao is an open source PHP content management system for people who want a professional website that is easy to
 maintain. Visit the [project website][1] for more information.
 
-The Contao 5 test case provides a PHPUnit test case with some useful methods for testing Contao. Run
+The Contao test case provides a PHPUnit test case with some useful methods for testing Contao. Run
 `php composer.phar require --dev contao/test-case` to install the package and then use it in your test classes:
 
 ```php

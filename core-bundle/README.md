@@ -1,4 +1,4 @@
-# Contao 5 core bundle
+# Contao core bundle
 
 [![](https://img.shields.io/packagist/v/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 [![](https://img.shields.io/packagist/dt/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
@@ -6,7 +6,7 @@
 Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
 maintain. Visit the [project website][1] for more information.
 
-Contao 5 has been designed as a [Symfony][2] bundle, which can be used to add CMS functionality to any Symfony
+Contao has been designed as a [Symfony][2] bundle, which can be used to add CMS functionality to any Symfony
 application. If you do not have an existing Symfony application yet, we recommend using the [Contao managed edition][3]
 as basis for your application.
 
