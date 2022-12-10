@@ -1,6 +1,6 @@
 # Semantic versioning
 
-Starting with Contao 4.0, we will be using [semantic versioning][1].
+Starting with Contao 4.0, we are using [semantic versioning][1].
 
 ## What does this mean?
 
