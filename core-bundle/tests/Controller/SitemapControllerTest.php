@@ -79,14 +79,17 @@ class SitemapControllerTest extends TestCase
 
     public function testIgnoresRequestPort(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com:8000/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com:8000/en/page1.html']
+        );
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
@@ -103,14 +106,17 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesSitemapForRegularPages(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html']
+        );
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
@@ -127,23 +133,29 @@ class SitemapControllerTest extends TestCase
 
     public function testRecursivelyWalksThePageTree(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html']
+        );
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
@@ -182,14 +194,17 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
@@ -226,14 +241,17 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
@@ -269,14 +287,17 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
@@ -326,14 +347,17 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
@@ -371,15 +395,18 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsPagesIfTheUserDoesNotHaveAccess(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'protected' => '',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html']
+        );
 
         $page2 = $this->mockPage([
             'id' => 44,
@@ -391,15 +418,18 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page3 = $this->mockPage([
-            'id' => 45,
-            'pid' => 43,
-            'type' => 'regular',
-            'protected' => '1',
-            'groups' => ['2'],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page3.html']);
+        $page3 = $this->mockPage(
+            [
+                'id' => 45,
+                'pid' => 43,
+                'type' => 'regular',
+                'protected' => '1',
+                'groups' => ['2'],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page3.html']
+        );
 
         $pages = [
             42 => [$page1, $page2, $page3],
@@ -429,15 +459,21 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesTheTeaserArticleUrls(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html', '/articles/foobar' => 'https://www.foobar.com/en/page1/articles/foobar.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'protected' => '',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            [
+                '' => 'https://www.foobar.com/en/page1.html',
+                '/articles/foobar' => 'https://www.foobar.com/en/page1/articles/foobar.html',
+            ]
+        );
 
         $article1 = $this->mockClassWithProperties(ArticleModel::class, [
             'id' => 1,
@@ -460,15 +496,21 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesTheTeaserArticleUrlsByIdIfAliasIsEmpty(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html', '/articles/1' => 'https://www.foobar.com/en/page1/articles/1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'protected' => '',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            [
+                '' => 'https://www.foobar.com/en/page1.html',
+                '/articles/1' => 'https://www.foobar.com/en/page1/articles/1.html',
+            ]
+        );
 
         $article1 = $this->mockClassWithProperties(ArticleModel::class, [
             'id' => 1,
@@ -491,15 +533,18 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsNoindexNofollowPages(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'groups' => [],
-            'published' => '1',
-            'robots' => 'index,follow',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'robots' => 'index,follow',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html']
+        );
 
         $page2 = $this->mockPage([
             'id' => 44,
@@ -536,25 +581,31 @@ class SitemapControllerTest extends TestCase
      */
     public function testCallsTheLegacyHookForEachRootPage(): void
     {
-        $page1 = $this->mockPage([
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page1.html']);
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'protected' => '',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html']
+        );
 
-        $page2 = $this->mockPage([
-            'id' => 22,
-            'pid' => 21,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 22,
+                'pid' => 21,
+                'type' => 'regular',
+                'protected' => '',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $GLOBALS['TL_HOOKS']['getSearchablePages'] = [['FooClass', 'fooFunction'], ['BarClass', 'barFunction']];
 
@@ -606,14 +657,17 @@ class SitemapControllerTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $page2 = $this->mockPage([
-            'id' => 44,
-            'pid' => 43,
-            'type' => 'custom2',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ], ['' => 'https://www.foobar.com/en/page2.html']);
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'custom2',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
 
         $pages = [
             42 => [$page1],
