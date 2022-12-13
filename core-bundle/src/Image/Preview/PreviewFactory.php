@@ -31,7 +31,6 @@ use Symfony\Component\Filesystem\Path;
 
 class PreviewFactory
 {
-    private string $secret;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
 
@@ -44,13 +43,12 @@ class PreviewFactory
         private PictureFactoryInterface $pictureFactory,
         private Studio $imageStudio,
         private ContaoFramework $framework,
-        #[\SensitiveParameter] string $secret,
+        #[\SensitiveParameter] private string $secret,
         private string $cacheDir,
         private array $validImageExtensions,
         private int $defaultSize,
         private int $maxSize,
     ) {
-        $this->secret = $secret;
     }
 
     public function setDefaultDensities(string $densities): self
