@@ -31,8 +31,6 @@ return static function (RectorConfig $rectorConfig): void {
         '*-bundle/contao/*',
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
-            'core-bundle/src/Image/Preview/PreviewFactory.php',
-            'manager-bundle/src/Command/ContaoSetupCommand.php',
         ],
         ChangeSwitchToMatchRector::class,
         ReadOnlyPropertyRector::class,
