@@ -44,7 +44,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsDefaultOperations(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -67,7 +67,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsChildrenOperationsWithChildTable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ctable' => ['tl_bar'],
@@ -94,7 +94,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsOperationsWithParentTable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ptable' => ['tl_bar'],
@@ -121,7 +121,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsOperationsInTreeMode(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -146,7 +146,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsToggleOperationIfThereIsOneToggleField(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -179,7 +179,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsToggleOperationIfThereIsOneReverseToggleField(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -212,7 +212,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddToggleOperationIfThereAreMultipleToggleField(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -346,7 +346,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAppendsIfOneOperationHasADefaultName(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -375,7 +375,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notEditable' => true,
@@ -397,7 +397,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCopyOperationIfTableIsNotCopyable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notCopyable' => true,
@@ -419,7 +419,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCopyOperationIfTableIsClosed(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'closed' => true,
@@ -441,7 +441,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCutOperationIfTableIsNotSortable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ptable' => 'tl_bar',
@@ -464,7 +464,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notDeletable' => true,
@@ -486,7 +486,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAlwaysAddsChildrenAndShowOperation(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the value is not immutable) */
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'closed' => true,
