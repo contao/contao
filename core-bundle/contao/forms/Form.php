@@ -12,8 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Provide methods to handle front end forms.
@@ -64,9 +62,9 @@ class Form extends Hybrid
 	protected $strTemplate = 'form_wrapper';
 
 	/**
-	 * @var Collection<string>
+	 * @var array<string>
 	 */
-	private Collection $errors;
+	private array $errors = [];
 
 	/**
 	 * {@inheritDoc}
@@ -74,7 +72,6 @@ class Form extends Hybrid
 	public function __construct($objElement, $strColumn='main')
 	{
 		parent::__construct($objElement, $strColumn);
-		$this->errors = new ArrayCollection();
 	}
 
 	/**
@@ -112,22 +109,22 @@ class Form extends Hybrid
 	}
 
 	/**
-	 * @return Collection<string>
+	 * @return array<string>
 	 */
-	public function getErrors(): Collection
+	public function getErrors(): array
 	{
 		return $this->errors;
 	}
 
 	public function hasErrors(): bool
 	{
-		return !$this->errors->isEmpty();
+		return !empty($this->errors);
 	}
 
 	/**
-	 * @param Collection<string> $errors
+	 * @param array<string> $errors
 	 */
-	public function setErrors(Collection $errors): self
+	public function setErrors(array $errors): self
 	{
 		$this->errors = $errors;
 
@@ -136,7 +133,7 @@ class Form extends Hybrid
 
 	public function addError(string $error): self
 	{
-		$this->errors->add($error);
+		$this->errors[] = $error;
 
 		return $this;
 	}
