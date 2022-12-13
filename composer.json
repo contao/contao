@@ -194,7 +194,7 @@
         "nikic/php-parser": "4.7.0",
         "phpunit/phpunit": "<8.0",
         "roave/better-reflection": "<4.12.2 || >=6.0",
-        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8",
+        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8 || 6.2.0 || 6.2.1",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"
