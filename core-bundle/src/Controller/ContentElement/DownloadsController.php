@@ -56,12 +56,12 @@ class DownloadsController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        $filesystemItems = $this->getFilesystemItems($model);
+
         // TODO: Remove method and move logic into its own action, once we have
         // a strategy how to handle permissions for downloads via a real route.
         // See #4862 for more details.
-        $this->handleDownload($request);
-
-        $filesystemItems = $this->getFilesystemItems($model);
+        $this->handleDownload($request, $filesystemItems);
 
         // Sort elements; relay to client-side logic if list should be randomized
         if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
@@ -222,17 +222,15 @@ class DownloadsController extends AbstractContentElementController
         }
     }
 
-    private function handleDownload(Request $request): void
+    private function handleDownload(Request $request, FilesystemItemIterator $filesystemItems): void
     {
         $response = $this->fileDownloadHelper->handle(
             $request,
             $this->filesStorage,
-            function (FilesystemItem $item, array $context): Response|null {
-                if (
-                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
-                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
-                ) {
-                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
+            function (FilesystemItem $item, array $context) use ($filesystemItems): Response|null {
+                // Ignore the download request if the file is not in the list (see #5568)
+                if (!$filesystemItems->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())) {
+                    return new Response('', Response::HTTP_NO_CONTENT);
                 }
 
                 return null;
