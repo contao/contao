@@ -1,6 +1,6 @@
 {
     "name": "contao/test-case",
-    "description": "Contao 4 test case",
+    "description": "Contao test case",
     "license": "LGPL-3.0-or-later",
     "type": "library",
     "authors": [

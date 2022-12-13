@@ -198,7 +198,7 @@ class DefaultOperationsListener
                 continue;
             }
 
-            // more than one toggle field exists
+            // More than one toggle field exists
             if (null !== $field) {
                 return null;
             }

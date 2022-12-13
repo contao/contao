@@ -167,7 +167,7 @@
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
         "friendsofsymfony/http-cache": "2.14.0",
-        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8",
+        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8 || 6.2.0 || 6.2.1",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },

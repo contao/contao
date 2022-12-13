@@ -46,7 +46,7 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $token = new UsernamePasswordToken($user, 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend', $user->getRoles());
 
         try {
             $session = $this->requestStack->getSession();
