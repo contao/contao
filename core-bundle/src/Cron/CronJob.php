@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
+use GuzzleHttp\Promise\PromiseInterface;
+
 class CronJob
 {
     private string $name;
@@ -29,29 +31,13 @@ class CronJob
         }
     }
 
-    public function __invoke(string $scope): ProcessCollection|null
+    public function __invoke(string $scope): PromiseInterface|null
     {
         if (\is_callable($this->service)) {
             return ($this->service)($scope);
         }
 
         return $this->service->{$this->method}($scope);
-    }
-
-    public function isAsync(): bool
-    {
-        if (\is_callable($this->service)) {
-            return false;
-        }
-
-        $ref = new \ReflectionMethod($this->getService(), $this->getMethod());
-        $returnType = $ref->getReturnType();
-
-        if (!$returnType instanceof \ReflectionNamedType) {
-            return false;
-        }
-
-        return ProcessCollection::class === $returnType->getName();
     }
 
     public function getService(): object

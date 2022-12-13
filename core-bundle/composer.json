@@ -68,6 +68,7 @@
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
+        "guzzlehttp/promises": "^1.5",
         "imagine/imagine": "^1.2.4",
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",

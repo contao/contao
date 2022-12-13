@@ -193,6 +193,37 @@ class AddCronJobsPassTest extends TestCase
         $this->assertSame('@monthly', $definitions[4]->getArgument(1));
     }
 
+    public function testAddsPromiseReturningCronjobsFirst(): void
+    {
+        $definition1 = new Definition(TestCronJob::class);
+        $definition1->addTag('contao.cronjob', ['interval' => 'minutely']);
+
+        $definition2 = new Definition(TestCronJob::class);
+        $definition2->addTag('contao.cronjob', ['interval' => 'minutely', 'method' => 'asyncMethod']);
+
+        $definition3 = new Definition(TestCronJob::class);
+        $definition3->addTag('contao.cronjob', ['interval' => 'minutely']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('cron-1', $definition1);
+        $container->setDefinition('cron-2', $definition2);
+        $container->setDefinition('cron-3', $definition3);
+
+        $pass = new AddCronJobsPass();
+        $pass->process($container);
+
+        $crons = $this->getCronsFromDefinition($container);
+
+        $serviceIds = [];
+
+        /** @var Definition $definition */
+        foreach ($crons as $definition) {
+            $serviceIds[] = (string) $definition[0]->getArguments()[0];
+        }
+
+        $this->assertSame(['cron-2', 'cron-1', 'cron-3'], $serviceIds);
+    }
+
     /**
      * Returns the container builder with a dummy Cron definition.
      */

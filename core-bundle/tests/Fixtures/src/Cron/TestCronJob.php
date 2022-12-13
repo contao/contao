@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
-use Contao\CoreBundle\Cron\ProcessCollection;
-use Symfony\Component\Process\Process;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class TestCronJob
 {
@@ -41,17 +41,10 @@ class TestCronJob
     {
     }
 
-    public function processMethod(): ProcessCollection
+    public function asyncMethod(): PromiseInterface|null
     {
-        return ProcessCollection::fromSingle(new Process([]), 'process-1');
-    }
+        $promise = new Promise(static function () use (&$promise): void {$promise->resolve('promise'); });
 
-    public function processesMethod(): ProcessCollection
-    {
-        $collection = new ProcessCollection();
-        $collection->add(new Process([]), 'process-1');
-        $collection->add(new Process([]), 'process-2');
-
-        return $collection;
+        return $promise;
     }
 }

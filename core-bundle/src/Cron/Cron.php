@@ -16,6 +16,8 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Psr\Log\LoggerInterface;
 
 class Cron
@@ -143,71 +145,30 @@ class Cron
      */
     private function executeCrons(array $crons, string $scope): void
     {
-        // If on CLI, we can support async processes for those crons that return a ProcessCollection
-        $sync = [];
-        $async = [];
+        /** @var array<string, PromiseInterface> $promises */
+        $promises = [];
 
         foreach ($crons as $cron) {
-            // Cannot run crons async if not on CLI
-            if (self::SCOPE_CLI !== $scope) {
-                $sync[] = $cron;
-                continue;
-            }
-
-            // Checks if the return value is an instance of ProcessCollection
-            if ($cron->isAsync()) {
-                $async[] = $cron;
-            } else {
-                $sync[] = $cron;
-            }
-        }
-
-        $processes = [];
-
-        // Start async processes first
-        foreach ($async as $cron) {
-            /** @var ProcessCollection $collection */
-            $collection = $cron(self::SCOPE_CLI);
-
-            foreach ($collection->all() as $name => $process) {
-                $this->logger?->debug(sprintf(
-                    'Starting async cron job "%s" with process "%s".',
-                    $cron->getName(),
-                    $name
-                ));
-
-                $process->start();
-                $processes[] = [
-                    'cron' => $cron,
-                    'processName' => $name,
-                    'process' => $process,
-                ];
-            }
-        }
-
-        // Run sync crons
-        foreach ($sync as $cron) {
             $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $cron($scope);
+            $return = $cron($scope);
+
+            if ($return instanceof PromiseInterface) {
+                $this->logger?->debug(sprintf('Cron job "%s" is asynchronous. Adding to waiting queue', $cron->getName()));
+
+                $promises[$cron->getName()] = $return;
+            }
         }
 
-        // Wait for async crons to complete
-        while (0 !== \count($processes)) {
-            sleep(5);
+        if (0 === \count($promises)) {
+            return;
+        }
 
-            foreach ($processes as $k => $process) {
-                if ($process['process']->isRunning()) {
-                    continue;
-                }
-
-                $this->logger?->debug(sprintf(
-                    'Finished async cron job "%s" with process "%s".',
-                    $process['cron']->getName(),
-                    $process['processName']
-                ));
-
-                unset($processes[$k]);
+        foreach (Utils::settle($promises)->wait() as $cronjobName => $result) {
+            if (PromiseInterface::FULFILLED === $result['state']) {
+                $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cronjobName));
+            } else {
+                $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cronjobName, $result['reason']));
             }
         }
     }

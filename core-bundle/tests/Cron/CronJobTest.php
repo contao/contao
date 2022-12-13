@@ -24,15 +24,4 @@ class CronJobTest extends TestCase
 
         new CronJob(new TestCronJob(), '@hourly');
     }
-
-    public function testAsyncCronJob(): void
-    {
-        $sync = new CronJob(new TestCronJob(), '@hourly', 'customMethod');
-        $async1 = new CronJob(new TestCronJob(), '@hourly', 'processMethod');
-        $async2 = new CronJob(new TestCronJob(), '@hourly', 'processesMethod');
-
-        $this->assertFalse($sync->isAsync());
-        $this->assertTrue($async1->isAsync());
-        $this->assertTrue($async2->isAsync());
-    }
 }

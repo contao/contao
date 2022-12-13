@@ -14,26 +14,17 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\CronJob;
-use Contao\CoreBundle\Cron\ProcessCollection;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\Promise;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ClockMock;
-use Symfony\Component\Process\Process;
 
 class CronTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        ClockMock::register(Cron::class);
-    }
-
     public function testExecutesAddedCronJob(): void
     {
         $cronjob = $this->createMock(TestCronJob::class);
@@ -109,25 +100,20 @@ class CronTest extends TestCase
 
     public function testRunsAsyncCrons(): void
     {
-        ClockMock::withClockMock(true);
+        $promise1 = new Promise(static function () use (&$promise1): void { $promise1->resolve('Success'); });
+        $promise2 = new Promise(static function () use (&$promise2): void { $promise2->reject('Failure'); });
 
-        $process1 = $this->mockProcess();
-        $process2 = $this->mockProcess();
-        $process3 = $this->mockProcess();
-
-        $cronjob1 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronjob')->getMock();
+        $cronjob1 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronJob')->getMock();
         $cronjob1
             ->expects($this->once())
-            ->method('processMethod')
-            ->willReturn(ProcessCollection::fromSingle($process1, 'process-1'))
+            ->method('asyncMethod')
+            ->willReturn($promise1)
         ;
-        $cronjob2 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronjob')->getMock();
+        $cronjob2 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronJob2')->getMock();
         $cronjob2
             ->expects($this->once())
-            ->method('processesMethod')
-            // Re-using "process-1" here on purpose to test that it does not get confused/merged with "process-1" from
-            // cronjob1
-            ->willReturn((new ProcessCollection())->add($process2, 'process-1')->add($process3, 'process-2'))
+            ->method('asyncMethod')
+            ->willReturn($promise2)
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
@@ -135,12 +121,12 @@ class CronTest extends TestCase
             ->expects($this->exactly(6))
             ->method('debug')
             ->withConsecutive(
-                ['Starting async cron job "TestCronJob::processMethod" with process "process-1".'],
-                ['Starting async cron job "TestCronJob::processesMethod" with process "process-1".'],
-                ['Starting async cron job "TestCronJob::processesMethod" with process "process-2".'],
-                ['Finished async cron job "TestCronJob::processMethod" with process "process-1".'],
-                ['Finished async cron job "TestCronJob::processesMethod" with process "process-1".'],
-                ['Finished async cron job "TestCronJob::processesMethod" with process "process-2".'],
+                ['Executing cron job "TestCronJob::asyncMethod"'],
+                ['Cron job "TestCronJob::asyncMethod" is asynchronous. Adding to waiting queue'],
+                ['Executing cron job "TestCronJob2::asyncMethod"'],
+                ['Cron job "TestCronJob2::asyncMethod" is asynchronous. Adding to waiting queue'],
+                ['Asynchronous cron job "TestCronJob2::asyncMethod" failed: Failure'],
+                ['Asynchronous cron job "TestCronJob::asyncMethod" finished successfully'],
             )
         ;
 
@@ -150,11 +136,9 @@ class CronTest extends TestCase
             $logger
         );
 
-        $cron->addCronJob(new CronJob($cronjob1, '* * * * *', 'processMethod'));
-        $cron->addCronJob(new CronJob($cronjob2, '* * * * *', 'processesMethod'));
+        $cron->addCronJob(new CronJob($cronjob1, '* * * * *', 'asyncMethod'));
+        $cron->addCronJob(new CronJob($cronjob2, '* * * * *', 'asyncMethod'));
         $cron->run(Cron::SCOPE_CLI);
-
-        ClockMock::withClockMock(false);
     }
 
     public function testUpdatesCronEntities(): void
@@ -339,21 +323,5 @@ class CronTest extends TestCase
         $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI, true);
-    }
-
-    private function mockProcess(): Process
-    {
-        $process = $this->createMock(Process::class);
-        $process
-            ->expects($this->once())
-            ->method('start')
-        ;
-        $process
-            ->expects($this->exactly(3))
-            ->method('isRunning')
-            ->willReturnOnConsecutiveCalls(true, true, false)
-        ;
-
-        return $process;
     }
 }
