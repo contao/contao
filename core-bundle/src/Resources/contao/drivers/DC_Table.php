@@ -1258,45 +1258,49 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$newPID = $objSorting->pid;
 						$curSorting = $objSorting->sorting;
 
-						$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
-														 ->execute($newPID, $curSorting);
-
-						// Select sorting value of the next record
-						if ($objNextSorting->sorting !== null)
+						// Do not proceed without a parent ID
+						if (is_numeric($newPID) || $newPID === null)
 						{
-							$nxtSorting = $objNextSorting->sorting;
+							$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
+															 ->execute($newPID, $curSorting);
 
-							// Resort if the new sorting value is no integer or bigger than a MySQL integer
-							if ((($curSorting + $nxtSorting) % 2) != 0 || $nxtSorting >= 4294967295)
+							// Select sorting value of the next record
+							if ($objNextSorting->sorting !== null)
 							{
-								$count = 1;
+								$nxtSorting = $objNextSorting->sorting;
 
-								$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
-																->execute($newPID);
-
-								while ($objNewSorting->next())
+								// Resort if the new sorting value is no integer or bigger than a MySQL integer
+								if ((($curSorting + $nxtSorting) % 2) != 0 || $nxtSorting >= 4294967295)
 								{
-									$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-												   ->execute(($count++ * 128), $objNewSorting->id);
+									$count = 1;
 
-									if ($objNewSorting->sorting == $curSorting)
+									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
+																	->execute($newPID);
+
+									while ($objNewSorting->next())
 									{
-										$newSorting = ($count++ * 128);
+										$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
+													   ->execute(($count++ * 128), $objNewSorting->id);
+
+										if ($objNewSorting->sorting == $curSorting)
+										{
+											$newSorting = ($count++ * 128);
+										}
 									}
+								}
+
+								// Else new sorting = (current sorting + next sorting) / 2
+								else
+								{
+									$newSorting = (($curSorting + $nxtSorting) / 2);
 								}
 							}
 
-							// Else new sorting = (current sorting + next sorting) / 2
+							// Else new sorting = (current sorting + 128)
 							else
 							{
-								$newSorting = (($curSorting + $nxtSorting) / 2);
+								$newSorting = ($curSorting + 128);
 							}
-						}
-
-						// Else new sorting = (current sorting + 128)
-						else
-						{
-							$newSorting = ($curSorting + 128);
 						}
 					}
 
