@@ -118,15 +118,13 @@ class CronTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(4))
             ->method('debug')
             ->withConsecutive(
                 ['Executing cron job "TestCronJob::asyncMethod"'],
-                ['Cron job "TestCronJob::asyncMethod" is asynchronous. Adding to waiting queue'],
                 ['Executing cron job "TestCronJob2::asyncMethod"'],
-                ['Cron job "TestCronJob2::asyncMethod" is asynchronous. Adding to waiting queue'],
-                ['Asynchronous cron job "TestCronJob2::asyncMethod" failed: Failure'],
                 ['Asynchronous cron job "TestCronJob::asyncMethod" finished successfully'],
+                ['Asynchronous cron job "TestCronJob2::asyncMethod" failed: Failure'],
             )
         ;
 

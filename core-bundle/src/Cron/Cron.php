@@ -151,12 +151,19 @@ class Cron
         foreach ($crons as $cron) {
             $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $return = $cron($scope);
+            $promise = $cron($scope);
 
-            if ($return instanceof PromiseInterface) {
-                $this->logger?->debug(sprintf('Cron job "%s" is asynchronous. Adding to waiting queue', $cron->getName()));
+            if ($promise instanceof PromiseInterface) {
+                $promise->then(
+                    function () use ($cron): void {
+                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                    },
+                    function ($reason) use ($cron): void {
+                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                    }
+                );
 
-                $promises[$cron->getName()] = $return;
+                $promises[] = $promise;
             }
         }
 
@@ -164,12 +171,6 @@ class Cron
             return;
         }
 
-        foreach (Utils::settle($promises)->wait() as $cronjobName => $result) {
-            if (PromiseInterface::FULFILLED === $result['state']) {
-                $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cronjobName));
-            } else {
-                $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cronjobName, $result['reason']));
-            }
-        }
+        Utils::settle($promises)->wait();
     }
 }
