@@ -64,7 +64,7 @@ class Form extends Hybrid
 	/**
 	 * @var array<string>
 	 */
-	private array $errors = [];
+	private array $errors = array();
 
 	/**
 	 * Remove name attributes in the back end so the form is not validated
