@@ -63,7 +63,7 @@ class AddCronJobsPass implements CompilerPassInterface
 
                 $reflector = new \ReflectionMethod($jobDefinition->getClass(), $method ?? '__invoke');
                 $returnType = $reflector->getReturnType();
-                $returnsPromise = $returnType instanceof \ReflectionNamedType && PromiseInterface::class === $returnType->getName();
+                $returnsPromise = $returnType instanceof \ReflectionNamedType && is_a($returnType->getName(), PromiseInterface::class, true);
 
                 if ($returnsPromise) {
                     $async[] = $newDefinition;
