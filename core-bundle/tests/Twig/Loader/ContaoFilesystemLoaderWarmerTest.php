@@ -106,7 +106,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     public function testRefreshOnKernelRequest(RequestEvent $event, string $environment, bool $shouldRefresh): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
-
         $loader
             ->expects($shouldRefresh ? $this->once() : $this->never())
             ->method('clear')
@@ -157,15 +156,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             ])
         ;
 
-        $expectedData = [
-            'namespaces' => [
-                ['namespace' => 'Contao', 'path' => '../../templates'],
-                ['namespace' => 'Contao_Global', 'path' => '../../templates'],
-                ['namespace' => 'Contao', 'path' => '../../some/place/contao/templates'],
-                ['namespace' => 'Contao_App', 'path' => '../../some/place/contao/templates'],
-            ],
-        ];
-
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->expects($this->once())
@@ -173,7 +163,16 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             ->with(
                 '/cache/contao/ide-twig.json',
                 $this->callback(
-                    function (string $json) use ($expectedData): bool {
+                    function (string $json): bool {
+                        $expectedData = [
+                            'namespaces' => [
+                                ['namespace' => 'Contao', 'path' => '../../templates'],
+                                ['namespace' => 'Contao_Global', 'path' => '../../templates'],
+                                ['namespace' => 'Contao', 'path' => '../../some/place/contao/templates'],
+                                ['namespace' => 'Contao_App', 'path' => '../../some/place/contao/templates'],
+                            ],
+                        ];
+
                         $this->assertJson($json);
                         $this->assertSame($expectedData, json_decode($json, true, 512, JSON_THROW_ON_ERROR));
 
