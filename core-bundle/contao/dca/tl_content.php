@@ -766,7 +766,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'invisible' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
