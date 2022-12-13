@@ -32,7 +32,7 @@ class ProcessUtil
                 if ($process->isSuccessful()) {
                     $promise->resolve($process->getOutput());
                 } else {
-                    $promise->reject($process->getErrorOutput());
+                    $promise->reject($process->getErrorOutput() ?: $process->getOutput());
                 }
             }
         );
