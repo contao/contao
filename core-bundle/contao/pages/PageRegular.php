@@ -60,6 +60,7 @@ class PageRegular extends Frontend
 	 */
 	private function prepare($objPage)
 	{
+		// Deprecated since Contao 4.0, to be removed in Contao 6.0
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
