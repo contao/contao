@@ -67,14 +67,6 @@ class Form extends Hybrid
 	private array $errors = [];
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function __construct($objElement, $strColumn='main')
-	{
-		parent::__construct($objElement, $strColumn);
-	}
-
-	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
 	 * @return string
