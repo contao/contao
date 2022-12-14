@@ -234,9 +234,7 @@ class DownloadsController extends AbstractContentElementController
                     return new Response('', Response::HTTP_NO_CONTENT);
                 }
 
-                if (
-                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
-                ) {
+                if (!$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())) {
                     return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
                 }
 
