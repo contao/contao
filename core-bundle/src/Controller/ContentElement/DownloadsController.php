@@ -228,16 +228,13 @@ class DownloadsController extends AbstractContentElementController
             $request,
             $this->filesStorage,
             function (FilesystemItem $item, array $context) use ($model): Response|null {
-                $id = $context['id'] ?? null;
-
                 // Do not handle downloads from other DownloadController
                 // elements on the same page (see #5568)
-                if ($id !== $model->id) {
+                if ($model->id !== ($context['id'] ?? null)) {
                     return new Response('', Response::HTTP_NO_CONTENT);
                 }
 
                 if (
-                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($id)) ||
                     !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
                 ) {
                     return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
