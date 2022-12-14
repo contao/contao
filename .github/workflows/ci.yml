@@ -236,7 +236,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4, 8.0, 8.1]
+                php: [7.4, 8.0, 8.1, 8.2]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -295,7 +295,7 @@ jobs:
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
 
     nightly:
-        name: PHP 8.2
+        name: PHP 8.3
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
         continue-on-error: true
@@ -303,7 +303,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
               env:
