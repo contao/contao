@@ -319,7 +319,7 @@ class Form extends Hybrid
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this);
+				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
 		}
 
