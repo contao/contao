@@ -118,7 +118,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check the request token (see #4007)
 		if (
 			Input::get('act') !== null
-			&& (!\in_array(Input::get('act'), array('edit', 'show', 'select'), true) || Input::isPost())
+			&& !\in_array(Input::get('act'), array('edit', 'show', 'select'), true)
 			&& (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt'))))
 		) {
 			$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
