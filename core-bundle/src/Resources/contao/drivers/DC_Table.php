@@ -395,12 +395,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 				continue;
 			}
 
-			// Special treatment for table tl_undo
-			if ($this->strTable == 'tl_undo' && $i == 'data')
-			{
-				continue;
-			}
-
 			$value = StringUtil::deserialize($row[$i]);
 
 			// Decrypt the value
