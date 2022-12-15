@@ -5879,7 +5879,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$value = $blnDate ? $kk : $vv;
 
 					// Options callback
-					if (!empty($options_callback) && \is_array($options_callback))
+					if (!empty($options_callback) && \is_array($options_callback) && isset($options_callback[$vv]))
 					{
 						$vv = $options_callback[$vv];
 					}
