@@ -5874,9 +5874,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						$options_callback = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback']($this);
 					}
-
-					// Sort options according to the keys of the callback array
-					$options = array_intersect(array_keys($options_callback), $options);
 				}
 
 				$options_sorter = array();
@@ -5888,7 +5885,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$value = $blnDate ? $kk : $vv;
 
 					// Options callback
-					if (!empty($options_callback) && \is_array($options_callback))
+					if (!empty($options_callback) && \is_array($options_callback) && isset($options_callback[$vv]))
 					{
 						$vv = $options_callback[$vv];
 					}
