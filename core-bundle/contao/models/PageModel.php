@@ -1171,7 +1171,8 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		if (false === strpos($baseUrl, $previewScript)) {
+		if (false === strpos($baseUrl, $previewScript))
+		{
 			$context->setBaseUrl(rtrim($baseUrl, '/') . $previewScript);
 		}
 
