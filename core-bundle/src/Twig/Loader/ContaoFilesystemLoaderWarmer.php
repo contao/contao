@@ -84,7 +84,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if ('dev' === $this->environment) {
+        if ('dev' === $this->environment && $event->isMainRequest()) {
             $this->refresh();
         }
     }
