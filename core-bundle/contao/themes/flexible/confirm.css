@@ -15,7 +15,7 @@ body {
 #container {
 	width: 620px;
 	margin: 15em auto 0;
-	background: var(--body-bg);
+	background: var(--content-bg);
 	border-radius: 2px;
 }
 
