@@ -6,10 +6,8 @@ Encore
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild(['**/*', '!core.**', '!mootao.**'])
     .disableSingleRuntimeChunk()
-
     .enableSourceMaps()
     .enableVersioning()
-
     .addEntry('backend', './assets/backend.js')
 ;
 

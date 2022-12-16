@@ -16,6 +16,7 @@ export default class extends Controller {
 
         currentTarget.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
         currentTarget.setAttribute('title', collapsed ? this.expandTitleValue : this.collapseTitleValue);
+
         this.sendRequest(category, collapsed)
     }
 

@@ -5,12 +5,12 @@
 # Dotenv
 /.env
 
+# Node
+/node_modules/
+
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
 
 # Functional tests
 /var/
-
-# Node
-/node_modules/
