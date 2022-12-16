@@ -325,7 +325,7 @@ class Form extends Hybrid
 		}
 
 		$this->Template->hasError = $doNotSubmit || $this->hasErrors();
-		$this->Template->errors = $this->getErrors()->toArray();
+		$this->Template->errors = $this->getErrors();
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
