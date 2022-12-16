@@ -29,7 +29,7 @@ export default class extends Controller {
             body: new URLSearchParams({
                 action: 'toggleNavigation',
                 id: category,
-                state: collapsed ? 1 : 0,
+                state: collapsed ? 0 : 1,
                 REQUEST_TOKEN: this.requestTokenValue
             })
         });
