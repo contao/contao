@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
+
 class TestCronJob
 {
     public function onMinutely(): void
@@ -36,5 +39,10 @@ class TestCronJob
 
     public function customMethod(): void
     {
+    }
+
+    public function asyncMethod(): PromiseInterface|null
+    {
+        return new Promise(static function () use (&$promise): void {$promise->resolve('promise'); });
     }
 }
