@@ -42,20 +42,12 @@ class BackendMenuListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend')
-            ->willReturn('/contao')
-        ;
-
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
         $listener = new BackendMenuListener(
             $security,
-            $router,
+            $this->createMock(RouterInterface::class),
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class)
@@ -82,7 +74,8 @@ class BackendMenuListenerTest extends TestCase
             [
                 'class' => 'group-category1 custom-class',
                 'title' => 'Category 1 Title',
-                'onclick' => "return AjaxRequest.toggleNavigation(this, 'category1', '/contao')",
+                'data-action' => 'contao--toggle-navigation#toggle:prevent',
+                'data-contao--toggle-navigation-category-param' => 'category1',
                 'aria-controls' => 'category1',
                 'aria-expanded' => 'true',
             ],
@@ -116,7 +109,8 @@ class BackendMenuListenerTest extends TestCase
             [
                 'class' => 'group-category2',
                 'title' => 'Category 2 Title',
-                'onclick' => "return AjaxRequest.toggleNavigation(this, 'category2', '/contao')",
+                'data-action' => 'contao--toggle-navigation#toggle:prevent',
+                'data-contao--toggle-navigation-category-param' => 'category2',
                 'aria-controls' => 'category2',
                 'aria-expanded' => 'false',
             ],

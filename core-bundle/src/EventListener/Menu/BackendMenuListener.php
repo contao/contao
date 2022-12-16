@@ -58,7 +58,6 @@ class BackendMenuListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $modules = $user->navigation();
-        $path = $this->router->generate('contao_backend');
 
         foreach ($modules as $categoryName => $categoryData) {
             $categoryNode = $tree->getChild($categoryName);
@@ -70,7 +69,8 @@ class BackendMenuListener
                     ->setUri($categoryData['href'])
                     ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
                     ->setLinkAttribute('title', $categoryData['title'])
-                    ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
+                    ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
+                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
                     ->setLinkAttribute('aria-controls', $categoryName)
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
