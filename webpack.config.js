@@ -1,14 +1,16 @@
 const Encore = require('@symfony/webpack-encore');
 
 Encore
-    .setOutputPath('public/')
+    .setOutputPath('core-bundle/public/')
     .setPublicPath('/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild(['**/*', '!core.**', '!mootao.**'])
     .disableSingleRuntimeChunk()
     .enableSourceMaps()
     .enableVersioning()
-    .addEntry('backend', './assets/backend.js')
+    .addEntry('backend', './core-bundle/assets/backend.js')
 ;
 
-module.exports = Encore.getWebpackConfig();
+const coreConfig = Encore.getWebpackConfig();
+
+module.exports = [coreConfig];

@@ -5,9 +5,6 @@
 # Dotenv
 /.env
 
-# Node
-/node_modules/
-
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
