@@ -43,6 +43,6 @@ class TestCronJob
 
     public function asyncMethod(): PromiseInterface|null
     {
-        return new Promise(static function () use (&$promise): void {$promise->resolve('promise'); });
+        return $promise = new Promise(static function () use (&$promise): void { $promise->resolve('promise'); });
     }
 }
