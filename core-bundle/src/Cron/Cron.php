@@ -16,6 +16,8 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Psr\Log\LoggerInterface;
 
 class Cron
@@ -135,11 +137,42 @@ class Cron
             $repository->unlockTable();
         }
 
-        // Execute all cron jobs to be run
-        foreach ($cronJobsToBeRun as $cron) {
+        $this->executeCrons($cronJobsToBeRun, $scope);
+    }
+
+    /**
+     * @param array<CronJob> $crons
+     */
+    private function executeCrons(array $crons, string $scope): void
+    {
+        /** @var array<string, PromiseInterface> $promises */
+        $promises = [];
+
+        foreach ($crons as $cron) {
             $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $cron($scope);
+            $promise = $cron($scope);
+
+            if (!$promise instanceof PromiseInterface) {
+                continue;
+            }
+
+            $promise->then(
+                function () use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                },
+                function ($reason) use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                }
+            );
+
+            $promises[] = $promise;
         }
+
+        if (0 === \count($promises)) {
+            return;
+        }
+
+        Utils::settle($promises)->wait();
     }
 }
