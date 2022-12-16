@@ -225,7 +225,7 @@ class AddCronJobsPassTest extends TestCase
     }
 
     /**
-     * Returns the container builder with a dummy Cron definition.
+     * Returns the container builder with a dummy contao.cron definition.
      */
     private function getContainerBuilder(): ContainerBuilder
     {

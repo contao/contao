@@ -60,10 +60,12 @@ class ProcessUtilTest extends TestCase
             ->expects($autostart ? $this->once() : $this->never())
             ->method('start')
         ;
+
         $process
             ->expects($this->once())
             ->method('wait')
         ;
+
         $process
             ->method('isSuccessful')
             ->willReturn($isSuccessful)

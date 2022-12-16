@@ -34,6 +34,7 @@ class AddCronJobsPass implements CompilerPassInterface
 
         /** @var array<Definition> $sync */
         $sync = [];
+
         /** @var array<Definition> $async */
         $async = [];
 
@@ -73,7 +74,7 @@ class AddCronJobsPass implements CompilerPassInterface
             }
         }
 
-        // Add async jobs first, so they will be executed first.
+        // Add async jobs first, so they are executed first.
         foreach ($async as $jobDefinition) {
             $definition->addMethodCall('addCronJob', [$jobDefinition]);
         }

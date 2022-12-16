@@ -153,18 +153,20 @@ class Cron
 
             $promise = $cron($scope);
 
-            if ($promise instanceof PromiseInterface) {
-                $promise->then(
-                    function () use ($cron): void {
-                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
-                    },
-                    function ($reason) use ($cron): void {
-                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
-                    }
-                );
-
-                $promises[] = $promise;
+            if (!$promise instanceof PromiseInterface) {
+                continue;
             }
+
+            $promise->then(
+                function () use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                },
+                function ($reason) use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                }
+            );
+
+            $promises[] = $promise;
         }
 
         if (0 === \count($promises)) {

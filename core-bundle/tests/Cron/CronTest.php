@@ -109,6 +109,7 @@ class CronTest extends TestCase
             ->method('asyncMethod')
             ->willReturn($promise1)
         ;
+
         $cronjob2 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronJob2')->getMock();
         $cronjob2
             ->expects($this->once())
