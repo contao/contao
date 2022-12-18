@@ -46,7 +46,7 @@ class FixAccesskeyMigration extends AbstractMigration
     public function run(): MigrationResult
     {
         $this->connection->executeQuery("ALTER TABLE tl_page CHANGE accesskey accesskey CHAR(1) DEFAULT '' NOT NULL");
-        $this->connection->executeQuery("UPDATE tl_page SET accesskey = '' WHERE accesskey = '0'");
+        $this->connection->executeQuery("UPDATE tl_page SET accesskey = ''");
 
         return $this->createResult(true);
     }
