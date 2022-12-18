@@ -32,7 +32,7 @@ services:
             - '@database_connection'
 
     contao.migration.version_500.fix_accesskey:
-        class: Contao\CoreBundle\Migration\Version500\FixAccesskeyMigration
+        class: Contao\CoreBundle\Migration\Version500\AccesskeyMigration
         arguments:
             - '@database_connection'
 
