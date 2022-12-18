@@ -1171,10 +1171,7 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		if (false === strpos($baseUrl, $previewScript))
-		{
-			$context->setBaseUrl(rtrim($baseUrl, '/') . $previewScript);
-		}
+		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
 		$objRouter = System::getContainer()->get('router');
 
