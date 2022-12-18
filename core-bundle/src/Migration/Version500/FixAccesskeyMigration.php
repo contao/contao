@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\BooleanType;
 
 /**
- * Removes '0' from tl_page.accesskey as this was accidentally introduced (see #5586)
+ * Removes '0' from tl_page.accesskey as this was accidentally introduced (see #5586).
  */
 class FixAccesskeyMigration extends AbstractMigration
 {
