@@ -31,7 +31,7 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_500.fix_accesskey:
+    contao.migration.version_500.accesskey:
         class: Contao\CoreBundle\Migration\Version500\AccesskeyMigration
         arguments:
             - '@database_connection'
