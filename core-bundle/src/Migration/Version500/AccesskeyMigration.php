@@ -22,7 +22,7 @@ use Doctrine\DBAL\Types\BooleanType;
  */
 class AccesskeyMigration extends AbstractMigration
 {
-    private static $affectedTables = ['tl_page', 'tl_form_field'];
+    private static array $affectedTables = ['tl_page', 'tl_form_field'];
 
     public function __construct(private Connection $connection)
     {
