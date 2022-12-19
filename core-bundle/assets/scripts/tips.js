@@ -3,7 +3,7 @@
 
     const tip = document.createElement('div');
     tip.setAttribute('role', 'tooltip');
-    tip.setAttribute('aria-hidden', true);
+    tip.setAttribute('aria-hidden', 'true');
     tip.classList.add('tip')
     tip.style.position = 'absolute';
     tip.style.display = 'none';
@@ -51,7 +51,7 @@
                 tip.style.top = `${(window.scrollY + position.top + y)}px`;
                 tip.style.display = 'block';
                 tip.style.willChange = 'auto';
-                tip.setAttribute('aria-hidden', false);
+                tip.removeAttribute('aria-hidden');
 
                 if (!tip.parentNode && document.body) {
                     document.body.append(tip);
@@ -72,7 +72,7 @@
                 timer = setTimeout(function () {
                     tip.style.display = 'none';
                     tip.style.willChange = 'auto';
-                    tip.setAttribute('aria-hidden', true);
+                    tip.setAttribute('aria-hidden', 'true');
                 }, 100)
             }
         })
@@ -85,7 +85,7 @@
                 clearTimeout(timer);
                 tip.style.display = 'none';
                 tip.style.willChange = 'auto';
-                tip.setAttribute('aria-hidden', true);
+                tip.setAttribute('aria-hidden', 'true');
             })
         }
     }
