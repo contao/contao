@@ -18,10 +18,12 @@ use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
 class Cron
 {
+    final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
     final public const SCOPE_WEB = 'web';
     final public const SCOPE_CLI = 'cli';
 
@@ -34,8 +36,27 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private CacheItemPoolInterface $cachePool, private LoggerInterface|null $logger = null)
     {
+        $this->addCronJob(new CronJob($this, '* * * * *', 'updateMinutelyCliCron'));
+    }
+
+    public function hasMinutelyCliCron(): bool
+    {
+        $item = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
+
+        return $item->isHit();
+    }
+
+    public function updateMinutelyCliCron(string $scope): void
+    {
+        if (self::SCOPE_CLI !== $scope) {
+            return;
+        }
+
+        $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
+        $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
+        $this->cachePool->save($cacheItem);
     }
 
     public function addCronJob(CronJob $cronjob): void

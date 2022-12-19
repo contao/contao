@@ -21,7 +21,9 @@ use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\Promise;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class CronTest extends TestCase
 {
@@ -35,7 +37,8 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
-            fn () => $this->createMock(EntityManagerInterface::class)
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
@@ -52,7 +55,8 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
-            fn () => $this->createMock(EntityManagerInterface::class)
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
@@ -79,9 +83,10 @@ class CronTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('debug')
             ->withConsecutive(
+                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
                 ['Executing cron job "TestCronJob::onMinutely"'],
                 ['Executing cron job "TestCronJob::onHourly"']
             )
@@ -90,6 +95,7 @@ class CronTest extends TestCase
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
             fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class),
             $logger
         );
 
@@ -119,9 +125,10 @@ class CronTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('debug')
             ->withConsecutive(
+                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
                 ['Executing cron job "TestCronJob::asyncMethod"'],
                 ['Executing cron job "TestCronJob2::asyncMethod"'],
                 ['Asynchronous cron job "TestCronJob::asyncMethod" finished successfully'],
@@ -132,6 +139,7 @@ class CronTest extends TestCase
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
             fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class),
             $logger
         );
 
@@ -150,31 +158,20 @@ class CronTest extends TestCase
 
         $entity
             ->method('getName')
-            ->willReturn('UpdateEntitiesCron::onHourly')
+            ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
         ;
 
         $entity
             ->method('getLastRun')
-            ->willReturn((new \DateTime())->modify('-1 hours'))
+            ->willReturn((new \DateTime())->modify('-1 minute'))
         ;
 
         $repository = $this->createMock(CronJobRepository::class);
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with($this->equalTo('findOneByName'), $this->equalTo(['UpdateEntitiesCron::onHourly']))
+            ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn($entity)
-        ;
-
-        $cronjob = $this
-            ->getMockBuilder(TestCronJob::class)
-            ->setMockClassName('UpdateEntitiesCron')
-            ->getMock()
-        ;
-
-        $cronjob
-            ->expects($this->once())
-            ->method('onHourly')
         ;
 
         $manager = $this->createMock(EntityManagerInterface::class);
@@ -183,8 +180,7 @@ class CronTest extends TestCase
             ->method('flush')
         ;
 
-        $cron = new Cron(static fn () => $repository, static fn () => $manager);
-        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
+        $cron = new Cron(static fn () => $repository, static fn () => $manager, $this->createMock(CacheItemPoolInterface::class));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -199,7 +195,8 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
-            fn () => $this->createMock(EntityManagerInterface::class)
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly'));
@@ -210,7 +207,8 @@ class CronTest extends TestCase
     {
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
-            fn () => $this->createMock(EntityManagerInterface::class)
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         try {
@@ -232,7 +230,8 @@ class CronTest extends TestCase
             },
             static function (): never {
                 throw new \LogicException();
-            }
+            },
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         $this->expectException(\LogicException::class);
@@ -245,7 +244,7 @@ class CronTest extends TestCase
         $entity = $this->createMock(CronJobEntity::class);
         $entity
             ->method('getName')
-            ->willReturn('UpdateEntitiesCron::onHourly')
+            ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
         ;
 
         $entity
@@ -262,23 +261,11 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with($this->equalTo('findOneByName'), $this->equalTo(['UpdateEntitiesCron::onHourly']))
+            ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn($entity)
         ;
 
-        $cronjob = $this
-            ->getMockBuilder(TestCronJob::class)
-            ->setMockClassName('UpdateEntitiesCron')
-            ->getMock()
-        ;
-
-        $cronjob
-            ->expects($this->never())
-            ->method('onHourly')
-        ;
-
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
-        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
+        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $this->createMock(CacheItemPoolInterface::class));
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -287,7 +274,7 @@ class CronTest extends TestCase
         $entity = $this->createMock(CronJobEntity::class);
         $entity
             ->method('getName')
-            ->willReturn('UpdateEntitiesCron::onHourly')
+            ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
         ;
 
         $entity
@@ -304,23 +291,70 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with($this->equalTo('findOneByName'), $this->equalTo(['UpdateEntitiesCron::onHourly']))
+            ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn($entity)
         ;
 
-        $cronjob = $this
-            ->getMockBuilder(TestCronJob::class)
-            ->setMockClassName('UpdateEntitiesCron')
-            ->getMock()
-        ;
-
-        $cronjob
-            ->expects($this->once())
-            ->method('onHourly')
-        ;
-
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
-        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
+        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $this->createMock(CacheItemPoolInterface::class));
         $cron->run(Cron::SCOPE_CLI, true);
+    }
+
+    public function testMinutelyCronJob(): void
+    {
+        $entity = $this->createMock(CronJobEntity::class);
+        $entity
+            ->method('getName')
+            ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
+        ;
+
+        $entity
+            ->method('getLastRun')
+            ->willReturn((new \DateTime())->modify('-1 minute'))
+        ;
+
+        $entity
+            ->expects($this->once())
+            ->method('setLastRun')
+        ;
+
+        $repository = $this->createMock(CronJobRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('__call')
+            ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
+            ->willReturn($entity)
+        ;
+
+        $item = $this->createMock(ItemInterface::class);
+        $item
+            ->expects($this->exactly(3))
+            ->method('isHit')
+            ->willReturnOnConsecutiveCalls(false, true, false)
+        ;
+        $item
+            ->expects($this->once())
+            ->method('expiresAfter')
+            ->with(70)
+        ;
+
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->expects($this->exactly(4))
+            ->method('getItem')
+            ->with(Cron::MINUTELY_CACHE_KEY)
+            ->willReturn($item)
+        ;
+        $cache
+            ->expects($this->once())
+            ->method('save')
+            ->with($item)
+        ;
+
+        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $cache);
+
+        $this->assertFalse($cron->hasMinutelyCliCron());
+        $cron->run(Cron::SCOPE_CLI);
+        $this->assertTrue($cron->hasMinutelyCliCron());
+        $this->assertFalse($cron->hasMinutelyCliCron());
     }
 }
