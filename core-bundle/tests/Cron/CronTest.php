@@ -20,6 +20,7 @@ use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\Promise;
 use Psr\Log\LoggerInterface;
 
 class CronTest extends TestCase
@@ -94,6 +95,48 @@ class CronTest extends TestCase
 
         $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
+        $cron->run(Cron::SCOPE_CLI);
+    }
+
+    public function testRunsAsyncCrons(): void
+    {
+        $promise1 = new Promise(static function () use (&$promise1): void { $promise1->resolve('Success'); });
+        $promise2 = new Promise(static function () use (&$promise2): void { $promise2->reject('Failure'); });
+
+        $cronjob1 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronJob')->getMock();
+        $cronjob1
+            ->expects($this->once())
+            ->method('asyncMethod')
+            ->willReturn($promise1)
+        ;
+
+        $cronjob2 = $this->getMockBuilder(TestCronJob::class)->setMockClassName('TestCronJob2')->getMock();
+        $cronjob2
+            ->expects($this->once())
+            ->method('asyncMethod')
+            ->willReturn($promise2)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(4))
+            ->method('debug')
+            ->withConsecutive(
+                ['Executing cron job "TestCronJob::asyncMethod"'],
+                ['Executing cron job "TestCronJob2::asyncMethod"'],
+                ['Asynchronous cron job "TestCronJob::asyncMethod" finished successfully'],
+                ['Asynchronous cron job "TestCronJob2::asyncMethod" failed: Failure'],
+            )
+        ;
+
+        $cron = new Cron(
+            fn () => $this->createMock(CronJobRepository::class),
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $logger
+        );
+
+        $cron->addCronJob(new CronJob($cronjob1, '* * * * *', 'asyncMethod'));
+        $cron->addCronJob(new CronJob($cronjob2, '* * * * *', 'asyncMethod'));
         $cron->run(Cron::SCOPE_CLI);
     }
 

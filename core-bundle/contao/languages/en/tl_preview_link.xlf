@@ -75,7 +75,7 @@
         <source>Please save this record to generate the preview link.</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
-        <source>Preview link: &lt;a href="%s" data-to-clipboard="%s"&gt;%s&lt;/a&gt;</source>
+        <source>Preview link</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
