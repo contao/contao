@@ -120,13 +120,13 @@ class BackendFavoritesListener
         $uri = '';
 
         if (!empty($pairs)) {
-            $uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            $uri = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
         }
 
         $requestUri = $request->getBaseUrl().$request->getPathInfo().$uri;
 
         $nodes = $this->connection->fetchAllAssociative(
-            "SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting",
+            'SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting',
             [
                 'pid' => $pid,
                 'user' => $user,
@@ -139,7 +139,7 @@ class BackendFavoritesListener
             $item = $factory
                 ->createItem($node['title'])
                 ->setLabel($node['title'])
-                ->setUri($node['url'].(str_contains($node['url'], '?') ? '&' : '?').'ref='.$ref)
+                ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
                 ->setLinkAttribute('class', 'navigation')
                 ->setLinkAttribute('title', $node['title'])
                 ->setCurrent($node['url'] === $requestUri)

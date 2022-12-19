@@ -32,9 +32,9 @@ class SaveFavoritesUrlListener
         }
 
         $this->connection->executeQuery(
-            "UPDATE tl_favorites SET url = :url WHERE id = :id",
+            'UPDATE tl_favorites SET url = :url WHERE id = :id',
             [
-                'url' => base64_decode($data),
+                'url' => base64_decode($data, true),
                 'id' => $insertId,
             ]
         );

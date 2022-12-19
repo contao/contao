@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -50,7 +51,8 @@ class BackendMenuListenerTest extends TestCase
             $this->createMock(RouterInterface::class),
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
@@ -140,7 +142,8 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
@@ -172,7 +175,8 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
@@ -211,7 +215,7 @@ class BackendMenuListenerTest extends TestCase
             )
         ;
 
-        $request = new Request();
+        $request = Request::create('https://localhost/contao?do=pages&ref=123456');
         $request->attributes->set('_contao_referer_id', 'bar');
 
         $requestStack = new RequestStack();
@@ -224,6 +228,13 @@ class BackendMenuListenerTest extends TestCase
             ->willReturn('<p class="tl_error">Foo</p>')
         ;
 
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($this->once())
+            ->method('getDefaultTokenValue')
+            ->willReturn('foobar')
+        ;
+
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
 
@@ -232,7 +243,8 @@ class BackendMenuListenerTest extends TestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages])
+            $this->mockContaoFramework([Backend::class => $systemMessages]),
+            $tokenManager
         );
 
         $listener($event);
@@ -261,7 +273,7 @@ class BackendMenuListenerTest extends TestCase
 
         // Add favorite
         $this->assertSame('MSC.favorite', $children['favorite']->getLabel());
-        $this->assertSame('/contao?do=favorite&ref=bar', $children['favorite']->getUri());
+        $this->assertSame('/contao?do=favorites&act=paste&mode=create&data=L2NvbnRhbz9kbz1wYWdlcw%3D%3D&rt=foobar&ref=bar', $children['favorite']->getUri());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['favorite']->getExtras());
 
         $this->assertSame(
@@ -338,7 +350,8 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
@@ -370,7 +383,8 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
