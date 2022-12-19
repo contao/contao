@@ -38,7 +38,6 @@ class Cron
      */
     public function __construct(private \Closure $repository, private \Closure $entityManager, private CacheItemPoolInterface $cachePool, private LoggerInterface|null $logger = null)
     {
-        $this->addCronJob(new CronJob($this, '* * * * *', 'updateMinutelyCliCron'));
     }
 
     public function hasMinutelyCliCron(): bool

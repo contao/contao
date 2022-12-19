@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
@@ -325,6 +326,67 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
         $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
         $this->assertSame(['1D', '2D', '7D', '14D', '1M', '1Y'], $retentionPolicyDefinition->getArgument(1));
+    }
+
+    public function testConfiguresCronSchedulerCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'cron' => [
+                        'web_listener' => false,
+                    ],
+                ],
+            ],
+            $container
+        );
+
+        // Disabling should remove the definition, no cron job should be configured
+        $this->assertFalse($container->hasDefinition('contao.listener.command_scheduler'));
+        $this->assertCount(0, $container->findDefinition('contao.cron')->getMethodCalls());
+
+        $extension->load(
+            [
+                'contao' => [
+                    'cron' => [
+                        'web_listener' => true,
+                    ],
+                ],
+            ],
+            $container
+        );
+
+        // Forcing it to true should disable auto mode, no cron job should be configured
+        $definition = $container->findDefinition('contao.listener.command_scheduler');
+        $this->assertFalse($definition->getArgument(3));
+        $this->assertCount(0, $container->findDefinition('contao.cron')->getMethodCalls());
+
+        $extension->load(
+            [
+                'contao' => [
+                    'cron' => [
+                        'web_listener' => 'auto',
+                    ],
+                ],
+            ],
+            $container
+        );
+
+        // Auto should also configure the minutely cron job
+        $definition = $container->findDefinition('contao.listener.command_scheduler');
+        $this->assertTrue($definition->getArgument(3));
+        $this->assertCount(1, $container->findDefinition('contao.cron')->getMethodCalls());
+        $this->assertSame('addCronJob', $container->findDefinition('contao.cron')->getMethodCalls()[0][0]);
+
+        /** @var Definition $definition */
+        $definition = $container->findDefinition('contao.cron')->getMethodCalls()[0][1][0];
+        $this->assertSame(CronJob::class, $definition->getClass());
+        $this->assertSame('contao.cron', (string) $definition->getArgument(0));
+        $this->assertSame('* * * * *', $definition->getArgument(1));
+        $this->assertSame('updateMinutelyCliCron', $definition->getArgument(2));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void

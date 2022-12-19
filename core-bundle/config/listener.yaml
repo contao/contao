@@ -39,6 +39,7 @@ services:
             - '@contao.cron'
             - '@database_connection'
             - '%fragment.path%'
+            # auto mode set by extension
         tags:
             - kernel.event_listener
 

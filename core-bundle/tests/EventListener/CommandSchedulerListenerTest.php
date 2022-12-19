@@ -26,13 +26,12 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CommandSchedulerListenerTest extends TestCase
 {
-    public function testRunsTheCommandSchedulerFor(): void
+    public function testRunsTheCommandSchedulerIfAutoModeIsDisabled(): void
     {
         $cron = $this->createMock(Cron::class);
         $cron
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('hasMinutelyCliCron')
-            ->willReturn(false)
         ;
         $cron
             ->expects($this->once())
@@ -44,7 +43,7 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 
-    public function testDoesNotRunTheCommandSchedulerIfWeHaveAMinutelyRealCliCron(): void
+    public function testRunsTheCommandSchedulerIfAutoModeIsEnabledAndCronExists(): void
     {
         $cron = $this->createMock(Cron::class);
         $cron
@@ -53,11 +52,29 @@ class CommandSchedulerListenerTest extends TestCase
             ->willReturn(true)
         ;
         $cron
+            ->expects($this->once())
+            ->method('run')
+            ->with(Cron::SCOPE_WEB)
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), '_fragment', true);
+        $listener($this->getTerminateEvent('contao_frontend'));
+    }
+
+    public function testDoesNotRunTheCommandSchedulerIfAutoModeIsEnabledAndCronDoesNotExist(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->once())
+            ->method('hasMinutelyCliCron')
+            ->willReturn(false)
+        ;
+        $cron
             ->expects($this->never())
             ->method('run')
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection());
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), '_fragment', true);
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 

@@ -27,6 +27,7 @@ class CommandSchedulerListener
         private Cron $cron,
         private Connection $connection,
         private string $fragmentPath = '_fragment',
+        private bool $autoMode = false,
     ) {
     }
 
@@ -54,8 +55,11 @@ class CommandSchedulerListener
             return false;
         }
 
-        // If we have a real minutely CLI cron, we don't need this listener
-        return !$this->cron->hasMinutelyCliCron();
+        if ($this->autoMode && !$this->cron->hasMinutelyCliCron()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

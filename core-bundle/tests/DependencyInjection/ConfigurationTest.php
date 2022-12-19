@@ -243,6 +243,54 @@ class ConfigurationTest extends TestCase
     }
 
     /**
+     * @dataProvider cronConfigurationProvider
+     */
+    public function testValidCronConfiguration(array $params, bool|string $expected): void
+    {
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($expected, $configuration['cron']['web_listener']);
+    }
+
+    /**
+     * @dataProvider cronConfigurationProvider
+     */
+    public function testInvalidCronConfiguration(): void
+    {
+        $params = [
+            'contao' => [
+                'cron' => [
+                    'web_listener' => 'foobar',
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.cron.web_listener": Only "true", "false" or "auto" are allowed. ""foobar"" given.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function cronConfigurationProvider(): \Generator
+    {
+        yield 'Default value' => [
+            [], 'auto',
+        ];
+
+        yield 'Explicit auto' => [
+            ['contao' => ['cron' => ['web_listener' => 'auto']]], 'auto',
+        ];
+
+        yield 'Explicit false' => [
+            ['contao' => ['cron' => ['web_listener' => false]]], false,
+        ];
+
+        yield 'Explicit true' => [
+            ['contao' => ['cron' => ['web_listener' => true]]], true,
+        ];
+    }
+
+    /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
      */
