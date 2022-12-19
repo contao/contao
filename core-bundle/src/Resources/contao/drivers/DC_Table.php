@@ -3704,7 +3704,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($objRoot->numRows < 1)
 			{
-				$this->root = array();
+				$this->updateRoot(array());
 			}
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
@@ -3720,12 +3720,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$arrFound = $arrRoot;
-				$this->root = $this->eliminateNestedPages($arrFound, $table, $blnHasSorting);
+				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
 			}
 			else
 			{
 				$arrFound = $objRoot->fetchEach($fld);
-				$this->root = $this->eliminateNestedPages($arrFound, $table, $blnHasSorting);
+				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
 			}
 		}
 
@@ -4036,7 +4036,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+				$allowedChildIds = array();
+
+				if (!empty($arrFound))
+				{
+					$allowedChildIds = array_merge($arrFound, $this->visibleRootTrails);
+				}
+
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($allowedChildIds) ? " AND id IN(" . implode(',', array_map('\intval', $allowedChildIds)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -6246,7 +6253,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if ($objIds->numRows > 0)
 				{
-					$this->root = $objIds->fetchEach('id');
+					$this->updateRoot($objIds->fetchEach('id'));
 				}
 
 				if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste']))
@@ -6261,11 +6268,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
 				{
-					$this->root = array(0);
+					$this->updateRoot(array(0));
 				}
 				else
 				{
-					$this->root = $this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table);
+					$this->updateRoot($this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table));
 				}
 			}
 		}
@@ -6273,8 +6280,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the IDs of all root records (list view or parent view)
 		elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
 		{
-			$this->root = array_unique($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']);
+			$this->updateRoot(array_unique($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']));
 		}
+	}
+
+	protected function updateRoot(array $root)
+	{
+		$this->root = $root;
+
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 
 		// Fetch visible root trails if enabled
 		if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
@@ -6323,7 +6337,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				);
 			}
 
-			$this->root = $arrRoot;
+			$this->updateRoot($arrRoot);
 		}
 
 		return $attributes;
