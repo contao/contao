@@ -158,6 +158,12 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.save_favorites_url:
+        class: Contao\CoreBundle\EventListener\DataContainer\SaveFavoritesUrlListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+
     contao.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
@@ -318,9 +324,21 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.framework'
+            - '@contao.csrf.token_manager'
         tags:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
+
+    contao.listener.menu.backend_favorites:
+        class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+        tags:
+            - kernel.event_listener
 
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener

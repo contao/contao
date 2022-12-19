@@ -249,7 +249,7 @@ class BackendMenuListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'favorite', 'alerts', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
@@ -265,6 +265,19 @@ class BackendMenuListenerTest extends TestCase
             $children['manual']->getLinkAttributes()
         );
 
+        // Add favorite
+        $this->assertSame('MSC.favorite', $children['favorite']->getLabel());
+        $this->assertSame('/contao?do=favorite&ref=bar', $children['favorite']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['favorite']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-favorite',
+                'title' => 'MSC.favorite',
+            ],
+            $children['favorite']->getLinkAttributes()
+        );
+
         // Alerts
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
@@ -277,8 +290,8 @@ class BackendMenuListenerTest extends TestCase
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(3, $grandChildren);
-        $this->assertSame(['info', 'login', 'security'], array_keys($grandChildren));
+        $this->assertCount(4, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'favorites'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
@@ -296,6 +309,12 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
+
+        // Favorites
+        $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
+        $this->assertSame('/contao?do=favorites&ref=bar', $grandChildren['favorites']->getUri());
+        $this->assertSame(['class' => 'icon-favorites'], $grandChildren['favorites']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
         $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());

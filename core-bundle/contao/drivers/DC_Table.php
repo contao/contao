@@ -351,7 +351,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				else
 				{
 					$this->procedure[] = $filter[0];
-					$this->values[] = $filter[1];
+					$this->values[] = $filter[1] instanceof \Closure ? $filter[1]() : $filter[1];
 				}
 			}
 		}

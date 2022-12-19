@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
@@ -33,6 +34,7 @@ class BackendMenuListener
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
         private ContaoFramework $framework,
+        private ContaoCsrfTokenManager $csrfTokenManager,
     ) {
     }
 
@@ -124,6 +126,29 @@ class BackendMenuListener
 
         $tree->addChild($manual);
 
+        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
+
+        $favoriteData = [
+            'do' => 'favorites',
+            'act' => 'paste',
+            'mode' => 'create',
+            'data' => base64_encode($this->getRelativeUrl()),
+            'rt' => $this->csrfTokenManager->getDefaultTokenValue(),
+            'ref' => $ref,
+        ];
+
+        $favorite = $factory
+            ->createItem('favorite')
+            ->setLabel($favoriteTitle)
+            ->setUri($this->router->generate('contao_backend', $favoriteData))
+            ->setLinkAttribute('class', 'icon-favorite')
+            ->setLinkAttribute('title', $favoriteTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($favorite);
+
         $alerts = $event->getFactory()
             ->createItem('alerts')
             ->setLabel($this->getAlertsLabel())
@@ -174,6 +199,16 @@ class BackendMenuListener
 
         $submenu->addChild($security);
 
+        $favorites = $factory
+            ->createItem('favorites')
+            ->setLabel('MSC.favorites')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
+            ->setLinkAttribute('class', 'icon-favorites')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($favorites);
+
         $buger = $factory
             ->createItem('burger')
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
@@ -214,6 +249,26 @@ class BackendMenuListener
         }
 
         return $request->attributes->get('_contao_referer_id');
+    }
+
+    private function getRelativeUrl(): string
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        if (null !== $qs = $request->getQueryString()) {
+            parse_str($qs, $pairs);
+            ksort($pairs);
+
+            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
+            if (!empty($pairs)) {
+                $qs = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            }
+        }
+
+        return $request->getBaseUrl().$request->getPathInfo().$qs;
     }
 
     private function getClassFromAttributes(array $attributes): string
