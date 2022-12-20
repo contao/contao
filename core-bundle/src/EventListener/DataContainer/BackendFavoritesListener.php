@@ -26,7 +26,7 @@ class BackendFavoritesListener
     public function __construct(
         private readonly Security $security,
         private RequestStack $requestStack,
-        private Connection $connection
+        private Connection $connection,
     ) {
     }
 
@@ -40,7 +40,7 @@ class BackendFavoritesListener
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         // Always filter the favorites by user
-        $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['filter'][] = ['user=?', $userId];
+        $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user=?', $userId];
 
         switch ((string) $request->query->get('act')) {
             case '': // empty
@@ -79,9 +79,10 @@ class BackendFavoritesListener
         }
 
         // Allow adding new favorites
-        if ('create' === $request->query->get('act') && $request->query->has('data')) {
+        if ('create' === $request->query->get('act') && ($data = $request->query->get('data'))) {
             $GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable'] = false;
-            $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default'] = base64_decode($request->query->get('data'), true);
+            $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default'] = base64_decode($data, true);
+            $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default'] = $userId;
         }
     }
 }

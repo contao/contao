@@ -84,8 +84,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->unloadTableWithoutPreviewScript('tl_preview_link');
 
         $this->assertSame([], $GLOBALS['TL_DCA']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotUnloadOtherTables(): void
@@ -106,8 +104,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->unloadTableWithoutPreviewScript('tl_member');
 
         $this->assertSame(['tl_preview_link' => 'foo', 'tl_member' => 'bar'], $GLOBALS['TL_DCA']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     /**
@@ -153,8 +149,6 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
 
-        unset($GLOBALS['TL_DCA']);
-
         ClockMock::withClockMock(false);
     }
 
@@ -198,8 +192,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->createFromUrl($dc);
 
         $this->assertFalse($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotEnableCreateOperationIfPreviewScriptIsNotInUrl(): void
@@ -226,8 +218,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     /**

@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\BackendUser;
 use Contao\DataContainer;
 use Contao\DC_Table;
 
@@ -99,7 +98,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		),
 		'user' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array

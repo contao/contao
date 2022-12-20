@@ -18,6 +18,7 @@ use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -69,7 +70,7 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        $session = $this->requestStack->getSession()->getBag('contao_backend');
+        $session = $this->requestStack->getSession()->all();
         $collapsed = 0 === ($session['backend_modules']['favorites'] ?? null);
 
         $tree = $factory
@@ -81,16 +82,19 @@ class BackendFavoritesListener
             ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, 'favorites', '$path')")
             ->setLinkAttribute('aria-controls', 'favorites')
             ->setChildrenAttribute('id', 'favorites')
-            ->setLinkAttribute('aria-expanded', 'true')
             ->setExtra('translation_domain', false)
         ;
 
         if ($collapsed) {
             $tree->setAttribute('class', 'collapsed');
-            $tree->setLinkAttribute('aria-expanded', 'false');
+        } else {
+            $tree->setLinkAttribute('aria-expanded', 'true');
         }
 
-        $this->buildTree($tree, $factory, $user->id);
+        $requestUri = $this->getRequestUri($request);
+        $ref = $request->attributes->get('_contao_referer_id');
+
+        $this->buildTree($tree, $factory, $requestUri, $ref, $user->id);
 
         if (!$tree->hasChildren()) {
             return;
@@ -108,23 +112,8 @@ class BackendFavoritesListener
         (new MenuManipulator())->moveToPosition($tree, 0);
     }
 
-    private function buildTree(ItemInterface $tree, FactoryInterface $factory, int $user, int $pid = 0): void
+    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, string $ref, int $user, int $pid = 0): void
     {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        parse_str($request->server->get('QUERY_STRING'), $pairs);
-        unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
-
-        $uri = '';
-
-        if (!empty($pairs)) {
-            $uri = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
-        }
-
-        $requestUri = $request->getBaseUrl().$request->getPathInfo().$uri;
-
         $nodes = $this->connection->fetchAllAssociative(
             'SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting',
             [
@@ -133,8 +122,6 @@ class BackendFavoritesListener
             ]
         );
 
-        $ref = $request->attributes->get('_contao_referer_id');
-
         foreach ($nodes as $node) {
             // Ignore drafts
             if ($node['tstamp'] < 1) {
@@ -142,7 +129,7 @@ class BackendFavoritesListener
             }
 
             $item = $factory
-                ->createItem($node['title'])
+                ->createItem('favorite_'.$node['id'])
                 ->setLabel($node['title'])
                 ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
                 ->setLinkAttribute('class', 'navigation')
@@ -153,7 +140,21 @@ class BackendFavoritesListener
 
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $user, $node['id']);
+            $this->buildTree($item, $factory, $requestUri, $ref, $user, $node['id']);
         }
+    }
+
+    private function getRequestUri(Request $request): string
+    {
+        parse_str($request->server->get('QUERY_STRING'), $pairs);
+        unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
+        $uri = '';
+
+        if (!empty($pairs)) {
+            $uri = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+        }
+
+        return $request->getBaseUrl().$request->getPathInfo().$uri;
     }
 }
