@@ -43,13 +43,13 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 
-    public function testRunsTheCommandSchedulerIfAutoModeIsEnabledAndCronExists(): void
+    public function testRunsTheCommandSchedulerIfAutoModeIsEnabledAndCronDoesNotExist(): void
     {
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->once())
             ->method('hasMinutelyCliCron')
-            ->willReturn(true)
+            ->willReturn(false)
         ;
         $cron
             ->expects($this->once())
@@ -61,13 +61,13 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 
-    public function testDoesNotRunTheCommandSchedulerIfAutoModeIsEnabledAndCronDoesNotExist(): void
+    public function testDoesNotRunTheCommandSchedulerIfAutoModeIsEnabledAndCronExists(): void
     {
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->once())
             ->method('hasMinutelyCliCron')
-            ->willReturn(false)
+            ->willReturn(true)
         ;
         $cron
             ->expects($this->never())
