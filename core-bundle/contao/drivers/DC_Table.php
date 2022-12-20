@@ -3676,7 +3676,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
 
 			// Expand tree
-			if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) !== 1)
+			if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1)
 			{
 				$session[$node] = array();
 				$objNodes = $this->Database->execute("SELECT DISTINCT pid FROM " . $table . " WHERE pid>0");
@@ -4161,7 +4161,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Calculate label and add a toggle button
 		$level = ($intMargin / $intSpacing + 1);
-		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] === 1;
+		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
