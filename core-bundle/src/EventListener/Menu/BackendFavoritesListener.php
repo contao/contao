@@ -136,6 +136,11 @@ class BackendFavoritesListener
         $ref = $request->attributes->get('_contao_referer_id');
 
         foreach ($nodes as $node) {
+            // Ignore drafts
+            if ($node['tstamp'] < 1) {
+                continue;
+            }
+
             $item = $factory
                 ->createItem($node['title'])
                 ->setLabel($node['title'])
