@@ -2,6 +2,13 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -156,12 +163,6 @@ services:
     contao.listener.data_container.reset_custom_template:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
-            - '@database_connection'
-
-    contao.listener.data_container.save_favorites_url:
-        class: Contao\CoreBundle\EventListener\DataContainer\SaveFavoritesUrlListener
-        arguments:
-            - '@request_stack'
             - '@database_connection'
 
     contao.listener.data_container.start_stop_validation:

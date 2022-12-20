@@ -19,7 +19,8 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
-		'markAsCopy'                  => 'title',
+		'notCreatable'                => true,
+		'notCopyable'                 => true,
 		'sql' => array
 		(
 			'keys' => array
@@ -38,10 +39,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'filter'                  => array
-			(
-				array('user=?', static fn () => BackendUser::getInstance()->id)
-			),
 			'icon'                    => 'favorites.svg'
 		),
 		'label' => array
@@ -67,7 +64,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		'operations' => array
 		(
 			'edit',
-			'copy',
 			'cut',
 			'delete',
 			'show'
@@ -117,7 +113,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
 			'sql'                     => "text NULL"
 		)
 	)
