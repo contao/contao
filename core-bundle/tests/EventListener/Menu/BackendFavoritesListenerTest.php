@@ -385,7 +385,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame($linkAttributes, $children['favorite']->getLinkAttributes());
     }
 
-    public function testDoesNotAddTheHeaderMenuIfThereIsNoRequest(): void
+    public function testAddsAnEditFavoritesLinkIfTheUrlIsAFavoriteAlready(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
 
@@ -396,31 +396,67 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn($user)
         ;
 
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->willReturn('/contao?do=favorites&ref=bar')
+        ;
+
+        $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
+        $request->attributes->set('_contao_referer_id', 'foobar');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT COUNT(*) FROM tl_favorites WHERE url = :url AND user = :user')
+            ->willReturn(1)
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('MSC.editFavorites', [], 'contao_default')
+            ->willReturn('Edit favorites')
+        ;
+
         $factory = new MenuFactory();
 
-        $event = $this->createMock(MenuEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getTree')
-            ->willReturn($factory->createItem('headerMenu'))
-        ;
+        $tree = $factory->createItem('headerMenu');
+        $tree->addChild($factory->createItem('manual'));
+        $tree->addChild($factory->createItem('alerts'));
 
-        $event
-            ->expects($this->never())
-            ->method('getFactory')
-        ;
+        $event = new MenuEvent($factory, $tree);
 
         $listener = new BackendFavoritesListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $router,
+            $requestStack,
+            $connection,
+            $translator,
             $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $listener($event);
-    }
 
-    // testDoesNotAddTheHeaderMenuIfTheUrlIsAFavoriteAlready()
+        $children = $tree->getChildren();
+
+        $this->assertSame(['manual', 'favorite', 'alerts'], array_keys($tree->getChildren()));
+        $this->assertSame('favorite', $children['favorite']->getName());
+        $this->assertSame('Edit favorites', $children['favorite']->getLabel());
+        $this->assertTrue($children['favorite']->getExtra('safe_label'));
+        $this->assertSame('/contao?do=favorites&ref=bar', $children['favorite']->getUri());
+
+        $linkAttributes = [
+            'class' => 'icon-favorite icon-favorite--active',
+            'title' => 'Edit favorites',
+        ];
+
+        $this->assertSame($linkAttributes, $children['favorite']->getLinkAttributes());
+    }
 }

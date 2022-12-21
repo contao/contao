@@ -203,6 +203,10 @@ body.popup {
 	background: url("icons/favorite.svg") center center no-repeat;
 }
 
+#tmenu .icon-favorite--active {
+	background: url("icons/favorite_active.svg") center center no-repeat;
+}
+
 #tmenu .icon-manual {
 	background: url("icons/manual.svg") center center no-repeat;
 }

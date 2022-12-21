@@ -130,33 +130,13 @@ class BackendFavoritesListener
             ]
         );
 
-        // Do not add the menu item if the URL is a favorite already
-        if ($exists) {
-            return;
-        }
-
-        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
-
-        $favoriteData = [
-            'do' => 'favorites',
-            'act' => 'paste',
-            'mode' => 'create',
-            'data' => base64_encode($url),
-            'rt' => $this->tokenManager->getDefaultTokenValue(),
-            'ref' => $request->attributes->get('_contao_referer_id'),
-        ];
-
         $factory = $event->getFactory();
 
-        $tree = $factory
-            ->createItem('favorite')
-            ->setLabel($favoriteTitle)
-            ->setUri($this->router->generate('contao_backend', $favoriteData))
-            ->setLinkAttribute('class', 'icon-favorite')
-            ->setLinkAttribute('title', $favoriteTitle)
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
+        if ($exists) {
+            $tree = $this->addEditFavoritesLink($factory, $request);
+        } else {
+            $tree = $this->addSaveAsFavoriteLink($factory, $request, $url);
+        }
 
         $event->getTree()->addChild($tree);
 
@@ -194,6 +174,50 @@ class BackendFavoritesListener
 
             $this->buildTree($item, $factory, $requestUri, $ref, $user, $node['id']);
         }
+    }
+
+    private function addSaveAsFavoriteLink(FactoryInterface $factory, Request $request, string $url): ItemInterface
+    {
+        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
+
+        $favoriteData = [
+            'do' => 'favorites',
+            'act' => 'paste',
+            'mode' => 'create',
+            'data' => base64_encode($url),
+            'rt' => $this->tokenManager->getDefaultTokenValue(),
+            'ref' => $request->attributes->get('_contao_referer_id'),
+        ];
+
+        return $factory
+            ->createItem('favorite')
+            ->setLabel($favoriteTitle)
+            ->setUri($this->router->generate('contao_backend', $favoriteData))
+            ->setLinkAttribute('class', 'icon-favorite')
+            ->setLinkAttribute('title', $favoriteTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+    }
+
+    private function addEditFavoritesLink(FactoryInterface $factory, Request $request): ItemInterface
+    {
+        $favoriteTitle = $this->translator->trans('MSC.editFavorites', [], 'contao_default');
+
+        $favoriteData = [
+            'do' => 'favorites',
+            'ref' => $request->attributes->get('_contao_referer_id'),
+        ];
+
+        return $factory
+            ->createItem('favorite')
+            ->setLabel($favoriteTitle)
+            ->setUri($this->router->generate('contao_backend', $favoriteData))
+            ->setLinkAttribute('class', 'icon-favorite icon-favorite--active')
+            ->setLinkAttribute('title', $favoriteTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
     }
 
     private function getRequestUri(Request $request): string

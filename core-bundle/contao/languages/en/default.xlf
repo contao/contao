@@ -2006,6 +2006,9 @@
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
       </trans-unit>
