@@ -65,11 +65,49 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn($user)
         ;
 
+        $factory = new MenuFactory();
+
         $event = $this->createMock(MenuEvent::class);
         $event
             ->expects($this->once())
             ->method('getTree')
-            ->willReturn($this->createMock(ItemInterface::class))
+            ->willReturn($factory->createItem('headerMenu'))
+        ;
+
+        $event
+            ->expects($this->never())
+            ->method('getFactory')
+        ;
+
+        $listener = new BackendFavoritesListener(
+            $security,
+            $this->createMock(RouterInterface::class),
+            $this->createMock(RequestStack::class),
+            $this->createMock(Connection::class),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $listener($event);
+    }
+
+    public function testDoesNothingIfThereIsNoRequest(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $factory = new MenuFactory();
+
+        $event = $this->createMock(MenuEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getTree')
+            ->willReturn($factory->createItem('mainMenu'))
         ;
 
         $event

@@ -58,7 +58,7 @@ class BackendFavoritesListener
     private function buildFavoritesMenu(MenuEvent $event, BackendUser $user): void
     {
         if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
+            return;
         }
 
         $factory = $event->getFactory();
