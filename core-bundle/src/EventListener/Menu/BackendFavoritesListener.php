@@ -160,7 +160,7 @@ class BackendFavoritesListener
 
         $event->getTree()->addChild($tree);
 
-        // Move the favorites menu to the top
+        // Move the favorites menu behind "manual"
         (new MenuManipulator())->moveToPosition($tree, 1);
     }
 
