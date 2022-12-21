@@ -203,7 +203,7 @@ class BackendMenuListenerTest extends TestCase
 
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;

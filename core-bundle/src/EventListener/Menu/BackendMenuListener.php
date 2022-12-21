@@ -130,7 +130,7 @@ class BackendMenuListener
 
         $tree->addChild($manual);
 
-        $this->addSaveAsFavorite($factory, $tree);
+        $this->addSaveAsFavorite($factory, $tree, $user);
 
         $alerts = $event->getFactory()
             ->createItem('alerts')
@@ -247,10 +247,9 @@ class BackendMenuListener
         return implode(' ', array_keys($classes));
     }
 
-    private function addSaveAsFavorite(FactoryInterface $factory, ItemInterface $tree): void
+    private function addSaveAsFavorite(FactoryInterface $factory, ItemInterface $tree, BackendUser $user): void
     {
         $url = $this->getRelativeUrl();
-        $user = $this->security->getUser();
 
         $exists = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM tl_favorites WHERE url = :url AND user = :user',
@@ -283,7 +282,8 @@ class BackendMenuListener
             ->setLinkAttribute('class', 'icon-favorite')
             ->setLinkAttribute('title', $favoriteTitle)
             ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false);
+            ->setExtra('translation_domain', false)
+        ;
 
         $tree->addChild($favorite);
     }
