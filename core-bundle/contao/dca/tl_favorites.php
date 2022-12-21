@@ -25,7 +25,8 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,user' => 'index'
+				'pid,user' => 'index',
+				'url' => 'index'
 			)
 		)
 	),
@@ -111,8 +112,8 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
-			'sql'                     => "text NULL"
+			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(1022) NOT NULL default ''"
 		)
 	)
 );

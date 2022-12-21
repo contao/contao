@@ -18,6 +18,9 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -35,6 +38,7 @@ class BackendMenuListener
         private TranslatorInterface $translator,
         private ContaoFramework $framework,
         private ContaoCsrfTokenManager $csrfTokenManager,
+        private Connection $connection,
     ) {
     }
 
@@ -126,28 +130,7 @@ class BackendMenuListener
 
         $tree->addChild($manual);
 
-        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
-
-        $favoriteData = [
-            'do' => 'favorites',
-            'act' => 'paste',
-            'mode' => 'create',
-            'data' => base64_encode($this->getRelativeUrl()),
-            'rt' => $this->csrfTokenManager->getDefaultTokenValue(),
-            'ref' => $ref,
-        ];
-
-        $favorite = $factory
-            ->createItem('favorite')
-            ->setLabel($favoriteTitle)
-            ->setUri($this->router->generate('contao_backend', $favoriteData))
-            ->setLinkAttribute('class', 'icon-favorite')
-            ->setLinkAttribute('title', $favoriteTitle)
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($favorite);
+        $this->addSaveAsFavorite($factory, $tree);
 
         $alerts = $event->getFactory()
             ->createItem('alerts')
@@ -251,6 +234,60 @@ class BackendMenuListener
         return $request->attributes->get('_contao_referer_id');
     }
 
+    private function getClassFromAttributes(array $attributes): string
+    {
+        $classes = [];
+
+        // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
+        if (isset($attributes['class'])) {
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
+            unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
+        }
+
+        return implode(' ', array_keys($classes));
+    }
+
+    private function addSaveAsFavorite(FactoryInterface $factory, ItemInterface $tree): void
+    {
+        $url = $this->getRelativeUrl();
+        $user = $this->security->getUser();
+
+        $exists = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM tl_favorites WHERE url = :url AND user = :user',
+            [
+                'url' => $url,
+                'user' => $user->id,
+            ]
+        );
+
+        // Do not add the menu item if the URL is a favorite already
+        if ($exists) {
+            return;
+        }
+
+        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
+
+        $favoriteData = [
+            'do' => 'favorites',
+            'act' => 'paste',
+            'mode' => 'create',
+            'data' => base64_encode($url),
+            'rt' => $this->csrfTokenManager->getDefaultTokenValue(),
+            'ref' => $this->getRefererId(),
+        ];
+
+        $favorite = $factory
+            ->createItem('favorite')
+            ->setLabel($favoriteTitle)
+            ->setUri($this->router->generate('contao_backend', $favoriteData))
+            ->setLinkAttribute('class', 'icon-favorite')
+            ->setLinkAttribute('title', $favoriteTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false);
+
+        $tree->addChild($favorite);
+    }
+
     private function getRelativeUrl(): string
     {
         if (!$request = $this->requestStack->getCurrentRequest()) {
@@ -269,18 +306,5 @@ class BackendMenuListener
         }
 
         return $request->getBaseUrl().$request->getPathInfo().$qs;
-    }
-
-    private function getClassFromAttributes(array $attributes): string
-    {
-        $classes = [];
-
-        // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
-        if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
-            unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
-        }
-
-        return implode(' ', array_keys($classes));
     }
 }

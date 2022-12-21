@@ -19,6 +19,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -52,7 +53,8 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(Connection::class)
         );
 
         $listener($event);
@@ -143,7 +145,8 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(Connection::class)
         );
 
         $listener($event);
@@ -176,7 +179,8 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(Connection::class)
         );
 
         $listener($event);
@@ -186,7 +190,10 @@ class BackendMenuListenerTest extends TestCase
         $this->assertCount(0, $tree->getChildren());
     }
 
-    public function testBuildsTheHeaderMenu(): void
+    /**
+     * @dataProvider getFavoriteExists
+     */
+    public function testBuildsTheHeaderMenu(bool $favoriteExists): void
     {
         /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -196,7 +203,7 @@ class BackendMenuListenerTest extends TestCase
 
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getUser')
             ->willReturn($user)
         ;
@@ -230,9 +237,16 @@ class BackendMenuListenerTest extends TestCase
 
         $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $tokenManager
-            ->expects($this->once())
+            ->expects($favoriteExists ? $this->never() : $this->once())
             ->method('getDefaultTokenValue')
             ->willReturn('foobar')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->willReturn($favoriteExists ? 1 : 0)
         ;
 
         $nodeFactory = new MenuFactory();
@@ -244,7 +258,8 @@ class BackendMenuListenerTest extends TestCase
             $requestStack,
             $this->getTranslator(),
             $this->mockContaoFramework([Backend::class => $systemMessages]),
-            $tokenManager
+            $tokenManager,
+            $connection
         );
 
         $listener($event);
@@ -255,7 +270,11 @@ class BackendMenuListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'favorite', 'alerts', 'submenu', 'burger'], array_keys($children));
+        if ($favoriteExists) {
+            $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
+        } else {
+            $this->assertSame(['manual', 'favorite', 'alerts', 'submenu', 'burger'], array_keys($children));
+        }
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
@@ -272,17 +291,19 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Add favorite
-        $this->assertSame('MSC.favorite', $children['favorite']->getLabel());
-        $this->assertSame('/contao?do=favorites&act=paste&mode=create&data=L2NvbnRhbz9kbz1wYWdlcw%3D%3D&rt=foobar&ref=bar', $children['favorite']->getUri());
-        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['favorite']->getExtras());
+        if (!$favoriteExists) {
+            $this->assertSame('MSC.favorite', $children['favorite']->getLabel());
+            $this->assertSame('/contao?do=favorites&act=paste&mode=create&data=L2NvbnRhbz9kbz1wYWdlcw%3D%3D&rt=foobar&ref=bar', $children['favorite']->getUri());
+            $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['favorite']->getExtras());
 
-        $this->assertSame(
-            [
-                'class' => 'icon-favorite',
-                'title' => 'MSC.favorite',
-            ],
-            $children['favorite']->getLinkAttributes()
-        );
+            $this->assertSame(
+                [
+                    'class' => 'icon-favorite',
+                    'title' => 'MSC.favorite',
+                ],
+                $children['favorite']->getLinkAttributes()
+            );
+        }
 
         // Alerts
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
@@ -328,6 +349,12 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
 
+    public function getFavoriteExists(): \Generator
+    {
+        yield [true];
+        yield [false];
+    }
+
     public function testDoesNotBuildTheHeaderMenuIfNoUserIsGiven(): void
     {
         $security = $this->createMock(Security::class);
@@ -351,7 +378,8 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(Connection::class)
         );
 
         $listener($event);
@@ -384,7 +412,8 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(Connection::class)
         );
 
         $listener($event);

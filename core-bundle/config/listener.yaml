@@ -326,6 +326,7 @@ services:
             - '@translator'
             - '@contao.framework'
             - '@contao.csrf.token_manager'
+            - '@database_connection'
         tags:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
