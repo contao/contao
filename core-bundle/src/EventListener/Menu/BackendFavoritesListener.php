@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
@@ -35,6 +36,7 @@ class BackendFavoritesListener
         private RequestStack $requestStack,
         private Connection $connection,
         private TranslatorInterface $translator,
+        private ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
@@ -48,14 +50,14 @@ class BackendFavoritesListener
 
         $name = $event->getTree()->getName();
 
-        if ('mainMenu' !== $name) {
-            return;
+        if ('mainMenu' === $name) {
+            $this->buildMainMenu($event, $user);
+        } elseif ('headerMenu' === $name) {
+            $this->buildHeaderMenu($event, $user);
         }
-
-        $this->buildFavoritesMenu($event, $user);
     }
 
-    private function buildFavoritesMenu(MenuEvent $event, BackendUser $user): void
+    private function buildMainMenu(MenuEvent $event, BackendUser $user): void
     {
         if (!$request = $this->requestStack->getCurrentRequest()) {
             return;
@@ -112,6 +114,56 @@ class BackendFavoritesListener
         (new MenuManipulator())->moveToPosition($tree, 0);
     }
 
+    private function buildHeaderMenu(MenuEvent $event, BackendUser $user): void
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return;
+        }
+
+        $url = $this->getRequestUri($request);
+
+        $exists = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM tl_favorites WHERE url = :url AND user = :user',
+            [
+                'url' => $url,
+                'user' => $user->id,
+            ]
+        );
+
+        // Do not add the menu item if the URL is a favorite already
+        if ($exists) {
+            return;
+        }
+
+        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
+
+        $favoriteData = [
+            'do' => 'favorites',
+            'act' => 'paste',
+            'mode' => 'create',
+            'data' => base64_encode($url),
+            'rt' => $this->tokenManager->getDefaultTokenValue(),
+            'ref' => $request->attributes->get('_contao_referer_id'),
+        ];
+
+        $factory = $event->getFactory();
+
+        $tree = $factory
+            ->createItem('favorite')
+            ->setLabel($favoriteTitle)
+            ->setUri($this->router->generate('contao_backend', $favoriteData))
+            ->setLinkAttribute('class', 'icon-favorite')
+            ->setLinkAttribute('title', $favoriteTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $event->getTree()->addChild($tree);
+
+        // Move the favorites menu to the top
+        (new MenuManipulator())->moveToPosition($tree, 1);
+    }
+
     private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, string $ref, int $user, int $pid = 0): void
     {
         $nodes = $this->connection->fetchAllAssociative(
@@ -146,15 +198,17 @@ class BackendFavoritesListener
 
     private function getRequestUri(Request $request): string
     {
-        parse_str($request->server->get('QUERY_STRING'), $pairs);
-        unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+        if (null !== $qs = $request->getQueryString()) {
+            parse_str($qs, $pairs);
+            ksort($pairs);
 
-        $uri = '';
+            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
-        if (!empty($pairs)) {
-            $uri = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            if (!empty($pairs)) {
+                $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            }
         }
 
-        return $request->getBaseUrl().$request->getPathInfo().$uri;
+        return $request->getBaseUrl().$request->getPathInfo().$qs;
     }
 }

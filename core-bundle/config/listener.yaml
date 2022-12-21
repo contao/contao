@@ -7,7 +7,6 @@ services:
         arguments:
             - '@security.helper'
             - '@request_stack'
-            - '@database_connection'
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
@@ -325,8 +324,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.framework'
-            - '@contao.csrf.token_manager'
-            - '@database_connection'
         tags:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
@@ -339,6 +336,7 @@ services:
             - '@request_stack'
             - '@database_connection'
             - '@translator'
+            - '@contao.csrf.token_manager'
         tags:
             - kernel.event_listener
 

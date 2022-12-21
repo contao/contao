@@ -14,13 +14,9 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
-use Doctrine\DBAL\Connection;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -37,8 +33,6 @@ class BackendMenuListener
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
         private ContaoFramework $framework,
-        private ContaoCsrfTokenManager $csrfTokenManager,
-        private Connection $connection,
     ) {
     }
 
@@ -129,8 +123,6 @@ class BackendMenuListener
         ;
 
         $tree->addChild($manual);
-
-        $this->addSaveAsFavorite($factory, $tree, $user);
 
         $alerts = $event->getFactory()
             ->createItem('alerts')
@@ -245,66 +237,5 @@ class BackendMenuListener
         }
 
         return implode(' ', array_keys($classes));
-    }
-
-    private function addSaveAsFavorite(FactoryInterface $factory, ItemInterface $tree, BackendUser $user): void
-    {
-        $url = $this->getRelativeUrl();
-
-        $exists = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM tl_favorites WHERE url = :url AND user = :user',
-            [
-                'url' => $url,
-                'user' => $user->id,
-            ]
-        );
-
-        // Do not add the menu item if the URL is a favorite already
-        if ($exists) {
-            return;
-        }
-
-        $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
-
-        $favoriteData = [
-            'do' => 'favorites',
-            'act' => 'paste',
-            'mode' => 'create',
-            'data' => base64_encode($url),
-            'rt' => $this->csrfTokenManager->getDefaultTokenValue(),
-            'ref' => $this->getRefererId(),
-        ];
-
-        $favorite = $factory
-            ->createItem('favorite')
-            ->setLabel($favoriteTitle)
-            ->setUri($this->router->generate('contao_backend', $favoriteData))
-            ->setLinkAttribute('class', 'icon-favorite')
-            ->setLinkAttribute('title', $favoriteTitle)
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($favorite);
-    }
-
-    private function getRelativeUrl(): string
-    {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        if (null !== $qs = $request->getQueryString()) {
-            parse_str($qs, $pairs);
-            ksort($pairs);
-
-            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
-
-            if (!empty($pairs)) {
-                $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
-            }
-        }
-
-        return $request->getBaseUrl().$request->getPathInfo().$qs;
     }
 }

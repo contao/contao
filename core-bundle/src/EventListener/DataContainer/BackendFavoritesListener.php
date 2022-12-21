@@ -26,15 +26,15 @@ class BackendFavoritesListener
 
     public function __invoke(): void
     {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
         $user = $this->security->getUser();
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         // Always filter the favorites by user
         $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user=?', $userId];
+
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return;
+        }
 
         // Allow adding new favorites
         if ('create' === $request->query->get('act') && ($data = $request->query->get('data'))) {

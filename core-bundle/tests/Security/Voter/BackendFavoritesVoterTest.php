@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
+namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -18,7 +18,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\BackendFavoritesVoter;
+use Contao\CoreBundle\Security\Voter\BackendFavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -41,7 +41,13 @@ class BackendFavoritesVoterTest extends TestCase
         $connection
             ->method('fetchOne')
             ->with('SELECT user FROM tl_favorites WHERE id = :id')
-            ->willReturnOnConsecutiveCalls(2, 3)
+            ->willReturnCallback(
+                static fn (string $query, array $args): int => match ((int) $args['id']) {
+                    42 => 2, // current user
+                    17 => 3, // different user
+                    default => 0,
+                }
+            )
         ;
 
         $voter = new BackendFavoritesVoter($security, $connection);
