@@ -744,6 +744,12 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.security.backend_favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\BackendFavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:

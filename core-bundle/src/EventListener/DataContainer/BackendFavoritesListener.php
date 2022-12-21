@@ -14,23 +14,17 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\DataContainer;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
 #[AsCallback(table: 'tl_favorites', target: 'config.onload')]
 class BackendFavoritesListener
 {
-    public function __construct(
-        private readonly Security $security,
-        private RequestStack $requestStack,
-        private Connection $connection,
-    ) {
+    public function __construct(private readonly Security $security, private RequestStack $requestStack)
+    {
     }
 
-    public function __invoke(DataContainer $dc): void
+    public function __invoke(): void
     {
         if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new \RuntimeException('The request stack did not contain a request');
@@ -41,42 +35,6 @@ class BackendFavoritesListener
 
         // Always filter the favorites by user
         $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user=?', $userId];
-
-        switch ((string) $request->query->get('act')) {
-            case '': // empty
-            case 'paste':
-            case 'create':
-            case 'select':
-                break;
-
-            case 'editAll':
-            case 'deleteAll':
-            case 'overrideAll':
-                $allowedIds = $this->connection->fetchFirstColumn(
-                    'SELECT id FROM tl_favorites WHERE user = :userId',
-                    ['userId' => $userId]
-                );
-
-                $session = $this->requestStack->getSession();
-                $sessionData = $session->all();
-                $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
-                $session->replace($sessionData);
-                break;
-
-            case 'edit':
-            case 'toggle':
-            case 'delete':
-            default:
-                $createdBy = (int) $this->connection->fetchOne(
-                    'SELECT user FROM tl_favorites WHERE id = :id',
-                    ['id' => $dc->id]
-                );
-
-                if ($createdBy !== $userId) {
-                    throw new AccessDeniedException(sprintf('Favorite ID %s does not belong to user ID %s', $dc->id, $userId));
-                }
-                break;
-        }
 
         // Allow adding new favorites
         if ('create' === $request->query->get('act') && ($data = $request->query->get('data'))) {
