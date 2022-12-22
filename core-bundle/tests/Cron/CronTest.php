@@ -299,9 +299,24 @@ class CronTest extends TestCase
             ->willReturn(null)
         ;
 
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(2))
+            ->method('debug')
+            ->withConsecutive(
+                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
+                ['Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully']
+            )
+        ;
+
         $cache = new ArrayAdapter();
 
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $cache);
+        $cron = new Cron(
+            static fn () => $repository,
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $cache,
+            $logger
+        );
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
 
         $this->assertFalse($cron->hasMinutelyCliCron());

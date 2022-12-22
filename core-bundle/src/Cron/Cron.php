@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Cache\CacheItemPoolInterface;
@@ -47,15 +48,25 @@ class Cron
         return $item->isHit();
     }
 
-    public function updateMinutelyCliCron(string $scope): void
+    public function updateMinutelyCliCron(string $scope): PromiseInterface|null
     {
         if (self::SCOPE_CLI !== $scope) {
-            return;
+            return null;
         }
 
         $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
         $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
-        $this->cachePool->save($cacheItem);
+        $this->cachePool->saveDeferred($cacheItem);
+
+        // Using a promise here not because the cache file takes forever to create but in order to make sure,
+        // it's one of the first crons that are executed. The fact that we can use deferred cache item
+        // saving is an added bonus.
+        return $promise = new Promise(
+            function () use (&$promise): void {
+                $this->cachePool->commit();
+                $promise->resolve('Saved cache item.');
+            }
+        );
     }
 
     public function addCronJob(CronJob $cronjob): void
