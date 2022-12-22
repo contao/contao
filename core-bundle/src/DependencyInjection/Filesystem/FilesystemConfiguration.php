@@ -191,6 +191,7 @@ class FilesystemConfiguration
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));
+        $definition->addMethodCall('useLastModified', [$useLastModified]);
         $definition->addTag('kernel.reset', ['method' => 'reset']);
 
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);
