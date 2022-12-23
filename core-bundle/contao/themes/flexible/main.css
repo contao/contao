@@ -1064,16 +1064,11 @@ table.tl_listing {
 }
 
 .tl_listing_container {
-	padding: 2px 0;
-	margin: 20px 15px 16px;
+	padding: 12px 15px 18px;
 }
 
 .tl_listing_container.tree_view {
 	position: relative;
-}
-
-#tl_buttons + .tl_listing_container {
-	margin-top: 10px;
 }
 
 #paste_hint + .tl_listing_container {
@@ -1281,7 +1276,6 @@ table.tl_listing {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	background: var(--panel-bg);
 }
 
 .tl_content.wrapper_stop {
@@ -1682,7 +1676,7 @@ ul.sgallery li {
 }
 
 #tl_soverview > div {
-	padding: 0 15px 4px;
+	padding: 4px 15px;
 	border-bottom: 1px solid var(--border);
 }
 
@@ -1696,7 +1690,7 @@ ul.sgallery li {
 }
 
 #tl_messages h2, #tl_shortcuts h2, #tl_versions h2 {
-	margin: 18px 0 6px;
+	margin: 14px 0 6px;
 }
 
 #tl_messages p:not([class]) {
