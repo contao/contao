@@ -8,14 +8,14 @@
 
 /* Body */
 body {
-	background: #eaeaec url("icons/stop.svg") center 3em no-repeat;
+	background: var(--body-bg) url("icons/stop.svg") center 3em no-repeat;
 }
 
 /* Container */
 #container {
 	width: 620px;
 	margin: 15em auto 0;
-	background: var(--body-bg);
+	background: var(--content-bg);
 	border-radius: 2px;
 }
 

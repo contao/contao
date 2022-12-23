@@ -204,7 +204,7 @@ class tl_image_size_item extends Backend
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span style="color:#999;padding-left:3px">(' . $row['zoom'] . '%)</span>';
+			$html .= ' <span class="label-info">(' . $row['zoom'] . '%)</span>';
 		}
 
 		$html .= "</div>\n";
