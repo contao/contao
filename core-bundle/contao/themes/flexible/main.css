@@ -488,6 +488,16 @@ h2.sub_headline {
 	padding: 7px 0;
 }
 
+.label-info {
+	color: var(--gray);
+	padding-left: 3px;
+}
+
+.label-date {
+	color: var(--gray);
+	padding-right: 3px;
+}
+
 .tl_gerror {
 	margin: 12px;
 	padding: 3px 0 3px 22px;

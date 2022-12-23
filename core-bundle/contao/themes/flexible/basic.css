@@ -340,6 +340,10 @@ fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
 	}
 }
 
+fieldset.tl_checkbox_container .check-all {
+	color: var(--gray);
+}
+
 fieldset.checkbox_container, fieldset.radio_container {
 	border: 0;
 	margin: 0;
@@ -761,7 +765,7 @@ a.tl_submit {
 	line-height: 1.3;
 }
 
-.tip div, .tip a {
+.tip div, .tip a, .tip span {
 	color: var(--invert-text);
 }
 
