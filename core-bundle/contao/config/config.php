@@ -185,6 +185,12 @@ $GLOBALS['BE_MOD'] = array
 			'callback'                => ModuleTwoFactor::class,
 			'hideInNavigation'        => true,
 			'disablePermissionChecks' => true
+		),
+		'favorites' => array
+		(
+			'tables'                  => array('tl_favorites'),
+			'hideInNavigation'        => true,
+			'disablePermissionChecks' => true
 		)
 	),
 
