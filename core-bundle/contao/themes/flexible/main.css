@@ -724,7 +724,7 @@ h2.sub_headline {
 	margin-bottom: 0;
 }
 
-.tl_edit_form .tl_formbody_edit {
+#tl_buttons + .tl_edit_form .tl_formbody_edit {
 	border-top: 1px solid var(--border);
 }
 
@@ -1064,7 +1064,11 @@ table.tl_listing {
 }
 
 .tl_listing_container {
-	padding: 12px 15px 18px;
+	padding: 24px 15px 18px;
+}
+
+#tl_buttons + .tl_listing_container {
+	padding-top: 9px;
 }
 
 .tl_listing_container.tree_view {
