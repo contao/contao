@@ -544,7 +544,8 @@ abstract class Backend extends Controller
 				}
 			}
 
-			if (Input::get('table') == 'tl_content' && \in_array(Input::get('act'), array('paste', 'select', null), true)) {
+			if (Input::get('table') == 'tl_content' && \in_array(Input::get('act'), array('paste', 'select', null), true))
+			{
 				$this->Template->contentClass .= ' content-elements';
 			}
 
