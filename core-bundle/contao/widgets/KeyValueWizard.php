@@ -37,19 +37,16 @@ class KeyValueWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey) {
-			case 'maxlength':
-				if ($varValue > 0) {
-					$this->arrAttributes['maxlength'] = $varValue;
-				}
-				break;
-
-			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
+		if ($strKey == 'maxlength')
+		{
+			if ($varValue > 0)
+			{
+				$this->arrAttributes['maxlength'] = $varValue;
+			}
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 
@@ -67,7 +64,7 @@ class KeyValueWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (trim($option['key']) === '')
+				if (!$this->allowEmptyKeys && trim($option['key']) === '')
 				{
 					unset($options[$key]);
 					continue;
@@ -76,7 +73,7 @@ class KeyValueWizard extends Widget
 				$options[$key]['key'] = trim($option['key']);
 				$options[$key]['value'] = trim($option['value']);
 
-				if ($options[$key]['key'])
+				if ($options[$key]['key'] || ($this->allowEmptyKeys && $options[$key]['value']))
 				{
 					$this->mandatory = false;
 				}
@@ -99,29 +96,6 @@ class KeyValueWizard extends Widget
 	}
 
 	/**
-	 * Only check against the option values
-	 *
-	 * @param array $arrOption The options array
-	 * @param mixed $varValue The row value
-	 *
-	 * @return string The "selected" attribute or an empty string
-	 */
-	protected function isSelectedKey($arrOption, $varValue): string
-	{
-		if (empty($varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
-		{
-			return $this->optionSelected(1, 1);
-		}
-
-		if (empty($varValue) || !\is_array($varValue))
-		{
-			return '';
-		}
-
-		return $this->optionSelected($arrOption['value'] ?? null, $varValue['key'] ?? null);
-	}
-
-	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -140,8 +114,8 @@ class KeyValueWizard extends Widget
 		$return = '<table id="ctrl_' . $this->strId . '" class="tl_key_value_wizard">
   <thead>
     <tr>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_key'] . '</th>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_value'] . '</th>
+      <th>' . ($this->keyLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_key']) . '</th>
+      <th>' . ($this->valueLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_value']) . '</th>
       <th></th>
     </tr>
   </thead>
@@ -150,28 +124,9 @@ class KeyValueWizard extends Widget
 		// Add fields
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
-			$strKey = '<input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['key'] ?? '') . '"' . $this->getAttributes() . '>';
-
-			if (!empty($this->arrOptions))
-			{
-				$strKey = '<select name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_select"' . $this->getAttributes() . '>';
-
-				foreach ($this->arrOptions as $arrOption)
-				{
-					$strKey .= sprintf(
-						'<option value="%s"%s>%s</option>',
-						self::specialcharsValue($arrOption['value']),
-						$this->isSelectedKey($arrOption, $this->varValue[$i]),
-						$arrOption['label']
-					);
-				}
-
-				$strKey .= '</select>';
-			}
-
 			$return .= '
     <tr>
-      <td>'.$strKey.'</td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['key'] ?? '') . '"' . $this->getAttributes() . '></td>
       <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['value'] ?? '') . '"' . $this->getAttributes() . '></td>';
 
 			// Add row buttons

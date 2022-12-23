@@ -2,8 +2,13 @@
 
 {% block content %}
     <dl>
-        {% for item in items %}
-            <{{ item.key }}>{{ item.value|insert_tag|raw }}</{{ item.key }}>
+        {% for description in descriptions %}
+            {% if description.term is not empty %}
+                <dt>{{ description.term|insert_tag_raw }}</dt>
+            {% endif %}
+            {% if description.details is not empty %}
+                <dd>{{ description.details|insert_tag_raw }}</dd>
+            {% endif %}
         {% endfor %}
     </dl>
 {% endblock %}

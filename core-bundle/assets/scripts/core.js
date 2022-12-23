@@ -1521,7 +1521,7 @@ window.Backend =
 				for (i=0; i<rows.length; i++) {
 					childs = rows[i].getChildren();
 					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input, select')) {
+						if (input = childs[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
 						}
 					}
@@ -1550,7 +1550,7 @@ window.Backend =
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
 									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input, select')) {
+									if (input = childs[i].getFirst('input')) {
 										next.getFirst().value = input.value;
 									}
 								}

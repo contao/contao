@@ -39,7 +39,6 @@ use Contao\Model\Collection;
  * @property string|null       $unfilteredHtml
  * @property string            $listtype
  * @property string|array|null $listitems
- * @property string|array|null $descriptionlistitems
  * @property string|array|null $tableitems
  * @property string            $summary
  * @property boolean           $thead
