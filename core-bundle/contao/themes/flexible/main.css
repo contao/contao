@@ -1130,6 +1130,10 @@ table.tl_listing {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.tl_label {
+		font-weight: 500;
+	}
+
 	.tl_label small {
 		font-weight: 300;
 	}
