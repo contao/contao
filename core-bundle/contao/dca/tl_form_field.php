@@ -638,7 +638,7 @@ class tl_form_field extends Backend
 
 		$strType = '
 <div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);

@@ -1174,13 +1174,10 @@ class tl_content extends Backend
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
-		$class = 'limit_height';
 
 		// Remove the class if it is a wrapper element
 		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
 		{
-			$class = '';
-
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
 				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
@@ -1221,6 +1218,7 @@ class tl_content extends Backend
 				}
 			}
 
+			$key .= ' icon-protected';
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
@@ -1228,12 +1226,6 @@ class tl_content extends Backend
 		if ($arrRow['type'] == 'headline' && is_array($headline = StringUtil::deserialize($arrRow['headline'])))
 		{
 			$type .= ' (' . $headline['unit'] . ')';
-		}
-
-		// Limit the element's height
-		if (!Config::get('doNotCollapse'))
-		{
-			$class .= ' h40';
 		}
 
 		if ($arrRow['start'] && $arrRow['stop'])
@@ -1254,7 +1246,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . trim($class) . '">
+<div class="cte_preview">
 ' . StringUtil::insertTagToSrc($this->getContentElement($objModel)) . '
 </div>' . "\n";
 	}
