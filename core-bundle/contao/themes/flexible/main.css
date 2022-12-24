@@ -1083,7 +1083,7 @@ table.tl_listing {
 }
 
 .tl_listing_container {
-	padding: 24px 15px 18px;
+	padding: 24px 15px;
 }
 
 #tl_buttons + .tl_listing_container, #tl_buttons + .tl_form .tl_listing_container {
@@ -2677,7 +2677,6 @@ fieldset.collapsed > legend {
 	width: 60%;
 	float: right;
 	text-align: right;
-	padding-right: 3px;
 }
 
 .pagination p {
@@ -2688,7 +2687,7 @@ fieldset.collapsed > legend {
 
 .pagination li {
 	display: inline;
-	padding-right: 3px;
+	padding-left: 3px;
 }
 
 .pagination .active {
@@ -2696,8 +2695,15 @@ fieldset.collapsed > legend {
 }
 
 .pagination-lp {
-	margin-left: 15px;
-	margin-right: 15px;
+	margin-bottom: 0;
+	border-bottom: 0;
+	padding: 15px 12px;
+}
+
+.content-elements .pagination-lp {
+	margin-top: 12px;
+	border: 1px solid var(--panel-border);
+	padding: 15px 10px;
 }
 
 /* File synchronization */
