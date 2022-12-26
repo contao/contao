@@ -1782,7 +1782,7 @@ ul.sgallery li {
 }
 
 /* Wizards */
-.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button {
+.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button, .tl_image_size + button {
 	margin: 0;
 	padding: 0;
 	border: 0;

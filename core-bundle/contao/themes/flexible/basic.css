@@ -707,6 +707,11 @@ a.tl_submit {
 	width: 45%;
 }
 
+.wizard .tl_image_size {
+	display: inline-block;
+	width: calc(100% - 24px);
+}
+
 .wizard img {
 	margin-left: 4px;
 }
