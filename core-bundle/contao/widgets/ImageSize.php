@@ -276,6 +276,6 @@ class ImageSize extends Widget
 			'iconDisabled' => Image::getUrl('edit_.svg'),
 		);
 
-		return ' data-controller="contao--image-size" data-contao--image-size-config-value="'.StringUtil::specialchars(json_encode($config)).'"';
+		return ' data-controller="contao--image-size" data-contao--image-size-config-value="' . StringUtil::specialchars(json_encode($config)) . '"';
 	}
 }
