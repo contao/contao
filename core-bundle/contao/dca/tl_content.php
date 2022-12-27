@@ -1244,11 +1244,18 @@ class tl_content extends Backend
 		$objModel = new ContentModel();
 		$objModel->setRow($arrRow);
 
+		$class = 'cte_preview';
+		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		// Strip HTML comments to check if the preview is empty
+		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
+		{
+			$class .= ' empty';
+		}
+
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="cte_preview">
-' . StringUtil::insertTagToSrc($this->getContentElement($objModel)) . '
-</div>' . "\n";
+<div class="' . $class . '">' . $preview . '</div>';
 	}
 
 	/**

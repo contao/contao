@@ -1572,6 +1572,10 @@ table.tl_listing {
 	display: initial;
 }
 
+.cte_preview.empty {
+	display: none;
+}
+
 /* Tree view */
 .tl_folder_top {
 	padding: 5px 0;
