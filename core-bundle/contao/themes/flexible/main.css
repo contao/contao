@@ -1345,6 +1345,11 @@ table.tl_listing {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	background-color: var(--panel-bg);
+}
+
+.new-design .parent_view > ul {
+	background-color: transparent;
 }
 
 .tl_content.indent_1 {
