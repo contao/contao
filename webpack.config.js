@@ -8,6 +8,7 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps()
     .enableVersioning()
+    .enablePostCssLoader()
     .addEntry('ajax-form', './core-bundle/assets/ajax-form.js')
     .addEntry('backend', './core-bundle/assets/backend.js')
 ;
