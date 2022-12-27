@@ -98,8 +98,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
-            throw new \InvalidArgumentException(sprintf('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "%s".', $name));
+        if (1 !== preg_match('/^[a-z](?:[_-]*[a-z0-9])*$/', $name)) {
+            throw new \InvalidArgumentException(sprintf('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter and must not end with a underscore/hyphen, got "%s".', $name));
         }
 
         // Unset if value is set to false
