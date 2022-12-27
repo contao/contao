@@ -17,11 +17,10 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\Message;
-use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
@@ -168,16 +167,16 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
-    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
+    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title): string
     {
         if ($row['expiresAt'] < time()) {
-            return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
+            return '<span class="clipboard clipboard--expired"></span>';
         }
 
-        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
+        return $this->generateClipboardLink((int) $row['id'], $title);
     }
 
-    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
+    private function generateClipboardLink(int $id, string|null $title = null): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         $url = $this->uriSigner->sign($url);
@@ -185,11 +184,17 @@ class PreviewLinkListener
         $title = $title ?? $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
         return sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
-            StringUtil::specialcharsUrl($url),
-            StringUtil::specialchars($title),
-            StringUtil::specialcharsUrl($url),
-            $label ?? $url
+            '<button%s><span class="url">%s</span></button>',
+            (new HtmlAttributes())
+                ->set('href', $url)
+                ->set('target', '_blank')
+                ->set('title', $title)
+                ->set('data-controller', 'contao--clipboard')
+                ->set('data-contao--clipboard-content-value', $url)
+                ->set('data-action', 'contao--clipboard#write:prevent')
+                ->addClass('clipboard')
+                ->set('data-contao--clipboard-written-class', 'clipboard--written'),
+            $url
         );
     }
 }
