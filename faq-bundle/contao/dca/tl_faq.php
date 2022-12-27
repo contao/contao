@@ -560,7 +560,7 @@ class tl_faq extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h120' : '') . '">
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">
 <h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
