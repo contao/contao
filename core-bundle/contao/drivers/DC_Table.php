@@ -6342,9 +6342,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$group = $value;
 
-			if ($value != '-' && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null) && ($label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)))
 			{
-				$group = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null);
+				$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
 			}
 		}
 

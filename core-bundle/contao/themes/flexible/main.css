@@ -281,7 +281,7 @@ body.popup {
 	margin: 0 15px 15px;
 }
 
-#main .content:not(.content-elements) {
+#main .content:not(.new-design) {
 	background: var(--content-bg);
 	border-radius: 3px;
 	border: 1px solid var(--content-border);
@@ -437,11 +437,8 @@ body.popup {
 	text-align: right;
 }
 
-.content-elements #tl_buttons {
-	background: var(--white);
+.new-design #tl_buttons {
 	padding-bottom: 14px;
-	border: solid var(--panel-border);
-	border-width: 0 1px 1px;
 }
 
 .toggleWrap {
@@ -569,12 +566,12 @@ h2.sub_headline {
 	text-align: right;
 }
 
-.content-elements .tl_panel {
+.new-design .tl_panel {
 	border: solid var(--panel-border);
 	border-width: 1px 1px 0;
 }
 
-.content-elements .tl_panel:last-of-type {
+.new-design .tl_panel:last-of-type {
 	border-bottom: 1px solid var(--panel-border);
 }
 
@@ -1094,7 +1091,7 @@ table.tl_listing {
 	position: relative;
 }
 
-.content-elements .tl_listing_container {
+.new-design .tl_listing_container {
 	padding: 0;
 }
 
@@ -1102,7 +1099,7 @@ table.tl_listing {
 	margin-top: 15px;
 }
 
-.content-elements #paste_hint + .tl_listing_container {
+.new-design #paste_hint + .tl_listing_container {
 	margin-top: 45px;
 }
 
@@ -1244,7 +1241,7 @@ table.tl_listing {
 	padding: 18px 0 0;
 }
 
-.content-elements .tl_empty_parent_view {
+.new-design .tl_empty_parent_view {
 	padding: 18px 15px;
 	background: var(--white);
 	border: solid var(--panel-border);
@@ -1285,7 +1282,7 @@ table.tl_listing {
 	border-bottom: 1px solid var(--panel-border);
 }
 
-.content-elements .tl_header {
+.new-design .tl_header {
 	margin-top: 3px;
 	padding: 10px;
 	border: 1px solid var(--panel-border);
@@ -1309,6 +1306,14 @@ table.tl_listing {
 	}
 }
 
+.new-design .tl_content_header {
+	margin-top: 24px;
+	padding: 0 1px;
+	border: 0;
+	background-color: transparent;
+	font-size: 1rem;
+}
+
 .tl_content {
 	padding: 6px;
 	border-bottom: 1px solid var(--border);
@@ -1321,7 +1326,7 @@ table.tl_listing {
 	opacity: 0.5;
 }
 
-.content-elements .tl_content {
+.new-design .tl_content {
 	margin-top: 12px;
 	padding: 0;
 	display: grid;
@@ -1329,7 +1334,7 @@ table.tl_listing {
 	border: 1px solid var(--panel-border);
 }
 
-.content-elements .tl_content > div:last-of-type {
+.new-design .tl_content > div:last-of-type {
 	order: 3;
 	grid-column: 1 / span 2;
 	padding: 10px 10px 6px;
@@ -1375,12 +1380,12 @@ table.tl_listing {
 	margin-bottom: -1px;
 }
 
-.content-elements .tl_content .tl_content_right {
+.new-design .tl_content .tl_content_right {
 	order: 2;
 	float: none;
 	margin-left: 0;
 	margin-bottom: 0;
-	padding: 10px;
+	padding: 8px 10px;
 	border-left: 1px solid var(--panel-border);
 	background: var(--table-header);
 }
@@ -1400,12 +1405,12 @@ table.tl_listing {
 	line-height: 16px;
 }
 
-.content-elements .cte_type {
+.new-design .cte_type {
 	order: 1;
 	margin-bottom: 0;
-	padding: 10px;
-	background: var(--table-header);
-	font-size: .85rem;
+	padding: 8px 10px;
+	background-color: var(--table-header);
+	font-size: .8rem;
 }
 
 .cte_type.published, .cte_type.published a {
@@ -1553,23 +1558,25 @@ table.tl_listing {
 }
 
 .cte_preview label, .cte_preview .checkbox_container legend, .cte_preview .radio_container legend {
-	display: inline-block;
-	width: 180px;
-	vertical-align: top;
-	margin-top: 3px;
+	display: block;
+	margin-bottom: 6px;
 }
 
 .cte_preview .widget {
-	margin-left: 0;
-	margin-right: 0;
-}
-
-.cte_preview .widget-submit {
-	margin-left: 180px;
+	margin: 0 0 6px;
 }
 
 .cte_preview .checkbox_container label, .cte_preview .radio_container label {
 	display: initial;
+}
+
+.cte_preview .widget-captcha {
+	display: block !important;
+}
+
+.cte_preview .widget-captcha .captcha_text {
+	padding-left: 3px;
+	vertical-align: middle;
 }
 
 .cte_preview.empty {
@@ -2191,7 +2198,7 @@ ul.sgallery li {
 	transform: rotate(-1deg);
 }
 
-.content-elements #paste_hint p {
+.new-design #paste_hint p {
 	right: 15px;
 	padding-top: 12px;
 }
@@ -2704,7 +2711,7 @@ fieldset.collapsed > legend {
 	padding: 15px 12px;
 }
 
-.content-elements .pagination-lp {
+.new-design .pagination-lp {
 	margin-top: 12px;
 	border: 1px solid var(--panel-border);
 	padding: 15px 10px;

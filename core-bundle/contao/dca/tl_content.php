@@ -64,7 +64,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
-			'child_record_callback'   => array('tl_content', 'addCteType')
+			'child_record_callback'   => array('tl_content', 'addCteType'),
+			'contentClass'            => 'new-design'
 		),
 		'global_operations' => array
 		(
@@ -1255,7 +1256,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . '">' . $preview . '</div>';
+<div class="' . $class . ' limit_height' . (!Config::get('doNotCollapse') ? ' h120' : '') . '">' . $preview . '</div>';
 	}
 
 	/**

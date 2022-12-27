@@ -544,9 +544,9 @@ abstract class Backend extends Controller
 				}
 			}
 
-			if (Input::get('table') == 'tl_content' && \in_array(Input::get('act'), array('paste', 'select', null), true))
+			if (isset($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['contentClass']) && \in_array(Input::get('act'), array('paste', 'select', null), true))
 			{
-				$this->Template->contentClass .= ' content-elements';
+				$this->Template->contentClass .= ' ' . $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['contentClass'];
 			}
 
 			return $dc->$act();
