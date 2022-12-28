@@ -16,5 +16,5 @@
 
 <?php
 if ($this->ajax) {
-  $GLOBALS['TL_JAVASCRIPT'][] = $this->asset('ajax-form.min.js', 'contao_core');
+  $GLOBALS['TL_JAVASCRIPT'][] = $this->asset('ajax-form.js', 'contao_core');
 }
