@@ -709,6 +709,7 @@ a.tl_submit {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
+	vertical-align: middle;
 }
 
 .split-button ul, .split-button li {
@@ -889,6 +890,10 @@ a.tl_submit {
 }
 
 @media (max-width: 1279px) {
+	.split-button {
+		display: inline-flex;
+	}
+
 	.split-button ul {
 		position: absolute;
 		right: 0;
@@ -945,16 +950,14 @@ a.tl_submit {
 		border-top: 7px solid var(--form-border);
 	}
 
-	.split-button button img {
-		vertical-align: 0;
-	}
-
 	.split-button > button[type="submit"] {
 		position: relative;
 		border-radius: 2px 0 0 2px;
 	}
 
 	.split-button > button[type="button"] {
+		height: 30px;
+		margin: 2px 0;
 		padding: 7px 4px;
 		background: var(--form-bg);
 		border: 1px solid var(--form-border);
