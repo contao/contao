@@ -1081,7 +1081,7 @@ table.tl_listing {
 .tl_folder_list, .tl_folder_tlist {
 	padding: 6px;
 	border-bottom: 1px solid var(--border);
-	background: var(--panel-bg);
+	background: var(--table-header);
 	font-weight: 600;
 }
 
@@ -1298,7 +1298,7 @@ table.tl_listing {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	background-color: var(--panel-bg);
+	background-color: var(--table-header);
 }
 
 .new-design .parent_view > ul {
@@ -1447,10 +1447,6 @@ table.tl_listing {
 	background: var(--white);
 	line-height: 11px;
 	text-align: center;
-}
-
-.new-design .limit_toggler {
-	background: var(--white);
 }
 
 .limit_toggler button {
@@ -2101,7 +2097,7 @@ ul.sgallery li {
 }
 
 .tl_metawizard li:nth-child(odd) {
-	background: var(--panel-bg);
+	background: var(--table-header);
 }
 
 .tl_metawizard li:nth-child(even) {
