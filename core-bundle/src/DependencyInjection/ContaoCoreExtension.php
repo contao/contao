@@ -132,7 +132,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
-        $this->handleWorkerConfig($config, $container);
+        $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
@@ -224,15 +224,22 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         ;
     }
 
-    private function handleWorkerConfig(array $config, ContainerBuilder $container): void
+    private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.cron.messenger')) {
             return;
         }
 
+        // No workers defined -> remove our cron job
+        if (0 === \count($config['messenger']['workers'])) {
+            $container->removeDefinition('contao.cron.messenger');
+
+            return;
+        }
+
         $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(0, $config['worker']['console_path']);
-        $cron->setArgument(1, $config['worker']['quantity']);
+        $cron->setArgument(1, $config['messenger']['console_path']);
+        $cron->setArgument(2, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

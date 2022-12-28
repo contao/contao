@@ -362,6 +362,11 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.messenger.worker_is_running:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerIsRunningEventListener
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
+
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:

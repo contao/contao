@@ -13,59 +13,99 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Util\ProcessUtil;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 
 #[AsCronJob('minutely')]
-class MessengerCron extends AbstractConsoleCron
+class MessengerCron
 {
-    public function __construct(string $consolePath, private int $numberOfWorkers = 0)
+    public function __construct(private ContainerInterface $messengerTransportLocator, private string $consolePath, private array $workers)
     {
-        parent::__construct($consolePath);
     }
 
-    public function __invoke(string $scope): void
+    public function __invoke(string $scope): PromiseInterface|null
     {
-        if (Cron::SCOPE_WEB === $scope || $this->numberOfWorkers < 1) {
-            return;
+        if (Cron::SCOPE_CLI !== $scope) {
+            return null;
         }
 
-        $processes = [];
+        $workerPromises = [];
 
-        for ($i = 0; $i < $this->numberOfWorkers; ++$i) {
-            $process = $this->createProcess(
-                'messenger:consume',
-                '--time-limit=60', // Minutely cronjob running for one minute max
-                'contao_prio_high',
-                'contao_prio_normal',
-                'contao_prio_low'
-            );
-            $process->setTimeout(65);
-
-            // Start the job asynchronously
-            $process->start();
-            $processes[] = $process;
+        foreach ($this->workers as $worker) {
+            $this->addWorkerPromises($worker, $workerPromises);
         }
 
-        // Now we need to sleep to keep the parent process open. Otherwise, this script will end and thus kill
-        // our child processes.
-        // All jobs run for 60 seconds, so we don't need to check every second yet
-        sleep(55);
+        return Utils::all($workerPromises);
+    }
 
-        // Now we check every second if all processes are done
-        while (true) {
-            $allDone = true;
+    private function addWorkerPromises(array $worker, array &$workerPromises): void
+    {
+        $this->validateConfiguration($worker);
 
-            foreach ($processes as $process) {
-                if ($process->isRunning()) {
-                    $allDone = false;
-                    break;
+        $process = ProcessUtil::createSymfonyConsoleProcess(
+            $this->consolePath,
+            'messenger:consume',
+            ...array_merge($worker['options'], $worker['transports'])
+        );
+
+        // Add one worker (starts now)
+        $workerPromises[] = ProcessUtil::createPromise($process);
+
+        if ($worker['autoscale']['enabled']) {
+            $totalMessages = $this->collectTotalMessages($worker['transports']);
+            $desiredWorkers = ceil($totalMessages / $worker['autoscale']['desired_size']);
+
+            // Never more than the max (-1 because we've already started one)
+            $desiredWorkers = min($desiredWorkers, $worker['autoscale']['max']);
+
+            // Subtract by one because we already started one and make sure $desiredWorkers is never negative
+            // (possible if totalMessages is 0)
+            $desiredWorkers = max(0, $desiredWorkers - 1);
+
+            for ($i = 1; $i <= $desiredWorkers; ++$i) {
+                $workerPromises[] = ProcessUtil::createPromise($process);
+            }
+        }
+    }
+
+    private function validateConfiguration($worker): void
+    {
+        foreach ($worker['transports'] as $transportName) {
+            if (!$this->messengerTransportLocator->has($transportName)) {
+                throw new \LogicException(sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
+            }
+
+            $transport = $this->messengerTransportLocator->get($transportName);
+
+            if ($worker['autoscale']['enabled']) {
+                if (!$transport instanceof MessageCountAwareInterface) {
+                    throw new \LogicException(sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
                 }
             }
+        }
+    }
 
-            if ($allDone) {
-                break;
+    private function collectTotalMessages(array $transportNames)
+    {
+        $total = 0;
+
+        foreach ($transportNames as $transportName) {
+            if (!$this->messengerTransportLocator->has($transportName)) {
+                throw new \LogicException(sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
             }
 
-            sleep(1);
+            $transport = $this->messengerTransportLocator->get($transportName);
+
+            if (!$transport instanceof MessageCountAwareInterface) {
+                throw new \LogicException(sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
+            }
+
+            $total += $transport->getMessageCount();
         }
+
+        return $total;
     }
 }

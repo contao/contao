@@ -12,19 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Transport;
 
-use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Messenger\AutoFallbackNotifier;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-class CronFallbackTransport implements TransportInterface
+class AutoFallbackTransport implements TransportInterface
 {
-    public function __construct(private Cron $cron, private TransportInterface $target, private TransportInterface $fallback)
+    public function __construct(private AutoFallbackNotifier $autoFallbackNotifier, private string $targetTransportName, private TransportInterface $target, private TransportInterface $fallback)
     {
     }
 
     public function get(): iterable
     {
-        if ($this->cron->hasMinutelyCliCron()) {
+        if ($this->isWorkerRunning()) {
             return $this->target->get();
         }
 
@@ -33,7 +33,7 @@ class CronFallbackTransport implements TransportInterface
 
     public function ack(Envelope $envelope): void
     {
-        if ($this->cron->hasMinutelyCliCron()) {
+        if ($this->isWorkerRunning()) {
             $this->target->ack($envelope);
 
             return;
@@ -44,7 +44,7 @@ class CronFallbackTransport implements TransportInterface
 
     public function reject(Envelope $envelope): void
     {
-        if ($this->cron->hasMinutelyCliCron()) {
+        if ($this->isWorkerRunning()) {
             $this->target->reject($envelope);
 
             return;
@@ -55,10 +55,15 @@ class CronFallbackTransport implements TransportInterface
 
     public function send(Envelope $envelope): Envelope
     {
-        if ($this->cron->hasMinutelyCliCron()) {
+        if ($this->isWorkerRunning()) {
             return $this->target->send($envelope);
         }
 
         return $this->fallback->send($envelope);
+    }
+
+    private function isWorkerRunning(): bool
+    {
+        return $this->autoFallbackNotifier->isWorkerRunning($this->targetTransportName);
     }
 }
