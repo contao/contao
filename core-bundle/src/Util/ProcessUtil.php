@@ -50,7 +50,7 @@ class ProcessUtil
     public static function createSymfonyConsoleProcess(string $consolePath, string $command, string ...$commandArguments): Process
     {
         $arguments = [];
-        $arguments[] = static::getPhpBinary();
+        $arguments[] = self::getPhpBinary();
         $arguments[] = $consolePath;
         $arguments[] = $command;
         $arguments = array_merge($arguments, $commandArguments);

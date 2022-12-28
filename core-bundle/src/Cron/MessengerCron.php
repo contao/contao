@@ -22,6 +22,9 @@ use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 #[AsCronJob('minutely')]
 class MessengerCron
 {
+    /**
+     * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}}> $workers
+     */
     public function __construct(private ContainerInterface $messengerTransportLocator, private string $consolePath, private array $workers)
     {
     }
@@ -41,10 +44,11 @@ class MessengerCron
         return Utils::all($workerPromises);
     }
 
+    /**
+     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}} $worker
+     */
     private function addWorkerPromises(array $worker, array &$workerPromises): void
     {
-        $this->validateConfiguration($worker);
-
         $process = ProcessUtil::createSymfonyConsoleProcess(
             $this->consolePath,
             'messenger:consume',
@@ -71,24 +75,7 @@ class MessengerCron
         }
     }
 
-    private function validateConfiguration($worker): void
-    {
-        foreach ($worker['transports'] as $transportName) {
-            if (!$this->messengerTransportLocator->has($transportName)) {
-                throw new \LogicException(sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
-            }
-
-            $transport = $this->messengerTransportLocator->get($transportName);
-
-            if ($worker['autoscale']['enabled']) {
-                if (!$transport instanceof MessageCountAwareInterface) {
-                    throw new \LogicException(sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
-                }
-            }
-        }
-    }
-
-    private function collectTotalMessages(array $transportNames)
+    private function collectTotalMessages(array $transportNames): int
     {
         $total = 0;
 

@@ -43,6 +43,9 @@ class SearchIndexerPass implements CompilerPassInterface
             // Remove search index listener
             $container->removeDefinition('contao.listener.search_index');
 
+            // Remove search index message handler
+            $container->removeDefinition('contao.messenger.message_handler.search_index');
+
             // Remove search index crawl subscriber
             $container->removeDefinition('contao.crawl.escargot.search_index_subscriber');
 
