@@ -17,6 +17,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\OAuthBundle\ContaoOAuthBundle;
+use KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle;
 
 /**
  * @internal
@@ -27,7 +28,8 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(ContaoOAuthBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class])
+                ->setLoadAfter([ContaoCoreBundle::class]),
+            BundleConfig::create(KnpUOAuth2ClientBundle::class),
         ];
     }
 }
