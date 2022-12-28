@@ -70,6 +70,7 @@
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
+        "guzzlehttp/promises": "^1.5",
         "imagine/imagine": "^1.2.4",
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",
@@ -194,6 +195,7 @@
         "nikic/php-parser": "4.7.0",
         "phpunit/phpunit": "<8.0",
         "roave/better-reflection": "<4.12.2 || >=6.0",
+        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8 || 6.2.0 || 6.2.1",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"
@@ -312,7 +314,7 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
+        "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --fix --ansi",
         "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",

@@ -1,11 +1,3 @@
-/*!
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
-
 window.addEventListener('DOMContentLoaded', function () {
     const edit = document.querySelector('#main .tl_formbody_edit');
     if (!edit) return;

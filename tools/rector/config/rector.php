@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
@@ -20,10 +28,12 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(SetList::PHP_81);
 
     $rectorConfig->paths([
-        __DIR__ . '/../../../*-bundle/bin',
-        __DIR__ . '/../../../*-bundle/src',
-        __DIR__ . '/../../../*-bundle/tests',
-        __DIR__ . '/../../../test-case/src',
+        __DIR__.'/../../../*/bin',
+        __DIR__.'/../../../*/src',
+        __DIR__.'/../../../*/tests',
+        __DIR__.'/../../../tools/*/bin',
+        __DIR__.'/../../../tools/*/config',
+        __DIR__.'/../../../tools/*/src',
     ]);
 
     $rectorConfig->skip([

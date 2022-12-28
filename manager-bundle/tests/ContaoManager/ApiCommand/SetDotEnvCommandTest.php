@@ -31,7 +31,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
 
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
-        $this->tempfile = $this->tempdir.'/.env';
+        $this->tempfile = $this->tempdir.'/.env.local';
 
         $application = $this->createMock(Application::class);
         $application
@@ -67,6 +67,8 @@ class SetDotEnvCommandTest extends ContaoTestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
+        $this->assertFileExists(substr($this->tempfile, 0, -6));
+        $this->assertSame('', file_get_contents(substr($this->tempfile, 0, -6)));
         $this->assertFileExists($this->tempfile);
         $this->assertSame("FOO='\$BAR'\n", file_get_contents($this->tempfile));
     }

@@ -232,10 +232,9 @@ class DebugContaoTwigCommand extends Command
     {
         $limitToChars = 300;
 
-        $shortened = mb_strlen($code) > $limitToChars ?
-            substr($code, 0, $limitToChars).'…' :
-            $code
-        ;
+        $shortened = mb_strlen($code) > $limitToChars
+            ? substr($code, 0, $limitToChars).'…'
+            : $code;
 
         return trim($shortened);
     }

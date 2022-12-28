@@ -20,6 +20,9 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,6 +30,22 @@ use Symfony\Component\HttpKernel\UriSigner;
 
 class FileDownloadHelperTest extends TestCase
 {
+    private string $phpIniIgnoreUserAbort = '';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->phpIniIgnoreUserAbort = \ini_get('ignore_user_abort');
+    }
+
+    protected function tearDown(): void
+    {
+        ini_set('ignore_user_abort', $this->phpIniIgnoreUserAbort);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider provideInlineContext
      */
@@ -44,7 +63,7 @@ class FileDownloadHelperTest extends TestCase
             return null;
         };
 
-        $response = $helper->handle(Request::create($url), $this->getStorage(), $onProcess);
+        $response = $helper->handle(Request::create($url), $this->getInMemoryStorage(), $onProcess);
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
@@ -84,13 +103,32 @@ class FileDownloadHelperTest extends TestCase
             return null;
         };
 
-        $response = $helper->handle(Request::create($url), $this->getStorage(), $onProcess);
+        $response = $helper->handle(Request::create($url), $this->getInMemoryStorage(), $onProcess);
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('text/plain', $response->headers->get('Content-Type'));
         $this->assertSame('attachment; filename='.($fileName ?? 'my_file.txt'), $response->headers->get('Content-Disposition'));
         $this->assertSame('foo', $this->getResponseContent($response));
+    }
+
+    public function testHandleLocalDownloadUrl(): void
+    {
+        $adapter = new LocalFilesystemAdapter(Path::canonicalize(__DIR__.'/../Fixtures/files/data'));
+
+        $mountManager = new MountManager();
+        $mountManager->mount($adapter);
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
+        $response = $helper->handle(Request::create($url), $storage);
+
+        $this->assertInstanceOf(BinaryFileResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('attachment; filename=data.csv', $response->headers->get('Content-Disposition'));
+        $this->assertSame("foo,bar\n", $this->getResponseContent($response));
     }
 
     public function provideDownloadContext(): \Generator
@@ -120,7 +158,7 @@ class FileDownloadHelperTest extends TestCase
         ];
     }
 
-    private function getStorage(): VirtualFilesystem
+    private function getInMemoryStorage(): VirtualFilesystem
     {
         $adapter = new InMemoryFilesystemAdapter();
         $adapter->write('my_file.txt', 'foo', new Config());

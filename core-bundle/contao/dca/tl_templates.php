@@ -19,7 +19,6 @@ use Contao\DC_Folder;
 use Contao\DiffRenderer;
 use Contao\Environment;
 use Contao\File;
-use Contao\Files;
 use Contao\Folder;
 use Contao\Image;
 use Contao\Input;
@@ -328,13 +327,8 @@ class tl_templates extends Backend
 				$filesystem->dumpFile($targetFile, $content);
 			};
 
-			$createLegacyTemplate = function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
+			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
 			{
-				if (Validator::isInsecurePath($strOriginal))
-				{
-					throw new RuntimeException('Invalid path ' . $strOriginal);
-				}
-
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Validate the target path
@@ -371,20 +365,23 @@ class tl_templates extends Backend
 						}
 						else
 						{
-							$this->import(Files::class, 'Files');
-							$this->Files->copy($strOriginal, $strTarget);
+							(new Filesystem())->copy(
+								Path::makeAbsolute($strOriginal, $projectDir),
+								Path::makeAbsolute($strTarget, $projectDir)
+							);
 						}
 					}
 				}
 			};
 
-			$strOriginal = Input::post('original', true);
 			$strTarget = Input::post('target', true);
 
 			if (Validator::isInsecurePath($strTarget))
 			{
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
+
+			$strOriginal = Input::post('original', true);
 
 			if (str_starts_with($strOriginal, '@'))
 			{
@@ -419,7 +416,7 @@ class tl_templates extends Backend
 		// Show form
 		return ($strError ? '
 <div class="tl_message">
-<p class="tl_error">' . $strError . '</p>
+<p class="tl_error">' . StringUtil::specialchars($strError) . '</p>
 </div>' : '') . '
 
 <div id="tl_buttons">

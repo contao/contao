@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields')
 		),
@@ -387,7 +388,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'invisible' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)

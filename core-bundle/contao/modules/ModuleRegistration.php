@@ -602,9 +602,16 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendAdminNotification($intId, $arrData)
 	{
+		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
+
+		if (!isset($GLOBALS['TL_ADMIN_EMAIL']))
+		{
+			return;
+		}
+
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
@@ -629,7 +636,5 @@ class ModuleRegistration extends Module
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
-
-		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
