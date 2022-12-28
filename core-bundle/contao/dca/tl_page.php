@@ -1036,7 +1036,7 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (\in_array(Input::get('act'), array('paste', 'select', null)))
+		if (in_array(Input::get('act'), array('paste', 'select', null)))
 		{
 			$messages = new Messages();
 			Message::addRaw($messages->languageFallback());
