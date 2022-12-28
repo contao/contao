@@ -36,3 +36,4 @@ parameters:
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
+    rememberPossiblyImpureFunctionValues: false

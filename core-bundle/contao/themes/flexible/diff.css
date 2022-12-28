@@ -16,8 +16,8 @@ body {
 h2 {
 	margin: 0;
 	padding: 4px 6px;
-	background: #eee;
-	border-bottom: 1px solid #ddd;
+	background: var(--tree-header);
+	border-bottom: 1px solid var(--panel-border);
 	font-size: .875rem;
 }
 
@@ -56,27 +56,27 @@ h2 {
 /* Diff */
 #diff .change {
 	margin-bottom: 1em;
-	border: 1px solid #ddd;
-	background: #fcfcfc;
+	border: 1px solid var(--panel-border);
+	background: var(--table-odd);
 	border-radius: 2px;
 }
 
 #diff .replace.left, #diff .delete.left {
-	background: #fdd;
+	background: var(--diff-left-bg);
 }
 
 #diff .replace.right, #diff .insert.right {
-	background: #dfd;
+	background: var(--diff-right-bg);
 }
 
 #diff .replace ins {
-	color: #060;
-	background: #bfb;
+	color: var(--diff-ins);
+	background: var(--diff-ins-bg);
 }
 
 #diff .replace del {
-	color: #a00;
-	background: #fbb;
+	color: var(--diff-del);
+	background: var(--diff-del-bg);
 }
 
 #diff ins, #diff del {

@@ -48,6 +48,12 @@ class ModuleNewsletterReader extends Module
 			return $objTemplate->parse();
 		}
 
+		// Return an empty string if "auto_item" is not set to combine list and reader on same page
+		if (Input::get('auto_item') === null)
+		{
+			return '';
+		}
+
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))

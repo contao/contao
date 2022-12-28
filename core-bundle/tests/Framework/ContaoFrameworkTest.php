@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
@@ -25,6 +24,8 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -225,6 +226,7 @@ class ContaoFrameworkTest extends TestCase
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_HOOKS'] = [
             'getPageLayout' => [
                 ['test.listener.c', 'onGetPageLayout'],
@@ -344,14 +346,20 @@ class ContaoFrameworkTest extends TestCase
 
     public function testDelegatesTheResetCalls(): void
     {
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
             ->method('createSchema')
             ->willReturn(new Schema())
         ;
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.doctrine.schema_provider', $schemaProvider);
+        $container->set('database_connection', $connection);
 
         $framework = $this->getFramework();
         $framework->setContainer($container);

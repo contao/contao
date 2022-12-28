@@ -70,7 +70,8 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'comment'
 		),
 		'label' => array
 		(
@@ -348,8 +349,8 @@ class tl_comments extends Backend
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
 				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);

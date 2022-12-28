@@ -513,7 +513,7 @@ class Dbafs
 		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
-		$objDatabase->query("UPDATE tl_files SET found=0");
+		$objDatabase->executeStatement("UPDATE tl_files SET found=0");
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -764,7 +764,7 @@ class Dbafs
 		$objLog->close();
 
 		// Reset the found flag
-		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
+		$objDatabase->executeStatement("UPDATE tl_files SET found=1 WHERE found=2");
 
 		// Finalize database access
 		$objDatabase->commitTransaction();

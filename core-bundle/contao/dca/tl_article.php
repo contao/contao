@@ -61,12 +61,13 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
-			'panelLayout'             => 'filter;search'
+			'panelLayout'             => 'filter;search',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
 			'fields'                  => array('title', 'inColumn'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>',
+			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'label_callback'          => array('tl_article', 'addIcon')
 		),
 		'global_operations' => array

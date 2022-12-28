@@ -155,6 +155,36 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 		catch (InvalidJobIdException $e)
 		{
+			if (file_exists($resultCache))
+			{
+				$results = json_decode(file_get_contents($resultCache), true);
+
+				if (Environment::get('isAjaxRequest'))
+				{
+					$response = new JsonResponse(array(
+						'pending' => 0,
+						'total' => 0,
+						'finished' => true,
+						'results' => $results,
+						'hasDebugLog' => file_exists($debugLogPath),
+					));
+
+					throw new ResponseException($response);
+				}
+
+				$subscriberLogHrefs = array();
+
+				foreach (array_keys($results) as $name)
+				{
+					$subscriberLogHrefs[$name] = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=' . $name);
+				}
+
+				$template->subscriberLogHrefs = $subscriberLogHrefs;
+				$template->debugLogHref = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=debug');
+
+				return $template->parse();
+			}
+
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
 		}
 

@@ -16,12 +16,12 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemPoolInterface;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    private const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
     final public const SCOPE_WEB = 'web';
     final public const SCOPE_CLI = 'cli';
 
@@ -34,7 +34,7 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(private \Closure $repository, private \Closure $entityManager, private CacheItemPoolInterface $cachePool, private LoggerInterface|null $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
     {
     }
 
@@ -49,13 +49,6 @@ class Cron
     public function getCronJobs(): array
     {
         return $this->cronJobs;
-    }
-
-    public function hasMinutelyCliCron(): bool
-    {
-        $item = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-
-        return $item->isHit();
     }
 
     /**
@@ -90,12 +83,6 @@ class Cron
         // Validate scope
         if (self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
             throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
-        }
-
-        if (self::SCOPE_CLI === $scope) {
-            $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-            $cacheItem->expiresAfter(60); // 60 seconds
-            $this->cachePool->save($cacheItem);
         }
 
         /** @var CronJobRepository $repository */
@@ -150,11 +137,42 @@ class Cron
             $repository->unlockTable();
         }
 
-        // Execute all cron jobs to be run
-        foreach ($cronJobsToBeRun as $cron) {
+        $this->executeCrons($cronJobsToBeRun, $scope);
+    }
+
+    /**
+     * @param array<CronJob> $crons
+     */
+    private function executeCrons(array $crons, string $scope): void
+    {
+        /** @var array<string, PromiseInterface> $promises */
+        $promises = [];
+
+        foreach ($crons as $cron) {
             $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $cron($scope);
+            $promise = $cron($scope);
+
+            if (!$promise instanceof PromiseInterface) {
+                continue;
+            }
+
+            $promise->then(
+                function () use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                },
+                function ($reason) use ($cron): void {
+                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                }
+            );
+
+            $promises[] = $promise;
         }
+
+        if (0 === \count($promises)) {
+            return;
+        }
+
+        Utils::settle($promises)->wait();
     }
 }

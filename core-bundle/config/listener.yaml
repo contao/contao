@@ -2,6 +2,12 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -211,8 +217,11 @@ services:
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - ce_
             - Contao\ContentProxy
         tags:
@@ -234,8 +243,11 @@ services:
     contao.listener.form_field_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - form_
         tags:
             - { name: contao.callback, table: tl_form_field, target: fields.customTpl.options }
@@ -316,6 +328,18 @@ services:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
 
+    contao.listener.menu.backend_favorites:
+        class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
+        tags:
+            - kernel.event_listener
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
@@ -348,8 +372,11 @@ services:
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - mod_
             - Contao\ModuleProxy
         tags:

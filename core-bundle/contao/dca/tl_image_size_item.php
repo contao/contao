@@ -143,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'invisible' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -204,7 +204,7 @@ class tl_image_size_item extends Backend
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span style="color:#999;padding-left:3px">(' . $row['zoom'] . '%)</span>';
+			$html .= ' <span class="label-info">(' . $row['zoom'] . '%)</span>';
 		}
 
 		$html .= "</div>\n";

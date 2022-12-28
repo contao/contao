@@ -286,35 +286,19 @@ class TemplateLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testReturnsAModernCustomTwigTemplate(): void
+    public function testThrowsExceptionWhenProvidedWithAModernFragmentTemplate(): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
-            ->method('getInheritanceChains')
-            ->willReturn([
-                'content_element/text' => ['some/path/content_element/text.html.twig' => '@Contao_Global/content_element/text.html.twig'],
-                'content_element/text/special' => ['some/path/content_element/text/special.html.twig' => '@Contao_Global/content_element/text/special.html.twig'],
-                'content_element/text_table' => ['some/path/content_element/text_table.html.twig' => '@Contao_Global/content_element/text_table.html.twig'],
-            ])
-        ;
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Using Contao\Controller::getTemplateGroup() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.');
 
-        System::getContainer()->set('contao.twig.filesystem_loader', $templateHierarchy);
+        Controller::getTemplateGroup('content_element/text');
+    }
 
-        $this->assertSame(
-            [
-                'content_element/text/special' => 'content_element/text/special',
-            ],
-            Controller::getTemplateGroup('content_element/text')
-        );
+    public function testThrowsExceptionWhenProvidedWithAModernFragmentTemplateAsPrefix(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Using Contao\Controller::getTemplateGroup() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.');
 
-        $this->assertSame(
-            [
-                'content_element/text/special' => 'content_element/text/special',
-            ],
-            Controller::getTemplateGroup('content_element/text_')
-        );
+        Controller::getTemplateGroup('content_element', [], 'content_element/text');
     }
 }

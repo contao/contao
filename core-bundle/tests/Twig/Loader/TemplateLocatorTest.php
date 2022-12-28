@@ -144,7 +144,7 @@ class TemplateLocatorTest extends TestCase
 
     public function testFindsTemplates(): void
     {
-        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle/templates');
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
         $locator = $this->getTemplateLocator('/project/dir');
 
         $expectedTemplates = [
