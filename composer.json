@@ -182,6 +182,7 @@
         "contao/manager-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
+        "contao/oauth-bundle": "self.version",
         "contao/test-case": "self.version"
     },
     "conflict": {
