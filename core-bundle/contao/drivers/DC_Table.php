@@ -571,7 +571,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show zebra-table zebra-table--with-header">';
+		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--no-border">';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
@@ -5156,7 +5156,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$return .= '
-  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? 'draft ' : '') . 'click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;

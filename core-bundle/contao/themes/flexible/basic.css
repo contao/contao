@@ -41,6 +41,9 @@ body {
 	--table-header: #f6f6f7;
 	--table-odd: #fff;
 	--table-even: #fbfbfc;
+	--table-nb-header: #f2f2f3;
+	--table-nb-odd: #fff;
+	--table-nb-even: #f7f7f8;
 	--panel-bg: #f0f0f2;
 	--tree-header: #eaeaec;
 	--tree-header-border: #dddddf;
@@ -78,7 +81,6 @@ body {
 	--paste-hint: #838990;
 	--serp-preview: #3c4043;
 	--serp-preview-title: #1a0dab;
-	--children-bg: #f6f6f7;
 }
 
 /* General */
@@ -208,8 +210,8 @@ hr {
 	height: 1px;
 	margin: 18px 0;
 	border: 0;
-	background: var(--content-border);
-	color: var(--content-border);
+	background: var(--border);
+	color: var(--border);
 }
 
 p {
@@ -230,7 +232,7 @@ p {
 }
 
 /* Tables */
-.zebra-table tr, .zebra-table td {
+.zebra-table th, .zebra-table td {
 	padding: 4px 6px;
 	border: solid var(--border);
 	border-width: 1px 0;
@@ -255,6 +257,34 @@ p {
 
 .zebra-table--with-header tr:nth-child(even) td {
 	background-color: var(--table-odd);
+}
+
+.zebra-table--no-border th {
+	border-top: 0;
+}
+
+.zebra-table--no-border td {
+	border: 0;
+}
+
+.zebra-table--no-border th {
+	background-color: var(--table-nb-header);
+}
+
+.zebra-table--no-border tr:nth-child(odd) td {
+	background-color: var(--table-nb-odd);
+}
+
+.zebra-table--no-border tr:nth-child(even) td {
+	background-color: var(--table-nb-even);
+}
+
+.zebra-table--with-header.zebra-table--no-border tr:nth-child(odd) td {
+	background-color: var(--table-nb-even);
+}
+
+.zebra-table--with-header.zebra-table--no-border tr:nth-child(even) td {
+	background-color: var(--table-nb-odd);
 }
 
 /* Invisible elements */

@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
-			'contentClass'            => 'new-design'
+			'useNewDesign'            => true
 		),
 		'global_operations' => array
 		(

@@ -59,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
-			'contentClass'            => 'new-design'
+			'useNewDesign'            => true
 		),
 		'global_operations' => array
 		(
