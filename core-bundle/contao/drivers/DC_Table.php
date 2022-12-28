@@ -571,7 +571,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show">';
+		$return = '<table class="tl_show zebra-table zebra-table--with-header">';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
@@ -592,8 +592,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Add the table name
 				$return .= '
   <tr>
-    <td class="tl_folder_top tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</td>
-    <td class="tl_folder_top">' . $table . '</td>
+    <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
+    <th>' . $table . '</th>
   </tr>
 ';
 
@@ -4436,7 +4436,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <div class="tl_header click2edit toggle_select hover-div">';
 
 		// List all records of the child table
-		if (!Input::get('act') || \in_array(Input::get('act'), array('paste', 'select')))
+		if (\in_array(Input::get('act'), array('paste', 'select', null)))
 		{
 			$this->import(BackendUser::class, 'User');
 
@@ -4725,7 +4725,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 				// Opening wrappers
@@ -5122,7 +5122,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Process result and add label and buttons
 			$remoteCur = false;
 			$groupclass = 'tl_folder_tlist';
-			$eoCount = -1;
 
 			foreach ($result as $row)
 			{
@@ -5145,7 +5144,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Add the group header
 					if (($remoteNew != $remoteCur || $remoteCur === false) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 					{
-						$eoCount = -1;
 						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row);
 						$remoteCur = $remoteNew;
 
@@ -5158,7 +5156,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$return .= '
-  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;

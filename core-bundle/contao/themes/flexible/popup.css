@@ -19,7 +19,6 @@ body {
 }
 
 .tl_show td {
-	padding: 4px 6px;
 	line-height: 18px;
 	white-space: pre-line;
 }
@@ -27,10 +26,6 @@ body {
 .tl_show td:first-child {
 	width: 34%;
 	white-space: normal;
-}
-
-.tl_show tr:nth-child(even) td {
-	background: var(--table-odd);
 }
 
 .tl_label {

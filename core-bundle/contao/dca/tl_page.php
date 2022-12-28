@@ -1036,13 +1036,11 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act'))
+		if (\in_array(Input::get('act'), array('paste', 'select', null)))
 		{
-			return;
+			$messages = new Messages();
+			Message::addRaw($messages->languageFallback());
 		}
-
-		$messages = new Messages();
-		Message::addRaw($messages->languageFallback());
 	}
 
 	/**

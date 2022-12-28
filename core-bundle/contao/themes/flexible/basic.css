@@ -15,9 +15,9 @@ html {
 /* Appearance */
 body {
 	--text: #222;
-	--body-bg: #eaecef;
+	--body-bg: #e2e5e9;
 	--content-bg: #fff;
-	--content-border: #dadadc;
+	--content-border: #c5c8cc;
 	--black: #000;
 	--white: #fff;
 	--gray: #999;
@@ -26,25 +26,24 @@ body {
 	--blue: #006494;
 	--orange: #d68c23;
 	--contao: #f47c00;
-	--border: #e6e6e8;
-	--nav: #d3d5d7;
-	--nav-hover: #eaecef;
+	--border: #e0e0e2;
+	--nav: #d3d6da;
+	--nav-hover: #eaedf1;
 	--nav-bg: #0f1c26;
 	--nav-current: #172b3b;
 	--nav-group: #9fa4a8;
 	--nav-separator: #3a454d;
 	--hover-row: #fffce1;
 	--header-bg: #f47c00;
-	--header-bg-hover: #e87600;
+	--header-bg-hover: #e67300;
 	--invert-bg: #333;
 	--invert-text: #fff;
-	--table-header: #f6f6f8;
-	--table-even: #f9f9fb;
-	--table-odd: #fafafc;
-	--panel-border: #ddd;
-	--panel-bg: #f3f3f5;
-	--tree-header: #f0f0f2;
-	--tree-header-border: #e3e3e3;
+	--table-header: #f6f6f7;
+	--table-odd: #fff;
+	--table-even: #fbfbfc;
+	--panel-bg: #f0f0f2;
+	--tree-header: #eaeaec;
+	--tree-header-border: #dddddf;
 	--form-text-disabled: #bbb;
 	--form-border: #aaa;
 	--form-border-disabled: #c8c8c8;
@@ -79,6 +78,7 @@ body {
 	--paste-hint: #838990;
 	--serp-preview: #3c4043;
 	--serp-preview-title: #1a0dab;
+	--children-bg: #f6f6f7;
 }
 
 /* General */
@@ -208,8 +208,8 @@ hr {
 	height: 1px;
 	margin: 18px 0;
 	border: 0;
-	background: var(--panel-border);
-	color: var(--panel-border);
+	background: var(--content-border);
+	color: var(--content-border);
 }
 
 p {
@@ -227,6 +227,34 @@ p {
 	-ms-user-select: none;
 	user-select: none;
 	-webkit-touch-callout: none;
+}
+
+/* Tables */
+.zebra-table tr, .zebra-table td {
+	padding: 4px 6px;
+	border: solid var(--border);
+	border-width: 1px 0;
+}
+
+.zebra-table th {
+	padding: 6px;
+	background-color: var(--table-header);
+}
+
+.zebra-table tr:nth-child(odd) td {
+	background-color: var(--table-odd);
+}
+
+.zebra-table tr:nth-child(even) td {
+	background-color: var(--table-even);
+}
+
+.zebra-table--with-header tr:nth-child(odd) td {
+	background-color: var(--table-even);
+}
+
+.zebra-table--with-header tr:nth-child(even) td {
+	background-color: var(--table-odd);
 }
 
 /* Invisible elements */
