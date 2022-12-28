@@ -211,6 +211,7 @@
             "Contao\\ManagerBundle\\": "manager-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
+            "Contao\\OAuthBundle\\": "oauth-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
@@ -295,7 +296,8 @@
             "contao/maker-bundle": "Contao\\MakerBundle\\ContaoManager\\Plugin",
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
-            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
+            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
+            "contao/oauth-bundle": "Contao\\OAuthBundle\\ContaoManager\\Plugin"
         }
     },
     "scripts": {
