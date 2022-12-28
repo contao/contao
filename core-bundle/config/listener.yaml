@@ -43,6 +43,7 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - '@contao.cron'
+            - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
         tags:
