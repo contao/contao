@@ -30,6 +30,7 @@ body {
 	--nav: #d3d6da;
 	--nav-hover: #eaedf1;
 	--nav-bg: #0f1c26;
+	--nav-hover-bg: #eaedf1;
 	--nav-current: #172b3b;
 	--nav-group: #9fa4a8;
 	--nav-separator: #3a454d;
@@ -52,6 +53,7 @@ body {
 	--form-border: #aaa;
 	--form-border-disabled: #c8c8c8;
 	--form-bg: #fff;
+	--form-bg-hover: #f6f6f6;
 	--form-bg-disabled: #f9f9f9;
 	--form-button: #eee;
 	--form-button-hover: #f6f6f6;
@@ -75,8 +77,6 @@ body {
 	--new-bg: #fbf2e5;
 	--progress-running: #f47c00;
 	--progress-finished: #589b0e;
-	--note-bg: #ffc;
-	--note-border: #f90;
 	--drag-bg: #4078a5;
 	--legend: #6a6a6c;
 	--paste-hint: #838990;
@@ -683,10 +683,6 @@ select[multiple] {
 	transition: background .2s ease;
 }
 
-.tl_panel .tl_submit, .tl_version_panel .tl_submit, .tl_formbody_submit .tl_submit {
-	background: var(--form-bg);
-}
-
 .tl_submit:hover {
 	color: inherit;
 	background-color: var(--form-button-hover);
@@ -700,6 +696,14 @@ select[multiple] {
 	color: var(--gray);
 	background: var(--form-button-disabled);
 	cursor: not-allowed;
+}
+
+.tl_panel .tl_submit, .tl_version_panel .tl_submit, .tl_formbody_submit .tl_submit {
+	background: var(--form-bg);
+}
+
+.tl_panel .tl_submit:hover, .tl_version_panel .tl_submit:hover, .tl_formbody_submit .tl_submit:hover {
+	background: var(--form-bg-hover);
 }
 
 a.tl_submit {
