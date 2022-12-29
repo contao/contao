@@ -22,6 +22,13 @@ use Symfony\Component\Process\Process;
 
 class MessengerCronTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([MessengerCron::class]);
+
+        parent::tearDown();
+    }
+
     public function testDoesNotRunIfNotOnCli(): void
     {
         $cron = new MessengerCron(new Container(), 'bin/console', []);
