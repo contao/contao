@@ -18,10 +18,16 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Symfony\Component\Process\Process;
 
 #[AsCronJob('minutely')]
 class MessengerCron
 {
+    /**
+     * @var callable|null
+     */
+    private $promiseFactory;
+
     /**
      * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}}> $workers
      */
@@ -44,19 +50,20 @@ class MessengerCron
         return Utils::all($workerPromises);
     }
 
+    public function setPromiseFactory(callable $callable): self
+    {
+        $this->promiseFactory = $callable;
+
+        return $this;
+    }
+
     /**
      * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}} $worker
      */
     private function addWorkerPromises(array $worker, array &$workerPromises): void
     {
-        $process = ProcessUtil::createSymfonyConsoleProcess(
-            $this->consolePath,
-            'messenger:consume',
-            ...array_merge($worker['options'], $worker['transports'])
-        );
-
-        // Add one worker (starts now)
-        $workerPromises[] = ProcessUtil::createPromise($process);
+        // Always add one worker
+        $workerPromises[] = $this->createProcessPromiseForWorker($worker);
 
         if ($worker['autoscale']['enabled']) {
             $totalMessages = $this->collectTotalMessages($worker['transports']);
@@ -70,9 +77,34 @@ class MessengerCron
             $desiredWorkers = max(0, $desiredWorkers - 1);
 
             for ($i = 1; $i <= $desiredWorkers; ++$i) {
-                $workerPromises[] = ProcessUtil::createPromise($process);
+                $workerPromises[] = $this->createProcessPromiseForWorker($worker);
             }
         }
+    }
+
+    /**
+     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}} $worker
+     */
+    private function createProcessPromiseForWorker(array $worker): PromiseInterface
+    {
+        $process = ProcessUtil::createSymfonyConsoleProcess(
+            $this->consolePath,
+            'messenger:consume',
+            ...array_merge($worker['options'], $worker['transports'])
+        );
+
+        return $this->createPromiseForProcess($process);
+    }
+
+    private function createPromiseForProcess(Process $process): PromiseInterface
+    {
+        if (null !== $this->promiseFactory) {
+            $factory = $this->promiseFactory;
+
+            return $factory($process);
+        }
+
+        return ProcessUtil::createPromise($process);
     }
 
     private function collectTotalMessages(array $transportNames): int
