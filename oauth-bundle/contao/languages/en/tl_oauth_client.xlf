@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en">
+    <body>
+      <trans-unit id="tl_oauth_client.oauth_legend">
+        <source>OAuth client</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.config_legend">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.title.0">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.title.1">
+        <source>Please enter the OAuth client title.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.type.0">
+        <source>Type</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.type.1">
+        <source>Please choose the type of OAuth client.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.client_id.0">
+        <source>Client ID</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.client_id.1">
+        <source>Enter the client ID of the OAuth client credentials.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.client_secret.0">
+        <source>Client secret</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.client_secret.1">
+        <source>Enter the client secret of the OAuth client credentials.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.scope.0">
+        <source>Scope</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.scope.1">
+        <source>Enter additional scopes as a comma separated list.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.graph_api_version.0">
+        <source>Graph API version</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.graph_api_version.1">
+        <source>Enter the version for the Facebook Graph API.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

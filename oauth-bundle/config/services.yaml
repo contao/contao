@@ -1,0 +1,44 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao_oauth.client_generator:
+        class: Contao\OAuthBundle\ClientGenerator
+        arguments:
+            - '@database_connection'
+            - '@request_stack'
+            - '@router' 
+
+    contao_oauth.controller.frontend_module.oauth_connect:
+        class: Contao\OAuthBundle\Controller\FrontendModule\OAuthConnectController
+        arguments:
+            - '@router'
+
+    Contao\OAuthBundle\Controller\OAuthController:
+        arguments:
+            - '@database_connection'
+            - '@contao_oauth.client_generator'
+        tags:
+            - 'controller.service_arguments'
+
+    contao_oauth.listener.data_container.oauth_client_check:
+        class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientCheckListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '%kernel.bundles%'
+
+    contao_oauth.listener.data_container.oauth_client_type_options:
+        class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientTypeOptionsListener
+
+    Contao\OAuthBundle\Security\Authenticator:
+        arguments:
+            - '@contao_oauth.client_generator'
+            - '@database_connection'
+            - '@contao.framework'
+            - '@request_stack'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.slug'
+            - '%kernel.project_dir%'
+
+    Contao\OAuthBundle\ClientGenerator: '@contao_oauth.client_generator'

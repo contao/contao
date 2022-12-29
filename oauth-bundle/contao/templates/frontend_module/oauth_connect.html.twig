@@ -1,0 +1,15 @@
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+
+{% block content %}
+    <ul>
+        {% for button in oauthUrls %}
+            <li>
+                {% set link_attributes = attrs()
+                    .set('href', button.url)
+                    .set('title', 'MSC.oauthConnect'|trans([button.name]))
+                %}
+                <a{{ link_attributes }}>{{ button.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
