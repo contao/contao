@@ -62,6 +62,21 @@ class AutoFallbackTransport implements TransportInterface
         return $this->fallback->send($envelope);
     }
 
+    public function getTargetTransportName(): string
+    {
+        return $this->targetTransportName;
+    }
+
+    public function getTarget(): TransportInterface
+    {
+        return $this->target;
+    }
+
+    public function getFallback(): TransportInterface
+    {
+        return $this->fallback;
+    }
+
     private function isWorkerRunning(): bool
     {
         return $this->autoFallbackNotifier->isWorkerRunning($this->targetTransportName);

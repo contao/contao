@@ -40,9 +40,11 @@ class MessengerCronTest extends TestCase
         $cron = new MessengerCron($container, 'bin/console', $this->getWorkers($desiredSize, $max));
         $cron->setPromiseFactory(
             static function (Process $process) {
-                return $promise = new Promise(static function () use (&$promise, $process): void {
-                    $promise->resolve($process);
-                });
+                return $promise = new Promise(
+                    static function () use (&$promise, $process): void {
+                        $promise->resolve($process);
+                    }
+                );
             }
         );
         $promise = $cron(Cron::SCOPE_CLI);
