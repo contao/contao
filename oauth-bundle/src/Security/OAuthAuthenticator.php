@@ -23,17 +23,16 @@ use Contao\OAuthBundle\ClientGenerator;
 use Contao\OAuthBundle\Event\OAuthLoginEvent;
 use Contao\OAuthBundle\Model\OAuthClientModel;
 use Doctrine\DBAL\Connection;
-use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -78,7 +77,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
                 $oauthUser = $oauthClient->fetchUserFromToken($accessToken);
 
                 // Search for existing member
-                $user = $this->getExistingMember($oauthUser, $oauthClient, $clientModel);
+                $user = $this->getExistingMember($oauthUser, $clientModel);
 
                 if (null !== $user) {
                     $this->updateOAuthData($user, $clientModel, $oauthUser);
@@ -172,7 +171,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         }
     }
 
-    private function getExistingMember(ResourceOwnerInterface $oauthUser, OAuth2Client $oauthClient, OAuthClientModel $clientModel): ?FrontendUser
+    private function getExistingMember(ResourceOwnerInterface $oauthUser, OAuthClientModel $clientModel): ?FrontendUser
     {
         // Check if we already have a logged in user
         if (($user = $this->security->getUser()) instanceof FrontendUser) {
