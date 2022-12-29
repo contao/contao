@@ -58,6 +58,11 @@ class ProcessUtil
         return new Process($arguments);
     }
 
+    public static function reset(): void
+    {
+        self::$phpBinary = null;
+    }
+
     private static function getPhpBinary(): string
     {
         if (null === self::$phpBinary) {

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\MessengerCron;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\Promise;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
@@ -24,7 +25,7 @@ class MessengerCronTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([MessengerCron::class]);
+        $this->resetStaticProperties([ProcessUtil::class]);
 
         parent::tearDown();
     }
