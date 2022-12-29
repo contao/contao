@@ -37,7 +37,7 @@ body.popup {
 
 #header h1 a .app-title {
 	font-size: 17px;
-	color: var(--white);
+	color: var(--header-text);
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -70,7 +70,7 @@ body.popup {
 	top: 5px;
 	left: 20px;
 	font-size: .6rem;
-	background: var(--white);
+	background: var(--header-text);
 	padding: 2px;
 	border-radius: 2px;
 	text-indent: 0;
@@ -111,7 +111,7 @@ body.popup {
 }
 
 #tmenu a, #tmenu .profile button, #tmenu .burger button {
-	color: var(--white);
+	color: var(--header-text);
 	transition: background-color .3s ease;
 }
 
@@ -125,7 +125,7 @@ body.popup {
 	right: 6px;
 	margin-top: 5px;
 	padding: 6px 0 9px;
-	background: var(--white);
+	background: var(--content-bg);
 	box-shadow: 0 0 3px var(--gray);
 	z-index: 1;
 	color: var(--text);
@@ -174,7 +174,7 @@ body.popup {
 	right: 9px;
 	top: -14px;
 	border: 7px solid transparent;
-	border-bottom-color: var(--white);
+	border-bottom-color: var(--content-bg);
 }
 
 #tmenu ul.menu_level_1:after {
@@ -237,7 +237,6 @@ body.popup {
 	padding: 0;
 	width: auto;
 	min-height: 0;
-	background: var(--white);
 	max-width: none;
 }
 
@@ -1264,7 +1263,7 @@ table.tl_listing {
 
 .tl_content .inside {
 	padding: 6px;
-	background-color: var(--white);
+	background-color: var(--content-bg);
 }
 
 .tl_content.draft > *, .tl_folder.draft > *, .tl_file.draft > *, .hover-row.draft > td {
@@ -1275,7 +1274,7 @@ table.tl_listing {
 	margin-top: 18px;
 	padding: 0;
 	border: 1px solid var(--border);
-	background-color: var(--white);
+	background-color: var(--content-bg);
 }
 
 .as-grid .tl_content .inside {
@@ -1440,7 +1439,7 @@ table.tl_listing {
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background: var(--white);
+	background: var(--content-bg);
 	line-height: 11px;
 	text-align: center;
 }
@@ -1449,7 +1448,7 @@ table.tl_listing {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	background: var(--white);
+	background: var(--content-bg);
 	width: 24px;
 	line-height: 8px;
 	color: var(--gray);
@@ -1509,7 +1508,7 @@ table.tl_listing {
 }
 
 .cte_preview td {
-	background: var(--white);
+	background: var(--content-bg);
 }
 
 .cte_preview table caption {
@@ -1608,7 +1607,7 @@ table.tl_listing {
 
 .tl_folder.tl_folder_dropping, .tl_folder_top.tl_folder_dropping {
 	background-color: var(--drag-bg) !important;
-	color: var(--white) !important;
+	color: var(--text) !important;
 }
 
 .tl_folder.tl_folder_dropping a, .tl_folder_top.tl_folder_dropping a {
@@ -1628,7 +1627,7 @@ table.tl_listing {
 	position: absolute;
 	background: var(--drag-bg);
 	border-radius: 10px;
-	color: var(--white);
+	color: var(--text);
 	padding: 5px 10px !important;
 	margin-left: 0;
 	text-indent: 0;
@@ -1909,7 +1908,7 @@ ul.sgallery li {
 .tl_chmod th, .tl_chmod td {
 	width: 14.2857%;
 	padding: 6px;
-	border: 1px solid var(--white);
+	border: 1px solid var(--content-bg);
 }
 
 /* Wizards */

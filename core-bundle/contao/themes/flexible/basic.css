@@ -36,6 +36,7 @@ body {
 	--hover-row: #fffce1;
 	--header-bg: #f47c00;
 	--header-bg-hover: #e67300;
+	--header-text: #fff;
 	--invert-bg: #333;
 	--invert-text: #fff;
 	--table-header: #f6f6f7;
@@ -372,7 +373,7 @@ optgroup {
 	padding-top: 3px;
 	padding-bottom: 3px;
 	font-style: normal;
-	background: var(--white);
+	background: var(--form-bg);
 }
 
 fieldset.tl_checkbox_container, fieldset.tl_radio_container {
@@ -935,7 +936,7 @@ a.tl_submit {
 		bottom: -12px;
 		z-index: 89;
 		border: 6px inset transparent;
-		border-top: 6px solid var(--white);
+		border-top: 6px solid var(--form-bg);
 	}
 
 	.split-button ul:after {
