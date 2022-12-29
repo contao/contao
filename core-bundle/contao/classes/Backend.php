@@ -544,11 +544,6 @@ abstract class Backend extends Controller
 				}
 			}
 
-			if (($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['useNewDesign'] ?? false) && \in_array(Input::get('act'), array('paste', 'select', null), true))
-			{
-				$this->Template->contentClass .= ' new-design';
-			}
-
 			return $dc->$act();
 		}
 

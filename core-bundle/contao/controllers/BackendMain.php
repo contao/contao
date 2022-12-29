@@ -106,7 +106,6 @@ class BackendMain extends Backend
 		}
 
 		$this->Template->main = '';
-		$this->Template->contentClass = 'content';
 
 		// Ajax request
 		if (Input::post('action') && Environment::get('isAjaxRequest'))

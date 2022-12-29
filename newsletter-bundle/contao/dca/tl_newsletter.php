@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
-			'useNewDesign'            => true
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(

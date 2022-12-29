@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
-			'useNewDesign'            => true
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
