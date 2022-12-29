@@ -67,8 +67,8 @@ class MessengerCronTest extends TestCase
             10,
             15,
             [
-                "'bin/console' 'messenger:consume' '--time-limit=60' 'prio_normal'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
 
@@ -77,8 +77,8 @@ class MessengerCronTest extends TestCase
             10,
             15,
             [
-                "'bin/console' 'messenger:consume' '--time-limit=60' 'prio_normal'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
 
@@ -87,9 +87,9 @@ class MessengerCronTest extends TestCase
             10,
             15,
             [
-                "'bin/console' 'messenger:consume' '--time-limit=60' 'prio_normal'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
 
@@ -98,13 +98,13 @@ class MessengerCronTest extends TestCase
             10,
             15,
             [
-                "'bin/console' 'messenger:consume' '--time-limit=60' 'prio_normal'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
 
@@ -113,22 +113,22 @@ class MessengerCronTest extends TestCase
             10,
             15,
             [
-                "'bin/console' 'messenger:consume' '--time-limit=60' 'prio_normal'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
-                "'bin/console' 'messenger:consume' '--sleep=5' '--time-limit=60' 'prio_high'",
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
     }
@@ -141,7 +141,9 @@ class MessengerCronTest extends TestCase
         $unwrapped = [];
 
         foreach ($processes as $process) {
-            $unwrapped[] = trim(strstr($process->getCommandLine(), ' '));
+            // Remove the PHP binary path and undo proper quoting (not relevant for this test and required for
+            // easier cross-platform CI runs
+            $unwrapped[] = str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
         }
 
         return $unwrapped;

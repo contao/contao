@@ -18,12 +18,17 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SearchIndexMessageHandler implements MessageHandlerInterface
 {
-    public function __construct(private IndexerInterface $indexer)
+    public function __construct(private IndexerInterface|null $indexer = null)
     {
     }
 
     public function __invoke(SearchIndexMessage $message): void
     {
+        // No search indexing activated at all
+        if (null === $this->indexer) {
+            return;
+        }
+
         if ($message->shouldIndex()) {
             $this->indexer->index($message->getDocument());
         }

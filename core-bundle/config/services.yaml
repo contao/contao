@@ -461,7 +461,7 @@ services:
     contao.messenger.message_handler.search_index:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
-            - '@contao.search.indexer'
+            - '@?contao.search.indexer'
 
     contao.messenger.auto_fallback_notifier:
         class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
