@@ -95,7 +95,8 @@ class OAuthAuthenticator extends OAuth2Authenticator
                 }
 
                 // Some OAuth resource owners provide the email address
-                $username = $oauthUser->toArray()['email'] ?? $oauthUser->getId();
+                $email = method_exists($oauthUser, 'getEmail') ? $oauthUser->getEmail() : '';
+                $username = $email ?: $oauthUser->getId();
 
                 $this->db->insert('tl_member', [
                     'tstamp' => time(),
@@ -103,7 +104,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
                     'groups' => $module->reg_groups,
                     'username' => $username,
                     'dateAdded' => time(),
-                    'email' => $oauthUser->toArray()['email'] ?? '',
+                    'email' => $email,
                 ]);
 
                 $user = $this->framework->getAdapter(FrontendUser::class)->loadUserByIdentifier($username);
@@ -179,7 +180,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         }
 
         // Some OAuth resource owners provide the email address
-        $email = $oauthUser->toArray()['email'] ?? '';
+        $email =  method_exists($oauthUser, 'getEmail') ? $oauthUser->getEmail() : '';
 
         // Check for existing users using the OAuth ID, email address or email address as a username
         $existingUsername = $this->db->fetchOne("
