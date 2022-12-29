@@ -1,12 +1,16 @@
+{% trans_default_domain 'contao_default' %}
 {% extends "@Contao/frontend_module/_base.html.twig" %}
 
 {% block content %}
     <ul>
         {% for button in oauthUrls %}
-            <li>
+            {% set item_attributes = attrs()
+                .addClass(['client', "client-#{button.type}"])
+            %}
+            <li{{ item_attributes }}>
                 {% set link_attributes = attrs()
                     .set('href', button.url)
-                    .set('title', 'MSC.oauthConnect'|trans([button.name]))
+                    .set('title', 'MSC.oauthConnectTo'|trans([button.name]))
                 %}
                 <a{{ link_attributes }}>{{ button.name }}</a>
             </li>

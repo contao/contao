@@ -5,6 +5,9 @@
       <trans-unit id="ERR.oauthPackageNotInstalled">
         <source>To use the %s OAuth provider you still need to install the "&lt;strong&gt;%s&lt;/strong&gt;" package.</source>
       </trans-unit>
+      <trans-unit id="MSC.oauthConnectTo">
+        <source>Connect to %s</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

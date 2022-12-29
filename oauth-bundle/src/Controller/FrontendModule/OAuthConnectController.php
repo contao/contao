@@ -18,50 +18,58 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\OAuthBundle\Model\OAuthClientModel;
 use Contao\PageModel;
-use Contao\StringUtil;
-use Contao\System;
 use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsFrontendModule(type: 'oauth_connect', category: 'user')]
 class OAuthConnectController extends AbstractFrontendModuleController
 {
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator, private readonly UriSigner $uriSigner)
     {
     }
 
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
-        $clients = $model->getRelated('oauthClients');
+        $clientModels = $model->getRelated('oauthClients');
 
-        if (null === $clients) {
+        if (null === $clientModels) {
             return new Response();
         }
 
         $oauthUrls = [];
         $extension = new KnpUOAuth2ClientExtension();
 
-        foreach ($clients as $client) {
-            /** @var OAuthClientModel $client */
-            $config = $extension->getConfigurator($client->type);
+        // Determine redirect URL
+        $redirect = $request->getUri();
+
+        if ($model->jumpTo && null !== ($page = PageModel::findByPk($model->jumpTo))) {
+            $redirect = $page->getAbsoluteUrl();
+        } elseif ($model->redirectBack && $request->query->has('redirect') && $this->uriSigner->check($request->getUri())) {
+			$redirect = $request->query->get('redirect');
+		}
+
+        foreach ($clientModels as $clientModel) {
+            /** @var OAuthClientModel $clientModel */
+            $providerConfig = $extension->getConfigurator($clientModel->type);
+
+            $url = $this->urlGenerator->generate('contao_oauth_connect', [
+                'moduleId' => (int) $model->id, 
+                'clientId' => (int) $clientModel->id, 
+                'redirect' => $redirect
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->uriSigner->sign($url);
 
             $oauthUrls[] = [
-                'url' => $this->urlGenerator->generate('contao_oauth_connect', ['moduleId' => (int) $model->id, 'clientId' => (int) $client->id]),
-                'name' => $config->getProviderDisplayName(),
+                'url' => $url,
+                'name' => $providerConfig->getProviderDisplayName(),
+                'type' => $clientModel->type,
             ];
         }
 
         $template->oauthUrls = $oauthUrls;
-
-        if ($model->jumpTo && null !== ($page = PageModel::findByPk($model->jumpTo))) {
-            $redirect = $page->getAbsoluteUrl();
-        } else {
-            $redirect = System::getReferer() ?: $request->getUri();
-        }
-
-        $request->getSession()->set('_oauth_redirect', $redirect);
 
         return $template->getResponse();
     }

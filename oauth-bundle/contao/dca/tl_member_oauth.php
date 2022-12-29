@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_member_oauth'] = [
             'keys' => [
                 'id' => 'primary',
                 'pid,oauthClient' => 'unique',
-                'oauthClient,oauthId' => 'index',
+                'pid,oauthClient,oauthId' => 'index',
             ],
         ], 
     ],
@@ -64,6 +64,9 @@ $GLOBALS['TL_DCA']['tl_member_oauth'] = [
         ],
         'oauthId' => [
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+        ],
+        'oauthUserData' => [
+            'sql' => ['type' => 'json', 'notnull' => false],
         ],
     ],
 ];

@@ -11,15 +11,16 @@ services:
 
     contao_oauth.controller.frontend_module.oauth_connect:
         class: Contao\OAuthBundle\Controller\FrontendModule\OAuthConnectController
-        arguments:
+        arguments: 
             - '@router'
+            - '@uri_signer'
 
     Contao\OAuthBundle\Controller\OAuthController:
         arguments:
             - '@database_connection'
             - '@contao_oauth.client_generator'
-        tags:
-            - 'controller.service_arguments'
+            - '@uri_signer'
+        tags: ['controller.service_arguments']
 
     contao_oauth.listener.data_container.oauth_client_check:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientCheckListener
@@ -31,14 +32,18 @@ services:
     contao_oauth.listener.data_container.oauth_client_type_options:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientTypeOptionsListener
 
-    Contao\OAuthBundle\Security\Authenticator:
+    contao_oauth.listener.facebook_login:
+        class: Contao\OAuthBundle\EventListener\FacebookLoginListener
+        tags: ['kernel.event_listener']
+
+    Contao\OAuthBundle\Security\OAuthAuthenticator:
         arguments:
             - '@contao_oauth.client_generator'
             - '@database_connection'
             - '@contao.framework'
-            - '@request_stack'
             - '@contao.filesystem.virtual.files'
             - '@contao.slug'
-            - '%kernel.project_dir%'
+            - '@event_dispatcher'
+            - '@security.helper'
 
     Contao\OAuthBundle\ClientGenerator: '@contao_oauth.client_generator'

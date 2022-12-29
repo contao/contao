@@ -35,7 +35,8 @@
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0"
+        "symfony/phpunit-bridge": "^5.4 || ^6.0",
+        "league/oauth2-facebook": "^2.2"
     },
     "conflict": {
         "contao/core": "*",

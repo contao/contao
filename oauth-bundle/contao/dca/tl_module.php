@@ -13,7 +13,7 @@ declare(strict_types=1);
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['oauthClients'] = [
-    'inputType' => 'checkbox',
+    'inputType' => 'checkboxWizard',
     'foreignKey' => 'tl_oauth_client.title',
     'eval' => ['multiple' => true, 'mandatory' => true],
     'sql' => ['type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false],

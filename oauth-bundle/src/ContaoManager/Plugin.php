@@ -20,7 +20,7 @@ use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\OAuthBundle\ContaoOAuthBundle;
-use Contao\OAuthBundle\Security\Authenticator;
+use Contao\OAuthBundle\Security\OAuthAuthenticator;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -54,7 +54,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, Extension
 
         foreach ($extensionConfigs as &$extensionConfig) {
             if (isset($extensionConfig['firewalls'], $extensionConfig['firewalls']['contao_frontend'])) {
-                $extensionConfig['firewalls']['contao_frontend']['custom_authenticators'][] = Authenticator::class;
+                $extensionConfig['firewalls']['contao_frontend']['custom_authenticators'][] = OAuthAuthenticator::class;
             }
         }
 
