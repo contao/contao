@@ -12,17 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger;
 
+use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransport;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 class AutoFallbackNotifier
 {
-    public function __construct(private CacheItemPoolInterface $cache)
+    public function __construct(private CacheItemPoolInterface $cache, private ContainerInterface $messengerTransportLocator)
     {
     }
 
     public function ping(string $transportName): void
     {
+        if (!$this->isAutoFallbackTransport($transportName)) {
+            return;
+        }
+
         $item = $this->getCacheItemForTransportName($transportName);
         $item->expiresAfter(60);
 
@@ -31,7 +38,23 @@ class AutoFallbackNotifier
 
     public function isWorkerRunning(string $transportName): bool
     {
+        if (!$this->isAutoFallbackTransport($transportName)) {
+            return false;
+        }
+
         return $this->getCacheItemForTransportName($transportName)->isHit();
+    }
+
+    private function isAutoFallbackTransport(string $transportName): bool
+    {
+        if (!$this->messengerTransportLocator->has($transportName)) {
+            return false;
+        }
+
+        /** @var TransportInterface $transport */
+        $transport = $this->messengerTransportLocator->get($transportName);
+
+        return $transport instanceof AutoFallbackTransport;
     }
 
     private function getCacheItemForTransportName(string $transportName): CacheItemInterface

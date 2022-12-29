@@ -25,7 +25,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
 {
     public function testSupports(): void
     {
-        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class));
+        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, new Container());
 
         $this->assertTrue($factory->supports('contao_auto_fallback://contao_prio_low?fallback=sync', []));
@@ -41,7 +41,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $container->set('contao_prio_low', $target);
         $container->set('sync', $fallback);
 
-        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class));
+        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
 
         /** @var AutoFallbackTransport $transport */
@@ -64,7 +64,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $container = new Container();
         $container->set('sync', $this->createMock(TransportInterface::class));
 
-        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class));
+        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
         $factory->createTransport(
             'contao_auto_fallback://contao_prio_low?fallback=sync',
@@ -81,7 +81,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $container = new Container();
         $container->set('contao_prio_low', $this->createMock(TransportInterface::class));
 
-        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class));
+        $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
         $factory->createTransport(
             'contao_auto_fallback://contao_prio_low?fallback=sync',

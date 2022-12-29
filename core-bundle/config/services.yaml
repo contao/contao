@@ -467,6 +467,7 @@ services:
         class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
         arguments:
             - '@cache.app'
+            - '@messenger.receiver_locator'
 
     contao.messenger.transport.auto_fallback_transport_factory:
         class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
