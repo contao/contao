@@ -40,7 +40,6 @@ class OAuthConnectController extends AbstractFrontendModuleController
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         $formId = 'module-'.$model->type.'-'.$model->id;
-        dd(KnpUOAuth2ClientExtension::getAllSupportedTypes());
 
         if ($request->isMethod(Request::METHOD_POST) && $formId === $request->request->get('FORM_SUBMIT')) {
             $clientId = (int) $request->request->get('client');
