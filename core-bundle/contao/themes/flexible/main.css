@@ -619,7 +619,6 @@ h2.sub_headline {
 }
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
-	border-color: var(--active-border);
 	background-color: var(--active-bg);
 }
 
@@ -1592,8 +1591,8 @@ table.tl_listing {
 /* Tree view */
 .tl_folder_top {
 	padding: 5px 6px;
-	border-top: 1px solid var(--tree-header-border);
-	border-bottom: 1px solid var(--tree-header-border);
+	border: solid var(--tree-header-border);
+	border-width: 1px 0;
 	background: var(--tree-header);
 }
 
@@ -1717,8 +1716,9 @@ label.tl_change_selected {
 	margin: 0 0 12px;
 	padding: 4px 6px;
 	overflow: hidden;
-	background: var(--active-bg);
-	border: 1px solid var(--active-border);
+	background: var(--table-header);
+	border: solid var(--tree-header-border);
+	border-width: 1px 0;
 	line-height: 24px;
 }
 

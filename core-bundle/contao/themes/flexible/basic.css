@@ -69,7 +69,6 @@ body {
 	--checkerbox-bg: #ddd;
 	--info: #808080;
 	--active-bg: #fffce1;
-	--active-border: #d68c23;
 	--pre-disabled: #a6a6a6;
 	--error-bg: #faebeb;
 	--confirm-bg: #eefcde;
@@ -77,7 +76,7 @@ body {
 	--new-bg: #fbf2e5;
 	--progress-running: #f47c00;
 	--progress-finished: #589b0e;
-	--drag-bg: #4078a5;
+	--drag-bg: #a3c2db;
 	--legend: #6a6a6c;
 	--paste-hint: #838990;
 	--serp-preview: #3c4043;
