@@ -10,6 +10,7 @@
       <directory>./manager-bundle/src</directory>
       <directory>./news-bundle/src</directory>
       <directory>./newsletter-bundle/src</directory>
+      <directory>./oauth-bundle/src</directory>
     </include>
     <exclude>
       <!-- exclude resources that are exempt from testing -->

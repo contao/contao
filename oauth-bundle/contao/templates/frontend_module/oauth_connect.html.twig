@@ -2,18 +2,30 @@
 {% extends "@Contao/frontend_module/_base.html.twig" %}
 
 {% block content %}
-    <ul>
-        {% for button in oauthUrls %}
-            {% set item_attributes = attrs()
-                .addClass(['client', "client-#{button.type}"])
+    <form method="post" id="{{ formId }}">
+        <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+        <input type="hidden" name="_target_path" value="{{ targetPath }}">
+        {% for button in buttons %}
+            {% set widget_attributes = attrs()
+                .addClass(['widget', 'widget-submit', "client-#{button.type}"])
             %}
-            <li{{ item_attributes }}>
-                {% set link_attributes = attrs()
-                    .set('href', button.url)
-                    .set('title', 'MSC.oauthConnectTo'|trans([button.name]))
+            <div{{ widget_attributes }}>
+                {% set button_attributes = attrs()
+                    .set('type', 'submit')
+                    .set('name', 'client')
+                    .set('value', button.client)
+                    .set('title', 'MSC.oauthConnect'|trans([button.name]))
                 %}
-                <a{{ link_attributes }}>{{ button.name }}</a>
-            </li>
+                <button{{ button_attributes }}>{{ button.name }}</button>
+            </div>
         {% endfor %}
-    </ul>
+        {% if autologin %}
+            <div class="widget widget-checkbox">
+                <fieldset class="checkbox_container">
+                    <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ 'MSC.autologin'|trans }}</label></span>
+                </fieldset>
+            </div>
+        {% endif %}
+    </form>
 {% endblock %}

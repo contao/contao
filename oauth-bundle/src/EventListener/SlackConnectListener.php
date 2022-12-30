@@ -12,27 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\OAuthBundle\EventListener;
 
+use AdamPaterson\OAuth2\Client\Provider\SlackResourceOwner;
 use Contao\FrontendUser;
-use Contao\OAuthBundle\Event\OAuthLoginEvent;
-use League\OAuth2\Client\Provider\FacebookUser;
+use Contao\OAuthBundle\Event\OAuthConnectEvent;
 
 /**
- * Updates a new front end user's details with data from Facebook.
+ * Updates a new front end user's details with data from Slack.
  */
-class FacebookLoginListener
+class SlackConnectListener
 {
-    public function __invoke(OAuthLoginEvent $event): void
+    public function __invoke(OAuthConnectEvent $event): void
     {
         $oauthUser = $event->getOauthUser();
         $user = $event->getUser();
 
-        if (!$event->getIsNew() || !$oauthUser instanceof FacebookUser || !$user instanceof FrontendUser) {
+        if (!$event->getIsNew() || !$oauthUser instanceof SlackResourceOwner || !$user instanceof FrontendUser) {
             return;
         }
        
         $user->email = $oauthUser->getEmail();
         $user->firstname = $oauthUser->getFirstName();
         $user->lastname = $oauthUser->getLastName();
+        $user->phone = $oauthUser->getPhone();
         $user->save();
     }
 }

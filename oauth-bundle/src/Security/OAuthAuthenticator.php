@@ -19,8 +19,8 @@ use Contao\CoreBundle\Slug\Slug;
 use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
-use Contao\OAuthBundle\ClientGenerator;
-use Contao\OAuthBundle\Event\OAuthLoginEvent;
+use Contao\OAuthBundle\OAuthClientGenerator;
+use Contao\OAuthBundle\Event\OAuthConnectEvent;
 use Contao\OAuthBundle\Model\OAuthClientModel;
 use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -42,7 +43,7 @@ use Symfony\Component\Uid\Uuid;
 class OAuthAuthenticator extends OAuth2Authenticator
 {
     public function __construct(
-        private readonly ClientGenerator $clientGenerator,
+        private readonly OAuthClientGenerator $clientGenerator,
         private readonly Connection $db,
         private readonly ContaoFramework $framework,
         private readonly VirtualFilesystem $filesStorage,
@@ -63,14 +64,19 @@ class OAuthAuthenticator extends OAuth2Authenticator
         $this->framework->initialize();
 
         $session = $request->getSession();
-        $clientModel = $this->framework->getAdapter(OAuthClientModel::class)->findById((int) $session->get('_oauth_client_id'));
+        $clientModel = $this->framework->getAdapter(OAuthClientModel::class)->findById((int) ($session->get('_oauth_client_id')?->getValue()));
 
         if (null === $clientModel) {
             throw new \RuntimeException('OAuth client model not found.');
         }
 
-        $oauthClient = $this->clientGenerator->getClientById($session->get('_oauth_client_id'));
+        $oauthClient = $this->clientGenerator->getClientById($session->get('_oauth_client_id')?->getValue());
         $accessToken = $this->fetchAccessToken($oauthClient);
+        $badges = [];
+
+        if ($session->has('_oauth_remember_me')) {
+            $badges[] = (new RememberMeBadge())->enable();
+        }
 
         return new SelfValidatingPassport(
             new UserBadge($accessToken->getToken(), function() use ($accessToken, $clientModel, $oauthClient, $session): UserInterface {
@@ -82,12 +88,12 @@ class OAuthAuthenticator extends OAuth2Authenticator
                 if (null !== $user) {
                     $this->updateOAuthData($user, $clientModel, $oauthUser);
 
-                    $this->eventDispatcher->dispatch(new OAuthLoginEvent($accessToken, $oauthClient, $oauthUser, $user, false));
+                    $this->eventDispatcher->dispatch(new OAuthConnectEvent($accessToken, $oauthClient, $oauthUser, $user, false));
 
                     return $user;
                 }
 
-                $module = ModuleModel::findByPk($session->get('_oauth_module_id'));
+                $module = ModuleModel::findByPk($session->get('_oauth_module_id')?->getValue());
 
                 if (null === $module) {
                     throw new \RuntimeException('Invalid module ID in session.');
@@ -114,10 +120,11 @@ class OAuthAuthenticator extends OAuth2Authenticator
 
                 $this->updateOAuthData($user, $clientModel, $oauthUser);
 
-                $this->eventDispatcher->dispatch(new OAuthLoginEvent($accessToken, $oauthClient, $oauthUser, $user, true));
+                $this->eventDispatcher->dispatch(new OAuthConnectEvent($accessToken, $oauthClient, $oauthUser, $user, true));
 
                 return $user;
-            })
+            }),
+            $badges
         );
     }
 
@@ -125,11 +132,12 @@ class OAuthAuthenticator extends OAuth2Authenticator
     {
         $session = $request->getSession();
 
-        $url = $session->get('_oauth_redirect', $request->getSchemeAndHttpHost());
+        $url = $session->get('_oauth_redirect')?->getValue() ??  $request->getSchemeAndHttpHost();
 
         $session->remove('_oauth_redirect');
         $session->remove('_oauth_client_id');
         $session->remove('_oauth_module_id');
+        $session->remove('_oauth_remember_me');
 
         return new RedirectResponse($url);
     }
@@ -141,10 +149,9 @@ class OAuthAuthenticator extends OAuth2Authenticator
         $session->remove('_oauth_redirect');
         $session->remove('_oauth_client_id');
         $session->remove('_oauth_module_id');
+        $session->remove('_oauth_remember_me');
 
-        $message = strtr($exception->getMessageKey(), $exception->getMessageData());
-
-        return new Response($message, Response::HTTP_FORBIDDEN);
+        throw new $exception;
     }
 
     private function assignHomeDir(FrontendUser $user, ModuleModel $model): void
@@ -181,11 +188,11 @@ class OAuthAuthenticator extends OAuth2Authenticator
         // Some OAuth resource owners provide the email address
         $email =  method_exists($oauthUser, 'getEmail') ? $oauthUser->getEmail() : '';
 
-        // Check for existing users using the OAuth ID, email address or email address as a username
+        // Check for existing users using the OAuth ID or email address
         $existingUsername = $this->db->fetchOne("
             SELECT m.username
               FROM tl_member AS m, tl_member_oauth AS o
-             WHERE (o.pid = m.id AND o.oauthClient = ? AND o.oauthId = ?) OR (m.email = ? AND m.email != '') OR (m.username = ? AND m.username != '')
+             WHERE (o.pid = m.id AND o.oauthClient = ? AND o.oauthId = ?) OR (m.email = ? AND m.email != '')
         ", [(int) $clientModel->id, $oauthUser->getId(), $email, $email]);
 
         if (false === $existingUsername) {

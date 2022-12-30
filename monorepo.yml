@@ -79,6 +79,15 @@ repositories:
             68e318965dd839ad339936069055b2a169cbd8fe: 7f250dcce34ebd71f0aee8311597aea7a3117e96
             7086050842a5babf22fd552181874a0e72b1e4ee: 5ad35c1360dc582289506553e55f21cd3823c621
 
+    # TODO:
+    #oauth-bundle:
+    #    url: https://github.com/contao/oauth-bundle.git
+    #    mapping:
+    #        2951d154c36bce159951a08706c12e6e64843f3a: 62ab82084be21f0e29f1f37b5e4d4e0c150e225f
+    #        a1e0f71608b6f300b00310a9f3b63bb4c3a42d46: 5e5097692fc9dfd5bbba82a7f6d64e8cb49a3c84
+    #        4a19d2d99c722db6873d702562295b26411e9946: 9d7c1be81e79312bd532e16c3a6db89b0106153d
+    #        9b45a4310974762b59f3f76afb5b85b11dc8581c: 851bba0e84cdc5e126ef4f72697c60534a2c8300
+
     test-case:
         url: https://github.com/contao/test-case.git
         mapping:

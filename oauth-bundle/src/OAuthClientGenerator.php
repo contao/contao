@@ -14,6 +14,10 @@ namespace Contao\OAuthBundle;
 
 use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
+use KnpU\OAuth2ClientBundle\Client\Provider\AmazonClient;
+use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
+use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
+use KnpU\OAuth2ClientBundle\Client\Provider\SlackClient;
 use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -21,7 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /** 
  * Generates an OAuth2Client.
  */
-class ClientGenerator
+class OAuthClientGenerator
 {
     public function __construct(private readonly Connection $db, private readonly RequestStack $requestStack, private readonly UrlGeneratorInterface $urlGenerator)
     {
@@ -55,5 +59,22 @@ class ClientGenerator
         $clientClass = $configurator->getClientClass($clientConfig);
 
         return new $clientClass($provider, $this->requestStack);
+    }
+
+    public function getDefaultScopes(OAuth2Client $oauthClient): array
+    {
+        $scopes = [];
+
+        if ($oauthClient instanceof AmazonClient) {
+            $scopes = ['identity.basic', 'identity.email'];
+        } elseif ($oauthClient instanceof FacebookClient) {
+            $scopes = ['email'];
+        } elseif ($oauthClient instanceof GoogleClient) {
+            $scopes = ['userinfo.email', 'userinfo.profile'];
+        } elseif ($oauthClient instanceof SlackClient) {
+            $scopes = ['profile'];
+        }
+
+        return $scopes;
     }
 }

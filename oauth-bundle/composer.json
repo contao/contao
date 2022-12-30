@@ -17,7 +17,7 @@
     "support": {
         "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/news-bundle",
+        "source": "https://github.com/contao/oauth-bundle",
         "docs": "https://docs.contao.org"
     },
     "funding": [
@@ -32,11 +32,13 @@
         "knpuniversity/oauth2-client-bundle": "^2.11"
     },
     "require-dev": {
+        "adam-paterson/oauth2-slack": "^1.1",
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
+        "league/oauth2-facebook": "^2.2",
+        "league/oauth2-google": "^4.0",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0",
-        "league/oauth2-facebook": "^2.2"
+        "symfony/phpunit-bridge": "^5.4 || ^6.0"
     },
     "conflict": {
         "contao/core": "*",

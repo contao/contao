@@ -44,6 +44,12 @@
       <trans-unit id="tl_oauth_client.graph_api_version.1">
         <source>Enter the version for the Facebook Graph API.</source>
       </trans-unit>
+      <trans-unit id="tl_oauth_client.scopes.0">
+        <source>Scopes</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.scopes.1">
+        <source>Provide a list of scopes to request from the OAuth provider.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

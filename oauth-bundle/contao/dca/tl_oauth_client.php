@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_oauth_client'] = [
     'config' => [
@@ -58,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_oauth_client'] = [
         'type' => [
             'filter' => true,
             'inputType' => 'select',
-            'eval' => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true],
+            'eval' => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true, 'chosen' => true],
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
         ],
         'client_id' => [
@@ -71,6 +72,11 @@ $GLOBALS['TL_DCA']['tl_oauth_client'] = [
             'eval' => ['tl_class' => 'w50', 'maxlength' => 255, 'mandatory' => true],
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''], 
         ],
+        'scopes' => [
+            'inputType' => 'listWizard',
+            'eval' => ['tl_class' => 'clr w50'],
+            'sql' => ['type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false]
+        ],
         'graph_api_version' => [
             'inputType' => 'text',
             'eval' => ['tl_class' => 'w50', 'maxlength' => 255, 'mandatory' => true],
@@ -79,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_oauth_client'] = [
     ],
     'palettes' => [
         '__selector__' => ['type'],
-        'default' => '{oauth_legend},title,type;{config_legend},client_id,client_secret',
-        'facebook' => '{oauth_legend},title,type;{config_legend},client_id,client_secret,graph_api_version',
+        'default' => '{oauth_legend},title,type;{config_legend},client_id,client_secret,scopes',
+        'facebook' => '{oauth_legend},title,type;{config_legend},client_id,client_secret,graph_api_version,scopes',
     ],
 ];

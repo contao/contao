@@ -3,7 +3,7 @@ services:
         autoconfigure: true
 
     contao_oauth.client_generator:
-        class: Contao\OAuthBundle\ClientGenerator
+        class: Contao\OAuthBundle\OAuthClientGenerator
         arguments:
             - '@database_connection'
             - '@request_stack'
@@ -12,15 +12,10 @@ services:
     contao_oauth.controller.frontend_module.oauth_connect:
         class: Contao\OAuthBundle\Controller\FrontendModule\OAuthConnectController
         arguments: 
-            - '@router'
             - '@uri_signer'
-
-    Contao\OAuthBundle\Controller\OAuthController:
-        arguments:
+            - '@contao.csrf.token_manager'
             - '@database_connection'
             - '@contao_oauth.client_generator'
-            - '@uri_signer'
-        tags: ['controller.service_arguments']
 
     contao_oauth.listener.data_container.oauth_client_check:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientCheckListener
@@ -32,8 +27,16 @@ services:
     contao_oauth.listener.data_container.oauth_client_type_options:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientTypeOptionsListener
 
-    contao_oauth.listener.facebook_login:
-        class: Contao\OAuthBundle\EventListener\FacebookLoginListener
+    contao_oauth.listener.facebook_connect:
+        class: Contao\OAuthBundle\EventListener\FacebookConnectListener
+        tags: ['kernel.event_listener']
+
+    contao_oauth.listener.google_connect:
+        class: Contao\OAuthBundle\EventListener\GoogleConnectListener
+        tags: ['kernel.event_listener']
+
+    contao_oauth.listener.slack_connect:
+        class: Contao\OAuthBundle\EventListener\SlackConnectListener
         tags: ['kernel.event_listener']
 
     Contao\OAuthBundle\Security\OAuthAuthenticator:
@@ -46,4 +49,4 @@ services:
             - '@event_dispatcher'
             - '@security.helper'
 
-    Contao\OAuthBundle\ClientGenerator: '@contao_oauth.client_generator'
+    Contao\OAuthBundle\OAuthClientGenerator: '@contao_oauth.client_generator'

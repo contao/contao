@@ -20,4 +20,4 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['oauthClients'] = [
     'relation' => ['type' => 'hasMany', 'load' => 'lazy'],
 ];
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['oauth_connect'] = '{title_legend},name,headline,type;{config_legend},oauthClients;{account_legend},reg_groups,reg_assignDir;{redirect_legend},jumpTo,redirectBack;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['oauth_connect'] = '{title_legend},name,headline,type;{config_legend},oauthClients,autologin;{account_legend},reg_groups,reg_assignDir;{redirect_legend},jumpTo,redirectBack;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
