@@ -6,6 +6,18 @@
  * @license LGPL-3.0-or-later
  */
 
+body {
+	--text: #222;
+	background: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		--text: #ddd;
+		background: #151619;
+	}
+}
+
 body, th, td {
 	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	font-weight: 400;

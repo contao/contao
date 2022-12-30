@@ -17,7 +17,7 @@ window.tinymce && tinymce.init({
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   promotion: false,
-  skin: 'tinymce-5',
+  skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? 'tinymce-5-dark' : 'tinymce-5'),
   setup: function(editor) {
     editor.getElement().removeAttribute('required');
     document.querySelectorAll('[accesskey]').forEach(function(el) {

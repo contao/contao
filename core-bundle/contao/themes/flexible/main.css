@@ -620,6 +620,7 @@ h2.sub_headline {
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
+	border: 1px solid var(--active-border);
 }
 
 .tl_filter {
@@ -1189,7 +1190,7 @@ table.tl_listing {
 }
 
 .tl_listing_container + .tl_empty {
-	margin-top: -32px;
+	margin-top: -18px;
 }
 
 .tl_noopt {
@@ -1716,9 +1717,9 @@ label.tl_change_selected {
 	margin: 0 0 12px;
 	padding: 4px 6px;
 	overflow: hidden;
-	background: var(--table-header);
-	border: solid var(--tree-header-border);
-	border-width: 1px 0;
+	background: var(--active-bg);
+	border: 1px solid var(--active-border);
+	border-radius: 2px;
 	line-height: 24px;
 }
 
@@ -2720,6 +2721,7 @@ fieldset.collapsed > legend {
 	min-height: auto !important;
 	border: 3px dashed var(--border) !important;
 	border-radius: 2px;
+	background: var(--form-bg) !important;
 }
 
 .dropzone-filetree {
