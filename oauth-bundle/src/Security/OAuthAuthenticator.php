@@ -141,7 +141,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         return new RedirectResponse($url);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): never
     {
         $session = $request->getSession();
 

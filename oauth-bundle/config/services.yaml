@@ -26,6 +26,8 @@ services:
 
     contao_oauth.listener.data_container.oauth_client_type_options:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientTypeOptionsListener
+        arguments:
+            - '%contao_oauth.enabled_providers%'
 
     contao_oauth.listener.facebook_connect:
         class: Contao\OAuthBundle\EventListener\FacebookConnectListener

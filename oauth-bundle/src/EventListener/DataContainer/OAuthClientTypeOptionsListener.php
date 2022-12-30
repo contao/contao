@@ -18,13 +18,17 @@ use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
 #[AsCallback('tl_oauth_client', 'fields.type.options')]
 class OAuthClientTypeOptionsListener
 {
+    public function __construct(private readonly array $enabledProviders)
+    {
+    }
+
     public function __invoke(): array
     {
         $options = [];
         $extension = new KnpUOAuth2ClientExtension();
 
         foreach (KnpUOAuth2ClientExtension::getAllSupportedTypes() as $type) {
-            if ('generic' === $type) {
+            if ('generic' === $type || !\in_array($type, $this->enabledProviders, true)) {
                 continue;
             }
 

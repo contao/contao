@@ -166,9 +166,12 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
+        "adam-paterson/oauth2-slack": "^1.1",
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
         "league/flysystem-memory": "^3.0",
+        "league/oauth2-facebook": "^2.2",
+        "league/oauth2-google": "^4.0",
         "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^5.4 || ^6.0",
         "symfony/phpunit-bridge": "^5.4 || ^6.0"
