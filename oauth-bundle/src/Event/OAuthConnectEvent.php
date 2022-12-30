@@ -18,6 +18,9 @@ use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\ResourceOwnerAccessTokenInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * This event is fired whenever a user connects via OAuth (either existing or new user).
+ */
 class OAuthConnectEvent extends Event
 {
     public function __construct(private ResourceOwnerAccessTokenInterface $accessToken, private OAuth2ClientInterface $client, private ResourceOwnerInterface $oauthUser, private User $user, private bool $isNew)

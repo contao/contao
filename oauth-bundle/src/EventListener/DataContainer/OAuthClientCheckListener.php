@@ -19,6 +19,10 @@ use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Checks whether the corresponding packages for the used OAuth types are installed,
+ * and displays a message otherwise.
+ */
 #[AsCallback('tl_oauth_client', 'config.onload')]
 class OAuthClientCheckListener
 {

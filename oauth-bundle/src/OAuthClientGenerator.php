@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Generates an OAuth2Client.
+ * Generates an OAuth2Client based on a given config.
  */
 class OAuthClientGenerator
 {
