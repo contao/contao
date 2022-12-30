@@ -1423,38 +1423,6 @@ table.tl_listing {
 	color: var(--gray);
 }
 
-.limit_height {
-	overflow: hidden;
-}
-
-.limit_toggler {
-	width: 100%;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	background: var(--content-bg);
-	line-height: 11px;
-	text-align: center;
-}
-
-.limit_toggler button {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	background: var(--content-bg);
-	width: 24px;
-	line-height: 8px;
-	color: var(--gray);
-	outline: none;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-}
-
-.limit_toggler button span {
-	position: relative;
-	top: -4px;
-}
-
 .cte_preview {
 	line-height: 1.25;
 	position: relative;
@@ -1587,6 +1555,38 @@ table.tl_listing {
 	grid-column: 1 / span 2;
 	padding: 10px 10px 6px;
 	border-top: 1px solid var(--border);
+}
+
+.limit_height {
+	overflow: hidden;
+}
+
+.limit_toggler {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background: var(--content-bg);
+	line-height: 11px;
+	text-align: center;
+}
+
+.limit_toggler button {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: var(--content-bg);
+	width: 24px;
+	line-height: 8px;
+	color: var(--gray);
+	outline: none;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+
+.limit_toggler button span {
+	position: relative;
+	top: -4px;
 }
 
 /* Tree view */
