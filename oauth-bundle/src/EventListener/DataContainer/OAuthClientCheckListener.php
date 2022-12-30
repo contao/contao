@@ -31,7 +31,7 @@ class OAuthClientCheckListener
         $extension = new KnpUOAuth2ClientExtension();
         $records = $this->db->fetchAllAssociative("SELECT type FROM tl_oauth_client WHERE type != '' AND tstamp > 0 ORDER BY id ASC");
 
-        foreach($records as $record) {
+        foreach ($records as $record) {
             try {
                 $config = $extension->getConfigurator($record['type']);
             } catch (\ErrorException) {

@@ -29,7 +29,7 @@ class SlackConnectListener
         if (!$event->getIsNew() || !$oauthUser instanceof SlackResourceOwner || !$user instanceof FrontendUser) {
             return;
         }
-       
+
         $user->email = $oauthUser->getEmail();
         $user->firstname = $oauthUser->getFirstName();
         $user->lastname = $oauthUser->getLastName();

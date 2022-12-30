@@ -29,7 +29,7 @@ class GoogleConnectListener
         if (!$event->getIsNew() || !$oauthUser instanceof GoogleUser || !$user instanceof FrontendUser) {
             return;
         }
-       
+
         $user->email = $oauthUser->getEmail();
         $user->firstname = $oauthUser->getFirstName();
         $user->lastname = $oauthUser->getLastName();

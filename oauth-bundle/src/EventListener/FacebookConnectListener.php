@@ -29,7 +29,7 @@ class FacebookConnectListener
         if (!$event->getIsNew() || !$oauthUser instanceof FacebookUser || !$user instanceof FrontendUser) {
             return;
         }
-       
+
         $user->email = $oauthUser->getEmail();
         $user->firstname = $oauthUser->getFirstName();
         $user->lastname = $oauthUser->getLastName();

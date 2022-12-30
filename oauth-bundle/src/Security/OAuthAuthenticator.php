@@ -19,9 +19,9 @@ use Contao\CoreBundle\Slug\Slug;
 use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
-use Contao\OAuthBundle\OAuthClientGenerator;
 use Contao\OAuthBundle\Event\OAuthConnectEvent;
 use Contao\OAuthBundle\Model\OAuthClientModel;
+use Contao\OAuthBundle\OAuthClientGenerator;
 use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -49,14 +49,13 @@ class OAuthAuthenticator extends OAuth2Authenticator
         private readonly VirtualFilesystem $filesStorage,
         private readonly Slug $slug,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly Security $security
-    )
-    {
+        private readonly Security $security,
+    ) {
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool|null
     {
-        return $request->attributes->get('_route') === 'contao_oauth_check';
+        return 'contao_oauth_check' === $request->attributes->get('_route');
     }
 
     public function authenticate(Request $request): Passport
@@ -79,7 +78,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         }
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function() use ($accessToken, $clientModel, $oauthClient, $session): UserInterface {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $clientModel, $oauthClient, $session): UserInterface {
                 $oauthUser = $oauthClient->fetchUserFromToken($accessToken);
 
                 // Search for existing member
@@ -128,11 +127,11 @@ class OAuthAuthenticator extends OAuth2Authenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response|null
     {
         $session = $request->getSession();
 
-        $url = $session->get('_oauth_redirect')?->getValue() ??  $request->getSchemeAndHttpHost();
+        $url = $session->get('_oauth_redirect')?->getValue() ?? $request->getSchemeAndHttpHost();
 
         $session->remove('_oauth_redirect');
         $session->remove('_oauth_client_id');
@@ -142,7 +141,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         return new RedirectResponse($url);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         $session = $request->getSession();
 
@@ -151,7 +150,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         $session->remove('_oauth_module_id');
         $session->remove('_oauth_remember_me');
 
-        throw new $exception;
+        throw $exception;
     }
 
     private function assignHomeDir(FrontendUser $user, ModuleModel $model): void
@@ -178,7 +177,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         }
     }
 
-    private function getExistingMember(ResourceOwnerInterface $oauthUser, OAuthClientModel $clientModel): ?FrontendUser
+    private function getExistingMember(ResourceOwnerInterface $oauthUser, OAuthClientModel $clientModel): FrontendUser|null
     {
         // Check if we already have a logged in user
         if (($user = $this->security->getUser()) instanceof FrontendUser) {
@@ -186,7 +185,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         }
 
         // Some OAuth resource owners provide the email address
-        $email =  method_exists($oauthUser, 'getEmail') ? $oauthUser->getEmail() : '';
+        $email = method_exists($oauthUser, 'getEmail') ? $oauthUser->getEmail() : '';
 
         // Check for existing users using the OAuth ID or email address
         $existingUsername = $this->db->fetchOne("
@@ -212,7 +211,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
             'oauthUserData' => json_encode($oauthUser->toArray()),
         ];
 
-        $existingRecord = $this->db->fetchOne("SELECT id FROM tl_member_oauth WHERE pid = ? AND oauthClient = ? AND oauthId = ?", [$user->id, $clientModel->id, $oauthUser->getId()]);
+        $existingRecord = $this->db->fetchOne('SELECT id FROM tl_member_oauth WHERE pid = ? AND oauthClient = ? AND oauthId = ?', [$user->id, $clientModel->id, $oauthUser->getId()]);
 
         if (false !== $existingRecord) {
             $this->db->update('tl_member_oauth', $set, ['id' => (int) $existingRecord]);

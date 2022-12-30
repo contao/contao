@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 use Contao\OAuthBundle\Model\OAuthClientModel;
 
-$GLOBALS['BE_MOD']['system']['oauth'] = [
-    'tables' => ['tl_oauth_client'],
-];
+$GLOBALS['BE_MOD']['system']['oauth'] = array(
+	'tables' => array('tl_oauth_client'),
+);
 
 $GLOBALS['BE_MOD']['accounts']['member']['tables'][] = 'tl_member_oauth';
 

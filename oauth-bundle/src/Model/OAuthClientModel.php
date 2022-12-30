@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,18 +13,17 @@
 namespace Contao\OAuthBundle\Model;
 
 use Contao\Model;
-use Contao\Model\Collection;
 
 /**
- * Reads and writes OAuth clients
+ * Reads and writes OAuth clients.
  *
- * @property integer        $id
- * @property integer        $tstamp
- * @property string         $title
- * @property string         $type
- * @property string         $client_id
- * @property string         $client_secret
- * @property string         $scope
+ * @property int    $id
+ * @property int    $tstamp
+ * @property string $title
+ * @property string $type
+ * @property string $client_id
+ * @property string $client_secret
+ * @property string $scope
  *
  * @method static NewsModel|null findById($id, array $opt=array())
  * @method static NewsModel|null findByPk($id, array $opt=array())
@@ -34,7 +35,6 @@ use Contao\Model\Collection;
  * @method static NewsModel|null findOneByClientId($val, array $opt=array())
  * @method static NewsModel|null findOneByClientSecret($val, array $opt=array())
  * @method static NewsModel|null findOneByScope($val, array $opt=array())
- *
  * @method static Collection|NewsModel[]|NewsModel|null findByPid($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByTitle($val, array $opt=array())
@@ -42,7 +42,6 @@ use Contao\Model\Collection;
  * @method static Collection|NewsModel[]|NewsModel|null findByClientId($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByClientSecret($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByScope($val, array $opt=array())
- *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -54,9 +53,10 @@ use Contao\Model\Collection;
  */
 class OAuthClientModel extends Model
 {
-	/**
-	 * Table name
-	 * @var string
-	 */
-	protected static $strTable = 'tl_oauth_client';
+    /**
+     * Table name.
+     *
+     * @var string
+     */
+    protected static $strTable = 'tl_oauth_client';
 }

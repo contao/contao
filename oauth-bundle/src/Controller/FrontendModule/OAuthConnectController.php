@@ -45,7 +45,7 @@ class OAuthConnectController extends AbstractFrontendModuleController
             $clientId = (int) $request->request->get('client');
             $moduleId = (int) $model->id;
 
-            $clientConfig = $this->db->fetchAssociative("SELECT * FROM tl_oauth_client WHERE id = ?", [$clientId]);
+            $clientConfig = $this->db->fetchAssociative('SELECT * FROM tl_oauth_client WHERE id = ?', [$clientId]);
 
             if (false === $clientConfig) {
                 throw new \InvalidArgumentException('Invalid client ID.');
@@ -61,7 +61,7 @@ class OAuthConnectController extends AbstractFrontendModuleController
 
             $session = $request->getSession();
             $session->set('_oauth_module_id', new AutoExpiringAttribute(self::SESSION_TTL, $moduleId));
-            $session->set('_oauth_client_id',  new AutoExpiringAttribute(self::SESSION_TTL, $clientId));
+            $session->set('_oauth_client_id', new AutoExpiringAttribute(self::SESSION_TTL, $clientId));
 
             if ($redirectUrl = $request->request->get('_target_path')) {
                 $session->set('_oauth_redirect', new AutoExpiringAttribute(self::SESSION_TTL, $redirectUrl));

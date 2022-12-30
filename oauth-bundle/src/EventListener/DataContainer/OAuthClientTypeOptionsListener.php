@@ -26,7 +26,7 @@ class OAuthClientTypeOptionsListener
         foreach (KnpUOAuth2ClientExtension::getAllSupportedTypes() as $type) {
             if ('generic' === $type) {
                 continue;
-            };
+            }
 
             $config = $extension->getConfigurator($type);
             $options[$type] = $config->getProviderDisplayName();

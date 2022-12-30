@@ -22,7 +22,7 @@ use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/** 
+/**
  * Generates an OAuth2Client.
  */
 class OAuthClientGenerator
@@ -33,7 +33,7 @@ class OAuthClientGenerator
 
     public function getClientById(int $clientId)
     {
-        $clientConfig = $this->db->fetchAssociative("SELECT * FROM tl_oauth_client WHERE id = ?", [$clientId]);
+        $clientConfig = $this->db->fetchAssociative('SELECT * FROM tl_oauth_client WHERE id = ?', [$clientId]);
 
         if (false === $clientConfig) {
             throw new \InvalidArgumentException('Invalid client ID.');

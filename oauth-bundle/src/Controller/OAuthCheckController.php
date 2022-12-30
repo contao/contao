@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/_oauth/check', name: 'contao_oauth_check', defaults: ['_scope' => 'frontend'])]
 class OAuthCheckController
-{  
+{
     public function __invoke(): Response
     {
         // Handled by the authenticator
