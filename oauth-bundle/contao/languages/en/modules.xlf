@@ -18,7 +18,7 @@
         <source>Connects a front end user via different OAuth clients.</source>
       </trans-unit>
       <trans-unit id="MOD.tl_member_oauth">
-        <source>OAuth clients</source>
+        <source>OAuth connections</source>
       </trans-unit>
     </body>
   </file>
