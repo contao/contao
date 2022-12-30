@@ -11,7 +11,7 @@
     <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
   </php>
   <testsuites>
-    <testsuite name="news-bundle">
+    <testsuite name="oauth-bundle">
       <directory>./tests</directory>
     </testsuite>
   </testsuites>
