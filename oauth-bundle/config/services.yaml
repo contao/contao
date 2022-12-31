@@ -7,11 +7,11 @@ services:
         arguments:
             - '@database_connection'
             - '@request_stack'
-            - '@router' 
+            - '@router'
 
     contao_oauth.controller.frontend_module.oauth_connect:
         class: Contao\OAuthBundle\Controller\FrontendModule\OAuthConnectController
-        arguments: 
+        arguments:
             - '@uri_signer'
             - '@contao.csrf.token_manager'
             - '@database_connection'
