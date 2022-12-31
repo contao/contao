@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="contao/languages/en/modules.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/tl_oauth_client.php" source-language="en">
     <body>
       <trans-unit id="tl_oauth_client.oauth_legend">
         <source>OAuth client</source>
@@ -49,6 +49,24 @@
       </trans-unit>
       <trans-unit id="tl_oauth_client.scopes.1">
         <source>Provide a list of scopes to request from the OAuth provider.</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.new.1">
+        <source>Create a new OAuth client</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.show">
+        <source>Show the details of OAuth client ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.edit">
+        <source>Edit OAuth client ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.copy">
+        <source>Duplicate OAuth client ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_oauth_client.delete">
+        <source>Delete OAuth client ID %s</source>
       </trans-unit>
     </body>
   </file>
