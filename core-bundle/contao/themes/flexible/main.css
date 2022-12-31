@@ -1102,7 +1102,7 @@ table.tl_listing {
 }
 
 .tl_right_nowrap {
-	padding: 6px 0;
+	padding: 6px;
 	vertical-align: top;
 	text-align: right;
 	white-space: nowrap;
@@ -2498,7 +2498,7 @@ time[title] {
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */
 .tl_text_trbl, .tl_imageSize_0, .tl_imageSize_1, #ctrl_playerSize input {
-	background: url("icons/hints.svg") no-repeat right 1px top 2px;
+	background: var(--form-bg) url("icons/hints.svg") no-repeat right 1px top 2px;
 }
 
 #ctrl_playerSize_1, .tl_imageSize_1 {

@@ -67,7 +67,12 @@ gulp.task('minify-theme-icons', function (cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/icons/*.svg'),
-            svgo(),
+            svgo({
+                multipass: true,
+                plugins: [{
+                    inlineStyles: false
+                }]
+            }),
             gulp.dest('core-bundle/contao/themes/flexible/icons')
         ],
         cb
