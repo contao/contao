@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
@@ -106,51 +106,67 @@ class DbafsTest extends FunctionalTestCase
 
     private function assertFile1MovedAndFile3Created(ChangeSet $changeSet): void
     {
-        $this->assertSame(
-            [[ChangeSet::ATTR_HASH => md5('3'), ChangeSet::ATTR_PATH => 'file3', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE]],
-            $changeSet->getItemsToCreate()
-        );
+        // Items to create
+        $itemsToCreate = $changeSet->getItemsToCreate();
+        $this->assertCount(1, $itemsToCreate);
 
-        $this->assertSame(
-            [
-                'file1' => [ChangeSet::ATTR_PATH => 'foo/file1'],
-                'foo' => [ChangeSet::ATTR_HASH => '56840dad0dd1d66fe8f3c3a0f41879b1'],
-            ],
-            $changeSet->getItemsToUpdate()
-        );
+        $this->assertSame('file3', $itemsToCreate[0]->getPath());
+        $this->assertSame(md5('3'), $itemsToCreate[0]->getHash());
+        $this->assertTrue($itemsToCreate[0]->isFile());
 
+        // Items to update
+        $itemsToUpdate = $changeSet->getItemsToUpdate();
+        $this->assertCount(2, $itemsToUpdate);
+
+        $this->assertSame('file1', $itemsToUpdate[0]->getExistingPath());
+        $this->assertTrue($itemsToUpdate[0]->updatesPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesHash());
+        $this->assertSame('foo/file1', $itemsToUpdate[0]->getNewPath());
+
+        $this->assertSame('foo', $itemsToUpdate[1]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[1]->updatesPath());
+        $this->assertTrue($itemsToUpdate[1]->updatesHash());
+        $this->assertSame('56840dad0dd1d66fe8f3c3a0f41879b1', $itemsToUpdate[1]->getNewHash());
+
+        // Items to delete
         $this->assertEmpty($changeSet->getItemsToDelete());
     }
 
     private function assertFile1Deleted(ChangeSet $changeSet): void
     {
+        // Items to create
         $this->assertEmpty($changeSet->getItemsToCreate());
 
-        $this->assertSame(
-            [
-                'foo' => [ChangeSet::ATTR_HASH => '4fdc634444e398f6d8aed051313817e6'],
-            ],
-            $changeSet->getItemsToUpdate()
-        );
+        // Items to update
+        $itemsToUpdate = $changeSet->getItemsToUpdate();
+        $this->assertCount(1, $itemsToUpdate);
 
-        $this->assertSame(
-            [
-                'foo/file1' => ChangeSet::TYPE_FILE,
-            ],
-            $changeSet->getItemsToDelete()
-        );
+        $this->assertSame('foo', $itemsToUpdate[0]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesPath());
+        $this->assertTrue($itemsToUpdate[0]->updatesHash());
+        $this->assertSame('4fdc634444e398f6d8aed051313817e6', $itemsToUpdate[0]->getNewHash());
+
+        // Items to delete
+        $itemsToDelete = $changeSet->getItemsToDelete();
+        $this->assertCount(1, $itemsToDelete);
+
+        $this->assertSame('foo/file1', $itemsToDelete[0]->getPath());
+        $this->assertTrue($itemsToDelete[0]->isFile());
     }
 
     private function assertFile3Deleted(ChangeSet $changeSet): void
     {
+        // Items to create
         $this->assertEmpty($changeSet->getItemsToCreate());
+
+        // Items to update
         $this->assertEmpty($changeSet->getItemsToUpdate());
 
-        $this->assertSame(
-            [
-                'file3' => ChangeSet::TYPE_FILE,
-            ],
-            $changeSet->getItemsToDelete()
-        );
+        // Items to delete
+        $itemsToDelete = $changeSet->getItemsToDelete();
+        $this->assertCount(1, $itemsToDelete);
+
+        $this->assertSame('file3', $itemsToDelete[0]->getPath());
+        $this->assertTrue($itemsToDelete[0]->isFile());
     }
 }
