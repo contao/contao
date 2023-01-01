@@ -338,7 +338,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         yield 'template inferred from type' => [
             null,
-            ['text' => 'content_element/text'],
+            ['text' => 'ce_text'], // Note: This will be "content_element/text" in Contao 5.
         ];
 
         yield 'modern template' => [

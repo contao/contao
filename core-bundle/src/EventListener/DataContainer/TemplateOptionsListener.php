@@ -74,22 +74,8 @@ class TemplateOptionsListener
             ->asTemplateOptions()
         ;
 
-        // We will end up with no templates if the logic assumes a non-legacy
-        // template but the user did not add any or uses the old prefix. For
-        // example a "foo" content element fragment controller (without an
-        // explicit definition of a template in the service tag) used with a
-        // "ce_foo.html.twig" template - although this template will be
-        // rendered for BC reasons, the template selection won't be possible.
         if (0 === \count($templateOptions)) {
-            $guessedType = $this->legacyTemplatePrefix.$type;
-
-            if (isset($this->hierarchy->getInheritanceChains()[$guessedType])) {
-                $help = sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
-            } else {
-                $help = 'Did you forget to create the default template?';
-            }
-
-            throw new \LogicException(sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. %s', $identifier, $help));
+            throw new \LogicException(sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. Did you forget to create the default template?', $identifier));
         }
 
         return $templateOptions;
