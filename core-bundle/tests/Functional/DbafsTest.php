@@ -84,7 +84,7 @@ class DbafsTest extends FunctionalTestCase
     public function testAutomaticallySyncsFiles(): void
     {
         // Adding a file should automatically update the Dbafs; we're using
-        // numeric looking filenames here, to also test their correct handling
+        // paths with numeric strings here to also test their correct handling
         // inside the Dbafs class (see #5618).
         $this->filesystem->write('1', '');
 
