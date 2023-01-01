@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_member_oauth.php" source-language="en">
+    <body>
+      <trans-unit id="tl_member_oauth.oauthClient.0">
+        <source>OAuth client</source>
+      </trans-unit>
+      <trans-unit id="tl_member_oauth.oauthClient.1">
+        <source>The OAuth client of this OAuth connection.</source>
+      </trans-unit>
+      <trans-unit id="tl_member_oauth.oauthId.0">
+        <source>OAuth ID</source>
+      </trans-unit>
+      <trans-unit id="tl_member_oauth.oauthId.1">
+        <source>The OAuth ID of this OAuth connection.</source>
+      </trans-unit>
+      <trans-unit id="tl_member_oauth.oauthUserData.0">
+        <source>OAuth user data</source>
+      </trans-unit>
+      <trans-unit id="tl_member_oauth.oauthUserData.1">
+        <source>The user data retrieved during the OAuth authorization process for this connection.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

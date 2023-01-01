@@ -3,29 +3,34 @@
 
 {% block content %}
     <form method="post" id="{{ formId }}">
-        <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-        <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
-        <input type="hidden" name="_target_path" value="{{ targetPath }}">
-        {% for button in buttons %}
-            {% set widget_attributes = attrs()
-                .addClass(['widget', 'widget-submit', "client-#{button.type}"])
-            %}
-            <div{{ widget_attributes }}>
-                {% set button_attributes = attrs()
-                    .set('type', 'submit')
-                    .set('name', 'client')
-                    .set('value', button.client)
-                    .set('title', 'MSC.oauthConnect'|trans([button.name]))
+        <div class="formbody">
+            {% if message|default %}
+                <p class="error">{{ message }}</p>
+            {% endif %}
+            <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+            <input type="hidden" name="_target_path" value="{{ targetPath }}">
+            {% for button in buttons %}
+                {% set widget_attributes = attrs()
+                    .addClass(['widget', 'widget-submit', "client-#{button.type}"])
                 %}
-                <button{{ button_attributes }}>{{ button.name }}</button>
-            </div>
-        {% endfor %}
-        {% if autologin %}
-            <div class="widget widget-checkbox">
-                <fieldset class="checkbox_container">
-                    <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ 'MSC.autologin'|trans }}</label></span>
-                </fieldset>
-            </div>
-        {% endif %}
+                <div{{ widget_attributes }}>
+                    {% set button_attributes = attrs()
+                        .set('type', 'submit')
+                        .set('name', 'client')
+                        .set('value', button.client)
+                        .set('title', 'MSC.oauthConnect'|trans([button.name]))
+                    %}
+                    <button{{ button_attributes }}>{{ button.name }}</button>
+                </div>
+            {% endfor %}
+            {% if autologin %}
+                <div class="widget widget-checkbox">
+                    <fieldset class="checkbox_container">
+                        <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ 'MSC.autologin'|trans }}</label></span>
+                    </fieldset>
+                </div>
+            {% endif %}
+        </div>
     </form>
 {% endblock %}

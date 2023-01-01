@@ -25,12 +25,13 @@ use Contao\OAuthBundle\OAuthClientGenerator;
 use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,6 +40,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OAuthAuthenticator extends OAuth2Authenticator
 {
@@ -49,7 +52,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
         private readonly VirtualFilesystem $filesStorage,
         private readonly Slug $slug,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly Security $security,
+        private readonly Security $security
     ) {
     }
 
@@ -133,24 +136,21 @@ class OAuthAuthenticator extends OAuth2Authenticator
 
         $url = $session->get('_oauth_redirect')?->getValue() ?? $request->getSchemeAndHttpHost();
 
-        $session->remove('_oauth_redirect');
-        $session->remove('_oauth_client_id');
-        $session->remove('_oauth_module_id');
-        $session->remove('_oauth_remember_me');
+        $this->removeSessionVariables($session);
 
         return new RedirectResponse($url);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): never
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         $session = $request->getSession();
 
-        $session->remove('_oauth_redirect');
-        $session->remove('_oauth_client_id');
-        $session->remove('_oauth_module_id');
-        $session->remove('_oauth_remember_me');
+        $url = $session->get('_oauth_failure_url')?->getValue() ?? $request->getSchemeAndHttpHost();
 
-        throw $exception;
+        $this->removeSessionVariables($request->getSession());
+        $this->saveAuthenticationErrorToSession($request, $exception);
+
+        return new RedirectResponse($url);
     }
 
     private function assignHomeDir(FrontendUser $user, ModuleModel $model): void
@@ -192,7 +192,7 @@ class OAuthAuthenticator extends OAuth2Authenticator
             SELECT m.username
               FROM tl_member AS m, tl_member_oauth AS o
              WHERE (o.pid = m.id AND o.oauthClient = ? AND o.oauthId = ?) OR (m.email = ? AND m.email != '')
-        ", [(int) $clientModel->id, $oauthUser->getId(), $email, $email]);
+        ", [(int) $clientModel->id, $oauthUser->getId(), $email]);
 
         if (false === $existingUsername) {
             return null;
@@ -218,5 +218,14 @@ class OAuthAuthenticator extends OAuth2Authenticator
         } else {
             $this->db->insert('tl_member_oauth', $set);
         }
+    }
+
+    private function removeSessionVariables(SessionInterface $session): void
+    {
+        $session->remove('_oauth_redirect');
+        $session->remove('_oauth_client_id');
+        $session->remove('_oauth_module_id');
+        $session->remove('_oauth_remember_me');
+        $session->remove('_oauth_failure_url');
     }
 }

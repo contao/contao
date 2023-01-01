@@ -24,16 +24,27 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use KnpU\OAuth2ClientBundle\DependencyInjection\KnpUOAuth2ClientExtension;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsFrontendModule(type: 'oauth_connect', category: 'user')]
 class OAuthConnectController extends AbstractFrontendModuleController
 {
     private const SESSION_TTL = 300;
 
-    public function __construct(private readonly UriSigner $uriSigner, private ContaoCsrfTokenManager $csrfTokenManager, private readonly Connection $db, private readonly OAuthClientGenerator $clientGenerator)
+    public function __construct(
+        private readonly UriSigner $uriSigner, 
+        private readonly ContaoCsrfTokenManager $csrfTokenManager, 
+        private readonly Connection $db, 
+        private readonly OAuthClientGenerator $clientGenerator,
+        private readonly AuthenticationUtils $authenticationUtils,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface|null $logger
+    )
     {
     }
 
@@ -62,6 +73,7 @@ class OAuthConnectController extends AbstractFrontendModuleController
             $session = $request->getSession();
             $session->set('_oauth_module_id', new AutoExpiringAttribute(self::SESSION_TTL, $moduleId));
             $session->set('_oauth_client_id', new AutoExpiringAttribute(self::SESSION_TTL, $clientId));
+            $session->set('_oauth_failure_url', new AutoExpiringAttribute(self::SESSION_TTL, $request->getUri()));
 
             if ($redirectUrl = $request->request->get('_target_path')) {
                 $session->set('_oauth_redirect', new AutoExpiringAttribute(self::SESSION_TTL, $redirectUrl));
@@ -99,7 +111,7 @@ class OAuthConnectController extends AbstractFrontendModuleController
 
         if ($model->jumpTo && null !== ($page = PageModel::findByPk($model->jumpTo))) {
             $targetPath = $page->getAbsoluteUrl();
-        } elseif ($model->redirectBack && $request->query->has('redirect') && $this->uriSigner->check($request->getUri())) {
+        } elseif ($model->redirectBack && $request->query->has('redirect') && $this->uriSigner->checkRequest($request)) {
             $targetPath = $request->query->get('redirect');
         }
 
@@ -108,6 +120,14 @@ class OAuthConnectController extends AbstractFrontendModuleController
         $template->autologin = $model->autologin;
         $template->targetPath = $targetPath;
         $template->formId = $formId;
+
+        if ($request->hasSession() && $exception = $this->authenticationUtils->getLastAuthenticationError()) {
+            $template->message = $this->translator->trans('ERR.oauthFailed', [], 'contao_default');
+
+            if (null !== $this->logger) {
+                $this->logger?->debug('OAuth authentication failed.', ['exception' => $exception]);
+            }
+        }
 
         return $template->getResponse();
     }

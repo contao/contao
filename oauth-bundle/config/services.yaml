@@ -16,6 +16,9 @@ services:
             - '@contao.csrf.token_manager'
             - '@database_connection'
             - '@contao_oauth.client_generator'
+            - '@security.authentication_utils'
+            - '@translator'
+            - '@?logger'
 
     contao_oauth.listener.data_container.oauth_client_check:
         class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientCheckListener
@@ -31,15 +34,15 @@ services:
 
     contao_oauth.listener.facebook_connect:
         class: Contao\OAuthBundle\EventListener\FacebookConnectListener
-        tags: ['kernel.event_listener']
+        tags: [kernel.event_listener]
 
     contao_oauth.listener.google_connect:
         class: Contao\OAuthBundle\EventListener\GoogleConnectListener
-        tags: ['kernel.event_listener']
+        tags: [kernel.event_listener]
 
     contao_oauth.listener.slack_connect:
         class: Contao\OAuthBundle\EventListener\SlackConnectListener
-        tags: ['kernel.event_listener']
+        tags: [kernel.event_listener]
 
     Contao\OAuthBundle\Security\OAuthAuthenticator:
         arguments:

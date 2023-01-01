@@ -2,6 +2,9 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/default.php" source-language="en">
     <body>
+      <trans-unit id="ERR.oauthFailed">
+        <source>Authentication with OAuth provider failed.</source>
+      </trans-unit>
       <trans-unit id="ERR.oauthPackageNotInstalled">
         <source>To use the %s OAuth provider you still need to install the "&lt;strong&gt;%s&lt;/strong&gt;" package.</source>
       </trans-unit>
