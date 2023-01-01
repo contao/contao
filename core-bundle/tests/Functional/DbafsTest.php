@@ -83,22 +83,24 @@ class DbafsTest extends FunctionalTestCase
 
     public function testAutomaticallySyncsFiles(): void
     {
-        // Adding a file should automatically update the Dbafs
-        $this->filesystem->write('a', '');
+        // Adding a file should automatically update the Dbafs; we're using
+        // numeric looking filenames here, to also test their correct handling
+        // inside the Dbafs class (see #5618).
+        $this->filesystem->write('1', '');
 
         $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(1, $contents);
-        $this->assertSame('a', $contents[0]->getPath());
+        $this->assertSame('1', $contents[0]->getPath());
 
         // Moving a file should automatically update the Dbafs
-        $this->filesystem->move('a', 'b');
+        $this->filesystem->move('1', '2');
 
         $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(1, $contents);
-        $this->assertSame('b', $contents[0]->getPath());
+        $this->assertSame('2', $contents[0]->getPath());
 
         // Deleting a file should automatically update the Dbafs
-        $this->filesystem->delete('b');
+        $this->filesystem->delete('2');
 
         $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(0, $contents);
