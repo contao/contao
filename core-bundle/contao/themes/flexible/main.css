@@ -61,10 +61,6 @@ body.popup {
 	display: inline-block;
 }
 
-#tmenu img {
-	vertical-align: top;
-}
-
 #tmenu sup {
 	position: absolute;
 	top: 5px;
@@ -212,19 +208,37 @@ body.popup {
 }
 
 #tmenu .icon-profile {
-	background: url("icons/profile_dark.svg") 20px center no-repeat;
+	background: url("icons/profile_light.svg") 20px center no-repeat;
 }
 
 #tmenu .icon-security {
-	background: url("icons/shield_dark.svg") 20px center no-repeat;
+	background: url("icons/shield_light.svg") 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {
-	background: url("icons/favorites_dark.svg") 20px center no-repeat;
+	background: url("icons/favorites_light.svg") 20px center no-repeat;
 }
 
 #tmenu .icon-logout {
-	background: url("icons/exit_dark.svg") 20px center no-repeat;
+	background: url("icons/exit_light.svg") 20px center no-repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+	#tmenu .icon-profile {
+		background-image: url("icons/profile_dark.svg");
+	}
+
+	#tmenu .icon-security {
+		background-image: url("icons/shield_dark.svg");
+	}
+
+	#tmenu .icon-favorites {
+		background-image: url("icons/favorites_dark.svg");
+	}
+
+	#tmenu .icon-logout {
+		background-image: url("icons/exit_dark.svg");
+	}
 }
 
 /* Container */
@@ -1870,10 +1884,6 @@ ul.sgallery li {
 	width: 32px;
 	white-space: nowrap;
 	text-align: right;
-}
-
-#tl_versions img.undo {
-	padding-right: 2px;
 }
 
 #tl_versions .pagination {
