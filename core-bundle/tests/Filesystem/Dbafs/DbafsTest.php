@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
@@ -338,24 +338,6 @@ class DbafsTest extends TestCase
         $dbafs->setExtraMetadata('some/invalid/path', []);
     }
 
-    public function testSetExtraMetadataThrowsIfRecordIsADirectory(): void
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => Uuid::v1()->toBinary(), 'path' => 'some/directory', 'type' => 'folder'],
-            )
-        ;
-
-        $dbafs = $this->getDbafs($connection);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under "some/directory".');
-
-        $dbafs->setExtraMetadata('some/directory', []);
-    }
-
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
     {
         $uuid = $this->generateUuid(1);
@@ -572,9 +554,7 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection, $filesystem);
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
-        $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
-        $this->assertSame($expected->getItemsToUpdate(), $changeSet->getItemsToUpdate(), 'items to update');
-        $this->assertSame($expected->getItemsToDelete(), $changeSet->getItemsToDelete(), 'items to delete');
+        $this->assertSameChangeSet($expected, $changeSet);
     }
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
@@ -989,33 +969,32 @@ class DbafsTest extends TestCase
 
         $changeSet = $dbafs->sync();
 
-        $this->assertSame(
-            [
-                [
-                    ChangeSet::ATTR_HASH => 'cbab7',
-                    ChangeSet::ATTR_PATH => 'new',
-                    ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
-                ],
-            ],
-            $changeSet->getItemsToCreate(),
-        );
+        // Items to create
+        $itemsToCreate = $changeSet->getItemsToCreate();
+        $this->assertCount(1, $itemsToCreate);
 
-        $this->assertSame(
-            [
-                'new' => [ChangeSet::ATTR_LAST_MODIFIED => 201],
-                'file1' => [ChangeSet::ATTR_PATH => 'file2', ChangeSet::ATTR_LAST_MODIFIED => 200],
-            ],
-            $changeSet->getItemsToUpdate(true),
-        );
+        $this->assertSame('cbab7', $itemsToCreate[0]->getHash());
+        $this->assertSame('new', $itemsToCreate[0]->getPath());
+        $this->assertTrue($itemsToCreate[0]->isFile());
 
-        $this->assertSame(
-            [
-                'new' => 201,
-                'file1' => 200,
-            ],
-            $changeSet->getLastModifiedUpdates(),
-        );
+        // Items to update
+        $itemsToUpdate = $changeSet->getItemsToUpdate(true);
+        $this->assertCount(2, $itemsToUpdate);
 
+        $this->assertSame('new', $itemsToUpdate[0]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesHash());
+        $this->assertTrue($itemsToUpdate[0]->updatesLastModified());
+        $this->assertSame(201, $itemsToUpdate[0]->getLastModified());
+
+        $this->assertSame('file1', $itemsToUpdate[1]->getExistingPath());
+        $this->assertTrue($itemsToUpdate[1]->updatesPath());
+        $this->assertFalse($itemsToUpdate[1]->updatesHash());
+        $this->assertTrue($itemsToUpdate[1]->updatesLastModified());
+        $this->assertSame('file2', $itemsToUpdate[1]->getNewPath());
+        $this->assertSame(200, $itemsToUpdate[1]->getLastModified());
+
+        // Items to delete
         $this->assertEmpty($changeSet->getItemsToDelete());
     }
 
@@ -1054,13 +1033,15 @@ class DbafsTest extends TestCase
             ])
         ;
 
+        $uuid = $this->generateUuid(1);
+
         $connection
             ->expects($this->once())
             ->method('fetchAssociative')
             ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
             ->willReturn([
                 'id' => 1,
-                'uuid' => $uuid = $this->generateUuid(1)->toBinary(),
+                'uuid' => $uuid->toBinary(),
                 'path' => 'files/baz',
                 'type' => 'file',
             ])
@@ -1172,11 +1153,11 @@ class DbafsTest extends TestCase
 
         // Prime internal cache to test if it gets updated and still points to
         // this resource
-        $this->assertSame($uuid, $dbafs->getRecord('baz')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz')->getUuid()->toRfc4122());
 
         $dbafs->sync();
 
-        $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
+        $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz2')->getUuid()->toRfc4122());
     }
 
     public function testSyncWithMove(): void
@@ -1268,6 +1249,102 @@ class DbafsTest extends TestCase
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
     }
 
+    private function assertSameChangeSet(ChangeSet $a, ChangeSet $b): void
+    {
+        // Compare items to create
+        $this->assertCount(
+            \count($a->getItemsToCreate()),
+            $itemsToCreate = $b->getItemsToCreate(),
+            'same number of items to create'
+        );
+
+        foreach ($a->getItemsToCreate() as $key => $item) {
+            $this->assertSame(
+                $item->getHash(),
+                $itemsToCreate[$key]->getHash(),
+                'item to create has same hash'
+            );
+
+            $this->assertSame(
+                $item->getPath(),
+                $itemsToCreate[$key]->getPath(),
+                'item to create has same path'
+            );
+        }
+
+        $this->assertCount(
+            \count($a->getItemsToUpdate()),
+            $itemsToUpdate = $b->getItemsToUpdate(true),
+            'same number of items to update'
+        );
+
+        // Compare items to update
+        foreach ($a->getItemsToUpdate(true) as $key => $item) {
+            $this->assertSame(
+                $item->updatesPath(),
+                $itemsToUpdate[$key]->updatesPath(),
+                'item to update modifies/keeps path'
+            );
+
+            if ($item->updatesPath()) {
+                $this->assertSame(
+                    $item->getNewPath(),
+                    $itemsToUpdate[$key]->getNewPath(),
+                    'item to update has same path'
+                );
+            }
+
+            $this->assertSame(
+                $item->updatesHash(),
+                $itemsToUpdate[$key]->updatesHash(),
+                'item to update modifies/keeps hash'
+            );
+
+            if ($item->updatesHash()) {
+                $this->assertSame(
+                    $item->getNewHash(),
+                    $itemsToUpdate[$key]->getNewHash(),
+                    'item to update has same hash'
+                );
+            }
+
+            $this->assertSame(
+                $item->updatesLastModified(),
+                $itemsToUpdate[$key]->updatesLastModified(),
+                'item to update modifies/keeps last modified date'
+            );
+
+            if ($item->updatesLastModified()) {
+                $this->assertSame(
+                    $item->getLastModified(),
+                    $itemsToUpdate[$key]->getLastModified(),
+                    'item to update has same last modified date'
+                );
+            }
+        }
+
+        // Compare items to delete
+        $this->assertCount(
+            \count($a->getItemsToDelete()),
+            $itemsToDelete = $b->getItemsToDelete(),
+            'same number of items to delete'
+        );
+
+        foreach ($a->getItemsToDelete() as $key => $item) {
+            $this->assertSame(
+                $item->getPath(),
+                $itemsToDelete[$key]->getPath(),
+                'item to delete has same path'
+            );
+
+            $this->assertSame(
+                $item->isFile(),
+                $itemsToDelete[$key]->isFile(),
+                'item to delete has same type'
+            );
+        }
+    }
+
     private function getMountManagerWithRootAdapter(): MountManager
     {
         return (new MountManager())->mount(new InMemoryFilesystemAdapter());
@@ -1292,7 +1369,6 @@ class DbafsTest extends TestCase
                 ->willReturnCallback(
                     static function (RetrieveDbafsMetadataEvent $event) {
                         $event->set('foo', 'bar');
-                        $event->set('uuid', $event->getUuid());
 
                         return $event;
                     }

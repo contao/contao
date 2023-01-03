@@ -46,7 +46,7 @@ class UserListCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('admins')) {
+        if ($input->getOption('admins') && 'json' !== $input->getOption('format')) {
             $io->note('Only showing admin accounts');
         }
 
@@ -69,7 +69,7 @@ class UserListCommand extends Command
             case 'json':
                 $data = $this->formatJson($users, $columns);
 
-                $io->write(json_encode($data));
+                $io->write(json_encode($data, JSON_THROW_ON_ERROR));
                 break;
 
             default:
@@ -129,7 +129,7 @@ class UserListCommand extends Command
         }
 
         if ([] === $columns) {
-            return $users->fetchAll();
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
         $data = [];

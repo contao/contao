@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\FilesyncCommand;
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;

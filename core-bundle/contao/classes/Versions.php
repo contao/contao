@@ -651,17 +651,17 @@ class Versions extends Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
-		$intLast   = ceil($objTotal->count / 30);
+		$intLast   = ceil($objTotal->count / 15);
 		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
-		$intOffset = ($intPage - 1) * 30;
+		$intOffset = ($intPage - 1) * 15;
 
 		// Create the pagination menu
-		$objPagination = new Pagination($objTotal->count, 30, 7, 'vp', new BackendTemplate('be_pagination'));
+		$objPagination = new Pagination($objTotal->count, 15, 7, 'vp', new BackendTemplate('be_pagination'));
 		$objTemplate->pagination = $objPagination->generate();
 
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
-								   ->limit(30, $intOffset)
+								   ->limit(15, $intOffset)
 								   ->execute(...$params);
 
 		$security = System::getContainer()->get('security.helper');
@@ -735,7 +735,7 @@ class Versions extends Controller
 	{
 		if ($this->strEditUrl !== null)
 		{
-			return sprintf($this->strEditUrl, $this->intPid);
+			return $this->strEditUrl;
 		}
 
 		$pairs = array();

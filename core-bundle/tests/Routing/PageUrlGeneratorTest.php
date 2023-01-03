@@ -66,7 +66,7 @@ class PageUrlGeneratorTest extends TestCase
         ;
 
         $url = $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -98,7 +98,7 @@ class PageUrlGeneratorTest extends TestCase
         ;
 
         $url = $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -130,7 +130,7 @@ class PageUrlGeneratorTest extends TestCase
         ;
 
         $url = $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -162,7 +162,7 @@ class PageUrlGeneratorTest extends TestCase
         ;
 
         $url = $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => '/foobar'],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -194,7 +194,7 @@ class PageUrlGeneratorTest extends TestCase
         ;
 
         $url = $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -229,7 +229,7 @@ class PageUrlGeneratorTest extends TestCase
 
         try {
             $this->generator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::CONTENT_OBJECT => $page, 'bar' => 'baz'],
                 UrlGeneratorInterface::NETWORK_PATH
             );

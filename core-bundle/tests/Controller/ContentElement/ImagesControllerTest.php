@@ -90,4 +90,33 @@ class ImagesControllerTest extends ContentElementTestCase
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
+
+    public function testDoesNotOutputAnythingWithoutImages(): void
+    {
+        $security = $this->createMock(Security::class);
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            [
+                'type' => 'image',
+                'singleSRC' => null,
+                'sortBy' => 'name_desc',
+                'fullsize' => true,
+            ],
+        );
+
+        $this->assertSame('', $response->getContent());
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            [
+                'type' => 'gallery',
+                'multiSRC' => null,
+                'sortBy' => 'name_desc',
+                'fullsize' => true,
+            ],
+        );
+
+        $this->assertSame('', $response->getContent());
+    }
 }

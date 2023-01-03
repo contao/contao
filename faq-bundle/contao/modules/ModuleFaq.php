@@ -40,7 +40,7 @@ class ModuleFaq extends Frontend
 				'name' => $htmlDecoder->inputEncodedToPlainText($objFaq->question),
 				'acceptedAnswer' => array(
 					'@type' => 'Answer',
-					'text' =>  $htmlDecoder->htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
+					'text' => $htmlDecoder->htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
 				)
 			);
 		}

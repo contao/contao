@@ -184,6 +184,12 @@ $GLOBALS['BE_MOD'] = array
 			'callback'                => ModuleTwoFactor::class,
 			'hideInNavigation'        => true,
 			'disablePermissionChecks' => true
+		),
+		'favorites' => array
+		(
+			'tables'                  => array('tl_favorites'),
+			'hideInNavigation'        => true,
+			'disablePermissionChecks' => true
 		)
 	),
 
@@ -205,7 +211,6 @@ $GLOBALS['BE_MOD'] = array
 		'preview_link' => array
 		(
 			'tables'                  => array('tl_preview_link'),
-			'javascript'              => 'bundles/contaocore/clipboard.min.js'
 		),
 		'opt_in' => array
 		(

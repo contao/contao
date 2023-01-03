@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -47,7 +48,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null       $favicon
  * @property string|null       $robotsTxt
  * @property string            $mailerTransport
- * @property integer           $enableCanonical
+ * @property boolean           $enableCanonical
  * @property string            $canonicalLink
  * @property string            $canonicalKeepParams
  * @property string            $adminEmail
@@ -705,6 +706,11 @@ class PageModel extends Model
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
 			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
+
+			if (!isset($arrOptions['order']))
+			{
+				$arrOptions['order'] = "$t.dns DESC";
+			}
 		}
 
 		if (!static::isPreviewMode($arrOptions))
@@ -1088,7 +1094,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1123,7 +1129,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1165,13 +1171,13 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		$context->setBaseUrl(rtrim(\dirname($baseUrl), '/') . $previewScript);
+		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
 		$objRouter = System::getContainer()->get('router');
 
 		try
 		{
-			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{

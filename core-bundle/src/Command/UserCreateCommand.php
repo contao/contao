@@ -123,7 +123,7 @@ class UserCreateCommand extends Command
         if (null === $input->getOption('password')) {
             $password = $this->askForPassword('Please enter the new password: ', $input, $output, $passwordCallback);
 
-            $confirmCallback = static function ($value) use ($password): string {
+            $confirmCallback = static function (#[\SensitiveParameter] $value) use ($password): string {
                 if ($password !== $value) {
                     throw new \RuntimeException('The passwords do not match.');
                 }

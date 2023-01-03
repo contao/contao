@@ -16,6 +16,8 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 
@@ -25,26 +27,26 @@ class ModelTest extends TestCase
     {
         parent::setUp();
 
-        $schema = new Schema();
-        $table = $schema->createTable('tl_foo');
-        $table->addColumn('string_not_null', Types::STRING, ['notnull' => true]);
-        $table->addColumn('string_null', Types::STRING, ['notnull' => false]);
-        $table->addColumn('int_not_null', Types::INTEGER, ['notnull' => true]);
-        $table->addColumn('int_null', Types::INTEGER, ['notnull' => false]);
-        $table->addColumn('smallint_not_null', Types::SMALLINT, ['notnull' => true]);
-        $table->addColumn('smallint_null', Types::SMALLINT, ['notnull' => false]);
-        $table->addColumn('float_not_null', Types::FLOAT, ['notnull' => true]);
-        $table->addColumn('float_null', Types::FLOAT, ['notnull' => false]);
-        $table->addColumn('bool_not_null', Types::BOOLEAN, ['notnull' => true]);
-        $table->addColumn('bool_null', Types::BOOLEAN, ['notnull' => false]);
-
         $schemaProvider = $this->createMock(SchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
-            ->willReturn($schema)
+            ->willReturn($this->createSchema(false))
+        ;
+
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn($this->createSchema(true))
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('database_connection', $connection);
         $container->set('contao.doctrine.schema_provider', $schemaProvider);
         System::setContainer($container);
     }
@@ -56,7 +58,7 @@ class ModelTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGetColumnCastTypes(): void
+    public function testGetColumnCastTypesFromSchema(): void
     {
         $this->assertSame(
             [
@@ -69,9 +71,30 @@ class ModelTest extends TestCase
                     'float_null' => Types::FLOAT,
                     'bool_not_null' => Types::BOOLEAN,
                     'bool_null' => Types::BOOLEAN,
+                    'dca_only' => Types::INTEGER,
                 ],
             ],
-            Model::getColumnCastTypes(),
+            Model::getColumnCastTypesFromDca(),
+        );
+    }
+
+    public function testGetColumnCastTypesFromDatabase(): void
+    {
+        $this->assertSame(
+            [
+                'tl_foo' => [
+                    'int_not_null' => Types::INTEGER,
+                    'int_null' => Types::INTEGER,
+                    'smallint_not_null' => Types::SMALLINT,
+                    'smallint_null' => Types::SMALLINT,
+                    'float_not_null' => Types::FLOAT,
+                    'float_null' => Types::FLOAT,
+                    'bool_not_null' => Types::BOOLEAN,
+                    'bool_null' => Types::BOOLEAN,
+                    'database_only' => Types::INTEGER,
+                ],
+            ],
+            Model::getColumnCastTypesFromDatabase(),
         );
     }
 
@@ -122,5 +145,29 @@ class ModelTest extends TestCase
         yield ['float_null', null, null];
 
         yield ['bool_null', null, null];
+    }
+
+    private function createSchema(bool $fromDatabase): Schema
+    {
+        $schema = new Schema();
+        $table = $schema->createTable('tl_foo');
+        $table->addColumn('string_not_null', Types::STRING, ['notnull' => true]);
+        $table->addColumn('string_null', Types::STRING, ['notnull' => false]);
+        $table->addColumn('int_not_null', Types::INTEGER, ['notnull' => true]);
+        $table->addColumn('int_null', Types::INTEGER, ['notnull' => false]);
+        $table->addColumn('smallint_not_null', Types::SMALLINT, ['notnull' => true]);
+        $table->addColumn('smallint_null', Types::SMALLINT, ['notnull' => false]);
+        $table->addColumn('float_not_null', Types::FLOAT, ['notnull' => true]);
+        $table->addColumn('float_null', Types::FLOAT, ['notnull' => false]);
+        $table->addColumn('bool_not_null', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('bool_null', Types::BOOLEAN, ['notnull' => false]);
+
+        if ($fromDatabase) {
+            $table->addColumn('database_only', Types::INTEGER, ['notnull' => false]);
+        } else {
+            $table->addColumn('dca_only', Types::INTEGER, ['notnull' => false]);
+        }
+
+        return $schema;
     }
 }

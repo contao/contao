@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -234,8 +235,14 @@ class ModuleRegistration extends Module
 					}
 				}
 
+				// Convert arrays (see #4980)
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				{
+					$varValue = implode($arrData['eval']['csv'], $varValue);
+				}
+
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -360,12 +367,6 @@ class ModuleRegistration extends Module
 		// Disable account
 		$arrData['disable'] = 1;
 
-		// Make sure newsletter is an array
-		if (isset($arrData['newsletter']) && !\is_array($arrData['newsletter']))
-		{
-			$arrData['newsletter'] = array($arrData['newsletter']);
-		}
-
 		// Create the user
 		$objNewUser = new MemberModel();
 		$objNewUser->setRow($arrData);
@@ -422,7 +423,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
@@ -447,7 +448,8 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
-		$optIn = System::getContainer()->get('contao.opt_in');
+		$container = System::getContainer();
+		$optIn = $container->get('contao.opt_in');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
@@ -455,32 +457,23 @@ class ModuleRegistration extends Module
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
 		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
-		$arrTokenData['channels'] = '';
 
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
+		$event = new MemberActivationMailEvent(
+			MemberModel::findByPk($arrData['id']),
+			$optInToken,
+			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			$this->reg_text,
+			$arrTokenData,
+		);
 
-		if (isset($bundles['ContaoNewsletterBundle']))
-		{
-			// Make sure newsletter is an array
-			$arrData['newsletter'] = (array) ($arrData['newsletter'] ?? null);
-
-			// Replace the wildcard
-			if (!empty($arrData['newsletter']))
-			{
-				$objChannels = NewsletterChannelModel::findByIds($arrData['newsletter']);
-
-				if ($objChannels !== null)
-				{
-					$arrTokenData['channels'] = implode("\n", $objChannels->fetchEach('title'));
-				}
-			}
-		}
+		$container->get('event_dispatcher')->dispatch($event);
 
 		// Send the token
-		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_text, $arrTokenData)
-		);
+		if ($event->shouldSendOptInToken())
+		{
+			$text = $container->get('contao.string.simple_token_parser')->parse($event->getText(), $event->getSimpleTokens());
+			$optInToken->send($event->getSubject(), $text);
+		}
 	}
 
 	/**
@@ -596,9 +589,16 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendAdminNotification($intId, $arrData)
 	{
+		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
+
+		if (!isset($GLOBALS['TL_ADMIN_EMAIL']))
+		{
+			return;
+		}
+
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
@@ -623,7 +623,5 @@ class ModuleRegistration extends Module
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
-
-		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }

@@ -30,12 +30,12 @@ body {
 .tl_help_table td {
 	padding: 12px 0;
 	vertical-align: top;
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid var(--border);
 	line-height: 1.3;
 }
 
 .tl_help_table td code {
-	background: #f0f0f0;
+	background: var(--code-bg);
 	border-radius: 2px;
 	padding: 0 1px;
 }

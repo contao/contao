@@ -43,6 +43,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property boolean           $thumbnails
  * @property boolean           $useRTE
  * @property boolean           $useCE
+ * @property boolean           $doNotCollapse
  * @property string            $password
  * @property boolean           $pwChange
  * @property boolean           $admin
@@ -381,7 +382,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	public function setPassword(?string $password): self
+	public function setPassword(#[\SensitiveParameter] ?string $password): self
 	{
 		$this->password = $password;
 

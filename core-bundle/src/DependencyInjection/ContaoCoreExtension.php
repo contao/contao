@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
@@ -139,6 +140,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
+        $this->handleCronConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -418,6 +420,30 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->removeDefinition('contao.image.fallback_preview_provider');
+    }
+
+    private function handleCronConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.command_scheduler') || !$container->hasDefinition('contao.cron')) {
+            return;
+        }
+
+        if (false === $config['cron']['web_listener']) {
+            $container->removeDefinition('contao.listener.command_scheduler');
+
+            return;
+        }
+
+        $scheduler = $container->getDefinition('contao.listener.command_scheduler');
+        $scheduler->setArgument(3, false);
+
+        if ('auto' === $config['cron']['web_listener']) {
+            $scheduler->setArgument(3, true);
+
+            $container->getDefinition('contao.cron')->addMethodCall('addCronJob', [
+                new Definition(CronJob::class, [new Reference('contao.cron'), '* * * * *', 'updateMinutelyCliCron']),
+            ]);
+        }
     }
 
     private function getComposerPublicDir(string $projectDir): string|null

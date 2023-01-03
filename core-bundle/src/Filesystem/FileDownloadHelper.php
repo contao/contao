@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\StringUtil;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -115,14 +117,19 @@ class FileDownloadHelper
             }
         }
 
-        $response = new StreamedResponse(
-            static function () use ($storage, $file): void {
-                stream_copy_to_stream(
-                    $storage->readStream($file->getPath()),
-                    fopen('php://output', 'w')
-                );
-            }
-        );
+        $stream = $storage->readStream($file->getPath());
+        $metadata = stream_get_meta_data($stream);
+
+        // Prefer sendfile for local resources
+        if ('STDIO' === $metadata['stream_type'] && 'plainfile' === $metadata['wrapper_type'] && Path::isAbsolute($localPath = $metadata['uri'])) {
+            $response = (new BinaryFileResponse($localPath));
+        } else {
+            $response = new StreamedResponse(
+                static function () use ($stream): void {
+                    stream_copy_to_stream($stream, fopen('php://output', 'w'));
+                }
+            );
+        }
 
         $this->addContentTypeHeader($response, $file);
         $this->addContentDispositionHeader($response, $request, $file);

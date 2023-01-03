@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
@@ -129,15 +130,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         $path = Path::join($this->dbPathPrefix, $path);
         $table = $this->connection->quoteIdentifier($this->table);
 
+        $searchLiteral = '' !== $path ? "$path/%" : '%';
+
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                ["$path/%"]
+                [$searchLiteral]
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                ["$path/%", "$path/%/%"]
+                [$searchLiteral, "$searchLiteral/%"]
             );
         }
 
@@ -154,12 +157,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     public function setExtraMetadata(string $path, array $metadata): void
     {
-        if (null === ($record = $this->getRecord($path))) {
+        if (null === $this->getRecord($path)) {
             throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
-        }
-
-        if (!$record->isFile()) {
-            throw new \LogicException(sprintf('Can only set extra metadata for files, directory given under "%s".', $path));
         }
 
         $row = [
@@ -208,24 +207,26 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
-        foreach ($changeSet->getItemsToUpdate() as $path => $changes) {
-            if (
-                null === ($newPath = $changes[ChangeSet::ATTR_PATH] ?? null) ||
-                null === ($record = $this->records[$path] ?? null)
-            ) {
+        foreach ($changeSet->getItemsToUpdate() as $itemToUpdate) {
+            $path = $itemToUpdate->getExistingPath();
+
+            if (null === ($record = $this->records[$path] ?? null) || !$itemToUpdate->updatesPath()) {
                 continue;
             }
 
-            $record['path'] = $newPath;
+            $record['path'] = $itemToUpdate->getNewPath();
             unset($this->records[$path]);
-            $this->records[$newPath] = $record;
+            $this->records[$itemToUpdate->getNewPath()] = $record;
+
+            $this->pathById[array_search($path, $this->pathById, true)] = $itemToUpdate->getNewPath();
+            $this->pathByUuid[array_search($path, $this->pathByUuid, true)] = $itemToUpdate->getNewPath();
         }
 
-        foreach (array_keys($changeSet->getItemsToDelete()) as $identifier) {
-            unset($this->records[$identifier]);
+        foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
+            unset($this->records[$itemToDelete->getPath()]);
 
-            $this->pathById = array_diff($this->pathById, [$identifier]);
-            $this->pathByUuid = array_diff($this->pathByUuid, [$identifier]);
+            $this->pathById = array_diff($this->pathById, [$itemToDelete->getPath()]);
+            $this->pathByUuid = array_diff($this->pathByUuid, [$itemToDelete->getPath()]);
         }
 
         return $changeSet;
@@ -256,13 +257,15 @@ class Dbafs implements DbafsInterface, ResetInterface
      */
     private function toFilesystemItem(array $record): FilesystemItem
     {
+        $uuid = array_search($record['path'], $this->pathByUuid, true);
+
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
             isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
             isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
             $record['mimeType'] ?? null,
-            $record['extra']
+            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
         );
     }
 
@@ -280,21 +283,21 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         // We're identifying items by their (old) path and store any detected
         // changes as an array of definitions
-        /** @phpstan-var array<string, CreateItemDefinition> $itemsToCreate */
+        /** @phpstan-var array<string|int, CreateItemDefinition> $itemsToCreate */
         $itemsToCreate = [];
 
-        /** @phpstan-var array<string, UpdateItemDefinition> $itemsToUpdate */
+        /** @phpstan-var array<string|int, UpdateItemDefinition> $itemsToUpdate */
         $itemsToUpdate = [];
 
         // To detect orphans, we start with a list of all items and remove them
         // once found
-        /** @phpstan-var array<string, DeleteItemDefinition> $itemsToDelete */
+        /** @phpstan-var array<string|int, DeleteItemDefinition> $itemsToDelete */
         $itemsToDelete = $dbPaths;
 
         // We keep a list of hashes and names of traversed child elements
         // indexed by their directory path, so that we are later able to
         // compute the directory hash
-        /** @var array<string, array<string>> $dirHashesParts */
+        /** @var array<string|int, array<string>> $dirHashesParts */
         $dirHashesParts = [];
 
         /** @var array<string, int|null> $lastModifiedUpdates */
@@ -385,7 +388,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if (!empty($shallowDirectories)) {
             foreach (array_keys($itemsToDelete) as $item) {
-                if ($this->inPath($item, $shallowDirectories)) {
+                if ($this->inPath((string) $item, $shallowDirectories)) {
                     unset($itemsToDelete[$item]);
                 }
             }
@@ -406,7 +409,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // identify them by their name.
                 $candidates = array_filter(
                     $candidates,
-                    static fn (string $candidatePath): bool => basename($path) === basename($candidatePath)
+                    static fn (string $candidatePath): bool => basename((string) $path) === basename((string) $candidatePath)
                 );
             }
 
@@ -417,7 +420,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $oldPath = reset($candidates);
 
             // We identified a move, transfer to update list
-            $itemsToUpdate[$oldPath] = [ChangeSet::ATTR_PATH => $path];
+            $itemsToUpdate[$oldPath] = [ChangeSet::ATTR_PATH => (string) $path];
             unset($itemsToCreate[$path], $itemsToDelete[$oldPath]);
 
             if (null !== ($lastModified = $lastModifiedUpdates[$path] ?? null)) {
@@ -537,7 +540,13 @@ class Dbafs implements DbafsInterface, ResetInterface
             return $allUuidsByPath[$parentPath];
         };
 
-        $allLastModifiedUpdatesByPath = $changeSet->getLastModifiedUpdates();
+        $allLastModifiedUpdatesByPath = [];
+
+        foreach ($changeSet->getItemsToUpdate(true) as $itemToUpdate) {
+            if ($itemToUpdate->updatesLastModified()) {
+                $allLastModifiedUpdatesByPath[$itemToUpdate->getExistingPath()] = $itemToUpdate->getLastModified();
+            }
+        }
 
         $this->connection->beginTransaction();
 
@@ -545,33 +554,31 @@ class Dbafs implements DbafsInterface, ResetInterface
         $currentTime = time();
         $inserts = [];
 
-        foreach ($changeSet->getItemsToCreate() as $newValues) {
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
             $newUuid = Uuid::v1()->toBinary();
-            $newPath = $newValues[ChangeSet::ATTR_PATH];
-            $isDir = ChangeSet::TYPE_DIRECTORY === $newValues[ChangeSet::ATTR_TYPE];
 
-            if ($isDir) {
+            if ($itemToCreate->isDirectory()) {
                 // Add new UUID to lookup, so that child entries will be able to reference it
-                $allUuidsByPath[$newPath] = $newUuid;
+                $allUuidsByPath[$itemToCreate->getPath()] = $newUuid;
             }
 
             $dataToInsert = [
                 'uuid' => $newUuid,
-                'pid' => $getParentUuid($newPath),
-                'path' => $this->convertToDatabasePath($newPath),
-                'hash' => $newValues[ChangeSet::ATTR_HASH],
-                'type' => $isDir ? 'folder' : 'file',
+                'pid' => $getParentUuid($itemToCreate->getPath()),
+                'path' => $this->convertToDatabasePath($itemToCreate->getPath()),
+                'hash' => $itemToCreate->getHash(),
+                'type' => $itemToCreate->isDirectory() ? 'folder' : 'file',
             ];
 
             // Backwards compatibility
             if ('tl_files' === $this->table) {
-                $dataToInsert['name'] = basename($newPath);
-                $dataToInsert['extension'] = !$isDir ? Path::getExtension($newPath) : '';
+                $dataToInsert['name'] = basename($itemToCreate->getPath());
+                $dataToInsert['extension'] = $itemToCreate->isFile() ? Path::getExtension($itemToCreate->getPath()) : '';
                 $dataToInsert['tstamp'] = $currentTime;
             }
 
             if ($this->useLastModified) {
-                $dataToInsert['lastModified'] = $allLastModifiedUpdatesByPath[$newPath] ?? null;
+                $dataToInsert['lastModified'] = $allLastModifiedUpdatesByPath[$itemToCreate->getPath()] ?? null;
             }
 
             $inserts[] = $dataToInsert;
@@ -596,38 +603,38 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
 
         // Updates
-        foreach ($changeSet->getItemsToUpdate($this->useLastModified) as $pathIdentifier => $changedValues) {
+        foreach ($changeSet->getItemsToUpdate($this->useLastModified) as $itemToUpdate) {
             $dataToUpdate = [
                 'tstamp' => $currentTime,
             ];
 
-            if (null !== ($newPath = $changedValues[ChangeSet::ATTR_PATH] ?? null)) {
-                $dataToUpdate['path'] = $this->convertToDatabasePath($newPath);
-                $dataToUpdate['pid'] = $getParentUuid($newPath);
+            if ($itemToUpdate->updatesPath()) {
+                $dataToUpdate['path'] = $this->convertToDatabasePath($itemToUpdate->getNewPath());
+                $dataToUpdate['pid'] = $getParentUuid($itemToUpdate->getNewPath());
             }
 
-            if (null !== ($newHash = $changedValues[ChangeSet::ATTR_HASH] ?? null)) {
-                $dataToUpdate['hash'] = $newHash;
+            if ($itemToUpdate->updatesHash()) {
+                $dataToUpdate['hash'] = $itemToUpdate->getNewHash();
             }
 
-            if (false !== ($newLastModified = $changedValues[ChangeSet::ATTR_LAST_MODIFIED] ?? false)) {
-                $dataToUpdate['lastModified'] = $newLastModified;
+            if ($itemToUpdate->updatesLastModified()) {
+                $dataToUpdate['lastModified'] = $itemToUpdate->getLastModified();
             }
 
             $this->connection->update(
                 $this->table,
                 $dataToUpdate,
-                ['path' => $this->convertToDatabasePath($pathIdentifier)]
+                ['path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath())]
             );
         }
 
         // Deletes
-        foreach ($changeSet->getItemsToDelete() as $pathToDelete => $type) {
+        foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
             $this->connection->delete(
                 $this->table,
                 [
-                    'path' => $this->convertToDatabasePath($pathToDelete),
-                    'type' => ChangeSet::TYPE_FILE === $type ? 'file' : 'folder',
+                    'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
+                    'type' => $itemToDelete->isFile() ? 'file' : 'folder',
                 ]
             );
         }
@@ -765,13 +772,6 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
-                    // Yield file
-                    yield $searchPath => self::RESOURCE_FILE;
-
-                    continue;
-                }
-
                 // Analyze parent path
                 $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
                 $isDir = $analyzedPaths[$searchPath] ??= false;
@@ -779,6 +779,13 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             if ($isDir) {
                 yield from $traverseRecursively($searchPath, $shallow);
+
+                continue;
+            }
+
+            if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
+                // Yield existing file
+                yield $searchPath => self::RESOURCE_FILE;
 
                 continue;
             }

@@ -45,6 +45,12 @@ class Password extends Widget
 	 */
 	public function __construct($arrAttributes=null)
 	{
+		// If there is a password, the field is no longer mandatory
+		if (!empty($arrAttributes['value']))
+		{
+			$arrAttributes['mandatory'] = false;
+		}
+
 		parent::__construct($arrAttributes);
 
 		$this->useRawRequestData = true;
@@ -100,9 +106,9 @@ class Password extends Widget
 	{
 		$this->blnSubmitInput = false;
 
-		if ((!$varInput || $varInput == '*****') && $this->varValue)
+		if (!$varInput && $this->varValue)
 		{
-			return '*****';
+			return '';
 		}
 
 		// Check password length either from DCA or use Config as fallback (#1086)
@@ -123,7 +129,6 @@ class Password extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
 			$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
@@ -141,7 +146,7 @@ class Password extends Widget
 	public function generate()
 	{
 		return sprintf(
-			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
+			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" placeholder="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),

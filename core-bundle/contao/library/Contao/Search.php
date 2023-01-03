@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -181,11 +182,12 @@ class Search
 		}
 
 		// Prevent deadlocks
-		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
+		$objDatabase->executeStatement("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
 		try
 		{
-			$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+			$objIndex = $objDatabase
+				->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
 				->limit(1)
 				->execute($arrSet['checksum'], $arrSet['pid']);
 
@@ -196,7 +198,8 @@ class Search
 				{
 					self::removeEntry($arrSet['url']);
 
-					$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					$objDatabase
+						->prepare("UPDATE tl_search %s WHERE id=?")
 						->set($arrSet)
 						->execute($objIndex->id);
 				}
@@ -205,14 +208,16 @@ class Search
 				return false;
 			}
 
-			$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
+			$objIndex = $objDatabase
+				->prepare("SELECT id FROM tl_search WHERE url=?")
 				->limit(1)
 				->execute($arrSet['url']);
 
 			// Add the page to the tl_search table
 			if ($objIndex->numRows)
 			{
-				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+				$objDatabase
+					->prepare("UPDATE tl_search %s WHERE id=?")
 					->set($arrSet)
 					->execute($objIndex->id);
 
@@ -220,7 +225,8 @@ class Search
 			}
 			else
 			{
-				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+				$objInsertStmt = $objDatabase
+					->prepare("INSERT INTO tl_search %s")
 					->set($arrSet)
 					->execute();
 
@@ -258,7 +264,8 @@ class Search
 				->execute($intInsertId);
 
 			// Remove the existing index
-			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+			$objDatabase
+				->prepare("DELETE FROM tl_search_index WHERE pid=?")
 				->execute($intInsertId);
 
 			// Add new terms and increment frequency counts of existing terms
@@ -271,7 +278,7 @@ class Search
 				->execute(...array_map('strval', array_keys($arrIndex)));
 
 			// Remove obsolete terms
-			$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+			$objDatabase->executeStatement("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 
 			$objTermIds = $objDatabase
 				->prepare("
@@ -310,7 +317,7 @@ class Search
 		}
 		finally
 		{
-			$objDatabase->query("UNLOCK TABLES");
+			$objDatabase->executeStatement("UNLOCK TABLES");
 		}
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
@@ -339,7 +346,7 @@ class Search
 		$arrDocumentIds = array_merge(array($intInsertId), $arrRandomIds);
 
 		// Set or update vector length
-		$objDatabase->query("
+		$objDatabase->executeStatement("
 			UPDATE tl_search
 			INNER JOIN (
 				SELECT
@@ -387,7 +394,8 @@ class Search
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $transliterator->transliterate($part);
+				// Limit length to 64 to fit in the database
+				$words[] = mb_substr($transliterator->transliterate($part), 0, 64, 'UTF-8');
 			}
 		}
 
@@ -736,33 +744,27 @@ class Search
 	 *
 	 * @param string $strUrl The URL to be removed
 	 */
-	public static function removeEntry($strUrl)
+	public static function removeEntry($strUrl, Connection $connection = null)
 	{
-		$objDatabase = Database::getInstance();
+		$connection = $connection ?? System::getContainer()->get('database_connection');
+		$result = $connection->executeQuery('SELECT id FROM tl_search WHERE url = :url', array('url' => $strUrl));
 
-		$objResult = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
-								 ->execute($strUrl);
-
-		while ($objResult->next())
+		foreach ($result->fetchFirstColumn() as $id)
 		{
 			// Decrement document frequency counts
-			$objDatabase
-				->prepare("
-					UPDATE tl_search_term
-					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-					SET documentFrequency = GREATEST(1, documentFrequency) - 1
-				")
-				->execute($objResult->id);
+			$connection->executeQuery(
+				"UPDATE tl_search_term
+				INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = :pid
+				SET documentFrequency = GREATEST(1, documentFrequency) - 1",
+				array('pid' => $id)
+			);
 
-			$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
-						->execute($objResult->id);
-
-			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						->execute($objResult->id);
+			$connection->delete('tl_search', array('id' => $id));
+			$connection->delete('tl_search_index', array('pid' => $id));
 		}
 
 		// Remove obsolete terms
-		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+		$connection->executeQuery("DELETE FROM tl_search_term WHERE documentFrequency = 0");
 	}
 
 	/**

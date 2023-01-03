@@ -228,7 +228,15 @@ abstract class Widget extends Controller
 				break;
 
 			case 'value':
-				$this->varValue = StringUtil::deserialize($varValue);
+				if (\is_float($varValue))
+				{
+					// Prevent exponential notations (see #5296)
+					$this->varValue = StringUtil::numberToString($varValue);
+				}
+				else
+				{
+					$this->varValue = StringUtil::deserialize($varValue);
+				}
 				break;
 
 			case 'class':
@@ -381,7 +389,7 @@ abstract class Widget extends Controller
 				return $this->strWizard;
 
 			case 'required':
-				return $this->arrConfiguration[$strKey];
+				return $this->arrConfiguration[$strKey] ?? null;
 
 			case 'forAttribute':
 				return $this->blnForAttribute;

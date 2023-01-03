@@ -1502,6 +1502,15 @@
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
       </trans-unit>
@@ -1584,7 +1593,7 @@
         <source>protected</source>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -1991,6 +2000,15 @@
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
       </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
       </trans-unit>
@@ -2086,6 +2104,9 @@
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

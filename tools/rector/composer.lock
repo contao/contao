@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b172c779330acfc362f492ece0e0604",
+    "content-hash": "a92038e75d07f87411ed5190c90dbf54",
     "packages": [
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.5",
+            "version": "1.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "f6598a5ff12ca4499a836815e08b4d77a2ddeb20"
+                "reference": "4d18c5d98965029c2aa1ccbd91dc22e7ba8c5034"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f6598a5ff12ca4499a836815e08b4d77a2ddeb20",
-                "reference": "f6598a5ff12ca4499a836815e08b4d77a2ddeb20",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4d18c5d98965029c2aa1ccbd91dc22e7ba8c5034",
+                "reference": "4d18c5d98965029c2aa1ccbd91dc22e7ba8c5034",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.5"
+                "source": "https://github.com/phpstan/phpstan/tree/1.9.5"
             },
             "funding": [
                 {
@@ -63,35 +63,31 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-07T16:05:32+00:00"
+            "time": "2023-01-02T21:35:42+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "0.12.23",
+            "version": "0.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "690b31768b322db886b35845f8452025eba2cacb"
+                "reference": "5bc89fa73d0be2769e02e49a0e924c95b1842093"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/690b31768b322db886b35845f8452025eba2cacb",
-                "reference": "690b31768b322db886b35845f8452025eba2cacb",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/5bc89fa73d0be2769e02e49a0e924c95b1842093",
+                "reference": "5bc89fa73d0be2769e02e49a0e924c95b1842093",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.6"
+                "phpstan/phpstan": "^1.9.4"
             },
             "conflict": {
-                "phpstan/phpdoc-parser": "<1.2",
-                "rector/rector-cakephp": "*",
                 "rector/rector-doctrine": "*",
-                "rector/rector-laravel": "*",
-                "rector/rector-nette": "*",
-                "rector/rector-phpoffice": "*",
+                "rector/rector-downgrade-php": "*",
+                "rector/rector-php-parser": "*",
                 "rector/rector-phpunit": "*",
-                "rector/rector-prefixed": "*",
                 "rector/rector-symfony": "*"
             },
             "bin": [
@@ -100,7 +96,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.12-dev"
+                    "dev-main": "0.14-dev"
                 }
             },
             "autoload": {
@@ -115,7 +111,7 @@
             "description": "Instant Upgrade and Automated Refactoring of any PHP code",
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.12.23"
+                "source": "https://github.com/rectorphp/rector/tree/0.15.2"
             },
             "funding": [
                 {
@@ -123,7 +119,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-01T15:50:16+00:00"
+            "time": "2022-12-24T12:55:36+00:00"
         }
     ],
     "packages-dev": [],

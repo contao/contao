@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -27,6 +26,7 @@ use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -36,20 +36,24 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
-            ->willReturn(new Schema())
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.doctrine.schema_provider', $schemaProvider);
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
@@ -75,15 +79,15 @@ class ModuleTest extends TestCase
     public function testGetPublishedSubpagesWithoutGuestsByPid(): void
     {
         $databaseResultFirstQuery = [
-            ['id' => '1', 'hasSubpages' => '0'],
-            ['id' => '2', 'hasSubpages' => '1'],
-            ['id' => '3', 'hasSubpages' => '1'],
+            ['id' => 1, 'hasSubpages' => 0],
+            ['id' => 2, 'hasSubpages' => 1],
+            ['id' => 3, 'hasSubpages' => 1],
         ];
 
         $databaseResultSecondQuery = [
-            ['id' => '1', 'alias' => 'alias1'],
-            ['id' => '2', 'alias' => 'alias2'],
-            ['id' => '3', 'alias' => 'alias3'],
+            ['id' => 1, 'alias' => 'alias1'],
+            ['id' => 2, 'alias' => 'alias2'],
+            ['id' => 3, 'alias' => 'alias3'],
         ];
 
         $statement = $this->createMock(Statement::class);
@@ -140,8 +144,8 @@ class ModuleTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

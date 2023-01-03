@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -28,6 +27,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -42,22 +42,26 @@ class PageModelTest extends TestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
-            ->willReturn(new Schema())
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('contao.doctrine.schema_provider', $schemaProvider);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
@@ -88,17 +92,17 @@ class PageModelTest extends TestCase
 
     public function testCreatingPageModelFromArray(): void
     {
-        $pageModel = new PageModel(['id' => '1', 'alias' => 'alias']);
+        $pageModel = new PageModel(['id' => 1, 'alias' => 'alias']);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
     public function testCreatingPageModelFromDatabaseResult(): void
     {
-        $pageModel = new PageModel(new Result([['id' => '1', 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
+        $pageModel = new PageModel(new Result([['id' => 1, 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
@@ -107,7 +111,7 @@ class PageModelTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('execute')
-            ->willReturn(new Result([['id' => '1', 'alias' => 'alias']], ''))
+            ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
         ;
 
         $database = $this->createMock(Database::class);
@@ -121,7 +125,7 @@ class PageModelTest extends TestCase
 
         $pageModel = PageModel::findByPk(1);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
@@ -443,8 +447,8 @@ class PageModelTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

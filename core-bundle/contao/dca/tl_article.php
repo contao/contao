@@ -61,12 +61,13 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
-			'panelLayout'             => 'filter;search'
+			'panelLayout'             => 'filter;search',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
 			'fields'                  => array('title', 'inColumn'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>',
+			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'label_callback'          => array('tl_article', 'addIcon')
 		),
 		'global_operations' => array
@@ -512,23 +513,35 @@ class tl_article extends Backend
 	 */
 	public function addIcon($row, $label)
 	{
-		$image = 'articles';
+		$sub = 0;
 		$unpublished = ($row['start'] && $row['start'] > time()) || ($row['stop'] && $row['stop'] <= time());
 
 		if ($unpublished || !$row['published'])
 		{
-			$image .= '_';
+			++$sub;
+		}
+
+		if ($row['protected'])
+		{
+			$sub += 2;
+		}
+
+		$image = 'articles.svg';
+
+		if ($sub > 0)
+		{
+			$image = 'articles_' . $sub . '.svg';
 		}
 
 		$attributes = sprintf(
 			'data-icon="%s" data-icon-disabled="%s"',
-			Image::getUrl($unpublished ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_'),
+			Image::getUrl($row['protected'] ? 'articles_2.svg' : 'articles.svg'),
+			Image::getUrl($row['protected'] ? 'articles_3.svg' : 'articles_1.svg'),
 		);
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
 
-		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $attributes) . '</a> ' . $label;
 	}
 
 	/**

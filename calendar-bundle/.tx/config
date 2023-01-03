@@ -2,47 +2,47 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[calendar-bundle.v5_0-default]
+[calendar-bundle.v5_1-default]
 source_file = contao/languages/en/default.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/default.xlf
 
-[calendar-bundle.v5_0-modules]
+[calendar-bundle.v5_1-modules]
 source_file = contao/languages/en/modules.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/modules.xlf
 
-[calendar-bundle.v5_0-tl_calendar]
+[calendar-bundle.v5_1-tl_calendar]
 source_file = contao/languages/en/tl_calendar.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_calendar.xlf
 
-[calendar-bundle.v5_0-tl_calendar_events]
+[calendar-bundle.v5_1-tl_calendar_events]
 source_file = contao/languages/en/tl_calendar_events.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_calendar_events.xlf
 
-[calendar-bundle.v5_0-tl_calendar_feed]
+[calendar-bundle.v5_1-tl_calendar_feed]
 source_file = contao/languages/en/tl_calendar_feed.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_calendar_feed.xlf
 
-[calendar-bundle.v5_0-tl_layout]
+[calendar-bundle.v5_1-tl_layout]
 source_file = contao/languages/en/tl_layout.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_layout.xlf
 
-[calendar-bundle.v5_0-tl_module]
+[calendar-bundle.v5_1-tl_module]
 source_file = contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_module.xlf
 
-[calendar-bundle.v5_0-tl_user]
+[calendar-bundle.v5_1-tl_user]
 source_file = contao/languages/en/tl_user.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_user.xlf
 
-[calendar-bundle.v5_0-tl_user_group]
+[calendar-bundle.v5_1-tl_user_group]
 source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
 file_filter = contao/languages/<lang>/tl_user_group.xlf

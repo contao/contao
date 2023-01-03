@@ -37,12 +37,13 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('tstamp', 'id'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'text'
 		),
 		'label' => array
 		(
 			'fields'                  => array('tstamp', 'text'),
-			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span> %s',
+			'format'                  => '<span class="label-date">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
 		),
 		'global_operations' => array
