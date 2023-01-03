@@ -145,7 +145,12 @@ class CronTest extends TestCase
             ->method('flush')
         ;
 
-        $cron = new Cron(static fn () => $repository, static fn () => $manager, $this->createMock(CacheItemPoolInterface::class));
+        $cron = new Cron(
+            static fn () => $repository,
+            static fn () => $manager,
+            $this->createMock(CacheItemPoolInterface::class)
+        );
+
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -242,7 +247,12 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $this->createMock(CacheItemPoolInterface::class));
+        $cron = new Cron(
+            static fn () => $repository,
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
+        );
+
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -284,7 +294,12 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $this->createMock(CacheItemPoolInterface::class));
+        $cron = new Cron(
+            static fn () => $repository,
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class)
+        );
+
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI, true);
     }
@@ -317,10 +332,13 @@ class CronTest extends TestCase
             $cache,
             $logger
         );
+
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
 
         $this->assertFalse($cron->hasMinutelyCliCron());
+
         $cron->run(Cron::SCOPE_CLI);
+
         $this->assertTrue($cron->hasMinutelyCliCron());
 
         $cache->clear();

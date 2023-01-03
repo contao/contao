@@ -266,7 +266,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.cron.web_listener": Only "true", "false" or "auto" are allowed. ""foobar"" given.');
+        $this->expectExceptionMessage('Invalid configuration for path "contao.cron.web_listener": Expected "true", "false" or "auto", got "foobar".');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

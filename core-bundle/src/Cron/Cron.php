@@ -37,15 +37,17 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(private \Closure $repository, private \Closure $entityManager, private CacheItemPoolInterface $cachePool, private LoggerInterface|null $logger = null)
-    {
+    public function __construct(
+        private \Closure $repository,
+        private \Closure $entityManager,
+        private CacheItemPoolInterface $cachePool,
+        private LoggerInterface|null $logger = null,
+    ) {
     }
 
     public function hasMinutelyCliCron(): bool
     {
-        $item = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-
-        return $item->isHit();
+        return $this->cachePool->getItem(self::MINUTELY_CACHE_KEY)->isHit();
     }
 
     public function updateMinutelyCliCron(string $scope): PromiseInterface|null
@@ -58,8 +60,8 @@ class Cron
         $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
         $this->cachePool->saveDeferred($cacheItem);
 
-        // Using a promise here not because the cache file takes forever to create but in order to make sure,
-        // it's one of the first crons that are executed. The fact that we can use deferred cache item
+        // Using a promise here not because the cache file takes forever to create but in order to make sure
+        // it's one of the first cron jobs that are executed. The fact that we can use deferred cache item
         // saving is an added bonus.
         return $promise = new Promise(
             function () use (&$promise): void {

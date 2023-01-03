@@ -33,6 +33,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->expects($this->never())
             ->method('hasMinutelyCliCron')
         ;
+
         $cron
             ->expects($this->once())
             ->method('run')
@@ -51,6 +52,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('hasMinutelyCliCron')
             ->willReturn(false)
         ;
+
         $cron
             ->expects($this->once())
             ->method('run')
@@ -69,6 +71,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('hasMinutelyCliCron')
             ->willReturn(true)
         ;
+
         $cron
             ->expects($this->never())
             ->method('run')

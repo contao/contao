@@ -361,6 +361,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Forcing it to true should disable auto mode, no cron job should be configured
         $definition = $container->findDefinition('contao.listener.command_scheduler');
+
         $this->assertFalse($definition->getArgument(3));
         $this->assertCount(0, $container->findDefinition('contao.cron')->getMethodCalls());
 
@@ -377,12 +378,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Auto should also configure the minutely cron job
         $definition = $container->findDefinition('contao.listener.command_scheduler');
+
         $this->assertTrue($definition->getArgument(3));
         $this->assertCount(1, $container->findDefinition('contao.cron')->getMethodCalls());
         $this->assertSame('addCronJob', $container->findDefinition('contao.cron')->getMethodCalls()[0][0]);
 
         /** @var Definition $definition */
         $definition = $container->findDefinition('contao.cron')->getMethodCalls()[0][1][0];
+
         $this->assertSame(CronJob::class, $definition->getClass());
         $this->assertSame('contao.cron', (string) $definition->getArgument(0));
         $this->assertSame('* * * * *', $definition->getArgument(1));

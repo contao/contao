@@ -50,7 +50,7 @@ class CommandSchedulerListener
             return false;
         }
 
-        // Without the db table, the cron framework cannot work
+        // Without the DB table, the cron framework cannot work
         if (!$this->canRunDbQuery()) {
             return false;
         }
