@@ -124,7 +124,7 @@ class TemplateLocator
         $finder = (new Finder())
             ->files()
             ->in($path)
-            ->name('/(\.html\.twig|\.html5)$/')
+            ->name('/(\.twig|\.html5)$/')
             ->filter(
                 // Never list templates from theme directories unless $path is
                 // a theme path. This ensures that you can still have theme

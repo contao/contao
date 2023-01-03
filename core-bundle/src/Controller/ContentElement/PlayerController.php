@@ -111,7 +111,7 @@ class PlayerController extends AbstractContentElementController
                 $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
-                    ->setIfExists('type', $item->getMimeType())
+                    ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', ((string) $this->publicUriByStoragePath[$item->getPath()]).$range)
                 ;
             },
@@ -151,7 +151,7 @@ class PlayerController extends AbstractContentElementController
                 $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
-                    ->setIfExists('type', $item->getMimeType())
+                    ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
             },

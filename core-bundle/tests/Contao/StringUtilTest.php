@@ -495,4 +495,54 @@ class StringUtilTest extends TestCase
         yield [NAN, \InvalidArgumentException::class];
         yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
     }
+
+    public function testResolvesReferencesInArrays(): void
+    {
+        $ref = ['a'];
+
+        $array = [
+            &$ref,
+            &$ref[0],
+            'key1' => &$ref,
+            'key2' => &$ref[0],
+            'nested' => [
+                'array' => [
+                    &$ref,
+                    &$ref[0],
+                    'key1' => &$ref,
+                    'key2' => &$ref[0],
+                ],
+            ],
+        ];
+
+        $dereferenced = StringUtil::resolveReferences($array);
+
+        $this->assertSame($array, $dereferenced);
+
+        $ref[0] = 'b';
+        $ref = ['c'];
+
+        /** @phpstan-ignore-next-line because PHPStan gets confused by the references */
+        $this->assertNotSame($array, $dereferenced);
+        $this->assertNotSame($ref, $dereferenced[0]);
+        $this->assertSame($ref, $array[0]);
+
+        $this->assertSame(
+            [
+                ['a'],
+                'a',
+                'key1' => ['a'],
+                'key2' => 'a',
+                'nested' => [
+                    'array' => [
+                        ['a'],
+                        'a',
+                        'key1' => ['a'],
+                        'key2' => 'a',
+                    ],
+                ],
+            ],
+            $dereferenced
+        );
+    }
 }

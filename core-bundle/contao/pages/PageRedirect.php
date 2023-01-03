@@ -55,6 +55,7 @@ class PageRedirect extends Frontend
 	 */
 	private function prepare($objPage)
 	{
+		// Deprecated since Contao 4.0, to be removed in Contao 6.0
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
 		$locale = str_replace('-', '_', $objPage->language);

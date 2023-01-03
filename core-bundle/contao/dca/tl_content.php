@@ -64,7 +64,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
-			'child_record_callback'   => array('tl_content', 'addCteType')
+			'child_record_callback'   => array('tl_content', 'addCteType'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -767,7 +768,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'invisible' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -1174,13 +1175,10 @@ class tl_content extends Backend
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
-		$class = 'limit_height';
 
 		// Remove the class if it is a wrapper element
 		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
 		{
-			$class = '';
-
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
 				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
@@ -1221,6 +1219,7 @@ class tl_content extends Backend
 				}
 			}
 
+			$key .= ' icon-protected';
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
@@ -1228,12 +1227,6 @@ class tl_content extends Backend
 		if ($arrRow['type'] == 'headline' && is_array($headline = StringUtil::deserialize($arrRow['headline'])))
 		{
 			$type .= ' (' . $headline['unit'] . ')';
-		}
-
-		// Limit the element's height
-		if (!Config::get('doNotCollapse'))
-		{
-			$class .= ' h40';
 		}
 
 		if ($arrRow['start'] && $arrRow['stop'])
@@ -1252,11 +1245,18 @@ class tl_content extends Backend
 		$objModel = new ContentModel();
 		$objModel->setRow($arrRow);
 
+		$class = 'cte_preview';
+		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		// Strip HTML comments to check if the preview is empty
+		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
+		{
+			$class .= ' empty';
+		}
+
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . trim($class) . '">
-' . StringUtil::insertTagToSrc($this->getContentElement($objModel)) . '
-</div>' . "\n";
+<div class="' . $class . ' limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . $preview . '</div>';
 	}
 
 	/**

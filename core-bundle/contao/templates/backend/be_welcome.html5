@@ -13,17 +13,17 @@
   </div>
 
   <div id="tl_versions">
-    <h2><?= $GLOBALS['TL_LANG']['MSC']['latestChanges'] ?></h2>
+    <h2><?= $this->trans('MSC.latestChanges') ?></h2>
     <?php if (!empty($this->versions)): ?>
-      <table class="tl_listing">
+      <table class="tl_listing zebra-table">
       <thead>
         <tr>
-          <th><?= $GLOBALS['TL_LANG']['MSC']['date'] ?></th>
-          <th><?= $GLOBALS['TL_LANG']['MSC']['user'] ?></th>
-          <th><?= $GLOBALS['TL_LANG']['MSC']['table'] ?></th>
+          <th><?= $this->trans('MSC.date') ?></th>
+          <th><?= $this->trans('MSC.user') ?></th>
+          <th><?= $this->trans('MSC.table') ?></th>
           <th>ID</th>
-          <th><?= $GLOBALS['TL_LANG']['MSC']['description'] ?></th>
-          <th><?= $GLOBALS['TL_LANG']['MSC']['version'] ?></th>
+          <th><?= $this->trans('MSC.description') ?></th>
+          <th><?= $this->trans('MSC.version') ?></th>
           <th></th>
         </tr>
       </thead>
@@ -38,7 +38,7 @@
             <td><?= $version['active'] ? '<strong>'.$version['version'].'</strong>' : $version['version'] ?></td>
             <td>
               <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
+                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.restore')) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl']): ?>
                   <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
@@ -58,7 +58,7 @@
       </table>
       <?= $this->pagination ?>
     <?php else: ?>
-      <p><?= $GLOBALS['TL_LANG']['MSC']['noVersions'] ?></p>
+      <p><?= $this->trans('MSC.noVersions') ?></p>
     <?php endif; ?>
   </div>
 

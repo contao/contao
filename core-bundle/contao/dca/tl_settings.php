@@ -106,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 
 					if ($showWarning)
 					{
-						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span style="color: #c33;">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
+						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span class="tl_red">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
 					}
 
 					return $varValue;
