@@ -1530,7 +1530,7 @@
         <source>Copy</source>
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
-        <source>Copy multiple</source>
+        <source>Copy repeatedly</source>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>

@@ -3913,7 +3913,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 			{
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
+				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
 			}
 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
@@ -4869,7 +4869,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 			{
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
+				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
 			}
 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
