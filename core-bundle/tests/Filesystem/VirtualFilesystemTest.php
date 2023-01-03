@@ -879,10 +879,8 @@ class VirtualFilesystemTest extends TestCase
 
     /**
      * @dataProvider provideReadOnlyMethods
-     *
-     * @param mixed ...$arguments
      */
-    public function testDisallowsMutatingAReadOnlyFilesystem(...$arguments): void
+    public function testDisallowsMutatingAReadOnlyFilesystem(mixed ...$arguments): void
     {
         $method = array_shift($arguments);
 
