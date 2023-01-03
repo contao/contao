@@ -310,7 +310,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
 			'default'                 => time(),
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_DAY_DESC,
+			'flag'                    => DataContainer::SORT_DAY_BOTH,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),

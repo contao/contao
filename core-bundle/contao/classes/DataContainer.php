@@ -1617,7 +1617,7 @@ abstract class DataContainer extends Backend
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 			{
 				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 				{
