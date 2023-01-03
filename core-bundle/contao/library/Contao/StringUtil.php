@@ -1129,4 +1129,12 @@ class StringUtil
 
 		return rtrim("$signPart$wholePart.$decimalPart", '.');
 	}
+
+	public static function resolveReferences(array $array): array
+	{
+		return array_map(
+			static fn ($value) => \is_array($value) ? self::resolveReferences($value) : $value,
+			$array,
+		);
+	}
 }

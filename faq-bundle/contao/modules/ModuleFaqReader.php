@@ -50,6 +50,12 @@ class ModuleFaqReader extends Module
 			return $objTemplate->parse();
 		}
 
+		// Return an empty string if "auto_item" is not set to combine list and reader on same page
+		if (Input::get('auto_item') === null)
+		{
+			return '';
+		}
+
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
@@ -199,7 +205,7 @@ class ModuleFaqReader extends Module
 		$arrNotifies = array();
 
 		// Notify the system administrator
-		if ($objCategory->notify != 'notify_author')
+		if ($objCategory->notify != 'notify_author' && isset($GLOBALS['TL_ADMIN_EMAIL']))
 		{
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}

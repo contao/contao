@@ -85,6 +85,7 @@ class Config
 
 	private static $arrToBeRemoved = array
 	(
+		'disableCron',
 	);
 
 	/**

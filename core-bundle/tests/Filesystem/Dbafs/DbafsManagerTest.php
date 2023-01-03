@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
@@ -435,13 +435,14 @@ class DbafsManagerTest extends TestCase
 
         $changeSet = $manager->sync('files/foo/*', 'files/foo/bar/**', 'baz');
 
-        $this->assertSame(
-            [
-                'files/foo/bar/file1' => ChangeSet::TYPE_FILE,
-                'files/foo/bar/file2' => ChangeSet::TYPE_FILE,
-            ],
-            $changeSet->getItemsToDelete()
-        );
+        $itemsToDelete = $changeSet->getItemsToDelete();
+        $this->assertCount(2, $itemsToDelete);
+
+        $this->assertSame('files/foo/bar/file1', $itemsToDelete[0]->getPath());
+        $this->assertTrue($itemsToDelete[0]->isFile());
+
+        $this->assertSame('files/foo/bar/file2', $itemsToDelete[1]->getPath());
+        $this->assertTrue($itemsToDelete[1]->isFile());
     }
 
     public function testSyncAll(): void
@@ -477,13 +478,14 @@ class DbafsManagerTest extends TestCase
 
         $changeSet = $manager->sync();
 
-        $this->assertSame(
-            [
-                'files/foo/bar/file1' => ChangeSet::TYPE_FILE,
-                'files/foo/bar/file2' => ChangeSet::TYPE_FILE,
-            ],
-            $changeSet->getItemsToDelete()
-        );
+        $itemsToDelete = $changeSet->getItemsToDelete();
+        $this->assertCount(2, $itemsToDelete);
+
+        $this->assertSame('files/foo/bar/file1', $itemsToDelete[0]->getPath());
+        $this->assertTrue($itemsToDelete[0]->isFile());
+
+        $this->assertSame('files/foo/bar/file2', $itemsToDelete[1]->getPath());
+        $this->assertTrue($itemsToDelete[1]->isFile());
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface

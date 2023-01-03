@@ -444,7 +444,6 @@ abstract class DataContainer extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
-
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -484,6 +483,12 @@ abstract class DataContainer extends Backend
 				try
 				{
 					$this->save($varValue);
+
+					// Confirm password changes
+					if ($objWidget instanceof Password)
+					{
+						Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+					}
 				}
 				catch (ResponseException $e)
 				{
@@ -694,7 +699,16 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+
+					try
+					{
+						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					}
+					catch (\Exception $e)
+					{
+						Message::addError($e->getMessage());
+						$image = Image::getPath('placeholder.svg');
+					}
 				}
 				else
 				{
@@ -787,7 +801,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		foreach (Input::getKeys() as $strKey)
 		{

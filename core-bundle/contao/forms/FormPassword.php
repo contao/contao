@@ -106,7 +106,7 @@ class FormPassword extends Widget
 	 *
 	 * @return mixed The validated user input
 	 */
-	protected function validator($varInput)
+	protected function validator(#[\SensitiveParameter] $varInput)
 	{
 		$this->blnSubmitInput = false;
 

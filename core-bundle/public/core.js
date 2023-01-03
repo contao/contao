@@ -29,6 +29,8 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
+		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+
 		var item = $(id),
 			parent = $(el).getParent('li');
 
@@ -1812,7 +1814,7 @@ var Backend =
 					partElement.setStyle('display', null);
 				}
 				Object.each(values, function(value, key) {
-					inputElements[key].set('value', value.toFixed(15));
+					inputElements[key].set('value', value === '' ? '' : Number(value).toFixed(15));
 				});
 			},
 			start = function(event) {
