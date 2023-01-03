@@ -246,6 +246,12 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame('tl_foo', $dbafs->getArgument(2));
         $this->assertTrue($definition->hasTag('kernel.reset'));
 
+        // Set last modified
+        $this->assertSame(
+            ['useLastModified', [$useLastModified]],
+            $definition->getMethodCalls()[0]
+        );
+
         // Registered at DbafsManager
         $this->assertSame(
             ['register', [$definition, 'some/prefix']],

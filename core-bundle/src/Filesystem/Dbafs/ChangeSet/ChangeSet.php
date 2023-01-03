@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem\Dbafs;
+namespace Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 
 use Symfony\Component\Filesystem\Path;
 
@@ -32,14 +32,15 @@ class ChangeSet
     final public const TYPE_DIRECTORY = 1;
 
     /**
-     * @param array<array<string, string|int>>         $itemsToCreate
-     * @param array<string, array<string, string|int>> $itemsToUpdate
-     * @param array<string, int>                       $itemsToDelete
-     * @param array<string, int|null>                  $lastModifiedUpdates
+     * @param list<array<string, string|int>>              $itemsToCreate
+     * @param array<string|int, array<string, string|int>> $itemsToUpdate
+     * @param array<string|int, int>                       $itemsToDelete
+     * @param array<string|int, int|null>                  $lastModifiedUpdates
      *
-     * @phpstan-param array<CreateItemDefinition> $itemsToCreate
-     * @phpstan-param array<string, UpdateItemDefinition> $itemsToUpdate
-     * @phpstan-param array<string, DeleteItemDefinition> $itemsToDelete
+     * @phpstan-param list<CreateItemDefinition>             $itemsToCreate
+     * @phpstan-param array<array-key, UpdateItemDefinition> $itemsToUpdate
+     * @phpstan-param array<array-key, DeleteItemDefinition> $itemsToDelete
+     * @phpstan-param array<array-key, int|null>             $lastModifiedUpdates
      *
      * @internal
      */
@@ -68,7 +69,7 @@ class ChangeSet
         }
 
         foreach ($changeSet->itemsToUpdate as $path => $item) {
-            $prefixedPath = Path::join($pathPrefix, $path);
+            $prefixedPath = Path::join($pathPrefix, (string) $path);
 
             if (null !== ($newPath = $item[self::ATTR_PATH] ?? null)) {
                 $item = array_merge($item, [self::ATTR_PATH => Path::join($pathPrefix, $newPath)]);
@@ -78,11 +79,11 @@ class ChangeSet
         }
 
         foreach ($changeSet->itemsToDelete as $path => $type) {
-            $itemsToDelete[Path::join($pathPrefix, $path)] = $type;
+            $itemsToDelete[Path::join($pathPrefix, (string) $path)] = $type;
         }
 
         foreach ($changeSet->lastModifiedUpdates as $path => $lastModified) {
-            $lastModifiedUpdates[Path::join($pathPrefix, $path)] = $lastModified;
+            $lastModifiedUpdates[Path::join($pathPrefix, (string) $path)] = $lastModified;
         }
 
         return new self(array_values($itemsToCreate), $itemsToUpdate, $itemsToDelete, $lastModifiedUpdates);
@@ -111,73 +112,89 @@ class ChangeSet
     }
 
     /**
-     * Returns a collection of definitions that describe new items that should
-     * get created.
+     * Returns a list of new items that should get created.
      *
-     * @return array<array<string, string>>
-     *
-     * @phpstan-return array<CreateItemDefinition>
+     * @return list<ItemToCreate>
      */
     public function getItemsToCreate(): array
     {
-        return $this->itemsToCreate;
+        return array_map(
+            static fn (array $item): ItemToCreate => new ItemToCreate(
+                $item['hash'],
+                $item['path'],
+                self::TYPE_FILE === $item['type']
+            ),
+            $this->itemsToCreate
+        );
     }
 
     /**
-     * Returns a list of definitions - each indexed by their existing path -
-     * that describe changes that should be applied to items of those paths.
+     * Returns a list of changes that should be applied to existing items.
      *
      * If $includeLastModified is set to true, changes to last modified
      * timestamps will be included in the definitions.
      *
-     * @return array<string, array<string, string|int>>
-     *
-     * @phpstan-return array<string, UpdateItemDefinition>>
+     * @return list<ItemToUpdate>
      */
     public function getItemsToUpdate(bool $includeLastModified = false): array
     {
-        if (!$includeLastModified) {
-            return $this->itemsToUpdate;
-        }
+        $lastModifiedUpdates = $this->lastModifiedUpdates;
 
-        $lastModifiedUpdates = array_map(
-            static fn (int $value): array => [self::ATTR_LAST_MODIFIED => $value],
-            $this->lastModifiedUpdates
+        $items = array_map(
+            /** @param string|int $existingPath */
+            static function ($existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
+                $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
+                    ? $lastModifiedUpdates[$existingPath]
+                    : false;
+
+                unset($lastModifiedUpdates[$existingPath]);
+
+                return new ItemToUpdate(
+                    (string) $existingPath,
+                    $item[self::ATTR_HASH] ?? null,
+                    $item[self::ATTR_PATH] ?? null,
+                    $lastModified,
+                );
+            },
+            array_keys($this->itemsToUpdate),
+            array_values($this->itemsToUpdate),
         );
 
-        $itemsToUpdate = $this->itemsToUpdate;
-
-        foreach ($itemsToUpdate as $path => &$definition) {
-            if (null !== ($lastModifiedDefinition = $lastModifiedUpdates[$path] ?? null)) {
-                $definition = array_merge($definition, $lastModifiedDefinition);
-                unset($lastModifiedUpdates[$path]);
-            }
+        if (!$includeLastModified) {
+            return $items;
         }
 
-        return [...$lastModifiedUpdates, ...$itemsToUpdate];
+        return array_merge(
+            array_map(
+                /** @param string|int $existingPath */
+                static fn ($existingPath, int $lastModified) => new ItemToUpdate(
+                    (string) $existingPath,
+                    null,
+                    null,
+                    $lastModified
+                ),
+                array_keys($lastModifiedUpdates),
+                array_values($lastModifiedUpdates),
+            ),
+            $items
+        );
     }
 
     /**
-     * Returns a list of items to be deleted. Keys are paths, values the type
-     * of resource (self::TYPE_FILE or self::TYPE_DIRECTORY).
+     * Returns a list of items that should be deleted.
      *
-     * @return array<string, int>
-     *
-     * @phpstan-return array<string, DeleteItemDefinition>
+     * @return list<ItemToDelete>
      */
     public function getItemsToDelete(): array
     {
-        return $this->itemsToDelete;
-    }
-
-    /**
-     * Returns a list of items where the last modified time should be updated.
-     * Keys are paths, values the new timestamp.
-     *
-     * @return array<string, int|null> last modified timestamps indexed by path
-     */
-    public function getLastModifiedUpdates(): array
-    {
-        return $this->lastModifiedUpdates;
+        return array_map(
+            /** @param string|int $path */
+            static fn ($path, int $type): ItemToDelete => new ItemToDelete(
+                (string) $path,
+                self::TYPE_FILE === $type
+            ),
+            array_keys($this->itemsToDelete),
+            array_values($this->itemsToDelete)
+        );
     }
 }

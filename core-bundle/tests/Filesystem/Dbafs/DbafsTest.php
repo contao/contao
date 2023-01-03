@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
@@ -554,9 +554,7 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection, $filesystem);
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
-        $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
-        $this->assertSame($expected->getItemsToUpdate(), $changeSet->getItemsToUpdate(), 'items to update');
-        $this->assertSame($expected->getItemsToDelete(), $changeSet->getItemsToDelete(), 'items to delete');
+        $this->assertSameChangeSet($expected, $changeSet);
     }
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
@@ -971,33 +969,32 @@ class DbafsTest extends TestCase
 
         $changeSet = $dbafs->sync();
 
-        $this->assertSame(
-            [
-                [
-                    ChangeSet::ATTR_HASH => 'cbab7',
-                    ChangeSet::ATTR_PATH => 'new',
-                    ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
-                ],
-            ],
-            $changeSet->getItemsToCreate(),
-        );
+        // Items to create
+        $itemsToCreate = $changeSet->getItemsToCreate();
+        $this->assertCount(1, $itemsToCreate);
 
-        $this->assertSame(
-            [
-                'new' => [ChangeSet::ATTR_LAST_MODIFIED => 201],
-                'file1' => [ChangeSet::ATTR_PATH => 'file2', ChangeSet::ATTR_LAST_MODIFIED => 200],
-            ],
-            $changeSet->getItemsToUpdate(true),
-        );
+        $this->assertSame('cbab7', $itemsToCreate[0]->getHash());
+        $this->assertSame('new', $itemsToCreate[0]->getPath());
+        $this->assertTrue($itemsToCreate[0]->isFile());
 
-        $this->assertSame(
-            [
-                'new' => 201,
-                'file1' => 200,
-            ],
-            $changeSet->getLastModifiedUpdates(),
-        );
+        // Items to update
+        $itemsToUpdate = $changeSet->getItemsToUpdate(true);
+        $this->assertCount(2, $itemsToUpdate);
 
+        $this->assertSame('new', $itemsToUpdate[0]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesHash());
+        $this->assertTrue($itemsToUpdate[0]->updatesLastModified());
+        $this->assertSame(201, $itemsToUpdate[0]->getLastModified());
+
+        $this->assertSame('file1', $itemsToUpdate[1]->getExistingPath());
+        $this->assertTrue($itemsToUpdate[1]->updatesPath());
+        $this->assertFalse($itemsToUpdate[1]->updatesHash());
+        $this->assertTrue($itemsToUpdate[1]->updatesLastModified());
+        $this->assertSame('file2', $itemsToUpdate[1]->getNewPath());
+        $this->assertSame(200, $itemsToUpdate[1]->getLastModified());
+
+        // Items to delete
         $this->assertEmpty($changeSet->getItemsToDelete());
     }
 
