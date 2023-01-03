@@ -354,24 +354,32 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
-                $identifier = ContaoTwigUtil::getIdentifier($shortName);
-
-                if (isset($templatesByNamespace[$namespace][$identifier])) {
+                if (isset($templatesByNamespace[$namespace][$shortName])) {
                     $basePath = Path::getLongestCommonBasePath(...$this->paths[$namespace]);
 
-                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $identifier, $basePath));
+                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $shortName, $basePath));
                 }
 
-                $templatesByNamespace[$namespace][$identifier] = [$shortName, $templatePath];
+                $templatesByNamespace[$namespace][$shortName] = $templatePath;
             }
         }
 
+        $typeByIdentifier = [];
         $hierarchy = [];
 
         foreach ($templatesByNamespace as $namespace => $templates) {
-            foreach ($templates as $identifier => [$shortName, $path]) {
-                if (!isset($hierarchy[$identifier])) {
-                    $hierarchy[$identifier] = [];
+            foreach ($templates as $shortName => $path) {
+                $identifier = ContaoTwigUtil::getIdentifier($shortName);
+
+                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
+                    ? 'html.twig/html5'
+                    : $extension;
+
+                // Make sure all files grouped under a certain identifier share the same type
+                if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
+                    $typeByIdentifier[$identifier] = $type;
+                } elseif ($type !== $existingType) {
+                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
                 }
 
                 $hierarchy[$identifier][$path] = "@$namespace/$shortName";

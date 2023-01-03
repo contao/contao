@@ -91,6 +91,11 @@ abstract class Controller extends System
 	 */
 	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
+		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
+		{
+			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+		}
+
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
 
@@ -118,10 +123,7 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-
-		$identifierPattern = str_contains($strPrefix, '/')
-			? sprintf('/^%s(\/[^\/]+)$/', preg_quote(rtrim($strPrefix, '_'), '/'))
-			: sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(

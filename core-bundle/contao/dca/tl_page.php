@@ -404,7 +404,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'favicon' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg,png'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array
@@ -653,7 +653,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -1036,13 +1036,11 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act'))
+		if (in_array(Input::get('act'), array('paste', 'select', null)))
 		{
-			return;
+			$messages = new Messages();
+			Message::addRaw($messages->languageFallback());
 		}
-
-		$messages = new Messages();
-		Message::addRaw($messages->languageFallback());
 	}
 
 	/**

@@ -77,6 +77,10 @@ class ImagesController extends AbstractContentElementController
             iterator_to_array($filesystemItems)
         );
 
+        if (empty($imageList)) {
+            return new Response();
+        }
+
         $template->set('images', $imageList);
         $template->set('items_per_page', $model->perPage ?: null);
         $template->set('items_per_row', $model->perRow ?: null);
@@ -102,6 +106,6 @@ class ImagesController extends AbstractContentElementController
             return $user->homeDir;
         }
 
-        return $model->multiSRC;
+        return $model->multiSRC ?? [];
     }
 }

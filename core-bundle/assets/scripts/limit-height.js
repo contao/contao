@@ -1,11 +1,3 @@
-/*!
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
-
 window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('div.limit_height').forEach(function (div) {
         const parent = div.parentNode.closest('.tl_content');
@@ -18,13 +10,15 @@ window.addEventListener('DOMContentLoaded', function () {
         // Return if there is no height value
         if (!hgt) return;
 
-        const height = div.offsetHeight;
-
-        // Resize the element
-        div.style.height = hgt+'px';
+        const style = window.getComputedStyle(div, null);
+        const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+        const height = div.clientHeight - padding;
 
         // Do not add the toggle if the preview height is below the max-height
         if (height <= hgt) return;
+
+        // Resize the element if it is higher than the maximum height
+        div.style.height = hgt+'px';
 
         const button = document.createElement('button');
         button.setAttribute('type', 'button');
@@ -32,7 +26,7 @@ window.addEventListener('DOMContentLoaded', function () {
         button.classList.add('unselectable');
 
         button.addEventListener('click', function () {
-            if (div.offsetHeight > hgt) {
+            if (div.style.height == 'auto') {
                 div.style.height = hgt+'px';
             } else {
                 div.style.height = 'auto';

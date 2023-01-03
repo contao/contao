@@ -11,8 +11,7 @@ var gulp = require('gulp'),
 gulp.task('minify-public', function (cb) {
     pump(
         [
-            gulp.src('core-bundle/public/*.js'),
-            ignore.exclude('*.min.js'),
+            gulp.src(['core-bundle/public/core.js', 'core-bundle/public/mootao.js']),
             uglify({
                 output: {
                     comments: false
@@ -78,8 +77,8 @@ gulp.task('minify-theme-icons', function (cb) {
 gulp.task('watch', function () {
     gulp.watch(
         [
-            'core-bundle/public/*.js',
-            '!core-bundle/public/*.min.js'
+            'core-bundle/public/core.js',
+            'core-bundle/public/mootao.js'
         ],
         gulp.series('minify-public')
     );

@@ -47,7 +47,7 @@ class PreviewLinkController
             throw new NotFoundHttpException('Preview link not found.');
         }
 
-        $this->previewAuthenticator->authenticateFrontendGuest((bool) $link['showUnpublished']);
+        $this->previewAuthenticator->authenticateFrontendGuest((bool) $link['showUnpublished'], $id);
 
         return new RedirectResponse($link['url']);
     }

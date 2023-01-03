@@ -359,8 +359,8 @@ class Comments extends Frontend
 
 			// Prepare the notification mail
 			$objEmail = new Email();
-			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
@@ -671,8 +671,8 @@ class Comments extends Frontend
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
 				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);

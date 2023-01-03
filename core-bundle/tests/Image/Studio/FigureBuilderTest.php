@@ -447,6 +447,38 @@ class FigureBuilderTest extends TestCase
         yield 'absolute path' => [$absoluteFilePath];
     }
 
+    public function testBuildIfResourceExistsHandlesFilesThatCannotBeProcessed(): void
+    {
+        $image = $this->createMock(ImageResult::class);
+        $image
+            ->method('getOriginalDimensions')
+            ->willThrowException($innerException = new \Exception('Broken image'))
+        ;
+
+        [$brokenImagePath] = $this->getTestFilePaths();
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createImage')
+            ->with($brokenImagePath, null, null)
+            ->willReturn($image)
+        ;
+
+        $figureBuilder = $this
+            ->getFigureBuilder($studio)
+            ->fromPath($brokenImagePath, false)
+        ;
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame('The file "'.$brokenImagePath.'" could not be opened as an image.', $exception->getMessage());
+        $this->assertSame($innerException, $exception->getPrevious());
+    }
+
     public function testLastExceptionIsResetWhenCallingFrom(): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();

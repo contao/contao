@@ -145,30 +145,12 @@ class PreviewLinkListener
         } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
         } else {
-            $clipboard = $this->generateClipboardData((int) $row['id']);
-
-            $message->addInfo($this->translator->trans(
-                'tl_preview_link.hintEdit',
-                [
-                    $clipboard['content'],
-                    StringUtil::specialchars(json_encode($clipboard)),
-                    $clipboard['content'],
-                ],
-                'contao_tl_preview_link'
+            $message->addInfo(sprintf(
+                '%s: %s',
+                $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
+                $this->generateClipboardLink((int) $row['id'])
             ));
         }
-    }
-
-    /**
-     * Updates tl_preview_link.expiresAt based on expiresInDays selection.
-     */
-    #[AsCallback(table: 'tl_preview_link', target: 'config.onsubmit')]
-    public function updateExpiresAt(DataContainer $dc): void
-    {
-        $this->connection->executeStatement(
-            'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-            [$dc->id]
-        );
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
@@ -192,24 +174,22 @@ class PreviewLinkListener
             return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
         }
 
-        $clipboard = $this->generateClipboardData((int) $row['id']);
-
-        return sprintf(
-            '<a href="%s" target="_blank" title="%s" data-to-clipboard="%s">%s</a> ',
-            $clipboard['content'],
-            StringUtil::specialchars($title),
-            StringUtil::specialchars(json_encode($clipboard)),
-            Image::getHtml($icon, $label)
-        );
+        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
     }
 
-    private function generateClipboardData(int $id): array
+    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->uriSigner->sign($url);
 
-        return [
-            'content' => $this->uriSigner->sign($url),
-            'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
-        ];
+        $title = $title ?? $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
+
+        return sprintf(
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            StringUtil::specialcharsUrl($url),
+            StringUtil::specialchars($title),
+            StringUtil::specialcharsUrl($url),
+            $label ?? $url
+        );
     }
 }
