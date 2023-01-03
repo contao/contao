@@ -1593,7 +1593,7 @@
         <source>protected</source>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
