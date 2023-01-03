@@ -449,7 +449,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function trans($strId, array $arrParams = [], $strDomain = 'contao_default'): never
+    public function trans($strId, array $arrParams = [], $strDomain = 'contao_default', $locale = null): never
     {
         self::throwOnAccess();
     }
