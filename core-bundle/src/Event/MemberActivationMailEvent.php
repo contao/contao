@@ -20,8 +20,13 @@ class MemberActivationMailEvent extends Event
 {
     private bool $sendOptInToken = true;
 
-    public function __construct(private MemberModel $member, private OptInToken $optInToken, private string $subject, private string $text, private array $simpleTokens)
-    {
+    public function __construct(
+        private MemberModel $member,
+        private OptInToken $optInToken,
+        private string $subject,
+        private string $text,
+        private array $simpleTokens,
+    ) {
     }
 
     public function getMember(): MemberModel

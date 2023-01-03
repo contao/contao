@@ -21,7 +21,6 @@ class MemberActivationMailListener
 {
     public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function __invoke(MemberActivationMailEvent $event): void
@@ -32,7 +31,11 @@ class MemberActivationMailListener
             return;
         }
 
-        $channels = $this->connection->fetchFirstColumn('SELECT title FROM tl_newsletter_channel WHERE id IN (?)', [$newsletter], [Types::SIMPLE_ARRAY]);
+        $channels = $this->connection->fetchFirstColumn(
+            'SELECT title FROM tl_newsletter_channel WHERE id IN (?)',
+            [$newsletter],
+            [Types::SIMPLE_ARRAY]
+        );
 
         if (empty($channels)) {
             return;
