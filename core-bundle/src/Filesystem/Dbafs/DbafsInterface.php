@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Symfony\Component\Uid\Uuid;
 
