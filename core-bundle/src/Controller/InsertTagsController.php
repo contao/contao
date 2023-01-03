@@ -45,6 +45,7 @@ class InsertTagsController
         if ('{{date::Y}}' === $insertTag) {
             $response->setPublic();
             $response->setExpires(new \DateTimeImmutable(date('Y').'-12-31 23:59:59'));
+            $response->headers->removeCacheControlDirective('no-store');
         }
 
         return $response;
