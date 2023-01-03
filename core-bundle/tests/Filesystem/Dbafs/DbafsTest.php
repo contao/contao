@@ -553,8 +553,8 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection, $filesystem);
-
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
+
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
@@ -1369,6 +1369,7 @@ class DbafsTest extends TestCase
                 $itemsToDelete[$key]->getPath(),
                 'item to delete has same path'
             );
+
             $this->assertSame(
                 $item->isFile(),
                 $itemsToDelete[$key]->isFile(),

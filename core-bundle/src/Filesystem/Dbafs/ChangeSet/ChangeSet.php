@@ -184,9 +184,10 @@ class ChangeSet
         $items = array_map(
             /** @param string|int $existingPath */
             static function ($existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
-                $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates) ?
-                    $lastModifiedUpdates[$existingPath] : false
-                ;
+                $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
+                    ? $lastModifiedUpdates[$existingPath]
+                    : false;
+
                 unset($lastModifiedUpdates[$existingPath]);
 
                 return new ItemToUpdate(
