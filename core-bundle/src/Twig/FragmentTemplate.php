@@ -72,10 +72,7 @@ final class FragmentTemplate extends Template
         self::throwOnAccess();
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->context[$key] = $value;
     }
