@@ -43,8 +43,8 @@ doctrine:
         auto_generate_proxy_classes: true
 
 contao:
-    localconfig:
-        disableCron: true
+    cron:
+        web_listener: false
     search:
         default_indexer:
             enable: false
