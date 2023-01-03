@@ -1529,6 +1529,9 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
       </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+      </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
       </trans-unit>

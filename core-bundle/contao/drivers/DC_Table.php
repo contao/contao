@@ -164,20 +164,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('requestUri')));
 			}
-			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
 					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
+					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll'),
+					'keep' => Input::post('copyMultiple') !== null
 				);
 
 				$objSession->set('CLIPBOARD', $arrClipboard);
 
 				// Support copyAll in the list view (see #7499)
-				if (Input::post('copy') !== null && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+				if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 				{
 					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
 				}
@@ -940,8 +941,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+
+		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
+		{
+			$arrClipboard[$this->strTable] = array();
+			$objSession->set('CLIPBOARD', $arrClipboard);
+		}
 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
@@ -3908,6 +3913,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 			{
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
+				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
 			}
 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
@@ -4863,6 +4869,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 			{
 				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
+				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
 			}
 
 			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
