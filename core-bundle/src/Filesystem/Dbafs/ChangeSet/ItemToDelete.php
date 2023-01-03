@@ -14,16 +14,11 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 
 class ItemToDelete
 {
-    private string $path;
-    private bool $isFile;
-
     /**
      * @internal
      */
-    public function __construct(string $path, bool $isFile)
+    public function __construct(private string $path, private bool $isFile)
     {
-        $this->path = $path;
-        $this->isFile = $isFile;
     }
 
     public function getPath(): string

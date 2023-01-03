@@ -14,18 +14,11 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 
 class ItemToCreate
 {
-    private string $hash;
-    private string $path;
-    private bool $isFile;
-
     /**
      * @internal
      */
-    public function __construct(string $hash, string $path, bool $isFile)
+    public function __construct(private string $hash, private string $path, private bool $isFile)
     {
-        $this->hash = $hash;
-        $this->path = $path;
-        $this->isFile = $isFile;
     }
 
     public function getHash(): string

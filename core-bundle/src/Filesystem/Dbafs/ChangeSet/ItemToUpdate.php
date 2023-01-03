@@ -14,26 +14,15 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 
 class ItemToUpdate
 {
-    private string $existingPath;
-    private ?string $newHash;
-    private ?string $newPath;
-
     /**
-     * @var false|int|null
-     */
-    private $lastModified;
-
-    /**
-     * @param int|false|null $lastModified
-     *
      * @internal
      */
-    public function __construct(string $existingPath, ?string $newHash, ?string $newPath, $lastModified = false)
-    {
-        $this->existingPath = $existingPath;
-        $this->newHash = $newHash;
-        $this->newPath = $newPath;
-        $this->lastModified = $lastModified;
+    public function __construct(
+        private string $existingPath,
+        private string|null $newHash,
+        private string|null $newPath,
+        private int|false|null $lastModified = false,
+    ) {
     }
 
     public function getExistingPath(): string
@@ -74,7 +63,7 @@ class ItemToUpdate
         return false !== $this->lastModified;
     }
 
-    public function getLastModified(): ?int
+    public function getLastModified(): int|null
     {
         if (false === $this->lastModified) {
             throw new \LogicException(sprintf('The update to item "%s" does not include a last modified date.', $this->existingPath));

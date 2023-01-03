@@ -1249,6 +1249,102 @@ class DbafsTest extends TestCase
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
     }
 
+    private function assertSameChangeSet(ChangeSet $a, ChangeSet $b): void
+    {
+        // Compare items to create
+        $this->assertCount(
+            \count($a->getItemsToCreate()),
+            $itemsToCreate = $b->getItemsToCreate(),
+            'same number of items to create'
+        );
+
+        foreach ($a->getItemsToCreate() as $key => $item) {
+            $this->assertSame(
+                $item->getHash(),
+                $itemsToCreate[$key]->getHash(),
+                'item to create has same hash'
+            );
+
+            $this->assertSame(
+                $item->getPath(),
+                $itemsToCreate[$key]->getPath(),
+                'item to create has same path'
+            );
+        }
+
+        $this->assertCount(
+            \count($a->getItemsToUpdate()),
+            $itemsToUpdate = $b->getItemsToUpdate(true),
+            'same number of items to update'
+        );
+
+        // Compare items to update
+        foreach ($a->getItemsToUpdate(true) as $key => $item) {
+            $this->assertSame(
+                $item->updatesPath(),
+                $itemsToUpdate[$key]->updatesPath(),
+                'item to update modifies/keeps path'
+            );
+
+            if ($item->updatesPath()) {
+                $this->assertSame(
+                    $item->getNewPath(),
+                    $itemsToUpdate[$key]->getNewPath(),
+                    'item to update has same path'
+                );
+            }
+
+            $this->assertSame(
+                $item->updatesHash(),
+                $itemsToUpdate[$key]->updatesHash(),
+                'item to update modifies/keeps hash'
+            );
+
+            if ($item->updatesHash()) {
+                $this->assertSame(
+                    $item->getNewHash(),
+                    $itemsToUpdate[$key]->getNewHash(),
+                    'item to update has same hash'
+                );
+            }
+
+            $this->assertSame(
+                $item->updatesLastModified(),
+                $itemsToUpdate[$key]->updatesLastModified(),
+                'item to update modifies/keeps last modified date'
+            );
+
+            if ($item->updatesLastModified()) {
+                $this->assertSame(
+                    $item->getLastModified(),
+                    $itemsToUpdate[$key]->getLastModified(),
+                    'item to update has same last modified date'
+                );
+            }
+        }
+
+        // Compare items to delete
+        $this->assertCount(
+            \count($a->getItemsToDelete()),
+            $itemsToDelete = $b->getItemsToDelete(),
+            'same number of items to delete'
+        );
+
+        foreach ($a->getItemsToDelete() as $key => $item) {
+            $this->assertSame(
+                $item->getPath(),
+                $itemsToDelete[$key]->getPath(),
+                'item to delete has same path'
+            );
+
+            $this->assertSame(
+                $item->isFile(),
+                $itemsToDelete[$key]->isFile(),
+                'item to delete has same type'
+            );
+        }
+    }
+
     private function getMountManagerWithRootAdapter(): MountManager
     {
         return (new MountManager())->mount(new InMemoryFilesystemAdapter());
