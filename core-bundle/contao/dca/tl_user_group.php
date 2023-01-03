@@ -404,7 +404,7 @@ class tl_user_group extends Backend
 
 					if (DataContainer::isFieldExcluded($k, $kk))
 					{
-						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
+						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span class="label-info">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}

@@ -357,12 +357,13 @@ abstract class Template extends Controller
 	 * @param string $strId
 	 * @param array  $arrParams
 	 * @param string $strDomain
+	 * @param string $locale
 	 *
 	 * @return string
 	 */
-	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
+	public function trans($strId, array $arrParams=array(), $strDomain='contao_default', $locale=null)
 	{
-		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain, $locale);
 	}
 
 	/**

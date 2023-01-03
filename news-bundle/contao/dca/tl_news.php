@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'label' => array
 		(
 			'fields' => array('headline', 'date', 'time'),
-			'format' => '%s <span style="color:#999;padding-left:3px">[%s %s]</span>',
+			'format' => '%s <span class="label-info">[%s %s]</span>',
 		),
 		'global_operations' => array
 		(

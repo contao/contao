@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'label' => array
 		(
 			'fields'                  => array('title', 'formID'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>'
+			'format'                  => '%s <span class="label-info">[%s]</span>'
 		),
 		'global_operations' => array
 		(
@@ -497,7 +497,7 @@ class tl_form extends Backend
 			return $GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options'];
 		}
 
-		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span style="color: #c33;">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
+		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
 		if (!$this->User->isAdmin)
 		{

@@ -44,7 +44,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
         $this->getRepository()->deleteBySeries($series);
     }
 
-    public function updateToken(string $series, string $tokenValue, \DateTime $lastUsed): void
+    public function updateToken(string $series, #[\SensitiveParameter] string $tokenValue, \DateTime $lastUsed): void
     {
         $rememberMe = $this->getRepository()->findBySeries($series);
         $rememberMe->setValue($tokenValue);

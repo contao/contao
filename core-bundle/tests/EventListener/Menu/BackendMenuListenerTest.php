@@ -211,7 +211,7 @@ class BackendMenuListenerTest extends TestCase
             )
         ;
 
-        $request = new Request();
+        $request = Request::create('https://localhost/contao?do=pages&ref=123456');
         $request->attributes->set('_contao_referer_id', 'bar');
 
         $requestStack = new RequestStack();
@@ -271,8 +271,8 @@ class BackendMenuListenerTest extends TestCase
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(3, $grandChildren);
-        $this->assertSame(['info', 'login', 'security'], array_keys($grandChildren));
+        $this->assertCount(4, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'favorites'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
@@ -290,6 +290,12 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
+
+        // Favorites
+        $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
+        $this->assertSame('/contao?do=favorites&ref=bar', $grandChildren['favorites']->getUri());
+        $this->assertSame(['class' => 'icon-favorites'], $grandChildren['favorites']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
         $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());

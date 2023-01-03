@@ -122,6 +122,12 @@
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
       </trans-unit>
