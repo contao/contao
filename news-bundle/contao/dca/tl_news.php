@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('date'),
+			'fields'                  => array('date DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'headline'
@@ -174,8 +174,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -187,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'default'                 => time(),
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_MONTH_DESC,
+			'flag'                    => DataContainer::SORT_MONTH_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'load_callback' => array

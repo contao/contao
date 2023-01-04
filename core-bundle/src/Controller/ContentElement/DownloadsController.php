@@ -59,7 +59,7 @@ class DownloadsController extends AbstractContentElementController
         // TODO: Remove method and move logic into its own action, once we have
         // a strategy how to handle permissions for downloads via a real route.
         // See #4862 for more details.
-        $this->handleDownload($request);
+        $this->handleDownload($request, $model);
 
         $filesystemItems = $this->getFilesystemItems($model);
 
@@ -222,16 +222,19 @@ class DownloadsController extends AbstractContentElementController
         }
     }
 
-    private function handleDownload(Request $request): void
+    private function handleDownload(Request $request, ContentModel $model): void
     {
         $response = $this->fileDownloadHelper->handle(
             $request,
             $this->filesStorage,
-            function (FilesystemItem $item, array $context): Response|null {
-                if (
-                    null === ($model = $this->getContaoAdapter(ContentModel::class)->findById($context['id'] ?? null)) ||
-                    !$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())
-                ) {
+            function (FilesystemItem $item, array $context) use ($model): Response|null {
+                // Do not handle downloads from other DownloadController
+                // elements on the same page (see #5568)
+                if ($model->id !== ($context['id'] ?? null)) {
+                    return new Response('', Response::HTTP_NO_CONTENT);
+                }
+
+                if (!$this->getFilesystemItems($model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())) {
                     return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
                 }
 

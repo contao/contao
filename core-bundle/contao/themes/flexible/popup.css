@@ -19,7 +19,6 @@ body {
 }
 
 .tl_show td {
-	padding: 4px 6px;
 	line-height: 18px;
 	white-space: pre-line;
 }
@@ -27,10 +26,6 @@ body {
 .tl_show td:first-child {
 	width: 34%;
 	white-space: normal;
-}
-
-.tl_show tr:nth-child(even) td {
-	background: var(--table-odd);
 }
 
 .tl_label {
@@ -62,7 +57,7 @@ body {
 
 #preview .checkerbox {
 	background-size: 30px 30px;
-	background-color: var(--white);
+	background-color: var(--content-bg);
 	background-image: linear-gradient(45deg, var(--checkerbox-bg) 25%, transparent 25%, transparent 75%, var(--checkerbox-bg) 75%, var(--checkerbox-bg)), linear-gradient(45deg, var(--checkerbox-bg) 25%, transparent 25%, transparent 75%, var(--checkerbox-bg) 75%, var(--checkerbox-bg));
 	background-position: 0 0, 15px 15px;
 }

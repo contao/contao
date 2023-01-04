@@ -15,9 +15,10 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
-use Rector\Php74\Rector\Property\TypedPropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Set\ValueObject\SetList;
 
@@ -43,6 +44,8 @@ return static function (RectorConfig $rectorConfig): void {
             '*/src/Entity/*',
         ],
         ChangeSwitchToMatchRector::class,
+        FirstClassCallableRector::class,
+        NullToStrictStringFuncCallArgRector::class,
         ReadOnlyPropertyRector::class,
     ]);
 
@@ -51,5 +54,4 @@ return static function (RectorConfig $rectorConfig): void {
     $services->set(CompactToVariablesRector::class);
     $services->set(RemoveUnusedPrivateMethodParameterRector::class);
     $services->set(RestoreDefaultNullToNullableTypePropertyRector::class);
-    $services->set(TypedPropertyRector::class);
 };
