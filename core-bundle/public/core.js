@@ -66,7 +66,7 @@ var AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getFirst('img');
+			image = $(el).getElement('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
@@ -155,7 +155,7 @@ var AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getFirst('img');
+			image = $(el).getElement('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
@@ -348,7 +348,7 @@ var AjaxRequest =
 
 						if (pa && pa.href.indexOf('contao/preview') == -1) {
 							if (next = pa.getNext('a')) {
-								img = next.getFirst('img');
+								img = next.getElement('img');
 							} else {
 								img = new Element('img'); // no icons used (see #2286)
 							}
@@ -404,7 +404,7 @@ var AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getFirst('img');
+			image = $(el).getElement('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
