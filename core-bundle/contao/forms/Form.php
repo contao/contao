@@ -120,7 +120,7 @@ class Form extends Hybrid
 
 		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
 
-		// Add confirmation to the template and remove it afterward
+		// Add a confirmation to the template and remove it afterwards
 		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 		{
 			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
@@ -604,7 +604,7 @@ class Form extends Hybrid
 			$targetPageData = $objJumpTo->row();
 		}
 
-		// Set the confirmation message, if any
+		// Set the confirmation message if any
 		if ($this->objModel->confirmation)
 		{
 			$confirmation = $this->objModel->confirmation;
