@@ -6,8 +6,8 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <?php if ($this->confirmation): ?>
-    <?php $this->insert('form_confirmation', $this->arrData) ?>
+  <?php if ($this->message): ?>
+    <?php $this->insert('form_message', $this->arrData) ?>
   <?php else: ?>
     <?php $this->insert('form_inline', $this->arrData) ?>
   <?php endif; ?>

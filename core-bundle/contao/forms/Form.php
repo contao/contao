@@ -162,7 +162,7 @@ class Form extends Hybrid
 
 			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
 			{
-				$this->Template->confirmation = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
 			}
 		}
 
@@ -648,9 +648,9 @@ class Form extends Hybrid
 		// Set the confirmation message if any
 		if ($this->objModel->confirmation)
 		{
-			$confirmation = $this->objModel->confirmation;
-			$confirmation = System::getContainer()->get('contao.string.simple_token_parser')->parse($confirmation, array_map(StringUtil::specialchars(...), $arrSubmitted));
-			$confirmation = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($confirmation);
+			$message = $this->objModel->confirmation;
+			$message = System::getContainer()->get('contao.string.simple_token_parser')->parse($message, array_map(StringUtil::specialchars(...), $arrSubmitted));
+			$message = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($message);
 
 			$requestStack = System::getContainer()->get('request_stack');
 			$request = $requestStack->getCurrentRequest();
@@ -658,14 +658,14 @@ class Form extends Hybrid
 			// Throw the response exception if it's an AJAX request
 			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
-				$confirmationTemplate = new FrontendTemplate('form_confirmation');
+				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());
-				$confirmationTemplate->confirmation = $confirmation;
+				$confirmationTemplate->message = $message;
 
 				throw new ResponseException($confirmationTemplate->getResponse());
 			}
 
-			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $confirmation));
+			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $message));
 		}
 
 		// Redirect or reload if there is a target page
