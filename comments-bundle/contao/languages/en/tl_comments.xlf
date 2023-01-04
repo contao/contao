@@ -69,7 +69,7 @@
         <source>Here you can enter the reply.</source>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
+        <source>Published</source>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

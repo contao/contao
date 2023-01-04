@@ -6382,9 +6382,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$group = $value;
 
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null) && ($label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['multiple'] ?? null)))
 			{
-				$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
+				$label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null);
+
+				if ($label)
+				{
+					$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
+				}
 			}
 		}
 

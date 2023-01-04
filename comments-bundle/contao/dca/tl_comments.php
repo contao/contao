@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
-			'fields'                  => array('date DESC'),
+			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'comment'
 		),
@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'flag'                    => DataContainer::SORT_MONTH_BOTH,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -219,6 +219,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
+			'sorting'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'save_callback' => array
