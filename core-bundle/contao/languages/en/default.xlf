@@ -1881,7 +1881,7 @@
         <source>Remember me</source>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
       </trans-unit>
       <trans-unit id="MSC.activation">
         <source>Activation token</source>
