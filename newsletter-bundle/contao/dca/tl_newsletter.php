@@ -234,8 +234,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'senderName' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'load_callback' => array

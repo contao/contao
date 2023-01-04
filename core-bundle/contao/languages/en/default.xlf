@@ -1529,6 +1529,9 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
       </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+      </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
       </trans-unit>
@@ -1593,7 +1596,7 @@
         <source>protected</source>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -1878,7 +1881,7 @@
         <source>Remember me</source>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
       </trans-unit>
       <trans-unit id="MSC.activation">
         <source>Activation token</source>

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -366,12 +367,6 @@ class ModuleRegistration extends Module
 		// Disable account
 		$arrData['disable'] = 1;
 
-		// Make sure newsletter is an array
-		if (isset($arrData['newsletter']) && !\is_array($arrData['newsletter']))
-		{
-			$arrData['newsletter'] = array($arrData['newsletter']);
-		}
-
 		// Create the user
 		$objNewUser = new MemberModel();
 		$objNewUser->setRow($arrData);
@@ -453,7 +448,8 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
-		$optIn = System::getContainer()->get('contao.opt_in');
+		$container = System::getContainer();
+		$optIn = $container->get('contao.opt_in');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
@@ -461,32 +457,23 @@ class ModuleRegistration extends Module
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
 		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
-		$arrTokenData['channels'] = '';
 
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
+		$event = new MemberActivationMailEvent(
+			MemberModel::findByPk($arrData['id']),
+			$optInToken,
+			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			$this->reg_text,
+			$arrTokenData,
+		);
 
-		if (isset($bundles['ContaoNewsletterBundle']))
-		{
-			// Make sure newsletter is an array
-			$arrData['newsletter'] = (array) ($arrData['newsletter'] ?? null);
-
-			// Replace the wildcard
-			if (!empty($arrData['newsletter']))
-			{
-				$objChannels = NewsletterChannelModel::findByIds($arrData['newsletter']);
-
-				if ($objChannels !== null)
-				{
-					$arrTokenData['channels'] = implode("\n", $objChannels->fetchEach('title'));
-				}
-			}
-		}
+		$container->get('event_dispatcher')->dispatch($event);
 
 		// Send the token
-		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_text, $arrTokenData)
-		);
+		if ($event->shouldSendOptInToken())
+		{
+			$text = $container->get('contao.string.simple_token_parser')->parse($event->getText(), $event->getSimpleTokens());
+			$optInToken->send($event->getSubject(), $text);
+		}
 	}
 
 	/**

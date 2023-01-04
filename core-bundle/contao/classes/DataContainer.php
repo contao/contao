@@ -132,6 +132,36 @@ abstract class DataContainer extends Backend
 	public const SORT_DESC = 12;
 
 	/**
+	 * Sort by initial letter ascending and descending
+	 */
+	public const SORT_INITIAL_LETTER_BOTH = 13;
+
+	/**
+	 * Sort by initial two letters ascending and descending
+	 */
+	public const SORT_INITIAL_LETTERS_BOTH = 14;
+
+	/**
+	 * Sort by day ascending and descending
+	 */
+	public const SORT_DAY_BOTH = 15;
+
+	/**
+	 * Sort by month ascending and descending
+	 */
+	public const SORT_MONTH_BOTH = 16;
+
+	/**
+	 * Sort by year ascending and descending
+	 */
+	public const SORT_YEAR_BOTH = 17;
+
+	/**
+	 * Sort ascending and descending
+	 */
+	public const SORT_BOTH = 18;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -1587,7 +1617,7 @@ abstract class DataContainer extends Backend
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 			{
 				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 				{

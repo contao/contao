@@ -16,12 +16,15 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
 class Cron
 {
+    final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
     final public const SCOPE_WEB = 'web';
     final public const SCOPE_CLI = 'cli';
 
@@ -34,8 +37,38 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
+    public function __construct(
+        private \Closure $repository,
+        private \Closure $entityManager,
+        private CacheItemPoolInterface $cachePool,
+        private LoggerInterface|null $logger = null,
+    ) {
+    }
+
+    public function hasMinutelyCliCron(): bool
     {
+        return $this->cachePool->getItem(self::MINUTELY_CACHE_KEY)->isHit();
+    }
+
+    public function updateMinutelyCliCron(string $scope): PromiseInterface|null
+    {
+        if (self::SCOPE_CLI !== $scope) {
+            return null;
+        }
+
+        $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
+        $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
+        $this->cachePool->saveDeferred($cacheItem);
+
+        // Using a promise here not because the cache file takes forever to create but in order to make sure
+        // it's one of the first cron jobs that are executed. The fact that we can use deferred cache item
+        // saving is an added bonus.
+        return $promise = new Promise(
+            function () use (&$promise): void {
+                $this->cachePool->commit();
+                $promise->resolve('Saved cache item.');
+            }
+        );
     }
 
     public function addCronJob(CronJob $cronjob): void

@@ -140,14 +140,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'source' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'parent' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'date' => array
@@ -221,6 +219,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
+			'sorting'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'save_callback' => array

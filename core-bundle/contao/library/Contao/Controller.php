@@ -1455,7 +1455,7 @@ abstract class Controller extends System
 
 		if ($strStaticUrl = $context->getStaticUrl())
 		{
-			return $strStaticUrl . $script;
+			return $strStaticUrl . ltrim($script, '/');
 		}
 
 		return $script;
