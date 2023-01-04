@@ -192,7 +192,6 @@ class FormText extends Widget
 					case HttpUrlListener::RGXP_NAME:
 						return 'url';
 
-					// We can use the HTML5 date type as the validation has been adjusted (see #4936)
 					case 'date':
 						return 'date';
 				}
