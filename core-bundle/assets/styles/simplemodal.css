@@ -1,0 +1,235 @@
+/*
+* Mootools Simple Modal
+* Version 1.0
+* Copyright (c) 2011 Marco Dell'Anna - http://www.plasm.it
+*
+* Markup Modal
+* <div class="simple-modal" id="simple-modal">
+*   <div class="simple-modal-header">
+*     <a class="close" href="#">×</a>
+*     <h1>SimpleModal Title</h1>
+*   </div>
+*   <div class="simple-modal-body">
+*     <div class="contents">
+*       <p>
+*         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+*       </p>
+*     </div>
+*   </div>
+*   <div class="simple-modal-footer">
+*     <a class="btn primary" href="#">Primary</a>
+*     <a class="btn secondary" href="#">Secondary</a>
+*   </div>
+* </div>
+*/
+
+/* Vars */
+:root {
+    --loader: url("../images/loader.svg");
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --loader: url("../images/loader-dark.svg");
+    }
+}
+
+/* Overlay style */
+#simple-modal-overlay {
+    position: fixed;
+    display: block;
+    z-index: 399998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
+.simple-modal {
+    width: 600px;
+    left: 20px;
+    top: 20px;
+    position: fixed;
+    margin: 0;
+    color: #808080;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    background-color: var(--content-bg);
+    border: 1px solid var(--content-border);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    z-index: 399999;
+    border-radius: 2px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+    .simple-modal {
+        font-weight: 300;
+    }
+}
+
+/* PATCH: see #6028 */
+.ios .simple-modal {
+    overflow: auto;
+    bottom: 40px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ios .simple-modal:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 101%;
+    pointer-events: none;
+}
+
+.simple-modal .simple-modal-header {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--content-border);
+    border-radius: 2px 2px 0 0;
+    background-color: var(--panel-bg);
+}
+
+.simple-modal .simple-modal-header h1 {
+    margin: 0;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    padding: 18px 12px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+    .simple-modal .simple-modal-header h1 {
+        font-weight: 500;
+    }
+}
+
+.simple-modal a.close {
+    position: absolute;
+    right: 10px;
+    top: 19px;
+    color: #999;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 10px;
+    text-decoration: none;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+    .simple-modal a.close {
+        font-weight: 300;
+    }
+}
+
+.simple-modal a.close:hover {
+    color: #666;
+}
+
+.simple-modal .simple-modal-body {
+    padding: 0;
+}
+
+.simple-modal .simple-modal-body div.contents {
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.simple-modal .simple-modal-body p {
+    font-size: 13px;
+    font-weight: 400;
+    color: #606060;
+    line-height: 18px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+    .simple-modal .simple-modal-body p {
+        font-weight: 300;
+    }
+}
+
+.simple-modal .simple-modal-body p img {
+    display: block;
+    margin: 0 auto 10px auto;
+}
+
+.simple-modal .simple-modal-footer {
+    display: block;
+    background-color: var(--panel-bg);
+    padding: 12px;
+    border-top: 1px solid var(--content-border);
+    border-radius: 0 0 2px 2px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.simple-modal .simple-modal-footer a.btn {
+    margin-left: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    background: var(--content-bg);
+    padding: 7px 12px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid var(--content-border);
+    border-radius: 2px;
+}
+
+.simple-modal .simple-modal-footer a.btn:hover {
+    background: var(--form-button-hover);
+}
+
+.simple-modal .simple-modal-footer a.btn:active {
+    color: #aaa;
+}
+
+.simple-modal .simple-modal-footer a.btn-disabled {
+    cursor: not-allowed;
+    color: #bbb;
+    background-color: #f9f9f9;
+    border-color: #c8c8c8;
+}
+
+.simple-modal .simple-modal-footer a.btn-disabled:hover {
+    box-shadow: none;
+}
+
+/* Draggable style */
+.simple-modal.draggable .simple-modal-header:hover {
+    cursor: move;
+    background-color: #f8f8f8;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+/* Loading style */
+.simple-modal.loading .simple-modal-body {
+    min-height: 60px;
+    background: transparent var(--loader) no-repeat center center;
+}
+
+.simple-modal.loading .simple-modal-body div.contents {
+    display: none;
+}
+
+.simple-modal.loading .close, .simple-modal.loading .simple-modal-header, .simple-modal.loading .simple-modal-footer {
+    display: none;
+}
+
+/* Hide header */
+.simple-modal.hide-header .simple-modal-header {
+    display: none;
+}
+
+/* Hide footer */
+.simple-modal.hide-footer .simple-modal-footer {
+    display: none;
+}

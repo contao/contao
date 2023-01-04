@@ -6,8 +6,11 @@
       ]
     },
     "backend": {
+      "css": [
+        "/bundles/contaocore/backend.4d8cd9d0.css"
+      ],
       "js": [
-        "/bundles/contaocore/backend.25f3db11.js"
+        "/bundles/contaocore/backend.933c192c.js"
       ]
     }
   }

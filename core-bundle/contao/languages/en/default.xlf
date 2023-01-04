@@ -1376,9 +1376,6 @@
       <trans-unit id="MSC.datepicker">
         <source>Date picker</source>
       </trans-unit>
-      <trans-unit id="MSC.colorpicker">
-        <source>Color picker</source>
-      </trans-unit>
       <trans-unit id="MSC.pagepicker">
         <source>Page picker</source>
       </trans-unit>
