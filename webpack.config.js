@@ -4,7 +4,7 @@ Encore
     .setOutputPath('core-bundle/public/')
     .setPublicPath('/bundles/contaocore')
     .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild(['**/*', '!core.**', '!mootao.**'])
+    .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .enableSourceMaps()
     .enableVersioning()

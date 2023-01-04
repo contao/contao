@@ -1,17 +1,9 @@
-/*!
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
-
 /**
  * Provide methods to handle Ajax requests.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-var AjaxRequest =
+window.AjaxRequest =
 {
 	/**
 	 * The theme path
@@ -482,7 +474,7 @@ var AjaxRequest =
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-var Backend =
+window.Backend =
 {
 	/**
 	 * The current ID
