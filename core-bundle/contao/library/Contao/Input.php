@@ -545,9 +545,9 @@ class Input
 	/**
 	 * Strip HTML and PHP tags preserving HTML comments
 	 *
-	 * @param mixed  $varValue             A string or array
-	 * @param string $strAllowedTags       A string of tags to preserve
-	 * @param string $strAllowedAttributes A serialized string of attributes to preserve
+	 * @param mixed                                       $varValue             A string or array
+	 * @param string                                      $strAllowedTags       A string of tags to preserve
+	 * @param string|list<array{key:string,value:string}> $strAllowedAttributes A serialized string of attributes to preserve
 	 *
 	 * @return mixed The cleaned string or array
 	 */
