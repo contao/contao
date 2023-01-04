@@ -62,6 +62,11 @@ class Form extends Hybrid
 	protected $strTemplate = 'form_wrapper';
 
 	/**
+	 * @var array<string>
+	 */
+	private array $errors = array();
+
+	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
 	 * @return string
@@ -93,6 +98,36 @@ class Form extends Hybrid
 		}
 
 		return parent::generate();
+	}
+
+	/**
+	 * @return array<string>
+	 */
+	public function getErrors(): array
+	{
+		return $this->errors;
+	}
+
+	public function hasErrors(): bool
+	{
+		return !empty($this->errors);
+	}
+
+	/**
+	 * @param array<string> $errors
+	 */
+	public function setErrors(array $errors): self
+	{
+		$this->errors = $errors;
+
+		return $this;
+	}
+
+	public function addError(string $error): self
+	{
+		$this->errors[] = $error;
+
+		return $this;
 	}
 
 	/**
@@ -248,7 +283,7 @@ class Form extends Hybrid
 		}
 
 		// Remove any uploads, if form did not validate (#1185)
-		if ($doNotSubmit && $hasUpload)
+		if (($doNotSubmit || $this->hasErrors()) && $hasUpload)
 		{
 			foreach ($arrFiles as $upload)
 			{
@@ -266,7 +301,7 @@ class Form extends Hybrid
 
 		// Add a warning to the page title
 		if (
-			$doNotSubmit
+			($doNotSubmit || $this->hasErrors())
 			&& !Environment::get('isAjaxRequest')
 			&& ($responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext())
 			&& $responseContext->has(HtmlHeadBag::class)
@@ -289,7 +324,8 @@ class Form extends Hybrid
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
 
-		$this->Template->hasError = $doNotSubmit;
+		$this->Template->hasError = $doNotSubmit || $this->hasErrors();
+		$this->Template->errors = $this->getErrors();
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
@@ -558,6 +594,11 @@ class Form extends Hybrid
 		else
 		{
 			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by a guest.');
+		}
+
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Check whether there is a jumpTo page
