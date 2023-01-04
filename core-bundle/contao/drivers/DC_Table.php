@@ -5564,7 +5564,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$sessionValue = str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '');
 			}
 
-			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $value == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . '>' . $options_label . '</option>';
+			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . '>' . $options_label . '</option>';
 		}
 
 		// Sort by option values
