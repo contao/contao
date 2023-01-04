@@ -3739,7 +3739,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
 		}
 
-		$icon = !empty($GLOBALS['TL_DCA'][$table]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] : 'pagemounts.svg';
+		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'pagemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
 		// Check the default labels (see #509)

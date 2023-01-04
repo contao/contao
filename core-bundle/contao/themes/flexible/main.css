@@ -6,6 +6,24 @@
  * @license LGPL-3.0-or-later
  */
 
+:root {
+	--icon-logo: url("icons/logo.svg");
+	--icon-profile: url("icons/profile_small.svg");
+	--icon-security: url("icons/shield_small.svg");
+	--icon-favorites: url("icons/favorites_small.svg");
+	--icon-logout: url("icons/exit.svg");
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--icon-logo: url("icons-dark/logo.svg");
+		--icon-profile: url("icons-dark/profile_small.svg");
+		--icon-security: url("icons-dark/shield_small.svg");
+		--icon-favorites: url("icons-dark/favorites_small.svg");
+		--icon-logout: url("icons-dark/exit.svg");
+	}
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -31,7 +49,7 @@ body.popup {
 	display: block;
 	height: 16px;
 	padding: 12px 12px 12px 42px;
-	background: url("icons/logo.svg") no-repeat 10px center;
+	background: var(--icon-logo) no-repeat 10px center;
 	font-weight: 400;
 }
 
@@ -59,10 +77,6 @@ body.popup {
 	margin: 0;
 	padding: 13px 12px;
 	display: inline-block;
-}
-
-#tmenu img {
-	vertical-align: top;
 }
 
 #tmenu sup {
@@ -212,19 +226,19 @@ body.popup {
 }
 
 #tmenu .icon-profile {
-	background: url("icons/profile_dark.svg") 20px center no-repeat;
+	background: var(--icon-profile) 20px center no-repeat;
 }
 
 #tmenu .icon-security {
-	background: url("icons/shield_dark.svg") 20px center no-repeat;
+	background: var(--icon-security) 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {
-	background: url("icons/favorites_dark.svg") 20px center no-repeat;
+	background: var(--icon-favorites) 20px center no-repeat;
 }
 
 #tmenu .icon-logout {
-	background: url("icons/exit_dark.svg") 20px center no-repeat;
+	background: var(--icon-logout) 20px center no-repeat;
 }
 
 /* Container */
@@ -620,6 +634,7 @@ h2.sub_headline {
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
+	border: 1px solid var(--active-border);
 }
 
 .tl_filter {
@@ -1101,7 +1116,7 @@ table.tl_listing {
 }
 
 .tl_right_nowrap {
-	padding: 6px 0;
+	padding: 6px;
 	vertical-align: top;
 	text-align: right;
 	white-space: nowrap;
@@ -1189,7 +1204,7 @@ table.tl_listing {
 }
 
 .tl_listing_container + .tl_empty {
-	margin-top: -32px;
+	margin-top: -18px;
 }
 
 .tl_noopt {
@@ -1716,9 +1731,9 @@ label.tl_change_selected {
 	margin: 0 0 12px;
 	padding: 4px 6px;
 	overflow: hidden;
-	background: var(--table-header);
-	border: solid var(--tree-header-border);
-	border-width: 1px 0;
+	background: var(--active-bg);
+	border: 1px solid var(--active-border);
+	border-radius: 2px;
 	line-height: 24px;
 }
 
@@ -1869,10 +1884,6 @@ ul.sgallery li {
 	width: 32px;
 	white-space: nowrap;
 	text-align: right;
-}
-
-#tl_versions img.undo {
-	padding-right: 2px;
 }
 
 #tl_versions .pagination {
@@ -2497,7 +2508,7 @@ time[title] {
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */
 .tl_text_trbl, .tl_imageSize_0, .tl_imageSize_1, #ctrl_playerSize input {
-	background: url("icons/hints.svg") no-repeat right 1px top 2px;
+	background: var(--form-bg) url("icons/hints.svg") no-repeat right 1px top 2px;
 }
 
 #ctrl_playerSize_1, .tl_imageSize_1 {
@@ -2720,6 +2731,7 @@ fieldset.collapsed > legend {
 	min-height: auto !important;
 	border: 3px dashed var(--border) !important;
 	border-radius: 2px;
+	background: var(--form-bg) !important;
 }
 
 .dropzone-filetree {

@@ -313,10 +313,10 @@ var AjaxRequest =
 		el.blur();
 
 		var img = null,
-			image = $(el).getFirst('img'),
+			image = $(el).getElement('img'),
 			published = (image.get('data-state') == 1),
 			div = el.getParent('div'),
-			next, pa;
+			next, pa, src;
 
 		if (rowIcon) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -343,9 +343,7 @@ var AjaxRequest =
 			if (img !== null) {
 				// Tree view
 				if (img.nodeName.toLowerCase() == 'img') {
-					if (img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
-						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-					} else {
+					if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 						pa = img.getParent('a');
 
 						if (pa && pa.href.indexOf('contao/preview') == -1) {
@@ -355,8 +353,12 @@ var AjaxRequest =
 								img = new Element('img'); // no icons used (see #2286)
 							}
 						}
+					}
 
-						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
+					img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
+
+					if ((src = img.getPrevious('source')) && src.srcset.indexOf('/icons-dark/') != -1) {
+						src.srcset = !published ? img.get('data-icon').replace('/icons/', '/icons-dark/') : img.get('data-icon-disabled').replace('/icons/', '/icons-dark/');
 					}
 				}
 				// Parent view
@@ -379,6 +381,10 @@ var AjaxRequest =
 		// Send request
 		image.src = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 		image.set('data-state', !published ? 1 : 0);
+
+		if ((src = image.getPrevious('source')) && src.srcset.indexOf('/icons-dark/') != -1) {
+			src.srcset = !published ? image.get('data-icon').replace('/icons/', '/icons-dark/') : image.get('data-icon-disabled').replace('/icons/', '/icons-dark/');
+		}
 
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 

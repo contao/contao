@@ -6,14 +6,8 @@
  * @license LGPL-3.0-or-later
  */
 
-/* HTML */
-html {
-	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-}
-
 /* Appearance */
-body {
+:root {
 	--text: #222;
 	--body-bg: #e2e5e9;
 	--content-bg: #fff;
@@ -59,21 +53,20 @@ body {
 	--form-button-hover: #f6f6f6;
 	--form-button-active: #aaa;
 	--form-button-disabled: #e9e9e9;
-	--diff-ins: #060;
-	--diff-ins-bg: #bfb;
-	--diff-del: #a00;
-	--diff-del-bg: #fbb;
-	--diff-left-bg: #fdd;
-	--diff-right-bg: #dfd;
+	--diff-left: #ffebe9;
+	--diff-del: #ffc1bf;
+	--diff-right: #e6ffec;
+	--diff-ins: #abf2bc;
 	--code-bg: #f0f0f0;
 	--checkerbox-bg: #ddd;
 	--info: #808080;
 	--active-bg: #fffce1;
+	--active-border: #e7b36a;
 	--pre-disabled: #a6a6a6;
-	--error-bg: #faebeb;
-	--confirm-bg: #eefcde;
-	--info-bg: #e9f0f7;
-	--new-bg: #fbf2e5;
+	--error-bg: rgba(204,51,51,0.15);
+	--confirm-bg: rgba(88,155,14,0.15);
+	--info-bg: rgba(0,100,148,0.15);
+	--new-bg: rgba(224,149,21,0.15);
 	--progress-running: #f47c00;
 	--progress-finished: #589b0e;
 	--drag-bg: #a3c2db;
@@ -82,6 +75,69 @@ body {
 	--serp-preview: #3c4043;
 	--serp-preview-title: #1a0dab;
 	--nested-bg: #fbfbfd;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--text: #ddd;
+		--body-bg: #121416;
+		--content-bg: #1b1d21;
+		--content-border: #4e5156;
+		--black: #fff;
+		--white: #000;
+		--blue: #0073a8;
+		--contao: #f47c00;
+		--border: #3a3c40;
+		--nav-bg: #1b1d21;
+		--nav-hover-bg: #1b325f;
+		--nav-current: #292c32;
+		--nav-separator: #3f3f3f;
+		--hover-row: #1b325f;
+		--header-bg: #292c32;
+		--header-bg-hover: #202327;
+		--invert-bg: #7e8695;
+		--invert-text: #222;
+		--table-header: #232529;
+		--table-odd: #1b1d21;
+		--table-even: #1e2024;
+		--table-nb-header: #292c32;
+		--table-nb-odd: #1b1d21;
+		--table-nb-even: #23252a;
+		--panel-bg: #292c32;
+		--tree-header: #292c32;
+		--tree-header-border: #3f4146;
+		--form-text-disabled: #666;
+		--form-border: #44464b;
+		--form-border-disabled: #3a3c40;
+		--form-bg: #151619;
+		--form-bg-hover: #1e2024;
+		--form-bg-disabled: #1e2024;
+		--form-button: #31333a;
+		--form-button-hover: #383a42;
+		--form-button-active: #777;
+		--form-button-disabled: #26272c;
+		--diff-left: rgba(248,81,73,0.15);
+		--diff-del: rgba(248,81,73,0.4);
+		--diff-right: rgba(46,160,67,0.15);
+		--diff-ins: rgba(46,160,67,0.4);
+		--code-bg: #30343b;
+		--checkerbox-bg: #30343b;
+		--info: #9095a2;
+		--active-bg: #1b325f;
+		--active-border: #264787;
+		--drag-bg: #1b325f;
+		--legend: #747b8b;
+		--serp-preview: #bdc1c6;
+		--serp-preview-title: #8ab4f8;
+		--nested-bg: #1e2024;
+		--datepicker-hover: #393e46;
+	}
+}
+
+/* HTML */
+html {
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
 }
 
 /* General */
@@ -352,7 +408,8 @@ p {
 }
 
 .widget legend img {
-	vertical-align: -3px;
+	margin-left: 3px;
+	vertical-align: top;
 }
 
 .widget-captcha {
@@ -365,6 +422,10 @@ p {
 	background: var(--panel-bg);
 	line-height: 1.3;
 	border-radius: 3px;
+}
+
+.widget picture {
+	display: contents;
 }
 
 /* Forms */
@@ -693,7 +754,7 @@ select[multiple] {
 
 .tl_submit:disabled {
 	color: var(--gray);
-	background: var(--form-button-disabled);
+	background: var(--form-button-disabled) !important;
 	cursor: not-allowed;
 }
 
