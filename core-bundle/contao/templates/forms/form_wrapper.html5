@@ -11,6 +11,7 @@
   <?php else: ?>
     <?php $this->insert('form_inline', $this->arrData) ?>
   <?php endif; ?>
+
 </div>
 <!-- indexer::continue -->
 
