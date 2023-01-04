@@ -6,14 +6,8 @@
  * @license LGPL-3.0-or-later
  */
 
-/* HTML */
-html {
-	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-}
-
 /* Appearance */
-body {
+:root {
 	--text: #222;
 	--body-bg: #e2e5e9;
 	--content-bg: #fff;
@@ -84,7 +78,7 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-	body {
+	:root {
 		--text: #ddd;
 		--body-bg: #121416;
 		--content-bg: #1b1d21;
@@ -99,6 +93,8 @@ body {
 		--nav-current: #292c32;
 		--nav-separator: #3f3f3f;
 		--hover-row: #1b325f;
+		--header-bg: #292c32;
+		--header-bg-hover: #202327;
 		--invert-bg: #7e8695;
 		--invert-text: #222;
 		--table-header: #232529;
@@ -136,6 +132,12 @@ body {
 		--nested-bg: #1e2024;
 		--datepicker-hover: #393e46;
 	}
+}
+
+/* HTML */
+html {
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
 }
 
 /* General */

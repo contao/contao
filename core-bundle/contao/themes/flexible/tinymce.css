@@ -6,16 +6,20 @@
  * @license LGPL-3.0-or-later
  */
 
-body {
+:root {
 	--text: #222;
-	background: #fff;
+	--body-bg: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
-	body {
+	:root {
 		--text: #ddd;
-		background: #151619;
+		--body-bg: #151619;
 	}
+}
+
+body {
+	background: var(--body-bg);
 }
 
 body, th, td {

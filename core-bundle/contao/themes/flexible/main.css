@@ -6,6 +6,24 @@
  * @license LGPL-3.0-or-later
  */
 
+:root {
+	--icon-logo: url("icons/logo.svg");
+	--icon-profile: url("icons/profile_small.svg");
+	--icon-security: url("icons/shield_small.svg");
+	--icon-favorites: url("icons/favorites_small.svg");
+	--icon-logout: url("icons/exit.svg");
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--icon-logo: url("icons-dark/logo.svg");
+		--icon-profile: url("icons-dark/profile_small.svg");
+		--icon-security: url("icons-dark/shield_small.svg");
+		--icon-favorites: url("icons-dark/favorites_small.svg");
+		--icon-logout: url("icons-dark/exit.svg");
+	}
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -31,7 +49,7 @@ body.popup {
 	display: block;
 	height: 16px;
 	padding: 12px 12px 12px 42px;
-	background: url("icons/logo.svg") no-repeat 10px center;
+	background: var(--icon-logo) no-repeat 10px center;
 	font-weight: 400;
 }
 
@@ -208,37 +226,19 @@ body.popup {
 }
 
 #tmenu .icon-profile {
-	background: url("icons/profile_small.svg") 20px center no-repeat;
+	background: var(--icon-profile) 20px center no-repeat;
 }
 
 #tmenu .icon-security {
-	background: url("icons/shield_small.svg") 20px center no-repeat;
+	background: var(--icon-security) 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {
-	background: url("icons/favorites_small.svg") 20px center no-repeat;
+	background: var(--icon-favorites) 20px center no-repeat;
 }
 
 #tmenu .icon-logout {
-	background: url("icons/exit.svg") 20px center no-repeat;
-}
-
-@media (prefers-color-scheme: dark) {
-	#tmenu .icon-profile {
-		background-image: url("icons-dark/profile_small.svg");
-	}
-
-	#tmenu .icon-security {
-		background-image: url("icons-dark/shield_small.svg");
-	}
-
-	#tmenu .icon-favorites {
-		background-image: url("icons-dark/favorites_small.svg");
-	}
-
-	#tmenu .icon-logout {
-		background-image: url("icons-dark/exit.svg");
-	}
+	background: var(--icon-logout) 20px center no-repeat;
 }
 
 /* Container */
