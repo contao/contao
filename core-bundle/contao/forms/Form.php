@@ -10,8 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle front end forms.
@@ -36,6 +38,7 @@ use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
 	 * Model
@@ -86,15 +89,18 @@ class Form extends Hybrid
 			return $objTemplate->parse();
 		}
 
-		if ($this->customTpl)
+		// Use the custom template unless it is a back end request
+		if ($this->customTpl && (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)))
 		{
-			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$this->strTemplate = $this->customTpl;
+		}
 
-			// Use the custom template unless it is a back end request
-			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-			{
-				$this->strTemplate = $this->customTpl;
-			}
+		// Use the inline template in AJAX request
+		if ($this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+		{
+			$this->strTemplate = 'form_inline';
+
+			throw new ResponseException(new Response(parent::generate()));
 		}
 
 		return parent::generate();
@@ -140,12 +146,25 @@ class Form extends Hybrid
 		$arrSubmitted = array();
 
 		$this->loadDataContainer('tl_form_field');
-		$formId = $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
+		$formId = $this->getFormId();
 
 		$this->Template->fields = '';
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
+
+		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+
+		// Add a confirmation to the template and remove it afterwards
+		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		{
+			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			{
+				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+			}
+		}
 
 		$arrLabels = array();
 		$arrFiles = array();
@@ -330,6 +349,7 @@ class Form extends Hybrid
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
+		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
 		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -337,6 +357,22 @@ class Form extends Hybrid
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();
 		}
+	}
+
+	/**
+	 * Get the form ID.
+	 */
+	protected function getFormId(): string
+	{
+		return $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
+	}
+
+	/**
+	 * Return true if the Ajax is enabled.
+	 */
+	protected function isAjaxEnabled(): bool
+	{
+		return $this->method === 'POST' && $this->ajax;
 	}
 
 	/**
@@ -601,10 +637,41 @@ class Form extends Hybrid
 			return;
 		}
 
+		$targetPageData = null;
+
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			$this->jumpToOrReload($objJumpTo->row());
+			$targetPageData = $objJumpTo->row();
+		}
+
+		// Set the confirmation message if any
+		if ($this->objModel->confirmation)
+		{
+			$message = $this->objModel->confirmation;
+			$message = System::getContainer()->get('contao.string.simple_token_parser')->parse($message, array_map(StringUtil::specialchars(...), $arrSubmitted));
+			$message = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($message);
+
+			$requestStack = System::getContainer()->get('request_stack');
+			$request = $requestStack->getCurrentRequest();
+
+			// Throw the response exception if it's an AJAX request
+			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			{
+				$confirmationTemplate = new FrontendTemplate('form_message');
+				$confirmationTemplate->setData($this->Template->getData());
+				$confirmationTemplate->message = $message;
+
+				throw new ResponseException($confirmationTemplate->getResponse());
+			}
+
+			$requestStack->getSession()->getFlashBag()->set(self::SESSION_CONFIRMATION_KEY, array('id' => $this->id, 'message' => $message));
+		}
+
+		// Redirect or reload if there is a target page
+		if ($targetPageData !== null)
+		{
+			$this->jumpToOrReload($targetPageData);
 		}
 
 		$this->reload();

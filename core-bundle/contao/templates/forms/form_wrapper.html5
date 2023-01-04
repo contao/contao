@@ -6,24 +6,16 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="<?= $this->method ?>" enctype="<?= $this->enctype ?>"<?= $this->attributes ?><?= $this->novalidate ?>>
-    <div class="formbody">
-      <?php if ($this->errors): ?>
-        <?php foreach ($this->errors as $error): ?>
-          <p class="error"><?= $error ?></p>
-        <?php endforeach; ?>
-      <?php endif; ?>
-      <?php if ('get' != $this->method): ?>
-        <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formSubmit ?>">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-        <?php if ($this->maxFileSize): ?>
-          <input type="hidden" name="MAX_FILE_SIZE" value="<?= $this->maxFileSize ?>">
-        <?php endif; ?>
-      <?php endif; ?>
-      <?= $this->hidden ?>
-      <?= $this->fields ?>
-    </div>
-  </form>
+  <?php if ($this->message): ?>
+    <?php $this->insert('form_message', $this->arrData) ?>
+  <?php else: ?>
+    <?php $this->insert('form_inline', $this->arrData) ?>
+  <?php endif; ?>
 
 </div>
 <!-- indexer::continue -->
+
+<?php
+if ($this->ajax) {
+    $GLOBALS['TL_JAVASCRIPT'][] = $this->asset('ajax-form.js', 'contao_core');
+}
