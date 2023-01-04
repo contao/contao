@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Een voorbeeld van het uiteindelijke pad (mogelijk met tijdelijke aanduidingen) dat bij deze pagina past.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Routeprioriteit</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Configureer optioneel de prioriteit om de volgorde van routes te beïnvloeden. Standaard: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.1">
         <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Toon bezoekers een pagina dat deze website momenteel wordt onderhouden.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -175,22 +179,26 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.0">
         <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Schakel rel=&quot;canonical&quot; in</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.1">
         <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Voeg rel=&quot;canonical&quot;-tags toe aan de website.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.0">
         <source>Custom URL</source>
         <target>Aangepaste URL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
+        <target>Queryparameters</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
         <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Contao verwijdert standaard de queryparameters in de canonieke URL. Hier kunt u een door komma's gescheiden lijst met queryparameters toevoegen die u wilt bewaren. Gebruik &quot;*&quot; als jokerteken.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -245,8 +253,7 @@
         <target>URL prefix</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
-        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Voer een URL-voorvoegsel in (bijv. de taal) dat wordt toegevoegd aan aliassen voor deze hoofdpagina.</target>
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -306,9 +313,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Subpagina layout</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Hier kunt u een andere lay-out voor subpagina's selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -406,22 +415,6 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Verberg de pagina in het navigatiemenu</target>
       </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-        <target>Alleen zichtbaar voor gasten</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-        <target>Verberg de pagina als een lid is ingelogd.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-        <target>Tab navigatie</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-        <target>Dit nummer specificeert de positie van het huidige navigatie element in de TAB-volgorde. U kunt een nummer tussen 1 en 32767 opgeven.</target>
-      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Toegangscombinatie</target>
@@ -476,6 +469,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Routing</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -483,6 +477,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonical_legend">
         <source>Canonical URL</source>
+        <target>Canonieke URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -570,6 +565,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Pagina lay-out overnemen</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -623,18 +619,17 @@
         <source>Edit the articles of page ID %s</source>
         <target>Bewerk artikelen van pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-        <target>Schakel de oude routeringsmodus uit om deze configuratie in te schakelen.</target>
-      </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Routeconflicten</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>De volgende pagina's hebben een vergelijkbare alias die mogelijk in strijd is met deze pagina. Als de URL niet correct is opgelost, probeer dan de prioriteit van de routes te wijzigen.</target>
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Schakel canonieke URL's in de hoofdpagina van de website in om deze configuratie in te schakelen.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

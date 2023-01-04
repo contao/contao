@@ -52,7 +52,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'lastname'
 		),
 		'label' => array
 		(
@@ -104,7 +105,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
+			'search'                  => true
 		),
 		'tstamp' => array
 		(
@@ -114,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -123,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -232,7 +234,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.intl.locales')->getLocales(null, false);
+				return System::getContainer()->get('contao.intl.locales')->getLocales();
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -434,9 +436,9 @@ class tl_member extends Backend
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
-			Image::getPath($image),
-			Image::getPath($disabled ? $image : rtrim($image, '_')),
-			Image::getPath(rtrim($image, '_') . '_')
+			Image::getUrl($image),
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_')
 		);
 
 		return $args;

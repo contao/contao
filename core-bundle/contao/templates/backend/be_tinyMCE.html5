@@ -16,26 +16,28 @@ window.tinymce && tinymce.init({
   document_base_url: '<?= Environment::get('base') ?>',
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
+  promotion: false,
   skin: 'tinymce-5',
   setup: function(editor) {
     editor.getElement().removeAttribute('required');
+    document.querySelectorAll('[accesskey]').forEach(function(el) {
+      editor.addShortcut('access+' + el.accessKey, el.id, () => el.click());
+    });
   },
   init_instance_callback: function(editor) {
     if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
       editor.editorManager.get(editor.id).focus();
     }
-    editor.on('focus', function() { Backend.getScrollOffset(); });
+    editor.on('focus', () => Backend.getScrollOffset());
   },
 
   <?php $this->block('picker'); ?>
-    file_picker_callback: function (callback, value, meta) {
+    file_picker_callback: function(callback, value, meta) {
       Backend.openModalSelector({
         'id': 'tl_listing',
         'title': document.getElement('.tox-dialog__title').get('text'),
         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
-        'callback': function(table, val) {
-          callback(val.join(','));
-        }
+        'callback': function(table, val) { callback(val.join(',')); }
       });
     },
     file_picker_types: '<?= $this->fileBrowserTypes ?>',
@@ -50,7 +52,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('valid_elements'); ?>
-    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption,a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|data-lightbox]',
   <?php $this->endblock(); ?>
 
   <?php $this->block('menubar'); ?>

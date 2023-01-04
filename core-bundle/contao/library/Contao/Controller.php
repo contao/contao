@@ -91,6 +91,11 @@ abstract class Controller extends System
 	 */
 	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
+		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
+		{
+			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+		}
+
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
 
@@ -467,18 +472,6 @@ abstract class Controller extends System
 		if (!static::isVisibleElement($objRow))
 		{
 			return '';
-		}
-
-		// Print the article as PDF
-		if (Input::get('pdf') !== null && $objRow->printable && Input::get('pdf') == $objRow->id)
-		{
-			$options = StringUtil::deserialize($objRow->printable);
-
-			if (\is_array($options) && \in_array('pdf', $options))
-			{
-				$objArticle = new ModuleArticle($objRow);
-				$objArticle->generatePdf();
-			}
 		}
 
 		$objRow->headline = $objRow->title;
@@ -1167,13 +1160,12 @@ abstract class Controller extends System
 	/**
 	 * Load a set of DCA files
 	 *
-	 * @param string  $strTable   The table name
-	 * @param boolean $blnNoCache If true, the cache will be bypassed
+	 * @param string $strTable The table name
 	 */
-	public static function loadDataContainer($strTable, $blnNoCache=false)
+	public static function loadDataContainer($strTable)
 	{
 		$loader = new DcaLoader($strTable);
-		$loader->load($blnNoCache);
+		$loader->load();
 	}
 
 	/**
@@ -1438,20 +1430,6 @@ abstract class Controller extends System
 		}
 
 		$objTemplate->enclosure = $arrEnclosures;
-	}
-
-	/**
-	 * Set the static URL constants
-	 */
-	public static function setStaticUrls()
-	{
-		if (\defined('TL_FILES_URL'))
-		{
-			return;
-		}
-
-		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
-		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
 	}
 
 	/**

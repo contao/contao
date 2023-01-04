@@ -16,6 +16,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -45,26 +46,29 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $token = new UsernamePasswordToken($user, 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend', $user->getRoles());
 
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
             return false;
         }
 
-        $session = $request->getSession();
         $session->set('_security_contao_frontend', serialize($token));
         $session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
 
         return true;
     }
 
-    public function authenticateFrontendGuest(bool $showUnpublished): bool
+    public function authenticateFrontendGuest(bool $showUnpublished, int $previewLinkId = null): bool
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
             return false;
         }
 
-        $request->getSession()->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
+        $session->set(self::SESSION_NAME, ['previewLinkId' => $previewLinkId, 'showUnpublished' => $showUnpublished]);
 
         return true;
     }
@@ -74,11 +78,11 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
             return false;
         }
-
-        $session = $request->getSession();
 
         if (!$session->isStarted() || (!$session->has('_security_contao_frontend') && !$session->has(self::SESSION_NAME))) {
             return false;

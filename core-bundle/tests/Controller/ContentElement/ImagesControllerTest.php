@@ -39,7 +39,7 @@ class ImagesControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/image">
+            <div class="content-image">
                 <figure>
                     <img src="files/image1.jpg" alt="alt text">
                 </figure>
@@ -72,7 +72,7 @@ class ImagesControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/gallery">
+            <div class="content-gallery--cols-2 content-gallery">
                 <ul>
                     <li>
                         <figure>
@@ -89,5 +89,34 @@ class ImagesControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testDoesNotOutputAnythingWithoutImages(): void
+    {
+        $security = $this->createMock(Security::class);
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            [
+                'type' => 'image',
+                'singleSRC' => null,
+                'sortBy' => 'name_desc',
+                'fullsize' => true,
+            ],
+        );
+
+        $this->assertSame('', $response->getContent());
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            [
+                'type' => 'gallery',
+                'multiSRC' => null,
+                'sortBy' => 'name_desc',
+                'fullsize' => true,
+            ],
+        );
+
+        $this->assertSame('', $response->getContent());
     }
 }

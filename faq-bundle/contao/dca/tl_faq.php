@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
+use Contao\Environment;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\Input;
@@ -56,9 +57,11 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
-			'child_record_callback'   => array('tl_faq', 'listQuestions')
+			'child_record_callback'   => array('tl_faq', 'listQuestions'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -101,9 +104,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'sorting' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
@@ -113,7 +113,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'question' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
@@ -132,10 +131,9 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -436,7 +434,7 @@ class tl_faq extends Backend
 				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
 										 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
@@ -537,12 +535,10 @@ class tl_faq extends Backend
 
 		if (!$objTarget = PageModel::findByPk($jumpTo))
 		{
-			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
+			return StringUtil::ampersand(Environment::get('request'));
 		}
 
-		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl('/%s'));
-
-		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
+		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 	}
 
 	/**
@@ -559,7 +555,7 @@ class tl_faq extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">
 <h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";

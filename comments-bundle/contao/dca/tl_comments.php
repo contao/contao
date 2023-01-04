@@ -70,7 +70,8 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'comment'
 		),
 		'label' => array
 		(
@@ -139,14 +140,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'source' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'parent' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'date' => array
@@ -202,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -220,6 +219,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
+			'sorting'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'save_callback' => array
@@ -294,7 +294,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
 				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))
@@ -333,7 +333,7 @@ class tl_comments extends Backend
 	public function notifyOfReply(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
-		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
+		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifiedReply)
 		{
 			return;
 		}
@@ -348,8 +348,8 @@ class tl_comments extends Backend
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
 				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
@@ -473,9 +473,9 @@ class tl_comments extends Backend
 	 */
 	public function sendNotifications($varValue)
 	{
-		if ($varValue)
+		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk(Input::get('id')));
+			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
 		}
 
 		return $varValue;
@@ -566,11 +566,9 @@ class tl_comments extends Backend
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
 		return '
-<div class="comment_wrap">
 <div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="limit_height mark_links' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h60' : '') . '">
 ' . $arrRow['comment'] . '
-</div>
 </div>' . "\n    ";
 	}
 

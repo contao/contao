@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="ja">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="ja">
     <body>
       <trans-unit id="XPL.insertTags.0.0">
         <source>Rich text editor</source>
@@ -30,8 +30,8 @@
         <target>colspan</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
-        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter variant front end formats in the site structure (website root pages).&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
-        <target>ContaoはPHPのdate()関数が解釈できる、すべての日付と時刻の書式をサポートしています。しかし、どのような入力でもUNIXタイムスタンプに確実に変換できるように、バックエンドでは数値の日付と時刻の書式(j, d, m, n, y, Y, g, G, h, H, i, s)だけ使用できます。&lt;br&gt;&lt;br&gt;&lt;strong&gt;サイト構造(ウェブサイトのルートのページ)で、フロントエンドでは様々な書式を使用できます。&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;有効な日付と時刻の書式の例を示します:&lt;/em&gt;:</target>
+        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>ContaoはPHPのdate()関数が解釈できる、すべての日付と時刻の書式をサポートしています。しかし、どのような入力でもUNIXタイムスタンプに確実に変換できるように、バックエンドでは数値の日付と時刻の書式(j, d, m, n, y, Y, g, G, h, H, i, s)だけ使用できます。&lt;br&gt;&lt;br&gt;&lt;strong&gt;ウェブサイトのルートのページで、フロントエンドの異なる書式を入力できます。&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;有効な日付と時刻の書式の例を示します:&lt;/em&gt;:</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>

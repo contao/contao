@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
@@ -24,7 +32,6 @@ use PhpCsFixer\Fixer\Phpdoc\PhpdocOrderFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocScalarFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocSeparationFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocSummaryFixer;
-use PhpCsFixer\Fixer\Phpdoc\PhpdocToCommentFixer;
 use PhpCsFixer\Fixer\ReturnNotation\ReturnAssignmentFixer;
 use PhpCsFixer\Fixer\Semicolon\MultilineWhitespaceBeforeSemicolonsFixer;
 use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
@@ -63,7 +70,6 @@ return static function (ECSConfig $ecsConfig): void {
         PhpdocScalarFixer::class,
         PhpdocSeparationFixer::class,
         PhpdocSummaryFixer::class,
-        PhpdocToCommentFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
         StrictComparisonFixer::class,

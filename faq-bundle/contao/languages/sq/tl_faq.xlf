@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_faq.php" source-language="en" target-language="sq">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="sq">
     <body>
       <trans-unit id="tl_faq.question.0">
         <source>Question</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
-        <target>Këtu mund të shtoni një titull në nivel meta për të zëvendësuar titullin e faqes parazgjedhore.</target>
+        <target>Here you can add a custom meta title to overwrite the default page title. Këtu mund të shtoni një titull në nivel meta për të zëvendësuar titullin e faqes parazgjedhore.</target>
       </trans-unit>
       <trans-unit id="tl_faq.robots.0">
         <source>Robots tag</source>
@@ -58,7 +58,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
-        <target>Përshkrim në nivel meta</target>
+        <target>Përshkrim të nivelit meta</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>

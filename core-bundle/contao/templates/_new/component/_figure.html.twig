@@ -54,7 +54,7 @@
 
         {# Caption #}
         {% block caption %}
-            {% if figure.hasMetadata|default(false) and figure.metadata.caption %}
+            {% if figure.metadata and figure.metadata.caption %}
                 {% set caption_attributes = attrs()
                     .mergeWith(figure.options.caption_attr|default)
                     .mergeWith(caption_attributes|default)

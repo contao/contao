@@ -51,7 +51,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'sort,search,limit'
+			'panelLayout'             => 'sort,search,limit',
+			'defaultSearchField'      => 'name'
 		),
 		'label' => array
 		(

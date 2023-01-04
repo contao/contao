@@ -63,6 +63,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_image_size', 'listImageSize')
 		),
@@ -260,7 +261,7 @@ class tl_image_size extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
@@ -324,12 +325,12 @@ class tl_image_size extends Backend
 
 		if ($row['width'] || $row['height'])
 		{
-			$html .= ' <span style="color:#999;padding-left:3px">' . $row['width'] . 'x' . $row['height'] . '</span>';
+			$html .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
 		}
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span style="color:#999;padding-left:3px">(' . (int) $row['zoom'] . '%)</span>';
+			$html .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
 		}
 
 		$html .= "</div>\n";

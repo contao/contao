@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_maintenance.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_maintenance.cacheTables.0">
         <source>Purge data</source>
@@ -79,17 +79,19 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>De preview-cache leegmaken</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Verwijdert de automatisch gegenereerde voorbeeldafbeeldingen en zuivert vervolgens de gedeelde cache, zodat er geen links naar verwijderde bronnen zijn.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Opschonen script cache</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
-        <target>Verwijdert de automatisch gegenereerde &lt;code&gt;.css&lt;/code&gt; en&lt;code&gt;.js&lt;/code&gt;bestanden, maakt de interne style sheets aan en schoont de gedeelde cache op.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Verwijdert de automatisch gegenereerde &lt;code&gt;.css&lt;/code&gt; en &lt;code&gt;.js&lt;/code&gt; bestanden en zuivert vervolgens de gedeelde cache, zodat er geen links zijn naar verwijderde bronnen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
@@ -112,8 +114,8 @@
         <target>XML bestanden opnieuw opbouwen</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Bouwt de XML-bestanden (sitemaps en feeds) en schoont de gedeelde pagina cache op, zodat er geen links naar verwijderde bronnen zijn.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Maakt de XML-bestanden opnieuw aan in de &lt;code&gt;gedeelde&lt;/code&gt; map en verwijdert vervolgens de gedeelde cache, zodat er geen koppelingen zijn naar verwijderde bronnen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -151,13 +153,14 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>De crawler werkt momenteel. Wacht tot het klaar is om de resultaten te zien.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Download het foutopsporingslogboek</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
-        <target>Download het logboek</target>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

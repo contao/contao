@@ -29,11 +29,11 @@
   <?= $this->javascripts ?>
 
 </head>
-<body class="popup">
+<body>
 
   <div id="container">
     <main id="main">
-      <table class="tl_show">
+      <table class="tl_show zebra-table zebra-table--no-border">
         <tr>
           <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
           <td><?= $this->ctime ?></td>

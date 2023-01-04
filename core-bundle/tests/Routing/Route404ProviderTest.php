@@ -115,7 +115,7 @@ class Route404ProviderTest extends TestCase
             $pageRegistry
         );
 
-        $routes = $provider->getRoutesByNames(null);
+        $routes = $provider->getRoutesByNames();
 
         $this->assertIsArray($routes);
         $this->assertCount(2, $routes);

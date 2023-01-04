@@ -95,6 +95,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
+            - '@cache.app'
             - '@?logger'
 
     contao.cron.purge_expired_data:
@@ -203,6 +204,11 @@ services:
     contao.filesystem.dbafs_manager:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
         public: true
+
+    contao.filesystem.file_download_helper:
+        class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        arguments:
+            - '@uri_signer'
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
@@ -710,8 +716,8 @@ services:
         arguments:
             - '@.inner'
             - '@contao.security.access_decision_manager.priority'
-            - '@contao.routing.scope_matcher'
             - '@request_stack'
+            - '@security.firewall.map'
 
     contao.security.access_decision_manager.priority:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
@@ -738,6 +744,12 @@ services:
             - '@contao.framework'
         tags:
             - { name: kernel.reset, method: reset }
+
+    contao.security.backend_favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendFavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -811,7 +823,7 @@ services:
     contao.security.remember_me_token_provider:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
         arguments:
-            - '@contao.repository.remember_me'
+            - !service_closure '@contao.repository.remember_me'
 
     contao.security.token_checker:
         public: true
@@ -822,6 +834,7 @@ services:
             - '@security.token_storage'
             - '@security.authentication.trust_resolver'
             - ~
+            - '@database_connection'
 
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
@@ -850,6 +863,14 @@ services:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
             - '@contao.framework'
+
+    contao.session.factory:
+        class: Contao\CoreBundle\Session\SessionFactory
+        decorates: session.factory
+        arguments:
+            - '@contao.session.factory.inner'
+            - '@contao.session.contao_backend'
+            - '@contao.session.contao_frontend'
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
@@ -969,6 +990,18 @@ services:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    contao.twig.finder_factory:
+        class: Contao\CoreBundle\Twig\Finder\FinderFactory
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.loader.theme_namespace'
+            - '@translator'
+
+    contao.twig.formatter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
@@ -979,6 +1012,7 @@ services:
 
     contao.twig.inspector:
         class: Contao\CoreBundle\Twig\Inspector\Inspector
+        public: true
         arguments:
             - '@twig'
 
@@ -1033,6 +1067,7 @@ services:
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
+    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor: '@contao.routing.response_context_accessor'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
@@ -1041,5 +1076,6 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'

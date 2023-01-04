@@ -67,6 +67,10 @@ class FaviconController
             case 'ico':
                 $response->headers->set('Content-Type', 'image/x-icon');
                 break;
+
+            case 'png':
+                $response->headers->set('Content-Type', 'image/png');
+                break;
         }
 
         $this->entityCacheTags->tagWithModelInstance($rootPage);

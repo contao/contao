@@ -84,7 +84,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
-			'panelLayout'             => 'filter;search'
+			'panelLayout'             => 'filter;search',
+			'defaultSearchField'      => 'pageTitle'
 		),
 		'label' => array
 		(
@@ -403,7 +404,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'favicon' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg'),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg,png'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'robotsTxt' => array
@@ -652,7 +653,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -729,7 +730,7 @@ class tl_page extends Backend
 			return;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -1035,13 +1036,11 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act'))
+		if (in_array(Input::get('act'), array('paste', 'select', null)))
 		{
-			return;
+			$messages = new Messages();
+			Message::addRaw($messages->languageFallback());
 		}
-
-		$messages = new Messages();
-		Message::addRaw($messages->languageFallback());
 	}
 
 	/**
@@ -1081,7 +1080,7 @@ class tl_page extends Backend
 			return;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Store the ID in the session
 		$session = $objSession->get('sitemap_updater');
@@ -1452,7 +1451,7 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			$objSession = System::getContainer()->get('session');
+			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1548,7 +1547,7 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

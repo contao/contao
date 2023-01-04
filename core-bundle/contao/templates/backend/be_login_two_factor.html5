@@ -35,7 +35,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body<?= $this->attributes ?>>
+<body class="be_login_two_factor"<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
     <div id="container">

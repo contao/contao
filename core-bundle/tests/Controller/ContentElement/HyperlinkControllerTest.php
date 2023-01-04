@@ -14,14 +14,13 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
 use Contao\StringUtil;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -36,7 +35,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 <a href="/my-link.html">/my-link.html</a>
             </div>
             HTML;
@@ -47,7 +46,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -62,7 +61,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 See the <a href="https://www.php.net/manual/en/function.sprintf.php" title="sprintf() documentation" target="_blank" rel="noreferrer noopener">sprintf() documentation</a>
                 on how to use the %s placeholder.
             </div>
@@ -74,7 +73,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsImageLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
@@ -89,7 +88,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content_element/hyperlink">
+            <div class="content-hyperlink">
                 <figure>
                     This is me…
                     <a href="/foo.html#demo" data-lightbox="bar">

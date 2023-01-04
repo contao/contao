@@ -28,11 +28,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_news_archive', 'adjustDca'),
-			array('tl_news_archive', 'generateFeed')
-		),
 		'oncreate_callback' => array
 		(
 			array('tl_news_archive', 'adjustPermissions')
@@ -40,10 +35,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'oncopy_callback' => array
 		(
 			array('tl_news_archive', 'adjustPermissions')
-		),
-		'onsubmit_callback' => array
-		(
-			array('tl_news_archive', 'scheduleUpdate')
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
@@ -66,7 +57,8 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit'
+			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
@@ -75,13 +67,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		),
 		'global_operations' => array
 		(
-			'feeds' => array
-			(
-				'href'                => 'table=tl_news_feed',
-				'class'               => 'header_rss',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_news_archive', 'manageFeeds')
-			),
 			'all' => array
 			(
 				'href'                => 'act=select',
@@ -286,7 +271,7 @@ class tl_news_archive extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -335,82 +320,6 @@ class tl_news_archive extends Backend
 			$root[] = $insertId;
 			$this->User->news = $root;
 		}
-	}
-
-	/**
-	 * Check for modified news feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('session');
-		$session = $objSession->get('news_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$this->import(News::class, 'News');
-
-		foreach ($session as $id)
-		{
-			$this->News->generateFeedsByArchive($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('news_feed_updater', null);
-	}
-
-	/**
-	 * Schedule a news feed update
-	 *
-	 * This method is triggered when a single news archive or multiple news
-	 * archives are modified (edit/editAll).
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function scheduleUpdate(DataContainer $dc)
-	{
-		// Return if there is no ID
-		if (!$dc->id)
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('session');
-
-		// Store the ID in the session
-		$session = $objSession->get('news_feed_updater');
-		$session[] = $dc->id;
-		$objSession->set('news_feed_updater', array_unique($session));
-	}
-
-	/**
-	 * Return the manage feeds button
-	 *
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $class
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function manageFeeds($href, $label, $title, $class, $attributes)
-	{
-		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || !empty($this->User->newsfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**

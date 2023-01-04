@@ -30,8 +30,6 @@ class PurgePreviewLinksCron
 
     public function __invoke(): void
     {
-        $this->connection->executeStatement(
-            'DELETE FROM tl_preview_link WHERE createdAt<=UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL 31 DAY))'
-        );
+        $this->connection->executeStatement('DELETE FROM tl_preview_link WHERE expiresAt <= UNIX_TIMESTAMP()');
     }
 }

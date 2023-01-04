@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @experimental
@@ -83,7 +84,7 @@ class FilesystemItem implements \Stringable
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
      */
-    public function withMetadataIfNotDefined($lastModified, $fileSize, $mimeType): self
+    public function withMetadataIfNotDefined(\Closure|int|null $lastModified, \Closure|int|null $fileSize, \Closure|string|null $mimeType): self
     {
         return new self(
             $this->isFile,
@@ -117,6 +118,16 @@ class FilesystemItem implements \Stringable
         return $this->path;
     }
 
+    public function getExtension(bool $forceLowerCase = false): string
+    {
+        return Path::getExtension($this->path, $forceLowerCase);
+    }
+
+    public function getName(): string
+    {
+        return basename($this->path);
+    }
+
     public function getLastModified(): int|null
     {
         $this->resolveIfClosure($this->lastModified);
@@ -132,20 +143,35 @@ class FilesystemItem implements \Stringable
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(): string
+    public function getMimeType(string $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
-        $this->resolveIfClosure($this->mimeType);
+        $exception = null;
 
-        return $this->mimeType ?? '';
+        try {
+            $this->resolveIfClosure($this->mimeType);
+        } catch (VirtualFilesystemException $e) {
+            $this->mimeType = null;
+            $exception = $e;
+        }
+
+        if (null === $this->mimeType && null === $default) {
+            throw VirtualFilesystemException::unableToRetrieveMetadata($this->path, $exception, 'A mime type could not be detected. Set the "$default" argument to suppress this exception.');
+        }
+
+        return $this->mimeType ?? $default;
     }
 
     public function getExtraMetadata(): array
     {
-        $this->assertIsFile(__FUNCTION__);
         $this->resolveIfClosure($this->extraMetadata);
 
         return $this->extraMetadata;
+    }
+
+    public function getUuid(): Uuid|null
+    {
+        return $this->getExtraMetadata()['uuid'] ?? null;
     }
 
     private function assertIsFile(string $method): void

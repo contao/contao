@@ -1,12 +1,29 @@
 {
     "devDependencies": {
+        "@babel/core": "^7.19.3",
+        "@babel/preset-env": "^7.19.4",
+        "@hotwired/stimulus": "^3.1.0",
+        "@hotwired/stimulus-webpack-helpers": "^1.0.1",
+        "@symfony/webpack-encore": "^4.0.0",
+        "autoprefixer": "^10.4.12",
         "gulp": "^4.0.2",
         "gulp-csso": "^4.0.1",
-        "gulp-ignore": "^3.0.0",
-        "gulp-rename": "^2.0.0",
-        "gulp-svgo": "^2.1.1",
+        "gulp-ignore": "^3.0",
+        "gulp-rename": "^2.0",
+        "gulp-svgo": "^2.2.1",
         "gulp-uglify-es": "^3.0",
-        "pump": "^3.0"
+        "pump": "^3.0",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0"
     },
-    "private": true
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "browserslist": [
+        "defaults"
+    ]
 }

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\Input;
@@ -83,8 +84,8 @@ class PageUrlListener
 
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'] ?? null,
-            $currentRecord['id'] ?? null,
+            $currentRecord['title'] ?? '',
+            (int) ($currentRecord['id'] ?? null),
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -203,7 +204,7 @@ class PageUrlListener
 
         try {
             $currentUrl = $this->urlGenerator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -240,6 +241,7 @@ class PageUrlListener
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
+                && $currentRoute->getHost() === $aliasRoute->getHost()
                 && 0 === ($currentRoute->getRequirements() <=> $aliasRoute->getRequirements())
             ) {
                 if ($throw) {
@@ -289,7 +291,7 @@ class PageUrlListener
         }
 
         if (null !== ($requireItem = $input->post('requireItem'))) {
-            $pageModel->requireItem = $requireItem;
+            $pageModel->requireItem = (bool) $requireItem;
         }
 
         if ('root' === $pageModel->type) {

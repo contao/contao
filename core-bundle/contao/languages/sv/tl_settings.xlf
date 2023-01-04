@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="sv">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="sv">
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
@@ -93,14 +93,6 @@
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
         <target>Att tillåta &lt;code&gt;*&lt;/code&gt;-attribut kan utnyttjas för XSS-attacker. Gör bara detta om alla backend-användare är betrodda!</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.0">
-        <source>Disable request tokens</source>
-        <target>Slå av referenskontroll</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted (insecure!).</source>
-        <target>Kontrollera inte request-token när ett formulär skickas (osäker!).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
         <target>Godkända filtyper för nedladdning</target>
@@ -108,22 +100,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Ange en kommaseparerad lista med filändelser som är godkända för nedladdning. &lt;br /&gt;Av säkerhetsskäl är filnedladdning begränsat till den mapp som filen finns i och dess undermappar.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.0">
-        <source>Maximum GD image width</source>
-        <target>Maximal GD-bildbredd</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.1">
-        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-        <target>Ange maximal bildbredd för bilder som GD library ska försöka hantera.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.0">
-        <source>Maximum GD image height</source>
-        <target>Maximal GD-bildhöjd</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.1">
-        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-        <target>Ange maximal bildhöjd för bilder som GD library ska försöka hantera.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>

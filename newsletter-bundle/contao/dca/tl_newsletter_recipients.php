@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
 		),
@@ -267,7 +268,7 @@ class tl_newsletter_recipients extends Backend
 				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
 											 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
@@ -358,11 +359,11 @@ class tl_newsletter_recipients extends Backend
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span class="label-info">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
 		}
 		else
 		{
-			$label .= ' <span style="color:#999;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
+			$label .= ' <span class="label-info">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
 		}
 
 		$icon = Image::getPath('member');

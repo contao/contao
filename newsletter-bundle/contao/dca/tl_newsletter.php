@@ -54,7 +54,9 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'fields'                  => array('sent', 'date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'child_record_callback'   => array('tl_newsletter', 'listNewsletters')
+			'defaultSearchField'      => 'subject',
+			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -232,8 +234,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'senderName' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -361,7 +361,7 @@ class tl_newsletter extends Backend
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
 											 ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
@@ -409,7 +409,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h85' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";

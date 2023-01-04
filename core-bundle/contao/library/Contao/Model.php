@@ -15,6 +15,7 @@ use Contao\Database\Statement;
 use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
+use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Filesystem\Path;
 
@@ -174,7 +175,6 @@ abstract class Model
 					}
 					else
 					{
-						/** @var static $objRelated */
 						$objRelated = new $strClass();
 						$objRelated->setRow($row);
 
@@ -392,12 +392,30 @@ abstract class Model
 	 *
 	 * @return array<string,array<string,string>>
 	 */
-	public static function getColumnCastTypes(): array
+	public static function getColumnCastTypesFromDatabase(): array
+	{
+		return static::getColumnCastTypesFromSchema(
+			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
+		);
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @return array<string,array<string,string>>
+	 */
+	public static function getColumnCastTypesFromDca(): array
+	{
+		return static::getColumnCastTypesFromSchema(
+			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
+		);
+	}
+
+	private static function getColumnCastTypesFromSchema(Schema $schema): array
 	{
 		$types = array();
-		$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
 
-		foreach ($tables as $table)
+		foreach ($schema->getTables() as $table)
 		{
 			foreach ($table->getColumns() as $column)
 			{
@@ -426,6 +444,11 @@ abstract class Model
 	 */
 	public static function convertToPhpValue(string $strKey, mixed $varValue): mixed
 	{
+		if (null === $varValue)
+		{
+			return null;
+		}
+
 		if (!self::$arrColumnCastTypes)
 		{
 			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
@@ -436,7 +459,7 @@ abstract class Model
 			}
 			else
 			{
-				self::$arrColumnCastTypes = self::getColumnCastTypes();
+				self::$arrColumnCastTypes = self::getColumnCastTypesFromDatabase();
 			}
 		}
 
@@ -808,18 +831,13 @@ abstract class Model
 	/**
 	 * Find a single record by its primary key
 	 *
-	 * @param int|string $varValue   The property value
-	 * @param array      $arrOptions An optional options array
+	 * @param int|string|null $varValue   The property value
+	 * @param array           $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
-		if ($varValue === null)
-		{
-			throw new \TypeError('Model::findByPk(): Argument #1 ($varValue) must be of type int|string, got null');
-		}
-
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
@@ -999,11 +1017,6 @@ abstract class Model
 		if (\count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || \in_array($arrColumn[0], static::getUniqueFields())))
 		{
 			$blnModel = true;
-
-			if ($varValue === null && $arrColumn[0] === static::getPk())
-			{
-				throw new \TypeError('Model::findBy(): Argument #2 ($varValue) must be of type int|string when querying for the primary key, got null');
-			}
 		}
 
 		$arrOptions = array_merge
@@ -1113,6 +1126,13 @@ abstract class Model
 				if ($arrColumn[0] == static::$strPk || \in_array($arrColumn[0], static::getUniqueFields()))
 				{
 					$varKey = \is_array($arrOptions['value'] ?? null) ? $arrOptions['value'][0] : ($arrOptions['value'] ?? null);
+
+					// Return early if column is unique and field value is null (#5033)
+					if ($varKey === null)
+					{
+						return null;
+					}
+
 					$objModel = Registry::getInstance()->fetch(static::$strTable, $varKey, $arrColumn[0]);
 
 					if ($objModel !== null)

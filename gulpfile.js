@@ -11,8 +11,7 @@ var gulp = require('gulp'),
 gulp.task('minify-public', function (cb) {
     pump(
         [
-            gulp.src('core-bundle/src/Resources/public/*.js'),
-            ignore.exclude('*.min.js'),
+            gulp.src(['core-bundle/public/core.js', 'core-bundle/public/mootao.js']),
             uglify({
                 output: {
                     comments: false
@@ -21,7 +20,7 @@ gulp.task('minify-public', function (cb) {
             rename({
                 suffix: '.min'
             }),
-            gulp.dest('core-bundle/src/Resources/public')
+            gulp.dest('core-bundle/public')
         ],
         cb
     );
@@ -78,8 +77,8 @@ gulp.task('minify-theme-icons', function (cb) {
 gulp.task('watch', function () {
     gulp.watch(
         [
-            'core-bundle/src/Resources/public/*.js',
-            '!core-bundle/src/Resources/public/*.min.js'
+            'core-bundle/public/core.js',
+            'core-bundle/public/mootao.js'
         ],
         gulp.series('minify-public')
     );

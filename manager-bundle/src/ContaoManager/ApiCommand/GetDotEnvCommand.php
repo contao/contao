@@ -52,7 +52,14 @@ class GetDotEnvCommand extends Command
         $dotenv = new Dotenv();
         $dotenv->usePutenv(false);
 
-        $vars = $dotenv->parse(file_get_contents($path));
+        $vars = [];
+
+        foreach ([$path, $path.'.local'] as $filePath) {
+            if (file_exists($filePath)) {
+                $vars = array_merge($vars, $dotenv->parse(file_get_contents($filePath)));
+            }
+        }
+
         $key = $input->getArgument('key');
 
         if (!$key) {

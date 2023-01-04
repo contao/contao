@@ -15,8 +15,11 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -29,6 +32,8 @@ class TokenChecker
     private const FRONTEND_FIREWALL = 'contao_frontend';
     private const BACKEND_FIREWALL = 'contao_backend';
 
+    private array $previewLinks = [];
+
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
@@ -38,6 +43,7 @@ class TokenChecker
         private TokenStorageInterface $tokenStorage,
         private AuthenticationTrustResolverInterface $trustResolver,
         private VoterInterface $roleVoter,
+        private Connection $connection,
     ) {
     }
 
@@ -66,11 +72,17 @@ class TokenChecker
      */
     public function hasFrontendGuest(): bool
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
             return false;
         }
 
-        return $request->getSession()->has(FrontendPreviewAuthenticator::SESSION_NAME);
+        if (!$preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return false;
+        }
+
+        return $this->isValidPreviewLink($preview);
     }
 
     /**
@@ -102,13 +114,21 @@ class TokenChecker
     }
 
     /**
+     * Tells whether the front end preview can be accessed.
+     */
+    public function canAccessPreview(): bool
+    {
+        return $this->hasBackendUser() || $this->hasFrontendGuest();
+    }
+
+    /**
      * Tells whether the front end preview can show unpublished fragments.
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false)) {
+        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -148,7 +168,7 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): TokenInterface|null
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -165,7 +185,7 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
+        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
             return null;
         }
 
@@ -187,5 +207,49 @@ class TokenChecker
         }
 
         return $token;
+    }
+
+    private function isValidPreviewLink(array $token): bool
+    {
+        if (!isset($token['previewLinkId'])) {
+            return false;
+        }
+
+        $id = (int) $token['previewLinkId'];
+
+        if (!isset($this->previewLinks[$id])) {
+            $this->previewLinks[$id] = $this->connection->fetchAssociative(
+                "
+                    SELECT
+                        url,
+                        showUnpublished,
+                        restrictToUrl
+                    FROM tl_preview_link
+                    WHERE
+                        id = :id
+                        AND published = '1'
+                        AND expiresAt > UNIX_TIMESTAMP()
+                ",
+                ['id' => $id],
+            );
+        }
+
+        $previewLink = $this->previewLinks[$id];
+
+        if (!$previewLink) {
+            return false;
+        }
+
+        if ((bool) $previewLink['showUnpublished'] !== (bool) $token['showUnpublished']) {
+            return false;
+        }
+
+        if (!$previewLink['restrictToUrl']) {
+            return true;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+
+        return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
     }
 }

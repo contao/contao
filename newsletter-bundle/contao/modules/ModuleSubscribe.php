@@ -117,7 +117,7 @@ class ModuleSubscribe extends Module
 			$this->Template->captcha = $objWidget->parse();
 		}
 
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 
 		// Confirmation message
 		if ($session->isStarted())
@@ -229,7 +229,7 @@ class ModuleSubscribe extends Module
 			foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids);
+				$this->{$callback[0]}->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids, $this);
 			}
 		}
 
@@ -381,7 +381,7 @@ class ModuleSubscribe extends Module
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
-		System::getContainer()->get('session')->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
 
 		$this->reload();
 	}

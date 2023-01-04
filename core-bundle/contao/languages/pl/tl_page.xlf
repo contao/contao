@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="pl">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
@@ -190,8 +190,7 @@
         <target>Własny URL</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
-        <source>Here you can set a custom canonical URL.</source>
-        <target>Tutaj możesz ustawić własny kanoniczny adres URL.</target>
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -215,7 +214,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.1">
         <source>The date format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.timeFormat.0">
         <source>Time format</source>
@@ -223,7 +222,7 @@
       </trans-unit>
       <trans-unit id="tl_page.timeFormat.1">
         <source>The time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.datimFormat.0">
         <source>Date and time format</source>
@@ -231,7 +230,7 @@
       </trans-unit>
       <trans-unit id="tl_page.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
-        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP function date().</target>
+        <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
@@ -254,8 +253,7 @@
         <target>Prefiks URL</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
-        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Wprowadź prefiks URL (np. język), który będzie dodawany do aliasów stron w tym serwisie.</target>
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -291,7 +289,7 @@
       </trans-unit>
       <trans-unit id="tl_page.groups.0">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_page.groups.1">
         <source>These groups will be able to access the page.</source>
@@ -416,22 +414,6 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
         <target>Ukryj stronę w menu nawigacyjnym.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-        <target>Pokaż tylko dla osób niezalogowanych</target>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-        <target>Ukryj stronę, jeśli użytkownik jest zalogowany.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-        <target>Kolejność elementów nawigacji</target>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-        <target>Ta liczba określa pozycję tego elementu w nawigacji. Możesz wprowadzić liczbę pomiędzy 1 i 32767.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -637,10 +619,6 @@
         <source>Edit the articles of page ID %s</source>
         <target>Edytuj artykuły strony ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-        <target>Wyłącz stary tryb przekierowywania, aby włączyć tą konfigurację.</target>
-      </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
         <target>Konflikty route</target>
@@ -651,6 +629,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Włącz kanoniczne URL-e w ustawieniach punktu startowego, aby uaktywnić tę konfigurację.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

@@ -1,13 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="tr">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>Abone olunabilecek haber abonelikleri</target>
+        <target>Abone olunabilecek haber bültenleri</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Bu kanalları ön sayfadaki formda göster.</target>
+        <target>Bu kanallar ön yüzdeki formda görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.1">
         <source>Please select one or more channels.</source>
-        <target>Lütfen bir yada birden fazla kanal seçiniz.</target>
+        <target>Lütfen bir ya da birkaç kanal seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
@@ -23,39 +23,39 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
-        <target>Buraya haber aboneliklerini  saklılık talebi kurallarına uygun kılmak için özel bir yazı girebilirsiniz.</target>
+        <target>Buraya örneğin, bülten aboneliğinin KVKK uyumluluğu hakkında bir kişisel verilerin gizliliği notu yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
-        <target>Kanal menüsünü sakla</target>
+        <target>Kanal menüsü gizlensin</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.1">
         <source>Do not show the channel selection menu.</source>
-        <target>Kanal seçim menüsünü gösterme.</target>
+        <target>Bu seçenek etkinleştirildiğinde, kanal seçim menüsü görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>Abonelik mesajı</target>
+        <target>Abonelik iletisi</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal ismi), &lt;em&gt;##domain##&lt;/em&gt; (domain ismi) ve &lt;em&gt;##link##&lt;/em&gt; (etkinleştirme bağlantısı) gibi wildcardları kullanabilirsiniz.</target>
+        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal adı), &lt;em&gt;##domain##&lt;/em&gt; (etki alanı adı) ve &lt;em&gt;##link##&lt;/em&gt; (etkinleştirme bağlantısı) kodlarını kullanabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>Abonelikten çıkma mesajı</target>
+        <target>Abonelikten ayrılma iletisi</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal ismi) ve &lt;em&gt;##domain##&lt;/em&gt; (domain ismi) gibi wildcardları kullanabilirsiniz.</target>
+        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal adı) ve &lt;em&gt;##domain##&lt;/em&gt; (etki alanı adı) kodlarını kullanabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Haber abonelik şablonu</target>
+        <target>Haber bülteni kalıbı</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
-        <target>Buradan bir haber bülteni şablonu seçebilirsiniz.</target>
+        <target>Buradan bir haber bülteni kalıbı seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
@@ -78,17 +78,17 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>##domain## sitesinde altta sıralanmış olan  kanallara abone olmak istediniz: 
+        <target>##domain## web sitesindeki şu kanallara abone oldunuz: 
 
 ##channels##
 
-Aboneliğinizi etkinleştirmek için buraya tıklayınız:
+Aboneliğinizi etkinleştirmek için bağlantıya tıklayın:
 
 ##link##
 
-Onaylama bağlantısı 24 saat geçerlidir. Aboneliğinizi istediğiniz zaman iptal edebilirsiniz.
+Etkinleştirme bağlantısı 24 saat süreyle geçerlidir. Aboneliğinizi istediğiniz zaman iptal edebilirsiniz.
 
-Abonelik başvurusunda bulunmadıysanız  bu e-postayı umursamayın.
+Abonelik başvurusunda bulunmadıysanız bu e-postayı yok sayabilirsiniz.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
@@ -100,7 +100,7 @@ Abonelik başvurusunda bulunmadıysanız  bu e-postayı umursamayın.
 
 ##channels##
 </source>
-        <target>##domain## web sitesinde altta sıralanmış olan kanallara olan aboneliğinizden çıkarıldınız:
+        <target>##domain## web sitesindeki şu kanalların aboneliğinden ayrıldınız:
 
 ##channels##
 </target>

@@ -212,7 +212,9 @@ class Picker extends Widget
 			if ($objRows->numRows)
 			{
 				$dataContainer = DataContainer::getDriverForTable($strRelatedTable);
-				$dc = new $dataContainer($strRelatedTable);
+
+				$dc = (new \ReflectionClass($dataContainer))->newInstanceWithoutConstructor();
+				$dc->table = $strRelatedTable;
 
 				while ($objRows->next())
 				{
@@ -250,7 +252,7 @@ class Picker extends Widget
 
 		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
-		return $label ?: $arrRow['id'];
+		return $label ?: $arrRow['id'] ?? '';
 	}
 
 	protected function getRelatedTable(): string
@@ -262,7 +264,7 @@ class Picker extends Widget
 
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
-		return (string) $arrRelations[$this->strField]['table'];
+		return (string) ($arrRelations[$this->strField]['table'] ?? '');
 	}
 
 	/**

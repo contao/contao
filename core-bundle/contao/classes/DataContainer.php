@@ -132,6 +132,36 @@ abstract class DataContainer extends Backend
 	public const SORT_DESC = 12;
 
 	/**
+	 * Sort by initial letter ascending and descending
+	 */
+	public const SORT_INITIAL_LETTER_BOTH = 13;
+
+	/**
+	 * Sort by initial two letters ascending and descending
+	 */
+	public const SORT_INITIAL_LETTERS_BOTH = 14;
+
+	/**
+	 * Sort by day ascending and descending
+	 */
+	public const SORT_DAY_BOTH = 15;
+
+	/**
+	 * Sort by month ascending and descending
+	 */
+	public const SORT_MONTH_BOTH = 16;
+
+	/**
+	 * Sort by year ascending and descending
+	 */
+	public const SORT_YEAR_BOTH = 17;
+
+	/**
+	 * Sort ascending and descending
+	 */
+	public const SORT_BOTH = 18;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -420,15 +450,14 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			// Use strlen() here (see #3277)
-			elseif (!\strlen($this->varValue))
+			elseif ('' === (string) $this->varValue)
 			{
 				$arrData['eval']['required'] = true;
 			}
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
@@ -445,7 +474,6 @@ abstract class DataContainer extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
-
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -485,6 +513,12 @@ abstract class DataContainer extends Backend
 				try
 				{
 					$this->save($varValue);
+
+					// Confirm password changes
+					if ($objWidget instanceof Password)
+					{
+						Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+					}
 				}
 				catch (ResponseException $e)
 				{
@@ -695,7 +729,16 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+
+					try
+					{
+						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					}
+					catch (\Exception $e)
+					{
+						Message::addError($e->getMessage());
+						$image = Image::getPath('placeholder.svg');
+					}
 				}
 				else
 				{
@@ -788,7 +831,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		foreach (Input::getKeys() as $strKey)
 		{
@@ -950,7 +993,7 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1176,7 +1219,7 @@ abstract class DataContainer extends Backend
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{
@@ -1282,7 +1325,7 @@ abstract class DataContainer extends Backend
 		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
 			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$data = $objSessionBag->all();
 
 			unset(
@@ -1432,7 +1475,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback'] ?? null))
@@ -1459,64 +1501,30 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
-	}
-
-	public function addCtableTags($strTable, $intId, &$tags)
-	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
-		{
-			return;
-		}
-
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
-		{
-			Controller::loadDataContainer($ctable);
-
-			if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? null)
-			{
-				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=? AND ptable=?')
-										 ->execute($intId, $strTable);
-			}
-			else
-			{
-				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=?')
-										 ->execute($intId);
-			}
-
-			if (!$objIds->numRows)
-			{
-				continue;
-			}
-
-			while ($objIds->next())
-			{
-				$tags[] = 'contao.db.' . $ctable . '.' . $objIds->id;
-
-				$this->addCtableTags($ctable, $objIds->id, $tags);
-			}
-		}
+		// Do not call recursively (see #4777)
 	}
 
 	/**
@@ -1609,7 +1617,7 @@ abstract class DataContainer extends Backend
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 			{
 				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 				{
@@ -1732,6 +1740,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!\count($ids))
+		{
+			return;
+		}
+
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_news.php" source-language="en" target-language="sl">
+  <file datatype="php" original="contao/languages/en/tl_news.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
@@ -153,6 +153,13 @@
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
         <target>S klikom na gumb &quot;Beri naprej ...&quot; bodo obiskovalci preusmerjeni na poljuben naslov URL.</target>
       </trans-unit>
+      <trans-unit id="tl_news.linkText.0">
+        <source>Link text</source>
+        <target>Naslov povezave</target>
+      </trans-unit>
+      <trans-unit id="tl_news.linkText.1">
+        <source>Here you can override the default &quot;read more…&quot; link text.</source>
+      </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
         <target>Pojdi na stran</target>
@@ -281,6 +288,9 @@
         <source>Edit news item ID %s</source>
         <target>Uredi novico ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.children">
+        <source>Edit the content elements of news item ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>Podvoji novico ID %s</target>
@@ -301,17 +311,9 @@
         <source>Feature/unfeature news item ID %s</source>
         <target>Izpostavi/Neizpostavi novico ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader">
-        <source>Edit the settings of news item ID %s</source>
-        <target>Uredi nastavitve novice z ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Prilepi v ta arhiv novic</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta">
-        <source>Edit the news item settings</source>
-        <target>Uredi nastavitve novice</target>
       </trans-unit>
     </body>
   </file>

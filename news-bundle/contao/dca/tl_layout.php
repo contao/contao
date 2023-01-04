@@ -21,7 +21,7 @@ PaletteManipulator::create()
 $GLOBALS['TL_DCA']['tl_layout']['fields']['newsfeeds'] = array
 (
 	'inputType'       => 'checkbox',
-	'foreignKey'      => 'tl_news_feed.title',
+	'foreignKey'	  => 'tl_page.title',
 	'eval'            => array('multiple'=>true),
 	'sql'             => "blob NULL",
 );

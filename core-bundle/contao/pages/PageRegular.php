@@ -60,6 +60,7 @@ class PageRegular extends Frontend
 	 */
 	private function prepare($objPage)
 	{
+		// Deprecated since Contao 4.0, to be removed in Contao 6.0
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
@@ -74,9 +75,6 @@ class PageRegular extends Frontend
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 
 		System::loadLanguageFile('default');
-
-		// Static URLs
-		$this->setStaticUrls();
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);

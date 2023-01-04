@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="fa">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="fa">
     <body>
       <trans-unit id="tl_module.news_archives.0">
         <source>News archives</source>
@@ -30,16 +30,7 @@
         <target>ماژول خبرخوان</target>
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
-        <source>Automatically switch to the news reader if an item has been selected.</source>
-        <target>به صورت خودکار به خبرخوان تعویض خواهد شد اگر موردی انتخاب شده باشد.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.news_metaFields.0">
-        <source>Meta fields</source>
-        <target>فیلدهای متا</target>
-      </trans-unit>
-      <trans-unit id="tl_module.news_metaFields.1">
-        <source>Here you can select the meta fields.</source>
-        <target>اینجا می‌توانید فیلدهایی متا را انتخاب نمایید.</target>
+        <source>Automatically switch to the newsreader if an item has been selected.</source>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>

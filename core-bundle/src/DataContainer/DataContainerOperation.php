@@ -30,6 +30,9 @@ class DataContainerOperation implements \ArrayAccess
     {
         $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
 
+        // Dereference pointer to $GLOBALS['TL_LANG']
+        $operation = StringUtil::resolveReferences($operation);
+
         if (isset($operation['label'])) {
             if (\is_array($operation['label'])) {
                 $operation['title'] = sprintf($operation['label'][1] ?? '', $id);

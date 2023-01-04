@@ -110,14 +110,14 @@ class ModulePersonalData extends Module
 		$objMember = MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
-		$session = System::getContainer()->get('session');
+		$session = System::getContainer()->get('request_stack')->getSession();
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #7415)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
 		$arrSubmitted = array();
@@ -140,7 +140,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
 			if (!($arrData['eval']['feEditable'] ?? null) || !class_exists($strClass))
@@ -169,6 +169,12 @@ class ModulePersonalData extends Module
 			}
 
 			$varValue = $this->User->$field;
+
+			// Convert CSV fields (see #4980)
+			if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+			{
+				$varValue = StringUtil::trimsplit($arrData['eval']['csv'], $varValue);
+			}
 
 			// Call the load_callback
 			if (\is_array($arrData['load_callback'] ?? null))
@@ -221,8 +227,14 @@ class ModulePersonalData extends Module
 					}
 				}
 
+				// Convert arrays (see #4980)
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				{
+					$varValue = implode($arrData['eval']['csv'], $varValue);
+				}
+
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}

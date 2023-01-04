@@ -39,8 +39,7 @@ class PreviewAuthenticationListener
         if (
             !$request->attributes->get('_preview', false)
             || $this->scopeMatcher->isBackendRequest($request)
-            || $this->tokenChecker->hasBackendUser()
-            || $this->tokenChecker->hasFrontendGuest()
+            || $this->tokenChecker->canAccessPreview()
         ) {
             return;
         }
@@ -48,7 +47,7 @@ class PreviewAuthenticationListener
         // Ajax requests must not be redirected to the login screen, instead we
         // redirect to the URL without preview script.
         if ($request->isXmlHttpRequest()) {
-            $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
+            $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
 
             return;
         }

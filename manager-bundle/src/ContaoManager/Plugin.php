@@ -171,7 +171,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'COOKIE_WHITELIST',
                 'DATABASE_URL',
                 'DISABLE_HTTP_CACHE',
-                'MAILER_URL',
                 'MAILER_DSN',
                 'TRACE_LEVEL',
                 'TRUSTED_PROXIES',
@@ -211,11 +210,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 if (!isset($_SERVER['MAILER_DSN'])) {
-                    if (isset($_SERVER['MAILER_URL'])) {
-                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
-                    } else {
-                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
-                    }
+                    $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
                 }
 
                 return $extensionConfigs;
@@ -549,10 +544,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
-            $userPassword = $this->encodeUrlParameter($user);
+            $userPassword = $this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$this->encodeUrlParameter($password);
+                $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $userPassword .= '@';
@@ -561,11 +556,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName .= '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter((string) $name);
         }
 
         if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
-            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
         return sprintf(
@@ -575,118 +570,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $container->getParameter('database_host'),
             (int) $container->getParameter('database_port'),
             $dbName
-        );
-    }
-
-    private function getMailerDsnFromMailerUrl(string $mailerUrl): string
-    {
-        if (false === $parts = parse_url($mailerUrl)) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        $options = [
-            'transport' => null,
-            'username' => null,
-            'password' => null,
-            'host' => null,
-            'port' => null,
-            'encryption' => null,
-        ];
-
-        $queryOptions = [];
-
-        if (isset($parts['scheme'])) {
-            $options['transport'] = $parts['scheme'];
-        }
-
-        if (isset($parts['user'])) {
-            $options['username'] = rawurldecode($parts['user']);
-        }
-
-        if (isset($parts['pass'])) {
-            $options['password'] = rawurldecode($parts['pass']);
-        }
-
-        if (isset($parts['host'])) {
-            $options['host'] = rawurldecode($parts['host']);
-        }
-
-        if (isset($parts['port'])) {
-            $options['port'] = $parts['port'];
-        }
-
-        if (isset($parts['query'])) {
-            parse_str($parts['query'], $query);
-
-            foreach ($query as $key => $value) {
-                if (empty($key)) {
-                    continue;
-                }
-
-                if (\array_key_exists($key, $options)) {
-                    $options[$key] = $value;
-                } else {
-                    $queryOptions[$key] = $value;
-                }
-            }
-        }
-
-        if (empty($options['transport'])) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
-            return 'sendmail://default';
-        }
-
-        /*
-         * Check for gmail transport.
-         *
-         * With Swiftmailer a DSN like "gmail://username:password@localhost" was
-         * supported out-of-the-box. See https://symfony.com/doc/4.4/email.html#using-gmail-to-send-emails
-         * Symfony Mailer supports something similar, but only with an additional
-         * dependency. See https://symfony.com/doc/4.4/components/mailer.html#transport
-         *
-         * Thus we add backwards compatibility for the "gmail" transport here.
-         */
-        if ('gmail' === $options['transport']) {
-            $options['host'] = 'smtp.gmail.com';
-            $options['transport'] = 'smtps';
-        }
-
-        if (empty($options['host']) || !\in_array($options['transport'], ['smtp', 'smtps'], true)) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        $transport = $options['transport'];
-        $credentials = '';
-        $port = '';
-
-        if (!empty($options['encryption']) && 'ssl' === $options['encryption']) {
-            $transport = 'smtps';
-        }
-
-        if (!empty($options['username'])) {
-            $credentials .= $this->encodeUrlParameter($options['username']);
-
-            if (!empty($options['password'])) {
-                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
-            }
-
-            $credentials .= '@';
-        }
-
-        if (!empty($options['port'])) {
-            $port = ':'.$options['port'];
-        }
-
-        return sprintf(
-            '%s://%s%s%s%s',
-            $transport,
-            $credentials,
-            $options['host'],
-            $port,
-            !empty($queryOptions) ? '?'.http_build_query($queryOptions) : ''
         );
     }
 
@@ -705,10 +588,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if ($user = $container->getParameter('mailer_user')) {
-            $credentials .= $this->encodeUrlParameter($user);
+            $credentials .= $this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('mailer_password')) {
-                $credentials .= ':'.$this->encodeUrlParameter($password);
+                $credentials .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $credentials .= '@';

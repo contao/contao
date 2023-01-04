@@ -166,7 +166,7 @@ class FilesystemItemIteratorTest extends TestCase
 
     public function provideInvalidItems(): \Generator
     {
-        yield 'scalar' => [42, 'integer'];
+        yield 'scalar' => [42, 'int'];
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
     }
 
@@ -176,6 +176,29 @@ class FilesystemItemIteratorTest extends TestCase
 
         $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
         $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+    }
+
+    public function testFirst(): void
+    {
+        $iterator = new FilesystemItemIterator(
+            new \ArrayIterator([
+                $first = new FilesystemItem(true, 'foo'),
+                new FilesystemItem(true, 'bar'),
+            ])
+        );
+
+        $this->assertSame($first, $iterator->first());
+        $this->assertSame($first, $iterator->first());
+
+        $this->assertSameItems(['foo', 'bar'], $iterator->toArray());
+    }
+
+    public function testFirstWithEmptySet(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->assertNull($iterator->first());
+        $this->assertSame([], $iterator->toArray());
     }
 
     /**

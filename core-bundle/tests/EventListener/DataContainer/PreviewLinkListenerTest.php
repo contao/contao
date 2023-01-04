@@ -37,6 +37,13 @@ class PreviewLinkListenerTest extends TestCase
         ClockMock::register(PreviewLinkListener::class);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testRemovesTheBackendModuleWithoutPreviewScript(): void
     {
         $GLOBALS['BE_MOD']['system'] = ['preview_link' => ['foo']];
@@ -77,8 +84,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->unloadTableWithoutPreviewScript('tl_preview_link');
 
         $this->assertSame([], $GLOBALS['TL_DCA']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotUnloadOtherTables(): void
@@ -99,8 +104,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->unloadTableWithoutPreviewScript('tl_member');
 
         $this->assertSame(['tl_preview_link' => 'foo', 'tl_member' => 'bar'], $GLOBALS['TL_DCA']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     /**
@@ -146,8 +149,6 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
 
-        unset($GLOBALS['TL_DCA']);
-
         ClockMock::withClockMock(false);
     }
 
@@ -168,6 +169,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testEnablesCreateOperationWithPreviewUrl(): void
     {
+        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
         ];
@@ -190,8 +192,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->createFromUrl($dc);
 
         $this->assertFalse($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotEnableCreateOperationIfPreviewScriptIsNotInUrl(): void
@@ -218,36 +218,6 @@ class PreviewLinkListenerTest extends TestCase
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
-
-        unset($GLOBALS['TL_DCA']);
-    }
-
-    public function testUpdatesTheExpiresAtField(): void
-    {
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('executeStatement')
-            ->with(
-                'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-                [$dc->id]
-            )
-        ;
-
-        $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $connection,
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
-            ''
-        );
-
-        $listener->updateExpiresAt($dc);
     }
 
     /**

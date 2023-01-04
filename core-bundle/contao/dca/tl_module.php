@@ -49,6 +49,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_module', 'listModule')
 		),
@@ -753,7 +754,7 @@ class tl_module extends Backend
 	 */
 	public function listModule($row)
 	{
-		return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
+		return '<div class="tl_content_left">' . $row['name'] . ' <span class="label-info">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

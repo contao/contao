@@ -145,7 +145,13 @@ trait TemplateInheritance
 		// Replace insert tags
 		if ($this instanceof FrontendTemplate)
 		{
-			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+			$container = System::getContainer();
+			$request = $container->get('request_stack')->getCurrentRequest();
+
+			if (!$request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$strBuffer = $container->get('contao.insert_tag.parser')->replace($strBuffer);
+			}
 		}
 
 		// Add start and end markers in debug mode
@@ -372,10 +378,9 @@ trait TemplateInheritance
 
 		$contextFactory = $container->get('contao.twig.interop.context_factory');
 
-		$context = $this instanceof Template ?
-			$contextFactory->fromContaoTemplate($this) :
-			$contextFactory->fromClass($this)
-		;
+		$context = $this instanceof Template
+			? $contextFactory->fromContaoTemplate($this)
+			: $contextFactory->fromClass($this);
 
 		return $twig->render($templateCandidate, $context);
 	}

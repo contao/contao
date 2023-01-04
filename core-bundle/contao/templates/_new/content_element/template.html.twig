@@ -1,0 +1,10 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% for key, value in keys %}
+        <dl>
+            <dt>{{ key }}</dt>
+            <dd>{{ value }}</dd>
+        </dl>
+    {% endfor %}
+{% endblock %}

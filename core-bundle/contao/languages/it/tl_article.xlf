@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_article.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="tl_article.title.0">
         <source>Title</source>
@@ -33,14 +33,6 @@
         <source>Please choose the layout section you want the article to be displayed in.</source>
         <target>Seleziona la sezione di layout in cui desideri che venga visualizzato l'articolo</target>
       </trans-unit>
-      <trans-unit id="tl_article.keywords.0">
-        <source>Meta keywords</source>
-        <target>Parole chiave</target>
-      </trans-unit>
-      <trans-unit id="tl_article.keywords.1">
-        <source>Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).</source>
-        <target>Qui puoi inserire delle parole chiave, separate da virgola. Tuttavia queste parole chiave, non sono più rilevanti per maggior parte dei motori di ricerca (Google compreso).</target>
-      </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
         <target>ID e classe css per l'anteprima</target>
@@ -72,14 +64,6 @@
       <trans-unit id="tl_article.printable.1">
         <source>Here you can choose which options are available.</source>
         <target>Mostra un link alla versione pdf dell'articolo</target>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.0">
-        <source>Show to guests only</source>
-        <target>Mostra solo agli utenti che non hanno effettuato il login (guest/ospiti)</target>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.1">
-        <source>Hide the article if a member is logged in.</source>
-        <target>Nasconde l'articolo se un utente membro è loggato.</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
         <source>Article template</source>
@@ -150,8 +134,8 @@
         <target>Titolo ed autore</target>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
-        <source>Section and keywords</source>
-        <target>Sezione e parole chiave</target>
+        <source>Section</source>
+        <target>Sezione</target>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>
@@ -209,9 +193,9 @@
         <source>Edit article ID %s</source>
         <target>Modifica l'articolo ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader">
-        <source>Edit the settings of article ID %s</source>
-        <target>Modifica le impostazioni per l'articolo ID %s</target>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Modifica gli elementi di contenuto dell'articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>

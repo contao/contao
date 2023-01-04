@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -148,7 +149,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 			// Render boxes
 			$class = 'tl_tbox';
@@ -244,10 +245,10 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 		}
 
-		$this->import(Files::class, 'Files');
+		$configFile = Path::join(System::getContainer()->getParameter('kernel.project_dir'), 'system/config/localconfig.php');
 
 		// Check whether the target file is writeable
-		if (!$this->Files->is_writeable('system/config/localconfig.php'))
+		if (file_exists($configFile) && !is_writable($configFile))
 		{
 			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
 		}

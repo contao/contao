@@ -123,6 +123,15 @@ class FilesystemItemIterator implements \IteratorAggregate
         return new self($listLimited($this->listing));
     }
 
+    public function first(): FilesystemItem|null
+    {
+        foreach ($this->listing as $item) {
+            return $item;
+        }
+
+        return null;
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */
@@ -130,10 +139,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     {
         foreach ($this->listing as $item) {
             if (!$item instanceof FilesystemItem) {
-                /** @phpstan-ignore-next-line */
-                $type = \is_object($item) ? $item::class : \gettype($item);
-
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, $type));
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, get_debug_type($item)));
             }
 
             yield $item;

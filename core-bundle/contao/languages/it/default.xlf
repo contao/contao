@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="it">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
         <target>Si è verificato un errore!</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+        <target>I dati non possono essere salvati perché si è verificato un errore!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -186,12 +190,15 @@
         <target>Gli alias numerici non sono supportati!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
-        <target>Il prefisso URL &quot;%s&quot; è già utilizzato da un'altra pagina principale con lo stesso nome di dominio!</target>
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>La pagina con URL &quot;%s&quot; è già presente!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Questo alias è in conflitto con la pagina &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -270,8 +277,7 @@
         <target>La pagina principale del sito deve essere una Pagina Root!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>Ci sono pagine di livello superiore nella struttura del sito che non sono le pagine del sito web di root.</target>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -296,10 +302,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
         <target>Nel database non è stata trovata nessuna informazione per %s. È necessario risincronizzare il file system.</target>
-      </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Indicare l'ID numerico del profilo Google+ o il nome vanity!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -349,6 +351,16 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Il percorso del modello &quot;%s&quot; non deve contenere i seguenti caratteri: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Nome utente sconosciuto: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Somma %d a %d.</target>
@@ -392,6 +404,14 @@
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
         <target>Ti permette di aggiungere codice HTML personalizzabile.</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>HTML non filtrato</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>Ti permette di aggiungere codice HTML personalizzato e non filtrato.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -455,7 +475,7 @@
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
-        <target>Template personalizzati</target>
+        <target>Template personalizzato</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
@@ -750,16 +770,14 @@
         <target>Inoltro ad un'altra pagina</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Questo tipo di pagina inoltra automaticamente il visitatore ad un'altra pagina del sito. Il reindirizzamento avviene usando l'ID di pagina oppure l'alias di pagina.</target>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
         <target>Pagina &quot;root&quot; di un nuovo sito</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>Se vuoi creare più di un sito web dentro la stessa gerarchia di pagine, è possibile definire un nuovo punto di inizio. Una pagina di root contiene un valore DNS oppure una lingua o entrambi.</target>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -798,8 +816,7 @@
         <target>503 Servizio non disponibile</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
-        <target>Quando una pagina principale è in modalità di manutenzione, viene visualizzata una pagina di errore 503 per tutte le richieste.</target>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1318,8 +1335,8 @@
         <target>Didascalia</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licenza</target>
+        <source>License URL</source>
+        <target>License URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1341,9 +1358,13 @@
         <source>Predefined dimensions</source>
         <target>Dimensioni predefinite</target>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
-        <target>Dimensioni relative</target>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+        <target>Dimensioni personalizzate</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
+        <target>L'immagine verrà ridimensionata alle dimensioni fornite.</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1361,21 +1382,13 @@
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
         <target>Il lato più corto dell'immagine viene variato in base alle dimensioni indicate e l'immagine viene ridimensionata in modo proporzionale.</target>
       </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-        <target>Dimensioni esatte</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>L'immagine verrà ridimensionata alle dimensioni indicate. Se necessario, verrà ritagliata.</target>
-      </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
-        <target>Parte importante</target>
+        <source>Crop (important part)</source>
+        <target>Ritaglia (parte importante)</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Preserva la parte importante di un'immagine come specificato nel file manager.</target>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>Mantiene la parte importante di un'immagine specificata nella gestione file. Se necessario, l'immagine verrà ritagliata.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1582,8 +1595,8 @@
         <target>Scorciatoie da tastiera del backend</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Ulteriori informazioni su come accelerare il flusso di lavoro utilizzando le &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scorciatoie da tastiera&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Scopri di più su come velocizzare il tuo flusso di lavoro usando le &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scelte rapide da tastiera&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1754,8 +1767,8 @@
         <target>Salva e chiudi</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
-        <target>Salva e modifica</target>
+        <source>Save and edit child elements</source>
+        <target>Salva e modifica gli elementi figlio</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1965,10 +1978,6 @@
         <source>Contao version %s is available.</source>
         <target>È disponibile la versione %s di Contao</target>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-        <target>Word wrap</target>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
         <target>ATTENZIONE! Perderai ogni modifica non salvata. Continuare?</target>
@@ -2032,22 +2041,6 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
         <target>Articoli</target>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-        <target>Gestione file</target>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-        <target>Struttura sito</target>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-        <target>Torna alla selezione file</target>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
-        <target>Torna alla selezione pagina</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2550,8 +2543,7 @@
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
-        <target>Per inserire i metadati dei file è necessario aggiungere una pagina principale nella struttura del sito.</target>
+        <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2673,6 +2665,14 @@
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
         <target>Esiste almeno un gruppo di utenti che concede il permesso al modulo front-end &quot;Listing&quot; e ai suoi campi &quot;list_*&quot;. Poiché possono contenere query SQL arbitrarie, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti che ha l'accesso all'elemento HTML non filtrato. Poiché il codice HTML di questo elemento non viene filtrato, gli utenti di questi gruppi hanno potenzialmente il pieno controllo sul sistema!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>C'è almeno un utente con accesso all'elemento HTML non filtrato. Poiché il codice HTML di quell'elemento non viene filtrato, questi utenti hanno potenzialmente il pieno controllo sul sistema!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Abilita</target>
@@ -2680,10 +2680,6 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Disabilita</target>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>L'editor CSS interno è stato deprecato e verrà rimosso in Contao 5.0! Considera di esportare i tuoi fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2755,6 +2751,22 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Manuale</target>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2924,13 +2936,9 @@
         <source>Drag element ID %s</source>
         <target>Trascina elemento ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-        <target>Modifica le impostazioni dell'elemento</target>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
-        <target>Modifica le impostazioni dell'elemento ID %s</target>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
+        <target>Modifica gli elementi figlio dell'elemento ID%s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2965,8 +2973,7 @@
         <target>inidizzati %d url con successo. %d falliti.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d Gli URI sono stati ignorati (se ne manca uno, consulta il registro di debug).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

@@ -222,6 +222,7 @@ class BackendUser extends User
 		Config::set('showHelp', $this->showHelp);
 		Config::set('useRTE', $this->useRTE);
 		Config::set('useCE', $this->useCE);
+		Config::set('doNotCollapse', $this->doNotCollapse);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
 
@@ -320,7 +321,7 @@ class BackendUser extends User
 	public function navigation($blnShowAll=false)
 	{
 		$arrModules = array();
-		$arrStatus = System::getContainer()->get('session')->getBag('contao_backend')->get('backend_modules');
+		$arrStatus = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('backend_modules');
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$router = System::getContainer()->get('router');
 		$security = System::getContainer()->get('security.helper');

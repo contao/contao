@@ -78,9 +78,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('startTime'),
+			'fields'                  => array('startTime DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
+			'defaultSearchField'      => 'title',
 			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
 		),
 		'global_operations' => array
@@ -181,11 +182,9 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'author' => array
 		(
-			'default'                 => BackendUser::getInstance()->id,
+			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -203,7 +202,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'default'                 => time(),
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_MONTH_DESC,
+			'flag'                    => DataContainer::SORT_MONTH_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -601,7 +600,7 @@ class tl_calendar_events extends Backend
 				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
 											  ->execute($id);
 
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
@@ -799,7 +798,7 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
-		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">[' . $date . ']</span></div>';
+		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span class="label-info">[' . $date . ']</span></div>';
 	}
 
 	/**
@@ -903,8 +902,8 @@ class tl_calendar_events extends Backend
 	 */
 	public function adjustTime(DataContainer $dc)
 	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
+		// Return if there is no active record (override all) or no start date has been set yet
+		if (!$dc->activeRecord || !$dc->activeRecord->startDate)
 		{
 			return;
 		}
@@ -931,7 +930,7 @@ class tl_calendar_events extends Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?? $dc->activeRecord->startTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', '' !== (string) $dc->activeRecord->endTime ? $dc->activeRecord->endTime : $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events
@@ -973,7 +972,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateFeed()
 	{
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$session = $objSession->get('calendar_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -1022,7 +1021,7 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Store the ID in the session
 		$session = $objSession->get('calendar_feed_updater');

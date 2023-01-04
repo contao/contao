@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * A static class to replace insert tags
@@ -1119,23 +1120,29 @@ class InsertTags extends Controller
 					switch ($flag)
 					{
 						case 'addslashes':
-						case 'standardize':
-						case 'ampersand':
-						case 'specialchars':
 						case 'strtolower':
-						case 'utf8_strtolower':
 						case 'strtoupper':
-						case 'utf8_strtoupper':
 						case 'ucfirst':
 						case 'lcfirst':
 						case 'ucwords':
 						case 'trim':
 						case 'rtrim':
 						case 'ltrim':
-						case 'utf8_romanize':
 						case 'urlencode':
 						case 'rawurlencode':
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
+							break;
+
+						case 'utf8_strtolower':
+							$arrCache[$strTag] = mb_strtolower($arrCache[$strTag]);
+							break;
+
+						case 'utf8_strtoupper':
+							$arrCache[$strTag] = mb_strtoupper($arrCache[$strTag]);
+							break;
+
+						case 'utf8_romanize':
+							$arrCache[$strTag] = (new UnicodeString($arrCache[$strTag]))->ascii()->toString();
 							break;
 
 						case 'attr':
@@ -1150,6 +1157,9 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = preg_replace('/\r?\n/', '<br>', $arrCache[$strTag]);
 							break;
 
+						case 'standardize':
+						case 'ampersand':
+						case 'specialchars':
 						case 'encodeEmail':
 							$arrCache[$strTag] = StringUtil::$flag($arrCache[$strTag]);
 							break;

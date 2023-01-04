@@ -14,28 +14,25 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\News;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
-use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
+use Psr\Log\LoggerInterface;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
-    public function testReplacesTheNewsFeedTag(): void
+    public function testTriggersWarningForNewsFeedTag(): void
     {
-        $feedModel = $this->mockClassWithProperties(NewsFeedModel::class);
-        $feedModel->feedBase = 'http://localhost/';
-        $feedModel->alias = 'news';
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('warning')
+            ->with('The "news_feed" insert tag has been removed in Contao 5.0. Use "link_url" instead.')
+        ;
 
-        $adapters = [
-            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $listener = new InsertTagsListener($framework);
+        $listener = new InsertTagsListener($this->mockContaoFramework(), $logger);
         $url = $listener('news_feed::2', false, null, []);
 
-        $this->assertSame('http://localhost/share/news.xml', $url);
+        $this->assertFalse($url);
     }
 
     public function testReplacesTheNewsTags(): void
@@ -63,7 +60,8 @@ class InsertTagsListenerTest extends ContaoTestCase
             News::class => $news,
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $logger = $this->createMock(LoggerInterface::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $logger);
 
         $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
@@ -143,7 +141,8 @@ class InsertTagsListenerTest extends ContaoTestCase
             News::class => $news,
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $logger = $this->createMock(LoggerInterface::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $logger);
 
         $this->assertSame(
             '<a href="./" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
@@ -163,7 +162,8 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $logger = $this->createMock(LoggerInterface::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework(), $logger);
 
         $this->assertFalse($listener('link_url::2', false, null, []));
     }
@@ -172,12 +172,11 @@ class InsertTagsListenerTest extends ContaoTestCase
     {
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
-            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $logger = $this->createMock(LoggerInterface::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $logger);
 
-        $this->assertSame('', $listener('news_feed::3', false, null, []));
         $this->assertSame('', $listener('news_url::3', false, null, []));
     }
 }

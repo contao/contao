@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en" target-language="cs">
+  <file datatype="php" original="contao/languages/en/tl_form_field.php" source-language="en" target-language="cs">
     <body>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
@@ -329,14 +329,6 @@
         <source>A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
         <target>Pole formuláře mohou být vybrána pomocí příslušných klávesových zkratek, když stisknete [ALT]+ respektive [STRG]+danou klávesu.</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.0">
-        <source>Tab index</source>
-        <target>Index tabulátoru</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.1">
-        <source>The position of the form field in the tabbing order.</source>
-        <target>Uspořádání formulářového pole podle tabulátoru.</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
         <target>Velikost pole</target>
@@ -456,10 +448,6 @@
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
         <target>Smazat pole formuláře ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader">
-        <source>Edit the form settings</source>
-        <target>Nastavit formulář</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>

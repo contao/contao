@@ -2,6 +2,12 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -37,9 +43,9 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - '@contao.cron'
-            - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
+            - ~
         tags:
             - kernel.event_listener
 
@@ -211,10 +217,15 @@ services:
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - ce_
             - Contao\ContentProxy
+        tags:
+            - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
@@ -228,6 +239,18 @@ services:
             - '@database_connection'
         tags:
             - kernel.event_listener
+
+    contao.listener.form_field_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
+            - '@contao.framework'
+            - '@request_stack'
+            - '@contao.twig.filesystem_loader'
+            - form_
+        tags:
+            - { name: contao.callback, table: tl_form_field, target: fields.customTpl.options }
 
     contao.listener.image_size_options:
         class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
@@ -305,6 +328,18 @@ services:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
 
+    contao.listener.menu.backend_favorites:
+        class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
+        tags:
+            - kernel.event_listener
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
@@ -337,10 +372,15 @@ services:
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - mod_
             - Contao\ModuleProxy
+        tags:
+            - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
@@ -351,6 +391,14 @@ services:
             # The priority must be lower than the Symfony route listener (defaults to 32)
             # and lower than the Symfony firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
+
+    contao.listener.page_trail_cache_tags:
+        class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+        tags:
+            - { name: kernel.event_listener }
 
     contao.listener.pretty_error_screen:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
@@ -392,7 +440,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
-            - '@http_kernel'
+            - '@uri_signer'
+            - '%fragment.path%'
         tags:
             - kernel.event_listener
 

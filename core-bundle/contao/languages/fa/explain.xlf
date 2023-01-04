@@ -1,37 +1,33 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="fa">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="fa">
     <body>
       <trans-unit id="XPL.insertTags.0.0">
         <source>Rich text editor</source>
         <target>ویرایشگر متن پیشرفته</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
-        <source>For more information about TinyMCE please visit &lt;a href=&quot;http://www.tinymce.com/&quot; title=&quot;TinyMCE by moxiecode&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://www.tinymce.com/&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر درباره TinyMCE از &lt;a href=&quot;http://www.tinymce.com/&quot; title=&quot;TinyMCE by moxiecode&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://www.tinymce.com/&lt;/a&gt; بازدید کنید.</target>
+        <source>For more information on TinyMCE, please visit &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
         <target>برچسب‌های درجی</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information on insert tags please visit &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر درباره تگ‌ها از &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt; بازدید کنید.</target>
+        <source>For more information on insert tags, please visit &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
         <target>ویرایشگر کد</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
-        <source>For more information about Ace please visit &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://ace.c9.io&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر درباره Ace از &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;http://ace.c9.io&lt;/a&gt; بازدید کنید.</target>
+        <source>For more information on Ace, please visit &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
         <target>colspan</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
-        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter variant front end formats in the site structure (website root pages).&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
-        <target>کنتائو تمامی فرمت‌های زمان و تاریخ را می‌تواند توسط تابع PHP date() ایجاد نماید. همچنین برای اینکه مطمئن باشید که ورودی‌ها می‌توانند به UNIX timestamp تبدیل شوند، باید فقط از ساختارهای تاریخ و زمان (j, d, m, n, y, Y, g, G, h, H, i, s) در بخش مدیریت استفاده نمایید.&lt;br&gt;&lt;br&gt;&lt;strong&gt;شما می‌توانید ساختارهای مختلفی را برای بخش کاربری در ساختار وب‌سایت (برگه‌ها ریشه وب‌سایت) تعریف نمایید.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;اینها چند مثال از ساختارهای زمان و تاریخ معتبر می‌باشند.&lt;/em&gt;:</target>
+        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>
@@ -94,16 +90,14 @@
         <target>ویژگی اندازه‌ها</target>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.0.1">
-        <source>The HTML attribute &lt;code&gt;sizes&lt;/code&gt; defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.&lt;br&gt;&lt;br&gt;E.g. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; means the images width is 100% of the viewport for small screens and 50% of the viewport for larger screens.&lt;br&gt;&lt;br&gt;And &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; means the images width is 20px smaller than the viewport for small screens and 500px for larger screens.&lt;br&gt;&lt;br&gt;The sizes attribute shouldn’t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.&lt;br&gt;&lt;br&gt;For more information about the sizes attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
-        <target>ویژگی &lt;code&gt;sizes&lt;/code&gt; در HTML عرض تصویر برای چیدمان موردنظر را به صورت اختیاری با یک مدیا کوئری تعریف می‌کند. شما می‌توانید در این ویژگی از هر مقدار طول استفاده کنید.&lt;br&gt;&lt;br&gt;مثلا&lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; که به معنی تصاویر با عرض 100% نمای دید برای صفحه نمایش‌های کوچک و 50% نمای دید برای صفحه نمایش‌های بزرگ است. &lt;br&gt;&lt;br&gt;و &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; به معنی عرض تصاویر 20px کوچکتر از نمای دید برای صفحه نمایش‌های کوچک و 500px برای صفحه نمایش‌های بزرگ است.&lt;br&gt;&lt;br&gt;ویژگی sizes نباید برای استایل استفاده شود در عوض از CSS استفادهکنید. ویژگی sizes حتما لازم نیست که با عرض واقعی تصویر که در CSS مشخص شده مظابقت داشته باشد.&lt;br&gt;&lt;br&gt;برای اطلاعات بیشتر در مورد ویژگی sizes از &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; دیدن کنید.</target>
+        <source>The HTML attribute &lt;code&gt;sizes&lt;/code&gt; defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.&lt;br&gt;&lt;br&gt;E.g. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.&lt;br&gt;&lt;br&gt;And &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.&lt;br&gt;&lt;br&gt;The sizes attribute shouldn’t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.&lt;br&gt;&lt;br&gt;For more information about the sizes attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.0">
         <source>Pixel densities/&lt;br&gt;scale factors</source>
         <target>چگالی‌های پیکسل/&lt;br&gt;فاکتورهای بزرگنمایی</target>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.1">
-        <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes get generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
-        <target>اگر ویژگی sizes تعریف نشده باشد، این تنظیم به سادگی چگالی پیکسل که می‌خواهید پشتیبانی کنید را تعیین می‌کند. ابعاد تصویربه صورت خدوکار تنظیم می‌شود. مانند &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; کد HTML زیر را ایجاد می‌کند:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;اگر ویژگی اندازه‌ها تعریف شده باشد، همان اندازه‌های تصویر ایجاد می‌شود، ولی توصیف‌کننده‌ی عرض برای ویژگی srcset استفاده می‌شود. مانند تصویری با عرض 200 پیکسل با چگالی‌های &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; کد HTML زیر را ایجاد می‌کند:&lt;br&gt;&lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;برای اطلاعات بیشتر درباره ویژگی srcset &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; را ببینید.</target>
+        <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
       </trans-unit>
     </body>
   </file>

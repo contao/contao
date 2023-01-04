@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_image_size.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_image_size.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_image_size.name.0">
         <source>Name</source>
@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.formatsNotSupported">
         <source>The following formats are not supported on your server: %s</source>
+        <target>De volgende formats worden niet ondersteund op uw server: %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -156,9 +157,9 @@
         <source>Edit image size ID %s</source>
         <target>Bewerk beeldformaat ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader">
-        <source>Edit the settings of image size ID %s</source>
-        <target>Bewerk de instellingen van beeldformaat ID %s</target>
+      <trans-unit id="tl_image_size.children">
+        <source>Edit the media queries of image size ID %s</source>
+        <target>Bewerk de mediaquery's van afbeelding grootte ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>

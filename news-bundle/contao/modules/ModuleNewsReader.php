@@ -53,6 +53,12 @@ class ModuleNewsReader extends ModuleNews
 			return $objTemplate->parse();
 		}
 
+		// Return an empty string if "auto_item" is not set to combine list and reader on same page
+		if (Input::get('auto_item') === null)
+		{
+			return '';
+		}
+
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
@@ -182,7 +188,7 @@ class ModuleNewsReader extends ModuleNews
 		$arrNotifies = array();
 
 		// Notify the system administrator
-		if ($objArchive->notify != 'notify_author')
+		if ($objArchive->notify != 'notify_author' && isset($GLOBALS['TL_ADMIN_EMAIL']))
 		{
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}

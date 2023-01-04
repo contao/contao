@@ -106,7 +106,7 @@ class FormPassword extends Widget
 	 *
 	 * @return mixed The validated user input
 	 */
-	protected function validator($varInput)
+	protected function validator(#[\SensitiveParameter] $varInput)
 	{
 		$this->blnSubmitInput = false;
 
@@ -146,7 +146,7 @@ class FormPassword extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		$this->confirmLabel = sprintf($GLOBALS['TL_LANG']['MSC']['confirmation'], $this->strLabel);
+		$this->confirmLabel = sprintf($GLOBALS['TL_LANG']['MSC']['confirm'][0], $this->strLabel);
 
 		return parent::parse($arrAttributes);
 	}

@@ -53,6 +53,9 @@ class RouteProvider extends AbstractPageRouteProvider
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
         $this->framework->initialize();
@@ -81,7 +84,7 @@ class RouteProvider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames($names = null): iterable
     {
         $this->framework->initialize();
 
@@ -268,6 +271,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $models = $pages->getModels();
         }
 
+        /** @var Collection|array<PageModel> $pages */
         $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {

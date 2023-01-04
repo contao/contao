@@ -62,11 +62,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
 			'fields'                  => array('title', 'formID'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>'
+			'format'                  => '%s <span class="label-info">[%s]</span>'
 		),
 		'global_operations' => array
 		(
@@ -312,7 +313,7 @@ class tl_form extends Backend
 			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Check current action
 		switch (Input::get('act'))
@@ -399,7 +400,7 @@ class tl_form extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
@@ -469,7 +470,7 @@ class tl_form extends Backend
 		// Generate an alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Input::post('jumpTo') ?: $dc->activeRecord->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate((string) $dc->activeRecord->title, (int) (Input::post('jumpTo') ?: $dc->activeRecord->jumpTo), $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -496,7 +497,7 @@ class tl_form extends Backend
 			return $GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options'];
 		}
 
-		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span style="color: #c33;">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
+		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
 		if (!$this->User->isAdmin)
 		{

@@ -2,6 +2,25 @@
 
 ## Version 4.* to 5.0
 
+### Contao 3 theme icons
+
+The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
+
+### TL_ASSETS_URL and TL_FILES_URL
+
+The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been removed. Use the assets or files context instead:
+
+ ```php
+$container = System::getContainer();
+echo $container->get('contao.assets.assets_context')->getStaticUrl();
+echo $container->get('contao.assets.files_context')->getStaticUrl();
+```
+
+### News feeds
+
+News feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
+module. The `{{news_feed:id}}` insert tag has been removed. You can use `{{link_url::id}}` instead.
+
 ### app.php
 
 The old `app.php` entry point has been removed. Adjust your server configuration to use `index.php` instead.
@@ -64,6 +83,9 @@ passed instead.
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it back to
 an array representation. If you are just using array access, nothing needs to be changed.
+
+To ease accessing metadata and lightbox results in a chained manner or in templates, the `getMetadata()` and
+`getLightbox()` methods will now return `null` instead of throwing an exception if no data is available.
 
 The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
 returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
@@ -217,6 +239,10 @@ The following content element types have been rewritten as fragment controllers 
  - `gallery` (`ce_gallery` → `content_element/gallery`)
  - `youtube` (`ce_youtube` → `content_element/youtube`)
  - `vimeo` (`ce_vimeo` → `content_element/vimeo`)
+ - `downloads` (`ce_downloads` → `content_element/downloads`)
+ - `download` (`ce_download` → `content_element/download`)
+ - `player` (`ce_player` → `content_element/player`)
+ - `teaser` (`ce_teaser` → `content_element/teaser`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6. If you want to
 use them instead of the new ones, you can opt in on a per-element basis by adding the respective lines to your
@@ -236,7 +262,18 @@ $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 $GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
 $GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
+$GLOBALS['TL_CTE']['files']['downloads'] = \Contao\ContentDownloads::class;
+$GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
+$GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
+$GLOBALS['TL_CTE']['includes']['teaser'] = \Contao\ContentTeaser::class;
 ```
+
+The following content elements and modules were already implemented as fragment controllers before. As of Contao 5.0,
+they are Twig-only and also follow the new naming scheme:
+
+- `template` content element (`ce_template` → `content_element/template`)
+- `markdown` content element (`ce_markdown` → `content_element/markdown`)
+- `template` module (`mod_template` → `frontend_module/template`)
 
 ### Show to guests only
 

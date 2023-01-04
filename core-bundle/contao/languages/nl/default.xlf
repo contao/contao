@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
         <target>Er is een fout is opgetreden!</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+        <target>De gegevens konden niet worden opgeslagen omdat er een fout is opgetreden!</target>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
@@ -186,12 +190,15 @@
         <target>Numerieke aliassen worden niet ondersteund!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
-        <target>Het URL-voorvoegsel &quot;1%s&quot; wordt al gebruikt door een andere hoofdpagina met dezelfde domeinnaam!</target>
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Er bestaat al een pagina met de URL &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Deze alias leidt tot een conflict met pagina &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -270,8 +277,7 @@
         <target>Top-level pagina's moeten website startpagina's zijn!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
-        <target>Er zijn top-level pagina's in de site structuur welke geen website root pagina's zijn.</target>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -296,10 +302,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
         <target>Geen database toegang gevonden voor %s. Gelieve  het bestandssysteem te synchroniseren.</target>
-      </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-        <target>Voer een numeriek Google+ ID of vanity naam in!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -349,6 +351,16 @@
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Het template pad &quot;%s&quot; mag de volgende tekens niet bevatten: %s</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Onbekende gebruikersnaam: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Tel %d en %d bij elkaar op.</target>
@@ -392,6 +404,14 @@
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
         <target>Maakt het mogelijk om eigen HTML code toe te voegen.</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>Ongefilterde HTML</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>Hiermee kunt u aangepaste, ongefilterde HTML code toevoegen.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -750,16 +770,14 @@
         <target>Doorverwijzen naar een interne URL</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Deze pagina verwijst u automatisch door naar een andere pagina van de website gebruik makende van een pagina ID of een pagina alias.</target>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
         <target>Website startpunt</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>Dit type pagina markeert het startpunt van een nieuwe website binnen de site structuur.</target>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -798,8 +816,7 @@
         <target>503 Service niet beschikbaar</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
-        <target>Wanneer een hoofdpagina zich in de onderhoudsmodus bevindt, wordt voor alle verzoeken een 503-foutpagina weergegeven.</target>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1318,8 +1335,8 @@
         <target>Bijschrift</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licentie</target>
+        <source>License URL</source>
+        <target>Licentie URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1341,9 +1358,13 @@
         <source>Predefined dimensions</source>
         <target>Vooraf gedefinieerde afmetingen</target>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
-        <target>Relatieve afmetingen</target>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+        <target>Aangepaste afmetingen</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
+        <target>De afbeelding wordt aangepast aan de gegeven afmetingen.</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1361,21 +1382,13 @@
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
         <target>De kortste zijde van het beeld wordt aangepast aan de bepaalde afmetingen en het beeld wordt proportioneel aangepast.</target>
       </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-        <target>Exacte afmetingen</target>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>De afbeelding wordt aangepast aan de opgegeven maten. Indien nodig  wordt dit bijgesneden.</target>
-      </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
-        <target>Belangrijk gedeelte</target>
+        <source>Crop (important part)</source>
+        <target>Bijsnijden (belangrijke gedeelte)</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Behoudt het belangrijkste gedeelte van een afbeelding, zoals gespecificeerd in de bestandsmanager.</target>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>Behoudt het belangrijke deel van een afbeelding zoals gespecificeerd in bestandsbeheer. Indien nodig wordt de afbeelding bijgesneden.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1582,8 +1595,8 @@
         <target>Back-end sneltoetsen</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Lees meer informatie over het versnellen van uw workflow door &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Meer informatie over het versnellen van uw workflow door &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1754,8 +1767,8 @@
         <target>Opslaan en sluiten</target>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
-        <target>Opslaan en bewerken</target>
+        <source>Save and edit child elements</source>
+        <target>Opslaan en bewerken van child elementen</target>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1965,10 +1978,6 @@
         <source>Contao version %s is available.</source>
         <target>Contao versie %s beschikbaar.</target>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-        <target>Automatische terugloop</target>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
         <target>LET OP! Niet opgeslagen gegevens gaan verloren. Doorgaan?</target>
@@ -2032,22 +2041,6 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
         <target>Artikelen</target>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-        <target>Bestandsbeheer</target>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-        <target>Site-structuur</target>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-        <target>Terug naar de bestandskiezer</target>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
-        <target>Terug naar de paginakiezer</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2550,8 +2543,7 @@
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
-        <target>U moet een hoofdpagina toevoegen aan de sitestructuur om de meta data van het bestand in te voeren.</target>
+        <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2673,6 +2665,14 @@
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
         <target>Er is ten minste één gebruikersgroep die toestemming geeft voor de front-end module &quot;Listing&quot; en zijn &quot;list_*&quot; velden. Omdat ze willekeurige SQL-query's kunnen bevatten, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>Er is ten minste één gebruikersgroep die toegang geeft tot het ongefilterde HTML element. Omdat de HTML code van dit element niet wordt gefilterd, hebben de gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>Er is ten minste één vaste gebruiker met toegang tot het ongefilterde HTML element. Omdat de HTML code van dat element niet wordt gefilterd, hebben deze gebruikers impliciet volledige controle over het systeem!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Activeer</target>
@@ -2680,10 +2680,6 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Uitschakelen</target>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>De interne CSS-editor is verouderd en wordt verwijderd in Contao 5.0! Overweeg om uw bestaande stylesheets te exporteren en ze opnieuw toe te voegen aan de paginalay-out als externe stylesheets.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2755,6 +2751,22 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Handleiding</target>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2924,13 +2936,9 @@
         <source>Drag element ID %s</source>
         <target>Sleep element ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-        <target>Bewerk de element instellingen</target>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
-        <target>Bewerk instellingen van element ID %s</target>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
+        <target>Bewerk de child elementen van element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2965,8 +2973,7 @@
         <target>%d geïndexeerde URI('s) succesvol. %d mislukt.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URI('s) zijn overgeslagen (als u er een mist, bekijk dan het foutopsporingslogboek).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

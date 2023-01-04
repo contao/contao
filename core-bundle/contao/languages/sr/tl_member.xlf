@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_member.php" source-language="en" target-language="sr">
+  <file datatype="php" original="contao/languages/en/tl_member.php" source-language="en" target-language="sr">
     <body>
       <trans-unit id="tl_member.firstname.0">
         <source>First name</source>
@@ -62,16 +62,14 @@
         <target>Град</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
-        <source>Plase enter the name of the city.</source>
-        <target>Унесите име града.</target>
+        <source>Please enter the name of the city.</source>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
         <target>Провинција/Република/Област</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
-        <source>Plase enter the name of the state.</source>
-        <target>Унесите име провинције/републике/области/регије.</target>
+        <source>Please enter the name of the state.</source>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>
@@ -225,9 +223,8 @@
         <source>Account settings</source>
         <target>Подешавања налога</target>
       </trans-unit>
-      <trans-unit id="tl_member.personalData">
-        <source>Personal data</source>
-        <target>Лични подаци</target>
+      <trans-unit id="tl_member.personalDetails">
+        <source>Personal details</source>
       </trans-unit>
       <trans-unit id="tl_member.addressDetails">
         <source>Address details</source>

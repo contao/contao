@@ -56,8 +56,10 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
+			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
-			'child_record_callback'   => array('tl_form_field', 'listFormFields')
+			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -353,7 +355,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'fSize' => array
 		(
@@ -364,7 +366,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_form_field', 'getFormFieldTemplates'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -388,7 +389,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'invisible' => array
 		(
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -426,7 +427,7 @@ class tl_form_field extends Backend
 			return;
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Set root IDs
 		if (empty($this->User->forms) || !is_array($this->User->forms))
@@ -554,7 +555,7 @@ class tl_form_field extends Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
 
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Prevent editing form fields with not allowed types
 		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
@@ -625,12 +626,6 @@ class tl_form_field extends Backend
 	public function listFormFields($arrRow)
 	{
 		$arrRow['required'] = $arrRow['mandatory'];
-		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-
-		$strType = '
-<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
-
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']] ?? null;
 
 		if (!class_exists($strClass))
@@ -640,6 +635,11 @@ class tl_form_field extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
+		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
+
+		$strType = '
+<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
@@ -710,25 +710,6 @@ class tl_form_field extends Backend
 	}
 
 	/**
-	 * Return all form field templates as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getFormFieldTemplates(DataContainer $dc)
-	{
-		if (Input::get('act') == 'overrideAll')
-		{
-			return $this->getTemplateGroup('form_');
-		}
-
-		$default = 'form_' . $dc->activeRecord->type;
-
-		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
-	}
-
-	/**
 	 * Disable the button if the element type is not allowed
 	 *
 	 * @param array  $row
@@ -780,6 +761,6 @@ class tl_form_field extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

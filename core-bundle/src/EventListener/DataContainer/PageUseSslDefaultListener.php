@@ -29,7 +29,7 @@ class PageUseSslDefaultListener
 
         // Set useSSL to HTTP if the current request does not use HTTPS
         if ($request && !$request->isSecure()) {
-            $GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = '';
+            $GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = false;
         }
     }
 }

@@ -155,6 +155,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\Filesystem\\',
                 'Symfony\Component\HttpClient\Internal\CurlClientState',
                 'Symfony\Component\Mime\Address',
+                'Symfony\Component\Mime\MimeTypes',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',

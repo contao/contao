@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar_events.php" source-language="en" target-language="nl">
+  <file datatype="php" original="contao/languages/en/tl_calendar_events.php" source-language="en" target-language="nl">
     <body>
       <trans-unit id="tl_calendar_events.title.0">
         <source>Title</source>
@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Hier kunt u overschrijven hoe zoekmachines het evenement afhandelen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -212,6 +213,14 @@
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
         <target>Door op de &quot;lees meer...&quot; link te klikken worden bezoekers doorverwezen naar de aangepaste URL.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.0">
+        <source>Link text</source>
+        <target>Link titel</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.1">
+        <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Hier kunt u de standaard &quot;lees meer...&quot; linktekst overschrijven.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
         <target>Ga naar pagina</target>
@@ -246,9 +255,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Beveel evenement aan</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Toon het evenement in een lijst met aanbevolen evenementen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -358,6 +369,10 @@
         <source>Edit event ID %s</source>
         <target>Bewerk evenement ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.children">
+        <source>Edit the content elements of event ID %s</source>
+        <target>Bewerk de inhoudselementen van evenement ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
         <target>Kopieer evenement ID %s</target>
@@ -376,18 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader">
-        <source>Edit the settings of event ID %s</source>
-        <target>Bewerk de instellingen van event ID %s</target>
+        <target>Aanbevelen/afraden evenement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Plak in deze kalender</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta">
-        <source>Edit the event settings</source>
-        <target>Bewerk de evenement instellingen</target>
       </trans-unit>
     </body>
   </file>

@@ -20,13 +20,15 @@ use Symfony\Component\Security\Core\Authentication\RememberMe\TokenProviderInter
 
 class RememberMeTokenProvider implements TokenProviderInterface
 {
-    public function __construct(private RememberMeRepository $repository)
+    private RememberMeRepository|null $repository = null;
+
+    public function __construct(private \Closure $repositoryClosure)
     {
     }
 
     public function loadTokenBySeries(string $series): PersistentToken
     {
-        $rememberMe = $this->repository->findBySeries($series);
+        $rememberMe = $this->getRepository()->findBySeries($series);
 
         return new PersistentToken(
             $rememberMe->getClass(),
@@ -39,21 +41,21 @@ class RememberMeTokenProvider implements TokenProviderInterface
 
     public function deleteTokenBySeries(string $series): void
     {
-        $this->repository->deleteBySeries($series);
+        $this->getRepository()->deleteBySeries($series);
     }
 
-    public function updateToken(string $series, string $tokenValue, \DateTime $lastUsed): void
+    public function updateToken(string $series, #[\SensitiveParameter] string $tokenValue, \DateTime $lastUsed): void
     {
-        $rememberMe = $this->repository->findBySeries($series);
+        $rememberMe = $this->getRepository()->findBySeries($series);
         $rememberMe->setValue($tokenValue);
         $rememberMe->setLastUsed($lastUsed);
 
-        $this->repository->persist($rememberMe);
+        $this->getRepository()->persist($rememberMe);
     }
 
     public function createNewToken(PersistentTokenInterface $token): void
     {
-        $this->repository->persist(
+        $this->getRepository()->persist(
             new RememberMe(
                 $token->getClass(),
                 $token->getUserIdentifier(),
@@ -62,5 +64,14 @@ class RememberMeTokenProvider implements TokenProviderInterface
                 $token->getLastUsed()
             )
         );
+    }
+
+    private function getRepository(): RememberMeRepository
+    {
+        if (null === $this->repository) {
+            $this->repository = ($this->repositoryClosure)();
+        }
+
+        return $this->repository;
     }
 }
