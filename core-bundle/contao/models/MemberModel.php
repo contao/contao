@@ -46,8 +46,6 @@ use Contao\Model\Registry;
  * @property integer           $dateAdded
  * @property integer           $lastLogin
  * @property integer           $currentLogin
- * @property integer           $loginAttempts
- * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
  * @property boolean           $useTwoFactor
@@ -87,8 +85,6 @@ use Contao\Model\Registry;
  * @method static MemberModel|null findOneByDateAdded($val, array $opt=array())
  * @method static MemberModel|null findOneByLastLogin($val, array $opt=array())
  * @method static MemberModel|null findOneByCurrentLogin($val, array $opt=array())
- * @method static MemberModel|null findOneByLoginAttempts($val, array $opt=array())
- * @method static MemberModel|null findOneByLocked($val, array $opt=array())
  * @method static MemberModel|null findOneBySession($val, array $opt=array())
  * @method static MemberModel|null findOneBySecret($val, array $opt=array())
  * @method static MemberModel|null findOneByUseTwoFactor($val, array $opt=array())
@@ -123,8 +119,6 @@ use Contao\Model\Registry;
  * @method static Collection|MemberModel[]|MemberModel|null findByDateAdded($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByLastLogin($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByLoginAttempts($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByLocked($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBySession($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBySecret($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByUseTwoFactor($val, array $opt=array())
@@ -164,8 +158,6 @@ use Contao\Model\Registry;
  * @method static integer countByDateAdded($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())
- * @method static integer countByLoginAttempts($val, array $opt=array())
- * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
  * @method static integer countBySecret($val, array $opt=array())
  * @method static integer countByUseTwoFactor($val, array $opt=array())

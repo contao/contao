@@ -240,7 +240,6 @@ class ModuleLostPassword extends Module
 				$objSession->set('setPasswordToken', '');
 
 				$objMember->tstamp = time();
-				$objMember->locked = 0; // see #8545
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
