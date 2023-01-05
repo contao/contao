@@ -6,10 +6,10 @@
         <source>Token</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
-        <source>Confirmed on</source>
+        <source>Confirmed at</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.removeOn">
-        <source>Remove on</source>
+        <source>Remove at</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.invalidatedThrough">
         <source>Invalidated through</source>
