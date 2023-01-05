@@ -98,7 +98,7 @@ class FeedReaderController extends AbstractFrontendModuleController
 
             // Set limit and offset
             $offset = ($page - 1) * $model->perPage;
-            $limit = $model->perPage + $offset;
+            $limit = $model->perPage;
 
             $pagination = new Pagination(\count($elements), $model->perPage, $config->get('maxPaginationLinks'), $param);
 
