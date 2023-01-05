@@ -2476,10 +2476,6 @@ time[title] {
 	background-image: url("icons/all.svg");
 }
 
-.header_delete_all {
-	background-image: url("icons/deleteAll.svg");
-}
-
 .header_new_folder {
 	padding-left: 24px;
 	background-image: url("icons/newfolder.svg");

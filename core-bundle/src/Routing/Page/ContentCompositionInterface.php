@@ -31,7 +31,7 @@ interface ContentCompositionInterface
      *
      * The $pageModel might tell if a particular page supports composition, for
      * example a 404 page that redirects cannot have articles, but a regular
-     * 404 page can.
+     * 404-page can.
      */
     public function supportsContentComposition(PageModel $pageModel): bool;
 }

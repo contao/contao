@@ -316,10 +316,7 @@ class ModuleEventReader extends Events
 				->enableLightbox($objEvent->fullsize)
 				->buildIfResourceExists();
 
-			if (null !== $figure)
-			{
-				$figure->applyLegacyTemplateData($objTemplate, null, $objEvent->floating);
-			}
+			$figure?->applyLegacyTemplateData($objTemplate, null, $objEvent->floating);
 		}
 
 		$objTemplate->enclosure = array();

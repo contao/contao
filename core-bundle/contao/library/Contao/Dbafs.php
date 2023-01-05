@@ -398,13 +398,8 @@ class Dbafs
 	{
 		self::validateUtf8Path($strResource);
 
-		$objModel = FilesModel::findByPath($strResource);
-
 		// Remove the resource
-		if ($objModel !== null)
-		{
-			$objModel->delete();
-		}
+		FilesModel::findByPath($strResource)?->delete();
 
 		// Look for subfolders and files
 		$objFiles = FilesModel::findMultipleByBasepath($strResource . '/');
