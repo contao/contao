@@ -6,7 +6,7 @@
     <?php endforeach; ?>
 <?php endif; ?>
 
-<img src="<?= $this->img['src'] ?>"<?php if ($this->img['srcset'] !== $this->img['src']): ?> srcset="<?= $this->img['srcset'] ?>"<?php endif; ?><?php if (!empty($this->img['sizes'])): ?> sizes="<?= $this->img['sizes'] ?>"<?php endif; ?><?php if (!empty($this->img['width']) && !empty($this->img['height'])): ?> width="<?= $this->img['width'] ?>" height="<?= $this->img['height'] ?>"<?php endif; ?> alt="<?= $this->alt ?>"<?php if (!empty($this->img['loading'])): ?> loading="<?= $this->img['loading'] ?>"<?php endif; ?><?php if ($this->title): ?> title="<?= $this->title ?>"<?php endif; ?><?php if ($this->class || !empty($this->img['class'])): ?> class="<?= trim($this->class.' '.$this->img['class']??'') ?>"<?php endif; ?><?= $this->attributes ?>>
+<img src="<?= $this->img['src'] ?>"<?php if ($this->img['srcset'] !== $this->img['src']): ?> srcset="<?= $this->img['srcset'] ?>"<?php endif; ?><?php if (!empty($this->img['sizes'])): ?> sizes="<?= $this->img['sizes'] ?>"<?php endif; ?><?php if (!empty($this->img['width']) && !empty($this->img['height'])): ?> width="<?= $this->img['width'] ?>" height="<?= $this->img['height'] ?>"<?php endif; ?> alt="<?= $this->alt ?>"<?php if (!empty($this->img['loading'])): ?> loading="<?= $this->img['loading'] ?>"<?php endif; ?><?php if ($this->title): ?> title="<?= $this->title ?>"<?php endif; ?><?php if ($this->class || !empty($this->img['class'])): ?> class="<?= trim($this->class.' '.$this->img['class'] ?? '') ?>"<?php endif; ?><?= $this->attributes ?>>
 
 <?php if ($this->sources): ?>
   </picture>
