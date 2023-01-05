@@ -4170,7 +4170,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Calculate label and add a toggle button
 		$level = ($intMargin / $intSpacing + 1);
-		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1);
+		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
@@ -4339,32 +4339,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Begin a new submenu
-		if (!$blnNoRecursion)
+		// Begin a new submenu if the node is open or $arrFound is not empty (which means that there
+		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
+		if (!$blnNoRecursion && !empty($childs) && ($blnIsOpen || !empty($arrFound)))
 		{
-			$blnAddParent = ($blnIsOpen || !empty($arrFound) || (!empty($childs) && $session[$node][$id] == 1));
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . '><ul class="level_' . $level . '">';
 
-			if ($blnAddParent)
-			{
-				$return .= '<li class="parent" id="' . $node . '_' . $id . '"><ul class="level_' . $level . '">';
-			}
+			static::preloadCurrentRecords($childs, $table);
 
 			// Add the records of the parent table
-			if ($blnIsOpen && \is_array($childs))
+			for ($k=0, $c=\count($childs); $k<$c; $k++)
 			{
-				static::preloadCurrentRecords($childs, $table);
-
-				for ($k=0, $c=\count($childs); $k<$c; $k++)
-				{
-					$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
-				}
+				$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
 			}
 
-			// Close the submenu
-			if ($blnAddParent)
-			{
-				$return .= '</ul></li>';
-			}
+			$return .= '</ul></li>';
 		}
 
 		$objSessionBag->replace($session);
