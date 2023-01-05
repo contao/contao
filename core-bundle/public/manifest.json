@@ -1,6 +1,6 @@
 {
   "ajax-form.js": "/bundles/contaocore/ajax-form.8d9f14a4.js",
-  "backend.css": "/bundles/contaocore/backend.4d8cd9d0.css",
+  "backend.css": "/bundles/contaocore/backend.df1fd4a2.css",
   "backend.js": "/bundles/contaocore/backend.933c192c.js",
   "images/loader-dark.svg": "/bundles/contaocore/images/loader-dark.d21779f7.svg",
   "images/loader.svg": "/bundles/contaocore/images/loader.f229ebc3.svg",
@@ -8,6 +8,6 @@
   "images/up.svg": "/bundles/contaocore/images/up.2ab1e887.svg",
   "images/down.svg": "/bundles/contaocore/images/down.84aa456f.svg",
   "ajax-form.8d9f14a4.js.map": "/bundles/contaocore/ajax-form.8d9f14a4.js.map",
-  "backend.4d8cd9d0.css.map": "/bundles/contaocore/backend.4d8cd9d0.css.map",
+  "backend.df1fd4a2.css.map": "/bundles/contaocore/backend.df1fd4a2.css.map",
   "backend.933c192c.js.map": "/bundles/contaocore/backend.933c192c.js.map"
 }

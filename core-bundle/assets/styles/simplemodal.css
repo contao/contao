@@ -198,10 +198,6 @@
     border-color: #c8c8c8;
 }
 
-.simple-modal .simple-modal-footer a.btn-disabled:hover {
-    box-shadow: none;
-}
-
 /* Draggable style */
 .simple-modal.draggable .simple-modal-header:hover {
     cursor: move;
