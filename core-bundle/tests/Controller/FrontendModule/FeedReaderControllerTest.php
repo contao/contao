@@ -210,7 +210,7 @@ class FeedReaderControllerTest extends TestCase
             return true;
         };
 
-        $finder = new ResourceFinder(__DIR__.'/../../../src/Resources/contao');
+        $finder = new ResourceFinder(__DIR__.'/../../../contao');
 
         $container = $this->mockContainer(null, $assertTwigContext);
         $container->set('contao.resource_finder', $finder);
