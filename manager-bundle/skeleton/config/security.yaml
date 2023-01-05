@@ -15,13 +15,10 @@ security:
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
             switch_user: true
+            login_throttling: ~
 
             contao_login:
                 remember_me: false
-
-            login_throttling:
-                max_attempts: 5
-                interval: 5 minutes
 
             logout:
                 path: contao_backend_logout
@@ -31,13 +28,10 @@ security:
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
             switch_user: false
+            login_throttling: ~
 
             contao_login:
                 remember_me: true
-
-            login_throttling:
-                max_attempts: 5
-                interval: 5 minutes
 
             remember_me:
                 secret: '%kernel.secret%'
