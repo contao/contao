@@ -32,8 +32,7 @@
                         {% block feed_header_description %}
                             {% if feed.description %}
                                 <div class="description">
-                                    {# todo: We probably need sanitizing here + can then allow |raw; maybe even as a filter |sanitize|raw? #}
-                                    {{ feed.description }}
+                                    {{ feed.description|sanitize_html }}
                                 </div>
                             {% endif %}
                         {% endblock %}
@@ -50,8 +49,7 @@
                     {% endblock %}
                     {% block feed_item_content %}
                         <div class="content">
-                            {# todo: We probably need sanitizing here + can then allow |raw; maybe even as a filter |sanitize|raw? #}
-                            {{ item.content }}
+                            {{ item.content|sanitize_html }}
                         </div>
                     {% endblock %}
                 </section>

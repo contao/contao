@@ -1020,6 +1020,11 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
 
+    contao.twig.sanitizer_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.inspector:
         class: Contao\CoreBundle\Twig\Inspector\Inspector
         public: true
