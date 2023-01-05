@@ -25,7 +25,6 @@
     <script><?= $this->getLocaleString() ?></script>
     <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
     <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
-    <script src="<?= $this->asset('system/themes/'.$this->theme.'/hover.min.js') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
