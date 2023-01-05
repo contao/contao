@@ -73,6 +73,7 @@ use Contao\ModuleQuicklink;
 use Contao\ModuleQuicknav;
 use Contao\ModuleRandomImage;
 use Contao\ModuleRegistration;
+use Contao\ModuleRssReader;
 use Contao\ModuleSearch;
 use Contao\ModuleSitemap;
 use Contao\ModuleTwoFactor;
@@ -257,6 +258,7 @@ $GLOBALS['FE_MOD'] = array
 		'articlelist'    => ModuleArticleList::class,
 		'randomImage'    => ModuleRandomImage::class,
 		'html'           => ModuleHtml::class,
+		'rssReader'      => ModuleRssReader::class,
 	)
 );
 

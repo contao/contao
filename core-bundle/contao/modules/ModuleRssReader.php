@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use RuntimeException;
 
 /**
  * Front end module "rss reader".
@@ -36,6 +37,12 @@ class ModuleRssReader extends Module
 	 */
 	public function generate()
 	{
+		trigger_deprecation('contao/core-bundle', '5.1', sprintf('The "%s" has been deprecated and will be removed in Contao 6. Use the Feed Reader Module instead.', __CLASS__));
+
+		if (!\class_exists('\SimplePie')) {
+			throw new RuntimeException('The RSS Reader Module requires the SimplePie library. Install simplepie/simplepie ^1.3 manually.');
+		}
+
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
@@ -51,7 +58,7 @@ class ModuleRssReader extends Module
 		}
 
 		$this->objFeed = new \SimplePie();
-		$arrUrls = StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
+		$arrUrls = StringUtil::trimsplit('[\n\t ]', trim($this->feedUrls));
 
 		if (\count($arrUrls) > 1)
 		{
@@ -66,15 +73,15 @@ class ModuleRssReader extends Module
 		$this->objFeed->set_cache_location(System::getContainer()->getParameter('kernel.project_dir') . '/system/tmp');
 		$this->objFeed->enable_cache(false);
 
-		if ($this->rss_cache > 0)
+		if ($this->feedCache > 0)
 		{
 			$this->objFeed->enable_cache();
-			$this->objFeed->set_cache_duration($this->rss_cache);
+			$this->objFeed->set_cache_duration($this->feedCache);
 		}
 
 		if (!$this->objFeed->init())
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->rss_feed . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->feedUrls . '"');
 
 			return '';
 		}

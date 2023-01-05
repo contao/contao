@@ -95,6 +95,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},feedUrls,numberOfItems,perPage,skipFirst,feedCache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},feedUrls,numberOfItems,perPage,skipFirst,feedCache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
@@ -419,6 +420,16 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'style'=>'height:60px'),
 			'sql'                     => "text NULL"
+		),
+		'rss_template' => array
+		(
+			'inputType'               => 'select',
+			'options_callback' => static function ()
+			{
+				return Controller::getTemplateGroup('rss_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'rss_default'"
 		),
 		'numberOfItems' => array
 		(

@@ -272,6 +272,12 @@
       <trans-unit id="tl_module.feedUrls.1">
         <source>Please enter the URL of one or more feed (RSS, Atom or JSON).</source>
       </trans-unit>
+      <trans-unit id="tl_module.rss_template.0">
+        <source>Feed template</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_template.1">
+        <source>Here you can select the feed template.</source>
+      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
       </trans-unit>
