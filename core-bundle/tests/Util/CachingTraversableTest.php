@@ -125,6 +125,7 @@ class CachingTraversableTest extends TestCase
      * @template TValue
      *
      * @param list<array{0:TKey,1:TValue}> $items
+     *
      * @param-out list<int> $generatorLog
      *
      * @return \Generator<TKey, TValue>

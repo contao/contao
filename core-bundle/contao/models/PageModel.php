@@ -820,14 +820,7 @@ class PageModel extends Model
 	 */
 	public static function findWithDetails($intId)
 	{
-		$objPage = static::findByPk($intId);
-
-		if ($objPage === null)
-		{
-			return null;
-		}
-
-		return $objPage->loadDetails();
+		return static::findByPk($intId)?->loadDetails();
 	}
 
 	/**

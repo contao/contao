@@ -51,6 +51,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     /**
      * @var array<string, array|null>
+     *
      * @phpstan-var array<string, Record|null>
      */
     private array $records = [];
