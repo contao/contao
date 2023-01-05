@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use RuntimeException;
 
 /**
  * Front end module "rss reader".
@@ -39,8 +38,9 @@ class ModuleRssReader extends Module
 	{
 		trigger_deprecation('contao/core-bundle', '5.1', sprintf('The "%s" has been deprecated and will be removed in Contao 6. Use the Feed Reader Module instead.', __CLASS__));
 
-		if (!\class_exists('\SimplePie')) {
-			throw new RuntimeException('The RSS Reader Module requires the SimplePie library. Install simplepie/simplepie ^1.3 manually.');
+		if (!class_exists('\SimplePie'))
+		{
+			throw new \RuntimeException('The RSS Reader Module requires the SimplePie library. Install simplepie/simplepie ^1.3 manually.');
 		}
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
