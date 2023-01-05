@@ -11,11 +11,9 @@
 	--body-bg: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--text: #ddd;
-		--body-bg: #151619;
-	}
+html[data-color-scheme="dark"] {
+	--text: #ddd;
+	--body-bg: #151619;
 }
 
 body {

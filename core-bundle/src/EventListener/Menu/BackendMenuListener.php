@@ -154,6 +154,25 @@ class BackendMenuListener
 
         $submenu->addChild($info);
 
+        $colorScheme = $factory
+            ->createItem('color-scheme')
+            ->setLabel($this->translator->trans('MSC.toggleColorScheme', [], 'contao_default'))
+            ->setAttribute('class', 'color-scheme')
+            ->setAttribute('data-controller', 'contao--colorscheme')
+            ->setAttribute('data-contao--colorscheme-i18n-value', json_encode([
+                'dark' => $this->translator->trans('MSC.enableDarkMode', [], 'contao_default'),
+                'light' => $this->translator->trans('MSC.disableDarkMode', [], 'contao_default'),
+            ]))
+            ->setUri('#')
+            ->setLinkAttribute('title', $this->translator->trans('MSC.toggleColorScheme', [], 'contao_default'))
+            ->setLinkAttribute('class', 'icon-color-scheme')
+            ->setLinkAttribute('data-contao--colorscheme-target', 'label')
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $submenu->addChild($colorScheme);
+
         $login = $factory
             ->createItem('login')
             ->setLabel('MSC.profile')
