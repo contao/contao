@@ -53,7 +53,10 @@ class RouteProvider extends AbstractPageRouteProvider
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
-    public function getRouteByName(string $name): Route
+    /**
+     * @param string $name
+     */
+    public function getRouteByName($name): Route
     {
         $this->framework->initialize();
 
