@@ -12,6 +12,7 @@
       <meta name="referrer" content="origin">
     <?php $this->endblock(); ?>
 
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>">
     <link rel="stylesheet" href="<?php
       $objCombiner = new Contao\Combiner();
       $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
@@ -19,7 +20,6 @@
       $objCombiner->add('system/themes/'.$this->theme.'/main.min.css');
       echo $objCombiner->getCombinedFile();
     ?>">
-    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
