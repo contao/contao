@@ -21,7 +21,7 @@ export default class extends Controller {
     };
 
     static afterLoad (_identifier, _application) {
-        document.firstElementChild.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
+        document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
     }
 
     initialize () {
@@ -51,7 +51,7 @@ export default class extends Controller {
             localStorage.setItem('contao--prefers-dark', String(isDark));
         }
 
-        document.firstElementChild.dataset.colorScheme = isDark ? 'dark' : 'light';
+        document.documentElement.dataset.colorScheme = isDark ? 'dark' : 'light';
 
         // Change the label after the dropdown is hidden
         setTimeout(() => {
