@@ -164,8 +164,8 @@ class tl_member_group extends Backend
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
 			Image::getUrl($image),
-			$disabled ? $image : rtrim($image, '_'),
-			rtrim($image, '_') . '_',
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_'),
 			$label
 		);
 	}

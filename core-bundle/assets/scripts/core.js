@@ -350,7 +350,7 @@ window.AjaxRequest =
 							}
 
 							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1)+newSrc : newSrc;
+							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
 						}
 					})
 				}
@@ -374,7 +374,7 @@ window.AjaxRequest =
 		// Send request
 		images.forEach(function (image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
-			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1)+newSrc : newSrc;
+			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
 			image.set('data-state', !published ? 1 : 0);
 		});
 

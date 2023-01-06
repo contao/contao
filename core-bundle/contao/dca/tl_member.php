@@ -427,8 +427,8 @@ class tl_member extends Backend
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
 			Image::getUrl($image),
-			$disabled ? $image : rtrim($image, '_'),
-			rtrim($image, '_') . '_'
+			Image::getUrl($disabled ? $image : rtrim($image, '_')),
+			Image::getUrl(rtrim($image, '_') . '_')
 		);
 
 		return $args;
