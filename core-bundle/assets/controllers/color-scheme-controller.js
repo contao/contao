@@ -10,6 +10,13 @@ const prefersDark = () => {
     return prefersDark === 'true';
 }
 
+const setColorScheme = () => {
+    document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
+};
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setColorScheme);
+setColorScheme();
+
 export default class extends Controller {
     static targets = ['label'];
 
@@ -20,20 +27,16 @@ export default class extends Controller {
         }
     };
 
-    static afterLoad (_identifier, _application) {
-        document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
-    }
-
     initialize () {
         this.toggle = this.toggle.bind(this);
+        this.setLabel = this.setLabel.bind(this);
     }
 
     connect () {
         this.element.addEventListener('click', this.toggle);
 
-        if (this.hasLabelTarget) {
-            this.labelTarget.innerText = this.i18nValue[prefersDark() ? 'light' : 'dark'];
-        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.setLabel);
+        this.setLabel();
     }
 
     disconnect () {
@@ -51,11 +54,15 @@ export default class extends Controller {
             localStorage.setItem('contao--prefers-dark', String(isDark));
         }
 
-        document.documentElement.dataset.colorScheme = isDark ? 'dark' : 'light';
+        setColorScheme();
 
         // Change the label after the dropdown is hidden
-        setTimeout(() => {
-            this.labelTarget.innerText = this.i18nValue[isDark ? 'light' : 'dark'];
-        }, 300);
+        setTimeout(this.setLabel, 300);
+    }
+
+    setLabel () {
+        if (this.hasLabelTarget) {
+            this.labelTarget.innerText = this.i18nValue[prefersDark() ? 'light' : 'dark'];
+        }
     }
 }
