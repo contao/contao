@@ -33,7 +33,7 @@ class DoctrineSchemaListener
     {
         $this->provider->appendToSchema($event->getSchema());
 
-        foreach (['contao_prio_high', 'contao_prio_medium', 'contao_prio_low'] as $transportName) {
+        foreach (['contao_prio_high', 'contao_prio_normal', 'contao_prio_low', 'contao_failure'] as $transportName) {
             if (!$this->messengerTransportLocator->has($transportName)) {
                 continue;
             }
