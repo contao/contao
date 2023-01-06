@@ -148,7 +148,7 @@ class Image
 
 			if (file_exists(Path::join($projectDir, $darkSrc)))
 			{
-				return '<img class="color-scheme--dark" style="display:none" src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '><img class="color-scheme--light" src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
+				return '<img class="color-scheme--dark" src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '" loading="lazy"' . ($attributes ? ' ' . $attributes : '') . '><img class="color-scheme--light" src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '" loading="lazy"' . ($attributes ? ' ' . $attributes : '') . '>';
 			}
 		}
 
