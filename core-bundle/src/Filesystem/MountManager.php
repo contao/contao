@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
  * the path (prefix) each adapter is registered with.
  *
  * Note: In general, user code should not directly interface with the
- *       MountManager, but use the @see VirtualFilesystem instead.
+ *       MountManager, but use the {@see VirtualFilesystem} instead.
  *
  * @experimental
  */

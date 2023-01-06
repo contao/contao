@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -90,7 +91,7 @@ class TemplateOptionsListener
     /**
      * Called by the RegisterFragmentsPass for all fragment controllers.
      *
-     * @see \Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass
+     * @see RegisterFragmentsPass
      */
     public function setDefaultIdentifiersByType(array $defaultIdentifiersByType): void
     {

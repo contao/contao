@@ -20,7 +20,7 @@ use Contao\Template;
 final class ContextFactory
 {
     /**
-     * Creates a Twig template context from a @see Template object.
+     * Creates a Twig template context from a {@see Template} object.
      */
     public function fromContaoTemplate(Template $template): array
     {

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -22,7 +23,7 @@ use Symfony\Component\Uid\Uuid;
  * registered with a prefix path and will be queried accordingly.
  *
  * Note: In general, user code should not directly interface with the
- *       DbafsManager, but use the @see VirtualFilesystem instead.
+ *       DbafsManager, but use the {@see VirtualFilesystem} instead.
  *
  * @experimental
  */

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Tests\Filesystem\Dbafs\DbafsTest;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -851,7 +852,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * denote directories of which only the direct children should be read, we
      * append a double slash (//) as an internal marker.
      *
-     * @see \Contao\CoreBundle\Tests\Filesystem\DbafsTest::testNormalizesSearchPaths()
+     * @see DbafsTest::testNormalizesSearchPaths()
      *
      * @return array{0: array<string>, 1: array<string>}
      */

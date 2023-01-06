@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -168,18 +169,20 @@ class FrontendTemplate extends Template
 		{
 			$response->setSharedMaxAge($objPage->cache); // Automatically sets the response to public
 
-			// We vary on cookies if a response is cacheable by the shared
-			// cache, so a reverse proxy does not load a response from cache if
-			// the _request_ contains a cookie.
-			//
-			// This DOES NOT mean that we generate a cache entry for every
-			// response containing a cookie! Responses with cookies will always
-			// be private (@see Contao\CoreBundle\EventListener\MakeResponsePrivateListener).
-			//
-			// However, we want to be able to force the reverse proxy to load a
-			// response from cache, even if the request contains a cookie – in
-			// case the admin has configured to do so. A typical use case would
-			// be serving public pages from cache to logged in members.
+			/**
+			 * We vary on cookies if a response is cacheable by the shared
+			 * cache, so a reverse proxy does not load a response from cache if
+			 * the _request_ contains a cookie.
+			 *
+			 * This DOES NOT mean that we generate a cache entry for every
+			 * response containing a cookie! Responses with cookies will always
+			 * be private ({@see MakeResponsePrivateListener}).
+			 *
+			 * However, we want to be able to force the reverse proxy to load a
+			 * response from cache, even if the request contains a cookie – in
+			 * case the admin has configured to do so. A typical use case would
+			 * be serving public pages from cache to logged in members.
+			 */
 			if (!$objPage->alwaysLoadFromCache)
 			{
 				$response->setVary(array('Cookie'));
