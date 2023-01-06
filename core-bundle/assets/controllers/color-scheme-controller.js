@@ -16,7 +16,7 @@ export default class extends Controller {
     static values = {
         i18n: {
             type: Object,
-            default: { light: 'Disable dark mode', dark: 'Enable dark mode'}
+            default: { light: 'Disable dark mode', dark: 'Enable dark mode' }
         }
     };
 

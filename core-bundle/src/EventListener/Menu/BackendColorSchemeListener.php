@@ -21,10 +21,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendColorSchemeListener
 {
-    public function __construct(
-        private Security $security,
-        private TranslatorInterface $translator,
-    ) {
+    public function __construct(private Security $security, private TranslatorInterface $translator)
+    {
     }
 
     public function __invoke(MenuEvent $event): void
