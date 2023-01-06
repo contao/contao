@@ -11,8 +11,8 @@ const prefersDark = () => {
 }
 
 export default class extends Controller {
-
     static targets = ['label'];
+
     static values = {
         i18n: {
             type: Object,
