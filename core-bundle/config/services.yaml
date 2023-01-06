@@ -101,6 +101,7 @@ services:
         class: Contao\CoreBundle\Cron\MessengerCron
         arguments:
             - '@messenger.receiver_locator'
+            - '@contao.util.process_util'
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -1070,6 +1071,9 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.util.process_util:
+        class: Contao\CoreBundle\Util\ProcessUtil
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

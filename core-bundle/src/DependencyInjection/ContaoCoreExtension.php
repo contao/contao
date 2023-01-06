@@ -238,8 +238,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(1, $config['messenger']['console_path']);
-        $cron->setArgument(2, $config['messenger']['workers']);
+        $cron->setArgument(2, $config['messenger']['console_path']);
+        $cron->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

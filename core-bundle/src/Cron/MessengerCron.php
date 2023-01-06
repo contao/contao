@@ -18,20 +18,14 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
-use Symfony\Component\Process\Process;
 
 #[AsCronJob('minutely')]
 class MessengerCron
 {
     /**
-     * @var callable|null
-     */
-    private $promiseFactory;
-
-    /**
      * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}}> $workers
      */
-    public function __construct(private ContainerInterface $messengerTransportLocator, private string $consolePath, private array $workers)
+    public function __construct(private ContainerInterface $messengerTransportLocator, private ProcessUtil $processUtil, private string $consolePath, private array $workers)
     {
     }
 
@@ -48,13 +42,6 @@ class MessengerCron
         }
 
         return Utils::all($workerPromises);
-    }
-
-    public function setPromiseFactory(callable $callable): self
-    {
-        $this->promiseFactory = $callable;
-
-        return $this;
     }
 
     /**
@@ -87,24 +74,13 @@ class MessengerCron
      */
     private function createProcessPromiseForWorker(array $worker): PromiseInterface
     {
-        $process = ProcessUtil::createSymfonyConsoleProcess(
+        $process = $this->processUtil->createSymfonyConsoleProcess(
             $this->consolePath,
             'messenger:consume',
             ...array_merge($worker['options'], $worker['transports'])
         );
 
-        return $this->createPromiseForProcess($process);
-    }
-
-    private function createPromiseForProcess(Process $process): PromiseInterface
-    {
-        if (null !== $this->promiseFactory) {
-            $factory = $this->promiseFactory;
-
-            return $factory($process);
-        }
-
-        return ProcessUtil::createPromise($process);
+        return $this->processUtil->createPromise($process);
     }
 
     private function collectTotalMessages(array $transportNames): int

@@ -23,16 +23,9 @@ use Symfony\Component\Process\Process;
 
 class MessengerCronTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([ProcessUtil::class]);
-
-        parent::tearDown();
-    }
-
     public function testDoesNotRunIfNotOnCli(): void
     {
-        $cron = new MessengerCron(new Container(), 'bin/console', []);
+        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
         $this->assertNull($cron(Cron::SCOPE_WEB));
     }
 
@@ -45,16 +38,22 @@ class MessengerCronTest extends TestCase
         $container->set('prio_normal', $this->mockMessengerTransporter(0, false));
         $container->set('prio_high', $this->mockMessengerTransporter($messageCount, true));
 
-        $cron = new MessengerCron($container, 'bin/console', $this->getWorkers($desiredSize, $max));
-        $cron->setPromiseFactory(
-            static function (Process $process) {
-                return $promise = new Promise(
-                    static function () use (&$promise, $process): void {
-                        $promise->resolve($process);
-                    }
-                );
-            }
-        );
+        $processUtil = $this->createPartialMock(ProcessUtil::class, ['createPromise']);
+        $processUtil
+            ->expects($this->exactly(\count($expectedWorkers)))
+            ->method('createPromise')
+            ->willReturnCallback(
+                static function (Process $process) {
+                    return $promise = new Promise(
+                        static function () use (&$promise, $process): void {
+                            $promise->resolve($process);
+                        }
+                    );
+                }
+            )
+        ;
+
+        $cron = new MessengerCron($container, $processUtil, 'bin/console', $this->getWorkers($desiredSize, $max));
         $promise = $cron(Cron::SCOPE_CLI);
 
         $processes = [];

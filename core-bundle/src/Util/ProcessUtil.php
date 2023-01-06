@@ -16,17 +16,18 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Symfony\Contracts\Service\ResetInterface;
 
-class ProcessUtil
+class ProcessUtil implements ResetInterface
 {
-    private static string|null $phpBinary = null;
+    private string|null $phpBinary = null;
 
     /**
      * Creates a GuzzleHttp/Promise for a Symfony Process instance.
      *
      * @param bool $start automatically calls Process::start() if true
      */
-    public static function createPromise(Process $process, bool $start = true): PromiseInterface
+    public function createPromise(Process $process, bool $start = true): PromiseInterface
     {
         $promise = new Promise(
             static function () use (&$promise, $process): void {
@@ -47,7 +48,7 @@ class ProcessUtil
         return $promise;
     }
 
-    public static function createSymfonyConsoleProcess(string $consolePath, string $command, string ...$commandArguments): Process
+    public function createSymfonyConsoleProcess(string $consolePath, string $command, string ...$commandArguments): Process
     {
         $arguments = [];
         $arguments[] = self::getPhpBinary();
@@ -58,18 +59,18 @@ class ProcessUtil
         return new Process($arguments);
     }
 
-    public static function reset(): void
+    public function reset(): void
     {
-        self::$phpBinary = null;
+        $this->phpBinary = null;
     }
 
-    private static function getPhpBinary(): string
+    private function getPhpBinary(): string
     {
-        if (null === self::$phpBinary) {
+        if (null === $this->phpBinary) {
             $executableFinder = new PhpExecutableFinder();
-            self::$phpBinary = $executableFinder->find();
+            $this->phpBinary = $executableFinder->find();
         }
 
-        return self::$phpBinary;
+        return $this->phpBinary;
     }
 }
