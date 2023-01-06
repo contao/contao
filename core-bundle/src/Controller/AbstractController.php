@@ -105,7 +105,9 @@ abstract class AbstractController extends SymfonyAbstractController
              *
              * This DOES NOT mean that we generate a cache entry for every
              * response containing a cookie! Responses with cookies will always
-             * be private ({@see MakeResponsePrivateListener}).
+             * be private.
+             *
+             * @see MakeResponsePrivateListener
              *
              * However, we want to be able to force the reverse proxy to load a
              * response from cache, even if the request contains a cookie – in

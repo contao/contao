@@ -18,8 +18,6 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 /**
- * @template-extends ServiceEntityRepository<RememberMe>
- *
  * @internal
  */
 class RememberMeRepository extends ServiceEntityRepository

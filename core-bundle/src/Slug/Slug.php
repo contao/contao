@@ -27,7 +27,9 @@ class Slug
     }
 
     /**
-     * @param int|iterable $options A page ID, object or options array {@see SlugGeneratorInterface::generate()}
+     * @param int|iterable $options A page ID, object or options array
+     *
+     * @see SlugGeneratorInterface::generate()
      */
     public function generate(string $text, int|iterable $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {

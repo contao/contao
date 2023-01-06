@@ -21,8 +21,10 @@ use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\UseTokenParser;
 
 /**
- * This parser is a drop in replacement for {@see UseTokenParser}
+ * This parser is a drop in replacement for the UseTokenParser
  * that adds support for the Contao template hierarchy.
+ *
+ * @see UseTokenParser
  *
  * @experimental
  */

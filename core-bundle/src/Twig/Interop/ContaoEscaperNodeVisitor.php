@@ -46,7 +46,9 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * Make sure to run after {@see EscaperNodeVisitor}.
+     * Make sure to run after the EscaperNodeVisitor.
+     *
+     * @see EscaperNodeVisitor
      */
     public function getPriority(): int
     {
