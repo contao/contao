@@ -133,12 +133,12 @@ html[data-color-scheme="dark"] {
 	--datepicker-hover: #393e46;
 }
 
-html .color-scheme--light, html[data-color-scheme="dark"] .color-scheme--dark {
-	display: initial !important;
+html[data-color-scheme="dark"] .color-scheme--light {
+	display: none !important;
 }
 
-html .color-scheme--dark, html[data-color-scheme="dark"] .color-scheme--light {
-	display: none !important;
+html[data-color-scheme="dark"] .color-scheme--dark {
+	display: initial !important;
 }
 
 /* HTML */
