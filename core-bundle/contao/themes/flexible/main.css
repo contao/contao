@@ -11,17 +11,17 @@
 	--icon-profile: url("icons/profile_small.svg");
 	--icon-security: url("icons/shield_small.svg");
 	--icon-favorites: url("icons/favorites_small.svg");
+	--icon-color-scheme: url("icons/color-scheme_small.svg");
 	--icon-logout: url("icons/exit.svg");
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--icon-logo: url("icons-dark/logo.svg");
-		--icon-profile: url("icons-dark/profile_small.svg");
-		--icon-security: url("icons-dark/shield_small.svg");
-		--icon-favorites: url("icons-dark/favorites_small.svg");
-		--icon-logout: url("icons-dark/exit.svg");
-	}
+html[data-color-scheme="dark"] {
+	--icon-logo: url("icons-dark/logo.svg");
+	--icon-profile: url("icons-dark/profile_small.svg");
+	--icon-security: url("icons-dark/shield_small.svg");
+	--icon-favorites: url("icons-dark/favorites_small.svg");
+	--icon-color-scheme: url("icons-dark/color-scheme_small.svg");
+	--icon-logout: url("icons-dark/exit.svg");
 }
 
 /* Body */
@@ -138,9 +138,9 @@ body.popup {
 	position: absolute;
 	right: 6px;
 	margin-top: 5px;
-	padding: 6px 0 9px;
 	background: var(--content-bg);
-	box-shadow: 0 0 3px var(--gray);
+	border: 1px solid var(--content-border);
+	box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
 	z-index: 1;
 	color: var(--text);
 	text-align: left;
@@ -167,7 +167,7 @@ body.popup {
 
 #tmenu ul.menu_level_1 .info {
 	color: var(--info);
-	padding: 9px 20px 15px;
+	padding: 15px 20px;
 	border-bottom: 1px solid var(--border);
 	line-height: 1.4;
 	margin-bottom: 9px;
@@ -194,10 +194,20 @@ body.popup {
 #tmenu ul.menu_level_1:after {
 	content: "";
 	display: block;
-	width: 100%;
-	height: 5px;
+	width: 9px;
+	height: 9px;
 	position: absolute;
-	top: -5px;
+	top: -6px;
+	right: 11px;
+	border-top: 1px solid var(--content-border);
+	border-right: 1px solid var(--content-border);
+	transform: rotateZ(-45deg);
+}
+
+#tmenu ul.menu_level_1 .color-scheme {
+	margin-top: 9px;
+	padding: 6px 0;
+	border-top: 1px solid var(--border);
 }
 
 #tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual {
@@ -223,6 +233,10 @@ body.popup {
 
 #tmenu .icon-manual {
 	background: url("icons/manual.svg") center center no-repeat;
+}
+
+#tmenu .icon-color-scheme {
+	background: var(--icon-color-scheme) 20px center no-repeat;
 }
 
 #tmenu .icon-profile {

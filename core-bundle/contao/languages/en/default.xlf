@@ -2105,6 +2105,12 @@
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
       </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

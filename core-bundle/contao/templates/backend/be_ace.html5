@@ -25,7 +25,7 @@ window.ace && window.addEvent('domready', function() {
   // Instantiate the editor
   let editor = ace.edit('<?= $this->selector ?>_div');
   editor.$blockScrolling = Infinity;
-  editor.setTheme((window.matchMedia("(prefers-color-scheme: dark)").matches ? 'ace/theme/twilight' : 'ace/theme/clouds'));
+  editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
   editor.renderer.setScrollMargin(3, 3, 0, 0);
   editor.renderer.scrollBy(0, -6);
   editor.container.style.lineHeight = 1.45;
