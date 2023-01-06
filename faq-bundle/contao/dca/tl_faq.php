@@ -57,10 +57,11 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
-			'child_record_callback'   => array('tl_faq', 'listQuestions')
+			'child_record_callback'   => array('tl_faq', 'listQuestions'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -103,9 +104,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'sorting' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
@@ -115,7 +113,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'question' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
@@ -137,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -559,7 +555,7 @@ class tl_faq extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">
 <h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";

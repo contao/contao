@@ -488,7 +488,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Build the tree
 		$return = $this->panel() . Message::generate() . ($buttons ? '
 <div id="tl_buttons">' . $buttons . '</div>' : '') . ((Input::get('act') == 'select') ? '
-<form id="tl_select" class="tl_form tl_edit_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
+<form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . ($blnClipboard ? '

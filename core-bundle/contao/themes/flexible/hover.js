@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-var Theme = {
+window.Theme = {
 
 	/**
 	 * Check for WebKit

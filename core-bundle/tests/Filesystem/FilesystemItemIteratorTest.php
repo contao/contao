@@ -166,7 +166,7 @@ class FilesystemItemIteratorTest extends TestCase
 
     public function provideInvalidItems(): \Generator
     {
-        yield 'scalar' => [42, 'integer'];
+        yield 'scalar' => [42, 'int'];
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
     }
 

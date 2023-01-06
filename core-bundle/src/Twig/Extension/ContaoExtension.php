@@ -248,8 +248,8 @@ final class ContaoExtension extends AbstractExtension
     }
 
     /**
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor
+     * @see PhpTemplateProxyNode
+     * @see PhpTemplateProxyNodeVisitor
      *
      * @internal
      */
@@ -284,8 +284,8 @@ final class ContaoExtension extends AbstractExtension
     }
 
     /**
-     * @see \Contao\CoreBundle\Twig\ResponseContext\AddNode
-     * @see \Contao\CoreBundle\Twig\ResponseContext\AddTokenParser
+     * @see AddNode
+     * @see AddTokenParser
      *
      * @internal
      */

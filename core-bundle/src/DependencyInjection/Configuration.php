@@ -114,6 +114,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
+                ->append($this->addCronNode())
             ->end()
         ;
 
@@ -736,6 +737,24 @@ class Configuration implements ConfigurationInterface
                                 return $protocols;
                             }
                         )
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCronNode(): NodeDefinition
+    {
+        return (new TreeBuilder('cron'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('web_listener')
+                    ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
+                    ->defaultValue('auto')
+                    ->validate()
+                        ->ifTrue(static fn ($value) => !\in_array($value, [true, false, 'auto'], true))
+                        ->thenInvalid('Expected "true", "false" or "auto", got %s.')
                     ->end()
                 ->end()
             ->end()

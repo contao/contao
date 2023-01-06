@@ -43,7 +43,7 @@ class PreviewFactory
         private PictureFactoryInterface $pictureFactory,
         private Studio $imageStudio,
         private ContaoFramework $framework,
-        private string $secret,
+        #[\SensitiveParameter] private string $secret,
         private string $cacheDir,
         private array $validImageExtensions,
         private int $defaultSize,

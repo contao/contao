@@ -1,6 +1,8 @@
 import { Application } from '@hotwired/stimulus'
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers'
 
+import './scripts/mootao'
+import './scripts/core'
 import './scripts/autofocus'
 import './scripts/limit-height'
 import './scripts/modulewizard'

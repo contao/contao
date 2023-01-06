@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +25,9 @@ class CommandSchedulerListener
 {
     public function __construct(
         private Cron $cron,
-        private ContaoFramework $framework,
         private Connection $connection,
         private string $fragmentPath = '_fragment',
+        private bool $autoMode = false,
     ) {
     }
 
@@ -38,12 +36,12 @@ class CommandSchedulerListener
      */
     public function __invoke(TerminateEvent $event): void
     {
-        if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
+        if ($this->shouldRunCron($event->getRequest())) {
             $this->cron->run(Cron::SCOPE_WEB);
         }
     }
 
-    private function canRunCron(Request $request): bool
+    private function shouldRunCron(Request $request): bool
     {
         $pathInfo = $request->getPathInfo();
 
@@ -52,9 +50,16 @@ class CommandSchedulerListener
             return false;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
+        // Without the DB table, the cron framework cannot work
+        if (!$this->canRunDbQuery()) {
+            return false;
+        }
 
-        return !$config->get('disableCron') && $this->canRunDbQuery();
+        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

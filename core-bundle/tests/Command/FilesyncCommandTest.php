@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\FilesyncCommand;
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -66,43 +66,41 @@ class FilesyncCommandTest extends TestCase
     {
         ClockMock::withClockMock(true);
 
-        $changeSet = new ChangeSet(
-            [
-                [
-                    ChangeSet::ATTR_HASH => '5493611ba7d91b0ee8e0f893f6bf837e',
-                    ChangeSet::ATTR_PATH => 'foo/new1',
-                    ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
-                ],
-                [
-                    ChangeSet::ATTR_HASH => '802ffec476939b66450caf0140bee49e',
-                    ChangeSet::ATTR_PATH => 'foo/new2',
-                    ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY,
-                ],
-            ],
-            [
-                'bar/old_path' => [
-                    ChangeSet::ATTR_PATH => 'bar/updated_path',
-                ],
-                'bar/file_that_changes' => [
-                    ChangeSet::ATTR_HASH => '8a1631a4eacf47253f3ebb5aea2ccce7',
-                ],
-            ],
-            [
-                'baz' => ChangeSet::TYPE_DIRECTORY,
-                'baz/deleted1' => ChangeSet::TYPE_FILE,
-                'baz/deleted2' => ChangeSet::TYPE_FILE,
-            ]
-        );
-
         $manager = $this->createMock(DbafsManager::class);
         $manager
             ->expects($this->once())
             ->method('sync')
             ->willReturnCallback(
-                static function () use ($changeSet) {
+                static function () {
                     ClockMock::sleep(3);
 
-                    return $changeSet;
+                    return new ChangeSet(
+                        [
+                            [
+                                ChangeSet::ATTR_HASH => '5493611ba7d91b0ee8e0f893f6bf837e',
+                                ChangeSet::ATTR_PATH => 'foo/new1',
+                                ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
+                            ],
+                            [
+                                ChangeSet::ATTR_HASH => '802ffec476939b66450caf0140bee49e',
+                                ChangeSet::ATTR_PATH => 'foo/new2',
+                                ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY,
+                            ],
+                        ],
+                        [
+                            'bar/old_path' => [
+                                ChangeSet::ATTR_PATH => 'bar/updated_path',
+                            ],
+                            'bar/file_that_changes' => [
+                                ChangeSet::ATTR_HASH => '8a1631a4eacf47253f3ebb5aea2ccce7',
+                            ],
+                        ],
+                        [
+                            'baz' => ChangeSet::TYPE_DIRECTORY,
+                            'baz/deleted1' => ChangeSet::TYPE_FILE,
+                            'baz/deleted2' => ChangeSet::TYPE_FILE,
+                        ]
+                    );
                 }
             )
         ;
