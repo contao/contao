@@ -18,6 +18,8 @@ use Doctrine\DBAL\Connection;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
+ * @template-extends ServiceEntityRepository<CronJob>
+ *
  * @method object|null findOneByName(string $name)
  *
  * @internal
