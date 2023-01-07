@@ -130,7 +130,6 @@ html[data-color-scheme="dark"] {
 	--serp-preview: #bdc1c6;
 	--serp-preview-title: #8ab4f8;
 	--nested-bg: #1e2024;
-	--datepicker-hover: #393e46;
 }
 
 html[data-color-scheme="dark"] .color-scheme--light {
@@ -410,13 +409,12 @@ p {
 	min-height: 16px;
 }
 
-.widget h3 label, .widget h3 img {
+.widget h3 img {
 	margin-right: 3px;
 }
 
 .widget legend img {
-	margin-left: 3px;
-	vertical-align: top;
+	vertical-align: -1px;
 }
 
 .widget-captcha {
