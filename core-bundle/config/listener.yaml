@@ -362,8 +362,8 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.messenger.worker_is_running:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerIsRunningEventListener
+    contao.listener.messenger.worker:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
         arguments:
             - '@contao.messenger.auto_fallback_notifier'
 

@@ -31,9 +31,14 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
             throw new InvalidArgumentException(sprintf('The given Auto Fallback DSN "%s" is invalid.', $dsn));
         }
 
-        $target = $parsedUrl['host'] ?? '';
+        $self = $parsedUrl['host'] ?? '';
         parse_str($parsedUrl['query'] ?? '', $parsedQuery);
+        $target = $parsedQuery['target'] ?? '';
         $fallback = $parsedQuery['fallback'] ?? '';
+
+        if (!$this->messengerTransportLocator->has($self)) {
+            throw new InvalidArgumentException(sprintf('The given Auto Fallback Transport self "%s" is invalid.', $self));
+        }
 
         if (!$this->messengerTransportLocator->has($target)) {
             throw new InvalidArgumentException(sprintf('The given Auto Fallback Transport target "%s" is invalid.', $target));
@@ -45,7 +50,7 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
 
         return new AutoFallbackTransport(
             $this->autoFallbackNotifier,
-            $target,
+            $self,
             $this->messengerTransportLocator->get($target),
             $this->messengerTransportLocator->get($fallback),
         );

@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Messenger\Transport;
 
 use Contao\CoreBundle\Messenger\AutoFallbackNotifier;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-class AutoFallbackTransport implements TransportInterface
+class AutoFallbackTransport implements TransportInterface, MessageCountAwareInterface
 {
-    public function __construct(private AutoFallbackNotifier $autoFallbackNotifier, private string $targetTransportName, private TransportInterface $target, private TransportInterface $fallback)
+    public function __construct(private AutoFallbackNotifier $autoFallbackNotifier, private string $selfTransportName, private TransportInterface $target, private TransportInterface $fallback)
     {
     }
 
@@ -62,9 +63,20 @@ class AutoFallbackTransport implements TransportInterface
         return $this->fallback->send($envelope);
     }
 
-    public function getTargetTransportName(): string
+    public function getMessageCount(): int
     {
-        return $this->targetTransportName;
+        $transport = $this->isWorkerRunning() ? $this->target : $this->fallback;
+
+        if ($transport instanceof MessageCountAwareInterface) {
+            return $transport->getMessageCount();
+        }
+
+        return 0;
+    }
+
+    public function getSelfTransportName(): string
+    {
+        return $this->selfTransportName;
     }
 
     public function getTarget(): TransportInterface
@@ -79,6 +91,6 @@ class AutoFallbackTransport implements TransportInterface
 
     private function isWorkerRunning(): bool
     {
-        return $this->autoFallbackNotifier->isWorkerRunning($this->targetTransportName);
+        return $this->autoFallbackNotifier->isWorkerRunning($this->selfTransportName);
     }
 }

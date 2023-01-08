@@ -15,15 +15,24 @@ namespace Contao\CoreBundle\Messenger\EventListener;
 use Contao\CoreBundle\Messenger\AutoFallbackNotifier;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
+use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 
-#[AsEventListener]
-class WorkerIsRunningEventListener
+class WorkerListener
 {
     public function __construct(private AutoFallbackNotifier $autoFallbackNotifier)
     {
     }
 
-    public function __invoke(WorkerRunningEvent $event): void
+    #[AsEventListener]
+    public function onWorkerRunning(WorkerRunningEvent $event): void
+    {
+        foreach ($event->getWorker()->getMetadata()->getTransportNames() as $transportName) {
+            $this->autoFallbackNotifier->ping($transportName);
+        }
+    }
+
+    #[AsEventListener]
+    public function onWorkerStarted(WorkerStartedEvent $event): void
     {
         foreach ($event->getWorker()->getMetadata()->getTransportNames() as $transportName) {
             $this->autoFallbackNotifier->ping($transportName);

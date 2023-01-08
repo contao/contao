@@ -36,17 +36,17 @@ framework:
         transports:
             sync: sync://
             contao_failure: doctrine://default?table_name=tl_message_queue&queue_name=failure&auto_setup=false
-            contao_prio_high: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
-            contao_prio_normal: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
-            contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
-            contao_auto_fallback_prio_high: contao-auto-fallback://contao_prio_high?fallback=sync
-            contao_auto_fallback_prio_normal: contao-auto-fallback://contao_prio_normal?fallback=sync
-            contao_auto_fallback_prio_low: contao-auto-fallback://contao_prio_low?fallback=sync
+            contao_prio_high: contao-auto-fallback://contao_prio_high?target=contao_prio_high_doctrine&fallback=sync
+            contao_prio_normal: contao-auto-fallback://contao_prio_normal?target=contao_prio_normal_doctrine&fallback=sync
+            contao_prio_low: contao-auto-fallback://contao_prio_low?target=contao_prio_low_doctrine&fallback=sync
+            contao_prio_high_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
+            contao_prio_normal_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
+            contao_prio_low_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
-            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_auto_fallback_prio_low
-            'Contao\CoreBundle\Messenger\Message\HighPrioMessageInterface': contao_auto_fallback_prio_high
-            'Contao\CoreBundle\Messenger\Message\NormalPrioMessageInterface': contao_auto_fallback_prio_normal
-            'Contao\CoreBundle\Messenger\Message\LowPrioMessageInterface': contao_auto_fallback_prio_low
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_low
+            'Contao\CoreBundle\Messenger\Message\HighPrioMessageInterface': contao_prio_high
+            'Contao\CoreBundle\Messenger\Message\NormalPrioMessageInterface': contao_prio_normal
+            'Contao\CoreBundle\Messenger\Message\LowPrioMessageInterface': contao_prio_low
 
 # Contao configuration
 contao:
