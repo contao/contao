@@ -31,7 +31,7 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
             throw new InvalidArgumentException(sprintf('The given Auto Fallback DSN "%s" is invalid.', $dsn));
         }
 
-        $target = isset($parsedUrl['path']) ? substr($parsedUrl['path'], \strlen('contao_auto_fallback://')) : '';
+        $target = $parsedUrl['host'] ?? '';
         parse_str($parsedUrl['query'] ?? '', $parsedQuery);
         $fallback = $parsedQuery['fallback'] ?? '';
 
@@ -53,6 +53,6 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
 
     public function supports(string $dsn, array $options): bool
     {
-        return str_starts_with($dsn, 'contao_auto_fallback://');
+        return str_starts_with($dsn, 'contao-auto-fallback://');
     }
 }

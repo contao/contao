@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Messenger\MessageHandler;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler;
 use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
@@ -43,6 +44,39 @@ class SearchIndexMessageHandlerTest extends TestCase
             ->expects($this->once())
             ->method('delete')
             ->with($message->getDocument())
+        ;
+
+        $handler = new SearchIndexMessageHandler($indexer);
+        $handler($message);
+    }
+
+    public function testIgnoresWarningOnlyIndexerExceptions(): void
+    {
+        $message = SearchIndexMessage::createWithIndex(new Document(new Uri(), 200, [], ''));
+        $indexer = $this->createMock(IndexerInterface::class);
+        $indexer
+            ->expects($this->once())
+            ->method('index')
+            ->with($message->getDocument())
+            ->willThrowException(IndexerException::createAsWarning('warning'))
+        ;
+
+        $handler = new SearchIndexMessageHandler($indexer);
+        $handler($message);
+    }
+
+    public function testThrowsOnIndexerExceptions(): void
+    {
+        $this->expectException(IndexerException::class);
+        $this->expectExceptionMessage('exception');
+
+        $message = SearchIndexMessage::createWithIndex(new Document(new Uri(), 200, [], ''));
+        $indexer = $this->createMock(IndexerInterface::class);
+        $indexer
+            ->expects($this->once())
+            ->method('index')
+            ->with($message->getDocument())
+            ->willThrowException(new IndexerException('exception'))
         ;
 
         $handler = new SearchIndexMessageHandler($indexer);

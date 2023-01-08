@@ -39,9 +39,9 @@ framework:
             contao_prio_high: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
             contao_prio_normal: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
             contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
-            contao_auto_fallback_prio_high: contao_auto_fallback://contao_prio_high?fallback=sync
-            contao_auto_fallback_prio_normal: contao_auto_fallback://contao_prio_normal?fallback=sync
-            contao_auto_fallback_prio_low: contao_auto_fallback://contao_prio_low?fallback=sync
+            contao_auto_fallback_prio_high: contao-auto-fallback://contao_prio_high?fallback=sync
+            contao_auto_fallback_prio_normal: contao-auto-fallback://contao_prio_normal?fallback=sync
+            contao_auto_fallback_prio_low: contao-auto-fallback://contao_prio_low?fallback=sync
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_auto_fallback_prio_low
             'Contao\CoreBundle\Messenger\Message\HighPrioMessageInterface': contao_auto_fallback_prio_high

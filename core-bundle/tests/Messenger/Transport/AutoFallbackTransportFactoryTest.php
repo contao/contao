@@ -28,7 +28,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, new Container());
 
-        $this->assertTrue($factory->supports('contao_auto_fallback://contao_prio_low?fallback=sync', []));
+        $this->assertTrue($factory->supports('contao-auto-fallback://contao_prio_low?fallback=sync', []));
         $this->assertFalse($factory->supports('doctrine://default', []));
     }
 
@@ -46,7 +46,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
 
         /** @var AutoFallbackTransport $transport */
         $transport = $factory->createTransport(
-            'contao_auto_fallback://contao_prio_low?fallback=sync',
+            'contao-auto-fallback://contao_prio_low?fallback=sync',
             [],
             $this->createMock(SerializerInterface::class)
         );
@@ -67,7 +67,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
         $factory->createTransport(
-            'contao_auto_fallback://contao_prio_low?fallback=sync',
+            'contao-auto-fallback://contao_prio_low?fallback=sync',
             [],
             $this->createMock(SerializerInterface::class)
         );
@@ -84,7 +84,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
         $factory->createTransport(
-            'contao_auto_fallback://contao_prio_low?fallback=sync',
+            'contao-auto-fallback://contao_prio_low?fallback=sync',
             [],
             $this->createMock(SerializerInterface::class)
         );

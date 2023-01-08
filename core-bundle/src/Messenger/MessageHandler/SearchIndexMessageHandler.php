@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\MessageHandler;
 
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class SearchIndexMessageHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class SearchIndexMessageHandler
 {
     public function __construct(private IndexerInterface|null $indexer = null)
     {
@@ -29,12 +31,20 @@ class SearchIndexMessageHandler implements MessageHandlerInterface
             return;
         }
 
-        if ($message->shouldIndex()) {
-            $this->indexer->index($message->getDocument());
-        }
+        try {
+            if ($message->shouldIndex()) {
+                $this->indexer->index($message->getDocument());
+            }
 
-        if ($message->shouldDelete()) {
-            $this->indexer->delete($message->getDocument());
+            if ($message->shouldDelete()) {
+                $this->indexer->delete($message->getDocument());
+            }
+        } catch (IndexerException $exception) {
+            if ($exception->isOnlyWarning()) {
+                return;
+            }
+
+            throw $exception;
         }
     }
 }

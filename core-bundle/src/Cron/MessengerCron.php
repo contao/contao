@@ -56,7 +56,7 @@ class MessengerCron
             $totalMessages = $this->collectTotalMessages($worker['transports']);
             $desiredWorkers = ceil($totalMessages / $worker['autoscale']['desired_size']);
 
-            // Never more than the max (-1 because we've already started one)
+            // Never more than the max
             $desiredWorkers = min($desiredWorkers, $worker['autoscale']['max']);
 
             // Subtract by one because we already started one and make sure $desiredWorkers is never negative
