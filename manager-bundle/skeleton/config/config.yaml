@@ -32,6 +32,11 @@ framework:
             doctrine.system_cache_pool:
                 adapter: cache.system
     messenger:
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
         failure_transport: contao_failure
         transports:
             sync: sync://
