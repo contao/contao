@@ -303,9 +303,6 @@ class ConfigurationTest extends TestCase
         $this->assertSame($expected, $configuration['cron']['web_listener']);
     }
 
-    /**
-     * @dataProvider cronConfigurationProvider
-     */
     public function testInvalidCronConfiguration(): void
     {
         $params = [
@@ -317,7 +314,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.cron.web_listener": Expected "true", "false" or "auto", got "foobar".');
+        $this->expectExceptionMessage('The value "foobar" is not allowed for path "contao.cron.web_listener". Permissible values: "auto", true, false');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
