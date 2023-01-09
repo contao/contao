@@ -275,6 +275,12 @@
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
       </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href="%s" target="_top"&gt;system settings&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

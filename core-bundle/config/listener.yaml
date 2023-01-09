@@ -2,6 +2,17 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.administrator_email:
+        class: Contao\CoreBundle\EventListener\AdministratorEmailListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+            - '@router'
+            - '@request_stack'
+            - '@security.helper'
+        tags:
+            - { name: contao.hook, hook: getSystemMessages }
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
