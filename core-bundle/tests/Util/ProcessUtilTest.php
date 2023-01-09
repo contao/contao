@@ -25,8 +25,9 @@ class ProcessUtilTest extends TestCase
      */
     public function testPromise(bool $successful, bool $autostart): void
     {
+        $util = new ProcessUtil();
         $process = $this->mockProcess($successful, $autostart);
-        $promise = ProcessUtil::createPromise($process, $autostart);
+        $promise = $util->createPromise($process, $autostart);
 
         $this->assertTrue(Is::pending($promise));
 
