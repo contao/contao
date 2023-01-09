@@ -279,7 +279,7 @@
         <source>There is no administrator e-mail address set in the &lt;a href="%s" target="_top"&gt;system settings&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
-        <source>No administrator e-mail address has been set in the system settings.</source>
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
