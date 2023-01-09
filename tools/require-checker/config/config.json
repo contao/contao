@@ -44,7 +44,6 @@
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
-        "Symfony\\Bundle\\MonologBundle\\MonologBundle",
-        "SimplePie"
+        "Symfony\\Bundle\\MonologBundle\\MonologBundle"
     ]
 }
