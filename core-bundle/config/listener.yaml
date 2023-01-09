@@ -329,6 +329,15 @@ services:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
 
+    contao.listener.menu.backend_color_scheme:
+        class: Contao\CoreBundle\EventListener\Menu\BackendColorSchemeListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
+        tags:
+            # Make sure this listener comes last
+            - { name: kernel.event_listener, priority: -96 }
+
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:

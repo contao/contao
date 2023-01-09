@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Attribute;
 
+use Symfony\Component\Routing\Annotation\Route;
+
 /**
  * An attribute class for page controllers.
  *
- * @see \Symfony\Component\Routing\Annotation\Route
+ * @see Route
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsPage

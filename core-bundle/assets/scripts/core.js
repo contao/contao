@@ -305,15 +305,15 @@ window.AjaxRequest =
 		el.blur();
 
 		var img = null,
-			image = $(el).getElement('img'),
-			published = (image.get('data-state') == 1),
+			images = $(el).getElements('img'),
+			published = (images[0].get('data-state') == 1),
 			div = el.getParent('div'),
 			next, pa, src;
 
 		if (rowIcon) {
 			// Find the icon depending on the view (tree view, list view, parent view)
 			if (div.hasClass('tl_right')) {
-				img = div.getPrevious('div').getElement('img');
+				img = div.getPrevious('div').getElements('img');
 			} else if (div.hasClass('tl_listing_container')) {
 				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
 				if (img === null) { // comments
@@ -334,24 +334,25 @@ window.AjaxRequest =
 			// Change the row icon
 			if (img !== null) {
 				// Tree view
-				if (img.nodeName.toLowerCase() == 'img') {
-					if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
-						pa = img.getParent('a');
+				if (!(img instanceof HTMLElement) && img.forEach) {
+					img.forEach((img) => {
+						if (img.nodeName.toLowerCase() == 'img') {
+							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
+								pa = img.getParent('a');
 
-						if (pa && pa.href.indexOf('contao/preview') == -1) {
-							if (next = pa.getNext('a')) {
-								img = next.getElement('img');
-							} else {
-								img = new Element('img'); // no icons used (see #2286)
+								if (pa && pa.href.indexOf('contao/preview') == -1) {
+									if (next = pa.getNext('a')) {
+										img = next.getElement('img');
+									} else {
+										img = new Element('img'); // no icons used (see #2286)
+									}
+								}
 							}
+
+							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
+							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
 						}
-					}
-
-					img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-
-					if ((src = img.getPrevious('source')) && src.srcset.indexOf('/icons-dark/') != -1) {
-						src.srcset = !published ? img.get('data-icon').replace('/icons/', '/icons-dark/') : img.get('data-icon-disabled').replace('/icons/', '/icons-dark/');
-					}
+					})
 				}
 				// Parent view
 				else if (img.hasClass('cte_type')) {
@@ -371,12 +372,11 @@ window.AjaxRequest =
 		}
 
 		// Send request
-		image.src = !published ? image.get('data-icon') : image.get('data-icon-disabled');
-		image.set('data-state', !published ? 1 : 0);
-
-		if ((src = image.getPrevious('source')) && src.srcset.indexOf('/icons-dark/') != -1) {
-			src.srcset = !published ? image.get('data-icon').replace('/icons/', '/icons-dark/') : image.get('data-icon-disabled').replace('/icons/', '/icons-dark/');
-		}
+		images.forEach(function (image) {
+			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
+			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+			image.set('data-state', !published ? 1 : 0);
+		});
 
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
