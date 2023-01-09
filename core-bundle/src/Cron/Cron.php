@@ -150,7 +150,7 @@ class Cron
 
         // Throw the first exception
         if (null !== $exception) {
-            throw $e;
+            throw $exception;
         }
     }
 }
