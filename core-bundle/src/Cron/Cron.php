@@ -125,7 +125,7 @@ class Cron
         }
 
         $exception = null;
-        
+
         // Execute all cron jobs to be run
         foreach ($cronJobsToBeRun as $cron) {
             try {
