@@ -80,8 +80,8 @@ class FeedReaderControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
-            'feedUrls' => $feedUrl,
-            'feedCache' => 3600,
+            'rss_feed' => $feedUrl,
+            'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
         ]);
@@ -118,8 +118,8 @@ class FeedReaderControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
-            'feedUrls' => $feedUrl,
-            'feedCache' => 3600,
+            'rss_feed' => $feedUrl,
+            'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
         ]);
@@ -150,8 +150,8 @@ class FeedReaderControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
-            'feedUrls' => $feedUrl,
-            'feedCache' => 3600,
+            'rss_feed' => $feedUrl,
+            'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
         ]);
@@ -192,8 +192,8 @@ class FeedReaderControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
-            'feedUrls' => $feedUrl,
-            'feedCache' => 3600,
+            'rss_feed' => $feedUrl,
+            'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
             'perPage' => 1,
@@ -240,8 +240,8 @@ class FeedReaderControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
-            'feedUrls' => $feedUrl,
-            'feedCache' => 3600,
+            'rss_feed' => $feedUrl,
+            'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
             'perPage' => 1,

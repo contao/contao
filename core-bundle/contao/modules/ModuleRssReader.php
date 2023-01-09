@@ -58,7 +58,7 @@ class ModuleRssReader extends Module
 		}
 
 		$this->objFeed = new \SimplePie();
-		$arrUrls = StringUtil::trimsplit('[\n\t ]', trim($this->feedUrls));
+		$arrUrls = StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
 
 		if (\count($arrUrls) > 1)
 		{
@@ -73,15 +73,15 @@ class ModuleRssReader extends Module
 		$this->objFeed->set_cache_location(System::getContainer()->getParameter('kernel.project_dir') . '/system/tmp');
 		$this->objFeed->enable_cache(false);
 
-		if ($this->feedCache > 0)
+		if ($this->rss_feed > 0)
 		{
 			$this->objFeed->enable_cache();
-			$this->objFeed->set_cache_duration($this->feedCache);
+			$this->objFeed->set_cache_duration($this->rss_feed);
 		}
 
 		if (!$this->objFeed->init())
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->feedUrls . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->rss_feed . '"');
 
 			return '';
 		}

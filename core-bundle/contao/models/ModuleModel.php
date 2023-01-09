@@ -57,9 +57,9 @@ use Contao\Model\Collection;
  * @property string|array|null $multiSRC
  * @property string|null       $html
  * @property string|null       $unfilteredHtml
+ * @property integer           $rss_cache
+ * @property string|null       $rss_feed
  * @property string            $rss_template
- * @property integer           $feedCache
- * @property string|null       $feedUrls
  * @property integer           $numberOfItems
  * @property boolean           $disableCaptcha
  * @property string|array|null $reg_groups
@@ -127,9 +127,9 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByMultiSRC($val, array $opt=array())
  * @method static ModuleModel|null findOneByHtml($val, array $opt=array())
  * @method static ModuleModel|null findOneByUnfilteredHtml($val, array $opt=array())
+ * @method static ModuleModel|null findOneByRss_cache($val, array $opt=array())
+ * @method static ModuleModel|null findOneByRss_feed($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_template($val, array $opt=array())
- * @method static ModuleModel|null findOneByFeedCache($val, array $opt=array())
- * @method static ModuleModel|null findOneByFeedUrlsfeedUrlsfeedUrls($val, array $opt=array())
  * @method static ModuleModel|null findOneByNumberOfItems($val, array $opt=array())
  * @method static ModuleModel|null findOneByDisableCaptcha($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_groups($val, array $opt=array())
@@ -190,9 +190,9 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByMultiSRC($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByHtml($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByUnfilteredHtml($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_cache($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_feed($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_template($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByFeedCache($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByFeedUrls($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByNumberOfItems($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByDisableCaptcha($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_groups($val, array $opt=array())
@@ -257,9 +257,9 @@ use Contao\Model\Collection;
  * @method static integer countByMultiSRC($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
  * @method static integer countByUnfilteredHtml($val, array $opt=array())
+ * @method static integer countByRss_cache($val, array $opt=array())
+ * @method static integer countByRss_feed($val, array $opt=array())
  * @method static integer countByRss_template($val, array $opt=array())
- * @method static integer countByFeedCache($val, array $opt=array())
- * @method static integer countByFeedUrls($val, array $opt=array())
  * @method static integer countByNumberOfItems($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  * @method static integer countByReg_groups($val, array $opt=array())

@@ -50,8 +50,3 @@ services:
         class: Contao\CoreBundle\Migration\Version500\OrderFieldMigration
         arguments:
             - '@database_connection'
-
-    contao.migration.version_500.rss_to_feed_reader:
-        class: Contao\CoreBundle\Migration\Version500\RssToFeedReaderMigration
-        arguments:
-            - '@database_connection'

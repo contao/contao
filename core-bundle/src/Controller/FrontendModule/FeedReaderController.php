@@ -45,13 +45,13 @@ class FeedReaderController extends AbstractFrontendModuleController
 
         $feeds = [];
 
-        foreach (StringUtil::trimsplit('[\n\t ]', trim($model->feedUrls)) as $url) {
+        foreach (StringUtil::trimsplit('[\n\t ]', trim($model->rss_feed)) as $url) {
             try {
                 $feed = $this->cache->get('feed_reader_'.$model->id.'_'.md5($url), function (ItemInterface $item) use ($url, $model) {
                     $readerResult = $this->feedIo->read($url, new Feed());
 
-                    if ($model->feedCache > 0) {
-                        $item->expiresAfter($model->feedCache);
+                    if ($model->rss_cache > 0) {
+                        $item->expiresAfter($model->rss_cache);
                     }
 
                     return $readerResult->getFeed();
