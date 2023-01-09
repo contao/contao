@@ -258,7 +258,7 @@ $GLOBALS['FE_MOD'] = array
 		'articlelist'    => ModuleArticleList::class,
 		'randomImage'    => ModuleRandomImage::class,
 		'html'           => ModuleHtml::class,
-		'rssReader'      => ModuleRssReader::class,
+		'rssReader'      => ModuleRssReader::class
 	)
 );
 
