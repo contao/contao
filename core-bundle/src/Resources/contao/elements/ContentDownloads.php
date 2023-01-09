@@ -39,6 +39,11 @@ class ContentDownloads extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		// Use the home directory of the current user as file source
 		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
