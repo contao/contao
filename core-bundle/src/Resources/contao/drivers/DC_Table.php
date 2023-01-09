@@ -357,12 +357,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
-			// Special treatment for table tl_undo
-			if ($this->strTable == 'tl_undo' && $i == 'data')
-			{
-				continue;
-			}
-
 			$value = StringUtil::deserialize($row[$i]);
 
 			// Decrypt the value
@@ -5899,9 +5893,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$options_callback = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback']($this);
 					}
-
-					// Sort options according to the keys of the callback array
-					$options = array_intersect(array_keys($options_callback), $options);
 				}
 
 				$options_sorter = array();
@@ -5913,7 +5904,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$value = $blnDate ? $kk : $vv;
 
 					// Options callback
-					if (!empty($options_callback) && \is_array($options_callback))
+					if (!empty($options_callback) && \is_array($options_callback) && isset($options_callback[$vv]))
 					{
 						$vv = $options_callback[$vv];
 					}

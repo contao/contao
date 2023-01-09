@@ -714,10 +714,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if (!empty($options['username'])) {
-            $credentials .= $this->encodeUrlParameter($options['username']);
+            $credentials .= $this->encodeUrlParameter((string) $options['username']);
 
             if (!empty($options['password'])) {
-                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
+                $credentials .= ':'.$this->encodeUrlParameter((string) $options['password']);
             }
 
             $credentials .= '@';
