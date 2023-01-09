@@ -24,6 +24,11 @@ class ContentArticle extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		return $this->getArticle($this->articleAlias, false, true, $this->strColumn);
 	}
 
