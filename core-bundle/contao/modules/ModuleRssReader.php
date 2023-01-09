@@ -68,10 +68,10 @@ class ModuleRssReader extends Module
 		$this->objFeed->set_cache_location(System::getContainer()->getParameter('kernel.project_dir') . '/system/tmp');
 		$this->objFeed->enable_cache(false);
 
-		if ($this->rss_feed > 0)
+		if ($this->rss_cache > 0)
 		{
 			$this->objFeed->enable_cache();
-			$this->objFeed->set_cache_duration($this->rss_feed);
+			$this->objFeed->set_cache_duration($this->rss_cache);
 		}
 
 		if (!$this->objFeed->init())
