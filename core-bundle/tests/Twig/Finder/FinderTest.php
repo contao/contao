@@ -148,7 +148,7 @@ class FinderTest extends TestCase
         $hierarchy
             ->method('getInheritanceChains')
             ->willReturnCallback(
-                static function (string|null $themeSlug): array {
+                static function (?string $themeSlug): array {
                     $chains = [
                         'ce_html' => [
                             '/templates/ce_html.html5' => '@Contao_ContaoCoreBundle/ce_html.html5',
@@ -172,10 +172,10 @@ class FinderTest extends TestCase
                     ];
 
                     if ('my_theme' === $themeSlug) {
-                        $chains['content_element/text'] = [
-                            '/app/templates/my/theme/content_element/text.html.twig' => '@Contao_Theme_my_theme/content_element/text.html.twig',
-                            ...$chains['content_element/text'],
-                        ];
+                        $chains['content_element/text'] = array_merge(
+                            ['/app/templates/my/theme/content_element/text.html.twig' => '@Contao_Theme_my_theme/content_element/text.html.twig'],
+                            $chains['content_element/text']
+                        );
 
                         $chains['content_element/text/baz'] = [
                             '/app/templates/my/theme/content_element/text/foo.html.twig' => '@Contao_Theme_my_theme/content_element/text/foo.html.twig',
@@ -194,11 +194,15 @@ class FinderTest extends TestCase
                 function (string $id, array $parameters, string $domain) {
                     $this->assertSame('contao_default', $domain);
 
-                    return match ($id) {
-                        'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
-                        'MSC.global' => 'Global',
-                        default => throw new \LogicException('Unsupported translation id.')
-                    };
+                    switch ($id) {
+                        case 'MSC.templatesTheme':
+                            return sprintf('Theme %s', $parameters[0]);
+                        case 'MSC.global':
+                            return 'Global';
+
+                        default:
+                            throw new \LogicException('Unsupported translation id.');
+                    }
                 }
             )
         ;

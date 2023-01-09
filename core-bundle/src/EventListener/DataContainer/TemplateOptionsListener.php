@@ -95,7 +95,7 @@ class TemplateOptionsListener
      * Handles legacy elements that aren't implemented as fragment controllers
      * or that still use the old template naming scheme.
      */
-    private function handleLegacyTemplates(string $type, string|null $identifier, bool $overrideAll): array|null
+    private function handleLegacyTemplates(string $type, ?string $identifier, bool $overrideAll): ?array
     {
         $isModernIdentifier = $identifier && str_contains($identifier, '/');
         $legacyDefaultIdentifier = $this->getLegacyDefaultIdentifier($type);
@@ -109,18 +109,18 @@ class TemplateOptionsListener
             $identifier = $legacyDefaultIdentifier ?? $this->legacyTemplatePrefix.$type;
         }
 
-        return [
-            ...($overrideAll ? ['' => '-'] : []),
-            ...$this->framework
+        return array_merge(
+            $overrideAll ? ['' => '-'] : [],
+            $this->framework
                 ->getAdapter(Controller::class)
                 ->getTemplateGroup($identifier.'_', [], $identifier),
-        ];
+        );
     }
 
     /**
      * Uses the reflection API to return the default template from a legacy class.
      */
-    private function getLegacyDefaultIdentifier(string|null $type): string|null
+    private function getLegacyDefaultIdentifier(?string $type): ?string
     {
         if (null === $type || null === $this->legacyProxyClass || !method_exists($this->legacyProxyClass, 'findClass')) {
             return null;
@@ -152,7 +152,7 @@ class TemplateOptionsListener
      * Returns the type that all currently edited items are sharing or null if
      * there is no common type.
      */
-    private function getCommonOverrideAllType(DataContainer $dc): string|null
+    private function getCommonOverrideAllType(DataContainer $dc): ?string
     {
         $affectedIds = $this->requestStack->getSession()->all()['CURRENT']['IDS'] ?? [];
         $table = $this->connection->quoteIdentifier($dc->table);
