@@ -2500,7 +2500,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$this->import(BackendUser::class, 'User');
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level * 18), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
 
 	/**
@@ -2532,7 +2532,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return = '';
 		$files = array();
 		$folders = array();
-		$intSpacing = 20;
+		$intSpacing = 18;
 		$level = ($intMargin / $intSpacing + 1);
 
 		// Mount folder
@@ -2636,14 +2636,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 20 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 18 : 0)) . 'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
 			{
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_' . $md5 . '\', \'' . $currentFolder . '\', ' . $level . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_' . $md5 . '\', \'' . $currentFolder . '\', ' . $level . ')">' . Image::getHtml($img) . '</a>';
 			}
 
 			$protected = $blnProtected;
