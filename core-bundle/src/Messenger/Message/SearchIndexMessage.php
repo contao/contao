@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Messenger\Message;
 
 use Contao\CoreBundle\Search\Document;
 
-class SearchIndexMessage implements LowPrioMessageInterface
+class SearchIndexMessage implements LowPriorityMessageInterface
 {
     final public const ACTION_INDEX = 'index';
     final public const ACTION_DELETE = 'delete';

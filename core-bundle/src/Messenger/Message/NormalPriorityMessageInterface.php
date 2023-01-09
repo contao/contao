@@ -12,6 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Message;
 
-interface HighPrioMessageInterface
+interface NormalPriorityMessageInterface
 {
 }

@@ -44,9 +44,9 @@ framework:
             contao_prio_low_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_low
-            'Contao\CoreBundle\Messenger\Message\HighPrioMessageInterface': contao_prio_high
-            'Contao\CoreBundle\Messenger\Message\NormalPrioMessageInterface': contao_prio_normal
-            'Contao\CoreBundle\Messenger\Message\LowPrioMessageInterface': contao_prio_low
+            'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
+            'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
+            'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
 
 # Contao configuration
 contao:
