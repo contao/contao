@@ -25,6 +25,7 @@ class SearchIndexMessageHandlerTest extends TestCase
     public function testShouldIndex(): void
     {
         $message = SearchIndexMessage::createWithIndex(new Document(new Uri(), 200, [], ''));
+
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
             ->expects($this->once())
@@ -39,6 +40,7 @@ class SearchIndexMessageHandlerTest extends TestCase
     public function testShouldDelete(): void
     {
         $message = SearchIndexMessage::createWithDelete(new Document(new Uri(), 200, [], ''));
+
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
             ->expects($this->once())
@@ -53,6 +55,7 @@ class SearchIndexMessageHandlerTest extends TestCase
     public function testIgnoresWarningOnlyIndexerExceptions(): void
     {
         $message = SearchIndexMessage::createWithIndex(new Document(new Uri(), 200, [], ''));
+
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
             ->expects($this->once())
@@ -67,10 +70,8 @@ class SearchIndexMessageHandlerTest extends TestCase
 
     public function testThrowsOnIndexerExceptions(): void
     {
-        $this->expectException(IndexerException::class);
-        $this->expectExceptionMessage('exception');
-
         $message = SearchIndexMessage::createWithIndex(new Document(new Uri(), 200, [], ''));
+
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
             ->expects($this->once())
@@ -80,6 +81,10 @@ class SearchIndexMessageHandlerTest extends TestCase
         ;
 
         $handler = new SearchIndexMessageHandler($indexer);
+
+        $this->expectException(IndexerException::class);
+        $this->expectExceptionMessage('exception');
+
         $handler($message);
     }
 }

@@ -62,14 +62,17 @@ class AutoFallbackTransportTest extends TestCase
             ->expects($expectCalls ? $this->once() : $this->never())
             ->method('get')
         ;
+
         $transport
             ->expects($expectCalls ? $this->once() : $this->never())
             ->method('ack')
         ;
+
         $transport
             ->expects($expectCalls ? $this->once() : $this->never())
             ->method('reject')
         ;
+
         $transport
             ->expects($expectCalls ? $this->once() : $this->never())
             ->method('send')

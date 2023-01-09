@@ -460,16 +460,16 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
-    contao.messenger.message_handler.search_index:
-        class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
-        arguments:
-            - '@?contao.search.indexer'
-
     contao.messenger.auto_fallback_notifier:
         class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
         arguments:
             - '@cache.app'
             - '@messenger.receiver_locator'
+
+    contao.messenger.message_handler.search_index:
+        class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
+        arguments:
+            - '@?contao.search.indexer'
 
     contao.messenger.transport.auto_fallback_transport_factory:
         class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory

@@ -49,7 +49,6 @@ class SearchIndexListener
         $request = $event->getRequest();
         $document = Document::createFromRequestResponse($request, $response);
         $needsIndex = $this->needsIndex($request, $response, $document);
-
         $success = $event->getResponse()->isSuccessful();
 
         if ($needsIndex && $success && $this->enabledFeatures & self::FEATURE_INDEX) {

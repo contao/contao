@@ -69,6 +69,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
 
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
+
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
@@ -87,6 +88,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
 
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
+
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
@@ -105,6 +107,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
 
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
+
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],

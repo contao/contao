@@ -42,6 +42,7 @@ class AutoFallbackNotifierTest extends TestCase
             ->with('auto-fallback-transport-notifier-auto-fallback')
             ->willReturn($cacheItem)
         ;
+
         $cache
             ->expects($this->once())
             ->method('save')
@@ -79,6 +80,7 @@ class AutoFallbackNotifierTest extends TestCase
         ;
 
         $notifier = new AutoFallbackNotifier($cache, $container);
+
         $this->assertTrue($notifier->isWorkerRunning('running-auto-fallback'));
         $this->assertFalse($notifier->isWorkerRunning('not-running-auto-fallback'));
         $this->assertFalse($notifier->isWorkerRunning('regular'));

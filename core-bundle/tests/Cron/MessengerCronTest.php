@@ -26,6 +26,7 @@ class MessengerCronTest extends TestCase
     public function testDoesNotRunIfNotOnCli(): void
     {
         $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
+
         $this->assertNull($cron(Cron::SCOPE_WEB));
     }
 
@@ -57,6 +58,7 @@ class MessengerCronTest extends TestCase
         $promise = $cron(Cron::SCOPE_CLI);
 
         $processes = [];
+
         $promise->then(
             static function (array $realProcesses) use (&$processes): void {
                 $processes = $realProcesses;
@@ -64,6 +66,7 @@ class MessengerCronTest extends TestCase
         );
 
         $promise->wait();
+
         $this->assertSame($expectedWorkers, $this->unwrapProcesses($processes));
     }
 
@@ -148,8 +151,8 @@ class MessengerCronTest extends TestCase
         $unwrapped = [];
 
         foreach ($processes as $process) {
-            // Remove the PHP binary path and undo proper quoting (not relevant for this test and required for
-            // easier cross-platform CI runs
+            // Remove the PHP binary path and undo proper quoting (not relevant for
+            // this test and required for easier cross-platform CI runs
             $unwrapped[] = str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
         }
 

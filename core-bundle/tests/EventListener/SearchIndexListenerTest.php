@@ -39,8 +39,8 @@ class SearchIndexListenerTest extends TestCase
             ->method('dispatch')
             ->with($this->callback(
                 function (SearchIndexMessage $message) use ($index, $delete) {
-                    $this->assertTrue($index === $message->shouldIndex());
-                    $this->assertTrue($delete === $message->shouldDelete());
+                    $this->assertSame($index, $message->shouldIndex());
+                    $this->assertSame($delete, $message->shouldDelete());
 
                     return true;
                 }

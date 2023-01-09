@@ -59,8 +59,8 @@ class MessengerCron
             // Never more than the max
             $desiredWorkers = min($desiredWorkers, $worker['autoscale']['max']);
 
-            // Subtract by one because we already started one and make sure $desiredWorkers is never negative
-            // (possible if totalMessages is 0)
+            // Subtract by one because we already started one and make sure $desiredWorkers
+            // is never negative (possible if totalMessages is 0)
             $desiredWorkers = max(0, $desiredWorkers - 1);
 
             for ($i = 1; $i <= $desiredWorkers; ++$i) {

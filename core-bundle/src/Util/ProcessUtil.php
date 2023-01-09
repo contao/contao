@@ -50,13 +50,7 @@ class ProcessUtil implements ResetInterface
 
     public function createSymfonyConsoleProcess(string $consolePath, string $command, string ...$commandArguments): Process
     {
-        $arguments = [];
-        $arguments[] = self::getPhpBinary();
-        $arguments[] = $consolePath;
-        $arguments[] = $command;
-        $arguments = array_merge($arguments, $commandArguments);
-
-        return new Process($arguments);
+        return new Process(array_merge([$this->getPhpBinary(), $consolePath, $command], $commandArguments));
     }
 
     public function reset(): void

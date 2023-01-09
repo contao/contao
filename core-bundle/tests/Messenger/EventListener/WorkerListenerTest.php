@@ -24,23 +24,17 @@ class WorkerListenerTest extends TestCase
 {
     public function testPingsCorrectlyOnRunning(): void
     {
-        $worker = $this->mockWorker();
-        $notifier = $this->mockNotifier();
+        $event = new WorkerRunningEvent($this->mockWorker(), false);
 
-        $event = new WorkerRunningEvent($worker, false);
-
-        $listener = new WorkerListener($notifier);
+        $listener = new WorkerListener($this->mockNotifier());
         $listener->onWorkerRunning($event);
     }
 
     public function testPingsCorrectlyOnStart(): void
     {
-        $worker = $this->mockWorker();
-        $notifier = $this->mockNotifier();
+        $event = new WorkerStartedEvent($this->mockWorker());
 
-        $event = new WorkerStartedEvent($worker);
-
-        $listener = new WorkerListener($notifier);
+        $listener = new WorkerListener($this->mockNotifier());
         $listener->onWorkerStarted($event);
     }
 
