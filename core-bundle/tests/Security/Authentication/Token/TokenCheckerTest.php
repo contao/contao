@@ -535,8 +535,6 @@ class TokenCheckerTest extends TestCase
 
     /**
      * @param class-string<User> $class
-     *
-     * @return User
      */
     private function mockUser(string $class): User
     {
