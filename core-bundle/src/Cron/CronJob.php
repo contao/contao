@@ -36,7 +36,7 @@ class CronJob
      */
     private $name;
 
-    /** 
+    /**
      * @var \DateTimeInterface
      */
     private $previousRun;

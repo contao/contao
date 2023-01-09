@@ -203,7 +203,7 @@ class CronTest extends TestCase
             ->withConsecutive(
                 [$this->anything()],
                 [$lastRun]
-            );
+            )
         ;
 
         $entity
