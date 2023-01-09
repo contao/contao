@@ -140,7 +140,7 @@ class Cron
                 $lastRunEntity = $repository->findOneByName($cron->getName());
                 $lastRunEntity->setLastRun($cron->getPreviousRun());
                 $entityManager->flush();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 // Catch any exceptions so that other cronjobs are still executed
                 if (null === $exception) {
                     $exception = $e;
