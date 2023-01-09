@@ -78,7 +78,9 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -167,7 +169,9 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -236,7 +240,9 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: false,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+			},
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
@@ -308,7 +314,7 @@ window.AjaxRequest =
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
 			div = el.getParent('div'),
-			next, pa, src;
+			next, pa;
 
 		if (rowIcon) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -594,7 +600,7 @@ window.Backend =
 				return;
 			}
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], ul, inp, field, act, it, i, pickerValue, sIndex;
+				val = [], ul, inp, i, pickerValue, sIndex;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
@@ -2036,9 +2042,7 @@ window.Backend =
 			}
 		}
 
-		function execRequest(onlyStatusUpdate) {
-			var onlyStatusUpdate = onlyStatusUpdate || false;
-
+		function execRequest(onlyStatusUpdate = false) {
 			new Request({
 				url: window.location.href,
 				headers: {
