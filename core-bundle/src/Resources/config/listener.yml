@@ -208,7 +208,6 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
-            - '@contao.twig.filesystem_loader'
             - ce_
             - Contao\ContentProxy
         tags:
@@ -352,7 +351,6 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
-            - '@contao.twig.filesystem_loader'
             - mod_
             - Contao\ModuleProxy
         tags:

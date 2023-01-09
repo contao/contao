@@ -262,7 +262,6 @@ class TemplateOptionsListenerTest extends TestCase
             $connection,
             $framework,
             $requestStack,
-            $hierarchy,
             $legacyTemplatePrefix,
             $legacyProxyClass
         );

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,7 +25,6 @@ class TemplateOptionsListener
     private Connection $connection;
     private ContaoFramework $framework;
     private RequestStack $requestStack;
-    private TemplateHierarchyInterface $hierarchy;
     private string $legacyTemplatePrefix;
     private ?string $legacyProxyClass;
 
@@ -35,13 +33,12 @@ class TemplateOptionsListener
      */
     private array $defaultIdentifiersByType = [];
 
-    public function __construct(FinderFactory $finderFactory, Connection $connection, ContaoFramework $framework, RequestStack $requestStack, TemplateHierarchyInterface $hierarchy, string $legacyTemplatePrefix, string $legacyProxyClass = null)
+    public function __construct(FinderFactory $finderFactory, Connection $connection, ContaoFramework $framework, RequestStack $requestStack, string $legacyTemplatePrefix, string $legacyProxyClass = null)
     {
         $this->finderFactory = $finderFactory;
         $this->connection = $connection;
         $this->framework = $framework;
         $this->requestStack = $requestStack;
-        $this->hierarchy = $hierarchy;
         $this->legacyTemplatePrefix = $legacyTemplatePrefix;
         $this->legacyProxyClass = $legacyProxyClass;
     }
