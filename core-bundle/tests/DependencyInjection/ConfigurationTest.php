@@ -242,6 +242,57 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
+    public function testMessengerConfiguration(): void
+    {
+        $params = [
+            'contao' => [
+                'messenger' => [
+                    'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
+                    'workers' => [
+                        [
+                            'transports' => ['prio_normal'],
+                        ],
+                        [
+                            'transports' => ['prio_high'],
+                            'options' => ['--sleep=5', '--time-limit=60'],
+                            'autoscale' => [
+                                'desired_size' => 10,
+                                'max' => 30,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(
+            [
+                'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
+                'workers' => [
+                    [
+                        'transports' => ['prio_normal'],
+                        'options' => ['--time-limit=60'],
+                        'autoscale' => [
+                            'enabled' => false,
+                        ],
+                    ],
+                    [
+                        'transports' => ['prio_high'],
+                        'options' => ['--sleep=5', '--time-limit=60'],
+                        'autoscale' => [
+                            'desired_size' => 10,
+                            'max' => 30,
+                            'enabled' => true,
+                        ],
+                    ],
+                ],
+            ],
+            $configuration['messenger']
+        );
+    }
+
     /**
      * @dataProvider cronConfigurationProvider
      */
@@ -252,9 +303,6 @@ class ConfigurationTest extends TestCase
         $this->assertSame($expected, $configuration['cron']['web_listener']);
     }
 
-    /**
-     * @dataProvider cronConfigurationProvider
-     */
     public function testInvalidCronConfiguration(): void
     {
         $params = [
@@ -266,7 +314,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.cron.web_listener": Expected "true", "false" or "auto", got "foobar".');
+        $this->expectExceptionMessage('The value "foobar" is not allowed for path "contao.cron.web_listener". Permissible values: "auto", true, false');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
