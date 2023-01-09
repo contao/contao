@@ -211,6 +211,7 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@messenger.receiver_locator'
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
@@ -370,6 +371,11 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.messenger.worker:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
+
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
@@ -499,7 +505,7 @@ services:
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
-            - '@contao.search.indexer'
+            - '@messenger.bus.default'
             - '%fragment.path%'
         tags:
             - kernel.event_listener

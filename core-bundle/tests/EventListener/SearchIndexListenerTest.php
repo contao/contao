@@ -14,14 +14,15 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
-use Contao\CoreBundle\Search\Document;
-use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class SearchIndexListenerTest extends TestCase
 {
@@ -30,22 +31,26 @@ class SearchIndexListenerTest extends TestCase
      */
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
     {
-        $indexer = $this->createMock(IndexerInterface::class);
-        $indexer
-            ->expects($index ? $this->once() : $this->never())
-            ->method('index')
-            ->with($this->isInstanceOf(Document::class))
-        ;
+        $dispatchCount = (int) $index + (int) $delete;
+        $messenger = $this->createMock(MessageBusInterface::class);
 
-        $indexer
-            ->expects($delete ? $this->once() : $this->never())
-            ->method('delete')
-            ->with($this->isInstanceOf(Document::class))
+        $messenger
+            ->expects($this->exactly($dispatchCount))
+            ->method('dispatch')
+            ->with($this->callback(
+                function (SearchIndexMessage $message) use ($index, $delete) {
+                    $this->assertSame($index, $message->shouldIndex());
+                    $this->assertSame($delete, $message->shouldDelete());
+
+                    return true;
+                }
+            ))
+            ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
-        $listener = new SearchIndexListener($indexer, '_fragment', $features);
+        $listener = new SearchIndexListener($messenger, '_fragment', $features);
         $listener($event);
     }
 
