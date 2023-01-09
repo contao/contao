@@ -5045,7 +5045,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 							{
 								$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
 
-								$reference = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
+								$reference = $this->Database
+									->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
 									->limit(1)
 									->execute($arg);
 
