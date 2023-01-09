@@ -536,13 +536,14 @@ class TokenCheckerTest extends TestCase
     /**
      * @param class-string<User> $class
      *
-     * @return User&MockObject
+     * @return User
      */
     private function mockUser(string $class): User
     {
-        $user = $this->createPartialMock($class, []);
-        $user->id = 1;
-        $user->username = 'foobar';
+        $user = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
+
+        $data = new \ReflectionProperty($user, 'arrData');
+        $data->setValue($user, ['id' => 1, 'username' => 'foobar']);
 
         return $user;
     }
