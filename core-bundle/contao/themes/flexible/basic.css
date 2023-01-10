@@ -845,6 +845,10 @@ a.tl_submit {
 	margin-left: 4px;
 }
 
+.wizard h3 img {
+	margin-left: 0;
+}
+
 .long .tl_text, .long .tl_select {
 	width: 100%;
 }
