@@ -48,9 +48,11 @@
                         </h2>
                     {% endblock %}
                     {% block feed_item_content %}
-                        <div class="content">
-                            {{ item.content|sanitize_html }}
-                        </div>
+                        {% if item.content|default %}
+                            <div class="content">
+                                {{ item.content|sanitize_html }}
+                            </div>
+                        {% endif %}
                     {% endblock %}
                 </section>
             {% endblock %}
