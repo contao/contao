@@ -21,6 +21,8 @@ services:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
+    Contao\CoreBundle\Controller\Backend\FooController: ~
+
     Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
