@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,10 +51,10 @@ class Cron
         return $this->cachePool->getItem(self::MINUTELY_CACHE_KEY)->isHit();
     }
 
-    public function updateMinutelyCliCron(string $scope): PromiseInterface|null
+    public function updateMinutelyCliCron(string $scope): PromiseInterface
     {
         if (self::SCOPE_CLI !== $scope) {
-            return null;
+            throw new CronExecutionSkippedException();
         }
 
         $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);

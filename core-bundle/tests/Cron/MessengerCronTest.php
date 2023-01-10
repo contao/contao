@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\MessengerCron;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\Promise;
@@ -23,11 +24,12 @@ use Symfony\Component\Process\Process;
 
 class MessengerCronTest extends TestCase
 {
-    public function testDoesNotRunIfNotOnCli(): void
+    public function testIsSkippedIfNotOnCli(): void
     {
-        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
+        $this->expectException(CronExecutionSkippedException::class);
 
-        $this->assertNull($cron(Cron::SCOPE_WEB));
+        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
+        $cron(Cron::SCOPE_WEB);
     }
 
     /**

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
@@ -29,10 +30,10 @@ class MessengerCron
     {
     }
 
-    public function __invoke(string $scope): PromiseInterface|null
+    public function __invoke(string $scope): PromiseInterface
     {
         if (Cron::SCOPE_CLI !== $scope) {
-            return null;
+            throw new CronExecutionSkippedException();
         }
 
         $workerPromises = [];
