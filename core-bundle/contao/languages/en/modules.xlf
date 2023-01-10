@@ -306,7 +306,7 @@
         <source>Generates a module to insert a custom template.</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
