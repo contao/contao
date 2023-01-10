@@ -63,10 +63,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->user = $user;
 
-        // Reset login attempts and locked values
-        $this->user->loginAttempts = 0;
-        $this->user->locked = 0;
-
         if ($token instanceof TwoFactorTokenInterface) {
             $this->user->save();
 

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\StringUtil;
 use Contao\Validator;
+use League\Flysystem\Filesystem;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -43,7 +44,7 @@ class FilesystemUtil
     /**
      * @internal
      *
-     * @see \League\Flysystem\Filesystem::assertIsResource()
+     * @see Filesystem::assertIsResource()
      */
     public static function assertIsResource(mixed $contents): void
     {
@@ -63,7 +64,7 @@ class FilesystemUtil
      *
      * @internal
      *
-     * @see \League\Flysystem\Filesystem::rewindStream()
+     * @see Filesystem::rewindStream()
      */
     public static function rewindStream($resource): void
     {

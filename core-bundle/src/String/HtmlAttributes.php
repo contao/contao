@@ -258,7 +258,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         unset($this->attributes[$offset]);
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return $this->attributes;
     }

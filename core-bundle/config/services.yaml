@@ -95,7 +95,14 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
+            - '@cache.app'
             - '@?logger'
+
+    contao.cron.messenger:
+        class: Contao\CoreBundle\Cron\MessengerCron
+        arguments:
+            - '@messenger.receiver_locator'
+            - '@contao.util.process_util'
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -452,6 +459,23 @@ services:
         public: true
         arguments:
             - '@contao.menu.matcher'
+
+    contao.messenger.auto_fallback_notifier:
+        class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
+        arguments:
+            - '@cache.app'
+            - '@messenger.receiver_locator'
+
+    contao.messenger.message_handler.search_index:
+        class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
+        arguments:
+            - '@?contao.search.indexer'
+
+    contao.messenger.transport.auto_fallback_transport_factory:
+        class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -1048,6 +1072,9 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.util.process_util:
+        class: Contao\CoreBundle\Util\ProcessUtil
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

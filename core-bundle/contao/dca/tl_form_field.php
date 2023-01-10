@@ -58,7 +58,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
-			'child_record_callback'   => array('tl_form_field', 'listFormFields')
+			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -354,7 +355,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'fSize' => array
 		(
@@ -638,7 +639,7 @@ class tl_form_field extends Backend
 
 		$strType = '
 <div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
@@ -760,6 +761,6 @@ class tl_form_field extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

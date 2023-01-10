@@ -76,7 +76,7 @@
         <p><?= $this->trans('MSC.noTrustedDevices') ?></p>
       <?php else: ?>
         <div class="tl_listing_container">
-          <table class="tl_listing showColumns">
+          <table class="tl_listing showColumns zebra-table zebra-table--with-header">
             <tr>
               <th class="tl_folder_tlist"><?= $this->trans('MSC.device') ?></th>
               <th class="tl_folder_tlist"><?= $this->trans('MSC.browser') ?></th>

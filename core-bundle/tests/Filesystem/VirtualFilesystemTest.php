@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
@@ -879,10 +879,8 @@ class VirtualFilesystemTest extends TestCase
 
     /**
      * @dataProvider provideReadOnlyMethods
-     *
-     * @param mixed ...$arguments
      */
-    public function testDisallowsMutatingAReadOnlyFilesystem(...$arguments): void
+    public function testDisallowsMutatingAReadOnlyFilesystem(mixed ...$arguments): void
     {
         $method = array_shift($arguments);
 

@@ -105,10 +105,7 @@ class ModuleFaqPage extends Module
 					->enableLightbox($objFaq->fullsize)
 					->buildIfResourceExists();
 
-				if (null !== $figure)
-				{
-					$figure->applyLegacyTemplateData($objTemp, null, $objFaq->floating);
-				}
+				$figure?->applyLegacyTemplateData($objTemp, null, $objFaq->floating);
 			}
 
 			$objTemp->enclosure = array();

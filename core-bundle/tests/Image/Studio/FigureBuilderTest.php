@@ -226,7 +226,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromPathFailsWithNonExistingResource(): void
     {
-        [, , $projectDir,] = $this->getTestFilePaths();
+        [, , $projectDir] = $this->getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
         $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
@@ -1042,7 +1042,7 @@ class FigureBuilderTest extends TestCase
 
     public function provideLightboxResourcesOrUrls(): \Generator
     {
-        [$absoluteFilePath, $relativeFilePath, ,] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
         $absoluteFilePathWithInvalidExtension = str_replace('jpg', 'xml', $absoluteFilePath);
         $relativeFilePathWithInvalidExtension = str_replace('jpg', 'xml', $relativeFilePath);
@@ -1116,7 +1116,7 @@ class FigureBuilderTest extends TestCase
 
     public function provideLightboxFallbackResources(): \Generator
     {
-        [$absoluteFilePath, , ,] = $this->getTestFilePaths();
+        [$absoluteFilePath] = $this->getTestFilePaths();
 
         $url = 'https://example.com/valid_image.png';
 

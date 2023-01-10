@@ -2,5 +2,5 @@
 <nav aria-label="{{ 'MSC.headerNavigation'|trans }}">
     <a href="{{ app.request.requestUri }}#skipHeaderNav" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
     {{ knp_menu_render('be_header_menu', {'allow_safe_labels': true}) }}
-    <a id="skipHeaderNav" class="invisible">&nbsp;</a>
+    <span id="skipHeaderNav" class="invisible"></span>
 </nav>

@@ -70,8 +70,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property boolean           $useTwoFactor
  * @property integer           $lastLogin
  * @property integer           $currentLogin
- * @property integer           $loginAttempts
- * @property integer           $locked
  * @property string|null       $backupCodes
  * @property integer           $trustedTokenVersion
  * @property string            $firstname
@@ -382,7 +380,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	public function setPassword(?string $password): self
+	public function setPassword(#[\SensitiveParameter] ?string $password): self
 	{
 		$this->password = $password;
 

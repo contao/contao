@@ -54,8 +54,6 @@ use Contao\Model\Collection;
  * @property boolean           $useTwoFactor
  * @property integer           $lastLogin
  * @property integer           $currentLogin
- * @property integer           $loginAttempts
- * @property integer           $locked
  * @property string|null       $backupCodes
  * @property integer           $trustedTokenVersion
  *
@@ -102,8 +100,6 @@ use Contao\Model\Collection;
  * @method static UserModel|null findOneByUseTwoFactor($val, array $opt=array())
  * @method static UserModel|null findOneByLastLogin($val, array $opt=array())
  * @method static UserModel|null findOneByCurrentLogin($val, array $opt=array())
- * @method static UserModel|null findOneByLoginAttempts($val, array $opt=array())
- * @method static UserModel|null findOneByLocked($val, array $opt=array())
  * @method static UserModel|null findOneByBackupCodes($val, array $opt=array())
  * @method static UserModel|null findOneByTrustedTokenVersion($val, array $opt=array())
  *
@@ -145,8 +141,6 @@ use Contao\Model\Collection;
  * @method static Collection|UserModel[]|UserModel|null findByUseTwoFactor($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByLastLogin($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Collection|UserModel[]|UserModel|null findByLoginAttempts($val, array $opt=array())
- * @method static Collection|UserModel[]|UserModel|null findByLocked($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByBackupCodes($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByTrustedTokenVersion($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findMultipleByIds($val, array $opt=array())
@@ -193,8 +187,6 @@ use Contao\Model\Collection;
  * @method static integer countByUseTwoFactor($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())
- * @method static integer countByLoginAttempts($val, array $opt=array())
- * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countByBackupCodes($val, array $opt=array())
  * @method static integer countByTrustedTokenVersion($val, array $opt=array())
  */

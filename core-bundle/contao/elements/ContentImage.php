@@ -66,9 +66,6 @@ class ContentImage extends ContentElement
 			->enableLightbox($this->fullsize)
 			->buildIfResourceExists();
 
-		if (null !== $figure)
-		{
-			$figure->applyLegacyTemplateData($this->Template);
-		}
+		$figure?->applyLegacyTemplateData($this->Template);
 	}
 }

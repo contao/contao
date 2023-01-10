@@ -18,6 +18,7 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\EscaperNodeVisitor;
 
 /**
  * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
@@ -45,7 +46,9 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * Make sure to run after @see \Twig\NodeVisitor\EscaperNodeVisitor.
+     * Make sure to run after the EscaperNodeVisitor.
+     *
+     * @see EscaperNodeVisitor
      */
     public function getPriority(): int
     {

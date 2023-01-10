@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\FilesModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Filesystem\Path;
@@ -116,7 +117,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     /**
      * Urlencodes a file path preserving slashes.
      *
-     * @see \Contao\System::urlEncode()
+     * @see System::urlEncode()
      */
     private function urlEncode(string $strPath): string
     {

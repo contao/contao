@@ -5,6 +5,13 @@ services:
             - '@contao.framework'
             - '@?monolog.logger.contao.cron'
 
+    contao_newsletter.listener.member_activation_mail:
+        class: Contao\NewsletterBundle\EventListener\MemberActivationMailListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - kernel.event_listener
+
     contao_newsletter.listener.sitemap:
         class: Contao\NewsletterBundle\EventListener\SitemapListener
         arguments:

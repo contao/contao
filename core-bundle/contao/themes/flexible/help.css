@@ -30,7 +30,7 @@ body {
 .tl_help_table td {
 	padding: 12px 0;
 	vertical-align: top;
-	border-bottom: 1px solid var(--panel-border);
+	border-bottom: 1px solid var(--border);
 	line-height: 1.3;
 }
 
