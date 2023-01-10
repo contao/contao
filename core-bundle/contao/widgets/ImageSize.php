@@ -189,13 +189,14 @@ class ImageSize extends Widget
 		{
 			if (isset($arrOption['value']))
 			{
-				$arrValues[] = $arrOption['value'] ?? '';
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value'] ?? ''),
 					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
+
+				$arrValues[] = $arrOption['value'] ?? '';
 			}
 			else
 			{
@@ -203,13 +204,14 @@ class ImageSize extends Widget
 
 				foreach ($arrOption as $arrOptgroup)
 				{
-					$arrValues[] = $arrOptgroup['value'] ?? '';
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
 						$arrOptgroup['label'] ?? null
 					);
+
+					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
@@ -247,7 +249,7 @@ class ImageSize extends Widget
 		);
 	}
 
-	private function getStimulusAttributes($arrValues)
+	private function getStimulusAttributes($arrValues): string
 	{
 		if ($this->wizard)
 		{

@@ -35,10 +35,10 @@ export default class extends Controller {
     updateWizard () {
         if (this.canEdit()) {
             this.button.title = this.configValue.title;
-            this.button.disabled = false;
+            delete this.button.disabled;
             this.buttonImage.src = this.configValue.icon;
         } else {
-            this.button.title = null;
+            delete this.button.title;
             this.button.disabled = true;
             this.buttonImage.src = this.configValue.iconDisabled;
         }

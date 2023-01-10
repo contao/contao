@@ -829,7 +829,7 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
-.wizard .tl_text, .wizard .tl_select {
+.wizard .tl_text, .wizard .tl_select, .wizard .tl_image_size {
 	width: calc(100% - 24px);
 }
 
@@ -839,7 +839,6 @@ a.tl_submit {
 
 .wizard .tl_image_size {
 	display: inline-block;
-	width: calc(100% - 24px);
 }
 
 .wizard img {
