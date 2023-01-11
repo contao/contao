@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -33,13 +32,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
 {
-    private ContaoFramework $framework;
-    private Security $security;
-    private PageRegistry $pageRegistry;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private RequestStack $requestStack;
-
     /**
      * @var Adapter<Image>
      */
@@ -50,22 +42,20 @@ class ContentCompositionListener
      */
     private Adapter $backend;
 
-    public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
-    {
-        $this->framework = $framework;
-        $this->security = $security;
-        $this->pageRegistry = $pageRegistry;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Security $security,
+        private PageRegistry $pageRegistry,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private RequestStack $requestStack,
+    ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);
     }
 
-    /**
-     * @Callback(table="tl_page", target="list.operations.articles.button")
-     */
-    public function renderPageArticlesOperation(array $row, ?string $href, string $label, string $title, ?string $icon): string
+    #[AsCallback(table: 'tl_page', target: 'list.operations.articles.button')]
+    public function renderPageArticlesOperation(array $row, string|null $href, string $label, string $title, string|null $icon): string
     {
         if ((null === $href && null === $icon) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';
@@ -89,22 +79,22 @@ class ContentCompositionListener
 
     /**
      * Automatically creates an article in the main column of a new page.
-     *
-     * @Callback(table="tl_page", target="config.onsubmit", priority=-16)
      */
+    #[AsCallback(table: 'tl_page', target: 'config.onsubmit', priority: -16)]
     public function generateArticleForPage(DataContainer $dc): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
+        $currentRecord = $dc->getCurrentRecord();
 
-        // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        // Return if there is no current record (override all)
+        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($dc->activeRecord instanceof Result ? $dc->activeRecord->row() : (array) $dc->activeRecord);
+        $pageModel->setRow($currentRecord);
 
         if (
             empty($pageModel->title)
@@ -128,10 +118,7 @@ class ContentCompositionListener
         }
 
         // Check whether there are articles (e.g. on copied pages)
-        $total = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM tl_article WHERE pid=:pid',
-            ['pid' => $dc->id]
-        );
+        $total = $this->connection->fetchOne('SELECT COUNT(*) FROM tl_article WHERE pid=:pid', ['pid' => $dc->id]);
 
         if ($total > 0) {
             return;
@@ -144,17 +131,15 @@ class ContentCompositionListener
             'tstamp' => time(),
             'author' => $user->id,
             'inColumn' => $column,
-            'title' => $dc->activeRecord->title,
-            'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
-            'published' => $dc->activeRecord->published,
+            'title' => $currentRecord['title'] ?? null,
+            'alias' => str_replace('/', '-', $currentRecord['alias'] ?? ''), // see #516
+            'published' => $currentRecord['published'] ?? null,
         ];
 
         $this->connection->insert('tl_article', $article);
     }
 
-    /**
-     * @Callback(table="tl_article", target="list.sorting.paste_button")
-     */
+    #[AsCallback(table: 'tl_article', target: 'list.sorting.paste_button')]
     public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
     {
         if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
@@ -223,7 +208,7 @@ class ContentCompositionListener
         return null !== $this->getArticleColumnInLayout($pageModel);
     }
 
-    private function getArticleColumnInLayout(PageModel $pageModel): ?string
+    private function getArticleColumnInLayout(PageModel $pageModel): string|null
     {
         $pageModel->loadDetails();
 
@@ -231,7 +216,7 @@ class ContentCompositionListener
         $layout = $pageModel->getRelated('layout');
 
         if (null === $layout) {
-            return null;
+            return 'main';
         }
 
         $columns = [];

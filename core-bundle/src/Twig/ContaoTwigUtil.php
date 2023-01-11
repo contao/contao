@@ -26,7 +26,7 @@ final class ContaoTwigUtil
      * If parsing fails - i.e. if the given name does not describe a "Contao"
      * or "Contao_*" namespace - null is returned instead.
      */
-    public static function parseContaoName(string $logicalNameOrNamespace): ?array
+    public static function parseContaoName(string $logicalNameOrNamespace): array|null
     {
         if (1 === preg_match('%^@(Contao(?:_[a-zA-Z0-9_-]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
             return [$matches[1], $matches[2] ?? null];
@@ -40,7 +40,9 @@ final class ContaoTwigUtil
      */
     public static function getIdentifier(string $name): string
     {
-        return preg_replace('%(?:.*/)?(.*)(\.html5|\.html\.twig)%', '$1', $name);
+        preg_match('/^(?:@[^\/]+\/)?(.*?)\.(?:(?:[^.]+\.)?twig|html5)$/', $name, $matches);
+
+        return $matches[1] ?? $name;
     }
 
     /**
@@ -54,5 +56,15 @@ final class ContaoTwigUtil
         }
 
         return 'html5' === Path::getExtension($parts[1] ?? '', true);
+    }
+
+    /**
+     * Returns the file extension of a path including an optional .twig suffix.
+     */
+    public static function getExtension(string $path): string
+    {
+        preg_match('/\.([^.]+(?:\.twig)?)$/', $path, $matches);
+
+        return $matches[1] ?? '';
     }
 }

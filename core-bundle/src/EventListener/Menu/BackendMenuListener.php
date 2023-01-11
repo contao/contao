@@ -27,19 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendMenuListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private ContaoFramework $framework;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, ContaoFramework $framework)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->framework = $framework;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private ContaoFramework $framework,
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void
@@ -64,7 +58,6 @@ class BackendMenuListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $modules = $user->navigation();
-        $path = $this->router->generate('contao_backend');
 
         foreach ($modules as $categoryName => $categoryData) {
             $categoryNode = $tree->getChild($categoryName);
@@ -76,13 +69,18 @@ class BackendMenuListener
                     ->setUri($categoryData['href'])
                     ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
                     ->setLinkAttribute('title', $categoryData['title'])
-                    ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
+                    ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
+                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
+                    ->setLinkAttribute('aria-controls', $categoryName)
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
                 ;
 
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
+                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
+                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
+                } else {
+                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
                 }
 
                 $tree->addChild($categoryNode);
@@ -110,15 +108,25 @@ class BackendMenuListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $ref = $this->getRefererId();
-        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
+
+        $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
+
+        $manual = $factory
+            ->createItem('manual')
+            ->setLabel($manualTitle)
+            ->setUri('https://to.contao.org/manual')
+            ->setLinkAttribute('class', 'icon-manual')
+            ->setLinkAttribute('title', $manualTitle)
+            ->setLinkAttribute('target', '_blank')
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($manual);
 
         $alerts = $event->getFactory()
             ->createItem('alerts')
-            ->setLabel($this->getAlertsLabel($systemMessages))
-            ->setUri($this->router->generate('contao_backend_alerts'))
-            ->setLinkAttribute('class', 'icon-alert')
-            ->setLinkAttribute('title', $systemMessages)
-            ->setLinkAttribute('onclick', "Backend.openModalIframe({'title':'".StringUtil::specialchars(str_replace("'", "\\'", $systemMessages))."','url':this.href});return false")
+            ->setLabel($this->getAlertsLabel())
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
         ;
@@ -127,9 +135,10 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel($this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username)
+            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
-            ->setLabelAttribute('class', 'h2')
+            ->setExtra('safe_label', true)
+            ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
         ;
 
@@ -165,9 +174,19 @@ class BackendMenuListener
 
         $submenu->addChild($security);
 
+        $favorites = $factory
+            ->createItem('favorites')
+            ->setLabel('MSC.favorites')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
+            ->setLinkAttribute('class', 'icon-favorites')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($favorites);
+
         $buger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -176,16 +195,26 @@ class BackendMenuListener
         $tree->addChild($buger);
     }
 
-    private function getAlertsLabel(string $systemMessages): string
+    private function getAlertsLabel(): string
     {
+        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
+
+        $label = sprintf(
+            '<a href="%s" class="icon-alert" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+            $this->router->generate('contao_backend_alerts'),
+            htmlspecialchars($systemMessages),
+            StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
+            $systemMessages
+        );
+
         $adapter = $this->framework->getAdapter(Backend::class);
         $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
 
         if ($count > 0) {
-            $systemMessages .= ' <sup>'.$count.'</sup>';
+            $label .= '<sup>'.$count.'</sup>';
         }
 
-        return $systemMessages;
+        return $label;
     }
 
     private function getRefererId(): string
@@ -203,7 +232,7 @@ class BackendMenuListener
 
         // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
         if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', $attributes['class'])));
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
             unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
         }
 

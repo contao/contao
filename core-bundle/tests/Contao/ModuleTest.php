@@ -12,84 +12,82 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Model;
 use Contao\Model\Registry;
 use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ModuleTest extends ContaoTestCase
+class ModuleTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
         ;
 
         $connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
+
+        $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
     }
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class, System::class, Config::class]);
+
         parent::tearDown();
-
-        Registry::getInstance()->reset();
-
-        // Reset database instance
-        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([]);
     }
 
-    /**
-     * @group legacy
-     */
     public function testGetPublishedSubpagesWithoutGuestsByPid(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Not registering table "tl_page" in $GLOBALS[\'TL_MODELS\'] has been deprecated %s.');
-
         $databaseResultFirstQuery = [
-            ['id' => '1', 'hasSubpages' => '0'],
-            ['id' => '2', 'hasSubpages' => '1'],
-            ['id' => '3', 'hasSubpages' => '1'],
+            ['id' => 1, 'hasSubpages' => 0],
+            ['id' => 2, 'hasSubpages' => 1],
+            ['id' => 3, 'hasSubpages' => 1],
         ];
 
         $databaseResultSecondQuery = [
-            ['id' => '1', 'alias' => 'alias1'],
-            ['id' => '2', 'alias' => 'alias2'],
-            ['id' => '3', 'alias' => 'alias3'],
+            ['id' => 1, 'alias' => 'alias1'],
+            ['id' => 2, 'alias' => 'alias2'],
+            ['id' => 3, 'alias' => 'alias3'],
         ];
 
         $statement = $this->createMock(Statement::class);
@@ -115,7 +113,7 @@ class ModuleTest extends ContaoTestCase
             {
             }
 
-            public function execute(): ?array
+            public function execute(): array|null
             {
                 return self::getPublishedSubpagesByPid(1);
             }
@@ -146,9 +144,8 @@ class ModuleTest extends ContaoTestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

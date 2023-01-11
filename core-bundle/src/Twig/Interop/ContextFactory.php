@@ -20,14 +20,28 @@ use Contao\Template;
 final class ContextFactory
 {
     /**
-     * Creates a Twig template context from a @see Template object.
+     * Creates a Twig template context from a Template object.
+     *
+     * @see Template
      */
     public function fromContaoTemplate(Template $template): array
     {
-        $context = $template->getData();
+        $context = $this->fromData($template->getData());
 
+        if (!isset($context['Template'])) {
+            $context['Template'] = $template;
+        }
+
+        return $context;
+    }
+
+    /**
+     * Replaces all occurrences of closures by callable wrappers.
+     */
+    public function fromData(array $data): array
+    {
         array_walk_recursive(
-            $context,
+            $data,
             function (&$value, $key): void {
                 if ($value instanceof \Closure) {
                     $value = $this->getCallableWrapper($value, (string) $key);
@@ -35,11 +49,7 @@ final class ContextFactory
             }
         );
 
-        if (!isset($context['Template'])) {
-            $context['Template'] = $template;
-        }
-
-        return $context;
+        return $data;
     }
 
     /**
@@ -74,7 +84,7 @@ final class ContextFactory
 
             $name = $method->getName();
 
-            if (0 === strpos($name, '__')) {
+            if (str_starts_with($name, '__')) {
                 continue;
             }
 
@@ -94,13 +104,10 @@ final class ContextFactory
     private function getAllMembers(object $object): \Generator
     {
         // See https://externals.io/message/105697#105697
-        // Backwards compatibility with PHP < 7.4
-        $mangledObjectVars = \function_exists('get_mangled_object_vars')
-            ? get_mangled_object_vars($object)
-            : (array) $object;
+        $mangledObjectVars = get_mangled_object_vars($object);
 
         foreach ($mangledObjectVars as $key => $value) {
-            if (0 === strncmp($key, "\0*\0", 3)) {
+            if (str_starts_with($key, "\0*\0")) {
                 // Protected member
                 $key = substr($key, 3);
             }
@@ -116,53 +123,43 @@ final class ContextFactory
      */
     private function getCallableWrapper(callable $callable, string $name): object
     {
-        return new class($callable, $name) {
+        return new class($callable, $name) implements \Stringable {
             /**
              * @var callable
              */
             private $callable;
-            private string $name;
 
-            public function __construct(callable $callable, string $name)
+            public function __construct(callable $callable, private string $name)
             {
                 $this->callable = $callable;
-                $this->name = $name;
             }
 
             /**
              * Delegates call to callable, e.g. when in a Contao template context.
-             *
-             * @param mixed $args
-             *
-             * @return mixed
              */
-            public function __invoke(...$args)
+            public function __invoke(mixed ...$args): mixed
             {
                 return ($this->callable)(...$args);
             }
 
             /**
-             * Called when evaluating `{{ var }}` in a Twig template.
+             * Called when evaluating "{{ var }}" in a Twig template.
              */
             public function __toString(): string
             {
                 try {
                     return (string) $this();
                 } catch (\Throwable $e) {
-                    throw new \RuntimeException("Error evaluating '$this->name': {$e->getMessage()}", 0, $e);
+                    throw new \RuntimeException(sprintf('Error evaluating "%s": %s', $this->name, $e->getMessage()), 0, $e);
                 }
             }
 
             /**
-             * Called when evaluating '{{ var.invoke(…) }}' in a Twig template.
+             * Called when evaluating "{{ var.invoke(…) }}" in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
-             *
-             * @param mixed $args
-             *
-             * @return mixed
              */
-            public function invoke(...$args)
+            public function invoke(mixed ...$args): mixed
             {
                 return $this(...$args);
             }

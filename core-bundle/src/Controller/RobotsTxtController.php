@@ -23,34 +23,24 @@ use Symfony\Component\Routing\Annotation\Route;
 use webignition\RobotsTxt\File\Parser;
 
 /**
- * @Route(defaults={"_scope" = "frontend"})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend'])]
 class RobotsTxtController
 {
-    private ContaoFramework $framework;
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(ContaoFramework $framework, EventDispatcherInterface $eventDispatcher)
+    public function __construct(private ContaoFramework $framework, private EventDispatcherInterface $eventDispatcher)
     {
-        $this->framework = $framework;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @Route("/robots.txt")
-     */
+    #[Route('/robots.txt')]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->server->get('HTTP_HOST'),
-            ['fallbackToEmpty' => true]
-        );
+        /** @var PageModel|null $rootPage */
+        $rootPage = $pageModel->findPublishedFallbackByHostname($request->getHost(), ['fallbackToEmpty' => true]);
 
         if (null === $rootPage) {
             return new Response('', Response::HTTP_NOT_FOUND);

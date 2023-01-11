@@ -23,7 +23,7 @@ class ManagerConfig
 {
     private string $configFile;
     private Filesystem $filesystem;
-    private ?array $config = null;
+    private array|null $config = null;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
@@ -31,8 +31,18 @@ class ManagerConfig
             $projectDir = (string) $realpath;
         }
 
-        $this->configFile = Path::join($projectDir, 'config/contao-manager.yml');
         $this->filesystem = $filesystem ?: new Filesystem();
+        $this->configFile = Path::join($projectDir, 'config/contao-manager.yaml');
+
+        if ($this->filesystem->exists($this->configFile)) {
+            return;
+        }
+
+        if ($this->filesystem->exists($path = Path::join($projectDir, 'config/contao-manager.yml'))) {
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a contao-manager.yml file has been deprecated and will no longer work in Contao 6.0. Use a contao-manager.yaml file instead.');
+
+            $this->configFile = $path;
+        }
     }
 
     public function all(): array

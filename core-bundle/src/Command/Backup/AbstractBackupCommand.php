@@ -24,19 +24,15 @@ use Symfony\Component\Console\Input\InputOption;
  */
 abstract class AbstractBackupCommand extends Command
 {
-    protected BackupManager $backupManager;
-
-    public function __construct(BackupManager $backupManager)
+    public function __construct(protected BackupManager $backupManager)
     {
-        $this->backupManager = $backupManager;
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump file')
+            ->addArgument('name', InputArgument::OPTIONAL, 'The name of the backup')
             ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables). You can use the prefixes "+" and "-" to modify the existing configuration (e.g. "+tl_user" would add "tl_user" to the existing list).')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
         ;
@@ -51,12 +47,12 @@ abstract class AbstractBackupCommand extends Command
      */
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {
-        if ($file = $input->getArgument('file')) {
-            $config = $config->withFilePath($file);
+        if ($name = $input->getArgument('name')) {
+            $config = $config->withFileName($name);
         }
 
         if ($tablesToIgnore = $input->getOption('ignore-tables')) {
-            $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
+            $config = $config->withTablesToIgnore(explode(',', (string) $tablesToIgnore));
         }
 
         return $config;

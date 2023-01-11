@@ -23,35 +23,19 @@ namespace Contao\CoreBundle\File;
  */
 class Metadata
 {
-    public const VALUE_ALT = 'alt';
-    public const VALUE_CAPTION = 'caption';
-    public const VALUE_TITLE = 'title';
-    public const VALUE_URL = 'link';
-    public const VALUE_UUID = 'uuid';
-    public const VALUE_LICENSE = 'license';
+    final public const VALUE_ALT = 'alt';
+    final public const VALUE_CAPTION = 'caption';
+    final public const VALUE_TITLE = 'title';
+    final public const VALUE_URL = 'link';
+    final public const VALUE_UUID = 'uuid';
+    final public const VALUE_LICENSE = 'license';
 
     /**
-     * Key-value pairs of metadata.
-     *
-     * @var array<string, mixed>
+     * @param array<string, mixed>      $values          Key-value pairs of metadata
+     * @param array<string, array>|null $schemaOrgJsonLd JSON-LD data where the key matches the schema.org type
      */
-    private array $values;
-
-    /**
-     * JSON-LD data where the key matches the schema.org type.
-     *
-     * @var array<string, array>|null
-     */
-    private ?array $schemaOrgJsonLd;
-
-    /**
-     * @param array<string, mixed>      $values
-     * @param array<string, array>|null $schemaOrgJsonLd
-     */
-    public function __construct(array $values, array $schemaOrgJsonLd = null)
+    public function __construct(private array $values, private array|null $schemaOrgJsonLd = null)
     {
-        $this->values = $values;
-        $this->schemaOrgJsonLd = $schemaOrgJsonLd;
     }
 
     /**
@@ -66,15 +50,13 @@ class Metadata
             return $this;
         }
 
-        return new self(array_merge($this->values, $values));
+        return new self([...$this->values, ...$values]);
     }
 
     /**
      * Returns a value or null if the value was not found.
-     *
-     * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->values[$key] ?? null;
     }
@@ -102,7 +84,7 @@ class Metadata
     /**
      * Returns a UUID reference in ASCII format or null if not set.
      */
-    public function getUuid(): ?string
+    public function getUuid(): string|null
     {
         return $this->values[self::VALUE_UUID] ?? null;
     }

@@ -13,15 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Fragment\FragmentConfig;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'debug:fragments',
+    description: 'Displays the fragment controller configuration.'
+)]
 class DebugFragmentsCommand extends Command
 {
-    protected static $defaultName = 'debug:fragments';
-
     private array $identifiers = [];
     private array $attributes = [];
 
@@ -35,13 +38,6 @@ class DebugFragmentsCommand extends Command
         $this->identifiers[] = $identifier;
         $this->configs[$identifier] = $config;
         $this->attributes[$identifier] = $attributes;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Displays the fragment controller configuration.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -68,7 +64,7 @@ class DebugFragmentsCommand extends Command
         $io->title('Contao Fragments');
         $io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateArray(array $values): string
@@ -76,7 +72,7 @@ class DebugFragmentsCommand extends Command
         $length = array_reduce(
             array_keys($values),
             static function ($carry, $item): int {
-                $length = \strlen($item);
+                $length = \strlen((string) $item);
 
                 return max($carry, $length);
             },

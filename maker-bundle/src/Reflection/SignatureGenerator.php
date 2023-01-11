@@ -30,11 +30,11 @@ class SignatureGenerator
             $paramName = str_replace('&', '', $name);
             [$paramType] = \is_array($type) ? $type : [$type, null];
 
-            if (null !== $paramType && class_exists($paramType, true)) {
+            if (null !== $paramType && class_exists($paramType)) {
                 $paramType = Str::getShortClassName($paramType);
             }
 
-            $paramReference = 0 === strpos($name, '&');
+            $paramReference = str_starts_with($name, '&');
             $parameterTemplate = sprintf('%s %s$%s', $paramType, $paramReference ? '&' : '', $paramName);
 
             if (null !== $defaultValue) {
@@ -57,7 +57,7 @@ class SignatureGenerator
     {
         $returnType = $method->getReturnType();
 
-        if (null !== $returnType && class_exists($returnType, true)) {
+        if (null !== $returnType && class_exists($returnType)) {
             $returnType = Str::getShortClassName($returnType);
         }
 

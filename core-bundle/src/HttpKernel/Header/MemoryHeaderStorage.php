@@ -17,11 +17,8 @@ namespace Contao\CoreBundle\HttpKernel\Header;
  */
 class MemoryHeaderStorage implements HeaderStorageInterface
 {
-    private array $headers;
-
-    public function __construct(array $headers = [])
+    public function __construct(private array $headers = [])
     {
-        $this->headers = $headers;
     }
 
     public function all(): array

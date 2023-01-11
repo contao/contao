@@ -1,0 +1,47 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1550250980
+      title: Same domain root English
+      alias: same-domain-root-english
+      urlSuffix: .html
+      type: root
+      language: en
+      dns: same-domain-root.local
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: English site
+      alias: english-site
+      type: regular
+      published: 1
+
+    - id: 3
+      pid: 0
+      sorting: 256
+      tstamp: 1550250980
+      title: Same domain root German
+      alias: same-domain-root-german
+      urlSuffix: .html
+      type: root
+      language: de
+      dns: same-domain-root.local
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 4
+      pid: 3
+      sorting: 128
+      tstamp: 1539698035
+      title: German site
+      alias: german-site
+      type: regular
+      published: 1

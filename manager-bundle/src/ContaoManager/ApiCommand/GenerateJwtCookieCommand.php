@@ -14,14 +14,16 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'jwt-cookie:generate',
+    description: 'Generates a JWT cookie for the preview entry point.'
+)]
 class GenerateJwtCookieCommand extends Command
 {
     private JwtManager $jwtManager;
@@ -35,13 +37,7 @@ class GenerateJwtCookieCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
-        $this
-            ->setName('jwt-cookie:generate')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie')
-            ->setDescription('Generates a JWT cookie for the preview entry point.')
-        ;
+        $this->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

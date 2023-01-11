@@ -38,7 +38,7 @@ class DocumentTest extends TestCase
     /**
      * @dataProvider canonicalUriProvider
      */
-    public function testExtractsTheCanonicalUri(string $body, array $headers, ?Uri $expectedCanonicalUri): void
+    public function testExtractsTheCanonicalUri(string $body, array $headers, Uri|null $expectedCanonicalUri): void
     {
         $document = new Document(
             new Uri('https://example.com'),

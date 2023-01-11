@@ -27,14 +27,24 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PictureFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesAPictureObjectFromAnImagePath(): void
@@ -380,6 +390,9 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -438,6 +451,8 @@ class PictureFactoryTest extends TestCase
                 )
             )
         ;
+
+        $this->expectDeprecation('%slegacy resize mode "left_top" has been deprecated%s');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
@@ -605,11 +620,9 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureConfiguration|string|null $size
-     *
      * @dataProvider getResizeOptionsScenarios
      */
-    public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, $size, bool $expected): void
+    public function testCreatesAPictureWithResizeOptions(ResizeOptions|null $resizeOptions, PictureConfiguration|string|null $size, bool $expected): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);

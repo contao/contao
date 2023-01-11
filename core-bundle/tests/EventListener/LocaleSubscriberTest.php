@@ -29,7 +29,7 @@ class LocaleSubscriberTest extends TestCase
     /**
      * @dataProvider getLocaleRequestData
      */
-    public function testReadsTheLocaleFromTheRequest(?string $locale, string $expected): void
+    public function testReadsTheLocaleFromTheRequest(string|null $locale, string $expected): void
     {
         $request = Request::create('/');
         $request->attributes->set('_locale', $locale);
@@ -62,7 +62,7 @@ class LocaleSubscriberTest extends TestCase
     /**
      * @dataProvider acceptLanguageTestData
      */
-    public function testReadsTheLocaleFromTheAcceptLanguageHeader(?string $locale, string $expected, array $available): void
+    public function testReadsTheLocaleFromTheAcceptLanguageHeader(string|null $locale, string $expected, array $available): void
     {
         $request = Request::create('/');
         $request->headers->set('Accept-Language', $locale);

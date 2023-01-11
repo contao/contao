@@ -16,19 +16,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SendNewsletterEvent extends Event
 {
-    private string $recipientAddress;
-    private string $text;
-    private string $html;
     private bool $skipSending = false;
     private bool $htmlAllowed = true;
     private array $recipientData = [];
     private array $newsletterData = [];
 
-    public function __construct(string $recipientAddress, string $text, string $html = '')
+    public function __construct(private string $recipientAddress, private string $text, private string $html = '')
     {
-        $this->recipientAddress = $recipientAddress;
-        $this->text = $text;
-        $this->html = $html;
     }
 
     public function getRecipientAddress(): string
@@ -101,18 +95,12 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRecipientValue(string $key)
+    public function getRecipientValue(string $key): mixed
     {
         return $this->recipientData[$key] ?? null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setRecipientValue(string $key, $value): self
+    public function setRecipientValue(string $key, mixed $value): self
     {
         $this->recipientData[$key] = $value;
 
@@ -131,18 +119,12 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNewsletterValue(string $key)
+    public function getNewsletterValue(string $key): mixed
     {
         return $this->newsletterData[$key] ?? null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setNewsletterValue(string $key, $value): self
+    public function setNewsletterValue(string $key, mixed $value): self
     {
         $this->newsletterData[$key] = $value;
 

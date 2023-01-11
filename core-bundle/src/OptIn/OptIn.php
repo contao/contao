@@ -18,14 +18,11 @@ use Contao\OptInModel;
 
 class OptIn implements OptInInterface
 {
-    private ContaoFramework $framework;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.opt_in" service instead
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
@@ -60,7 +57,7 @@ class OptIn implements OptInInterface
         return new OptInToken($optIn, $this->framework);
     }
 
-    public function find(string $identifier): ?OptInTokenInterface
+    public function find(string $identifier): OptInTokenInterface|null
     {
         $adapter = $this->framework->getAdapter(OptInModel::class);
 

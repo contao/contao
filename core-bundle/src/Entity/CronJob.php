@@ -12,35 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Contao\CoreBundle\Repository\CronJobRepository;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Table(
- *     name="tl_cron_job",
- *     indexes={
- *         @ORM\Index(name="name", columns={"name"})
- *     }
- * )
- * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\CronJobRepository")
- */
+#[Table(name: 'tl_cron_job')]
+#[Entity(repositoryClass: CronJobRepository::class)]
+#[Index(columns: ['name'], name: 'name')]
 class CronJob
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned"=true})
-     * @GeneratedValue
-     */
+    #[Id]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     protected int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
+    #[Column(type: 'string', length: 255, nullable: false)]
     protected string $name;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[Column(type: 'datetime', nullable: false)]
     protected \DateTimeInterface $lastRun;
 
     public function __construct(string $name, \DateTimeInterface $lastRun = null)

@@ -60,7 +60,7 @@ class RegisterFragmentsPassTest extends TestCase
          */
         $this->assertSame('add', $element[0]);
         $this->assertSame('contao.content_element.text', $element[1][0]);
-        $this->assertRegExp('/^contao.fragment._config_/', (string) $element[1][1]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element[1][1]);
 
         $arguments = $container->getDefinition((string) $element[1][1])->getArguments();
         $this->assertSame('forward', $arguments[1]);
@@ -75,7 +75,7 @@ class RegisterFragmentsPassTest extends TestCase
          */
         $this->assertSame('add', $module[0]);
         $this->assertSame('contao.frontend_module.login', $module[1][0]);
-        $this->assertRegExp('/^contao.fragment._config_/', (string) $module[1][1]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module[1][1]);
 
         $arguments = $container->getDefinition((string) $module[1][1])->getArguments();
         $this->assertSame('esi', $arguments[1]);
@@ -294,6 +294,60 @@ class RegisterFragmentsPassTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
 
         $pass->process($container);
+    }
+
+    /**
+     * @dataProvider provideTemplateNames
+     */
+    public function testSetsTemplatesInTemplatesOptionsListener(string|null $template, array $expectedCustomTemplates): void
+    {
+        $contentController = new Definition('App\Controller\TextController');
+        $contentController->addTag('contao.content_element', array_filter(['template' => $template]));
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+        $container->setDefinition('contao.listener.element_template_options', $templateOptionsListener = new Definition());
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(
+            ContentElementReference::TAG_NAME,
+            templateOptionsListener: 'contao.listener.element_template_options'
+        );
+
+        $pass->process($container);
+
+        $this->assertCount(1, $calls = $templateOptionsListener->getMethodCalls());
+        $this->assertSame('setDefaultIdentifiersByType', $calls[0][0]);
+        $this->assertSame([$expectedCustomTemplates], $calls[0][1]);
+    }
+
+    public function provideTemplateNames(): \Generator
+    {
+        yield 'legacy template' => [
+            'ce_text',
+            ['text' => 'ce_text'],
+        ];
+
+        yield 'legacy template, alternative name' => [
+            'ce_foo',
+            ['text' => 'ce_foo'],
+        ];
+
+        yield 'template inferred from type' => [
+            null,
+            ['text' => 'content_element/text'],
+        ];
+
+        yield 'modern template' => [
+            'content_element/text',
+            ['text' => 'content_element/text'],
+        ];
+
+        yield 'modern template, alternative name' => [
+            'content_element/foobar',
+            ['text' => 'content_element/foobar'],
+        ];
     }
 
     public function testDoesNothingIfThereIsNoFragmentRegistry(): void

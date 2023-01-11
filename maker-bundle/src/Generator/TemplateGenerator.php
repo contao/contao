@@ -13,16 +13,13 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Generator;
 
 use Symfony\Bundle\MakerBundle\Generator;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Webmozart\PathUtil\Path;
 
 class TemplateGenerator implements GeneratorInterface
 {
-    private Generator $generator;
-
-    public function __construct(Generator $generator)
+    public function __construct(private Generator $generator)
     {
-        $this->generator = $generator;
     }
 
     public function generate(array $options): string
@@ -49,6 +46,6 @@ class TemplateGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

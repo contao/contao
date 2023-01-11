@@ -1,5 +1,6 @@
 name: 🚀 Request a feature
 description: RFC and ideas for new features and improvements
+labels: [feature]
 body:
     - type: textarea
       id: description

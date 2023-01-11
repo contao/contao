@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -23,30 +24,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Runs Contao automator tasks on the command line.
- *
  * @internal
  */
+#[AsCommand(
+    name: 'contao:automator',
+    description: 'Runs automator tasks on the command line.'
+)]
 class AutomatorCommand extends Command
 {
-    protected static $defaultName = 'contao:automator';
-
     private array $commands = [];
-    private ContaoFramework $framework;
 
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
-            ->setDescription('Runs automator tasks on the command line.')
-        ;
+        $this->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -58,10 +53,10 @@ class AutomatorCommand extends Command
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function runAutomator(InputInterface $input, OutputInterface $output): void
@@ -89,8 +84,6 @@ class AutomatorCommand extends Command
      */
     private function generateCommandMap(): array
     {
-        $this->framework->initialize();
-
         $commands = [];
 
         // Find all public methods

@@ -20,18 +20,15 @@ class ContentElementReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = new ContentModel();
-        $model->type = 'foobar';
+        $model = $this->mockClassWithProperties(ContentModel::class, ['type' => 'foobar']);
 
         $reference = new ContentElementReference($model);
-
         $this->assertSame(ContentElementReference::TAG_NAME.'.foobar', $reference->controller);
     }
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = new ContentModel();
-        $model->type = 'foobar';
+        $model = $this->createMock(ContentModel::class);
 
         $reference = new ContentElementReference($model);
         $this->assertSame('main', $reference->attributes['section']);

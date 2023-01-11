@@ -32,12 +32,10 @@ class BackendAccessVoter extends Voter implements ResetInterface
         'can_delete_articles' => 6,
     ];
 
-    private ContaoFramework $framework;
     private array $pagePermissionsCache = [];
 
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function reset(): void
@@ -45,20 +43,12 @@ class BackendAccessVoter extends Voter implements ResetInterface
         $this->pagePermissionsCache = [];
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
-        return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
+        return str_starts_with($attribute, 'contao_user.');
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -95,12 +85,10 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks the user permissions against a field in tl_user(_group).
-     *
-     * @param mixed $subject
      */
-    private function hasAccess($subject, string $field, BackendUser $user): bool
+    private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
     {
-        if (!is_scalar($subject) && !\is_array($subject)) {
+        if (!\is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
 
@@ -109,10 +97,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks if the user has access to a given page (tl_page.includeChmod et al.).
-     *
-     * @param mixed $subject
      */
-    private function isAllowed($subject, int $flag, BackendUser $user): bool
+    private function isAllowed(mixed $subject, int $flag, BackendUser $user): bool
     {
         if ($subject instanceof PageModel) {
             $subject = $subject->row();
@@ -136,7 +122,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'g'.$flag;
         }
 
-        if ($cuser === (int) $user->id) {
+        if ($cuser === $user->id) {
             $permission[] = 'u'.$flag;
         }
 
@@ -145,10 +131,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
-     *
-     * @param mixed $table
      */
-    private function canEditFieldsOf($table, BackendUser $user): bool
+    private function canEditFieldsOf(mixed $table, BackendUser $user): bool
     {
         if (!\is_string($table)) {
             return false;

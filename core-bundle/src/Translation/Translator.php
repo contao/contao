@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Translation;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -21,27 +22,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
 {
-    private ContaoFramework $framework;
-    private ResourceFinder $resourceFinder;
-
     /**
      * @var \SplObjectStorage<MessageCatalogueInterface, MessageCatalogue>
      */
     private \SplObjectStorage $catalogues;
 
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
-     */
-    private $translator;
-
-    /**
      * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
      */
-    public function __construct(TranslatorInterface $translator, ContaoFramework $framework, ResourceFinder $resourceFinder)
-    {
-        $this->translator = $translator;
-        $this->framework = $framework;
-        $this->resourceFinder = $resourceFinder;
+    public function __construct(
+        private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
+        private ContaoFramework $framework,
+        private ResourceFinder $resourceFinder,
+    ) {
         $this->catalogues = new \SplObjectStorage();
     }
 
@@ -54,7 +47,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
+        if (null === $domain || !str_starts_with($domain, 'contao_')) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
@@ -62,6 +55,12 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
         if (!empty($parameters)) {
             $translated = vsprintf($translated, $parameters);
+        }
+
+        // Restore previous translations in $GLOBALS['TL_LANG'] (see #5371)
+        if (null !== $locale && $locale !== $this->getLocale()) {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
         }
 
         return $translated;

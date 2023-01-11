@@ -22,7 +22,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -32,17 +31,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeHook extends AbstractMaker
 {
-    private ClassGenerator $classGenerator;
-    private SignatureGenerator $signatureGenerator;
-    private ImportExtractor $importExtractor;
-    private PhpCompatUtil $phpCompatUtil;
-
-    public function __construct(ClassGenerator $classGenerator, SignatureGenerator $signatureGenerator, ImportExtractor $importExtractor, PhpCompatUtil $phpCompatUtil)
-    {
-        $this->classGenerator = $classGenerator;
-        $this->signatureGenerator = $signatureGenerator;
-        $this->importExtractor = $importExtractor;
-        $this->phpCompatUtil = $phpCompatUtil;
+    public function __construct(
+        private ClassGenerator $classGenerator,
+        private SignatureGenerator $signatureGenerator,
+        private ImportExtractor $importExtractor,
+    ) {
     }
 
     public static function getCommandName(): string
@@ -107,7 +100,6 @@ class MakeHook extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
@@ -121,7 +113,7 @@ class MakeHook extends AbstractMaker
      */
     private function getAvailableHooks(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/hooks.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/hooks.yaml');
         $hooks = [];
 
         foreach ($yaml['hooks'] as $key => $config) {

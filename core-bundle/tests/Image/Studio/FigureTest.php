@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -19,6 +20,8 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
+use Contao\Files;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ResizerInterface;
@@ -31,6 +34,15 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, File::class, Files::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testGetImage(): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -80,14 +92,12 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetLightboxFailsIfNotSet(): void
+    public function testGetLightboxReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getLightbox();
+        $this->assertNull($figure->getLightbox());
     }
 
     public function testGetMetadata(): void
@@ -122,20 +132,18 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetMetadataFailsIfNotSet(): void
+    public function testGetMetadataReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getMetadata();
+        $this->assertNull($figure->getMetadata());
     }
 
     /**
      * @dataProvider provideLinkAttributesAndPreconditions
      */
-    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, ?string $expectedHref): void
+    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -143,7 +151,7 @@ class FigureTest extends TestCase
 
         $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
-        $this->assertSame($expectedAttributes, $figure->getLinkAttributes());
+        $this->assertSame($expectedAttributes, iterator_to_array($figure->getLinkAttributes()));
         $this->assertSame($expectedHref ?? '', $figure->getLinkHref());
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }
@@ -516,7 +524,7 @@ class FigureTest extends TestCase
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 
@@ -525,7 +533,7 @@ class FigureTest extends TestCase
             [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 
@@ -549,7 +557,20 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 
@@ -570,9 +591,22 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures')
-        ));
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
+
+        System::setContainer($container);
 
         $template = new \stdClass();
 

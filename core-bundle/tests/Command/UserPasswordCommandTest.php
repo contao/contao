@@ -20,12 +20,20 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class UserPasswordCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testDefinesUsernameAndPassword(): void
     {
         $command = $this->getCommand();
@@ -174,9 +182,7 @@ class UserPasswordCommandTest extends TestCase
                 'tl_user',
                 [
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
-                    'locked' => 0,
-                    'loginAttempts' => 0,
-                    'pwChange' => '',
+                    'pwChange' => 0,
                 ],
                 ['username' => $username]
             )
@@ -212,9 +218,7 @@ class UserPasswordCommandTest extends TestCase
                 'tl_user',
                 [
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
-                    'locked' => 0,
-                    'loginAttempts' => 0,
-                    'pwChange' => '1',
+                    'pwChange' => 1,
                 ],
                 ['username' => $username]
             )

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -30,20 +31,6 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigMacrosTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private static $macros;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$macros = file_get_contents(
-            Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/_macros.html.twig')
-        );
-    }
-
     /**
      * @dataProvider provideAttributes
      */
@@ -118,7 +105,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideImgData
      */
-    public function testImgMacro(array $imageData, ?Metadata $metadata, string $expected): void
+    public function testImgMacro(array $imageData, Metadata|null $metadata, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
         $image
@@ -382,7 +369,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideFigureData
      */
-    public function testFigureMacro(?Metadata $metadata, array $linkAttributes, ?LightboxResult $lightbox, string $expected): void
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
     {
         $figure = new Figure(
             $this->createMock(ImageResult::class),
@@ -586,12 +573,21 @@ class TwigMacrosTest extends TestCase
     private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
     {
         $templates = [
-            '_macros.html.twig' => self::$macros,
+            '_macros.html.twig' => file_get_contents(
+                Path::canonicalize(__DIR__.'/../../../templates/Image/Studio/_macros.html.twig')
+            ),
             'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+
+        $environment->setExtensions([
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            ),
+        ]);
 
         $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 

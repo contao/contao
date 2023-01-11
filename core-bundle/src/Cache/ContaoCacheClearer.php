@@ -18,14 +18,11 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 
 class ContaoCacheClearer implements CacheClearerInterface
 {
-    private Filesystem $filesystem;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.clearer" service instead
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(private Filesystem $filesystem)
     {
-        $this->filesystem = $filesystem;
     }
 
     public function clear(string $cacheDir): void

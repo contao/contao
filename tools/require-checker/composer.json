@@ -1,0 +1,5 @@
+{
+    "require": {
+        "maglnet/composer-require-checker": "^4.0"
+    }
+}

@@ -18,13 +18,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class InsertTagParser implements ResetInterface
 {
-    private ContaoFramework $framework;
-    private ?InsertTags $insertTags;
-
-    public function __construct(ContaoFramework $framework, InsertTags $insertTags = null)
+    public function __construct(private ContaoFramework $framework, private InsertTags|null $insertTags = null)
     {
-        $this->framework = $framework;
-        $this->insertTags = $insertTags;
     }
 
     public function replace(string $input): string
@@ -50,6 +45,10 @@ class InsertTagParser implements ResetInterface
     public function render(string $input): string
     {
         $chunked = iterator_to_array($this->replaceInlineChunked('{{'.$input.'}}'));
+
+        if (!$chunked) {
+            return '';
+        }
 
         if (1 !== \count($chunked) || ChunkedText::TYPE_RAW !== $chunked[0][0] || !\is_string($chunked[0][1])) {
             throw new \RuntimeException('Rendering a single insert tag has to return a single raw chunk');

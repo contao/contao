@@ -17,28 +17,51 @@ use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
-use Contao\NewsFeedModel;
 use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\ContaoTestCase;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $GLOBALS['TL_HEAD'] = [];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG'], $GLOBALS['TL_HEAD']);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNewsFeedLink(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
+        $newsFeedModel = $this->createMock(PageModel::class);
+        $newsFeedModel
+            ->method('__get')
+            ->willReturnMap([
+                ['id', 42],
+                ['type', 'news_feed'],
+                ['alias', 'news'],
+                ['title', 'Latest news'],
+                ['feedFormat', 'rss'],
+            ])
+        ;
 
-        $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class);
-        $newsFeedModel->feedBase = 'http://localhost/';
-        $newsFeedModel->alias = 'news';
-        $newsFeedModel->format = 'rss';
-        $newsFeedModel->title = 'Latest news';
+        $newsFeedModel
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('http://localhost/news.xml')
+        ;
 
-        $collection = new Collection([$newsFeedModel], 'tl_news_feeds');
+        $collection = new Collection([$newsFeedModel], 'tl_page');
 
         $adapters = [
             Environment::class => $this->mockAdapter(['get']),
-            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
+            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];
 
@@ -49,30 +72,29 @@ class GeneratePageListenerTest extends ContaoTestCase
         $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
-            ['<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">'],
+            ['<link type="application/rss+xml" rel="alternate" href="http://localhost/news.xml" title="Latest news">'],
             $GLOBALS['TL_HEAD']
         );
     }
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 
-    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels(): void
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoValidModels(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
+        $collection = new Collection([$pageModel], 'tl_page');
 
         $adapters = [
-            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
+            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
         ];
 
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
@@ -81,6 +103,6 @@ class GeneratePageListenerTest extends ContaoTestCase
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 }

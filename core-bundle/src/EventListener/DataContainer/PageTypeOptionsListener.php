@@ -12,30 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
 
-/**
- * @Callback(table="tl_page", target="fields.type.options")
- * @Callback(table="tl_user", target="fields.alpty.options")
- * @Callback(table="tl_user_group", target="fields.alpty.options")
- */
+#[AsCallback(table: 'tl_page', target: 'fields.type.options')]
+#[AsCallback(table: 'tl_user', target: 'fields.alpty.options')]
+#[AsCallback(table: 'tl_user_group', target: 'fields.alpty.options')]
 class PageTypeOptionsListener
 {
-    private PageRegistry $pageRegistry;
-    private Security $security;
-    private ?EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(PageRegistry $pageRegistry, Security $security, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(private PageRegistry $pageRegistry, private Security $security, private EventDispatcherInterface|null $eventDispatcher = null)
     {
-        $this->pageRegistry = $pageRegistry;
-        $this->security = $security;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(DataContainer $dc): array

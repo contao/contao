@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -32,22 +33,18 @@ use Twig\Environment as TwigEnvironment;
  */
 class PreviewToolbarListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private TwigEnvironment $twig;
-    private RouterInterface $router;
-    private string $previewScript;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->previewScript = $previewScript;
+    public function __construct(
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private string $previewScript = '',
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMainRequest($event)) {
+        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
 
@@ -66,7 +63,7 @@ class PreviewToolbarListener
         // Only inject the toolbar into HTML responses
         if (
             'html' !== $request->getRequestFormat()
-            || false === strpos((string) $response->headers->get('Content-Type'), 'text/html')
+            || !str_contains((string) $response->headers->get('Content-Type'), 'text/html')
             || false !== stripos((string) $response->headers->get('Content-Disposition'), 'attachment;')
         ) {
             return;

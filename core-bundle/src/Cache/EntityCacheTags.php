@@ -22,27 +22,23 @@ use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
 
 /**
- * Use this helper service to derive 'contao.db.*' cache tags from entity/model
+ * Use this helper service to derive "contao.db.*" cache tags from entity/model
  * classes and instances. The tagWith*() and invalidateFor*() shortcut methods
  * directly tag the response or invalidate tags. If your application does not
  * use response tagging, these methods are no-ops.
  */
 class EntityCacheTags
 {
-    private EntityManagerInterface $entityManager;
-    private ?ResponseTagger $responseTagger;
-    private ?CacheInvalidator $cacheInvalidator;
-
     /**
      * @var array<string, ClassMetadata<object>>
      */
     private array $classMetadata = [];
 
-    public function __construct(EntityManagerInterface $entityManager, ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->responseTagger = $responseTagger;
-        $this->cacheInvalidator = $cacheInvalidator;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ResponseTagger|null $responseTagger = null,
+        private CacheInvalidator|null $cacheInvalidator = null,
+    ) {
     }
 
     /**
@@ -66,10 +62,10 @@ class EntityCacheTags
      */
     public function getTagForEntityInstance(object $instance): string
     {
-        $metadata = $this->getClassMetadata(\get_class($instance));
+        $metadata = $this->getClassMetadata($instance::class);
 
         if (null === $metadata) {
-            throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', \get_class($instance)));
+            throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
         }
 
         $identifier = $this->entityManager
@@ -123,11 +119,9 @@ class EntityCacheTags
      *   getTagsFor(PageModel::class); // ['contao.db.tl_page']
      *   getTagsFor([$objPage, null, 'foo']); // ['contao.db.tl_page.42', 'foo']
      *
-     * @param array|Collection|ModelCollection|string|object|null $target
-     *
      * @return array<int, string>
      */
-    public function getTagsFor($target): array
+    public function getTagsFor(array|object|string|null $target): array
     {
         if (!$target) {
             return [];
@@ -141,7 +135,7 @@ class EntityCacheTags
 
                 try {
                     return [$this->getTagForEntityClass($target)];
-                } catch (\InvalidArgumentException $e) {
+                } catch (\InvalidArgumentException) {
                     // ignore
                 }
             }
@@ -219,10 +213,8 @@ class EntityCacheTags
      * Derives cache tags and adds them to the response.
      *
      * See getTagsFor() method for the allowed parameters.
-     *
-     * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function tagWith($target): void
+    public function tagWith(array|object|string|null $target): void
     {
         if (null === $this->responseTagger) {
             return;
@@ -283,10 +275,8 @@ class EntityCacheTags
      * Derives cache tags and invalidates them.
      *
      * See getTagsFor() method for the allowed parameters.
-     *
-     * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function invalidateTagsFor($target): void
+    public function invalidateTagsFor(array|object|string|null $target): void
     {
         if (null === $this->cacheInvalidator) {
             return;
@@ -302,12 +292,12 @@ class EntityCacheTags
      *
      * @return ?ClassMetadata<T>
      */
-    private function getClassMetadata(string $className): ?ClassMetadata
+    private function getClassMetadata(string $className): ClassMetadata|null
     {
         $getMetadata = function (string $className) {
             try {
                 return $this->entityManager->getClassMetadata($className);
-            } catch (MappingException $e) {
+            } catch (MappingException) {
                 return null;
             }
         };
@@ -320,10 +310,7 @@ class EntityCacheTags
         return 1 === preg_match('/^(?:[a-z_\x80-\xff][a-z0-9_\x80-\xff]*\\\\?)+(?<!\\\\)$/i', $target);
     }
 
-    /**
-     * @param object|string $classStringOrObject
-     */
-    private function isModel($classStringOrObject): bool
+    private function isModel(object|string $classStringOrObject): bool
     {
         return is_subclass_of($classStringOrObject, Model::class);
     }

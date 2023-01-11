@@ -27,19 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendPreviewListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void
@@ -106,10 +100,6 @@ class BackendPreviewListener
 
     private function getIdFromRequest(Request $request): int
     {
-        if (!$request->query->has('table')) {
-            return (int) $request->query->get('id');
-        }
-
-        return (int) $request->getSession()->get('CURRENT_ID');
+        return (int) ($request->query->get('id') ?? $request->query->get('pid'));
     }
 }

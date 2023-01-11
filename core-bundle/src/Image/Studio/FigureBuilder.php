@@ -15,7 +15,11 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -27,6 +31,7 @@ use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Use the FigureBuilder class to create Figure result objects. The class
@@ -37,57 +42,47 @@ use Symfony\Component\Filesystem\Path;
  */
 class FigureBuilder
 {
-    private ContainerInterface $locator;
-    private string $projectDir;
-    private string $uploadPath;
     private Filesystem $filesystem;
-    private ?InvalidResourceException $lastException = null;
-
-    /**
-     * @var array<string>
-     */
-    private array $validExtensions;
+    private InvalidResourceException|null $lastException = null;
 
     /**
      * The resource's absolute file path.
      */
-    private ?string $filePath = null;
+    private string|null $filePath = null;
 
     /**
      * The resource's file model if applicable.
      */
-    private ?FilesModel $filesModel = null;
+    private FilesModel|null $filesModel = null;
 
     /**
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $sizeConfiguration;
+    private PictureConfiguration|array|int|string|null $sizeConfiguration = null;
 
     /**
      * User defined resize options.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
      */
-    private ?ResizeOptions $resizeOptions = null;
+    private ResizeOptions|null $resizeOptions = null;
 
     /**
      * User defined custom locale. This will overwrite the default if set.
      */
-    private ?string $locale = null;
+    private string|null $locale = null;
 
     /**
      * User defined metadata. This will overwrite the default if set.
      */
-    private ?Metadata $metadata = null;
+    private Metadata|null $metadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
      */
-    private ?bool $disableMetadata = null;
+    private bool|null $disableMetadata = null;
 
     /**
      * User defined link attributes. These will add to or overwrite the default values.
@@ -98,32 +93,28 @@ class FigureBuilder
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
-     *
-     * @var string|ImageInterface|null
      */
-    private $lightboxResourceOrUrl;
+    private ImageInterface|string|null $lightboxResourceOrUrl = null;
 
     /**
      * User defined lightbox size configuration. This will overwrite the default if set.
-     *
-     * @var mixed|null
      */
-    private $lightboxSizeConfiguration;
+    private PictureConfiguration|array|int|string|null $lightboxSizeConfiguration = null;
 
     /**
      * User defined lightbox resize options.
      */
-    private ?ResizeOptions $lightboxResizeOptions = null;
+    private ResizeOptions|null $lightboxResizeOptions = null;
 
     /**
      * User defined lightbox group identifier. This will overwrite the default if set.
      */
-    private ?string $lightboxGroupIdentifier = null;
+    private string|null $lightboxGroupIdentifier = null;
 
     /**
      * Determines if a lightbox (or "fullsize") image should be created.
      */
-    private ?bool $enableLightbox = null;
+    private bool|null $enableLightbox = null;
 
     /**
      * User defined template options.
@@ -136,14 +127,15 @@ class FigureBuilder
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
+     *
+     * @param array<string> $validExtensions
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
-    {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->validExtensions = $validExtensions;
-
+    public function __construct(
+        private ContainerInterface $locator,
+        private string $projectDir,
+        private string $uploadPath,
+        private array $validExtensions,
+    ) {
         $this->filesystem = new Filesystem();
     }
 
@@ -155,7 +147,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException("DBAFS item '$filesModel->path' is not a file.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
 
             return $this;
         }
@@ -164,7 +156,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
+            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -180,7 +172,7 @@ class FigureBuilder
         $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
-            $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
         }
@@ -195,10 +187,11 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
-            $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
+            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
         }
@@ -231,7 +224,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
+            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -250,10 +243,10 @@ class FigureBuilder
      *
      * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from($identifier): self
+    public function from(FilesModel|ImageInterface|int|string|null $identifier): self
     {
         if (null === $identifier) {
-            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+            $this->lastException = new InvalidResourceException('The defined resource is "null".');
 
             return $this;
         }
@@ -266,9 +259,7 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        $isString = \is_string($identifier);
-
-        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
+        if (\is_string($identifier) && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -276,13 +267,35 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        if ($isString) {
-            return $this->fromPath($identifier);
+        return $this->fromPath($identifier);
+    }
+
+    /**
+     * Sets the image resource from a path inside a VFS storage.
+     */
+    public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
+    {
+        try {
+            $stream = $storage->readStream($location);
+        } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {
+            $this->lastException = new InvalidResourceException(sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
+
+            return $this;
         }
 
-        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
+        // TODO: After stream support is added to contao/image, remove this
+        // workaround and type restriction and directly pass on the stream to
+        // the resizer.
+        $metadata = stream_get_meta_data($stream);
+        $uri = $metadata['uri'];
 
-        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
+        if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type'] || !Path::isAbsolute($uri)) {
+            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
+
+            return $this;
+        }
+
+        return $this->fromPath($uri);
     }
 
     /**
@@ -290,7 +303,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setSize($size): self
+    public function setSize(PictureConfiguration|array|int|string|null $size): self
     {
         $this->sizeConfiguration = $size;
 
@@ -303,7 +316,7 @@ class FigureBuilder
      * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
-    public function setResizeOptions(?ResizeOptions $resizeOptions): self
+    public function setResizeOptions(ResizeOptions|null $resizeOptions): self
     {
         $this->resizeOptions = $resizeOptions;
 
@@ -316,7 +329,7 @@ class FigureBuilder
      * By default, or if the argument is set to null, metadata is trying to be
      * pulled from the FilesModel.
      */
-    public function setMetadata(?Metadata $metadata): self
+    public function setMetadata(Metadata|null $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -339,7 +352,7 @@ class FigureBuilder
      * By default, or if the argument is set to null, the locale is determined
      * from the request context and/or system settings.
      */
-    public function setLocale(?string $locale): self
+    public function setLocale(string|null $locale): self
     {
         $this->locale = $locale;
 
@@ -352,7 +365,7 @@ class FigureBuilder
      * Set the value to null to remove it. If you want to explicitly remove an
      * auto-generated value from the results, set the $forceRemove flag to true.
      */
-    public function setLinkAttribute(string $attribute, ?string $value, bool $forceRemove = false): self
+    public function setLinkAttribute(string $attribute, string|null $value, bool $forceRemove = false): self
     {
         if (null !== $value || $forceRemove) {
             $this->additionalLinkAttributes[$attribute] = $value;
@@ -370,8 +383,14 @@ class FigureBuilder
      * remove an auto-generated value from the results, set the respective
      * attribute to null.
      */
-    public function setLinkAttributes(array $attributes): self
+    public function setLinkAttributes(HtmlAttributes|array $attributes): self
     {
+        if ($attributes instanceof HtmlAttributes) {
+            $this->additionalLinkAttributes = iterator_to_array($attributes);
+
+            return $this;
+        }
+
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
@@ -388,7 +407,7 @@ class FigureBuilder
      *
      * Set the value to null to use the auto-generated default.
      */
-    public function setLinkHref(?string $url): self
+    public function setLinkHref(string|null $url): self
     {
         $this->setLinkAttribute('href', $url);
 
@@ -402,10 +421,8 @@ class FigureBuilder
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
-     *
-     * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightboxResourceOrUrl($resourceOrUrl): self
+    public function setLightboxResourceOrUrl(ImageInterface|string|null $resourceOrUrl): self
     {
         $this->lightboxResourceOrUrl = $resourceOrUrl;
 
@@ -418,9 +435,9 @@ class FigureBuilder
      * For this setting to take effect, make sure you have enabled the creation
      * of a lightbox by calling enableLightbox().
      *
-     * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
+     * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setLightboxSize($size): self
+    public function setLightboxSize(PictureConfiguration|array|int|string|null $size): self
     {
         $this->lightboxSizeConfiguration = $size;
 
@@ -433,7 +450,7 @@ class FigureBuilder
      * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
-    public function setLightboxResizeOptions(?ResizeOptions $resizeOptions): self
+    public function setLightboxResizeOptions(ResizeOptions|null $resizeOptions): self
     {
         $this->lightboxResizeOptions = $resizeOptions;
 
@@ -447,7 +464,7 @@ class FigureBuilder
      * this setting to take effect, make sure you have enabled the creation of
      * a lightbox by calling enableLightbox().
      */
-    public function setLightboxGroupIdentifier(?string $identifier): self
+    public function setLightboxGroupIdentifier(string|null $identifier): self
     {
         $this->lightboxGroupIdentifier = $identifier;
 
@@ -481,7 +498,7 @@ class FigureBuilder
      * Returns the last InvalidResourceException that was captured when setting
      * resources or null if there was none.
      */
-    public function getLastException(): ?InvalidResourceException
+    public function getLastException(): InvalidResourceException|null
     {
         return $this->lastException;
     }
@@ -505,13 +522,24 @@ class FigureBuilder
      * Creates a result object with the current settings, returns null if the
      * currently defined resource is invalid.
      */
-    public function buildIfResourceExists(): ?Figure
+    public function buildIfResourceExists(): Figure|null
     {
         if (null !== $this->lastException) {
             return null;
         }
 
-        return $this->doBuild();
+        $figure = $this->doBuild();
+
+        try {
+            // Make sure the resource can be processed
+            $figure->getImage()->getOriginalDimensions();
+        } catch (\Throwable $e) {
+            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+
+            return null;
+        }
+
+        return $figure;
     }
 
     /**
@@ -559,7 +587,7 @@ class FigureBuilder
     /**
      * Defines metadata on demand.
      */
-    private function onDefineMetadata(): ?Metadata
+    private function onDefineMetadata(): Metadata|null
     {
         if ($this->disableMetadata) {
             return null;
@@ -624,7 +652,7 @@ class FigureBuilder
     /**
      * Defines the lightbox result (if enabled) on demand.
      */
-    private function onDefineLightboxResult(Figure $result): ?LightboxResult
+    private function onDefineLightboxResult(Figure $result): LightboxResult|null
     {
         if (!$this->enableLightbox) {
             return null;
@@ -656,9 +684,9 @@ class FigureBuilder
 
             $target = urldecode($target);
 
-            $filePath = Path::isAbsolute($target) ?
-                Path::canonicalize($target) :
-                Path::makeAbsolute($target, $this->projectDir);
+            $filePath = Path::isAbsolute($target)
+                ? Path::canonicalize($target)
+                : Path::makeAbsolute($target, $this->projectDir);
 
             if (!is_file($filePath)) {
                 $filePath = null;

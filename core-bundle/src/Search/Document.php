@@ -21,26 +21,40 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    private UriInterface $uri;
-    private int $statusCode;
-    private string $body;
-    private ?Crawler $crawler = null;
-    private ?array $jsonLds = null;
+    private Crawler|null $crawler = null;
+    private array|null $jsonLds = null;
 
     /**
      * The key is the header name in lowercase letters and the value is again
      * an array of header values.
      *
-     * @var array<string,array>
+     * @param array<string,array> $headers
      */
-    private array $headers;
-
-    public function __construct(UriInterface $uri, int $statusCode, array $headers = [], string $body = '')
-    {
-        $this->uri = $uri;
-        $this->statusCode = $statusCode;
+    public function __construct(
+        private UriInterface $uri,
+        private int $statusCode,
+        private array $headers,
+        private string $body = '',
+    ) {
         $this->headers = array_change_key_case($headers);
-        $this->body = $body;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'uri' => $this->uri,
+            'statusCode' => $this->statusCode,
+            'headers' => $this->headers,
+            'body' => $this->body,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->uri = $data['uri'];
+        $this->statusCode = $data['statusCode'];
+        $this->headers = $data['headers'];
+        $this->body = $data['body'];
     }
 
     public function getUri(): UriInterface
@@ -68,12 +82,12 @@ class Document
         return $this->crawler ??= new Crawler($this->body);
     }
 
-    public function extractCanonicalUri(): ?UriInterface
+    public function extractCanonicalUri(): UriInterface|null
     {
         foreach ($this->getHeaders() as $key => $values) {
             if ('link' === $key) {
                 foreach ($values as $value) {
-                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', $value, $matches)) {
+                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', (string) $value, $matches)) {
                         return new Uri($matches[1]);
                     }
                 }
@@ -112,7 +126,7 @@ class Document
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
-                    $data = json_decode($node->text(null, true), true);
+                    $data = json_decode($node->text(), true);
 
                     if (JSON_ERROR_NONE !== json_last_error()) {
                         return null;
@@ -203,14 +217,14 @@ class Document
 
         if (\is_array($data['@context'])) {
             foreach ($data['@context'] as $prefix => $context) {
-                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen($prefix) + 1)) {
-                    $data['@type'] = $context.substr($data['@type'], \strlen($prefix) + 1);
+                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
+                    $data['@type'] = $context.substr($data['@type'], \strlen((string) $prefix) + 1);
                 }
 
                 foreach ($data as $key => $value) {
-                    if (0 === strncmp($prefix.':', $key, \strlen($prefix) + 1)) {
+                    if (0 === strncmp($prefix.':', $key, \strlen((string) $prefix) + 1)) {
                         unset($data[$key]);
-                        $data[$context.substr($key, \strlen($prefix) + 1)] = $value;
+                        $data[$context.substr($key, \strlen((string) $prefix) + 1)] = $value;
                     }
                 }
             }
@@ -231,15 +245,15 @@ class Document
                 if ('@type' === $key) {
                     $newData[$key] = $value;
 
-                    if (0 === strncmp($value, $context, \strlen($context))) {
-                        $newData[$key] = substr($value, \strlen($context));
+                    if (str_starts_with($value, $context)) {
+                        $newData[$key] = substr($value, \strlen((string) $context));
                         $found = true;
                         break;
                     }
                 }
 
-                if (0 === strncmp($context, $key, \strlen($context))) {
-                    $newData[substr($key, \strlen($context))] = $value;
+                if (0 === strncmp($context, $key, \strlen((string) $context))) {
+                    $newData[substr($key, \strlen((string) $context))] = $value;
                     $found = true;
                     break;
                 }

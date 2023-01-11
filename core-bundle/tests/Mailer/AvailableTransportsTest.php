@@ -14,43 +14,17 @@ namespace Contao\CoreBundle\Tests\Mailer;
 
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 
 class AvailableTransportsTest extends TestCase
 {
-    public function testAnnotatedCallbacks(): void
+    protected function tearDown(): void
     {
-        $service = new AvailableTransports();
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
-        $annotationReader = new AnnotationReader();
-        $annotations = $annotationReader->getMethodAnnotations(new \ReflectionMethod($service, 'getTransportOptions'));
-
-        $this->assertCount(2, $annotations);
-
-        [$pageCallback, $formCallback] = $annotations;
-
-        $this->assertInstanceOf(Callback::class, $pageCallback);
-        $this->assertInstanceOf(Callback::class, $formCallback);
-
-        $this->assertSame(
-            [
-                'table' => 'tl_page',
-                'target' => 'fields.mailerTransport.options',
-                'priority' => null,
-            ],
-            get_object_vars($pageCallback)
-        );
-
-        $this->assertSame(
-            [
-                'table' => 'tl_form',
-                'target' => 'fields.mailerTransport.options',
-                'priority' => null,
-            ],
-            get_object_vars($formCallback)
-        );
+        parent::tearDown();
     }
 
     public function testAddsTransports(): void

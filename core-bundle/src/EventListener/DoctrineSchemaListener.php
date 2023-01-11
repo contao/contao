@@ -14,17 +14,16 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 
 /**
  * @internal
  */
 class DoctrineSchemaListener
 {
-    private DcaSchemaProvider $provider;
-
-    public function __construct(DcaSchemaProvider $provider)
+    public function __construct(private DcaSchemaProvider $provider, private ContainerInterface $messengerTransportLocator)
     {
-        $this->provider = $provider;
     }
 
     /**
@@ -33,5 +32,19 @@ class DoctrineSchemaListener
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
         $this->provider->appendToSchema($event->getSchema());
+
+        foreach (['contao_prio_high', 'contao_prio_normal', 'contao_prio_low', 'contao_failure'] as $transportName) {
+            if (!$this->messengerTransportLocator->has($transportName)) {
+                continue;
+            }
+
+            $transport = $this->messengerTransportLocator->get($transportName);
+
+            if (!$transport instanceof DoctrineTransport) {
+                continue;
+            }
+
+            $transport->configureSchema($event->getSchema(), $event->getEntityManager()->getConnection());
+        }
     }
 }

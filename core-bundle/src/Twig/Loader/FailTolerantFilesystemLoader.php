@@ -32,7 +32,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
     {
         try {
             parent::addPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             // Ignore
         }
     }
@@ -47,7 +47,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
     {
         try {
             parent::prependPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             // Ignore
         }
     }

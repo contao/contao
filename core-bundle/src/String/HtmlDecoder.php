@@ -17,11 +17,8 @@ use Contao\StringUtil;
 
 class HtmlDecoder
 {
-    private InsertTagParser $insertTagParser;
-
-    public function __construct(InsertTagParser $insertTagParser)
+    public function __construct(private InsertTagParser $insertTagParser)
     {
-        $this->insertTagParser = $insertTagParser;
     }
 
     /**

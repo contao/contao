@@ -54,14 +54,6 @@ class AppKernel extends Kernel
         return \dirname(__DIR__, 3).'/var';
     }
 
-    /**
-     * @deprecated since Symfony 4.2, use getProjectDir() instead
-     */
-    public function getRootDir(): string
-    {
-        return __DIR__;
-    }
-
     public function getCacheDir(): string
     {
         return $this->getProjectDir().'/cache/'.$this->environment;
@@ -74,7 +66,7 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__.'/config/config_'.$this->environment.'.yml');
+        $loader->load(__DIR__.'/config/config_'.$this->environment.'.yaml');
     }
 
     protected function build(ContainerBuilder $container): void

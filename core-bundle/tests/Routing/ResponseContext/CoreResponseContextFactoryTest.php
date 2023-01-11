@@ -21,16 +21,23 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class CoreResponseContextFactoryTest extends ContaoTestCase
+class CoreResponseContextFactoryTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testResponseContext(): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -114,11 +121,14 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 0;
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
-        $pageModel->enableCanonical = '1';
+        $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
+        $pageModel->noSearch = false;
+        $pageModel->protected = false;
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
@@ -167,8 +177,11 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
+        $pageModel->noSearch = false;
+        $pageModel->protected = false;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser

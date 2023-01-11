@@ -127,7 +127,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
     public function testThrowExceptionIfMaintenanceIsEnabled(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['maintenanceMode' => '1']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['maintenanceMode' => true]);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')

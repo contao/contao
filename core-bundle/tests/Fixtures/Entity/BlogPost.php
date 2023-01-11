@@ -38,7 +38,7 @@ class BlogPost
      * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="blogPosts")
      * @ORM\JoinColumn(name="author", nullable=true)
      */
-    private ?Author $author = null;
+    private Author|null $author = null;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blogPost", orphanRemoval=true)
@@ -87,12 +87,12 @@ class BlogPost
         return $this;
     }
 
-    public function getAuthor(): ?Author
+    public function getAuthor(): Author|null
     {
         return $this->author;
     }
 
-    public function setAuthor(?Author $author): self
+    public function setAuthor(Author|null $author): self
     {
         $this->author = $author;
 

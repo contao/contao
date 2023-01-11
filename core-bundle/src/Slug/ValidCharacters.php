@@ -26,16 +26,11 @@ class ValidCharacters
         '0-9a-zA-Z' => 'ascii',
     ];
 
-    private EventDispatcherInterface $eventDispatcher;
-    private TranslatorInterface $translator;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug.valid_characters" service instead
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    public function __construct(private EventDispatcherInterface $eventDispatcher, private TranslatorInterface $translator)
     {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->translator = $translator;
     }
 
     /**

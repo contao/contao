@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\String;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
+use Contao\InsertTags;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class HtmlDecoderTest extends TestCase
 {
@@ -38,6 +42,15 @@ class HtmlDecoderTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([Input::class, InsertTags::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider getInputEncodedToPlainText
      */
@@ -47,13 +60,14 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
-        Input::setGet('value', $expected);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $expected]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, true));
-        $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, false));
+        $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded));
     }
 
     public function getInputEncodedToPlainText(): \Generator
@@ -63,7 +77,7 @@ class HtmlDecoderTest extends TestCase
         yield ['foo{{email::test@example.com}}bar', 'foobar', true];
         yield ['{{date::...}}', '...'];
         yield ['{{date::...}}', '', true];
-        yield ["&lt;&#62;&\u{A0}[lt][gt][&][nbsp]", "<>&\u{A0}<>&\u{A0}", true];
+        yield ["&lt;&#62;&\u{A0}&lt;&gt;&amp;&nbsp;", "<>&\u{A0}<>&\u{A0}", true];
         yield ['I &lt;3 Contao', 'I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags', 'Remove unexpected HTML tags'];
         yield ['Keep non-HTML &lt;tags&#62; intact', 'Keep non-HTML <tags> intact'];
@@ -80,9 +94,10 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 
-        Input::setPost('value', str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source));
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
+
         $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], Input::postHtml('value', true));
-        Input::setPost('value', null);
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($inputXssStripped, $removeInsertTags));
     }

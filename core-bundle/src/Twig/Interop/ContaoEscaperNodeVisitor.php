@@ -18,6 +18,7 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\EscaperNodeVisitor;
 
 /**
  * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
@@ -29,12 +30,12 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
-    private ?array $escaperFilterNodes = null;
+    private array|null $escaperFilterNodes = null;
 
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted
      * after building the container. Expects a list of regular expressions to
-     * be returned. A template counts as 'affected' if it matches any of the
+     * be returned. A template counts as "affected" if it matches any of the
      * rules.
      */
     private \Closure $rules;
@@ -45,7 +46,9 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * Make sure to run after @see \Twig\NodeVisitor\EscaperNodeVisitor.
+     * Make sure to run after the EscaperNodeVisitor.
+     *
+     * @see EscaperNodeVisitor
      */
     public function getPriority(): int
     {
@@ -75,7 +78,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env)
+    protected function doLeaveNode(Node $node, Environment $env): Node|null
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {
             foreach ($this->escaperFilterNodes as [$escaperFilterNode, $strategy]) {

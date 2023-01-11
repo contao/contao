@@ -1,0 +1,159 @@
+imports:
+    - { resource: parameters.yaml }
+    - { resource: security.yaml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
+
+# Framework configuration
+framework:
+    assets: true
+    esi: { enabled: true }
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%env(APP_SECRET)%'
+    router:
+        utf8: true
+        resource: contao_manager.routing.route_loader::loadFromPlugins
+        type: service
+        strict_requirements: '%kernel.debug%'
+    csrf_protection: ~
+    lock: ~
+    default_locale: '%locale%'
+    session:
+        handler_id: ~
+        cookie_secure: auto
+    fragments: { path: /_fragment }
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
+    messenger:
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+        failure_transport: contao_failure
+        transports:
+            sync: sync://
+            contao_failure: doctrine://default?table_name=tl_message_queue&queue_name=failure&auto_setup=false
+            contao_prio_high: contao-auto-fallback://contao_prio_high?target=contao_prio_high_doctrine&fallback=sync
+            contao_prio_normal: contao-auto-fallback://contao_prio_normal?target=contao_prio_normal_doctrine&fallback=sync
+            contao_prio_low: contao-auto-fallback://contao_prio_low?target=contao_prio_low_doctrine&fallback=sync
+            contao_prio_high_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
+            contao_prio_normal_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
+            contao_prio_low_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
+        routing:
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_low
+            'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
+            'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
+            'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
+
+# Contao configuration
+contao:
+    preview_script: /preview.php
+    messenger:
+        console_path: '%kernel.project_dir%/vendor/bin/contao-console'
+        workers:
+            -
+                transports:
+                    - contao_prio_high
+                options:
+                    - --time-limit=60
+                    - --sleep=5
+                autoscale:
+                    desired_size: 5
+                    max: 10
+            -
+                transports:
+                    - contao_prio_normal
+                options:
+                    - --time-limit=60
+                    - --sleep=10
+                autoscale:
+                    desired_size: 10
+                    max: 10
+            -
+                transports:
+                    - contao_prio_low
+                options:
+                    - --time-limit=60
+                    - --sleep=20
+                autoscale:
+                    desired_size: 20
+                    max: 10
+
+# Twig configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine configuration
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver: pdo_mysql
+                url: '%env(DATABASE_URL)%'
+                charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
+                    engine: InnoDB
+                    row_format: DYNAMIC
+        types:
+            binary_string:
+                class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
+    orm:
+        auto_mapping: true
+        auto_generate_proxy_classes: false
+        naming_strategy: doctrine.orm.naming_strategy.default
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+
+# Security configuration
+nelmio_security:
+    content_type:
+        nosniff: true
+    referrer_policy:
+        enabled: true
+        policies:
+            - no-referrer-when-downgrade
+            - strict-origin-when-cross-origin
+    xss_protection:
+        enabled: true
+        mode_block: true
+
+# FOS HttpCache configuration
+fos_http_cache:
+    proxy_client:
+        symfony:
+            use_kernel_dispatcher: true
+    cache_manager:
+        enabled: true
+    tags:
+        enabled: true
+        annotations:
+            enabled: false
+        max_header_value_length: 4096
+
+# Scheb 2FA configuration
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+        manager: contao.security.two_factor.trusted_device_manager
+    backup_codes:
+        enabled: true
+        manager: contao.security.two_factor.backup_code_manager

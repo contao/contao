@@ -12,35 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 
 /**
  * @internal
- *
- * @Callback(table="tl_content", target="fields.type.save")
- * @Callback(table="tl_module", target="fields.type.save")
  */
+#[AsCallback(table: 'tl_content', target: 'fields.type.save')]
+#[AsCallback(table: 'tl_module', target: 'fields.type.save')]
 class ResetCustomTemplateListener
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
      * Resets the custom template if the element type changes.
-     *
-     * @param mixed $varValue
-     *
-     * @return mixed
      */
-    public function __invoke($varValue, DataContainer $dc)
+    public function __invoke(mixed $varValue, DataContainer $dc): mixed
     {
-        if ($dc->activeRecord->type === $varValue) {
+        if (($dc->getCurrentRecord()['type'] ?? null) === $varValue) {
             return $varValue;
         }
 

@@ -25,19 +25,16 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PublishedFilter implements RouteFilterInterface
 {
-    private TokenChecker $tokenChecker;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.matcher.published_filter" service instead
      */
-    public function __construct(TokenChecker $tokenChecker)
+    public function __construct(private TokenChecker $tokenChecker)
     {
-        $this->tokenChecker = $tokenChecker;
     }
 
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        if ($this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode()) {
+        if ($this->tokenChecker->isPreviewMode()) {
             return $collection;
         }
 

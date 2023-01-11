@@ -52,16 +52,6 @@ class AddResourcesPathsPass implements CompilerPassInterface
             $paths[] = $path;
         }
 
-        if (is_dir($path = Path::join($projectDir, 'app/Resources/contao'))) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using "app/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.');
-            $paths[] = $path;
-        }
-
-        if (is_dir($path = Path::join($projectDir, 'src/Resources/contao'))) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using "src/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.');
-            $paths[] = $path;
-        }
-
         return $paths;
     }
 }

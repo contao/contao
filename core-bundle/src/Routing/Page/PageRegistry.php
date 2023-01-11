@@ -19,9 +19,8 @@ class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
-    private Connection $connection;
-    private ?array $urlPrefixes = null;
-    private ?array $urlSuffixes = null;
+    private array|null $urlPrefixes = null;
+    private array|null $urlSuffixes = null;
 
     /**
      * @var array<RouteConfig>
@@ -38,9 +37,8 @@ class PageRegistry
      */
     private array $contentComposition = [];
 
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
@@ -66,7 +64,7 @@ class PageRegistry
         } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
+            $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -136,10 +134,7 @@ class PageRegistry
         return $this->urlSuffixes;
     }
 
-    /**
-     * @param ContentCompositionInterface|bool $contentComposition
-     */
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): self
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\Tools\ServiceIdLinter;
 
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,12 +21,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 
 class LintServiceIdsCommand extends Command
 {
     protected static $defaultName = 'contao:lint-service-ids';
+    protected static $defaultDescription = 'Checks the Contao service IDs.';
 
     /**
      * Strip from name if the alias is part of the namespace.
@@ -62,18 +63,9 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
-    public string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(public string $projectDir)
     {
         parent::__construct();
-
-        $this->projectDir = $projectDir;
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Checks the Contao service IDs.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -83,7 +75,8 @@ class LintServiceIdsCommand extends Command
             ->name('*.yaml')
             ->name('*.yml')
             ->path('src/Resources/config')
-            ->in($this->projectDir);
+            ->in($this->projectDir)
+        ;
 
         $hasError = false;
         $io = new SymfonyStyle($input, $output);
@@ -134,8 +127,8 @@ class LintServiceIdsCommand extends Command
                 if (
                     !\is_string($config) // autowiring aliases
                     && !isset($config['alias'])
-                    && false !== strpos($serviceId, '\\')
-                    && 'Controller' !== substr($serviceId, -10)
+                    && str_contains((string) $serviceId, '\\')
+                    && !str_ends_with($serviceId, 'Controller')
                 ) {
                     $hasError = true;
 
@@ -196,7 +189,7 @@ class LintServiceIdsCommand extends Command
         return 0;
     }
 
-    private function getServiceIdFromClass(string $class): ?string
+    private function getServiceIdFromClass(string $class): string|null
     {
         $chunks = explode('\\', strtolower(Container::underscore($class)));
 
@@ -212,12 +205,12 @@ class LintServiceIdsCommand extends Command
         }
 
         // The second chunk is the bundle name (e.g. CoreBundle).
-        if ('_bundle' !== substr($chunks[0], -7)) {
+        if (!str_ends_with($chunks[0], '_bundle')) {
             return null;
         }
 
         // Rename "xxx_bundle" to "contao_xxx"
-        $chunks[0] = 'contao_' . substr($chunks[0], 0, -7);
+        $chunks[0] = 'contao_'.substr($chunks[0], 0, -7);
 
         // The last chunk is the class name.
         $name = array_pop($chunks);
@@ -227,7 +220,7 @@ class LintServiceIdsCommand extends Command
         foreach ($chunks as $i => &$chunk) {
             $chunk = self::$renameNamespaces[$chunk] ?? $chunk;
 
-            if (!$chunk || ($i > 1 && false !== strpos($name, $chunk))) {
+            if (!$chunk || ($i > 1 && str_contains($name, (string) $chunk))) {
                 unset($chunks[$i]);
             }
         }
@@ -236,8 +229,8 @@ class LintServiceIdsCommand extends Command
 
         // Strip prefixes from the name.
         foreach (self::$stripPrefixes as $prefix) {
-            if (0 === strncmp($name, $prefix, \strlen($prefix))) {
-                $name = substr($name, \strlen($prefix));
+            if (str_starts_with($name, $prefix)) {
+                $name = substr($name, \strlen((string) $prefix));
             }
         }
 
@@ -254,7 +247,7 @@ class LintServiceIdsCommand extends Command
                 unset($nameChunks[$i]);
             }
 
-            if (\in_array($nameChunk . '_' . ($nameChunks[$i + 1] ?? ''), $chunks, true)) {
+            if (\in_array($nameChunk.'_'.($nameChunks[$i + 1] ?? ''), $chunks, true)) {
                 unset($nameChunks[$i], $nameChunks[$i + 1]);
             }
         }

@@ -44,14 +44,6 @@ repositories:
             8120fbc973349136e0aed77b304e3bf0f5be8881: de61497e7d75418dfa93a1c12eb5b413f0fbd837
             38ad45e0c1243a2b67f48e69aa14de660f8f3dcb: 1bda612914a2c246367ee7a83e73656bb0d22676
 
-    installation-bundle:
-        url: https://github.com/contao/installation-bundle.git
-        mapping:
-            e3984a42db89d16cf82267edd297216d266b41aa: ee040b843c06bcadc1a8cc0eed684d62a3c8f7fc
-            734c8772eaef1a4e451779a81c2bfef030ad52f0: 259660c6a152de84f9dce60d3d9d4bff8f259b02
-            82902713c34908ed78d9b24990190932130c909a: 88a4146e7b2792089a99a04470dce7647f48e4d8
-            b73ed89cccda9377838d303cb7b0833a3b1b90e9: 28a2a56e599d52c9b803b8e1a89015714bf2b21c
-
     listing-bundle:
         url: https://github.com/contao/listing-bundle.git
         mapping:
@@ -86,3 +78,8 @@ repositories:
             22fb6437b09e08c022b507fcf0c5a9c2390fd9d9: 89ee40d099df11e777de0d6a1d8e02d46366b406
             68e318965dd839ad339936069055b2a169cbd8fe: 7f250dcce34ebd71f0aee8311597aea7a3117e96
             7086050842a5babf22fd552181874a0e72b1e4ee: 5ad35c1360dc582289506553e55f21cd3823c621
+
+    test-case:
+        url: https://github.com/contao/test-case.git
+        mapping:
+            4a2600d4a337cc35e6032e09a17518842bb175d5: bfc89052ec79916ffde6215cdd1a27a489e95291

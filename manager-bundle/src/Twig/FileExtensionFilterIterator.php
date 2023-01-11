@@ -30,7 +30,7 @@ class FileExtensionFilterIterator implements \IteratorAggregate
     {
         return new \CallbackFilterIterator(
             new \IteratorIterator($this->iterator),
-            static fn ($path): bool => 0 === strncmp($path, '@', 1) || 'twig' === Path::getExtension($path, true)
+            static fn ($path): bool => str_starts_with($path, '@') || 'twig' === Path::getExtension($path, true)
         );
     }
 }

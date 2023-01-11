@@ -13,19 +13,31 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
-class MaintenanceModeCommandTest extends TestCase
+class MaintenanceModeCommandTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider enableProvider
      */
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string $customTemplateName = null, string $customTemplateVars = null): void
     {
-        $twig = $this->getTwigMock();
+        $twig = $this->mockEnvironment();
         $twig
             ->expects($this->once())
             ->method('render')
@@ -33,7 +45,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn('parsed-template')
         ;
 
-        $filesystem = $this->getFilesystemMock();
+        $filesystem = $this->mockFilesystem();
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
@@ -60,19 +72,75 @@ class MaintenanceModeCommandTest extends TestCase
 
     public function testDisable(): void
     {
-        $filesystem = $this->getFilesystemMock();
+        $filesystem = $this->mockFilesystem();
         $filesystem
             ->expects($this->once())
             ->method('remove')
             ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
 
         $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
+    }
+
+    public function testOutputIfEnabled(): void
+    {
+        $filesystem = $this->mockFilesystem();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(true)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertStringContainsString(' ! [NOTE] Maintenance mode is enabled', $commandTester->getDisplay(true));
+    }
+
+    public function testOutputIfDisabled(): void
+    {
+        $filesystem = $this->mockFilesystem();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(false)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertStringContainsString(' [INFO] Maintenance mode is disabled', $commandTester->getDisplay(true));
+    }
+
+    public function testOutputWithJsonFormat(): void
+    {
+        $filesystem = $this->mockFilesystem();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(false)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--format' => 'json']);
+
+        $json = json_decode($commandTester->getDisplay(true), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
     }
 
     public function enableProvider(): \Generator
@@ -109,17 +177,25 @@ class MaintenanceModeCommandTest extends TestCase
         ];
     }
 
-    private function getFilesystemMock()
+    /**
+     * @return Filesystem&MockObject
+     */
+    private function mockFilesystem(): Filesystem
     {
-        return $this->getMockBuilder(Filesystem::class)
+        return $this
+            ->getMockBuilder(Filesystem::class)
             ->disableAutoReturnValueGeneration() // Ensure we don't call any other method than the ones we mock
             ->getMock()
         ;
     }
 
-    private function getTwigMock()
+    /**
+     * @return Environment&MockObject
+     */
+    private function mockEnvironment(): Environment
     {
-        return $this->getMockBuilder(Environment::class)
+        return $this
+            ->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->disableAutoReturnValueGeneration() // Ensure we don't call any other method than the ones we mock
             ->getMock()

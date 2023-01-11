@@ -13,61 +13,47 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Entity;
 
 use Contao\User;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="tl_trusted_device")
- */
+#[Table(name: 'tl_trusted_device')]
+#[Entity]
 class TrustedDevice
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected ?int $id = null;
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
+    protected int|null $id = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[Column(type: 'datetime')]
     protected \DateTimeInterface $created;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected ?string $userClass = null;
+    #[Column(type: 'string', nullable: true)]
+    protected string|null $userClass = null;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected ?int $userId = null;
+    #[Column(type: 'integer', nullable: true)]
+    protected int|null $userId = null;
 
-    /**
-     * @ORM\Column(type="text", name="user_agent", nullable=true)
-     */
-    protected ?string $userAgent = null;
+    #[Column(name: 'user_agent', type: 'text', nullable: true)]
+    protected string|null $userAgent = null;
 
-    /**
-     * @ORM\Column(type="string", name="ua_family", nullable=true)
-     */
-    protected ?string $uaFamily = null;
+    #[Column(name: 'ua_family', type: 'string', nullable: true)]
+    protected string|null $uaFamily = null;
 
-    /**
-     * @ORM\Column(type="string", name="os_family", nullable=true)
-     */
-    protected ?string $osFamily = null;
+    #[Column(name: 'os_family', type: 'string', nullable: true)]
+    protected string|null $osFamily = null;
 
-    /**
-     * @ORM\Column(type="string", name="device_family", nullable=true)
-     */
-    protected ?string $deviceFamily = null;
+    #[Column(name: 'device_family', type: 'string', nullable: true)]
+    protected string|null $deviceFamily = null;
 
     public function __construct(User $user)
     {
-        $this->userId = (int) $user->id;
+        $this->userId = $user->id;
         $this->created = new \DateTime();
-        $this->userClass = \get_class($user);
+        $this->userClass = $user::class;
     }
 
     public function getId(): int
@@ -99,38 +85,38 @@ class TrustedDevice
         return $this->userId;
     }
 
-    public function setUserAgent(?string $userAgent): self
+    public function setUserAgent(string|null $userAgent): self
     {
         $this->userAgent = $userAgent;
 
         return $this;
     }
 
-    public function getUaFamily(): ?string
+    public function getUaFamily(): string|null
     {
         return $this->uaFamily;
     }
 
-    public function setUaFamily(?string $uaFamily): self
+    public function setUaFamily(string|null $uaFamily): self
     {
         $this->uaFamily = $uaFamily;
 
         return $this;
     }
 
-    public function getOsFamily(): ?string
+    public function getOsFamily(): string|null
     {
         return $this->osFamily;
     }
 
-    public function setOsFamily(?string $osFamily): self
+    public function setOsFamily(string|null $osFamily): self
     {
         $this->osFamily = $osFamily;
 
         return $this;
     }
 
-    public function getDeviceFamily(): ?string
+    public function getDeviceFamily(): string|null
     {
         if ('Other' === $this->deviceFamily) {
             return '-';
@@ -139,7 +125,7 @@ class TrustedDevice
         return $this->deviceFamily;
     }
 
-    public function setDeviceFamily(?string $deviceFamily): self
+    public function setDeviceFamily(string|null $deviceFamily): self
     {
         $this->deviceFamily = $deviceFamily;
 

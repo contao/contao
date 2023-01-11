@@ -32,28 +32,22 @@ use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 
 class Factory
 {
-    public const USER_AGENT = 'contao/crawler';
-
-    private Connection $connection;
-    private ContaoFramework $framework;
-    private array $defaultHttpClientOptions;
-
-    /**
-     * @var array<string>
-     */
-    private array $additionalUris;
+    final public const USER_AGENT = 'contao/crawler';
 
     /**
      * @var array<EscargotSubscriberInterface>
      */
     private array $subscribers = [];
 
-    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
-    {
-        $this->connection = $connection;
-        $this->framework = $framework;
-        $this->additionalUris = $additionalUris;
-        $this->defaultHttpClientOptions = $defaultHttpClientOptions;
+    /**
+     * @param array<string> $additionalUris
+     */
+    public function __construct(
+        private Connection $connection,
+        private ContaoFramework $framework,
+        private array $additionalUris = [],
+        private array $defaultHttpClientOptions = [],
+    ) {
     }
 
     public function addSubscriber(EscargotSubscriberInterface $subscriber): self
@@ -194,19 +188,10 @@ class Factory
 
     private function validateSubscribers(array $selectedSubscribers): array
     {
-        $msg = sprintf(
-            'You have to specify at least one valid subscriber name. Valid subscribers are: %s',
-            implode(', ', $this->getSubscriberNames())
-        );
-
-        if (0 === \count($selectedSubscribers)) {
-            throw new \InvalidArgumentException($msg);
-        }
-
         $selectedSubscribers = array_intersect($this->getSubscriberNames(), $selectedSubscribers);
 
         if (0 === \count($selectedSubscribers)) {
-            throw new \InvalidArgumentException($msg);
+            throw new \InvalidArgumentException('You have to specify at least one valid subscriber name. Valid subscribers are: '.implode(', ', $this->getSubscriberNames()));
         }
 
         return $selectedSubscribers;

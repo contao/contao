@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -40,9 +41,11 @@ class InsertTagsTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
 
         InsertTags::reset();
+
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }
@@ -88,8 +91,6 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider insertTagsProvider
-     *
-     * @group legacy
      */
     public function testInsertTags(string $source, string $expected): void
     {
@@ -101,12 +102,6 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
 
         $output = (string) $insertTagParser->replaceChunked($source);
-
-        $this->assertSame($expected, $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($source, false);
 
         $this->assertSame($expected, $output);
     }
@@ -162,6 +157,91 @@ class InsertTagsTest extends TestCase
             'foo{{ins::1{{plain::2]]3}}baz',
             'foo{{ins::12}}3baz',
         ];
+
+        yield 'Flag addslashes' => [
+            '{{plain::f\'oo|addslashes}}',
+            'f\\\'oo',
+        ];
+
+        yield 'Flag standardize' => [
+            '{{plain::foo & bar|standardize}}',
+            'foo-bar',
+        ];
+
+        yield 'Flag ampersand' => [
+            '{{plain::foo & bar|ampersand}}',
+            'foo &amp; bar',
+        ];
+
+        yield 'Flag specialchars' => [
+            '{{plain::foo & bar < baz|specialchars}}',
+            'foo &amp; bar &lt; baz',
+        ];
+
+        yield 'Flag strtolower' => [
+            '{{plain::FOO|strtolower}}',
+            'foo',
+        ];
+
+        yield 'Flag utf8_strtolower' => [
+            '{{plain::FÖO|utf8_strtolower}}',
+            'föo',
+        ];
+
+        yield 'Flag strtoupper' => [
+            '{{plain::foo|strtoupper}}',
+            'FOO',
+        ];
+
+        yield 'Flag utf8_strtoupper' => [
+            '{{plain::föo|utf8_strtoupper}}',
+            'FÖO',
+        ];
+
+        yield 'Flag ucfirst' => [
+            '{{plain::foo|ucfirst}}',
+            'Foo',
+        ];
+
+        yield 'Flag lcfirst' => [
+            '{{plain::FOO|lcfirst}}',
+            'fOO',
+        ];
+
+        yield 'Flag ucwords' => [
+            '{{plain::foo bar|ucwords}}',
+            'Foo Bar',
+        ];
+
+        yield 'Flag trim' => [
+            '{{plain:: foo |trim}}',
+            'foo',
+        ];
+
+        yield 'Flag rtrim' => [
+            '{{plain:: foo |rtrim}}',
+            ' foo',
+        ];
+
+        yield 'Flag ltrim' => [
+            '{{plain:: foo |ltrim}}',
+            'foo ',
+        ];
+
+        yield 'Flag utf8_romanize' => [
+            '{{plain::föo|utf8_romanize}}',
+            'foo',
+        ];
+
+        yield 'Flag urlencode' => [
+            '{{plain::foo & bar|urlencode}}',
+            'foo+%26+bar',
+        ];
+
+        yield 'Flag rawurlencode' => [
+            '{{plain::foo & bar|rawurlencode}}',
+            'foo%20%26%20bar',
+        ];
     }
 
     /**
@@ -190,13 +270,6 @@ class InsertTagsTest extends TestCase
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
         $output = $insertTagParser->replaceInline($input);
-
-        $this->assertSame('<figure>foo</figure>', $output);
-        $this->assertSame($expectedArguments, $usedArguments);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($input, false);
 
         $this->assertSame('<figure>foo</figure>', $output);
         $this->assertSame($expectedArguments, $usedArguments);
@@ -248,7 +321,7 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'wrapped basic entities' => [
-            '{{figure::123?size[]=800[&]size[]=600[&]metadata[alt]=alt[&]enableLightbox=1}}',
+            '{{figure::123?size[]=800&amp;size[]=600&amp;metadata[alt]=alt&amp;enableLightbox=1}}',
             [
                 '123',
                 [800, 600],
@@ -305,12 +378,6 @@ class InsertTagsTest extends TestCase
         $output = $insertTagParser->replaceInline($input);
 
         $this->assertSame('', $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($input, false);
-
-        $this->assertSame('', $output);
     }
 
     public function provideInvalidFigureInsertTags(): \Generator
@@ -339,7 +406,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $output = (new InsertTags())->replace($source, false);
+        $output = (string) (new InsertTags())->replaceInternal($source, false);
 
         $this->assertSame($expected, $output);
     }
@@ -410,10 +477,6 @@ class InsertTagsTest extends TestCase
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $this->assertSame($expected, $insertTags->replace($source, false));
     }
 
     public function encodeHtmlAttributesProvider(): \Generator
@@ -456,21 +519,6 @@ class InsertTagsTest extends TestCase
         yield 'Quote outside attribute' => [
             '<span title="" {{plain::"}}>',
             '<span title="" &quot;>',
-        ];
-
-        yield 'Link URL back backwards compatibility' => [
-            '<a href="{{link_url::back}}">',
-            '<a href="javascript:history.go(-1)">',
-        ];
-
-        yield 'Trick link URL back' => [
-            '<a href="{{link_url::back}},alert(1)">',
-            '<a href="javascript%3Ahistory.go(-1),alert(1)">',
-        ];
-
-        yield 'Trick link URL back without quotes' => [
-            '<a href={{link_url::back}}>',
-            '<a href=javascript%3Ahistory.go(-1)>',
         ];
 
         yield 'Trick tag detection' => [
@@ -636,6 +684,8 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider languageInsertTagsProvider
+     *
+     * @group legacy
      */
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
     {
@@ -662,6 +712,10 @@ class InsertTagsTest extends TestCase
 
         // Test case insensitivity
         $source = str_replace('lng', 'LnG', $source);
+
+        if (str_contains($source, 'LnG')) {
+            $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+        }
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
         $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));

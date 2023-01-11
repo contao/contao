@@ -14,12 +14,8 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
-use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\ImageResult;
-use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
-use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithRandomArgumentStub;
-use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithResizeOptionsStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImage;
 use Contao\Image\DeferredImageInterface;
@@ -28,7 +24,6 @@ use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
-use Contao\Image\ResizeOptions;
 use Contao\Image\Resizer;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,69 +43,6 @@ class ImageResultTest extends TestCase
         $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
-    }
-
-    /**
-     * @param class-string<PictureFactoryInterface> $class
-     *
-     * @dataProvider providePictureFactories
-     */
-    public function testGetPictureWithResizeMode(string $class, bool $supportsResizeOptions): void
-    {
-        $resizeOptions = new ResizeOptions();
-
-        /** @var PictureFactoryInterface&MockObject $pictureFactory */
-        $pictureFactory = $this->createMock($class);
-        $pictureFactory
-            ->expects($this->once())
-            ->method('create')
-            ->willReturnCallback(
-                function () use ($supportsResizeOptions, $resizeOptions) {
-                    // Expect factories with a compatible 'create' method signature
-                    // to be called with $resizeOptions as 3rd argument.
-                    if ($supportsResizeOptions) {
-                        $this->assertSame($resizeOptions, func_get_arg(2));
-                    } else {
-                        $this->assertNull(\func_get_args()[2] ?? null);
-                    }
-
-                    return $this->createMock(PictureInterface::class);
-                }
-            )
-        ;
-
-        $imageResult = new ImageResult(
-            $this->mockLocator($pictureFactory),
-            'any/project/dir',
-            'foo/bar/foobar.png',
-            [100, 200, 'crop'],
-            $resizeOptions
-        );
-
-        $imageResult->getPicture();
-    }
-
-    public function providePictureFactories(): \Generator
-    {
-        yield 'Contao default picture factory' => [
-            PictureFactory::class,
-            true,
-        ];
-
-        yield 'Custom picture factory with resize options' => [
-            PictureFactoryWithResizeOptionsStub::class,
-            true,
-        ];
-
-        yield 'Custom picture factory without resize options' => [
-            PictureFactoryWithoutResizeOptionsStub::class,
-            false,
-        ];
-
-        yield 'Custom picture factory with random options' => [
-            PictureFactoryWithRandomArgumentStub::class,
-            false,
-        ];
     }
 
     public function testGetSourcesAndImg(): void
@@ -339,7 +271,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.legacy_resizer', $deferredResizer],
+                ['contao.image.resizer', $deferredResizer],
             ])
         ;
 
@@ -455,14 +387,14 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.legacy_resizer', $nonDeferredResizer],
+                ['contao.image.resizer', $nonDeferredResizer],
             ])
         ;
 
         $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('The "contao.image.legacy_resizer" service does not support deferred resizing.');
+        $this->expectExceptionMessage('The "contao.image.resizer" service does not support deferred resizing.');
 
         $imageResult->createIfDeferred();
     }
@@ -497,7 +429,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.legacy_resizer', $nonDeferredResizer],
+                ['contao.image.resizer', $nonDeferredResizer],
             ])
         ;
 

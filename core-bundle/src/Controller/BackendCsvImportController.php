@@ -29,27 +29,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportController
 {
-    public const SEPARATOR_COMMA = 'comma';
-    public const SEPARATOR_LINEBREAK = 'linebreak';
-    public const SEPARATOR_SEMICOLON = 'semicolon';
-    public const SEPARATOR_TABULATOR = 'tabulator';
-
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private string $projectDir;
+    final public const SEPARATOR_COMMA = 'comma';
+    final public const SEPARATOR_LINEBREAK = 'linebreak';
+    final public const SEPARATOR_SEMICOLON = 'semicolon';
+    final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
      * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private string $projectDir,
+    ) {
     }
 
     public function importListWizardAction(DataContainer $dc): Response
@@ -126,11 +120,7 @@ class BackendCsvImportController
                 return new RedirectResponse($request->getUri());
             }
 
-            $this->connection->update(
-                $table,
-                [$field => serialize($data)],
-                ['id' => $id]
-            );
+            $this->connection->update($table, [$field => serialize($data)], ['id' => $id]);
 
             return new RedirectResponse($this->getBackUrl($request));
         }

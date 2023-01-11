@@ -24,11 +24,8 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
-    private string $extensionName;
-
-    public function __construct(string $extensionName)
+    public function __construct(private string $extensionName)
     {
-        $this->extensionName = $extensionName;
     }
 
     public function getPriority(): int

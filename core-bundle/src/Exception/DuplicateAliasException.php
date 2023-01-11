@@ -12,19 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
+use Contao\PageModel;
+
 class DuplicateAliasException extends \RuntimeException
 {
-    private string $url;
+    private PageModel|null $pageModel = null;
 
-    public function __construct(string $url, string $message = '', int $code = 0, \Throwable $previous = null)
+    public function __construct(private string $url, string $message = '', int $code = 0, \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-
-        $this->url = $url;
     }
 
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function setPageModel(PageModel $pageModel): void
+    {
+        $this->pageModel = $pageModel;
+    }
+
+    public function getPageModel(): PageModel|null
+    {
+        return $this->pageModel;
     }
 }

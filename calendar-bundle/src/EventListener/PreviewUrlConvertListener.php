@@ -23,11 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PreviewUrlConvertListener
 {
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     /**
@@ -46,7 +43,7 @@ class PreviewUrlConvertListener
         $event->setUrl($this->framework->getAdapter(Events::class)->generateEventUrl($eventModel, true));
     }
 
-    private function getEventModel(Request $request): ?CalendarEventsModel
+    private function getEventModel(Request $request): CalendarEventsModel|null
     {
         if (!$request->query->has('calendar')) {
             return null;

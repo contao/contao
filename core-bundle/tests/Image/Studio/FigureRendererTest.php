@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
@@ -21,6 +23,9 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
+use Contao\Files;
+use Contao\Image\ImageInterface;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -29,6 +34,15 @@ use Twig\Environment;
 
 class FigureRendererTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, File::class, Files::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testConfiguresBuilder(): void
     {
         $metadata = new Metadata([]);
@@ -125,11 +139,18 @@ class FigureRendererTest extends TestCase
             Path::join($this->getTempDir(), 'files')
         );
 
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($this->createMock(ImageInterface::class))
+        ;
+
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 
@@ -156,7 +177,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer = $this->getFigureRenderer();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches("/Invalid Contao template name '.*'\\./");
+        $this->expectExceptionMessageMatches('/Invalid Contao template name ".*"\./');
 
         $figureRenderer->render(1, null, [], $invalidTemplate);
     }

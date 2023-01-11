@@ -16,36 +16,21 @@ interface PickerBuilderInterface
 {
     /**
      * Returns a picker or null if the context is not supported.
-     *
-     * @return PickerInterface|null
      */
-    public function create(PickerConfig $config)/*: ?PickerInterface*/;
+    public function create(PickerConfig $config): PickerInterface|null;
 
     /**
      * Returns a picker object from encoded URL data.
-     *
-     * @param string $data
-     *
-     * @return PickerInterface|null
      */
-    public function createFromData(/*string */$data)/*: ?PickerInterface*/;
+    public function createFromData(string $data): PickerInterface|null;
 
     /**
      * Returns whether the given context is supported.
-     *
-     * @param string $context
-     *
-     * @return bool
      */
-    public function supportsContext(/*string */$context, array $allowed = null)/*: bool*/;
+    public function supportsContext(string $context, array $allowed = null): bool;
 
     /**
      * Returns the picker URL for the given context and configuration.
-     *
-     * @param string $context
-     * @param string $value
-     *
-     * @return string
      */
-    public function getUrl(/*string */$context, array $extras = [], /*string */$value = '')/*: string*/;
+    public function getUrl(string $context, array $extras = [], string $value = ''): string;
 }

@@ -13,30 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomRgxpListenerTest extends TestCase
 {
-    public function testServiceAnnotation(): void
+    protected function tearDown(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->never())
-            ->method('trans')
-            ->willReturnArgument(0)
-        ;
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
-        $listener = new CustomRgxpListener($translator);
-
-        $annotationReader = new AnnotationReader();
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Hook::class);
-
-        $this->assertSame('addCustomRegexp', $annotation->value);
-        $this->assertSame(0, (int) $annotation->priority);
+        parent::tearDown();
     }
 
     public function testReturnsFalseIfNotCustomRgxpType(): void

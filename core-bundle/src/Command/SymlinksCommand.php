@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,54 +29,34 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Symlinks the public resources into the web directory.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:symlinks',
+    description: 'Symlinks the public resources into the public directory.'
+)]
 class SymlinksCommand extends Command
 {
-    protected static $defaultName = 'contao:symlinks';
-
     private array $rows = [];
-    private string $projectDir;
-    private ?string $webDir;
-    private string $uploadPath;
-    private string $logsDir;
-    private ResourceFinderInterface $resourceFinder;
-    private EventDispatcherInterface $eventDispatcher;
-    private int $statusCode = 0;
+    private string|null $webDir = null;
+    private int $statusCode = Command::SUCCESS;
 
-    public function __construct(string $projectDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->logsDir = $logsDir;
-        $this->resourceFinder = $resourceFinder;
-        $this->eventDispatcher = $eventDispatcher;
-
+    public function __construct(
+        private string $projectDir,
+        private string $uploadPath,
+        private string $logsDir,
+        private ResourceFinderInterface $resourceFinder,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-            ->setDescription('Symlinks the public resources into the public directory.')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ((new Filesystem())->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->generateSymlinks();
 
@@ -195,7 +176,7 @@ class SymlinksCommand extends Command
                 $target,
             ];
         } catch (\Exception $e) {
-            $this->statusCode = 1;
+            $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
                 sprintf(
@@ -252,10 +233,7 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf(
-                        '<fg=yellow;options=bold>%s</>',
-                        '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'
-                    ),
+                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
                     sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];

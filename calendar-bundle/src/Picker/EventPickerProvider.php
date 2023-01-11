@@ -28,16 +28,12 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
 {
     use FrameworkAwareTrait;
 
-    private Security $security;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
-
-        $this->security = $security;
     }
 
     public function getName(): string
@@ -55,7 +51,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
         return 'tl_calendar_events';
     }
@@ -63,10 +59,6 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
-
-        if ($source = $config->getExtra('source')) {
-            $attributes['preserveRecord'] = $source;
-        }
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
@@ -105,10 +97,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return '{{event_url::%s}}';
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getCalendarId($id): ?int
+    private function getCalendarId(int|string $id): int|null
     {
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 

@@ -49,7 +49,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = $this->getListener(true, true);
+        $listener = $this->getListener(true);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -126,7 +126,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $event = $this->getResponseEvent($exception, $request);
 
-        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
+        $listener = $this->getListener(false, null, $errorPage, $httpKernel);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -138,6 +138,37 @@ class PrettyErrorScreenListenerTest extends TestCase
         yield [401, new UnauthorizedHttpException('', '', new InsufficientAuthenticationException())];
         yield [403, new AccessDeniedHttpException('', new AccessDeniedException())];
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];
+    }
+
+    public function testUnprotectsErrorPage(): void
+    {
+        $errorPage = $this->mockPageWithProperties([
+            'pid' => 1,
+            'type' => 'error_401',
+            'rootLanguage' => '',
+            'protected' => true,
+            'groups' => '',
+        ]);
+
+        $request = $this->getRequest('frontend');
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($this->once())
+            ->method('handle')
+            ->willReturn(new Response('foo', 401))
+        ;
+
+        $exception = new UnauthorizedHttpException('', '', new InsufficientAuthenticationException());
+        $event = $this->getResponseEvent($exception, $request);
+
+        $listener = $this->getListener(false, null, $errorPage, $httpKernel);
+        $listener($event);
+
+        $this->assertTrue($event->hasResponse());
+        $this->assertSame(401, $event->getResponse()->getStatusCode());
+        $this->assertFalse($errorPage->protected);
     }
 
     public function testHandlesResponseExceptionsWhenForwarding(): void
@@ -161,7 +192,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->getResponseEvent($exception, $request);
 
-        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
+        $listener = $this->getListener(false, null, $errorPage, $httpKernel);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -191,7 +222,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->getResponseEvent($exception, $request);
 
-        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
+        $listener = $this->getListener(false, null, $errorPage, $httpKernel);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -260,7 +291,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $event = $this->getResponseEvent(new ConflictHttpException(), $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false, true);
+        $listener = $this->getListener();
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -287,7 +318,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             )
         ;
 
-        $listener = $this->getListener(false, true, $twig);
+        $listener = $this->getListener(false, $twig);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -366,7 +397,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    private function getListener(bool $isBackendUser = false, bool $expectLogging = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);

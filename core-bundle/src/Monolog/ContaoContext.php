@@ -12,42 +12,32 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
-class ContaoContext
+class ContaoContext implements \Stringable
 {
-    public const ERROR = 'ERROR';
-    public const ACCESS = 'ACCESS';
-    public const GENERAL = 'GENERAL';
-    public const FILES = 'FILES';
-    public const CRON = 'CRON';
-    public const FORMS = 'FORMS';
-    public const EMAIL = 'EMAIL';
-    public const CONFIGURATION = 'CONFIGURATION';
-    public const NEWSLETTER = 'NEWSLETTER';
-    public const REPOSITORY = 'REPOSITORY';
+    final public const ERROR = 'ERROR';
+    final public const ACCESS = 'ACCESS';
+    final public const GENERAL = 'GENERAL';
+    final public const FILES = 'FILES';
+    final public const CRON = 'CRON';
+    final public const FORMS = 'FORMS';
+    final public const EMAIL = 'EMAIL';
+    final public const CONFIGURATION = 'CONFIGURATION';
+    final public const NEWSLETTER = 'NEWSLETTER';
+    final public const REPOSITORY = 'REPOSITORY';
 
-    private string $func;
-    private ?string $action;
-    private ?string $username;
-    private ?string $ip;
-    private ?string $browser;
-    private ?string $source;
-    private ?string $uri;
-    private ?int $pageId;
-
-    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null, string $uri = null, int $pageId = null)
-    {
+    public function __construct(
+        private string $func,
+        private string|null $action = null,
+        private string|null $username = null,
+        private string|null $ip = null,
+        private string|null $browser = null,
+        private string|null $source = null,
+        private string|null $uri = null,
+        private int|null $pageId = null,
+    ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
-
-        $this->func = $func;
-        $this->action = $action;
-        $this->username = $username;
-        $this->ip = $ip;
-        $this->browser = $browser;
-        $this->source = $source;
-        $this->uri = $uri;
-        $this->pageId = $pageId;
     }
 
     /**
@@ -70,7 +60,7 @@ class ContaoContext
         return $this->func;
     }
 
-    public function getAction(): ?string
+    public function getAction(): string|null
     {
         return $this->action;
     }
@@ -80,7 +70,7 @@ class ContaoContext
         $this->action = $action;
     }
 
-    public function getUsername(): ?string
+    public function getUsername(): string|null
     {
         return $this->username;
     }
@@ -90,17 +80,17 @@ class ContaoContext
         $this->username = $username;
     }
 
-    public function getIp(): ?string
+    public function getIp(): string|null
     {
         return $this->ip;
     }
 
-    public function setIp(?string $ip): void
+    public function setIp(string|null $ip): void
     {
         $this->ip = (string) $ip;
     }
 
-    public function getBrowser(): ?string
+    public function getBrowser(): string|null
     {
         return $this->browser;
     }
@@ -110,7 +100,7 @@ class ContaoContext
         $this->browser = $browser;
     }
 
-    public function getSource(): ?string
+    public function getSource(): string|null
     {
         return $this->source;
     }

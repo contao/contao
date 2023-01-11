@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\CronJob;
 use Cron\CronExpression;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,6 +31,12 @@ class AddCronJobsPass implements CompilerPassInterface
 
         $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
         $definition = $container->findDefinition('contao.cron');
+
+        /** @var array<Definition> $sync */
+        $sync = [];
+
+        /** @var array<Definition> $async */
+        $async = [];
 
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
@@ -53,17 +60,31 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $definition->addMethodCall(
-                    'addCronJob',
-                    [
-                        new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]),
-                    ]
-                );
+                $newDefinition = new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]);
+
+                $reflector = new \ReflectionMethod($jobDefinition->getClass(), $method ?? '__invoke');
+                $returnType = $reflector->getReturnType();
+                $returnsPromise = $returnType instanceof \ReflectionNamedType && is_a($returnType->getName(), PromiseInterface::class, true);
+
+                if ($returnsPromise) {
+                    $async[] = $newDefinition;
+                } else {
+                    $sync[] = $newDefinition;
+                }
             }
+        }
+
+        // Add async jobs first, so they are executed first.
+        foreach ($async as $jobDefinition) {
+            $definition->addMethodCall('addCronJob', [$jobDefinition]);
+        }
+
+        foreach ($sync as $jobDefinition) {
+            $definition->addMethodCall('addCronJob', [$jobDefinition]);
         }
     }
 
-    private function getMethod(array $attributes, string $class, string $serviceId): ?string
+    private function getMethod(array $attributes, string $class, string $serviceId): string|null
     {
         $ref = new \ReflectionClass($class);
         $invalid = sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);

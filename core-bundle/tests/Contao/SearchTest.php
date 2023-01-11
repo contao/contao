@@ -16,11 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
 
 /**
- * Tests the Search class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- *
- * @group contao3
+ * @group legacy
  */
 class SearchTest extends TestCase
 {
@@ -31,7 +27,6 @@ class SearchTest extends TestCase
     {
         $search = new \ReflectionClass(Search::class);
         $compareUrls = $search->getMethod('compareUrls');
-        $compareUrls->setAccessible(true);
 
         $this->assertLessThan(0, $compareUrls->invokeArgs(null, [$moreCanonicalUrl, $lessCanonicalUrl]));
         $this->assertGreaterThan(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $moreCanonicalUrl]));
@@ -49,5 +44,50 @@ class SearchTest extends TestCase
         yield ['foo/bar-longer-url-but-no-query.html', 'foo/bar.html?query'];
         yield ['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'];
         yield ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'];
+    }
+
+    /**
+     * @dataProvider splitIntoWordsProvider
+     */
+    public function testSplitIntoWords(string $source, array $expectedWords): void
+    {
+        $search = new \ReflectionClass(Search::class);
+        $method = $search->getMethod('splitIntoWords');
+
+        $this->assertSame($expectedWords, $method->invokeArgs(null, [$source, '']));
+    }
+
+    public function splitIntoWordsProvider(): \Generator
+    {
+        yield ['Lorem-Ipsum dolor,sit`amet/consectetur.', ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur']];
+        yield ['FÖO Bär bäß', ['foo', 'bar', 'bass']];
+        yield ['Contrôl Fée bïr çæ BŒ', ['control', 'fee', 'bir', 'cae', 'boe']];
+    }
+
+    /**
+     * @dataProvider getMatchVariantsProvider
+     */
+    public function testGetMatchVariants(string $text, array $matches, array $expectedWords): void
+    {
+        $this->assertSame($expectedWords, Search::getMatchVariants($matches, $text, 'en'));
+    }
+
+    public function getMatchVariantsProvider(): \Generator
+    {
+        yield [
+            'FÖO Bär bäß',
+            ['foo', 'bar', 'bass'],
+            ['FÖO', 'Bär', 'bäß'],
+        ];
+        yield [
+            'Contrôl Fée bïr çæ BŒ',
+            ['control', 'fee', 'bir', 'cae', 'boe'],
+            ['Contrôl', 'Fée', 'bïr', 'çæ', 'BŒ'],
+        ];
+        yield [
+            'foo Foo fOO FOO föö',
+            ['foo', 'doesNotExist'],
+            ['foo', 'Foo', 'fOO', 'FOO', 'föö'],
+        ];
     }
 }

@@ -14,16 +14,11 @@ namespace Contao\CoreBundle\Exception;
 
 class InvalidThemePathException extends \InvalidArgumentException
 {
-    private string $path;
-
     /**
-     * @var array<string>
+     * @param array<string> $invalidCharacters
      */
-    private array $invalidCharacters;
-
-    public function __construct(string $path, array $invalidCharacters)
+    public function __construct(private string $path, private array $invalidCharacters)
     {
-        $this->path = $path;
         $this->invalidCharacters = array_unique($invalidCharacters);
 
         parent::__construct(

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
@@ -73,17 +72,12 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFramework
+    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework
     {
         $installer = $this->createMock(Installer::class);
         $installer
             ->method('getFromDca')
             ->willReturn($dca)
-        ;
-
-        $installer
-            ->method('getFromFile')
-            ->willReturn($file)
         ;
 
         $framework = $this->mockContaoFramework();
@@ -98,12 +92,11 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * @param Connection&MockObject $connection
      */
-    protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
+    protected function getDcaSchemaProvider(array $dca = [], Connection $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry($connection),
-            $this->createMock(SchemaProvider::class)
+            $this->mockContaoFrameworkWithInstaller($dca),
+            $this->mockDoctrineRegistry($connection)
         );
     }
 

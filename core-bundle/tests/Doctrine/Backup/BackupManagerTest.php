@@ -20,28 +20,27 @@ use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class BackupManagerTest extends ContaoTestCase
 {
+    private VirtualFilesystemInterface $vfs;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $fs = new Filesystem();
-        $fs->remove($this->getBackupDir());
-        $fs->mkdir($this->getBackupDir());
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        (new Filesystem())->remove($this->getBackupDir());
+        $this->vfs = new VirtualFilesystem(
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
     }
 
     public function testCreateCreateConfig(): void
@@ -64,62 +63,53 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testCreateRestoreConfig(): void
     {
-        $backup = Backup::createNewAtPath($this->getBackupDir());
+        $this->vfs->write(Backup::createNew(new \DateTime('-1 day'))->getFilename(), '');
 
         $manager = $this->getBackupManager();
-        $manager->createRestoreConfig();
-        $config = $manager->createCreateConfig();
+        $config = $manager->createRestoreConfig();
 
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
-        $this->assertSame($backup->getFilepath(), $config->getBackup()->getFilepath());
     }
 
     public function testListBackupsInCorrectOrder(): void
     {
-        $backupPastWeek = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
-        $backupNow = Backup::createNewAtPath($this->getBackupDir());
-        $backupTwoWeeksAgo = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 weeks'));
+        $backupPastWeek = Backup::createNew(new \DateTime('-1 week'));
+        $backupNow = Backup::createNew();
+        $backupTwoWeeksAgo = Backup::createNew(new \DateTime('-2 weeks'));
+
+        $this->vfs->write($backupPastWeek->getFilename(), '');
+        $this->vfs->write($backupNow->getFilename(), '');
+        $this->vfs->write($backupTwoWeeksAgo->getFilename(), '');
 
         $manager = $this->getBackupManager();
         $backups = $manager->listBackups();
 
         $this->assertCount(3, $backups);
-        $this->assertSame($backups[0]->getFilepath(), $backupNow->getFilepath());
-        $this->assertSame($backups[1]->getFilepath(), $backupPastWeek->getFilepath());
-        $this->assertSame($backups[2]->getFilepath(), $backupTwoWeeksAgo->getFilepath());
+        $this->assertSame($backups[0]->getFilename(), $backupNow->getFilename());
+        $this->assertSame($backups[1]->getFilename(), $backupPastWeek->getFilename());
+        $this->assertSame($backups[2]->getFilename(), $backupTwoWeeksAgo->getFilename());
 
         $latestBackup = $manager->getLatestBackup();
 
-        $this->assertSame($latestBackup->getFilepath(), $backupNow->getFilepath());
+        $this->assertSame($latestBackup->getFilename(), $backupNow->getFilename());
     }
 
     public function testIgnoresFilesThatAreNoBackups(): void
     {
+        $this->vfs->write('backup__20211101141254.zip', ''); // incorrect file extension
+
         $manager = $this->getBackupManager();
-
-        // Wrong file extension
-        (new Filesystem())->dumpFile($this->getBackupDir().'/backup__20211101141254.zip', '');
-
-        // In subfolder
-        (new Filesystem())->dumpFile($this->getBackupDir().'/subfolder/backup__20211101141254.sql', '');
 
         $this->assertCount(0, $manager->listBackups());
     }
 
-    /**
-     * @dataProvider getAutocommitSettings
-     */
-    public function testSuccessfulCreate(bool $autoCommitEnabled): void
+    public function testSuccessfulCreate(): void
     {
-        $connection = $this->mockConnection($autoCommitEnabled);
+        $connection = $this->mockConnection();
         $dumper = $this->mockDumper($connection);
+        $backup = Backup::createNew(\DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-03T13:36:00+00:00'));
+
         $manager = $this->getBackupManager($connection, $dumper);
-
-        $backup = Backup::createNewAtPath(
-            $this->getBackupDir(),
-            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-03T13:36:00+00:00')
-        );
-
         $config = (new CreateConfig($backup))->withGzCompression(false);
         $manager->create($config);
 
@@ -131,13 +121,13 @@ class BackupManagerTest extends ContaoTestCase
                 Dumper content line two
 
                 DUMP,
-            preg_replace('~\R~u', "\n", file_get_contents($backup->getFilepath()))
+            preg_replace('~\R~u', "\n", $this->vfs->read($backup->getFilename()))
         );
     }
 
     public function testIsGzipEncodedIfEnabled(): void
     {
-        $connection = $this->mockConnection(true);
+        $connection = $this->mockConnection();
         $dumper = $this->mockDumper($connection);
 
         $manager = $this->getBackupManager($connection, $dumper);
@@ -147,28 +137,22 @@ class BackupManagerTest extends ContaoTestCase
         // Assert it's gzipped
         $this->assertSame(
             0,
-            mb_strpos(file_get_contents($config->getBackup()->getFilepath()), "\x1f"."\x8b"."\x08", 0, 'US-ASCII')
+            mb_strpos($this->vfs->read($config->getBackup()->getFilename()), "\x1f"."\x8b"."\x08", 0, 'US-ASCII')
         );
     }
 
-    /**
-     * @dataProvider getAutocommitSettings
-     */
-    public function testUnsuccessfulCreate(bool $autoCommitEnabled): void
+    public function testUnsuccessfulCreate(): void
     {
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage('Error!');
 
-        $connection = $this->mockConnection($autoCommitEnabled);
+        $connection = $this->mockConnection();
 
         $dumper = $this->createMock(DumperInterface::class);
         $dumper
             ->expects($this->once())
             ->method('dump')
-            ->with(
-                $connection,
-                $this->isInstanceOf(CreateConfig::class)
-            )
+            ->with($connection, $this->isInstanceOf(CreateConfig::class))
             ->willThrowException(new BackupManagerException('Error!'))
         ;
 
@@ -176,41 +160,43 @@ class BackupManagerTest extends ContaoTestCase
         $config = $manager->createCreateConfig();
         $manager->create($config);
 
-        $this->assertFalse((new Filesystem())->exists($config->getBackup()->getFilepath()));
-    }
-
-    public function getAutocommitSettings(): \Generator
-    {
-        yield [true];
-        yield [false];
+        $this->assertFalse($this->vfs->fileExists($config->getBackup()->getFilename()));
     }
 
     public function testCleanup(): void
     {
-        $connection = $this->mockConnection(true);
+        $connection = $this->mockConnection();
         $dumper = $this->mockDumper($connection);
 
-        $backupNew = Backup::createNewAtPath($this->getBackupDir());
-        $backupExisting = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
+        $backupNew = Backup::createNew();
+        $backupExisting = Backup::createNew(new \DateTime('-1 day'));
+
+        $this->vfs->write($backupExisting->getFilename(), '');
 
         $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
         $retentionPolicy
             ->expects($this->once())
             ->method('apply')
             ->with(
-                $backupNew,
-                [$backupNew, $backupExisting]
+                $this->callback(static fn (Backup $backup) => $backup->getFilename() === $backupNew->getFilename()),
+                $this->callback(
+                    function (array $backups) use ($backupNew, $backupExisting) {
+                        $this->assertCount(2, $backups);
+
+                        return $backups[0]->getFilename() === $backupNew->getFilename()
+                            && $backups[1]->getFilename() === $backupExisting->getFilename();
+                    }
+                ),
             )
             ->willReturn([$backupNew])
         ;
 
         $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
-
         $manager->create($config);
 
         $this->assertCount(1, $manager->listBackups());
-        $this->assertSame($backupNew->getFilepath(), $manager->getLatestBackup()->getFilepath());
+        $this->assertSame($backupNew->getFilename(), $manager->getLatestBackup()->getFilename());
     }
 
     public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void
@@ -221,18 +207,19 @@ class BackupManagerTest extends ContaoTestCase
             ->method('dump')
             ->willThrowException(new BackupManagerException('Error!'))
         ;
+
         $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
         $retentionPolicy
             ->expects($this->never())
             ->method('apply')
         ;
 
-        $manager = $this->getBackupManager($this->mockConnection(true), $dumper, $retentionPolicy);
+        $manager = $this->getBackupManager($this->mockConnection(), $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
 
         try {
             $manager->create($config);
-        } catch (BackupManagerException $exception) {
+        } catch (BackupManagerException) {
             // irrelevant for this test
         }
     }
@@ -242,9 +229,9 @@ class BackupManagerTest extends ContaoTestCase
      */
     public function testSuccessfulRestore(string $backupContent, RestoreConfig $config, array $expectedQueries): void
     {
-        (new Filesystem())->dumpFile($config->getBackup()->getFilepath(), $backupContent);
+        $this->vfs->write($config->getBackup()->getFilename(), $backupContent);
 
-        $connection = $this->mockConnection(true);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(3))
             ->method('executeQuery')
@@ -257,29 +244,26 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testUnsuccessfulRestoreIfFileWasRemoved(): void
     {
-        $backup = Backup::createNewAtPath($this->getBackupDir());
+        $backup = Backup::createNew();
+        // Do not write it to vfs === backup does not exist
 
         $this->expectException(BackupManagerException::class);
-        $this->expectExceptionMessage(sprintf('Dump does not exist at "%s".', $backup->getFilepath()));
+        $this->expectExceptionMessage(sprintf('Dump "%s" does not exist.', $backup->getFilename()));
 
-        $manager = $this->getBackupManager($this->mockConnection(true));
-
-        (new Filesystem())->remove($backup->getFilepath());
-
+        $manager = $this->getBackupManager($this->mockConnection());
         $manager->restore(new RestoreConfig($backup));
     }
 
     public function testUnsuccessfulRestoreIfHeaderIsMissing(): void
     {
-        $backup = Backup::createNewAtPath($this->getBackupDir());
-
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage('The Contao database importer only supports dumps generated by Contao.');
 
-        $manager = $this->getBackupManager($this->mockConnection(true));
+        $backup = Backup::createNew();
+        $manager = $this->getBackupManager($this->mockConnection());
 
-        (new Filesystem())->dumpFile(
-            $backup->getFilepath(),
+        $this->vfs->write(
+            $backup->getFilename(),
             <<<'BACKUP'
                 -- Generated at 2021-11-02T17:15:52+00:00
                 SET NAMES utf8;
@@ -295,22 +279,13 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testUnsuccessfulRestoreIfErrorDuringQuery(): void
     {
-        $backup = Backup::createNewAtPath($this->getBackupDir());
-
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage('Query wrong.');
 
-        $connection = $this->mockConnection(true);
-        $connection
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->willThrowException(new \Exception('Query wrong.'))
-        ;
+        $backup = Backup::createNew();
 
-        $manager = $this->getBackupManager($connection);
-
-        (new Filesystem())->dumpFile(
-            $backup->getFilepath(),
+        $this->vfs->write(
+            $backup->getFilename(),
             <<<'BACKUP'
                 -- Generated by the Contao Open Source CMS Backup Manager (version: v1).
                 -- Generated at 2021-11-02T17:15:52+00:00
@@ -318,12 +293,20 @@ class BackupManagerTest extends ContaoTestCase
                 BACKUP
         );
 
+        $connection = $this->mockConnection();
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->willThrowException(new \Exception('Query wrong.'))
+        ;
+
+        $manager = $this->getBackupManager($connection);
         $manager->restore(new RestoreConfig($backup));
     }
 
     public function successfulRestoreProvider(): \Generator
     {
-        $backup = Backup::createNewAtPath($this->getBackupDir());
+        $backup = Backup::createNew();
 
         yield 'Regular backup' => [
             <<<'BACKUP'
@@ -380,10 +363,7 @@ class BackupManagerTest extends ContaoTestCase
         $dumper
             ->expects($this->once())
             ->method('dump')
-            ->with(
-                $connection,
-                $this->isInstanceOf(CreateConfig::class)
-            )
+            ->with($connection, $this->isInstanceOf(CreateConfig::class))
             ->willReturnCallback(
                 static function () {
                     yield 'Dumper content line one';
@@ -398,9 +378,9 @@ class BackupManagerTest extends ContaoTestCase
     /**
      * @return Connection&MockObject
      */
-    private function mockConnection(bool $autoCommitEnabled): Connection
+    private function mockConnection(): Connection
     {
-        $connection = $this
+        return $this
             ->getMockBuilder(Connection::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
@@ -409,30 +389,6 @@ class BackupManagerTest extends ContaoTestCase
             ->setMethodsExcept(['transactional'])
             ->getMock()
         ;
-
-        $connection
-            ->expects($this->once())
-            ->method('isAutoCommit')
-            ->willReturn($autoCommitEnabled)
-        ;
-
-        if ($autoCommitEnabled) {
-            $connection
-                ->expects($this->exactly(2))
-                ->method('setAutoCommit')
-                ->withConsecutive(
-                    [false],
-                    [true],
-                )
-            ;
-        }
-
-        return $connection;
-    }
-
-    private function getBackupDir(): string
-    {
-        return Path::join($this->getTempDir(), 'backups');
     }
 
     private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicyInterface $retentionPolicy = null): BackupManager
@@ -441,6 +397,6 @@ class BackupManagerTest extends ContaoTestCase
         $dumper ??= $this->createMock(DumperInterface::class);
         $retentionPolicy ??= new RetentionPolicy(5);
 
-        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], $retentionPolicy);
+        return new BackupManager($connection, $dumper, $this->vfs, ['foobar'], $retentionPolicy);
     }
 }

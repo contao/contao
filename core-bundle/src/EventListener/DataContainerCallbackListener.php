@@ -45,7 +45,7 @@ class DataContainerCallbackListener
         }
 
         foreach ($this->callbacks[$table] as $target => $callbacks) {
-            $keys = explode('.', $target);
+            $keys = explode('.', (string) $target);
             $dcaRef = &$this->getDcaReference($table, $keys);
 
             if ((isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true)) {
@@ -56,10 +56,7 @@ class DataContainerCallbackListener
         }
     }
 
-    /**
-     * @return array|callable|null
-     */
-    private function &getDcaReference(string $table, array $keys)
+    private function &getDcaReference(string $table, array $keys): array|callable|null
     {
         $dcaRef = &$GLOBALS['TL_DCA'][$table];
 
@@ -70,10 +67,7 @@ class DataContainerCallbackListener
         return $dcaRef;
     }
 
-    /**
-     * @param array|callable|null $dcaRef
-     */
-    private function updateSingleton(&$dcaRef, array $callbacks): void
+    private function updateSingleton(array|callable|null &$dcaRef, array $callbacks): void
     {
         krsort($callbacks, SORT_NUMERIC);
 
@@ -83,10 +77,7 @@ class DataContainerCallbackListener
         }
     }
 
-    /**
-     * @param array|callable|null $dcaRef
-     */
-    private function addCallbacks(&$dcaRef, array $callbacks): void
+    private function addCallbacks(array|callable|null &$dcaRef, array $callbacks): void
     {
         if (null === $dcaRef) {
             $dcaRef = [];
@@ -96,20 +87,12 @@ class DataContainerCallbackListener
 
         $preCallbacks = array_merge(
             [],
-            ...array_filter(
-                $callbacks,
-                static fn ($priority) => $priority >= 0,
-                ARRAY_FILTER_USE_KEY
-            )
+            ...array_filter($callbacks, static fn ($priority) => $priority > 0, ARRAY_FILTER_USE_KEY)
         );
 
         $postCallbacks = array_merge(
             [],
-            ...array_filter(
-                $callbacks,
-                static fn ($priority) => $priority < 0,
-                ARRAY_FILTER_USE_KEY
-            )
+            ...array_filter($callbacks, static fn ($priority) => $priority <= 0, ARRAY_FILTER_USE_KEY)
         );
 
         if (\count($preCallbacks)) {

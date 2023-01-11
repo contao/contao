@@ -103,7 +103,7 @@ class PageRouteTest extends TestCase
 
         $this->assertSame(['http'], $route->getSchemes());
 
-        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => '1']));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
 
         $this->assertSame(['https'], $route->getSchemes());
     }
@@ -121,7 +121,7 @@ class PageRouteTest extends TestCase
                     'alias' => 'bar',
                     'domain' => 'www.example.com',
                     'rootLanguage' => 'xx',
-                    'rootUseSSL' => '1',
+                    'rootUseSSL' => true,
                     'urlPrefix' => 'foo',
                     'urlSuffix' => '.baz',
                 ],

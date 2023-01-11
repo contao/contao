@@ -1,0 +1,31 @@
+
+<table class="calendar">
+<thead>
+  <tr>
+    <th colspan="2" class="head previous"><?php if ($this->prevHref): ?><a href="<?= $this->prevHref ?>" title="<?= $this->prevTitle ?>"><?= $this->prevLink ?></a><?php else: ?>&nbsp;<?php endif; ?></th>
+    <th colspan="3" class="head current"><?= $this->current ?></th>
+    <th colspan="2" class="head next"><?php if ($this->nextHref): ?><a href="<?= $this->nextHref ?>" title="<?= $this->nextTitle ?>"><?= $this->nextLink ?></a><?php else: ?>&nbsp;<?php endif; ?></th>
+  </tr>
+  <tr>
+    <?php foreach ($this->days as $day): ?>
+      <th class="label<?= $day['class'] ?>"><?= $day['name'] ?></th>
+    <?php endforeach; ?>
+  </tr>
+</thead>
+<tbody>
+  <?php foreach ($this->weeks as $week): ?>
+    <tr>
+      <?php foreach ($week as $day): ?>
+        <td<?php if (!empty($day['class'])): ?> class="<?= $day['class'] ?>"<?php endif; ?>>
+          <div class="header"><?= $day['label'] ?></div>
+          <?php foreach ($day['events'] as $event): ?>
+            <div class="event cal_<?= $event['parent'] ?><?= $event['class'] ?>">
+              <a href="<?= $event['href'] ?>" title="<?= $event['title'] ?> (<?php if ($event['day']): ?><?= $event['day'] ?>, <?php endif; ?><?= $event['date'] ?><?php if ($event['time']): ?> <?= $event['time']?><?php endif; ?>)"<?= $event['target'] ?>><?= $event['link'] ?></a>
+            </div>
+          <?php endforeach; ?>
+        </td>
+      <?php endforeach; ?>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
+</table>

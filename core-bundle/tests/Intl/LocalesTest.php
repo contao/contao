@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\ArrayUtil;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,10 +34,11 @@ class LocalesTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         \Locale::setDefault('');
+        ini_restore('intl.default_locale');
         unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
     }
 
     public function testGetsLocaleIds(): void
@@ -51,7 +50,7 @@ class LocalesTest extends TestCase
         $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
         foreach ($localeIds as $localeId) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
     }
 
@@ -86,7 +85,7 @@ class LocalesTest extends TestCase
         $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($label);
         }
     }
@@ -150,7 +149,7 @@ class LocalesTest extends TestCase
                 'de' => 'German',
                 'de_at' => 'German (Austria)',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en', false)
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en')
         );
 
         $this->assertSame(
@@ -242,7 +241,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
 
@@ -257,7 +256,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
     }
@@ -281,7 +280,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
 
         foreach ($locales as $localeId => $localeLabel) {
-            $this->assertRegExp('/^[a-z]{2}/', $localeId);
+            $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
             $this->assertNotEmpty($localeLabel);
         }
     }
@@ -359,139 +358,6 @@ class LocalesTest extends TestCase
         ], $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHook(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            [
-                'de' => 'Germanisch',
-                'de_AT' => 'Österreichisch',
-                'en_AT' => 'Terminatorisch',
-                'de_Cyrl' => 'Unleserlich',
-            ],
-            $this->getLocalesService()->getLocales('de')
-        );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToLanguages(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            [
-                'de' => 'Germanisch',
-                'en' => 'Terminatorisch',
-                'de_Cyrl' => 'Unleserlich',
-            ],
-            $this->getLocalesService()->getLanguages('de')
-        );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToEnabledLocales(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            [
-                'de' => 'Germanisch',
-                'de_AT' => 'Österreichisch',
-                'en_AT' => 'Terminatorisch',
-                'de_Cyrl' => 'Unleserlich',
-                'be' => 'Added backend language',
-            ],
-            $this->getLocalesService()->getEnabledLocales()
-        );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToLocaleLabels(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            [
-                'de' => 'Germanisch',
-                'de_AT' => 'Österreichisch',
-                'de_Cyrl' => 'Unleserlich',
-                'be' => 'Added backend language',
-            ],
-            $this->getLocalesService()->getDisplayNames(['be', 'de', 'de_AT', 'en', 'de_Cyrl'])
-        );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToLocaleIds(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            ['de', 'de_AT', 'de_Cyrl', 'en_AT'],
-            $this->getLocalesService()->getLocaleIds()
-        );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToLanguageLocaleIds(): void
-    {
-        $this->expectDeprecation('%s"getLanguages" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
-
-        $this->assertSame(
-            ['de', 'de_Cyrl', 'en'],
-            $this->getLocalesService()->getLanguageLocaleIds()
-        );
-    }
-
-    public function getLanguagesHook(array &$return, array $languages, array $langsNative, bool $blnInstalledOnly): void
-    {
-        $this->assertIsArray($return);
-        $this->assertNotEmpty($return);
-        $this->assertTrue(ArrayUtil::isAssoc($return));
-
-        $this->assertSame('German', $languages['de']);
-        $this->assertContains($return['de'], ['Deutsch', 'German']);
-        $this->assertSame('Deutsch', $langsNative['de']);
-        $this->assertSame('English', $langsNative['en']);
-
-        $return = [
-            'de' => 'Germanisch',
-            'de_AT' => 'Österreichisch',
-            'en_AT' => 'Terminatorisch',
-            'de_Cyrl' => 'Unleserlich',
-        ];
-
-        if ($blnInstalledOnly) {
-            $return['be'] = 'Added backend language';
-        }
-    }
-
     private function getLocalesService(Translator $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
     {
         if (null === $translator) {
@@ -504,19 +370,10 @@ class LocalesTest extends TestCase
 
         $requestStack ??= $this->createMock(RequestStack::class);
 
-        $contaoFramework = $this->mockContaoFramework([
-            System::class => new class(System::class) extends Adapter {
-                public function importStatic(string $class): object
-                {
-                    return new $class();
-                }
-            },
-        ]);
-
         $defaultLocales = \ResourceBundle::getLocales('');
         $defaultEnabledLocales ??= ['en', 'de'];
         $defaultLocale ??= 'en';
 
-        return new Locales($translator, $requestStack, $contaoFramework, $defaultLocales, $defaultEnabledLocales, $configLocales, $configEnabledLocales, $defaultLocale);
+        return new Locales($translator, $requestStack, $defaultLocales, $defaultEnabledLocales, $configLocales, $configEnabledLocales, $defaultLocale);
     }
 }

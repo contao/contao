@@ -12,61 +12,43 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Table(
- *     name="tl_crawl_queue",
- *     indexes={
- *         @ORM\Index(name="job_id", columns={"job_id"}),
- *         @ORM\Index(name="uri_hash", columns={"uri_hash"}),
- *         @ORM\Index(name="processed", columns={"processed"}),
- *     }
- * )
- * @ORM\Entity()
- */
+#[Table(name: 'tl_crawl_queue')]
+#[Entity]
+#[Index(columns: ['job_id'], name: 'job_id')]
+#[Index(columns: ['uri_hash'], name: 'uri_hash')]
+#[Index(columns: ['processed'], name: 'processed')]
 class CrawlQueue
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned"=true})
-     * @GeneratedValue
-     */
+    #[Id]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     public int $id;
 
-    /**
-     * @ORM\Column(name="job_id", type="string", length=128, options={"fixed"=true})
-     */
+    #[Column(name: 'job_id', type: 'string', length: 128, options: ['fixed' => true])]
     public string $jobId;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[Column(type: 'text')]
     public string $uri;
 
-    /**
-     * @ORM\Column(name="uri_hash", type="string", length=40, options={"fixed"=true})
-     */
+    #[Column(name: 'uri_hash', type: 'string', length: 40, options: ['fixed' => true])]
     public string $uriHash;
 
-    /**
-     * @ORM\Column(name="found_on", type="text", nullable=true)
-     */
-    public ?string $foundOn = null;
+    #[Column(name: 'found_on', type: 'text', nullable: true)]
+    public string|null $foundOn = null;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
+    #[Column(type: 'smallint')]
     public int $level;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[Column(type: 'boolean')]
     public bool $processed;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    public ?string $tags = null;
+    #[Column(type: 'text', nullable: true)]
+    public string|null $tags = null;
 }

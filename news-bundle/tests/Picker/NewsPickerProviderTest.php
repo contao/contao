@@ -102,7 +102,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_news.2',
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
@@ -112,7 +111,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_news.2',
             ],
             $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
         );
@@ -158,7 +156,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);
@@ -178,7 +175,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);
@@ -206,7 +202,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);

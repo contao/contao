@@ -23,13 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $framework;
-
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework)
+    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework)
     {
-        $this->requestStack = $requestStack;
-        $this->framework = $framework;
     }
 
     /**
@@ -59,10 +54,7 @@ class PreviewUrlCreateListener
         $event->setQuery('calendar='.$eventModel->id);
     }
 
-    /**
-     * @return int|string
-     */
-    private function getId(PreviewUrlCreateEvent $event, Request $request)
+    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
     {
         // Overwrite the ID if the event settings are edited
         if ('tl_calendar_events' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
@@ -72,10 +64,7 @@ class PreviewUrlCreateListener
         return $event->getId();
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getEventModel($id): ?CalendarEventsModel
+    private function getEventModel(int|string $id): CalendarEventsModel|null
     {
         return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
     }

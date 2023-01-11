@@ -18,13 +18,8 @@ use Contao\OptInModel;
 
 class OptInToken implements OptInTokenInterface
 {
-    private OptInModel $model;
-    private ContaoFramework $framework;
-
-    public function __construct(OptInModel $model, ContaoFramework $framework)
+    public function __construct(private OptInModel $model, private ContaoFramework $framework)
     {
-        $this->model = $model;
-        $this->framework = $framework;
     }
 
     public function getIdentifier(): string
@@ -77,7 +72,7 @@ class OptInToken implements OptInTokenInterface
                     $model->confirmedOn > 0
                     || $model->invalidatedThrough
                     || $model->token === $this->getIdentifier()
-                    || 0 !== strncmp($model->token, $prefix.'-', \strlen($prefix) + 1)
+                    || 0 !== strncmp($model->token, $prefix.'-', \strlen((string) $prefix) + 1)
                 ) {
                     continue;
                 }

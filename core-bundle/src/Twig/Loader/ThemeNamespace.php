@@ -25,7 +25,7 @@ class ThemeNamespace
     public function generateSlug(string $relativePath): string
     {
         if (!Path::isRelative($relativePath)) {
-            throw new \InvalidArgumentException("Path '$relativePath' must be relative.");
+            throw new \InvalidArgumentException(sprintf('Path "%s" must be relative.', $relativePath));
         }
 
         $path = Path::normalize($relativePath);
@@ -68,7 +68,7 @@ class ThemeNamespace
      *
      * @return string the theme slug or null if not a theme namespace
      */
-    public function match(string $logicalName): ?string
+    public function match(string $logicalName): string|null
     {
         if (1 === preg_match('%^@Contao_Theme_([a-zA-Z0-9_-]+)/%', $logicalName, $matches)) {
             return $matches[1];

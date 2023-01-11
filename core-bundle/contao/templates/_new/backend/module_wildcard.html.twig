@@ -1,0 +1,12 @@
+{% trans_default_domain 'contao_modules' %}
+
+{% if title %}
+    <h1>{{ title }}</h1>
+{% endif %}
+
+<div class="tl_gray">
+    <span class="upper">### {{ ('FMD.' ~ type ~ '.0')|trans }} ###</span>
+    <br>
+    {% set href = path('contao_backend', {do: 'themes', table: 'tl_module', act: 'edit', id, rt: request_token}) %}
+    {{ name }} (<a href="{{ href }}" class="tl_gray">ID: {{ id }}</a>)
+</div>

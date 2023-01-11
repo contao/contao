@@ -12,6 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-class PalettePositionException extends \Contao\CoreBundle\Exception\PalettePositionException
+class PalettePositionException extends \InvalidArgumentException
 {
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
@@ -19,16 +20,12 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -45,10 +42,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
                 ->end()
-                ->scalarNode('encryption_key')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.secret%')
-                ->end()
                 ->integerNode('error_level')
                     ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
                     ->min(-1)
@@ -56,12 +49,21 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
                 ->append($this->addIntlNode())
-                ->booleanNode('legacy_routing')
-                    ->defaultTrue()
-                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
-                ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
+                    ->validate()
+                        ->always(
+                            static function (array $options): array {
+                                foreach (array_keys($options) as $option) {
+                                    if ($newKey = Config::getNewKey($option)) {
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                    }
+                                }
+
+                                return $options;
+                            }
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
@@ -69,17 +71,12 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue([])
                 ->end()
-                ->booleanNode('prepend_locale')
-                    ->info('Whether or not to add the page language to the URL.')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultFalse()
-                ->end()
                 ->booleanNode('pretty_error_screens')
                     ->info('Show customizable, pretty error screens instead of the default PHP error messages.')
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
+                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. "/preview.php").')
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -98,19 +95,16 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
-                ->scalarNode('url_suffix')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultValue('.html')
-                ->end()
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
+                ->append($this->addMessengerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
@@ -119,10 +113,63 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackendNode())
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
+                ->append($this->addSanitizerNode())
+                ->append($this->addCronNode())
             ->end()
         ;
 
         return $treeBuilder;
+    }
+
+    private function addMessengerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('messenger'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
+            ->children()
+                ->scalarNode('console_path')
+                    ->info('The path to the Symfony console.')
+                    ->defaultValue('%kernel.project_dir%/bin/console')
+                ->end()
+                ->arrayNode('workers')
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('transports')
+                                ->info('The transports/receivers you would like to consume from.')
+                                ->example(['foobar_transport', 'foobar2_transport'])
+                                ->scalarPrototype()
+                                ->end()
+                            ->end()
+                            ->arrayNode('options')
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
+                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->scalarPrototype()->end()
+                                ->defaultValue(['--time-limit=60'])
+                                ->validate()
+                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
+                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                ->end()
+                            ->end()
+                            ->arrayNode('autoscale')
+                                ->info('Enables autoscaling.')
+                                ->canBeEnabled()
+                                ->children()
+                                    ->integerNode('desired_size')
+                                        ->info('Contao will automatically autoscale the number of workers to meet this queue size. Logic: desiredWorkers = ceil(currentSize / desiredSize)')
+                                        ->min(1)
+                                    ->end()
+                                    ->integerNode('max')
+                                        ->min(1)
+                                        ->info('Contao will never scale up to more than this configured number of workers.')
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     private function addImageNode(): NodeDefinition
@@ -165,6 +212,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->booleanNode('jxl_lossless')
                         ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
+                        ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
                         ->end()
@@ -175,7 +225,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -324,7 +374,39 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                ->end()
+                ->arrayNode('preview')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('target_dir')
+                            ->info('The target directory for the cached previews.')
+                            ->example('%kernel.project_dir%/assets/previews')
+                            ->cannotBeEmpty()
+                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->validate()
+                                ->always(static fn (string $value): string => Path::canonicalize($value))
+                            ->end()
+                        ->end()
+                        ->integerNode('default_size')
+                            ->min(1)
+                            ->max(65535)
+                            ->defaultValue(512)
+                        ->end()
+                        ->integerNode('max_size')
+                            ->min(1)
+                            ->max(65535)
+                            ->defaultValue(1024)
+                        ->end()
+                        ->booleanNode('enable_fallback_images')
+                            ->info('Whether or not to generate previews for unsupported file types that show a file icon containing the file type.')
+                            ->defaultValue(true)
+                        ->end()
+                    ->end()
+                    ->validate()
+                        ->ifTrue(static fn (array $v) => $v['default_size'] > $v['max_size'])
+                        ->thenInvalid('The default_size must not be greater than the max_size: %s')
+                    ->end()
                 ->end()
             ->end()
         ;
@@ -494,7 +576,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()
@@ -552,16 +634,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
                     ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('badge_title')
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
+                    ->cannotBeEmpty()
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('route_prefix')
@@ -599,10 +684,6 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('directory')
-                    ->info('The directory the backups are stored in.')
-                    ->defaultValue('%kernel.project_dir%/var/backups')
-                ->end()
                 ->arrayNode('ignore_tables')
                     ->info('These tables are ignored by default when creating and restoring backups.')
                     ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
@@ -620,7 +701,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 
@@ -635,14 +716,45 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function getDefaultWebDir(): string
+    private function addSanitizerNode(): NodeDefinition
     {
-        $webDir = Path::join($this->projectDir, 'web');
+        return (new TreeBuilder('sanitizer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_url_protocols')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data', 'skype', 'whatsapp'])
+                    ->validate()
+                        ->always(
+                            static function (array $protocols): array {
+                                foreach ($protocols as $protocol) {
+                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
+                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                    }
+                                }
 
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
+                                return $protocols;
+                            }
+                        )
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
 
-        return Path::join($this->projectDir, 'public');
+    private function addCronNode(): NodeDefinition
+    {
+        return (new TreeBuilder('cron'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('web_listener')
+                    ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
+                    ->values(['auto', true, false])
+                    ->defaultValue('auto')
+                ->end()
+            ->end()
+        ;
     }
 }

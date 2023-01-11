@@ -22,18 +22,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ContaoTableProcessor implements ProcessorInterface
 {
-    private RequestStack $requestStack;
-    private TokenStorageInterface $tokenStorage;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.monolog.processor" service instead
      */
-    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
+    public function __construct(private RequestStack $requestStack, private TokenStorageInterface $tokenStorage, private ScopeMatcher $scopeMatcher)
     {
-        $this->requestStack = $requestStack;
-        $this->tokenStorage = $tokenStorage;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**

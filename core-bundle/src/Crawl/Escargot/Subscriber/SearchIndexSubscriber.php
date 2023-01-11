@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -28,6 +29,7 @@ use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
 use Terminal42\Escargot\Subscriber\ExceptionSubscriberInterface;
 use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
+use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 use Terminal42\Escargot\Subscriber\Util;
 use Terminal42\Escargot\SubscriberLoggerTrait;
@@ -38,14 +40,12 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    private IndexerInterface $indexer;
-    private TranslatorInterface $translator;
+    final public const TAG_SKIP = 'skip-search-index';
+
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
+    public function __construct(private IndexerInterface $indexer, private TranslatorInterface $translator)
     {
-        $this->indexer = $indexer;
-        $this->translator = $translator;
     }
 
     public function getName(): string
@@ -55,12 +55,33 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // Respect robots.txt info and rel="nofollow" attributes
+        if ($crawlUri->hasTag(self::TAG_SKIP)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Before we request this URI, we only know about the tag from the robots.txt
+        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked "noindex" in the robots.txt.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Respect robots.txt info and nofollow metadata
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.'
+                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -110,6 +131,19 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
+        // Skip any redirected URLs that are now outside our base hosts (#4213)
+        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+
+        if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Did not index because it was not part of the base URI collection.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
         // No HTML, no index
         if (!Util::isOfContentType($response, 'text/html')) {
             $this->logWithCrawlUri(
@@ -121,12 +155,34 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
+        // At this point, we know about the X-Robots-Tag header
+        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
         // Let's go otherwise!
         return SubscriberInterface::DECISION_POSITIVE;
     }
 
     public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
     {
+        // At this point, we know about the <meta name="robots"> tag
+        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.'
+            );
+
+            return;
+        }
+
         $document = new Document(
             $crawlUri->getUri(),
             $response->getStatusCode(),
@@ -184,18 +240,18 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
     {
-        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+        $this->logWarning($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }
 
     public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
     {
-        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+        $this->logWarning($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
     }
 
-    private function logError(CrawlUri $crawlUri, string $message): void
+    private function logWarning(CrawlUri $crawlUri, string $message): void
     {
-        ++$this->stats['error'];
+        ++$this->stats['warning'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, sprintf('Broken link! %s.', $message));
     }
 }

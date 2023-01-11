@@ -19,20 +19,20 @@ use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\IncludeTokenParser;
 
 /**
- * This parser is a drop in replacement for @\Twig\TokenParser\IncludeTokenParser
+ * This parser is a drop in replacement for the IncludeTokenParser
  * that adds support for the Contao template hierarchy.
+ *
+ * @see IncludeTokenParser
  *
  * @experimental
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    private TemplateHierarchyInterface $hierarchy;
-
-    public function __construct(TemplateHierarchyInterface $hierarchy)
+    public function __construct(private TemplateHierarchyInterface $hierarchy)
     {
-        $this->hierarchy = $hierarchy;
     }
 
     public function parse(Token $token): IncludeNode

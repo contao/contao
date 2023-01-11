@@ -16,10 +16,10 @@ use Contao\StringUtil;
 
 class PaletteManipulator
 {
-    public const POSITION_BEFORE = 'before';
-    public const POSITION_AFTER = 'after';
-    public const POSITION_PREPEND = 'prepend';
-    public const POSITION_APPEND = 'append';
+    final public const POSITION_BEFORE = 'before';
+    final public const POSITION_AFTER = 'after';
+    final public const POSITION_PREPEND = 'prepend';
+    final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
     private array $fields = [];
@@ -33,12 +33,9 @@ class PaletteManipulator
     /**
      * If the legend already exists, nothing will be changed.
      *
-     * @param string|array $parent
-     * @param bool         $hide
-     *
      * @throws PalettePositionException
      */
-    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
+    public function addLegend(string $name, array|string|null $parent = null, string $position = self::POSITION_AFTER, bool $hide = false): self
     {
         $this->validatePosition($position);
 
@@ -46,7 +43,7 @@ class PaletteManipulator
             'name' => $name,
             'parents' => (array) $parent,
             'position' => $position,
-            'hide' => (bool) $hide,
+            'hide' => $hide,
         ];
 
         return $this;
@@ -55,14 +52,9 @@ class PaletteManipulator
     /**
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
-     * @param string|array               $name
-     * @param string|array               $parent
-     * @param string|array|\Closure|null $fallback
-     * @param string                     $fallbackPosition
-     *
      * @throws PalettePositionException
      */
-    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
+    public function addField(array|string $name, array|string|null $parent = null, string $position = self::POSITION_AFTER, \Closure|array|string|null $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
@@ -74,7 +66,7 @@ class PaletteManipulator
             'fields' => (array) $name,
             'parents' => (array) $parent,
             'position' => $position,
-            'fallback' => is_scalar($fallback) ? [$fallback] : $fallback,
+            'fallback' => \is_scalar($fallback) ? [$fallback] : $fallback,
             'fallbackPosition' => $fallbackPosition,
         ];
 
@@ -83,10 +75,8 @@ class PaletteManipulator
 
     /**
      * If no legend is given, the field is removed everywhere.
-     *
-     * @param string|array $name
      */
-    public function removeField($name, string $legend = null): self
+    public function removeField(array|string $name, string $legend = null): self
     {
         $this->removes[] = [
             'fields' => (array) $name,
@@ -188,7 +178,7 @@ class PaletteManipulator
             $hide = false;
             $fields = StringUtil::trimsplit(',', $group);
 
-            if (preg_match('#{(.+?)(:hide)?}#', $fields[0], $matches)) {
+            if (preg_match('#{(.+?)(:hide)?}#', (string) $fields[0], $matches)) {
                 $legend = $matches[1];
                 $hide = \count($matches) > 2 && ':hide' === $matches[2];
                 array_shift($fields);
@@ -196,7 +186,7 @@ class PaletteManipulator
                 $legend = $legendCount++;
             }
 
-            $legendMap[$legend] = compact('fields', 'hide');
+            $legendMap[$legend] = ['fields' => $fields, 'hide' => $hide];
         }
 
         return $legendMap;
@@ -327,8 +317,7 @@ class PaletteManipulator
 
     private function applyFallbackPalette(array &$config, array $action): void
     {
-        end($config);
-        $fallback = key($config);
+        $fallback = array_key_last($config);
 
         if (null !== $action['fallback']) {
             if ($this->canApplyToParent($config, $action, 'fallback', 'fallbackPosition')) {
@@ -364,10 +353,8 @@ class PaletteManipulator
 
     /**
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @return string|false
      */
-    private function findLegendForField(array $config, string $field)
+    private function findLegendForField(array $config, string $field): int|string|false
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

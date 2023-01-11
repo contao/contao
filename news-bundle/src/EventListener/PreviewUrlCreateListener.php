@@ -23,13 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $framework;
-
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework)
+    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework)
     {
-        $this->requestStack = $requestStack;
-        $this->framework = $framework;
     }
 
     /**
@@ -59,10 +54,7 @@ class PreviewUrlCreateListener
         $event->setQuery('news='.$newsModel->id);
     }
 
-    /**
-     * @return int|string
-     */
-    private function getId(PreviewUrlCreateEvent $event, Request $request)
+    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
     {
         // Overwrite the ID if the news settings are edited
         if ('tl_news' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
@@ -72,10 +64,7 @@ class PreviewUrlCreateListener
         return $event->getId();
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getNewsModel($id): ?NewsModel
+    private function getNewsModel(int|string $id): NewsModel|null
     {
         return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
     }

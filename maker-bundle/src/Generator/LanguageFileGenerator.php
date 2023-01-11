@@ -14,20 +14,13 @@ namespace Contao\MakerBundle\Generator;
 
 use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Webmozart\PathUtil\Path;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
-    private FileManager $fileManager;
-    private XliffMerger $xliffMerger;
-    private string $projectDir;
-
-    public function __construct(FileManager $fileManager, XliffMerger $xliffMerger, string $projectDir)
+    public function __construct(private FileManager $fileManager, private XliffMerger $xliffMerger, private string $projectDir)
     {
-        $this->fileManager = $fileManager;
-        $this->xliffMerger = $xliffMerger;
-        $this->projectDir = $projectDir;
     }
 
     public function generate(array $options): string
@@ -66,6 +59,6 @@ class LanguageFileGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

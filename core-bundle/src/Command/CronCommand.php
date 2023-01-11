@@ -13,34 +13,46 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Cron\Cron;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'contao:cron',
+    description: 'Runs cron jobs on the command line.'
+)]
 class CronCommand extends Command
 {
-    protected static $defaultName = 'contao:cron';
-
-    protected Cron $cron;
-
-    public function __construct(Cron $cron)
+    public function __construct(private Cron $cron)
     {
-        $this->cron = $cron;
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->setDescription('Runs all registered cron jobs on the command line.')
+            ->addArgument('cronjob', InputArgument::OPTIONAL, 'An optional single cron job to run')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force jobs to run, disregarding their last execution time')
+            ->setHelp('Runs all registered cron jobs by default, otherwise a specific cron job.')
+            ->addUsage('"Contao\CoreBundle\Cron\PurgeExpiredDataCron::onHourly"')
+            ->addUsage('--force')
+            ->addUsage('--force "Contao\CoreBundle\Cron\PurgeExpiredDataCron::onHourly"')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->cron->run(Cron::SCOPE_CLI);
+        $force = $input->getOption('force');
 
-        return 0;
+        if ($cronJobName = $input->getArgument('cronjob')) {
+            $this->cron->runJob($cronJobName, Cron::SCOPE_CLI, $force);
+        } else {
+            $this->cron->run(Cron::SCOPE_CLI, $force);
+        }
+
+        return Command::SUCCESS;
     }
 }

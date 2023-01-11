@@ -12,13 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
-use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -32,21 +33,21 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, true)
+            ->willReturnOnConsecutiveCalls(true)
         ;
 
         $session = $this->mockSession();
 
-        $user = $this->createPartialMock(FrontendUser::class, ['getRoles']);
+        $user = $this->createMock(FrontendUser::class);
         $user
             ->expects($this->once())
             ->method('getRoles')
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -56,12 +57,14 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
         $this->assertTrue($session->has('_security_contao_frontend'));
+        $this->assertTrue($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
 
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
+        $this->assertInstanceOf(UsernamePasswordToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertSame($showUnpublished, $token->showUnpublished());
+        $this->assertSame(['ROLE_MEMBER'], $token->getRoleNames());
+        $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
     public function getShowUnpublishedData(): \Generator
@@ -70,32 +73,15 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         yield [false];
     }
 
-    public function testDoesNotAuthenticateAFrontendUserIfThereIsNoBackendUser(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
-
-        $authenticator = $this->getAuthenticator($security);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
     public function testDoesNotAuthenticateAFrontendUserIfTheUsernameIsInvalid(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->expects($this->once())
             ->method('loadUserByIdentifier')
@@ -118,9 +104,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnOnConsecutiveCalls(false)
         ;
 
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -130,7 +116,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -142,48 +128,33 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @dataProvider getShowUnpublishedData
+     * @dataProvider getShowUnpublishedPreviewLinkIdData
      */
-    public function testAuthenticatesAFrontendGuest(bool $showUnpublished): void
+    public function testAuthenticatesAFrontendGuest(bool $showUnpublished, int|null $previewLinkId): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isGranted')
-            ->willReturn(true)
         ;
 
         $session = $this->mockSession();
         $authenticator = $this->getAuthenticator($security, $session);
 
-        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished));
-        $this->assertTrue($session->has('_security_contao_frontend'));
+        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished, $previewLinkId));
+        $this->assertFalse($session->has('_security_contao_frontend'));
+        $this->assertTrue($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
 
-        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
-
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
-        $this->assertSame($showUnpublished, $token->showUnpublished());
+        $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
+        $this->assertSame($previewLinkId, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewLinkId']);
     }
 
-    public function testDoesNotAuthenticateAFrontendGuestIfThereIsNoBackendUser(): void
+    public function getShowUnpublishedPreviewLinkIdData(): \Generator
     {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->willReturn(false)
-        ;
-
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->never())
-            ->method('set')
-        ;
-
-        $authenticator = $this->getAuthenticator($security, $session);
-
-        $this->assertFalse($authenticator->authenticateFrontendGuest(false));
+        yield [true, null];
+        yield [true, 123];
+        yield [false, null];
+        yield [false, 123];
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void
@@ -196,16 +167,16 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atMost(2))
             ->method('has')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('remove')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
         ;
 
         $authenticator = $this->getAuthenticator(null, $session);
@@ -237,9 +208,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('has')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
             ->willReturn(false)
         ;
 
@@ -258,10 +229,16 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ;
         }
 
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $security ??= $this->createMock(Security::class);
-        $userProvider ??= $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider ??= $this->createMock(UserProviderInterface::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
+        return new FrontendPreviewAuthenticator($security, $requestStack, $userProvider, $logger);
     }
 }

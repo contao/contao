@@ -138,6 +138,7 @@ class BackendControllerTest extends TestCase
 
         $request = new Request();
         $request->query->set('context', 'invalid');
+        $request->query->set('value', '');
 
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('Unsupported picker context');

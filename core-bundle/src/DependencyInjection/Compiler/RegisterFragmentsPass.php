@@ -36,21 +36,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    private ?string $tag;
-    private ?string $globalsKey;
-    private ?string $proxyClass;
-    private ?string $templateOptionsListener;
-
-    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null, string $templateOptionsListener = null)
-    {
-        if (null === $tag) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Initializing "Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass" objects without passing the tag name as argument has been deprecated and will no longer work in Contao 5.0.');
-        }
-
-        $this->tag = $tag;
-        $this->globalsKey = $globalsKey;
-        $this->proxyClass = $proxyClass;
-        $this->templateOptionsListener = $templateOptionsListener;
+    public function __construct(
+        private string|null $tag,
+        private string|null $globalsKey = null,
+        private string|null $proxyClass = null,
+        private string|null $templateOptionsListener = null,
+    ) {
     }
 
     /**
@@ -81,7 +72,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
             // element and a front end module), the first pass creates a child definition that
             // inherits all tags from the original. On the next run, the pass would pick up the
             // child definition and try to create duplicate fragments.
-            if (0 === strpos((string) $reference, 'contao.fragment._')) {
+            if (str_starts_with((string) $reference, 'contao.fragment._')) {
                 continue;
             }
 
@@ -101,9 +92,9 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
-                if (!empty($attributes['template'])) {
-                    $templates[$attributes['type']] = $attributes['template'];
-                }
+                $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
+
+                $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -118,10 +109,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-
-                if (null !== $command) {
-                    $command->addMethodCall('add', [$identifier, $config, $attributes]);
-                }
+                $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
                 $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);
@@ -140,7 +128,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addGlobalsMapListener($globals, $container);
 
         if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setCustomTemplates', [$templates]);
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
         }
     }
 
@@ -198,7 +186,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $className = $definition->getClass();
         $className = ltrim(strrchr($className, '\\'), '\\');
 
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 

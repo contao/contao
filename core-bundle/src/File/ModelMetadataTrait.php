@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\File;
 
 use Contao\FilesModel;
 use Contao\System;
+use Contao\Validator;
 
 /**
  * @property string $overwriteMeta
@@ -25,7 +26,7 @@ trait ModelMetadataTrait
     /**
      * Get the default metadata or null if not applicable.
      */
-    public function getOverwriteMetadata(): ?Metadata
+    public function getOverwriteMetadata(): Metadata|null
     {
         // Ignore if "overwriteMeta" is not set
         if (!$this->overwriteMeta) {
@@ -40,14 +41,20 @@ trait ModelMetadataTrait
         }
 
         if (isset($data['imageUrl'])) {
-            $data[Metadata::VALUE_URL] = $data['imageUrl'];
+            $url = $data['imageUrl'];
+
+            if (Validator::isRelativeUrl($url)) {
+                $url = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().$url;
+            }
+
+            $data[Metadata::VALUE_URL] = $url;
         }
 
         unset($data['imageTitle'], $data['imageUrl']);
 
         // Make sure we resolve insert tags pointing to files
         if (isset($data[Metadata::VALUE_URL])) {
-            $data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL]);
+            $data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL] ?? '');
         }
 
         // Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields

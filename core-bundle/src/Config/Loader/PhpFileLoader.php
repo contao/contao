@@ -37,7 +37,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class PhpFileLoader extends Loader
 {
-    public function load($resource, string $type = null): string
+    public function load(mixed $resource, string $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
 
@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports(mixed $resource, string $type = null): bool
     {
         return 'php' === Path::getExtension((string) $resource, true);
     }
@@ -68,7 +68,7 @@ class PhpFileLoader extends Loader
         $namespaceResolver = new NameResolver();
 
         $nodeStripper = new class() extends NodeVisitorAbstract {
-            public function leaveNode(Node $node)
+            public function leaveNode(Node $node): array|int|null
             {
                 // Drop namespace and use declarations
                 if ($node instanceof Namespace_) {
@@ -79,7 +79,7 @@ class PhpFileLoader extends Loader
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop 'strict_types' definition
+                // Drop the "strict_types" definition
                 if ($node instanceof Declare_) {
                     foreach ($node->declares as $key => $declare) {
                         if ('strict_types' === $declare->key->name) {
@@ -136,6 +136,9 @@ class PhpFileLoader extends Loader
         $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
         $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
+
+        // Force GC collection to reduce the total memory required when building the cache (see #4069)
+        gc_collect_cycles();
 
         return [$code, $namespace];
     }

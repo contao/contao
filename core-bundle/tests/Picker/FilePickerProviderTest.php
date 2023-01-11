@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Tests\Picker;
 
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\StringUtil;
-use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FilePickerProviderTest extends ContaoTestCase
+class FilePickerProviderTest extends TestCase
 {
     public function testCreatesTheMenuItem(): void
     {

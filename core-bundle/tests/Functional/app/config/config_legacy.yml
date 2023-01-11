@@ -1,5 +1,0 @@
-imports:
-    - { resource: config_test.yml }
-
-contao:
-    legacy_routing: true

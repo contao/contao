@@ -20,16 +20,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BackendMenuBuilder
 {
-    private FactoryInterface $factory;
-    private EventDispatcherInterface $eventDispatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.menu.backend_menu_builder" service instead
      */
-    public function __construct(FactoryInterface $factory, EventDispatcherInterface $eventDispatcher)
+    public function __construct(private FactoryInterface $factory, private EventDispatcherInterface $eventDispatcher)
     {
-        $this->factory = $factory;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function buildMainMenu(): ItemInterface

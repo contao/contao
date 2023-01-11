@@ -16,11 +16,16 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class PaginationTest extends TestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_LANG']['MSC']['first'] = 'First';
         $GLOBALS['TL_LANG']['MSC']['previous'] = 'Previous';
         $GLOBALS['TL_LANG']['MSC']['next'] = 'Next';
@@ -28,15 +33,17 @@ class PaginationTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['totalPages'] = 'Total';
         $GLOBALS['TL_LANG']['MSC']['goToPage'] = 'Go to';
 
-        parent::setUp();
+        System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $_GET['page']);
+        unset($GLOBALS['TL_LANG']);
+        $_GET = [];
 
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
+
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -46,7 +53,8 @@ class PaginationTest extends TestCase
      */
     public function testGeneratesPaginationItems(array $data): void
     {
-        $_GET['page'] = $data['currentPage'] ?? 1;
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['page' => $data['currentPage'] ?? 1]));
 
         $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();

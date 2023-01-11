@@ -34,6 +34,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
         $this->addBundles($container);
         $this->addComponents($container);
+        $this->addHighlightPhp($container);
     }
 
     /**
@@ -94,6 +95,21 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         }
     }
 
+    private function addHighlightPhp(ContainerBuilder $container): void
+    {
+        $packages = $container->getDefinition('assets.packages');
+        $serviceId = 'assets._package_scrivo/highlight.php';
+
+        $definition = $this->createPackageDefinition(
+            'vendor/scrivo/highlight_php/styles',
+            $this->createVersionStrategy($container, 'scrivo/highlight.php'),
+            new Reference('contao.assets.assets_context')
+        );
+
+        $container->setDefinition($serviceId, $definition);
+        $packages->addMethodCall('addPackage', ['scrivo/highlight.php', new Reference($serviceId)]);
+    }
+
     private function createPackageDefinition(string $basePath, Reference $version, Reference $context): Definition
     {
         $package = new ChildDefinition('assets.path_package');
@@ -123,14 +139,14 @@ class AddAssetsPackagesPass implements CompilerPassInterface
      */
     private function getBundlePackageName(string $className): string
     {
-        if ('Bundle' === substr($className, -6)) {
+        if (str_ends_with($className, 'Bundle')) {
             $className = substr($className, 0, -6);
         }
 
         return Container::underscore($className);
     }
 
-    private function findBundlePath(array $meta, string $name): ?string
+    private function findBundlePath(array $meta, string $name): string|null
     {
         if (is_dir($path = Path::join($meta[$name]['path'], 'Resources/public'))) {
             return $path;

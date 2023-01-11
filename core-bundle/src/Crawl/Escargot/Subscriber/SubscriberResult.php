@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 class SubscriberResult
 {
-    private bool $wasSuccessful;
-    private string $summary;
-    private ?string $warning = null;
+    private string|null $warning = null;
 
     /**
      * Mixed custom info. Must be serializable, so
@@ -24,10 +22,8 @@ class SubscriberResult
      */
     private array $info = [];
 
-    public function __construct(bool $wasSuccessful, string $summary)
+    public function __construct(private bool $wasSuccessful, private string $summary)
     {
-        $this->wasSuccessful = $wasSuccessful;
-        $this->summary = $summary;
     }
 
     public function wasSuccessful(): bool
@@ -40,12 +36,12 @@ class SubscriberResult
         return $this->summary;
     }
 
-    public function getWarning(): ?string
+    public function getWarning(): string|null
     {
         return $this->warning;
     }
 
-    public function setWarning(?string $warning): self
+    public function setWarning(string|null $warning): self
     {
         $this->warning = $warning;
 
@@ -57,20 +53,14 @@ class SubscriberResult
         $this->info = $info;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function addInfo(string $key, $value): self
+    public function addInfo(string $key, mixed $value): self
     {
         $this->info[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInfo(string $key)
+    public function getInfo(string $key): mixed
     {
         return $this->info[$key] ?? null;
     }

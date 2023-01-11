@@ -18,7 +18,7 @@ use Symfony\Component\Routing\RouteCompilerInterface;
 
 class UnroutablePageRouteCompiler implements RouteCompilerInterface
 {
-    public static function compile(Route $route): void
+    public static function compile(Route $route): never
     {
         throw new RouteNotFoundException('This route is not routable');
     }

@@ -15,27 +15,21 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model\Collection;
 use Contao\UserModel;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Lists Contao back end users.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:user:list',
+    description: 'Lists Contao back end users.'
+)]
 class UserListCommand extends Command
 {
-    protected static $defaultName = 'contao:user:list';
-
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 
@@ -45,7 +39,6 @@ class UserListCommand extends Command
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
-            ->setDescription('Lists Contao back end users.')
         ;
     }
 
@@ -53,7 +46,7 @@ class UserListCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('admins')) {
+        if ($input->getOption('admins') && 'json' !== $input->getOption('format')) {
             $io->note('Only showing admin accounts');
         }
 
@@ -61,15 +54,11 @@ class UserListCommand extends Command
         $columns = $input->getOption('column');
 
         switch ($input->getOption('format')) {
-            case 'text':
-                trigger_deprecation('contao/core-bundle', '4.13', 'Using --format=text is deprecated and will be removed in Contao 5. Use --format=txt instead.');
-                // no break
-
             case 'txt':
-                if (0 === $users->count()) {
+                if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
 
                 $rows = $this->formatTableRows($users, $columns);
@@ -80,24 +69,24 @@ class UserListCommand extends Command
             case 'json':
                 $data = $this->formatJson($users, $columns);
 
-                $io->write(json_encode($data));
+                $io->write(json_encode($data, JSON_THROW_ON_ERROR));
                 break;
 
             default:
                 throw new \LogicException('Invalid format: '.$input->getOption('format'));
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function getUsers(bool $onlyAdmins = false): Collection
+    private function getUsers(bool $onlyAdmins = false): Collection|null
     {
         $this->framework->initialize();
 
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {
-            return $userModel->findBy('admin', '1');
+            return $userModel->findBy('admin', true);
         }
 
         return $userModel->findAll();
@@ -133,10 +122,14 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(Collection $users, array $columns): array
+    private function formatJson(Collection|null $users, array $columns): array
     {
+        if (!$users) {
+            return [];
+        }
+
         if ([] === $columns) {
-            return $users->fetchAll();
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
         $data = [];

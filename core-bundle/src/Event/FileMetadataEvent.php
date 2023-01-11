@@ -16,19 +16,16 @@ use Contao\CoreBundle\File\Metadata;
 
 class FileMetadataEvent
 {
-    private ?Metadata $metadata;
-
-    public function __construct(?Metadata $metadata)
+    public function __construct(private Metadata|null $metadata)
     {
-        $this->metadata = $metadata;
     }
 
-    public function getMetadata(): ?Metadata
+    public function getMetadata(): Metadata|null
     {
         return $this->metadata;
     }
 
-    public function setMetadata(?Metadata $metadata): void
+    public function setMetadata(Metadata|null $metadata): void
     {
         $this->metadata = $metadata;
     }

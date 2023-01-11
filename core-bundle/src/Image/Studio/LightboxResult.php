@@ -23,26 +23,22 @@ use Psr\Container\ContainerInterface;
 
 class LightboxResult
 {
-    private ContainerInterface $locator;
-    private ?string $url;
-    private ?string $groupIdentifier;
-    private ?ImageResult $image = null;
+    private ImageResult|null $image = null;
 
     /**
-     * @param string|ImageInterface|null                 $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
-    {
+    public function __construct(
+        private ContainerInterface $locator,
+        ImageInterface|string|null $filePathOrImage,
+        private string|null $url,
+        PictureConfiguration|array|int|string|null $sizeConfiguration = null,
+        private string|null $groupIdentifier = null,
+        ResizeOptions $resizeOptions = null,
+    ) {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');
         }
-
-        $this->locator = $locator;
-        $this->url = $url;
-        $this->groupIdentifier = $groupIdentifier;
 
         if (null !== $filePathOrImage) {
             $this->image = $locator
@@ -98,7 +94,7 @@ class LightboxResult
      * Will return null if there is no lightbox size configuration or if not
      * in a request context.
      */
-    private function getDefaultLightboxSizeConfiguration(): ?array
+    private function getDefaultLightboxSizeConfiguration(): array|null
     {
         $page = $GLOBALS['objPage'] ?? null;
 

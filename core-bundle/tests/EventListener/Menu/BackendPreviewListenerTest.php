@@ -20,7 +20,6 @@ use Knp\Menu\MenuFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -131,16 +130,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $request = new Request();
         $request->query->set('do', 'page');
         $request->query->set('table', 'tl_page');
-
-        $session = $this->createMock(Session::class);
-        $session
-            ->expects($this->once())
-            ->method('get')
-            ->with('CURRENT_ID')
-            ->willReturn(null)
-        ;
-
-        $request->setSession($session);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

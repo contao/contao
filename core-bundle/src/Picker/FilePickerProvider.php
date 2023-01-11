@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\FilesModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Filesystem\Path;
@@ -27,18 +28,17 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    private Security $security;
-    private string $uploadPath;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Security $security, string $uploadPath)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        private Security $security,
+        private string $uploadPath,
+    ) {
         parent::__construct($menuFactory, $router, $translator);
-
-        $this->security = $security;
-        $this->uploadPath = $uploadPath;
     }
 
     public function getName(): string
@@ -46,7 +46,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return 'filePicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return \in_array($context, ['file', 'link'], true) && $this->security->isGranted('contao_user.modules', 'files');
     }
@@ -60,7 +60,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config) || Path::isBasePath($this->uploadPath, $config->getValue());
     }
 
-    public function getDcaTable(): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
         return 'tl_files';
     }
@@ -74,7 +74,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->getLinkDcaAttributes($config);
     }
 
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         if ('file' === $config->getContext()) {
             return $value;
@@ -117,7 +117,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     /**
      * Urlencodes a file path preserving slashes.
      *
-     * @see \Contao\System::urlEncode()
+     * @see System::urlEncode()
      */
     private function urlEncode(string $strPath): string
     {

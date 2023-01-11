@@ -13,11 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -29,24 +32,19 @@ class TokenChecker
     private const FRONTEND_FIREWALL = 'contao_frontend';
     private const BACKEND_FIREWALL = 'contao_backend';
 
-    private RequestStack $requestStack;
-    private FirewallMapInterface $firewallMap;
-    private TokenStorageInterface $tokenStorage;
-    private SessionInterface $session;
-    private AuthenticationTrustResolverInterface $trustResolver;
-    private VoterInterface $roleVoter;
+    private array $previewLinks = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter)
-    {
-        $this->requestStack = $requestStack;
-        $this->firewallMap = $firewallMap;
-        $this->tokenStorage = $tokenStorage;
-        $this->session = $session;
-        $this->trustResolver = $trustResolver;
-        $this->roleVoter = $roleVoter;
+    public function __construct(
+        private RequestStack $requestStack,
+        private FirewallMapInterface $firewallMap,
+        private TokenStorageInterface $tokenStorage,
+        private AuthenticationTrustResolverInterface $trustResolver,
+        private VoterInterface $roleVoter,
+        private Connection $connection,
+    ) {
     }
 
     /**
@@ -70,9 +68,27 @@ class TokenChecker
     }
 
     /**
+     * Checks if a front end guest user is "authenticated".
+     */
+    public function hasFrontendGuest(): bool
+    {
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
+            return false;
+        }
+
+        if (!$preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return false;
+        }
+
+        return $this->isValidPreviewLink($preview);
+    }
+
+    /**
      * Gets the front end username from the session.
      */
-    public function getFrontendUsername(): ?string
+    public function getFrontendUsername(): string|null
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
@@ -86,7 +102,7 @@ class TokenChecker
     /**
      * Gets the back end username from the session.
      */
-    public function getBackendUsername(): ?string
+    public function getBackendUsername(): string|null
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
@@ -98,22 +114,40 @@ class TokenChecker
     }
 
     /**
+     * Tells whether the front end preview can be accessed.
+     */
+    public function canAccessPreview(): bool
+    {
+        return $this->hasBackendUser() || $this->hasFrontendGuest();
+    }
+
+    /**
      * Tells whether the front end preview can show unpublished fragments.
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false)) {
+        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
+        if (!$request->hasPreviousSession()) {
+            return false;
+        }
 
-        return $token instanceof FrontendPreviewToken && $token->showUnpublished();
+        $session = $request->getSession();
+
+        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return false;
+        }
+
+        $preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
+
+        return (bool) $preview['showUnpublished'];
     }
 
-    private function getToken(string $context): ?TokenInterface
+    private function getToken(string $context): TokenInterface|null
     {
         $token = $this->getTokenFromStorage($context);
 
@@ -121,20 +155,20 @@ class TokenChecker
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
-        if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
+        if (!$token instanceof TokenInterface) {
             return null;
         }
 
-        if ($this->trustResolver->isAnonymous($token)) {
+        if (!$this->trustResolver->isAuthenticated($token) && !$this->trustResolver->isFullFledged($token) && !$this->trustResolver->isRememberMe($token)) {
             return null;
         }
 
         return $token;
     }
 
-    private function getTokenFromStorage(string $context): ?TokenInterface
+    private function getTokenFromStorage(string $context): TokenInterface|null
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -149,27 +183,73 @@ class TokenChecker
         return $this->tokenStorage->getToken();
     }
 
-    private function getTokenFromSession(string $sessionKey): ?TokenInterface
+    private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if (!$this->session->isStarted()) {
-            $request = $this->requestStack->getMainRequest();
-
-            if (!$request || !$request->hasPreviousSession()) {
-                return null;
-            }
-        }
-
-        // This will start the session if Request::hasPreviousSession() was true
-        if (!$this->session->has($sessionKey)) {
+        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
             return null;
         }
 
-        $token = unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
+        $session = $request->getSession();
+
+        if (!$session->isStarted() && !$request->hasPreviousSession()) {
+            return null;
+        }
+
+        // This will start the session if Request::hasPreviousSession() was true
+        if (!$session->has($sessionKey)) {
+            return null;
+        }
+
+        $token = unserialize($session->get($sessionKey), ['allowed_classes' => true]);
 
         if (!$token instanceof TokenInterface) {
             return null;
         }
 
         return $token;
+    }
+
+    private function isValidPreviewLink(array $token): bool
+    {
+        if (!isset($token['previewLinkId'])) {
+            return false;
+        }
+
+        $id = (int) $token['previewLinkId'];
+
+        if (!isset($this->previewLinks[$id])) {
+            $this->previewLinks[$id] = $this->connection->fetchAssociative(
+                "
+                    SELECT
+                        url,
+                        showUnpublished,
+                        restrictToUrl
+                    FROM tl_preview_link
+                    WHERE
+                        id = :id
+                        AND published = '1'
+                        AND expiresAt > UNIX_TIMESTAMP()
+                ",
+                ['id' => $id],
+            );
+        }
+
+        $previewLink = $this->previewLinks[$id];
+
+        if (!$previewLink) {
+            return false;
+        }
+
+        if ((bool) $previewLink['showUnpublished'] !== (bool) $token['showUnpublished']) {
+            return false;
+        }
+
+        if (!$previewLink['restrictToUrl']) {
+            return true;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+
+        return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
     }
 }

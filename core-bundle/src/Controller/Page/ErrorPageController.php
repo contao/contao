@@ -13,28 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
-use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\FrontendIndex;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Page("error_401", path=false)
- * @Page("error_403", path=false)
- * @Page("error_404", path=false)
- * @Page("error_503", path=false)
- *
  * @internal
  */
+#[AsPage('error_401', path: false)]
+#[AsPage('error_403', path: false)]
+#[AsPage('error_404', path: false)]
+#[AsPage('error_503', path: false)]
 class ErrorPageController extends AbstractController implements ContentCompositionInterface
 {
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function __invoke(PageModel $pageModel): Response

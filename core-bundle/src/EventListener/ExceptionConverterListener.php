@@ -70,7 +70,7 @@ class ExceptionConverterListener
         }
     }
 
-    private function getTargetClass(\Throwable $exception): ?string
+    private function getTargetClass(\Throwable $exception): string|null
     {
         foreach (self::MAPPER as $source => $target) {
             if ($exception instanceof $source) {
@@ -81,7 +81,7 @@ class ExceptionConverterListener
         return null;
     }
 
-    private function convertToHttpException(\Throwable $exception, string $target): ?HttpException
+    private function convertToHttpException(\Throwable $exception, string $target): HttpException|null
     {
         switch ($target) {
             case 'AccessDeniedHttpException':

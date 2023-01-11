@@ -21,21 +21,11 @@ interface PictureFactoryInterface
 {
     /**
      * Sets the default densities for generating pictures.
-     *
-     * @param string $densities
-     *
-     * @return static
      */
-    public function setDefaultDensities(/*string */$densities)/*: static*/;
+    public function setDefaultDensities(string $densities): static;
 
     /**
      * Creates a Picture object.
-     *
-     * @param string|ImageInterface                      $path
-     * @param int|string|array|PictureConfiguration|null $size
-     * @param ResizeOptions|null                         $options
-     *
-     * @return PictureInterface
      */
-    public function create($path, $size = null/*, ResizeOptions $options = null*/)/*: PictureInterface*/;
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface;
 }

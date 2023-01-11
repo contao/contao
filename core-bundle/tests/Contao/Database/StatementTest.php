@@ -25,11 +25,17 @@ class StatementTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     /**
-     * @group legacy
      * @dataProvider getDeprecatedSetQueries
      */
-    public function testSetTriggersDeprecation(string $query): void
+    public function testSetThrowsException(string $query): void
     {
         $statement = new Statement($this->createMock(Connection::class));
 
@@ -37,9 +43,10 @@ class StatementTest extends TestCase
             $statement->prepare($query);
         }
 
-        $this->expectDeprecation('%sUsing "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder%s');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('is only supported for INSERT and UPDATE queries with the "%s" placeholder');
 
-        $this->assertSame($statement, $statement->set(['foo' => 'bar']));
+        $statement->set(['foo' => 'bar']);
     }
 
     public function getDeprecatedSetQueries(): \Generator
@@ -54,72 +61,9 @@ class StatementTest extends TestCase
     }
 
     /**
-     * @group legacy
-     */
-    public function testExplainQuery(): void
-    {
-        $doctrineResult = $this->createMock(Result::class);
-        $doctrineResult
-            ->method('columnCount')
-            ->willReturn(1)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('executeQuery')
-            ->willReturn($doctrineResult)
-        ;
-
-        $connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
-        ;
-
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($this->createMock(AbstractPlatform::class))
-        ;
-
-        $container = new Container();
-        $container->set('database_connection', $connection);
-
-        System::setContainer($container);
-
-        $connection
-            ->method('fetchAssociative')
-            ->withConsecutive(
-                ['EXPLAIN SELECT * FROM tl_content', []],
-                ['EXPLAIN SELECT * FROM tl_content WHERE id = ?', [123]],
-                ['EXPLAIN INSERT INTO tl_content (foo) VALUES (?)', ['bar']],
-                ['EXPLAIN UPDATE tl_content SET foo=? WHERE id = ?', ['bar', 123]]
-            )
-            ->willReturn([])
-        ;
-
-        $this->expectDeprecation('%sUsing "%s::explain()" has been deprecated%s');
-
-        $statement = (new Statement($connection));
-        $statement->query('SELECT * FROM tl_content');
-        $statement->explain();
-
-        $statement = (new Statement($connection));
-        $statement->prepare('SELECT * FROM tl_content WHERE id = ?')->execute([123]);
-        $statement->explain();
-
-        $statement = (new Statement($connection));
-        $statement->prepare('INSERT INTO tl_content %s')->set(['foo' => 'bar'])->execute();
-        $statement->explain();
-
-        $statement = (new Statement($connection));
-        $statement->prepare('UPDATE tl_content %s WHERE id = ?')->set(['foo' => 'bar'])->execute([123]);
-        $statement->explain();
-    }
-
-    /**
-     * @group legacy
      * @dataProvider getQueriesWithParametersAndSets
      */
-    public function testBackwardsCompatibleReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
+    public function testReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
@@ -129,7 +73,7 @@ class StatementTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('executeQuery')
             ->willReturnCallback(
                 function (string $query, array $params) use ($doctrineResult, $expected) {
@@ -189,17 +133,6 @@ class StatementTest extends TestCase
         }
 
         $statement->execute(...($params ?? []));
-
-        $statement = (new Statement($connection));
-        $statement->prepare($query);
-
-        if ($set) {
-            $statement->set($set);
-        }
-
-        $this->expectDeprecation('%sUsing "%s" with an array parameter has been deprecated%s');
-
-        $statement->execute($params ?? []);
     }
 
     public function getQueriesWithParametersAndSets(): \Generator

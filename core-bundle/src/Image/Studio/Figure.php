@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\Controller;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
@@ -24,33 +24,9 @@ use Contao\Template;
  * use the provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
- *
- * @final This class will be made final in Contao 5.
  */
-class Figure
+final class Figure
 {
-    private ImageResult $image;
-
-    /**
-     * @var Metadata|(\Closure(self):Metadata|null)|null
-     */
-    private $metadata;
-
-    /**
-     * @var array<string, string|null>|(\Closure(self):array<string, string|null>)|null
-     */
-    private $linkAttributes;
-
-    /**
-     * @var LightboxResult|(\Closure(self):LightboxResult|null)|null
-     */
-    private $lightbox;
-
-    /**
-     * @var array<string, mixed>|(\Closure(self):array<string, mixed>)|null
-     */
-    private $options;
-
     /**
      * Creates a figure container.
      *
@@ -62,13 +38,13 @@ class Figure
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
-    {
-        $this->image = $image;
-        $this->metadata = $metadata;
-        $this->linkAttributes = $linkAttributes;
-        $this->lightbox = $lightbox;
-        $this->options = $options;
+    public function __construct(
+        private ImageResult $image,
+        private \Closure|Metadata|null $metadata = null,
+        private \Closure|array|null $linkAttributes = null,
+        private \Closure|LightboxResult|null $lightbox = null,
+        private \Closure|array|null $options = null,
+    ) {
     }
 
     /**
@@ -92,10 +68,10 @@ class Figure
     /**
      * Returns the lightbox result (if available).
      */
-    public function getLightbox(): LightboxResult
+    public function getLightbox(): LightboxResult|null
     {
         if (!$this->hasLightbox()) {
-            throw new \LogicException('This result container does not include a lightbox.');
+            return null;
         }
 
         /** @var LightboxResult */
@@ -112,10 +88,10 @@ class Figure
     /**
      * Returns the main resource's metadata.
      */
-    public function getMetadata(): Metadata
+    public function getMetadata(): Metadata|null
     {
         if (!$this->hasMetadata()) {
-            throw new \LogicException('This result container does not include metadata.');
+            return null;
         }
 
         /** @var Metadata */
@@ -152,7 +128,7 @@ class Figure
      * Returns a key-value list of all link attributes. This excludes "href" by
      * default.
      */
-    public function getLinkAttributes(bool $includeHref = false): array
+    public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
         $this->resolveIfClosure($this->linkAttributes);
 
@@ -181,7 +157,7 @@ class Figure
         if (
             !empty($this->linkAttributes['href'])
             && !\array_key_exists('rel', $this->linkAttributes)
-            && preg_match('#^https?://#', $this->linkAttributes['href'])
+            && preg_match('#^https?://#', (string) $this->linkAttributes['href'])
         ) {
             $this->linkAttributes['rel'] = 'noreferrer noopener';
         }
@@ -193,13 +169,10 @@ class Figure
         }
 
         // Allow removing attributes by setting them to null
-        $linkAttributes = array_filter(
-            $this->linkAttributes,
-            static fn ($attribute): bool => null !== $attribute
-        );
+        $linkAttributes = array_filter($this->linkAttributes, static fn ($attribute): bool => null !== $attribute);
 
         // Optionally strip the href attribute
-        return $includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]);
+        return new HtmlAttributes($includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]));
     }
 
     /**
@@ -227,11 +200,11 @@ class Figure
      *       when using Twig templates! Instead, add this object to your
      *       template's context and directly access the specific data you need.
      *
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the "margin" key
+     * @param string|array|null $margin              Deprecated, does not have any effect!
      * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
      * @param bool              $includeFullMetadata Make all metadata available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetadata = true): array
+    public function getLegacyTemplateData(array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): array
     {
         // Create a key-value list of the metadata and apply some renaming and
         // formatting transformations to fit the legacy templates.
@@ -263,25 +236,11 @@ class Figure
             return $mapping;
         };
 
-        // Create a CSS margin property from an array or serialized string
-        $createMargin = static function ($margin): string {
-            if (!$margin) {
-                return '';
-            }
-
-            $values = array_merge(
-                ['top' => '', 'right' => '', 'bottom' => '', 'left' => '', 'unit' => ''],
-                StringUtil::deserialize($margin, true)
-            );
-
-            return Controller::generateMargin($values);
-        };
-
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
         $fileInfoImageSize = (new File($image->getImageSrc(true)))->imageSize;
 
-        $linkAttributes = $this->getLinkAttributes();
+        $linkAttributes = iterator_to_array($this->getLinkAttributes());
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
 
         // Primary image and metadata
@@ -299,7 +258,6 @@ class Figure
                 'singleSRC' => $image->getFilePath(),
                 'src' => $image->getImageSrc(),
                 'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
-                'margin' => $createMargin($margin),
                 'addBefore' => 'below' !== $floating,
                 'addImage' => true,
             ],
@@ -367,11 +325,11 @@ class Figure
      *       template's context and directly access the specific data you need.
      *
      * @param Template|object   $template            The template to apply the data to
-     * @param string|array|null $margin              Set margins that will compose the inline CSS for the template's "margin" property
+     * @param string|array|null $margin              Deprecated, does not have any effect!
      * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
      * @param bool              $includeFullMetadata Make all metadata entries directly available in the template
      */
-    public function applyLegacyTemplateData(object $template, $margin = null, string $floating = null, bool $includeFullMetadata = true): void
+    public function applyLegacyTemplateData(object $template, array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): void
     {
         $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetadata);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);
@@ -399,10 +357,8 @@ class Figure
 
     /**
      * Evaluates closures to retrieve the value.
-     *
-     * @param mixed $property
      */
-    private function resolveIfClosure(&$property): void
+    private function resolveIfClosure(mixed &$property): void
     {
         if ($property instanceof \Closure) {
             $property = $property($this);

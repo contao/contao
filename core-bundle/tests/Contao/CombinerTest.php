@@ -14,29 +14,25 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\Dbafs;
+use Contao\Files;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class CombinerTest extends ContaoTestCase
+class CombinerTest extends TestCase
 {
     private Filesystem $filesystem;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        $fs = new Filesystem();
-        $fs->mkdir(static::getTempDir().'/assets/css');
-        $fs->mkdir(static::getTempDir().'/public');
-        $fs->mkdir(static::getTempDir().'/system/tmp');
-    }
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->filesystem = new Filesystem();
+
+        $this->filesystem->mkdir($this->getTempDir().'/assets/css');
+        $this->filesystem->mkdir($this->getTempDir().'/public');
+        $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
 
         $context = $this->createMock(ContaoContext::class);
         $context
@@ -49,6 +45,13 @@ class CombinerTest extends ContaoTestCase
         $container->set('contao.assets.assets_context', $context);
 
         System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class, Files::class, Dbafs::class]);
+
+        parent::tearDown();
     }
 
     public function testCombinesCssFiles(): void
@@ -84,11 +87,11 @@ class CombinerTest extends ContaoTestCase
 
         $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
 
-        $this->assertRegExp('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
+        $this->assertMatchesRegularExpression('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertMatchesRegularExpression('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
@@ -109,7 +112,6 @@ class CombinerTest extends ContaoTestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url(foo.bar) }
@@ -133,7 +135,6 @@ class CombinerTest extends ContaoTestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url(foo.bar) }
@@ -179,7 +180,6 @@ class CombinerTest extends ContaoTestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
@@ -196,7 +196,6 @@ class CombinerTest extends ContaoTestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url('/path/to/file.jpg') }
@@ -269,7 +268,7 @@ class CombinerTest extends ContaoTestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertMatchesRegularExpression('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         System::getContainer()->setParameter('kernel.debug', true);

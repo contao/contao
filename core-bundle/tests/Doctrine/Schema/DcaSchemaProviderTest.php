@@ -12,57 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
-    public function testCreateSchema(): void
-    {
-        $schema = $this->createMock(Schema::class);
-
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->expects($this->once())
-            ->method('createSchema')
-            ->willReturn($schema)
-        ;
-
-        $dcaSchemaProvider = new DcaSchemaProvider(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(Registry::class),
-            $schemaProvider
-        );
-
-        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
-
-        $this->assertSame($schema, $dcaSchemaProvider->createSchema());
-    }
-
     /**
      * @dataProvider provideDefinitions
      */
-    public function testAppendToSchema(array $dca = [], array $sql = []): void
+    public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, $sql)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -106,19 +73,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('text', $table->getColumn('teaser')->getType()->getName());
         $this->assertFalse($table->getColumn('teaser')->getNotnull());
         $this->assertFalse($table->getColumn('teaser')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
 
         $this->assertTrue($table->hasColumn('description'));
         $this->assertSame('text', $table->getColumn('description')->getType()->getName());
         $this->assertFalse($table->getColumn('description')->getNotnull());
         $this->assertFalse($table->getColumn('description')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
 
         $this->assertTrue($table->hasColumn('content'));
         $this->assertSame('text', $table->getColumn('content')->getType()->getName());
         $this->assertFalse($table->getColumn('content')->getNotnull());
         $this->assertFalse($table->getColumn('content')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
 
         $this->assertTrue($table->hasColumn('price'));
         $this->assertSame('decimal', $table->getColumn('price')->getType()->getName());
@@ -138,19 +105,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
         $this->assertFalse($table->getColumn('thumb')->getNotnull());
         $this->assertFalse($table->getColumn('thumb')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
 
         $this->assertTrue($table->hasColumn('image'));
         $this->assertSame('blob', $table->getColumn('image')->getType()->getName());
         $this->assertFalse($table->getColumn('image')->getNotnull());
         $this->assertFalse($table->getColumn('image')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
 
         $this->assertTrue($table->hasColumn('attachment'));
         $this->assertSame('blob', $table->getColumn('attachment')->getType()->getName());
         $this->assertFalse($table->getColumn('attachment')->getNotnull());
         $this->assertFalse($table->getColumn('attachment')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
 
         $this->assertTrue($table->hasColumn('published'));
         $this->assertSame('string', $table->getColumn('published')->getType()->getName());
@@ -195,36 +162,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
                         ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
                         ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
-                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TINYTEXT],
-                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TEXT],
-                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT],
+                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT],
+                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT],
+                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT],
                         ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => 1.99],
-                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_TINYBLOB],
-                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB],
-                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB],
+                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB],
+                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB],
+                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB],
                         ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
-                    ],
-                ],
-            ],
-        ];
-
-        yield 'table fields from database.sql file' => [
-            [],
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => '`id` int(10) NOT NULL default 0',
-                        'pid' => '`pid` int(10) NULL',
-                        'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                        'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
-                        'teaser' => '`teaser` tinytext NULL',
-                        'description' => '`description` text NULL',
-                        'content' => '`content` mediumtext NULL',
-                        'price' => '`price` decimal(6,2) NOT NULL default 1.99',
-                        'thumb' => '`thumb` tinyblob NULL',
-                        'image' => '`image` blob NULL',
-                        'attachment' => '`attachment` mediumblob NULL',
-                        'published' => "`published` char(1) NOT NULL default ''",
                     ],
                 ],
             ],
@@ -343,10 +288,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     /**
      * @dataProvider provideIndexes
-     *
-     * @param bool|string $largePrefixes
      */
-    public function testAppendToSchemaAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
+    public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {
         $dca = [
             'tl_files' => [
@@ -375,7 +318,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         return ['Value' => $map[$query]];
                     }
 
-                    throw new \RuntimeException("Test does not mirror actual query, got: '$query'");
+                    throw new \RuntimeException(sprintf('Test does not mirror actual query, got: "%s"', $query));
                 }
             )
         ;
@@ -387,7 +330,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -621,14 +564,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));
         $this->assertSame('text', $table->getColumn('text')->getType()->getName());
         $this->assertFalse($table->getColumn('text')->getNotnull());
         $this->assertFalse($table->getColumn('text')->getFixed());
-        $this->assertSame(MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
+        $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
 
         $this->assertTrue($table->hasIndex('text'));
         $this->assertFalse($table->getIndex('text')->isUnique());

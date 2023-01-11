@@ -17,11 +17,11 @@ use Contao\CoreBundle\OptIn\OptInToken;
 use Contao\CoreBundle\OptIn\OptInTokenAlreadyConfirmedException;
 use Contao\CoreBundle\OptIn\OptInTokenInterface;
 use Contao\CoreBundle\OptIn\OptInTokenNoLongerValidException;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Email;
 use Contao\OptInModel;
-use Contao\TestCase\ContaoTestCase;
 
-class OptInTokenTest extends ContaoTestCase
+class OptInTokenTest extends TestCase
 {
     public function testReturnsTheIdentifier(): void
     {

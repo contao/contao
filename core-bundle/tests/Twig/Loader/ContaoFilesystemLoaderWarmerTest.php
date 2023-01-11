@@ -17,14 +17,14 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ContaoFilesystemLoaderWarmerTest extends TestCase
 {
     public function testWarmUp(): void
     {
-        $projectDir = '/project/dir';
-
         $themePaths = [
             'my' => '/project/dir/my',
             'my_theme' => '/project/dir/my/theme',
@@ -70,24 +70,15 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             ->method('persist')
         ;
 
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $loader,
-            $this->mockTemplateLocator($themePaths, $resourcesPaths),
-            $projectDir,
-            'prod'
-        );
+        $locator = $this->mockTemplateLocator($themePaths, $resourcesPaths);
 
+        $warmer = $this->getContaoFilesystemLoaderWarmer($loader, $locator);
         $warmer->warmUp();
     }
 
     public function testIsMandatoryWarmer(): void
     {
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $this->createMock(ContaoFilesystemLoader::class),
-            $this->createMock(TemplateLocator::class),
-            '/project/dir',
-            'prod'
-        );
+        $warmer = $this->getContaoFilesystemLoaderWarmer();
 
         $this->assertFalse($warmer->isOptional());
     }
@@ -105,60 +96,116 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             ->method('addPath')
         ;
 
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $loader,
-            $this->mockTemplateLocator(),
-            'project/dir',
-            'any'
-        );
-
+        $warmer = $this->getContaoFilesystemLoaderWarmer($loader);
         $warmer->refresh();
     }
 
-    public function testRefreshOnKernelRequestIfInDevMode(): void
+    /**
+     * @dataProvider provideRequestScenarios
+     */
+    public function testRefreshOnKernelRequest(RequestEvent $event, string $environment, bool $shouldRefresh): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
-            ->expects($this->once())
+            ->expects($shouldRefresh ? $this->once() : $this->never())
             ->method('clear')
         ;
 
         $loader
-            ->expects($this->atLeastOnce())
+            ->expects($shouldRefresh ? $this->atLeastOnce() : $this->never())
             ->method('addPath')
         ;
 
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $loader,
-            $this->mockTemplateLocator(),
-            'project/dir',
-            'dev'
-        );
-
-        $warmer->onKernelRequest($this->createMock(RequestEvent::class));
+        $warmer = $this->getContaoFilesystemLoaderWarmer($loader, null, $environment);
+        $warmer->onKernelRequest($event);
     }
 
-    public function testDoesNotRefreshOnKernelRequestIfNotInDevMode(): void
+    public function provideRequestScenarios(): \Generator
+    {
+        $mainRequestEvent = $this->createMock(RequestEvent::class);
+        $mainRequestEvent
+            ->method('isMainRequest')
+            ->willReturn(true)
+        ;
+
+        $subRequestEvent = $this->createMock(RequestEvent::class);
+        $subRequestEvent
+            ->method('isMainRequest')
+            ->willReturn(false)
+        ;
+
+        yield 'dev env, main request' => [$mainRequestEvent, 'dev', true];
+        yield 'dev env, sub request' => [$subRequestEvent, 'dev', false];
+        yield 'prod env, main request' => [$mainRequestEvent, 'prod', false];
+        yield 'prod env, sub request' => [$subRequestEvent, 'prod', false];
+    }
+
+    public function testWritesIdeAutoCompletionFile(): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
-            ->expects($this->never())
-            ->method('clear')
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'a' => [
+                    '/templates/a.html.twig' => '@Contao_Global/a.html.twig',
+                    '/contao/templates/a.html.twig' => '@Contao_App/a.html.twig',
+                ],
+                'b' => [
+                    '/templates/b.html.twig' => '@Contao_Global/b.html.twig',
+                ],
+                'foo/c' => [
+                    '/templates/foo/c.html.twig' => '@Contao_Global/foo/c.html.twig',
+                ],
+                'bar/d' => [
+                    '/vendor/demo/bar/d.html.twig' => '@Contao_DemoBundle/bar/d.html.twig',
+                ],
+            ])
         ;
 
-        $loader
-            ->expects($this->never())
-            ->method('addPath')
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with(
+                '/cache/contao/ide-twig.json',
+                $this->callback(
+                    function (string $json): bool {
+                        $expectedData = [
+                            'namespaces' => [
+                                ['namespace' => 'Contao', 'path' => '../../templates'],
+                                ['namespace' => 'Contao_Global', 'path' => '../../templates'],
+                                ['namespace' => 'Contao', 'path' => '../../contao/templates'],
+                                ['namespace' => 'Contao_App', 'path' => '../../contao/templates'],
+                                ['namespace' => 'Contao', 'path' => '../../vendor/demo'],
+                                ['namespace' => 'Contao_DemoBundle', 'path' => '../../vendor/demo'],
+                            ],
+                        ];
+
+                        $this->assertJson($json);
+                        $this->assertSame($expectedData, json_decode($json, true, 512, JSON_THROW_ON_ERROR));
+
+                        return true;
+                    }
+                )
+            )
         ;
 
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $loader,
-            $this->mockTemplateLocator(),
-            'project/dir',
-            'prod'
-        );
+        $warmer = $this->getContaoFilesystemLoaderWarmer($loader, null, 'dev', $filesystem);
+        $warmer->warmUp();
+    }
 
-        $warmer->onKernelRequest($this->createMock(RequestEvent::class));
+    public function testToleratesFailingWritesWhenWritingIdeAutoCompletionFile(): void
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with('/cache/contao/ide-twig.json', $this->anything())
+            ->willThrowException(new IOException('write fail'))
+        ;
+
+        $warmer = $this->getContaoFilesystemLoaderWarmer(null, null, 'dev', $filesystem);
+        $warmer->warmUp();
     }
 
     /**
@@ -178,5 +225,17 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ;
 
         return $locator;
+    }
+
+    private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader $loader = null, TemplateLocator $locator = null, string $environment = 'prod', Filesystem $filesystem = null): ContaoFilesystemLoaderWarmer
+    {
+        return new ContaoFilesystemLoaderWarmer(
+            $loader ?? $this->createMock(ContaoFilesystemLoader::class),
+            $locator ?? $this->createMock(TemplateLocator::class),
+            '/project/dir',
+            '/cache',
+            $environment,
+            $filesystem ?? $this->createMock(Filesystem::class),
+        );
     }
 }

@@ -1,0 +1,96 @@
+
+<div class="<?= $this->class ?> ce_table listing block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
+  <?php if ($this->searchable): ?>
+    <div class="list_search">
+      <form method="get">
+        <div class="formbody">
+          <input type="hidden" name="order_by" value="<?= $this->order_by ?>">
+          <input type="hidden" name="sort" value="<?= $this->sort ?>">
+          <input type="hidden" name="per_page" value="<?= $this->per_page ?>">
+          <div class="widget widget-select">
+            <label for="ctrl_search" class="invisible"><?= $this->fields_label ?></label>
+            <select name="search" id="ctrl_search" class="select">
+              <?= $this->search_fields ?>
+            </select>
+          </div>
+          <div class="widget widget-text">
+            <label for="ctrl_for" class="invisible"><?= $this->keywords_label ?></label>
+            <input type="text" name="for" id="ctrl_for" class="text" value="<?= $this->for ?>">
+          </div>
+          <div class="widget widget-submit">
+            <button type="submit" class="submit"><?= $this->search_label ?></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->per_page): ?>
+    <div class="list_per_page">
+      <form method="get">
+        <div class="formbody">
+          <input type="hidden" name="order_by" value="<?= $this->order_by ?>">
+          <input type="hidden" name="sort" value="<?= $this->sort ?>">
+          <input type="hidden" name="search" value="<?= $this->search ?>">
+          <input type="hidden" name="for" value="<?= $this->for ?>">
+          <div class="widget widget-select">
+            <label for="ctrl_per_page" class="invisible"><?= $this->per_page_label ?></label>
+            <select name="per_page" id="ctrl_per_page" class="select">
+              <option value="10"<?php if (10 == $this->per_page): ?> selected<?php endif; ?>>10</option>
+              <option value="20"<?php if (20 == $this->per_page): ?> selected<?php endif; ?>>20</option>
+              <option value="30"<?php if (30 == $this->per_page): ?> selected<?php endif; ?>>30</option>
+              <option value="50"<?php if (50 == $this->per_page): ?> selected<?php endif; ?>>50</option>
+              <option value="100"<?php if (100 == $this->per_page): ?> selected<?php endif; ?>>100</option>
+              <option value="250"<?php if (250 == $this->per_page): ?> selected<?php endif; ?>>250</option>
+              <option value="500"<?php if (500 == $this->per_page): ?> selected<?php endif; ?>>500</option>
+            </select>
+          </div>
+          <div class="widget widget-submit">
+            <button type="submit" class="submit"><?= $this->per_page_label ?></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->searchable && $this->for && empty($this->tbody)): ?>
+    <?= $this->no_results ?>
+  <?php else: ?>
+    <table class="all_records">
+    <thead>
+      <tr>
+        <?php foreach ($this->thead as $col): ?>
+          <th class="head<?= $col['class'] ?>"><a href="<?= $col['href'] ?>" title="<?= $col['title'] ?>"><?= $col['link'] ?></a></th>
+        <?php endforeach; ?>
+        <?php if ($this->details): ?>
+          <th class="head">&nbsp;</th>
+        <?php endif; ?>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($this->tbody as $row): ?>
+        <tr>
+          <?php foreach ($row as $col): ?>
+            <td class="body"><?= $col['content'] ?></td>
+          <?php endforeach; ?>
+          <?php if ($this->details && isset($col)): ?>
+            <?php if ($col['details']): ?>
+              <td class="body"><a href="<?= $col['url'] ?>"><?= Contao\Image::getHtml('assets/contao/images/info.svg') ?></a></td>
+            <?php else: ?>
+              <td class="body">&nbsp;</td>
+            <?php endif; ?>
+          <?php endif; ?>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+    </table>
+  <?php endif; ?>
+
+  <?= $this->pagination ?>
+
+</div>

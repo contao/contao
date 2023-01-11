@@ -14,51 +14,37 @@ namespace Contao\CoreBundle\Routing\Page;
 
 final class RouteConfig
 {
-    private ?string $pathRegex;
-    private ?string $urlSuffix;
-    private array $requirements;
-    private array $options;
-    private array $defaults;
-
-    /**
-     * @var string|bool|null;
-     */
-    private $path;
-
     /**
      * @var array<string>
      */
     private array $methods;
 
     /**
-     * @param string|bool|null     $path
      * @param string|array<string> $methods
      */
-    public function __construct($path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
-    {
-        $this->path = $path;
-        $this->pathRegex = $pathRegex;
-        $this->urlSuffix = $urlSuffix;
-        $this->requirements = $requirements;
-        $this->options = $options;
-        $this->defaults = $defaults;
+    public function __construct(
+        private bool|string|null $path = null,
+        private string|null $pathRegex = null,
+        private string|null $urlSuffix = null,
+        private array $requirements = [],
+        private array $options = [],
+        private array $defaults = [],
+        array|string $methods = [],
+    ) {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 
-    /**
-     * @return string|bool|null
-     */
-    public function getPath()
+    public function getPath(): bool|string|null
     {
         return $this->path;
     }
 
-    public function getPathRegex(): ?string
+    public function getPathRegex(): string|null
     {
         return $this->pathRegex;
     }
 
-    public function getUrlSuffix(): ?string
+    public function getUrlSuffix(): string|null
     {
         return $this->urlSuffix;
     }

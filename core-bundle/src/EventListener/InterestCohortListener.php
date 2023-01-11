@@ -17,11 +17,8 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class InterestCohortListener
 {
-    private ScopeMatcher $scopeMatcher;
-
-    public function __construct(ScopeMatcher $scopeMatcher)
+    public function __construct(private ScopeMatcher $scopeMatcher)
     {
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(ResponseEvent $event): void

@@ -38,11 +38,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
-    protected function setUp(): void
+    protected function tearDown(): void
     {
-        parent::setUp();
+        $this->resetStaticProperties([System::class]);
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        parent::tearDown();
     }
 
     public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void
@@ -56,7 +56,7 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($container);
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         $response = $controller(new Request(), $module, 'main', null, $page);
@@ -78,7 +78,7 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($container);
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         $response = $controller(new Request(), $module, 'main', null, $page);
@@ -90,7 +90,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -101,10 +101,10 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($container);
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page->enforceTwoFactor = '1';
+        $page->enforceTwoFactor = true;
 
         $response = $controller(new Request(), $module, 'main', null, $page);
 
@@ -115,7 +115,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -129,7 +129,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         $response = $controller($request, $module, 'main', null, $page);
@@ -141,7 +141,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -164,7 +164,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
         $page
@@ -177,7 +177,7 @@ class TwoFactorControllerTest extends TestCase
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertNull($user->backupCodes);
-        $this->assertSame('', $user->useTwoFactor);
+        $this->assertFalse($user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
@@ -186,7 +186,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -200,7 +200,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('2fa', 'enable');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
         $page
@@ -217,7 +217,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -231,7 +231,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('2fa', 'enable');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
         $page
@@ -247,7 +247,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
@@ -263,7 +263,7 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
         $page
@@ -279,7 +279,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $user
             ->expects($this->once())
@@ -300,7 +300,7 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
         $page
@@ -318,7 +318,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -332,7 +332,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_show_backup_codes');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         /** @var RedirectResponse $response */
@@ -345,7 +345,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -366,7 +366,7 @@ class TwoFactorControllerTest extends TestCase
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_generate_backup_codes');
 
-        $module = $this->createMock(ModuleModel::class);
+        $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         /** @var RedirectResponse $response */
@@ -452,7 +452,7 @@ class TwoFactorControllerTest extends TestCase
     private function mockPageModel(): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->enforceTwoFactor = '';
+        $page->enforceTwoFactor = false;
 
         return $page;
     }

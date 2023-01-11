@@ -1,0 +1,15 @@
+{% trans_default_domain 'contao_default' %}
+<nav
+    id="tl_navigation"
+    data-controller="contao--toggle-navigation"
+    data-contao--toggle-navigation-collapsed-class="collapsed"
+    data-contao--toggle-navigation-url-value="{{ path('contao_backend') }}"
+    data-contao--toggle-navigation-request-token-value="{{ request_token }}"
+    data-contao--toggle-navigation-expand-title-value="{{ 'MSC.expandNode'|trans }}"
+    data-contao--toggle-navigation-collapse-title-value="{{ 'MSC.collapseNode'|trans }}"
+    aria-label="{{ 'MSC.mainNavigation'|trans }}"
+>
+    <a href="{{ app.request.requestUri }}#skipMainNav" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
+    {{ knp_menu_render('be_menu') }}
+    <span id="skipMainNav" class="invisible"></span>
+</nav>

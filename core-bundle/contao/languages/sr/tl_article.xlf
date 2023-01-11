@@ -1,0 +1,224 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="sr">
+    <body>
+      <trans-unit id="tl_article.title.0">
+        <source>Title</source>
+        <target>Назив</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title.1">
+        <source>Please enter the article title.</source>
+        <target>Унесите назив чланка.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.0">
+        <source>Article alias</source>
+        <target>Алиас чланка</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.1">
+        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <target>Алиас чланка је јединствена референца на чланак која може да се користи уместо нумеричког  ID-а чланка.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.0">
+        <source>Author</source>
+        <target>Аутор</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.1">
+        <source>Here you can change the author of the article.</source>
+        <target>Овде можете да промените аутора чланка.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.0">
+        <source>Display in</source>
+        <target>Прикажи у</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.1">
+        <source>Please choose the layout section you want the article to be displayed in.</source>
+        <target>Изаберите секцију распореда у којој желите да чланак буде приказан.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.0">
+        <source>Teaser CSS ID/class</source>
+        <target>CSS ID/класа тизера</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.1">
+        <source>Here you can set an ID and one or more classes for the teaser element.</source>
+        <target>Овде можете да дефинишете ID и једну или више класа тизера.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.0">
+        <source>Show teaser</source>
+        <target>Прикажи тизер</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.1">
+        <source>Show the article teaser if there are multiple articles.</source>
+        <target>Прикажи тизер чланка у случају вишеструких чланака.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.0">
+        <source>Article teaser</source>
+        <target>Тизер чланка</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.1">
+        <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
+        <target>Тизер чланка може, такође, бити приказан као посебан елемент &quot;тизер чланка&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.0">
+        <source>Syndication</source>
+        <target>Дељење</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.1">
+        <source>Here you can choose which options are available.</source>
+        <target>Овде можете да одабарете опције које ће бити на располагању.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.0">
+        <source>Article template</source>
+        <target>Шаблон чланка</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.1">
+        <source>Here you can select the article template.</source>
+        <target>Овде можете да одаберете шаблон чланка</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.0">
+        <source>Protect article</source>
+        <target>Заштити чланак</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.1">
+        <source>Show the article to certain member groups only.</source>
+        <target>Прикажи чланак само одређеној групи чланова.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.0">
+        <source>Allowed member groups</source>
+        <target>Дозвољене групе корисника</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.1">
+        <source>These groups will be able to see the article.</source>
+        <target>Ове групе ће моћи да виде чланак.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.0">
+        <source>CSS ID/class</source>
+        <target>CSS ID/класа</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Овде можете да доделите ID и једну или више класа.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.0">
+        <source>Publish article</source>
+        <target>Објави чланак</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.1">
+        <source>Make the article publicly visible on the website.</source>
+        <target>Омогући да чланак буде видљив на сајту.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.0">
+        <source>Show from</source>
+        <target>Прикажи од</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.1">
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да се чланак не приказује на сајту пре одређеног датума/времена, можете то унети овде. У супротном, оставите поље празним.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.0">
+        <source>Show until</source>
+        <target>Прикажи до</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.1">
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да се чланак не приказује на сајту након одређеног датума/времена, можете то унети овде. У супротном, оставите поље празним.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.0">
+        <source>Revision date</source>
+        <target>Датум последње верзије</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Датум и време последње верзије</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title_legend">
+        <source>Title and author</source>
+        <target>Назив и аутор</target>
+      </trans-unit>
+      <trans-unit id="tl_article.layout_legend">
+        <source>Section</source>
+      </trans-unit>
+      <trans-unit id="tl_article.syndication_legend">
+        <source>Syndication</source>
+        <target>Дељење</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser_legend">
+        <source>Article teaser</source>
+        <target>Тизер чланка</target>
+      </trans-unit>
+      <trans-unit id="tl_article.template_legend">
+        <source>Template settings</source>
+        <target>Подешавања шаблона</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected_legend">
+        <source>Access protection</source>
+        <target>Заштита приступа</target>
+      </trans-unit>
+      <trans-unit id="tl_article.expert_legend">
+        <source>Expert settings</source>
+        <target>Напредна подешавања</target>
+      </trans-unit>
+      <trans-unit id="tl_article.publish_legend">
+        <source>Publish settings</source>
+        <target>Примени подешавања</target>
+      </trans-unit>
+      <trans-unit id="tl_article.print">
+        <source>Print the page</source>
+        <target>Штампај страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pdf">
+        <source>Export as PDF</source>
+        <target>Извези као PDF</target>
+      </trans-unit>
+      <trans-unit id="tl_article.facebook">
+        <source>Share on Facebook</source>
+        <target>Подели на Facebook</target>
+      </trans-unit>
+      <trans-unit id="tl_article.twitter">
+        <source>Share on Twitter</source>
+        <target>Подели на Twitter</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.0">
+        <source>New</source>
+        <target>Ново</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.1">
+        <source>Create a new article</source>
+        <target>Креирај нови чланак</target>
+      </trans-unit>
+      <trans-unit id="tl_article.show">
+        <source>Show the details of article ID %s</source>
+        <target>Прикажи детаље чланка ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.edit">
+        <source>Edit article ID %s</source>
+        <target>Уреди чланак ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.copy">
+        <source>Duplicate article ID %s</source>
+        <target>Копирај чланак ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cut">
+        <source>Move article ID %s</source>
+        <target>Помери чланак ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.delete">
+        <source>Delete article ID %s</source>
+        <target>Обриши чланак ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle">
+        <source>Publish/unpublish article ID %s</source>
+        <target>Објави/сакриј чланак ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.1">
+        <source>Paste after article ID %s</source>
+        <target>Налепи после чланка ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Налепи у страницу ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

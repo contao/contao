@@ -57,7 +57,7 @@ class SymlinkUtil
 
         $link = Path::normalize($link);
 
-        if (false !== strpos($link, '../')) {
+        if (str_contains($link, '../')) {
             throw new \InvalidArgumentException('The symlink path must not be relative.');
         }
 

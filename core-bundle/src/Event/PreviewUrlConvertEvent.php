@@ -18,16 +18,14 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlConvertEvent extends Event
 {
-    private Request $request;
-    private ?string $url = null;
-    private ?Response $response = null;
+    private string|null $url = null;
+    private Response|null $response = null;
 
-    public function __construct(Request $request)
+    public function __construct(private Request $request)
     {
-        $this->request = $request;
     }
 
-    public function getUrl(): ?string
+    public function getUrl(): string|null
     {
         return $this->url;
     }
@@ -42,7 +40,7 @@ class PreviewUrlConvertEvent extends Event
         return $this->request;
     }
 
-    public function getResponse(): ?Response
+    public function getResponse(): Response|null
     {
         return $this->response;
     }

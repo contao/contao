@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
@@ -20,20 +21,23 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Imagine\Exception\RuntimeException;
+use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -41,7 +45,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
     public function getAlias(): string
     {
@@ -56,16 +60,35 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container): void
     {
         $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
-        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        $config = $container->getExtensionConfig($this->getAlias());
+        $config = $container->getParameterBag()->resolveValue($config);
+        $config = $this->processConfiguration($configuration, $config);
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+
+        // Make sure channels for all Contao log actions are available
+        if ($container->hasExtension('monolog')) {
+            $container->prependExtensionConfig('monolog', [
+                'channels' => [
+                    'contao.access',
+                    'contao.configuration',
+                    'contao.cron',
+                    'contao.email',
+                    'contao.error',
+                    'contao.files',
+                    'contao.forms',
+                    'contao.general',
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void
     {
         if ('UTF-8' !== $container->getParameter('kernel.charset')) {
-            trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
+            throw new RuntimeException(sprintf('Using the charset "%s" is not supported, use "UTF-8" instead', $container->getParameter('kernel.charset')));
         }
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
@@ -73,15 +96,14 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('commands.yml');
-        $loader->load('controller.yml');
-        $loader->load('listener.yml');
-        $loader->load('migrations.yml');
-        $loader->load('services.yml');
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+        $loader->load('commands.yaml');
+        $loader->load('controller.yaml');
+        $loader->load('listener.yaml');
+        $loader->load('migrations.yaml');
+        $loader->load('services.yaml');
 
-        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
-        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -95,6 +117,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
+        $container->setParameter('contao.image.preview.target_dir', $config['image']['preview']['target_dir']);
+        $container->setParameter('contao.image.preview.default_size', $config['image']['preview']['default_size']);
+        $container->setParameter('contao.image.preview.max_size', $config['image']['preview']['max_size']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
@@ -106,15 +131,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
+        $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
-        $this->overwriteImageTargetDir($config, $container);
-        $this->handleTokenCheckerConfig($config, $container);
-        $this->handleLegacyRouting($config, $configs, $container, $loader);
+        $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
+        $this->handleFallbackPreviewProvider($config, $container);
+        $this->handleCronConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -140,40 +167,81 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
         );
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCronJob::class,
-            static function (ChildDefinition $definition, AsCronJob $attribute): void {
-                $definition->addTag('contao.cronjob', get_object_vars($attribute));
-            }
-        );
+        $attributesForAutoconfiguration = [
+            AsPage::class => 'contao.page',
+            AsPickerProvider::class => 'contao.picker_provider',
+            AsCronJob::class => 'contao.cronjob',
+            AsHook::class => 'contao.hook',
+            AsCallback::class => 'contao.callback',
+        ];
 
-        $container->registerAttributeForAutoconfiguration(
-            AsHook::class,
-            static function (ChildDefinition $definition, AsHook $attribute): void {
-                $definition->addTag('contao.hook', get_object_vars($attribute));
-            }
-        );
+        foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
+            $container->registerAttributeForAutoconfiguration(
+                $attributeClass,
+                static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($attributeClass, $tag): void {
+                    $tagAttributes = get_object_vars($attribute);
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCallback::class,
-            static function (ChildDefinition $definition, AsCallback $attribute): void {
-                $definition->addTag('contao.callback', get_object_vars($attribute));
-            }
-        );
+                    if ($reflector instanceof \ReflectionMethod) {
+                        if (isset($tagAttributes['method'])) {
+                            throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
+                        }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPage::class,
-            static function (ChildDefinition $definition, AsPage $attribute): void {
-                $definition->addTag('contao.page', get_object_vars($attribute));
-            }
-        );
+                        $tagAttributes['method'] = $reflector->getName();
+                    }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPickerProvider::class,
-            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
-                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
-            }
-        );
+                    $definition->addTag($tag, $tagAttributes);
+                }
+            );
+        }
+
+        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
+            $loader->load('services_debug.yaml');
+        }
+    }
+
+    public function configureFilesystem(FilesystemConfiguration $config): void
+    {
+        // User uploads
+        $filesStorageName = 'files';
+
+        // TODO: Deprecate the "contao.upload_path" config key. In the next
+        // major version, $uploadPath can then be replaced with "files" and the
+        // redundant "files" attribute removed when mounting the local adapter.
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
+        $config
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
+        ;
+    }
+
+    private function handleMessengerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.cron.messenger')) {
+            return;
+        }
+
+        // No workers defined -> remove our cron job
+        if (0 === \count($config['messenger']['workers'])) {
+            $container->removeDefinition('contao.cron.messenger');
+
+            return;
+        }
+
+        $cron = $container->getDefinition('contao.cron.messenger');
+        $cron->setArgument(2, $config['messenger']['console_path']);
+        $cron->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -242,7 +310,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name '_defaults' but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
@@ -259,7 +327,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
-        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
 
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
@@ -318,7 +386,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException $e) {
+            } catch (ImagineRuntimeException) {
                 continue;
             }
 
@@ -328,34 +396,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Imagine::class; // see #616
     }
 
-    /**
-     * Reads the old contao.image.target_path parameter.
-     */
-    private function overwriteImageTargetDir(array $config, ContainerBuilder $container): void
-    {
-        if (!isset($config['image']['target_path'])) {
-            return;
-        }
-
-        $container->setParameter(
-            'contao.image.target_dir',
-            Path::join($container->getParameter('kernel.project_dir'), $config['image']['target_path'])
-        );
-
-        trigger_deprecation('contao/core-bundle', '4.4', 'Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.');
-    }
-
-    private function handleTokenCheckerConfig(array $config, ContainerBuilder $container): void
+    private function handleTokenCheckerConfig(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.security.token_checker')) {
             return;
         }
 
         $tokenChecker = $container->getDefinition('contao.security.token_checker');
-        $tokenChecker->replaceArgument(5, new Reference('security.access.simple_role_voter'));
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
-            $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
+            $tokenChecker->replaceArgument(4, new Reference('security.access.role_hierarchy_voter'));
+        } else {
+            $tokenChecker->replaceArgument(4, new Reference('security.access.simple_role_voter'));
         }
     }
 
@@ -374,34 +426,46 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 
-    private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
+    private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void
     {
-        if (false === $mergedConfig['legacy_routing']) {
-            foreach ($configs as $config) {
-                if (isset($config['prepend_locale'])) {
-                    throw new InvalidConfigurationException('Setting contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
-                }
-
-                if (isset($config['url_suffix'])) {
-                    throw new InvalidConfigurationException('Setting contao.url_suffix to "'.$config['url_suffix'].'" requires legacy routing.');
-                }
-            }
+        if (
+            $config['image']['preview']['enable_fallback_images']
+            || !$container->hasDefinition('contao.image.fallback_preview_provider')
+        ) {
+            return;
         }
 
-        $container->setParameter('contao.legacy_routing', $mergedConfig['legacy_routing']);
-        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
-        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
+        $container->removeDefinition('contao.image.fallback_preview_provider');
+    }
 
-        if ($mergedConfig['legacy_routing']) {
-            $loader->load('legacy_routing.yml');
+    private function handleCronConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.command_scheduler') || !$container->hasDefinition('contao.cron')) {
+            return;
+        }
+
+        if (false === $config['cron']['web_listener']) {
+            $container->removeDefinition('contao.listener.command_scheduler');
+
+            return;
+        }
+
+        $scheduler = $container->getDefinition('contao.listener.command_scheduler');
+        $scheduler->setArgument(3, false);
+
+        if ('auto' === $config['cron']['web_listener']) {
+            $scheduler->setArgument(3, true);
+
+            $container->getDefinition('contao.cron')->addMethodCall('addCronJob', [
+                new Definition(CronJob::class, [new Reference('contao.cron'), '* * * * *', 'updateMinutelyCliCron']),
+            ]);
         }
     }
 
-    private function getComposerPublicDir(string $projectDir): ?string
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 

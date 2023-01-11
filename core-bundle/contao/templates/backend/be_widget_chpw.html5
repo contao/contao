@@ -1,0 +1,6 @@
+
+<div class="widget widget-password wizard">
+  <label for="password"><?= $this->password ?></label>
+  <input type="password" name="password" id="ctrl_password" class="tl_text" value="" autocomplete="new-password" placeholder="<?= $this->password ?>" required>
+  <?= $this->wizard ?>
+</div>

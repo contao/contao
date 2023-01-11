@@ -25,11 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     private array $messages = [];
-
-    /**
-     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
-     */
-    private $translator;
+    private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -49,7 +45,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
 
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
+        if (null === $domain || !str_starts_with($domain, 'contao_')) {
             return $translated;
         }
 

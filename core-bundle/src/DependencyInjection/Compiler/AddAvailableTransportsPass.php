@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,7 +21,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(AvailableTransports::class)) {
+        if (!$container->has('contao.mailer.available_transports')) {
             return;
         }
 
@@ -34,7 +33,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
         }
 
         $frameworkConfig = $container->getExtensionConfig('framework');
-        $definition = $container->findDefinition(AvailableTransports::class);
+        $definition = $container->findDefinition('contao.mailer.available_transports');
 
         foreach ($frameworkConfig as $v) {
             if (!isset($v['mailer']['transports'])) {

@@ -26,18 +26,16 @@ class AbstractCandidates implements CandidatesInterface
      */
     private const LIMIT = 20;
 
-    protected array $urlPrefixes;
-    protected array $urlSuffixes;
-
-    public function __construct(array $urlPrefixes, array $urlSuffixes)
+    public function __construct(protected array $urlPrefixes, protected array $urlSuffixes)
     {
-        $this->urlPrefixes = $urlPrefixes;
-        $this->urlSuffixes = $urlSuffixes;
     }
 
+    /**
+     * @param string $name
+     */
     public function isCandidate($name): bool
     {
-        return 0 === strncmp($name, 'tl_page.', 8);
+        return str_starts_with($name, 'tl_page.');
     }
 
     public function restrictQuery($queryBuilder): void
@@ -76,7 +74,7 @@ class AbstractCandidates implements CandidatesInterface
         $url = $request->getPathInfo();
         $url = rawurldecode(substr($url, 1));
 
-        if (empty($url)) {
+        if ('' === $url) {
             throw new \RuntimeException(__METHOD__.' cannot handle empty path');
         }
 
@@ -93,22 +91,22 @@ class AbstractCandidates implements CandidatesInterface
             $withoutPrefix = $url;
 
             if ('' !== $prefix) {
-                if (0 !== strncmp($url, $prefix.'/', \strlen($prefix) + 1)) {
+                if (0 !== strncmp($url, $prefix.'/', \strlen((string) $prefix) + 1)) {
                     continue;
                 }
 
-                $withoutPrefix = substr($url, \strlen($prefix) + 1);
+                $withoutPrefix = substr($url, \strlen((string) $prefix) + 1);
             }
 
             foreach ($this->urlSuffixes as $suffix) {
                 $withoutSuffix = $withoutPrefix;
 
                 if ('' !== $suffix) {
-                    if (0 !== substr_compare($withoutPrefix, $suffix, -\strlen($suffix))) {
+                    if (!str_ends_with($withoutPrefix, $suffix)) {
                         continue;
                     }
 
-                    $withoutSuffix = substr($withoutPrefix, 0, -\strlen($suffix));
+                    $withoutSuffix = substr($withoutPrefix, 0, -\strlen((string) $suffix));
                 }
 
                 $this->addCandidatesFor($withoutSuffix, $candidates);

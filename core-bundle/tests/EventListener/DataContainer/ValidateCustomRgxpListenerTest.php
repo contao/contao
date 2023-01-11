@@ -13,30 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidateCustomRgxpListenerTest extends TestCase
 {
-    public function testServiceAnnotation(): void
+    protected function tearDown(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->never())
-            ->method('trans')
-            ->willReturnArgument(0)
-        ;
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
-        $listener = new ValidateCustomRgxpListener($translator);
-
-        $annotationReader = new AnnotationReader();
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
-
-        $this->assertSame('tl_form_field', $annotation->table);
-        $this->assertSame('fields.customRgxp.save', $annotation->target);
-        $this->assertSame(0, (int) $annotation->priority);
+        parent::tearDown();
     }
 
     public function testThrowsExceptionIfInvalidRegex(): void

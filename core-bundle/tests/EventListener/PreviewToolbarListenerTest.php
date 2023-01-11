@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -36,6 +37,7 @@ class PreviewToolbarListenerTest extends TestCase
     {
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -43,7 +45,6 @@ class PreviewToolbarListenerTest extends TestCase
         $response = new Response($content);
 
         $m = new \ReflectionMethod($listener, 'injectToolbar');
-        $m->setAccessible(true);
         $m->invoke($listener, $response, Request::create('/'));
 
         $this->assertSame($expected, $response->getContent());
@@ -76,6 +77,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -83,6 +85,30 @@ class PreviewToolbarListenerTest extends TestCase
         $listener($event);
 
         $this->assertSame("<html><head></head><body>\nCONTAO\n</body></html>", $response->getContent());
+    }
+
+    public function testDoesNotInjectTheToolbarIfThereIsNoBackendUser(): void
+    {
+        $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        $event = new ResponseEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $this->mockRequest(false),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response
+        );
+
+        $listener = new PreviewToolbarListener(
+            $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
+            $this->mockTwig(),
+            $this->mockRouterWithContext()
+        );
+
+        $listener($event);
+
+        $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
     public function testDoesNotInjectTheToolbarIfPreviewAttributeIsNotSet(): void
@@ -99,6 +125,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -122,6 +149,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -145,6 +173,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -171,6 +200,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -210,6 +240,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -249,6 +280,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -272,6 +304,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -295,6 +328,7 @@ class PreviewToolbarListenerTest extends TestCase
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext()
         );
@@ -370,5 +404,19 @@ class PreviewToolbarListenerTest extends TestCase
         ;
 
         return $router;
+    }
+
+    /**
+     * @return TokenChecker&MockObject
+     */
+    private function mockTokenChecker(): TokenChecker
+    {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        return $tokenChecker;
     }
 }

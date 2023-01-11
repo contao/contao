@@ -21,16 +21,15 @@ class BinaryStringTypeTest extends TestCase
 {
     private Type $type;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        Type::addType(BinaryStringType::NAME, BinaryStringType::class);
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (Type::hasType(BinaryStringType::NAME)) {
+            Type::overrideType(BinaryStringType::NAME, BinaryStringType::class);
+        } else {
+            Type::addType(BinaryStringType::NAME, BinaryStringType::class);
+        }
 
         $this->type = Type::getType(BinaryStringType::NAME);
     }

@@ -1,0 +1,19 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <ul>
+    <?php foreach ($this->items as $item): ?>
+      <?php if ($item['isActive']): ?>
+        <li class="active"><?= $item['link'] ?></li>
+      <?php else: ?>
+        <li><a href="<?= $item['href'] ?>" title="<?= $item['title'] ?>"><?= $item['link'] ?></a></li>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </ul>
+
+<?php $this->endblock(); ?>
+
+<?php
+
+$this->addSchemaOrg($this->getSchemaOrgData());

@@ -27,9 +27,9 @@ use Symfony\Component\Filesystem\Path;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $fs = new Filesystem();
         $fs->mkdir(static::getTempDir().'/FooBarBundle/Resources/public');
@@ -195,6 +195,8 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('assets._version_contao-components/contao'));
         $this->assertFalse($container->hasDefinition('assets._package_contao/image'));
         $this->assertFalse($container->hasDefinition('assets._version_contao/image'));
+        $this->assertTrue($container->hasDefinition('assets._package_scrivo/highlight.php'));
+        $this->assertTrue($container->hasDefinition('assets._version_scrivo/highlight.php'));
 
         $service = $container->getDefinition('assets._package_contao-components/contao');
 

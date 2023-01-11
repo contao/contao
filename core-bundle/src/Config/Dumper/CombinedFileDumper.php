@@ -21,16 +21,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class CombinedFileDumper implements DumperInterface
 {
-    private Filesystem $filesystem;
-    private LoaderInterface $loader;
-    private string $cacheDir;
     private string $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
-    public function __construct(Filesystem $filesystem, LoaderInterface $loader, string $cacheDir)
+    public function __construct(private Filesystem $filesystem, private LoaderInterface $loader, private string $cacheDir)
     {
-        $this->filesystem = $filesystem;
-        $this->loader = $loader;
-        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -38,14 +32,14 @@ class CombinedFileDumper implements DumperInterface
      */
     public function setHeader(string $header): void
     {
-        if (0 !== strncmp($header, '<?php', 5)) {
+        if (!str_starts_with($header, '<?php')) {
             throw new \InvalidArgumentException('The file header must start with an opening PHP tag.');
         }
 
         $this->header = $header;
     }
 
-    public function dump($files, $cacheFile, array $options = []): void
+    public function dump(array|string $files, string $cacheFile, array $options = []): void
     {
         $buffer = $this->header;
         $type = $options['type'] ?? null;

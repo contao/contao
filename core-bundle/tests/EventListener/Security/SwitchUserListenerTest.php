@@ -14,13 +14,12 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListenerTest extends TestCase
@@ -64,18 +63,10 @@ class SwitchUserListenerTest extends TestCase
             return $logger;
         }
 
-        $context = [
-            'contao' => new ContaoContext(
-                'Contao\CoreBundle\EventListener\Security\SwitchUserListener::__invoke',
-                ContaoContext::ACCESS,
-                'user1'
-            ),
-        ];
-
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with($message, $context)
+            ->with($message)
         ;
 
         return $logger;
@@ -89,7 +80,7 @@ class SwitchUserListenerTest extends TestCase
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         if (null !== $username) {
-            $token = $this->createMock(ForwardCompatibilityTokenInterface::class);
+            $token = $this->createMock(TokenInterface::class);
             $token
                 ->expects($this->once())
                 ->method('getUserIdentifier')

@@ -1,0 +1,129 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('@ContaoCore/Collector/contao.svg') }}
+        <span class="sf-toolbar-value">{{ collector.summary.version }}</span>
+    {% endset %}
+    {% set text %}
+        {% if collector.summary.frontend %}
+            <div class="sf-toolbar-info-group">
+                <div class="sf-toolbar-info-piece">
+                    <b>Page layout</b>
+                    <span>{{ collector.summary.layout }}</span>
+                </div>
+                <div class="sf-toolbar-info-piece">
+                    <b>Template</b>
+                    <span>{{ collector.summary.template|default('n/a') }}</span>
+                </div>
+                <div class="sf-toolbar-info-piece">
+                    <b>FE preview</b>
+                    {% if collector.summary.preview %}
+                        <span class="sf-toolbar-status sf-toolbar-status-yellow">enabled</span>
+                    {% else %}
+                        <span>disabled</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="sf-toolbar-info-group">
+            <div class="sf-toolbar-info-piece">
+                <b>Resources</b>
+                <span><a href="https://docs.contao.org/" target="_blank" rel="help noreferrer noopener">Read the Contao docs</a></span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Help</b>
+                <span><a href="https://contao.org/en/support.html" target="_blank" rel="help">Contao support channels</a></span>
+            </div>
+        </div>
+    {% endset %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'contao', additional_classes: (((collector.summary.preview) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right') }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">{{ include('@ContaoCore/Collector/contao.svg') }}</span>
+        <strong>Contao</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Summary</h2>
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.summary.version }}</span>
+            <span class="label">Contao version</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.summary.models }}</span>
+            <span class="label">Registered models</span>
+        </div>
+
+        {% if collector.summary.layout %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.layout }}</span>
+                <span class="label">Page layout</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <h2>Classes set</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Class name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in collector.classesset %}
+                <tr>
+                    <td><code>{{ class }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Classes aliased</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Alias name</th>
+                <th>Original name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alias, original in collector.classesaliased %}
+                <tr>
+                    <td><code>{{ alias }}</code></td>
+                    <td><code>{{ original }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Classes composerized</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Alias name</th>
+                <th>Original name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alias, original in collector.classescomposerized %}
+                <tr>
+                    <td><code>{{ alias }}</code></td>
+                    <td><code>{{ original }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if collector.additionaldata %}
+        <h2>Other</h2>
+        <pre>
+            {{ dump(collector.additionaldata) }}
+        </pre>
+    {% endif %}
+{% endblock %}

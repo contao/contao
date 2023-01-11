@@ -1,0 +1,15 @@
+
+<div class="comment_default" id="<?= $this->id ?>">
+  <p class="info"><?= $this->by ?> <?php if ($this->website): ?><a href="<?= $this->website ?>" target="_blank" rel="nofollow noreferrer noopener"><?= $this->name ?></a><?php else: ?><?= $this->name ?><?php endif; ?> | <time datetime="<?= $this->datetime ?>" class="date"><?= $this->date ?></time></p>
+  <div class="comment">
+    <?= $this->comment ?>
+  </div>
+  <?php if ($this->addReply): ?>
+    <div class="reply">
+      <p class="info"><?= $this->rby ?> <?= $this->author->name ?></p>
+      <div class="comment">
+        <?= $this->reply ?>
+      </div>
+    </div>
+  <?php endif; ?>
+</div>

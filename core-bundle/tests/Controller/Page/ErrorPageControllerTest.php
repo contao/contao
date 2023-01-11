@@ -50,7 +50,7 @@ class ErrorPageControllerTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'error_404',
-            'autoforward' => '',
+            'autoforward' => false,
         ]);
 
         $controller = new ErrorPageController($this->mockContaoFramework());
@@ -62,7 +62,7 @@ class ErrorPageControllerTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'error_404',
-            'autoforward' => '1',
+            'autoforward' => true,
         ]);
 
         $controller = new ErrorPageController($this->mockContaoFramework());
@@ -74,7 +74,7 @@ class ErrorPageControllerTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'error_503',
-            'autoforward' => '1',
+            'autoforward' => true,
         ]);
 
         $controller = new ErrorPageController($this->mockContaoFramework());

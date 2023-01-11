@@ -17,10 +17,10 @@ use Contao\ContentText;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
-use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +28,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoDataCollectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Model::class, Registry::class]);
+
+        parent::tearDown();
+    }
+
     public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [
@@ -37,7 +44,7 @@ class ContaoDataCollectorTest extends TestCase
             'additional_data' => 'data',
         ];
 
-        $collector = $this->getDataCollector();
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
@@ -54,7 +61,6 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => false,
                 'layout' => '',
                 'template' => '',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
@@ -79,10 +85,11 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
-        $collector = $this->getDataCollector();
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -95,7 +102,6 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => false,
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
@@ -119,6 +125,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -129,7 +136,7 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $collector = $this->getDataCollector(false, false, '.html', $tokenChecker);
+        $collector = new ContaoDataCollector($tokenChecker);
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -142,7 +149,6 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => true,
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
@@ -150,87 +156,11 @@ class ContaoDataCollectorTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function testStoresTheLegacyRoutingData(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): void
-    {
-        $collector = $this->getDataCollector($legacyRouting, $prependLocale, $urlSuffix);
-        $collector->collect(new Request(), new Response());
-
-        $this->assertSame(
-            [
-                'enabled' => $legacyRouting,
-                'prepend_locale' => $prependLocale,
-                'url_suffix' => $urlSuffix,
-                'hooks' => [],
-            ],
-            $collector->getLegacyRouting()
-        );
-    }
-
-    public function legacyRoutingProvider(): \Generator
-    {
-        yield [false, false, '.html'];
-        yield [true, false, '.html'];
-        yield [true, false, '.html'];
-        yield [true, true, '.html'];
-        yield [true, true, '.php'];
-    }
-
-    public function testIncludesTheLegacyRoutingHooks(): void
-    {
-        $GLOBALS['TL_HOOKS'] = [
-            'getPageIdFromUrl' => [
-                [TestClass::class, 'onGetPageIdFromUrl'],
-                ['foo.service', 'onGetPageIdFromUrl'],
-            ],
-            'getRootPageFromUrl' => [
-                [TestClass::class, 'onGetRootPageFromUrl'],
-                ['bar.service', 'onGetRootPageFromUrl'],
-            ],
-        ];
-
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-        $systemAdapter
-            ->expects($this->exactly(4))
-            ->method('importStatic')
-            ->withConsecutive([TestClass::class], ['foo.service'], [TestClass::class], ['bar.service'])
-            ->willReturnOnConsecutiveCalls(new TestClass(), new BundleTestClass(), new TestClass(), new BundleTestClass())
-        ;
-
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
-        $collector = $this->getDataCollector(true);
-        $collector->setFramework($framework);
-        $collector->collect(new Request(), new Response());
-
-        $this->assertSame(
-            [
-                ['name' => 'getPageIdFromUrl', 'class' => TestClass::class, 'method' => 'onGetPageIdFromUrl', 'package' => ''],
-                ['name' => 'getPageIdFromUrl', 'class' => BundleTestClass::class, 'method' => 'onGetPageIdFromUrl', 'package' => 'foo/bar'],
-                ['name' => 'getRootPageFromUrl', 'class' => TestClass::class, 'method' => 'onGetRootPageFromUrl', 'package' => ''],
-                ['name' => 'getRootPageFromUrl', 'class' => BundleTestClass::class, 'method' => 'onGetRootPageFromUrl', 'package' => 'foo/bar'],
-            ],
-            $collector->getLegacyRouting()['hooks']
-        );
-    }
-
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
-        $collector = $this->getDataCollector();
-
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
         $method = new \ReflectionMethod($collector, 'getData');
-        $method->setAccessible(true);
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
-    }
-
-    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html', TokenChecker $tokenChecker = null): ContaoDataCollector
-    {
-        return new ContaoDataCollector(
-            $tokenChecker ?? $this->createMock(TokenChecker::class),
-            $legacyRouting,
-            \dirname(__DIR__).'/Fixtures/DataCollector',
-            $prependLocale,
-            $urlSuffix
-        );
     }
 }

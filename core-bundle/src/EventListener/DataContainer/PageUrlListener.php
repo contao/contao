@@ -12,11 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\Input;
@@ -35,28 +36,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PageUrlListener
 {
-    private ContaoFramework $framework;
-    private Slug $slug;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private PageRegistry $pageRegistry;
-    private UrlGeneratorInterface $urlGenerator;
-    private FinalMatcherInterface $routeMatcher;
-
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry, UrlGeneratorInterface $urlGenerator, FinalMatcherInterface $routeMatcher)
-    {
-        $this->framework = $framework;
-        $this->slug = $slug;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->pageRegistry = $pageRegistry;
-        $this->urlGenerator = $urlGenerator;
-        $this->routeMatcher = $routeMatcher;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Slug $slug,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private PageRegistry $pageRegistry,
+        private UrlGeneratorInterface $urlGenerator,
+        private FinalMatcherInterface $routeMatcher,
+    ) {
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.alias.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -78,6 +69,10 @@ class PageUrlListener
                 try {
                     $this->aliasExists($value, $pageModel, true);
                 } catch (DuplicateAliasException $exception) {
+                    if ($pageModel = $exception->getPageModel()) {
+                        throw new \RuntimeException($this->translator->trans('ERR.pageUrlNameExists', [$pageModel->title, $pageModel->id], 'contao_default'), $exception->getCode(), $exception);
+                    }
+
                     throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
                 }
             }
@@ -85,10 +80,12 @@ class PageUrlListener
             return $value;
         }
 
+        $currentRecord = $dc->getCurrentRecord();
+
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $dc->activeRecord->title,
-            $dc->activeRecord->id,
+            $currentRecord['title'] ?? '',
+            (int) ($currentRecord['id'] ?? null),
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -100,12 +97,12 @@ class PageUrlListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.urlPrefix.save")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.urlPrefix.save')]
     public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
-        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlPrefix === $value) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlPrefix'] ?? null) === $value) {
             return $value;
         }
 
@@ -114,7 +111,7 @@ class PageUrlListener
             "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
             [
                 'urlPrefix' => $value,
-                'dns' => $dc->activeRecord->dns,
+                'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
             ]
         );
@@ -141,16 +138,12 @@ class PageUrlListener
         return $value;
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.urlSuffix.save")
-     *
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function validateUrlSuffix($value, DataContainer $dc)
+    #[AsCallback(table: 'tl_page', target: 'fields.urlSuffix.save')]
+    public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
-        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlSuffix === $value) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlSuffix'] ?? null) === $value) {
             return $value;
         }
 
@@ -201,8 +194,8 @@ class PageUrlListener
      */
     private function aliasExists(string $currentAlias, PageModel $currentPage, bool $throw = false): bool
     {
-        // We can safely modify the page model since `loadDetails` detaches it
-        // from the registry and calls `preventSaving()`
+        // We can safely modify the page model since loadDetails() detaches it
+        // from the registry and calls preventSaving()
         $currentPage->loadDetails();
         $currentPage->alias = $currentAlias;
 
@@ -211,11 +204,11 @@ class PageUrlListener
 
         try {
             $currentUrl = $this->urlGenerator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-        } catch (RouteParametersException $e) {
+        } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
             $currentUrl = null;
         }
@@ -244,14 +237,18 @@ class PageUrlListener
 
             // Even if we cannot generate the path because of parameter requirements,
             // two pages can never have the same path AND the same requirements. This
-            // could be two regular pages with same alias and  `requireItem` enabled.
+            // could be two regular pages with same alias and "requireItem" enabled.
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
+                && $currentRoute->getHost() === $aliasRoute->getHost()
                 && 0 === ($currentRoute->getRequirements() <=> $aliasRoute->getRequirements())
             ) {
                 if ($throw) {
-                    throw new DuplicateAliasException($currentRoute->getPath());
+                    $exception = new DuplicateAliasException($currentRoute->getPath());
+                    $exception->setPageModel($aliasPage);
+
+                    throw $exception;
                 }
 
                 return true;
@@ -267,13 +264,19 @@ class PageUrlListener
         $request = Request::create($currentUrl);
 
         try {
-            $this->routeMatcher->finalMatch($routeCollection, $request);
-        } catch (ResourceNotFoundException $exception) {
+            $attributes = $this->routeMatcher->finalMatch($routeCollection, $request);
+        } catch (ResourceNotFoundException) {
             return false;
         }
 
         if ($throw) {
-            throw new DuplicateAliasException($currentUrl);
+            $exception = new DuplicateAliasException($currentUrl);
+
+            if ($attributes['pageModel'] instanceof PageModel) {
+                $exception->setPageModel($attributes['pageModel']);
+            }
+
+            throw $exception;
         }
 
         return true;
@@ -288,7 +291,7 @@ class PageUrlListener
         }
 
         if (null !== ($requireItem = $input->post('requireItem'))) {
-            $pageModel->requireItem = $requireItem;
+            $pageModel->requireItem = (bool) $requireItem;
         }
 
         if ('root' === $pageModel->type) {

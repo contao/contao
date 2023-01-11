@@ -15,15 +15,11 @@ namespace Contao\CoreBundle\Tests\Monolog;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Monolog\Logger;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ContaoTableHandlerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();
@@ -35,13 +31,8 @@ class ContaoTableHandlerTest extends TestCase
         $this->assertSame('foobar', $handler->getDbalServiceName());
     }
 
-    /**
-     * @group legacy
-     */
     public function testHandlesContaoRecords(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.0: Using the "addLogEntry" hook has been deprecated %s.');
-
         $record = [
             'level' => Logger::DEBUG,
             'level_name' => 'DEBUG',
@@ -58,23 +49,13 @@ class ContaoTableHandlerTest extends TestCase
             ->willReturn(1)
         ;
 
-        $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
-
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([System::class => $system]));
         $container->set('doctrine.dbal.default_connection', $connection);
-
-        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [static::class, 'addLogEntry'];
 
         $handler = new ContaoTableHandler();
         $handler->setContainer($container);
 
         $this->assertFalse($handler->handle($record));
-    }
-
-    public function addLogEntry(): void
-    {
-        // Dummy method to test the addLogEntry hook
     }
 
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="it">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>Archivio News</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Seleziona l'archivio che vuoi abilitare per l'utente.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.0">
+        <source>News archive permissions</source>
+        <target>Permessi archivio news</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news archive permissions.</source>
+        <target>Qui è possibile definire le autorizzazioni per i gli archivi news.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeeds.0">
+        <source>Allowed news feeds</source>
+        <target>Feed news consentiti</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeeds.1">
+        <source>Here you can grant access to one or more news feeds.</source>
+        <target>Qui puoi dare accesso ad uno o più feed News.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeedp.0">
+        <source>News feed permissions</source>
+        <target>Permessi news feed </target>
+      </trans-unit>
+      <trans-unit id="tl_user.newsfeedp.1">
+        <source>Here you can define the news feed permissions.</source>
+        <target>Qui è possibile definire le autorizzazioni per i feed News.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news_legend">
+        <source>News permissions</source>
+        <target>Permessi News</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

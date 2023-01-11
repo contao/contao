@@ -78,10 +78,7 @@ class RegisterPagesPass implements CompilerPassInterface
 
                 $config = $this->getRouteConfig($reference, $definition, $attributes);
                 $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
-
-                if (null !== $command) {
-                    $command->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
-                }
+                $command?->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
             }
         }
     }
@@ -94,8 +91,8 @@ class RegisterPagesPass implements CompilerPassInterface
         $path = $attributes['path'] ?? null;
         $pathRegex = null;
 
-        if (\is_string($path) && 0 === strncmp($path, '/', 1)) {
-            $compiledRoute = (new Route($path))->compile();
+        if (\is_string($path) && str_starts_with($path, '/')) {
+            $compiledRoute = (new Route($path, $defaults, $attributes['requirements'] ?? [], $attributes['options'] ?? []))->compile();
             $pathRegex = $compiledRoute->getRegex();
         }
 
@@ -148,11 +145,11 @@ class RegisterPagesPass implements CompilerPassInterface
 
         $className = ltrim(strrchr($className, '\\'), '\\');
 
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 
-        if ('Page' === substr($className, -4)) {
+        if (str_ends_with($className, 'Page')) {
             $className = substr($className, 0, -4);
         }
 

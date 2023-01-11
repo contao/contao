@@ -1,0 +1,23 @@
+
+<div class="<?= $this->class ?> listing block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
+  <table class="single_record">
+  <tbody>
+    <?php foreach ($this->record as $col): ?>
+      <tr>
+        <td class="label"><?= $col['label'] ?></td>
+        <td class="value"><?= $col['content'] ?></td>
+      </tr>
+    <?php endforeach; ?>
+  </tbody>
+  </table>
+
+  <!-- indexer::stop -->
+  <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
+  <!-- indexer::continue -->
+
+</div>

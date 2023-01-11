@@ -1,9 +1,0 @@
-<?php $this->extend('block_searchable'); ?>
-
-<?php $this->block('content'); ?>
-
-  <p class="download-element ext-<?= $this->extension ?>">
-    <a href="<?= $this->href ?>" title="<?= $this->title ?>" type="<?= $this->mime ?>"><?= $this->link ?> <span class="size">(<?= $this->filesize ?>)</span></a>
-  </p>
-
-<?php $this->endblock(); ?>

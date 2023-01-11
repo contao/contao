@@ -19,6 +19,8 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,25 +31,20 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-/**
- * Creates a new Contao back end user.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:user:create',
+    description: 'Create a new Contao back end user.'
+)]
 class UserCreateCommand extends Command
 {
-    protected static $defaultName = 'contao:user:create';
-
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
     private array $locales;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->passwordHasherFactory = $passwordHasherFactory;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        Locales $locales,
+    ) {
         $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
@@ -64,7 +61,6 @@ class UserCreateCommand extends Command
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Give admin permissions to the new user')
             ->addOption('group', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The groups to assign the user to')
             ->addOption('change-password', null, InputOption::VALUE_NONE, 'Require user to change the password on the first back end login')
-            ->setDescription('Create a new Contao back end user.')
         ;
     }
 
@@ -127,7 +123,7 @@ class UserCreateCommand extends Command
         if (null === $input->getOption('password')) {
             $password = $this->askForPassword('Please enter the new password: ', $input, $output, $passwordCallback);
 
-            $confirmCallback = static function ($value) use ($password): string {
+            $confirmCallback = static function (#[\SensitiveParameter] $value) use ($password): string {
                 if ($password !== $value) {
                     throw new \RuntimeException('The passwords do not match.');
                 }
@@ -172,7 +168,7 @@ class UserCreateCommand extends Command
         ) {
             $io->error('Please provide at least and each of: username, name, email, password');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $isAdmin = $input->getOption('admin');
@@ -190,7 +186,7 @@ class UserCreateCommand extends Command
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string
@@ -277,6 +273,6 @@ class UserCreateCommand extends Command
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 
-        $this->connection->insert('tl_user', $data);
+        $this->connection->insert('tl_user', $data, ['admin' => Types::BOOLEAN, 'pwChange' => Types::BOOLEAN]);
     }
 }

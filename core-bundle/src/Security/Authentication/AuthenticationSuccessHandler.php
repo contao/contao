@@ -17,7 +17,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
@@ -36,21 +35,17 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     use TargetPathTrait;
 
-    private ContaoFramework $framework;
-    private TrustedDeviceManagerInterface $trustedDeviceManager;
-    private FirewallMap $firewallMap;
-    private ?LoggerInterface $logger;
-    private ?User $user = null;
+    private User|null $user = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
-    public function __construct(ContaoFramework $framework, TrustedDeviceManagerInterface $trustedDeviceManager, FirewallMap $firewallMap, LoggerInterface $logger = null)
-    {
-        $this->framework = $framework;
-        $this->trustedDeviceManager = $trustedDeviceManager;
-        $this->firewallMap = $firewallMap;
-        $this->logger = $logger;
+    public function __construct(
+        private ContaoFramework $framework,
+        private TrustedDeviceManagerInterface $trustedDeviceManager,
+        private FirewallMap $firewallMap,
+        private LoggerInterface|null $logger = null,
+    ) {
     }
 
     /**
@@ -67,10 +62,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $this->user = $user;
-
-        // Reset login attempts and locked values
-        $this->user->loginAttempts = 0;
-        $this->user->locked = 0;
 
         if ($token instanceof TwoFactorTokenInterface) {
             $this->user->save();
@@ -100,14 +91,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $response = new RedirectResponse($this->determineTargetUrl($request));
 
-        if (null !== $this->logger) {
-            $this->logger->info(
-                sprintf('User "%s" has logged in', $this->user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
-            );
-        }
-
-        $this->triggerPostLoginHook();
+        $this->logger?->info(
+            sprintf('User "%s" has logged in', $this->user->username),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
+        );
 
         if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
             $this->removeTargetPath($request->getSession(), $token->getFirewallName());
@@ -131,23 +118,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         return $this->decodeTargetPath($request);
-    }
-
-    private function triggerPostLoginHook(): void
-    {
-        $this->framework->initialize();
-
-        if (empty($GLOBALS['TL_HOOKS']['postLogin']) || !\is_array($GLOBALS['TL_HOOKS']['postLogin'])) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $this->framework->getAdapter(System::class);
-
-        foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($this->user);
-        }
     }
 
     private function decodeTargetPath(Request $request): string

@@ -17,22 +17,13 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewBundle\ContaoNewBundle;
 use Contao\TestBundle\ContaoTestBundle;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Filesystem\Path;
 
 class AddResourcesPathsPassTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
     public function testAddsTheResourcesPaths(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "app/Resources/contao" has been deprecated %s.');
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "src/Resources/contao" has been deprecated %s.');
-
         $fixturesDir = Path::normalize($this->getFixturesDir());
 
         $bundles = [
@@ -67,8 +58,6 @@ class AddResourcesPathsPassTest extends TestCase
                 $newPath.'/contao',
                 $fixturesDir.'/system/modules/foobar',
                 $fixturesDir.'/contao',
-                $fixturesDir.'/app/Resources/contao',
-                $fixturesDir.'/src/Resources/contao',
             ],
             $container->getParameter('contao.resources_paths')
         );

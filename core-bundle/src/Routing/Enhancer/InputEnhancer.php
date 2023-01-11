@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Enhancer;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
@@ -23,14 +22,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
-    private ContaoFramework $framework;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function enhance(array $defaults, Request $request): array
@@ -41,7 +37,7 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $input = $this->framework->getAdapter(Input::class);
 
@@ -53,16 +49,11 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
-            if (!$config->get('useAutoItem')) {
-                throw new ResourceNotFoundException('Invalid number of arguments');
-            }
-
             array_unshift($fragments, 'auto_item');
         }
 
@@ -77,18 +68,11 @@ class InputEnhancer implements RouteEnhancerInterface
                 throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
             }
 
-            // Abort if the request contains an auto_item keyword (duplicate content) (see #4012)
-            if (
-                isset($GLOBALS['TL_AUTO_ITEM'])
-                && $config->get('useAutoItem')
-                && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)
-            ) {
-                throw new ResourceNotFoundException(sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i]));
-            }
-
             $inputKeys[] = $fragments[$i];
-            $input->setGet($fragments[$i], $fragments[$i + 1], true);
+            $input->setGet($fragments[$i], $fragments[$i + 1]);
         }
+
+        $input->setUnusedRouteParameters($inputKeys);
 
         return $defaults;
     }

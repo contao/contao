@@ -15,10 +15,10 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 /**
  * An attribute to register a Contao cron job.
  */
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class AsCronJob
 {
-    public function __construct(public string $interval, public ?string $method = null)
+    public function __construct(public string $interval, public string|null $method = null)
     {
     }
 }

@@ -20,16 +20,16 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
+    final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
+
     private PageModel $pageModel;
-    private ?string $urlPrefix;
-    private ?string $urlSuffix;
+    private string|null $urlPrefix;
+    private string|null $urlSuffix;
 
     /**
      * The referenced content object (can be anything).
-     *
-     * @var mixed
      */
-    private $content;
+    private mixed $content = null;
 
     /**
      * @param string|array<string> $methods
@@ -43,7 +43,7 @@ class PageRoute extends Route implements RouteObjectInterface
                 '_token_check' => true,
                 '_controller' => 'Contao\FrontendIndex::renderPage',
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage),
+                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
                 '_format' => 'html',
                 '_canonical_route' => 'tl_page.'.$pageModel->id,
             ],
@@ -57,9 +57,13 @@ class PageRoute extends Route implements RouteObjectInterface
             $options['utf8'] = true;
         }
 
+        if (!isset($options['compiler_class'])) {
+            $options['compiler_class'] = PageRouteCompiler::class;
+        }
+
         if ('' === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id);
-        } elseif (0 !== strncmp($path, '/', 1)) {
+        } elseif (!str_starts_with($path, '/')) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'/'.$path;
         }
 
@@ -120,17 +124,15 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * Sets the object this URL points to.
-     *
-     * @param mixed $content
      */
-    public function setContent($content): self
+    public function setContent(mixed $content): self
     {
         $this->content = $content;
 
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): object|null
     {
         return $this->content;
     }

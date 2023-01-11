@@ -16,13 +16,8 @@ use Contao\DataContainer;
 
 class FilterPageTypeEvent
 {
-    private array $options;
-    private DataContainer $dataContainer;
-
-    public function __construct(array $options, DataContainer $dataContainer)
+    public function __construct(private array $options, private DataContainer $dataContainer)
     {
-        $this->options = $options;
-        $this->dataContainer = $dataContainer;
     }
 
     public function getDataContainer(): DataContainer

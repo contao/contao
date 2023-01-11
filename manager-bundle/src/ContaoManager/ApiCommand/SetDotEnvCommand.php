@@ -14,15 +14,18 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Dotenv\DotenvDumper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'dot-env:set',
+    description: 'Writes a parameter to the .env file.'
+)]
 class SetDotEnvCommand extends Command
 {
     private string $projectDir;
@@ -36,11 +39,7 @@ class SetDotEnvCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
-            ->setName('dot-env:set')
-            ->setDescription('Writes a parameter to the .env file.')
             ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
             ->addArgument('value', InputArgument::REQUIRED, 'The new value')
         ;
@@ -48,9 +47,15 @@ class SetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env'));
-        $dotenv->setParameter($input->getArgument('key'), $input->getArgument('value'));
-        $dotenv->dump();
+        $path = Path::join($this->projectDir, '.env');
+
+        $dumper = new DotenvDumper($path.'.local');
+        $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
+        $dumper->dump();
+
+        if (!file_exists($path)) {
+            (new Filesystem())->touch($path);
+        }
 
         return 0;
     }

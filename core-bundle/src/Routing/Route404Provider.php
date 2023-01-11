@@ -38,14 +38,10 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $collection = new RouteCollection();
-
-        $routes = array_merge(
-            $this->getNotFoundRoutes(),
-            $this->getLocaleFallbackRoutes($request)
-        );
+        $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
 
         $this->sortRoutes($routes, $request->getLanguages());
 
@@ -56,9 +52,12 @@ class Route404Provider extends AbstractPageRouteProvider
         return $collection;
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -88,9 +87,9 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
-    public function getRoutesByNames($names): array
+    public function getRoutesByNames($names = null): iterable
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -123,7 +122,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     private function getNotFoundRoutes(): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
@@ -153,7 +152,7 @@ class Route404Provider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 
@@ -161,7 +160,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage),
+            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
@@ -210,7 +209,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes;
     }
 
-    private function addLocaleRedirectRoute(PageRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirectRoute(PageRoute $route, Request|null $request, array &$routes): void
     {
         $length = \strlen($route->getUrlPrefix());
 
@@ -260,10 +259,11 @@ class Route404Provider extends AbstractPageRouteProvider
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
-                $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
-                $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
-                $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
-                $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
+                $nameA = array_search($a, $routes, true);
+                $nameB = array_search($b, $routes, true);
+
+                $errorA = str_ends_with($nameA, '.error_404');
+                $errorB = str_ends_with($nameB, '.error_404');
 
                 if ($errorA && !$errorB) {
                     return 1;
@@ -272,6 +272,9 @@ class Route404Provider extends AbstractPageRouteProvider
                 if ($errorB && !$errorA) {
                     return -1;
                 }
+
+                $localeA = str_ends_with($nameA, '.locale');
+                $localeB = str_ends_with($nameB, '.locale');
 
                 if ($localeA && !$localeB) {
                     return -1;

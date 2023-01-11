@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,17 +22,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendRebuildCacheMessageListener
 {
-    public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
+    final public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
 
-    private ScopeMatcher $scopeMatcher;
-    private CacheItemPoolInterface $cache;
-    private TranslatorInterface $translator;
-
-    public function __construct(ScopeMatcher $scopeMatcher, CacheItemPoolInterface $cache, TranslatorInterface $translator)
+    public function __construct(private ScopeMatcher $scopeMatcher, private CacheItemPoolInterface $cache, private TranslatorInterface $translator)
     {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->cache = $cache;
-        $this->translator = $translator;
     }
 
     public function __invoke(RequestEvent $event): void
@@ -48,10 +40,7 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        /** @var Session $session */
-        $session = $request->getSession();
-
-        $session->getFlashBag()->add(
+        $request->getSession()->getFlashBag()->add(
             'contao.BE.info',
             $this->translator->trans('ERR.applicationCache', [], 'contao_default')
         );

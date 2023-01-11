@@ -19,16 +19,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
-    private Security $security;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        private Security $security,
+    ) {
         parent::__construct($menuFactory, $router, $translator);
-
-        $this->security = $security;
     }
 
     public function getName(): string
@@ -36,7 +36,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return 'pagePicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
@@ -50,7 +50,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
         return 'tl_page';
     }
@@ -63,10 +63,6 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         if ('page' === $config->getContext()) {
             if ($fieldType = $config->getExtra('fieldType')) {
                 $attributes['fieldType'] = $fieldType;
-            }
-
-            if ($source = $config->getExtra('source')) {
-                $attributes['preserveRecord'] = $source;
             }
 
             if (\is_array($rootNodes = $config->getExtra('rootNodes'))) {
@@ -91,12 +87,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string|int
-     */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         if ('page' === $config->getContext()) {
             return (int) $value;

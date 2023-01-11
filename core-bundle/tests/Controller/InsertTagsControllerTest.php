@@ -47,4 +47,24 @@ class InsertTagsControllerTest extends TestCase
         $this->assertSame(300, $response->getMaxAge());
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
     }
+
+    public function testSpecialDateInsertTagHandling(): void
+    {
+        $year = date('Y');
+
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replaceInline')
+            ->with('{{date::Y}}')
+            ->willReturn($year)
+        ;
+
+        $controller = new InsertTagsController($insertTagParser);
+        $response = $controller->renderAction(new Request(), '{{date::Y}}');
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('public'));
+        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertSame((new \DateTimeImmutable($year.'-12-31 23:59:59'))->getTimestamp(), $response->getExpires()->getTimestamp());
+        $this->assertSame($year, $response->getContent());
+    }
 }

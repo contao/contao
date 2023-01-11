@@ -17,18 +17,17 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -41,6 +40,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -53,8 +53,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
 {
-    public const SCOPE_BACKEND = 'backend';
-    public const SCOPE_FRONTEND = 'frontend';
+    final public const SCOPE_BACKEND = 'backend';
+    final public const SCOPE_FRONTEND = 'frontend';
 
     public function getContainerExtension(): ContaoCoreExtension
     {
@@ -67,7 +67,7 @@ class ContaoCoreBundle extends Bundle
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ContaoLoginFactory());
+        $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
         $container->addCompilerPass(
             new AddEventAliasesPass([
@@ -76,14 +76,13 @@ class ContaoCoreBundle extends Bundle
                 PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
                 PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                 RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
+                SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                 SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
             ])
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
-        $container->addCompilerPass(new AddPackagesPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());
-        $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
@@ -107,7 +106,6 @@ class ContaoCoreBundle extends Bundle
             )
         );
 
-        $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new TranslationDataCollectorPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
@@ -119,13 +117,15 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RewireTwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
+        $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
+        $container->addCompilerPass(new ConfigureFilesystemPass());
     }
 
     public static function getVersion(): string
     {
         try {
             $version = (string) InstalledVersions::getPrettyVersion('contao/core-bundle');
-        } catch (\OutOfBoundsException $e) {
+        } catch (\OutOfBoundsException) {
             $version = '';
         }
 
@@ -134,5 +134,10 @@ class ContaoCoreBundle extends Bundle
         }
 
         return $version;
+    }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
     }
 }

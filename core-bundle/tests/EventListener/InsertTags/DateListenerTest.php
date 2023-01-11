@@ -15,33 +15,27 @@ namespace Contao\CoreBundle\Tests\EventListener\InsertTags;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\InsertTags\DateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Date;
 use Contao\PageModel;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DateListenerTest extends TestCase
 {
-    public function testAnnotatedCallbacks(): void
+    protected function tearDown(): void
     {
-        $listener = new DateListener($this->getFramework(), new RequestStack());
-        $annotationReader = new AnnotationReader();
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
-        /** @var Hook $annotation */
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Hook::class);
-
-        $this->assertSame('replaceInsertTags', $annotation->value);
+        parent::tearDown();
     }
 
     /**
-     * @param string|false $expected
-     *
      * @dataProvider getConvertedInsertTags
      */
-    public function testReplacedInsertTag(string $insertTag, $expected): void
+    public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());
 

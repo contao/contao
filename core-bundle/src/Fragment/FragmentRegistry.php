@@ -36,7 +36,7 @@ class FragmentRegistry implements FragmentRegistryInterface
         return isset($this->fragments[$identifier]);
     }
 
-    public function get(string $identifier): ?FragmentConfig
+    public function get(string $identifier): FragmentConfig|null
     {
         return $this->fragments[$identifier] ?? null;
     }

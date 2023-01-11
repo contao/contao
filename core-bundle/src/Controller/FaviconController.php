@@ -23,26 +23,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(defaults={"_scope" = "frontend"})
- *
  * @internal
  */
+#[Route(defaults: ['_scope' => 'frontend'])]
 class FaviconController
 {
-    private ContaoFramework $framework;
-    private string $projectDir;
-    private EntityCacheTags $entityCacheTags;
-
-    public function __construct(ContaoFramework $framework, string $projectDir, EntityCacheTags $entityCacheTags)
+    public function __construct(private ContaoFramework $framework, private string $projectDir, private EntityCacheTags $entityCacheTags)
     {
-        $this->framework = $framework;
-        $this->projectDir = $projectDir;
-        $this->entityCacheTags = $entityCacheTags;
     }
 
-    /**
-     * @Route("/favicon.ico")
-     */
+    #[Route('/favicon.ico')]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();
@@ -50,7 +40,7 @@ class FaviconController
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
         $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->server->get('HTTP_HOST'),
+            $request->getHost(),
             ['fallbackToEmpty' => true]
         );
 
@@ -76,6 +66,10 @@ class FaviconController
 
             case 'ico':
                 $response->headers->set('Content-Type', 'image/x-icon');
+                break;
+
+            case 'png':
+                $response->headers->set('Content-Type', 'image/png');
                 break;
         }
 

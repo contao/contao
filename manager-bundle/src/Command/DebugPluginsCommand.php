@@ -24,6 +24,7 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,21 +35,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'debug:plugins',
+    description: 'Displays the Contao Manager plugin configurations.'
+)]
 class DebugPluginsCommand extends Command
 {
-    protected static $defaultName = 'debug:plugins';
+    private SymfonyStyle|null $io = null;
 
-    private ContaoKernel $kernel;
-    private ?SymfonyStyle $io = null;
-
-    public function __construct(ContaoKernel $kernel)
+    public function __construct(private ContaoKernel $kernel)
     {
         parent::__construct();
-
-        $this->kernel = $kernel;
     }
 
     protected function configure(): void
@@ -56,7 +53,6 @@ class DebugPluginsCommand extends Command
         $this
             ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
             ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
-            ->setDescription('Displays the Contao Manager plugin configurations')
         ;
     }
 
@@ -95,7 +91,7 @@ class DebugPluginsCommand extends Command
 
         foreach ($plugins as $packageName => $plugin) {
             $rows[] = [
-                \get_class($plugin),
+                $plugin::class,
                 $packageName,
                 $plugin instanceof BundlePluginInterface ? $check : '',
                 $plugin instanceof RoutingPluginInterface ? $check : '',
@@ -109,7 +105,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function listBundles(): int
@@ -121,7 +117,7 @@ class DebugPluginsCommand extends Command
 
         foreach ($bundles as $name => $bundle) {
             $path = '';
-            $class = \get_class($bundle);
+            $class = $bundle::class;
 
             if (ContaoModuleBundle::class === $class) {
                 $path = Path::join('system/modules', $name);
@@ -139,7 +135,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function showPlugin(string $name, InputInterface $input): int
@@ -176,7 +172,7 @@ class DebugPluginsCommand extends Command
             $this->io->error(
                 sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
-                    \get_class($plugin),
+                    $plugin::class,
                     BundlePluginInterface::class
                 )
             );
@@ -184,7 +180,7 @@ class DebugPluginsCommand extends Command
             return -1;
         }
 
-        $title = sprintf('Bundles Registered by Plugin "%s"', \get_class($plugin));
+        $title = sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
         $headers = ['Bundle', 'Replaces', 'Load After', 'Environment'];
         $rows = [];
         $configs = $plugin->getBundles($this->getBundleParser());
@@ -207,10 +203,10 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function findPlugin(string $name): ?array
+    private function findPlugin(string $name): array|null
     {
         $plugins = $this->kernel->getPluginLoader()->getInstances();
 
@@ -219,7 +215,7 @@ class DebugPluginsCommand extends Command
         }
 
         foreach ($plugins as $packageName => $plugin) {
-            if (\get_class($plugin) === $name) {
+            if ($plugin::class === $name) {
                 return [$packageName, $plugin];
             }
         }

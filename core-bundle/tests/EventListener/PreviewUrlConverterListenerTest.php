@@ -18,16 +18,15 @@ use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-class PreviewUrlConverterListenerTest extends ContaoTestCase
+class PreviewUrlConverterListenerTest extends TestCase
 {
     public function testConvertsThePreviewUrlWithUrl(): void
     {
@@ -39,7 +38,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $this->mockContaoFramework(),
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
@@ -60,7 +59,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
@@ -76,7 +75,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $this->mockContaoFramework(),
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
@@ -108,7 +107,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
@@ -130,7 +129,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
@@ -168,45 +167,40 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $this->createMock(HttpKernelInterface::class)
+            $this->createMock(UriSigner::class),
         );
 
         $listener($event);
     }
 
-    public function testForwardsToControllerIfPreviewUrlThrowsException(): void
+    public function testRediectsToFragmentUrlIfPreviewUrlThrowsException(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['rootLanguage' => 'en']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en']);
         $pageModel
             ->expects($this->once())
             ->method('getPreviewUrl')
             ->willThrowException(new RouteNotFoundException())
         ;
 
-        $subRequest = new Request();
         $route = new PageRoute($pageModel);
 
         $request = $this->createMock(Request::class);
         $request->query = new ParameterBag(['page' => '9']);
         $request
             ->expects($this->once())
-            ->method('duplicate')
-            ->with(null, null, $route->getDefaults())
-            ->willReturn($subRequest)
+            ->method('getUriForPath')
+            ->willReturnArgument(0)
         ;
-
-        $response = new Response();
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
         ];
 
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $httpKernel
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
             ->expects($this->once())
-            ->method('handle')
-            ->with($subRequest, HttpKernelInterface::SUB_REQUEST)
-            ->willReturn($response)
+            ->method('sign')
+            ->willReturnArgument(0)
         ;
 
         $framework = $this->mockContaoFramework($adapters);
@@ -215,12 +209,18 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry($route),
-            $httpKernel
+            $uriSigner
         );
 
         $listener($event);
 
-        $this->assertSame($response, $event->getResponse());
+        $defaults = $route->getDefaults();
+        $defaults['pageModel'] = 42;
+
+        $expectedUrl = '/_fragment?_path='.urlencode(http_build_query($defaults));
+
+        $this->assertNull($event->getResponse());
+        $this->assertSame($expectedUrl, $event->getUrl());
     }
 
     /**

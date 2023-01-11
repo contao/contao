@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -21,8 +22,6 @@ class InstallCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $fs = new Filesystem();
         $fs->remove($this->getTempDir().'/assets/css');
         $fs->remove($this->getTempDir().'/assets/images');
@@ -33,11 +32,14 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/public/system');
         $fs->remove($this->getTempDir().'/system/cache');
         $fs->remove($this->getTempDir().'/system/config');
-        $fs->remove($this->getTempDir().'/system/initialize.php');
         $fs->remove($this->getTempDir().'/system/modules/.gitignore');
         $fs->remove($this->getTempDir().'/system/themes');
         $fs->remove($this->getTempDir().'/system/tmp');
         $fs->remove($this->getTempDir().'/templates');
+
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesTheContaoFolders(): void

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -21,17 +24,14 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
-    private ContaoFilesystemLoader $loader;
-    private TemplateLocator $templateLocator;
-    private string $projectDir;
-    private string $environment;
-
-    public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $environment)
-    {
-        $this->loader = $contaoFilesystemLoader;
-        $this->templateLocator = $templateLocator;
-        $this->projectDir = $projectDir;
-        $this->environment = $environment;
+    public function __construct(
+        private ContaoFilesystemLoader $loader,
+        private TemplateLocator $templateLocator,
+        private string $projectDir,
+        private string $cacheDir,
+        private string $environment,
+        private Filesystem|null $filesystem = null,
+    ) {
     }
 
     public function warmUp(string $cacheDir = null): array
@@ -60,6 +60,10 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->loader->buildInheritanceChains();
         $this->loader->persist();
 
+        if ('dev' === $this->environment) {
+            $this->writeIdeAutoCompletionMapping($cacheDir ?? $this->cacheDir);
+        }
+
         return [];
     }
 
@@ -80,8 +84,47 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if ('dev' === $this->environment) {
+        if ('dev' === $this->environment && $event->isMainRequest()) {
             $this->refresh();
+        }
+    }
+
+    /**
+     * Writes an "ide-twig.json" file with path mapping information that
+     * enables IDE auto-completion for all our dynamic namespaces.
+     */
+    private function writeIdeAutoCompletionMapping(string $cacheDir): void
+    {
+        $mappings = [];
+        $targetDir = Path::join($cacheDir, 'contao');
+
+        foreach ($this->loader->getInheritanceChains() as $chain) {
+            foreach ($chain as $path => $name) {
+                [$namespace, $file] = ContaoTwigUtil::parseContaoName($name);
+                $templateDir = preg_replace('%(.*)/'.preg_quote($file, '%').'%', '$1', $path);
+
+                $mappings[Path::makeRelative($templateDir, $targetDir)] = $namespace;
+            }
+        }
+
+        $data = [];
+
+        foreach ($mappings as $path => $namespace) {
+            $data['namespaces'][] = ['namespace' => 'Contao', 'path' => $path];
+            $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
+        }
+
+        if (null === $this->filesystem) {
+            $this->filesystem = new Filesystem();
+        }
+
+        try {
+            $this->filesystem->dumpFile(
+                Path::join($targetDir, 'ide-twig.json'),
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
+            );
+        } catch (IOException) {
+            // ignore
         }
     }
 }

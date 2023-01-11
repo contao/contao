@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="<?= $this->language ?>">
+<head>
+
+  <meta charset="<?= $this->charset ?>">
+  <title><?= $this->title ?> | <?= $this->host ?></title>
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <meta name="referrer" content="origin">
+
+  <link rel="stylesheet" href="<?php
+    $objCombiner = new Contao\Combiner();
+    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/help.min.css');
+    echo $objCombiner->getCombinedFile();
+  ?>">
+  <?= $this->stylesheets ?>
+
+  <script><?= $this->getLocaleString() ?></script>
+  <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
+  <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
+  <script><?= $this->getDateString() ?></script>
+  <?= $this->javascripts ?>
+
+</head>
+<body>
+
+  <div id="container">
+    <main id="main">
+      <?= $this->explanation ?>
+      <?php if (!empty($this->rows)): ?>
+        <table class="tl_help_table">
+          <?php foreach ($this->rows as $row): ?>
+            <tr>
+              <?php if ('colspan' == $row[0]): ?>
+                <td colspan="2"><?= $row[1] ?></td>
+              <?php elseif ('headspan' == $row[0]): ?>
+                <td colspan="2" class="headline"><?= $row[1] ?></td>
+              <?php else: ?>
+                <td class="tl_label"><?= $row[0] ?></td>
+                <td><?= $row[1] ?></td>
+              <?php endif; ?>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+      <?php endif; ?>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -20,7 +20,6 @@ use Contao\MakerBundle\Generator\TemplateGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,27 +27,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\Container;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 abstract class AbstractFragmentMaker extends AbstractMaker
 {
-    protected ContaoFramework $framework;
-    protected TemplateGenerator $templateGenerator;
-    protected ClassGenerator $classGenerator;
-    protected DcaGenerator $dcaGenerator;
-    protected LanguageFileGenerator $languageFileGenerator;
-    protected PhpCompatUtil $phpCompatUtil;
-    protected string $projectDir;
-
-    public function __construct(ContaoFramework $framework, TemplateGenerator $templateGenerator, ClassGenerator $classGenerator, DcaGenerator $dcaGenerator, LanguageFileGenerator $languageFileGenerator, PhpCompatUtil $phpCompatUtil, string $projectDir)
-    {
-        $this->framework = $framework;
-        $this->templateGenerator = $templateGenerator;
-        $this->classGenerator = $classGenerator;
-        $this->dcaGenerator = $dcaGenerator;
-        $this->languageFileGenerator = $languageFileGenerator;
-        $this->phpCompatUtil = $phpCompatUtil;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        protected ContaoFramework $framework,
+        protected TemplateGenerator $templateGenerator,
+        protected ClassGenerator $classGenerator,
+        protected DcaGenerator $dcaGenerator,
+        protected LanguageFileGenerator $languageFileGenerator,
+        protected string $projectDir,
+    ) {
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
@@ -108,7 +98,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
     protected function getClassNameWithoutSuffix(string $className): string
     {
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 

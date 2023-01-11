@@ -1,8 +1,0 @@
-[main]
-host = https://www.transifex.com
-type = XLIFF
-
-[installation-bundle.v4_13-ContaoInstallationBundle]
-source_file = src/Resources/translations/ContaoInstallationBundle.en.xlf
-source_lang = en
-file_filter = src/Resources/translations/ContaoInstallationBundle.<lang>.xlf

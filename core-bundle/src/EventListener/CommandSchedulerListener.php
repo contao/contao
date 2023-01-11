@@ -12,12 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
@@ -26,17 +23,12 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class CommandSchedulerListener
 {
-    private ContainerInterface $locator;
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private string $fragmentPath;
-
-    public function __construct(ContainerInterface $locator, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
-    {
-        $this->locator = $locator;
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->fragmentPath = $fragmentPath;
+    public function __construct(
+        private Cron $cron,
+        private Connection $connection,
+        private string $fragmentPath = '_fragment',
+        private bool $autoMode = false,
+    ) {
     }
 
     /**
@@ -44,23 +36,30 @@ class CommandSchedulerListener
      */
     public function __invoke(TerminateEvent $event): void
     {
-        if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->locator->get('contao.cron')->run(Cron::SCOPE_WEB);
+        if ($this->shouldRunCron($event->getRequest())) {
+            $this->cron->run(Cron::SCOPE_WEB);
         }
     }
 
-    private function canRunCron(Request $request): bool
+    private function shouldRunCron(Request $request): bool
     {
         $pathInfo = $request->getPathInfo();
 
-        // Skip the listener in the install tool and upon fragment URLs
-        if (preg_match('~(?:^|/)(?:contao/install$|'.preg_quote($this->fragmentPath, '~').'/)~', $pathInfo)) {
+        // Skip the listener upon fragment URLs
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $pathInfo)) {
             return false;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
+        // Without the DB table, the cron framework cannot work
+        if (!$this->canRunDbQuery()) {
+            return false;
+        }
 
-        return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();
+        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -71,7 +70,7 @@ class CommandSchedulerListener
         try {
             return $this->connection->isConnected()
                 && $this->connection->createSchemaManager()->tablesExist(['tl_cron_job']);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

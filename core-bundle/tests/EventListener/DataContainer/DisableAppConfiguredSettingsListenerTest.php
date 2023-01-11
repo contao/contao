@@ -13,24 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
 {
-    public function testAnnotatedCallbacks(): void
+    protected function tearDown(): void
     {
-        $listener = $this->createListener();
-        $annotationReader = new AnnotationReader();
+        unset($GLOBALS['TL_DCA']);
 
-        /** @var Callback $annotation */
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
-        $this->assertSame('tl_settings', $annotation->table);
-        $this->assertSame('config.onload', $annotation->target);
+        parent::tearDown();
     }
 
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
@@ -88,6 +85,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'helpwizard' => false,
+                        'chosen' => false,
                     ],
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
@@ -99,6 +97,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
+                        'chosen' => false,
                     ],
                     'explanation' => 'dateFormat',
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],

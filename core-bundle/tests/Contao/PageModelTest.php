@@ -12,21 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Input;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
-class PageModelTest extends ContaoTestCase
+class PageModelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
@@ -34,43 +40,46 @@ class PageModelTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $platform = $this->createMock(AbstractPlatform::class);
-        $platform
-            ->method('getIdentifierQuoteCharacter')
-            ->willReturn('\'')
+        $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
+
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('createSchema')
+            ->willReturn(new Schema())
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($platform)
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
         ;
 
         $connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+        $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
+
+        PageModel::reset();
+
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+
         parent::tearDown();
-
-        Registry::getInstance()->reset();
-
-        // Reset database instance
-        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([]);
     }
 
     public function testCreatingEmptyPageModel(): void
@@ -83,17 +92,17 @@ class PageModelTest extends ContaoTestCase
 
     public function testCreatingPageModelFromArray(): void
     {
-        $pageModel = new PageModel(['id' => '1', 'alias' => 'alias']);
+        $pageModel = new PageModel(['id' => 1, 'alias' => 'alias']);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
     public function testCreatingPageModelFromDatabaseResult(): void
     {
-        $pageModel = new PageModel(new Result([['id' => '1', 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
+        $pageModel = new PageModel(new Result([['id' => 1, 'alias' => 'alias']], 'SELECT * FROM tl_page WHERE id = 1'));
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
     }
 
@@ -102,7 +111,7 @@ class PageModelTest extends ContaoTestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('execute')
-            ->willReturn(new Result([['id' => '1', 'alias' => 'alias']], ''))
+            ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
         ;
 
         $database = $this->createMock(Database::class);
@@ -116,52 +125,8 @@ class PageModelTest extends ContaoTestCase
 
         $pageModel = PageModel::findByPk(1);
 
-        $this->assertSame('1', $pageModel->id);
+        $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testFindPublishedSubpagesWithoutGuestsByPid(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s');
-
-        $databaseResultData = [
-            ['id' => '1', 'alias' => 'alias1', 'subpages' => '0'],
-            ['id' => '2', 'alias' => 'alias2', 'subpages' => '3'],
-            ['id' => '3', 'alias' => 'alias3', 'subpages' => '42'],
-        ];
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('execute')
-            ->willReturn(new Result($databaseResultData, ''))
-        ;
-
-        $database = $this->createMock(Database::class);
-        $database
-            ->expects($this->once())
-            ->method('prepare')
-            ->willReturn($statement)
-        ;
-
-        $this->mockDatabase($database);
-
-        $pages = PageModel::findPublishedSubpagesWithoutGuestsByPid(1);
-
-        $this->assertInstanceOf(Collection::class, $pages);
-        $this->assertCount(3, $pages);
-
-        $this->assertSame($databaseResultData[0]['id'], $pages->offsetGet(0)->id);
-        $this->assertSame($databaseResultData[0]['alias'], $pages->offsetGet(0)->alias);
-        $this->assertSame($databaseResultData[0]['subpages'], $pages->offsetGet(0)->subpages);
-        $this->assertSame($databaseResultData[1]['id'], $pages->offsetGet(1)->id);
-        $this->assertSame($databaseResultData[1]['alias'], $pages->offsetGet(1)->alias);
-        $this->assertSame($databaseResultData[1]['subpages'], $pages->offsetGet(1)->subpages);
-        $this->assertSame($databaseResultData[2]['id'], $pages->offsetGet(2)->id);
-        $this->assertSame($databaseResultData[2]['alias'], $pages->offsetGet(2)->alias);
-        $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
     }
 
     /**
@@ -302,11 +267,188 @@ class PageModelTest extends ContaoTestCase
         ];
     }
 
+    public function testDoesNotFindSimilarIfAliasIsEmpty(): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 1,
+            'alias' => '',
+        ]);
+
+        $sourcePage
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @dataProvider layoutInheritanceParentPagesProvider
+     */
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, int $expectedLayout): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+
+        $numberOfParents = \count($parents);
+
+        // The last page has to be a root page for this test method to prevent
+        // running into the check of TL_MODE in PageModel::loadDetails()
+        $parents[$numberOfParents - 1][0]['type'] = 'root';
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnCallback(
+                static function () use (&$parents) {
+                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
+                }
+            )
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly($numberOfParents + 1))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+        $page->loadDetails();
+
+        $this->assertSame($expectedLayout, $page->layout);
+    }
+
+    public function layoutInheritanceParentPagesProvider(): \Generator
+    {
+        yield 'no parent with an inheritable layout' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 0, 'layout' => 1, 'subpageLayout' => 2]],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            0,
+        ];
+
+        yield 'inherit layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 1, 'subpageLayout' => 0]],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            1,
+        ];
+
+        yield 'inherit subpages layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 1, 'subpageLayout' => 2]],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            2,
+        ];
+
+        yield 'multiple parents with layouts' => [
+            [
+                [['id' => '1', 'pid' => '2', 'includeLayout' => 0, 'layout' => 1, 'subpageLayout' => 1]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => 1, 'layout' => 2, 'subpageLayout' => 3]],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => 1, 'layout' => 4, 'subpageLayout' => 0]],
+            ],
+            3,
+        ];
+    }
+
+    /**
+     * @group legacy
+     * @runInSeparateProcess
+     *
+     * @dataProvider folderUrlProvider
+     */
+    public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
+    {
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', 'BE');
+        }
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly(\count($databaseResultData)))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $page = PageModel::findWithDetails(3);
+
+        $this->assertInstanceOf(PageModel::class, $page);
+        $this->assertSame($expectedFolderUrl, $page->folderUrl);
+    }
+
+    public function folderUrlProvider(): \Generator
+    {
+        yield 'Inherits the alias from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'alias3'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'alias2'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'alias2/',
+        ];
+
+        yield 'Inherits a folderUrl from parent page' => [
+            [
+                ['id' => '3', 'pid' => '2', 'alias' => 'baz'],
+                ['id' => '2', 'pid' => '1', 'alias' => 'foo/bar'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'alias1'],
+            ],
+            'foo/bar/',
+        ];
+
+        yield 'Does not inherit from the root page' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'type' => 'root', 'fallback' => '1', 'alias' => 'foo/bar'],
+            ],
+            '',
+        ];
+
+        yield 'Does not inherit the index alias' => [
+            [
+                ['id' => '2', 'pid' => '1', 'alias' => 'baz'],
+                ['id' => '1', 'pid' => '0', 'alias' => 'index'],
+            ],
+            '',
+        ];
+    }
+
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property->setValue($database);
 
         $this->assertSame($database, Database::getInstance());
     }

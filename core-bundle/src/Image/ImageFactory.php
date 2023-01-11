@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FilesModel;
 use Contao\Image\DeferredResizerInterface;
+use Contao\Image\Exception\CoordinatesOutOfBoundsException;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
@@ -25,39 +25,27 @@ use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
-    private ResizerInterface $resizer;
-    private ImagineInterface $imagine;
-    private ImagineInterface $imagineSvg;
-    private ContaoFramework $framework;
-    private Filesystem $filesystem;
-    private bool $bypassCache;
-    private array $imagineOptions;
-    private array $validExtensions;
-    private string $uploadDir;
     private array $predefinedSizes = [];
-    private ?LoggerInterface $logger;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
-    {
-        $this->resizer = $resizer;
-        $this->imagine = $imagine;
-        $this->imagineSvg = $imagineSvg;
-        $this->filesystem = $filesystem;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
-        $this->validExtensions = $validExtensions;
-        $this->uploadDir = $uploadDir;
-        $this->logger = $logger;
+    public function __construct(
+        private ResizerInterface $resizer,
+        private ImagineInterface $imagine,
+        private ImagineInterface $imagineSvg,
+        private Filesystem $filesystem,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions,
+        private array $validExtensions,
+        private string $uploadDir,
+    ) {
     }
 
     /**
@@ -68,10 +56,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    /**
-     * @param int|array|string|ResizeConfiguration|null $size
-     */
-    public function create($path, $size = null, $options = null): ImageInterface
+    public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
             throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
@@ -122,7 +107,11 @@ class ImageFactory implements ImageFactoryInterface
 
         if (!\is_object($path) || !$path instanceof ImageInterface) {
             if (null === $importantPart) {
-                $importantPart = $this->createImportantPart($image);
+                try {
+                    $importantPart = $this->createImportantPart($image);
+                } catch (CoordinatesOutOfBoundsException $exception) {
+                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
+                }
             }
 
             $image->setImportantPart($importantPart);
@@ -186,7 +175,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @return array<(ResizeConfiguration|ImportantPart|ResizeOptions|null)>
      */
-    private function createConfig($size, ImageInterface $image): array
+    private function createConfig(array|int|null $size, ImageInterface $image): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
@@ -233,6 +222,8 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+
         $config->setMode(ResizeConfiguration::MODE_CROP);
 
         return [$config, $this->getImportantPartFromLegacyMode($image, $size[2]), null];
@@ -263,7 +254,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Fetches the important part from the database.
      */
-    private function createImportantPart(ImageInterface $image): ?ImportantPart
+    private function createImportantPart(ImageInterface $image): ImportantPart|null
     {
         if (!Path::isBasePath($this->uploadDir, $image->getPath())) {
             return null;
@@ -278,44 +269,6 @@ class ImageFactory implements ImageFactoryInterface
 
         if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
             return null;
-        }
-
-        // Larger values are considered to be in the old format (in absolute
-        // pixels) so we try to convert them to the new format if possible.
-        // Because of rounding errors, the values of the new format might slightly
-        // exceed 1.0, this is why we check for ">= 2" to detect the old format.
-        if (
-            (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
-            || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
-        ) {
-            trigger_deprecation('contao/core-bundle', '4.8', 'Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.');
-
-            if ($this->logger) {
-                $this->logger->warning(
-                    sprintf(
-                        'Invalid important part x=%s, y=%s, width=%s, height=%s for image "%s".',
-                        $file->importantPartX,
-                        $file->importantPartY,
-                        $file->importantPartWidth,
-                        $file->importantPartHeight,
-                        $image->getPath()
-                    ),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
-                );
-            }
-
-            try {
-                $size = $image->getDimensions()->getSize();
-
-                return new ImportantPart(
-                    (float) $file->importantPartX / $size->getWidth(),
-                    (float) $file->importantPartY / $size->getHeight(),
-                    (float) $file->importantPartWidth / $size->getWidth(),
-                    (float) $file->importantPartHeight / $size->getHeight()
-                );
-            } catch (\Throwable $exception) {
-                return new ImportantPart();
-            }
         }
 
         return new ImportantPart(

@@ -1,0 +1,18 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <ul>
+    <?php foreach ($this->files as $file): ?>
+      <li class="download-element ext-<?= $file['extension'] ?>">
+        <?php if ($file['previews']): ?>
+          <?php foreach ($file['previews'] as $preview): ?>
+            <?php $this->insert('image', $preview->getLegacyTemplateData()) ?>
+          <?php endforeach ?>
+        <?php endif ?>
+        <a href="<?= $file['href'] ?>" title="<?= $file['title'] ?>" type="<?= $file['mime'] ?>"><?= $file['link'] ?> <span class="size">(<?= $file['filesize'] ?>)</span></a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+
+<?php $this->endblock(); ?>

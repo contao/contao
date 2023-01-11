@@ -12,15 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\TwoFactor;
 
+use BaconQrCode\Common\Version;
+use BaconQrCode\Encoder\Encoder;
+use BaconQrCode\Renderer\Module\SquareModule;
+use BaconQrCode\Renderer\Path\Close;
+use BaconQrCode\Renderer\RendererStyle\EyeFill;
+use BaconQrCode\Renderer\RendererStyle\Fill;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
+use DASPRiD\Enum\AbstractEnum;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([SquareModule::class, Fill::class, EyeFill::class, Encoder::class, AbstractEnum::class, Version::class, Close::class]);
+
+        parent::tearDown();
+    }
+
     public function testValidatesTheCode(): void
     {
         $secret = $this->generateSecret(1);

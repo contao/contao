@@ -12,13 +12,39 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
+use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class FigureRendererRuntimeTest extends TestCase
 {
-    public function testDelegatesCalls(): void
+    use ExpectDeprecationTrait;
+
+    public function testDelegatesCallsWhenBuildingFigure(): void
+    {
+        $figure = new Figure($this->createMock(ImageResult::class));
+
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
+            ->expects($this->once())
+            ->method('buildFigure')
+            ->with('123', '_my_size', ['foo' => 'bar'])
+            ->willReturn($figure)
+        ;
+
+        $this->assertSame(
+            $figure,
+            (new FigureRuntime($figureRenderer))->buildFigure('123', '_my_size', ['foo' => 'bar'])
+        );
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testDelegatesCallsWhenRenderingFigure(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
         $figureRenderer
@@ -28,19 +54,19 @@ class FigureRendererRuntimeTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        $figureRendererRuntime = new FigureRendererRuntime($figureRenderer);
+        $figureRendererRuntime = new FigureRuntime($figureRenderer);
 
-        $result = $figureRendererRuntime->render(
-            '123',
-            '_my_size',
-            ['foo' => 'bar'],
-            'my_template.html.twig'
-        );
+        $this->expectDeprecation('%sUsing the "contao_figure" Twig function has been deprecated%s');
+
+        $result = $figureRendererRuntime->renderFigure('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig');
 
         $this->assertSame('<result>', $result);
     }
 
-    public function testUsesFigureTemplateByDefault(): void
+    /**
+     * @group legacy
+     */
+    public function testUsesFigureTemplateByDefaultWhenRenderingFigure(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
         $figureRenderer
@@ -50,6 +76,8 @@ class FigureRendererRuntimeTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        (new FigureRendererRuntime($figureRenderer))->render(1, null);
+        $this->expectDeprecation('%sUsing the "contao_figure" Twig function has been deprecated%s');
+
+        (new FigureRuntime($figureRenderer))->renderFigure(1, null);
     }
 }

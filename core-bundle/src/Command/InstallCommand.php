@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,51 +21,30 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * Installs the required Contao directories.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:install',
+    description: 'Installs the required Contao directories.'
+)]
 class InstallCommand extends Command
 {
-    protected static $defaultName = 'contao:install';
-
-    private ?Filesystem $fs = null;
+    private Filesystem|null $fs = null;
     private array $rows = [];
-    private string $projectDir;
-    private string $uploadPath;
-    private string $imageDir;
-    private ?string $webDir;
+    private string|null $webDir = null;
 
-    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
+    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
     {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->imageDir = $imageDir;
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-            ->setDescription('Installs the required Contao directories')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ($this->fs->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->addEmptyDirs();
 
@@ -74,7 +54,7 @@ class InstallCommand extends Command
             $io->listing($this->rows);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function addEmptyDirs(): void

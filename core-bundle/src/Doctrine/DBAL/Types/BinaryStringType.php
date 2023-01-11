@@ -20,7 +20,7 @@ use Doctrine\DBAL\Types\Type;
  */
 class BinaryStringType extends Type
 {
-    public const NAME = 'binary_string';
+    final public const NAME = 'binary_string';
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {

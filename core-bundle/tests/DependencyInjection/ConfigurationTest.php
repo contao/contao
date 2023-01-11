@@ -21,7 +21,6 @@ use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
@@ -54,19 +53,6 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
-    }
-
-    public function testAdjustsTheDefaultWebDir(): void
-    {
-        $configuration = (new Processor())->processConfiguration($this->configuration, []);
-
-        $this->assertSame('public', basename($configuration['web_dir']));
-
-        (new Filesystem())->mkdir($this->getTempDir().'/web');
-
-        $configuration = (new Processor())->processConfiguration($this->configuration, []);
-
-        $this->assertSame('web', basename($configuration['web_dir']));
     }
 
     /**
@@ -112,7 +98,6 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
             ],
         ];
@@ -257,6 +242,102 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
+    public function testMessengerConfiguration(): void
+    {
+        $params = [
+            'contao' => [
+                'messenger' => [
+                    'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
+                    'workers' => [
+                        [
+                            'transports' => ['prio_normal'],
+                        ],
+                        [
+                            'transports' => ['prio_high'],
+                            'options' => ['--sleep=5', '--time-limit=60'],
+                            'autoscale' => [
+                                'desired_size' => 10,
+                                'max' => 30,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(
+            [
+                'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
+                'workers' => [
+                    [
+                        'transports' => ['prio_normal'],
+                        'options' => ['--time-limit=60'],
+                        'autoscale' => [
+                            'enabled' => false,
+                        ],
+                    ],
+                    [
+                        'transports' => ['prio_high'],
+                        'options' => ['--sleep=5', '--time-limit=60'],
+                        'autoscale' => [
+                            'desired_size' => 10,
+                            'max' => 30,
+                            'enabled' => true,
+                        ],
+                    ],
+                ],
+            ],
+            $configuration['messenger']
+        );
+    }
+
+    /**
+     * @dataProvider cronConfigurationProvider
+     */
+    public function testValidCronConfiguration(array $params, bool|string $expected): void
+    {
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($expected, $configuration['cron']['web_listener']);
+    }
+
+    public function testInvalidCronConfiguration(): void
+    {
+        $params = [
+            'contao' => [
+                'cron' => [
+                    'web_listener' => 'foobar',
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value "foobar" is not allowed for path "contao.cron.web_listener". Permissible values: "auto", true, false');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function cronConfigurationProvider(): \Generator
+    {
+        yield 'Default value' => [
+            [], 'auto',
+        ];
+
+        yield 'Explicit auto' => [
+            ['contao' => ['cron' => ['web_listener' => 'auto']]], 'auto',
+        ];
+
+        yield 'Explicit false' => [
+            ['contao' => ['cron' => ['web_listener' => false]]], false,
+        ];
+
+        yield 'Explicit true' => [
+            ['contao' => ['cron' => ['web_listener' => true]]], true,
+        ];
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
@@ -275,7 +356,7 @@ class ConfigurationTest extends TestCase
             }
 
             if (\is_string($key) && !$value->isDeprecated()) {
-                $this->assertRegExp('/^[a-z][a-z_]+[a-z]$/', $key);
+                $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }
     }

@@ -16,7 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 
 abstract class AbstractResponseContextEvent
 {
-    private ?ResponseContext $responseContext = null;
+    private ResponseContext|null $responseContext = null;
 
     public function setResponseContext(ResponseContext $responseContext): self
     {

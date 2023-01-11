@@ -29,17 +29,12 @@ use Symfony\Component\Security\Core\Security;
  */
 class UserSessionListener
 {
-    private Connection $connection;
-    private Security $security;
-    private ScopeMatcher $scopeMatcher;
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(Connection $connection, Security $security, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(
+        private Connection $connection,
+        private Security $security,
+        private ScopeMatcher $scopeMatcher,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     /**

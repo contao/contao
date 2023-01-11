@@ -20,35 +20,29 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterfa
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use UAParser\AbstractParser;
 use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    private RequestStack $requestStack;
-    private TrustedDeviceTokenStorage $trustedTokenStorage;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
+    public function __construct(private RequestStack $requestStack, private TrustedDeviceTokenStorage $trustedTokenStorage, private EntityManagerInterface $entityManager)
     {
-        $this->requestStack = $requestStack;
-        $this->trustedTokenStorage = $trustedTokenStorage;
-        $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param mixed $user
+     */
     public function addTrustedDevice($user, string $firewallName): void
     {
         if (!$user instanceof User) {
             return;
         }
 
-        $userAgent = $this->requestStack->getMainRequest()->headers->get('User-Agent');
+        $userAgent = $this->requestStack->getCurrentRequest()->headers->get('User-Agent');
 
-        /** @var Parser&AbstractParser $parser */
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
@@ -63,13 +57,16 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
+    /**
+     * @param mixed $user
+     */
     public function isTrustedDevice($user, string $firewallName): bool
     {
         if (!($user instanceof User)) {
             return false;
         }
 
-        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
     }
 
     public function clearTrustedDevices(User $user): void
@@ -89,7 +86,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     /**
      * @return Collection<int, TrustedDevice>
      */
-    public function getTrustedDevices(User $user)
+    public function getTrustedDevices(User $user): mixed
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -97,13 +94,16 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->from(TrustedDevice::class, 'td')
             ->andWhere('td.userClass = :userClass')
             ->andWhere('td.userId = :userId')
-            ->setParameter('userClass', \get_class($user))
-            ->setParameter('userId', (int) $user->id)
+            ->setParameter('userClass', $user::class)
+            ->setParameter('userId', $user->id)
             ->getQuery()
             ->execute()
         ;
     }
 
+    /**
+     * @param mixed $user
+     */
     public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
     {
         return true;

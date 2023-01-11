@@ -23,9 +23,14 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $GLOBALS['TL_DCA'] = [];
-
         $this->listener = new DataContainerCallbackListener();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
     }
 
     public function testRegistersCallbacks(): void
@@ -269,7 +274,7 @@ class DataContainerCallbackListenerTest extends TestCase
         );
     }
 
-    public function testAddsCallbackWithPriorityZeroBeforeExistingOnes(): void
+    public function testAddsCallbackWithPriorityZeroAfterExistingOnes(): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [
             'config' => [
@@ -301,10 +306,10 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'config' => [
                     'onload_callback' => [
-                        ['Test\CallbackListener', 'newCallback'],
                         ['Test\CallbackListener', 'existingCallback'],
                         'key' => ['Test\CallbackListener', 'existingCallback2'],
                         ['Test\CallbackListener', 'existingCallback3'],
+                        ['Test\CallbackListener', 'newCallback'],
                     ],
                 ],
             ],
@@ -463,7 +468,7 @@ class DataContainerCallbackListenerTest extends TestCase
             ]
         );
 
-        $this->assertArrayNotHasKey('tl_page', $GLOBALS['TL_DCA']);
+        $this->assertArrayNotHasKey('tl_page', $GLOBALS['TL_DCA'] ?? []);
 
         $this->listener->onLoadDataContainer('tl_page');
 

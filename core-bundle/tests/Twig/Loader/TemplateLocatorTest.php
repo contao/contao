@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -23,13 +24,10 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLocatorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testFindsThemeDirectories(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
@@ -51,15 +49,13 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersDeprecationIfThemeDirectoryContainsInvalidCharacters(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.12: Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
-
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
+
+        $this->expectException(InvalidThemePathException::class);
+        $this->expectExceptionMessage('The theme path "../themes/invalid.theme" contains one or more invalid characters: "."');
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
@@ -122,10 +118,10 @@ class TemplateLocatorTest extends TestCase
         $expectedResourcePaths = [
             'App' => [
                 Path::join($projectDir, 'contao/templates'),
+                Path::join($projectDir, 'contao/templates/other'),
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
                 Path::join($projectDir, 'src/Resources/contao/templates'),
-                Path::join($projectDir, 'app/Resources/contao/templates'),
             ],
             'CoreBundle' => [
                 Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
@@ -148,7 +144,7 @@ class TemplateLocatorTest extends TestCase
 
     public function testFindsTemplates(): void
     {
-        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle/templates');
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
         $locator = $this->getTemplateLocator('/project/dir');
 
         $expectedTemplates = [
@@ -156,6 +152,50 @@ class TemplateLocatorTest extends TestCase
         ];
 
         $this->assertSame($expectedTemplates, $locator->findTemplates($path));
+    }
+
+    public function testFindsTemplatesWithDirectoryStructure(): void
+    {
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/nested');
+        $locator = $this->getTemplateLocator('/project/dir');
+
+        $expectedTemplates = [
+            'content-element/text.html.twig' => Path::join($path, 'content-element/text.html.twig'),
+            'content-element/text/variant.html.twig' => Path::join($path, 'content-element/text/variant.html.twig'),
+        ];
+
+        $this->assertSame($expectedTemplates, $locator->findTemplates($path));
+    }
+
+    public function testFindsTemplatesWithImplicitNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/implicit-roots');
+        $locator = $this->getTemplateLocator($projectDir, ['templates/my/theme']);
+
+        $expectedTemplates = [
+            'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+        ];
+
+        $expectedThemeTemplates = [
+            'content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
+        ];
+
+        $this->assertEmpty(
+            $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
+            'expect single depth without implicit root'
+        );
+
+        $this->assertSame(
+            $expectedTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates')),
+            'expect templates with directory structure but no theme templates'
+        );
+
+        $this->assertSame(
+            $expectedThemeTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
+            'expect theme templates with directory structure'
+        );
     }
 
     public function testFindsNoTemplatesIfPathDoesNotExist(): void

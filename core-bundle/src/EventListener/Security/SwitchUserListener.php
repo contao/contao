@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Security;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 /**
@@ -22,13 +22,8 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
  */
 class SwitchUserListener
 {
-    private TokenStorageInterface $tokenStorage;
-    private LoggerInterface $logger;
-
-    public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
+    public function __construct(private TokenStorageInterface $tokenStorage, private LoggerInterface $logger)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->logger = $logger;
     }
 
     /**
@@ -45,9 +40,20 @@ class SwitchUserListener
         $sourceUser = $token->getUserIdentifier();
         $targetUser = $event->getTargetUser()->getUserIdentifier();
 
-        $this->logger->info(
-            sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $sourceUser)]
-        );
+        $originalUser = null;
+
+        if ($token instanceof SwitchUserToken) {
+            $originalUser = $token->getOriginalToken()->getUserIdentifier();
+        }
+
+        if ($originalUser === $targetUser) {
+            $this->logger->info(sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
+        } else {
+            if (!empty($originalUser)) {
+                $sourceUser = $originalUser;
+            }
+
+            $this->logger->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
+        }
     }
 }

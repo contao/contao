@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -28,13 +29,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    private MemoryTokenStorage $tokenStorage;
-    private string $cookiePrefix;
-
-    public function __construct(MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
+    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->cookiePrefix = $cookiePrefix;
     }
 
     /**
@@ -132,7 +128,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $content = $response->getContent();
-        $tokens = $this->tokenStorage->getUsedTokens();
+        $tokens = $this->tokenManager->getUsedTokenValues();
 
         if (!\is_string($content) || empty($tokens)) {
             return;
@@ -180,16 +176,12 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return $tokens;
     }
 
-    /**
-     * @param mixed $key
-     * @param mixed $value
-     */
-    private function isCsrfCookie($key, $value): bool
+    private function isCsrfCookie(mixed $key, mixed $value): bool
     {
         if (!\is_string($key)) {
             return false;
         }
 
-        return 0 === strpos($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value);
+        return str_starts_with($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', (string) $value);
     }
 }

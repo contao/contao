@@ -46,11 +46,7 @@ class ThemeTemplatesListenerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with(
-                'ERR.invalidThemeTemplatePath',
-                ['<bad-path>', '._'],
-                'contao_default',
-            )
+            ->with('ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default')
             ->willReturn('<message>')
         ;
 

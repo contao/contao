@@ -6,9 +6,11 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_DCA']['tl_test'] = [
+use Contao\DC_Table;
+
+$GLOBALS['TL_DCA']['tl_test_with_declare3'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'sql' => [
             'keys' => [
                 'id' => 'primary',

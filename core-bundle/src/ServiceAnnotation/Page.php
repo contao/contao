@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\ServiceAnnotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
+use Symfony\Component\Routing\Annotation\Route;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
@@ -21,22 +22,18 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  *
- * @see \Symfony\Component\Routing\Annotation\Route
+ * @see Route
  */
 final class Page implements ServiceTagInterface
 {
-    private ?string $type = null;
+    private string|null $type = null;
     private bool $contentComposition = true;
-    private ?string $urlSuffix = null;
+    private string|null $urlSuffix = null;
     private array $requirements = [];
     private array $options = [];
     private array $defaults = [];
     private array $methods = [];
-
-    /**
-     * @var string|bool|null
-     */
-    private $path;
+    private bool|string|null $path = null;
 
     public function __construct(array $data)
     {
@@ -110,23 +107,17 @@ final class Page implements ServiceTagInterface
         $this->contentComposition = $contentComposition;
     }
 
-    /**
-     * @param string|bool|null $path
-     */
-    public function setPath($path): void
+    public function setPath(bool|string|null $path): void
     {
         $this->path = $path;
     }
 
-    /**
-     * @return string|bool|null
-     */
-    public function getPath()
+    public function getPath(): bool|string|null
     {
         return $this->path;
     }
 
-    public function getUrlSuffix(): ?string
+    public function getUrlSuffix(): string|null
     {
         return $this->urlSuffix;
     }
@@ -169,7 +160,7 @@ final class Page implements ServiceTagInterface
     /**
      * @param string|array<string> $methods
      */
-    public function setMethods($methods): void
+    public function setMethods(array|string $methods): void
     {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }

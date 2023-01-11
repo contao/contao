@@ -12,27 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
-use Contao\Image as ContaoImage;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizer;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
-use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Contao\System;
-use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
@@ -44,9 +40,9 @@ class ImageFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -56,20 +52,17 @@ class ImageFactoryTest extends TestCase
                 Path::join(self::getTempDir(), $directory)
             );
         }
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesAnImageObjectFromAnImagePath(): void
@@ -454,6 +447,8 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @dataProvider getCreateWithLegacyMode
+     *
+     * @group legacy
      */
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
@@ -513,49 +508,14 @@ class ImageFactoryTest extends TestCase
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
+
+        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
 
         $this->assertSame($imageMock, $image);
         $this->assertSame($imageMock, $imageFromSerializedConfig);
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getInvalidImportantParts
-     */
-    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart(array $invalid, array $expected): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.');
-
-        $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = $invalid[0];
-        $filesModel->importantPartY = $invalid[1];
-        $filesModel->importantPartWidth = $invalid[2];
-        $filesModel->importantPartHeight = $invalid[3];
-
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
-        $image = $imageFactory->create($path);
-
-        $this->assertSameImportantPart(
-            new ImportantPart($expected[0], $expected[1], $expected[2], $expected[3]),
-            $image->getImportantPart()
-        );
-
-        $this->assertSame($path, $image->getPath());
-    }
-
-    public function getInvalidImportantParts(): \Generator
-    {
-        yield [[20, 20, 160, 160], [0.1, 0.1, 0.8, 0.8]];
-        yield [[0, 0, 100, 100], [0, 0, 0.5, 0.5]];
-        yield [[0, 0, 200, 200], [0, 0, 1, 1]];
-        yield [[1, 1, 1, 1], [0.005, 0.005, 0.005, 0.005]];
-        yield [[0, 0, 999, 100], [0, 0, 1, 1]];
     }
 
     /**
@@ -625,215 +585,6 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testExecutesTheExecuteResizeHook(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
-
-        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
-
-        $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $adapter]);
-
-        $resizer = new LegacyResizer(Path::join($this->getTempDir(), 'assets/images'), new ResizeCalculator());
-        $resizer->setFramework($framework);
-
-        $imagine = new Imagine();
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
-
-        System::getContainer()->set('contao.image.factory', $imageFactory);
-
-        $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[static::class, 'executeResizeHookCallback']],
-        ];
-
-        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
-
-        $this->assertSame(
-            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg')),
-            Path::canonicalize($image->getPath())
-        );
-
-        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
-
-        $this->assertSame(
-            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg')),
-            Path::canonicalize($image->getPath())
-        );
-
-        $image = $imageFactory->create(
-            $path,
-            [200, 200, ResizeConfiguration::MODE_CROP],
-            Path::join($this->getTempDir(), 'target.jpg')
-        );
-
-        $this->assertSame(
-            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg')),
-            Path::canonicalize($image->getPath())
-        );
-
-        unset($GLOBALS['TL_CONFIG']['validImageTypes'], $GLOBALS['TL_HOOKS']);
-    }
-
-    public static function executeResizeHookCallback(ContaoImage $imageObj): string
-    {
-        // Do not include $cacheName as it is dynamic (mtime)
-        $relativePath = 'assets/'
-            .$imageObj->getOriginalPath()
-            .'&executeResize'
-            .'_'.$imageObj->getTargetWidth()
-            .'_'.$imageObj->getTargetHeight()
-            .'_'.$imageObj->getResizeMode()
-            .'_'.$imageObj->getTargetPath()
-            .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg';
-
-        $filesystem = new Filesystem();
-        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
-
-        if (!$filesystem->exists($dir = Path::getDirectory($path))) {
-            $filesystem->mkdir($dir);
-        }
-
-        $filesystem->dumpFile($path, '');
-
-        return $relativePath;
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testExecutesTheGetImageHook(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
-
-        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
-
-        $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $adapter]);
-
-        $resizer = new LegacyResizer(Path::join($this->getTempDir(), 'assets/images'), new ResizeCalculator());
-        $resizer->setFramework($framework);
-
-        $imagine = new Imagine();
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
-
-        System::getContainer()->set('contao.image.factory', $imageFactory);
-
-        $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[static::class, 'executeResizeHookCallback']],
-        ];
-
-        // Build cache before adding the hook
-        $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
-
-        $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[static::class, 'getImageHookCallback']],
-        ];
-
-        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
-
-        $this->assertSame(
-            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg')),
-            Path::canonicalize($image->getPath())
-        );
-
-        $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
-
-        $this->assertRegExp(
-            '(/images/.*dummy.*.jpg$)',
-            $image->getPath(),
-            'Hook should not get called for cached images'
-        );
-
-        $image = $imageFactory->create(
-            $path,
-            (new ResizeConfiguration())->setWidth(200)->setHeight(200),
-            (new ResizeOptions())->setSkipIfDimensionsMatch(true)
-        );
-
-        $this->assertSame(
-            Path::normalize($this->getTempDir()).'/images/dummy.jpg',
-            Path::normalize($image->getPath()),
-            'Hook should not get called if no resize is necessary'
-        );
-
-        unset($GLOBALS['TL_CONFIG']['validImageTypes'], $GLOBALS['TL_HOOKS']);
-    }
-
-    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, File $fileObj, string $targetPath, ContaoImage $imageObj): string
-    {
-        // Do not include $cacheName as it is dynamic (mtime)
-        $relativePath = 'assets/'
-            .$originalPath
-            .'&getImage'
-            .'_'.$targetWidth
-            .'_'.$targetHeight
-            .'_'.$resizeMode
-            .'_'.str_replace('\\', '-', \get_class($fileObj))
-            .'_'.$targetPath
-            .'_'.str_replace('\\', '-', \get_class($imageObj))
-            .'.jpg';
-
-        $filesystem = new Filesystem();
-        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
-
-        if (!$filesystem->exists($dir = Path::getDirectory($path))) {
-            $filesystem->mkdir($dir);
-        }
-
-        $filesystem->dumpFile($path, '');
-
-        return $relativePath;
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testIgnoresAnEmptyHookReturnValue(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
-
-        $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
-
-        $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-
-        $adapters = [
-            FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
-            Config::class => $this->mockConfiguredAdapter(['get' => 3000]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $resizer = new LegacyResizer(Path::join($this->getTempDir(), 'assets/images'), new ResizeCalculator());
-        $resizer->setFramework($framework);
-
-        $imagine = new Imagine();
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
-
-        System::getContainer()->set('contao.image.factory', $imageFactory);
-
-        $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[static::class, 'emptyHookCallback']],
-        ];
-
-        $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
-
-        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
-        $this->assertSame(100, $image->getDimensions()->getSize()->getWidth());
-        $this->assertSame(100, $image->getDimensions()->getSize()->getHeight());
-
-        unset($GLOBALS['TL_CONFIG']['validImageTypes'], $GLOBALS['TL_HOOKS']);
-    }
-
-    public static function emptyHookCallback(): void
-    {
-    }
-
     private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
@@ -843,7 +594,9 @@ class ImageFactoryTest extends TestCase
         $framework ??= $this->createMock(ContaoFramework::class);
         $bypassCache ??= false;
         $validExtensions ??= ['jpg', 'svg'];
-        $uploadDir ??= Path::join($this->getTempDir(), 'images');
+
+        // Do not use Path::join here (see #4596)
+        $uploadDir ??= $this->getTempDir().'/images';
 
         if (null === $imagineOptions) {
             $imagineOptions = [

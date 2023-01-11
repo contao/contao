@@ -24,7 +24,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,21 +34,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeDcaCallback extends AbstractMaker
 {
-    private ContaoFramework $framework;
-    private ClassGenerator $classGenerator;
-    private ResourceFinder $resourceFinder;
-    private SignatureGenerator $signatureGenerator;
-    private ImportExtractor $importExtractor;
-    private PhpCompatUtil $phpCompatUtil;
-
-    public function __construct(ContaoFramework $framework, ClassGenerator $classGenerator, ResourceFinder $resourceFinder, SignatureGenerator $signatureGenerator, ImportExtractor $importExtractor, PhpCompatUtil $phpCompatUtil)
-    {
-        $this->framework = $framework;
-        $this->classGenerator = $classGenerator;
-        $this->resourceFinder = $resourceFinder;
-        $this->signatureGenerator = $signatureGenerator;
-        $this->importExtractor = $importExtractor;
-        $this->phpCompatUtil = $phpCompatUtil;
+    public function __construct(
+        private ContaoFramework $framework,
+        private ClassGenerator $classGenerator,
+        private ResourceFinder $resourceFinder,
+        private SignatureGenerator $signatureGenerator,
+        private ImportExtractor $importExtractor,
+    ) {
     }
 
     public static function getCommandName(): string
@@ -97,8 +88,8 @@ class MakeDcaCallback extends AbstractMaker
         $definition = $targets[$target];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 
-        if (false !== strpos($target, '{')) {
-            $chunks = explode('.', $target);
+        if (str_contains((string) $target, '{')) {
+            $chunks = explode('.', (string) $target);
 
             foreach ($chunks as $chunk) {
                 if ('{' === $chunk[0]) {
@@ -117,7 +108,6 @@ class MakeDcaCallback extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
@@ -157,8 +147,8 @@ class MakeDcaCallback extends AbstractMaker
 
         $target = $io->askQuestion($question);
 
-        if (false !== strpos($target, '{')) {
-            $chunks = explode('.', $target);
+        if (str_contains((string) $target, '{')) {
+            $chunks = explode('.', (string) $target);
 
             foreach ($chunks as $chunk) {
                 if ('{' !== $chunk[0]) {
@@ -201,7 +191,7 @@ class MakeDcaCallback extends AbstractMaker
      */
     private function getTargets(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/callbacks.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/callbacks.yaml');
         $targets = [];
 
         foreach ($yaml['callbacks'] as $key => $config) {

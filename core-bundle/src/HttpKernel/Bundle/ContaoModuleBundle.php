@@ -28,13 +28,6 @@ final class ContaoModuleBundle extends Bundle
         $this->name = $name;
         $this->path = Path::join($projectDir, 'system/modules', $this->name);
 
-        if (is_dir($this->path)) {
-            return;
-        }
-
-        // Backwards compatibility, $projectDir was previously set from kernel $rootDir
-        $this->path = Path::join($projectDir, '../system/modules', $this->name);
-
         if (!is_dir($this->path)) {
             throw new \LogicException(sprintf('The module folder "system/modules/%s" does not exist.', $this->name));
         }

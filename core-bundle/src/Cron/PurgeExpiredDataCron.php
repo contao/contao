@@ -13,24 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\Config;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 
 class PurgeExpiredDataCron
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(private ContaoFramework $framework, private Connection $connection)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
     }
 
-    /**
-     * @CronJob("hourly")
-     */
+    #[AsCronJob('hourly')]
     public function onHourly(): void
     {
         $this->framework->initialize();
@@ -48,7 +42,10 @@ class PurgeExpiredDataCron
             return;
         }
 
-        $stmt = $this->connection->prepare(sprintf('DELETE FROM %s WHERE tstamp<:tstamp', $table));
-        $stmt->executeStatement(['tstamp' => time() - $period]);
+        $this->connection->executeStatement(
+            "DELETE FROM $table WHERE tstamp < :tstamp",
+            ['tstamp' => time() - $period],
+            ['tstamp' => Types::INTEGER],
+        );
     }
 }

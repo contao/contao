@@ -32,7 +32,7 @@ interface FragmentRegistryInterface
     /**
      * Returns a fragment by its identifier.
      */
-    public function get(string $identifier): ?FragmentConfig;
+    public function get(string $identifier): FragmentConfig|null;
 
     /**
      * Returns all fragment identifiers.

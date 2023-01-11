@@ -18,7 +18,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsPickerProvider
 {
-    public function __construct(public ?int $priority = null)
+    public function __construct(public int|null $priority = null)
     {
     }
 }

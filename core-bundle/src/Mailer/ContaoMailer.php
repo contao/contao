@@ -22,15 +22,8 @@ use Symfony\Component\Mime\RawMessage;
 
 final class ContaoMailer implements MailerInterface
 {
-    private MailerInterface $mailer;
-    private AvailableTransports $transports;
-    private RequestStack $requestStack;
-
-    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack)
+    public function __construct(private MailerInterface $mailer, private AvailableTransports $transports, private RequestStack $requestStack)
     {
-        $this->mailer = $mailer;
-        $this->transports = $transports;
-        $this->requestStack = $requestStack;
     }
 
     public function send(RawMessage $message, Envelope $envelope = null): void
@@ -61,7 +54,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $attributes = $this->requestStack->getCurrentRequest()->attributes;
+        $attributes = $request->attributes;
 
         if (!$attributes->has('pageModel')) {
             return;
@@ -106,5 +99,14 @@ final class ContaoMailer implements MailerInterface
         }
 
         $message->from($from);
+
+        // Also override "Return-Path" and "Sender" if set (see #4712)
+        if (null !== $message->getReturnPath()) {
+            $message->returnPath($from);
+        }
+
+        if (null !== $message->getSender()) {
+            $message->sender($from);
+        }
     }
 }

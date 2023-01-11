@@ -1,0 +1,48 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1539679763
+      title: English Root
+      alias: english-root
+      urlSuffix: .html
+      type: root
+      language: en
+      dns: example.com
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: English Index
+      alias: index
+      type: regular
+      published: 1
+
+    - id: 3
+      pid: 0
+      sorting: 256
+      tstamp: 1539679763
+      title: German Root
+      alias: german-root
+      urlSuffix: .html
+      type: root
+      language: de
+      dns: example.com
+      fallback: 0
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 4
+      pid: 3
+      sorting: 128
+      tstamp: 1539698035
+      title: German Index
+      alias: start
+      type: regular
+      published: 1

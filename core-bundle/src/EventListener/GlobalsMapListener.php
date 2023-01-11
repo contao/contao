@@ -17,21 +17,23 @@ namespace Contao\CoreBundle\EventListener;
  */
 class GlobalsMapListener
 {
-    private array $globals;
-
-    public function __construct(array $globals)
+    public function __construct(private array $globals)
     {
-        $this->globals = $globals;
     }
 
     /**
      * Maps fragments to the globals array.
+     *
+     * Note: Existing elements in $GLOBALS[$key] won't be overwritten. This
+     * allows opting out of our new content elements/modules as fragments by
+     * creating a $GLOBALS definition that points to the respective legacy
+     * class.
      */
     public function onInitializeSystem(): void
     {
         foreach ($this->globals as $key => $value) {
             if (\is_array($value) && isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
-                $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value);
+                $GLOBALS[$key] = array_replace_recursive($value, $GLOBALS[$key]);
             } else {
                 $GLOBALS[$key] = $value;
             }

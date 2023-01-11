@@ -28,7 +28,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class PickerProvider implements ServiceTagInterface
 {
-    public ?int $priority = null;
+    public int|null $priority = null;
 
     public function getName(): string
     {

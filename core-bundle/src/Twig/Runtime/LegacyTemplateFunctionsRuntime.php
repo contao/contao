@@ -12,11 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -25,18 +22,11 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $framework;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal
      */
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->requestStack = $requestStack;
-        $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -73,29 +63,6 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
                 $frontendTemplate->section($key, $template);
             }
         );
-    }
-
-    /**
-     * Renders a Contao back end template with the given blocks.
-     */
-    public function renderContaoBackendTemplate(array $blocks = []): string
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request || !$this->scopeMatcher->isBackendRequest($request)) {
-            return '';
-        }
-
-        $controller = $this->framework->createInstance(BackendCustom::class);
-        $template = $controller->getTemplateObject();
-
-        foreach ($blocks as $key => $content) {
-            $template->{$key} = $content;
-        }
-
-        $response = $controller->run();
-
-        return $response->getContent();
     }
 
     private function captureOutput(callable $callable): string

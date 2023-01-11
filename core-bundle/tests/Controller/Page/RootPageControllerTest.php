@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,13 @@ class RootPageControllerTest extends TestCase
         parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
     }
 
     public function testRedirectsToTheFirstChildPage(): void
@@ -51,7 +59,7 @@ class RootPageControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
 
-        $controller = new RootPageController();
+        $controller = new RootPageController(new NullLogger());
         $controller->setContainer($container);
 
         /** @var RedirectResponse $response */
@@ -77,7 +85,7 @@ class RootPageControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
 
-        $controller = new RootPageController();
+        $controller = new RootPageController(new NullLogger());
         $controller->setContainer($container);
 
         $this->expectException(NoActivePageFoundException::class);

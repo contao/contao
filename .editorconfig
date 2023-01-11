@@ -9,16 +9,16 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{php,twig,yml}]
+[*.{php,twig,yaml,yml}]
 indent_style = space
 indent_size = 4
 
-[*.{html5,svg,min.css,min.js}]
+[*.{svg,min.css,min.js}]
 insert_final_newline = false
 
-[*/src/Resources/contao/**.{css,js,php}]
+[*/contao/**.{css,js,php}]
 indent_style = tab
 
-[*/src/Resources/contao/**.html5]
+[*/contao/**.html5]
 indent_style = space
 indent_size = 2

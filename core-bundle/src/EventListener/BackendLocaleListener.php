@@ -23,13 +23,8 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class BackendLocaleListener
 {
-    private Security $security;
-    private LocaleAwareInterface $translator;
-
-    public function __construct(Security $security, LocaleAwareInterface $translator)
+    public function __construct(private Security $security, private LocaleAwareInterface $translator)
     {
-        $this->security = $security;
-        $this->translator = $translator;
     }
 
     /**
@@ -48,7 +43,7 @@ class BackendLocaleListener
 
         $this->translator->setLocale($user->language);
 
-        // Deprecated since Contao 4.0, to be removed in Contao 5.0
+        // Deprecated since Contao 4.0, to be removed in Contao 6.0
         $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($user->language);
     }
 }
