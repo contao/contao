@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -105,8 +106,6 @@ class Cron
 
                 // Determine the last run date
                 $lastRunDate = null;
-
-                /** @var CronJobEntity|null $lastRunEntity */
                 $lastRunEntity = $repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {
@@ -123,6 +122,9 @@ class Cron
                     continue;
                 }
 
+                // Store the previous run in case the cronjob skips itself
+                $cron->setPreviousRun($lastRunEntity->getLastRun());
+
                 // Update the cron entry
                 $lastRunEntity->setLastRun($now);
 
@@ -135,11 +137,32 @@ class Cron
             $repository->unlockTable();
         }
 
+        $exception = null;
+
         // Execute all cron jobs to be run
         foreach ($cronJobsToBeRun as $cron) {
-            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
+            try {
+                $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $cron($scope);
+                $cron($scope);
+            } catch (CronExecutionSkippedException $e) {
+                // Restore previous run date in case cronjob skips itself
+                $lastRunEntity = $repository->findOneByName($cron->getName());
+                $lastRunEntity->setLastRun($cron->getPreviousRun());
+                $entityManager->flush();
+            } catch (\Throwable $e) {
+                // Catch any exceptions so that other cronjobs are still executed
+                $this->logger?->error((string) $e);
+
+                if (null === $exception) {
+                    $exception = $e;
+                }
+            }
+        }
+
+        // Throw the first exception
+        if (null !== $exception) {
+            throw $exception;
         }
     }
 }

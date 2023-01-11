@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
+
 class TestCronJob
 {
     public function onMinutely(): void
@@ -36,5 +38,10 @@ class TestCronJob
 
     public function customMethod(): void
     {
+    }
+
+    public function skippingMethod(): never
+    {
+        throw new CronExecutionSkippedException();
     }
 }

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Cron;
 class CronJob
 {
     private string $name;
+    private \DateTimeInterface $previousRun;
 
     public function __construct(private object $service, private string $interval, private string|null $method = null)
     {
@@ -56,5 +57,17 @@ class CronJob
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setPreviousRun(\DateTimeInterface $previousRun): self
+    {
+        $this->previousRun = $previousRun;
+
+        return $this;
+    }
+
+    public function getPreviousRun(): \DateTimeInterface
+    {
+        return $this->previousRun;
     }
 }
