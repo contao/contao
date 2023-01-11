@@ -26,9 +26,10 @@ class MessengerCronTest extends TestCase
 {
     public function testIsSkippedIfNotOnCli(): void
     {
+        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
+
         $this->expectException(CronExecutionSkippedException::class);
 
-        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
         $cron(Cron::SCOPE_WEB);
     }
 
