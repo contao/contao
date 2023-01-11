@@ -13,6 +13,7 @@
 	--icon-favorites: url("icons/favorites_small.svg");
 	--icon-color-scheme: url("icons/color-scheme_small.svg");
 	--icon-logout: url("icons/exit.svg");
+	--icon-toggle-all: url("icons/folPlus.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -22,6 +23,7 @@ html[data-color-scheme="dark"] {
 	--icon-favorites: url("icons-dark/favorites_small.svg");
 	--icon-color-scheme: url("icons-dark/color-scheme_small.svg");
 	--icon-logout: url("icons-dark/exit.svg");
+	--icon-toggle-all: url("icons-dark/folPlus.svg");
 }
 
 /* Body */
@@ -2513,7 +2515,7 @@ time[title] {
 }
 
 .header_toggle {
-	background-image: url("icons/folPlus.svg");
+	background-image: var(--icon-toggle-all);
 }
 
 .header_sync {
