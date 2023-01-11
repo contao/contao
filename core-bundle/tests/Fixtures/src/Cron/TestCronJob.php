@@ -40,7 +40,7 @@ class TestCronJob
     {
     }
 
-    public function skippingMethod(): void
+    public function skippingMethod(): never
     {
         throw new CronExecutionSkippedException();
     }

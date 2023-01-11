@@ -152,7 +152,7 @@ class Cron
                 $entityManager->flush();
             } catch (\Throwable $e) {
                 // Catch any exceptions so that other cronjobs are still executed
-                $this->logger?->error((string)$e);
+                $this->logger?->error((string) $e);
 
                 if (null === $exception) {
                     $exception = $e;
