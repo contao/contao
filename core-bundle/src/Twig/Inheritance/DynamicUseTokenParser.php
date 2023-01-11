@@ -18,10 +18,13 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\UseTokenParser;
 
 /**
- * This parser is a drop in replacement for @see \Twig\TokenParser\UseTokenParser
+ * This parser is a drop in replacement for the UseTokenParser
  * that adds support for the Contao template hierarchy.
+ *
+ * @see UseTokenParser
  *
  * @experimental
  */

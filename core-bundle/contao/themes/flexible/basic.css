@@ -132,11 +132,11 @@ html[data-color-scheme="dark"] {
 	--nested-bg: #1e2024;
 }
 
-html[data-color-scheme="dark"] .color-scheme--light {
+html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {
 	display: none !important;
 }
 
-html[data-color-scheme="dark"] .color-scheme--dark {
+html[data-color-scheme="dark"] .color-scheme--dark, .color-scheme--light {
 	display: initial !important;
 }
 
@@ -839,6 +839,10 @@ a.tl_submit {
 
 .wizard img {
 	margin-left: 4px;
+}
+
+.wizard h3 img {
+	margin-left: 0;
 }
 
 .long .tl_text, .long .tl_select {

@@ -559,6 +559,10 @@ h2.sub_headline {
 	color: var(--red);
 }
 
+.tl_gerror a, .tl_error a {
+	text-decoration: underline;
+}
+
 .tl_confirm, .tl_confirm a {
 	color: var(--green);
 }
