@@ -338,12 +338,12 @@ class ContaoTableProcessorTest extends TestCase
     {
         yield 'regular URL' => [
             Request::create('https://www.contao.org/foo?bar=baz'),
-            'https://www.contao.org/foo?bar=baz'
+            'https://www.contao.org/foo?bar=baz',
         ];
 
         yield 'encoded URL' => [
             Request::create('https://www.contao.org/foo?bar=baz&foo=b%20r'),
-            'https://www.contao.org/foo?bar=baz&foo=b%20r'
+            'https://www.contao.org/foo?bar=baz&foo=b%20r',
         ];
 
         yield 'no request' => [null, null];
