@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
@@ -308,7 +309,7 @@ class CronTest extends TestCase
     {
         $repository = $this->createMock(CronJobRepository::class);
         $repository
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('__call')
             ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn(null)
@@ -316,11 +317,13 @@ class CronTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('debug')
             ->withConsecutive(
                 ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
-                ['Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully']
+                ['Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully'],
+                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
+                // No completion log, as we're skipping
             )
         ;
 
@@ -338,6 +341,13 @@ class CronTest extends TestCase
         $this->assertFalse($cron->hasMinutelyCliCron());
 
         $cron->run(Cron::SCOPE_CLI);
+
+        // Test throws CronExecutionSkippedException if not in CLI scope
+        try {
+            $cron->run(Cron::SCOPE_WEB);
+        } catch (CronExecutionSkippedException) {
+            $this->addToAssertionCount(1);
+        }
 
         $this->assertTrue($cron->hasMinutelyCliCron());
 
