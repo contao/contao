@@ -20,7 +20,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 /**
  * @template-extends ServiceEntityRepository<CronJob>
  *
- * @method object|null findOneByName(string $name)
+ * @method CronJob|null findOneByName(string $name)
  *
  * @internal
  */
