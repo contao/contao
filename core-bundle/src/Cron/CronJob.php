@@ -36,6 +36,11 @@ class CronJob
      */
     private $name;
 
+    /**
+     * @var \DateTimeInterface
+     */
+    private $previousRun;
+
     public function __construct(object $service, string $interval, string $method = null)
     {
         $this->service = $service;
@@ -79,5 +84,17 @@ class CronJob
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setPreviousRun(\DateTimeInterface $previousRun): self
+    {
+        $this->previousRun = $previousRun;
+
+        return $this;
+    }
+
+    public function getPreviousRun(): \DateTimeInterface
+    {
+        return $this->previousRun;
     }
 }
