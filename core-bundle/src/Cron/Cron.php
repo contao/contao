@@ -91,8 +91,6 @@ class Cron
 
                 // Determine the last run date
                 $lastRunDate = null;
-
-                /** @var CronJobEntity $lastRunEntity */
                 $lastRunEntity = $repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {
@@ -136,7 +134,6 @@ class Cron
                 $cron($scope);
             } catch (CronExecutionSkippedException $e) {
                 // Restore previous run date in case cronjob skips itself
-                /** @var CronJobEntity $lastRunEntity */
                 $lastRunEntity = $repository->findOneByName($cron->getName());
                 $lastRunEntity->setLastRun($cron->getPreviousRun());
                 $entityManager->flush();

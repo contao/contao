@@ -200,10 +200,7 @@ class CronTest extends TestCase
         $entity
             ->expects($this->exactly(2))
             ->method('setLastRun')
-            ->withConsecutive(
-                [$this->anything()],
-                [$lastRun]
-            )
+            ->withConsecutive([$this->anything()], [$lastRun])
         ;
 
         $entity
