@@ -110,7 +110,7 @@ class ContaoContext implements \Stringable
         $this->source = $source;
     }
 
-    public function getUri(): ?string
+    public function getUri(): string|null
     {
         return $this->uri;
     }
@@ -120,12 +120,12 @@ class ContaoContext implements \Stringable
         $this->uri = $uri;
     }
 
-    public function getPageId(): ?int
+    public function getPageId(): int|null
     {
         return $this->pageId;
     }
 
-    public function setPageId(?int $pageId): void
+    public function setPageId(int|null $pageId): void
     {
         $this->pageId = $pageId;
     }

@@ -313,8 +313,6 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $processor = $this->getContaoTableProcessor($requestStack);
-
         $data = [
             'context' => [
                 'contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar'),
@@ -327,6 +325,7 @@ class ContaoTableProcessorTest extends TestCase
             'message' => '',
         ];
 
+        $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -337,8 +336,16 @@ class ContaoTableProcessorTest extends TestCase
 
     public function requestProvider(): \Generator
     {
-        yield 'regular URL' => [Request::create('https://www.contao.org/foo?bar=baz'), 'https://www.contao.org/foo?bar=baz'];
-        yield 'encoded URL' => [Request::create('https://www.contao.org/foo?bar=baz&foo=b%20r'), 'https://www.contao.org/foo?bar=baz&amp;foo=b%20r'];
+        yield 'regular URL' => [
+            Request::create('https://www.contao.org/foo?bar=baz'),
+            'https://www.contao.org/foo?bar=baz'
+        ];
+
+        yield 'encoded URL' => [
+            Request::create('https://www.contao.org/foo?bar=baz&foo=b%20r'),
+            'https://www.contao.org/foo?bar=baz&foo=b%20r'
+        ];
+
         yield 'no request' => [null, null];
     }
 
@@ -353,8 +360,6 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $processor = $this->getContaoTableProcessor($requestStack);
-
         $data = [
             'context' => [
                 'contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar'),
@@ -367,6 +372,7 @@ class ContaoTableProcessorTest extends TestCase
             'message' => '',
         ];
 
+        $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
         /** @var ContaoContext $context */
