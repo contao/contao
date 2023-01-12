@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -73,23 +73,6 @@ class ToggleNodesLabelListenerTest extends TestCase
         $requestStack
             ->expects($this->never())
             ->method('getCurrentRequest')
-        ;
-
-        $listener = new ToggleNodesLabelListener($requestStack);
-        $listener('tl_foobar');
-    }
-
-    public function testDoesNothingIfRequestIsNull(): void
-    {
-        $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes'] = [
-            'href' => 'tg=all',
-        ];
-
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->expects($this->once())
-            ->method('getCurrentRequest')
-            ->willReturn(null)
         ;
 
         $listener = new ToggleNodesLabelListener($requestStack);
@@ -192,11 +175,20 @@ class ToggleNodesLabelListenerTest extends TestCase
     private function mockRequestStackWithSession(?Session $session)
     {
         $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->expects($this->once())
-            ->method('getSession')
-            ->willReturn($session)
-        ;
+
+        if (null === $session) {
+            $requestStack
+                ->expects($this->once())
+                ->method('getSession')
+                ->willThrowException(new SessionNotFoundException())
+            ;
+        } else {
+            $requestStack
+                ->expects($this->once())
+                ->method('getSession')
+                ->willReturn($session)
+            ;
+        }
 
         return $requestStack;
     }

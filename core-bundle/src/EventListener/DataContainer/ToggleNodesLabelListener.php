@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -36,8 +37,13 @@ class ToggleNodesLabelListener
                 'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
                 && 'tg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
             )
-            || null === ($session = $this->requestStack->getSession())
         ) {
+            return;
+        }
+
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException $e) {
             return;
         }
 
