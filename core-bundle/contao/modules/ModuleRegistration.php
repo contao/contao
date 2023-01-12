@@ -423,7 +423,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id, 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id)));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
