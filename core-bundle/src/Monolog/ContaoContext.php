@@ -32,6 +32,8 @@ class ContaoContext implements \Stringable
         private string|null $ip = null,
         private string|null $browser = null,
         private string|null $source = null,
+        private string|null $uri = null,
+        private int|null $pageId = null,
     ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
@@ -48,6 +50,8 @@ class ContaoContext implements \Stringable
             'action' => $this->action,
             'username' => $this->username,
             'browser' => $this->browser,
+            'uri' => $this->uri,
+            'pageId' => $this->pageId,
         ]);
     }
 
@@ -104,5 +108,25 @@ class ContaoContext implements \Stringable
     public function setSource(string $source): void
     {
         $this->source = $source;
+    }
+
+    public function getUri(): string|null
+    {
+        return $this->uri;
+    }
+
+    public function setUri(string $uri): void
+    {
+        $this->uri = $uri;
+    }
+
+    public function getPageId(): int|null
+    {
+        return $this->pageId;
+    }
+
+    public function setPageId(int|null $pageId): void
+    {
+        $this->pageId = $pageId;
     }
 }
