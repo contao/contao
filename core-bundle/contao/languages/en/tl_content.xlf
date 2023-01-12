@@ -699,7 +699,7 @@
         <source>Description list content</source>
       </trans-unit>
       <trans-unit id="tl_content.dl_label.1">
-        <source>Enter a list of terms and details for the description list. You can conditionally leave each field empty, e.g. to create multiple details for one term.</source>
+        <source>Enter a list of terms and details for the description list. You can conditionally leave the term field empty to create multiple details for one term.</source>
       </trans-unit>
       <trans-unit id="tl_content.dl_key">
         <source>Term</source>

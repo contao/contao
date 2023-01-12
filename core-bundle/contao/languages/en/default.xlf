@@ -330,7 +330,7 @@
         <source>Description list</source>
       </trans-unit>
       <trans-unit id="CTE.description_list.1">
-        <source>Generates an ordered or unordered list.</source>
+        <source>Generates a description list with terms and details.</source>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
