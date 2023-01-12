@@ -260,7 +260,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'attributes_callback'     => array('tl_content', 'adjustDcaSizeByType'),
+			'attributes_callback'     => array(static function (array $attributes, DataContainer $dc = null) {
+				if ($dc !== null && \in_array($dc->getCurrentRecord()['type'] ?? null, ['download', 'downloads']))
+				{
+					$attributes['eval']['mandatory'] = true;
+				}
+
+				return $attributes;
+			}),
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
@@ -275,7 +282,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'attributes_callback'     => array('tl_content', 'adjustDcaFullsizeByType'),
+			'attributes_callback'     => array(static function (array $attributes, DataContainer $dc = null) {
+				if ($dc !== null && \in_array($dc->getCurrentRecord()['type'] ?? null, ['download', 'downloads', 'image']))
+				{
+					$attributes['eval']['tl_class'] .= ' m12';
+				}
+
+				return $attributes;
+			}),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'caption' => array
@@ -992,42 +1006,6 @@ class tl_content extends Backend
 				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
 				break;
 		}
-	}
-
-	/**
-	 * Adjust the size field by type
-	 */
-	public function adjustDcaSizeByType(array $attributes, DataContainer $dc = null)
-	{
-		if ($dc === null)
-		{
-			return $attributes;
-		}
-
-		if (\in_array($dc->getCurrentRecord()['type'] ?? null, ['download', 'downloads']))
-		{
-			$attributes['eval']['mandatory'] = true;
-		}
-
-		return $attributes;
-	}
-
-	/**
-	 * Adjust the fullsize field by type
-	 */
-	public function adjustDcaFullsizeByType(array $attributes, DataContainer $dc = null)
-	{
-		if ($dc === null)
-		{
-			return $attributes;
-		}
-
-		if (\in_array($dc->getCurrentRecord()['type'] ?? null, ['download', 'downloads', 'image']))
-		{
-			$attributes['eval']['tl_class'] .= ' m12';
-		}
-
-		return $attributes;
 	}
 
 	/**
