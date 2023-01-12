@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -30,6 +31,8 @@ class ToggleNodesLabelListenerTest extends TestCase
 
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
     }
 
@@ -177,7 +180,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $this->assertSame('collapseNodes', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
-    private function mockRequestStackWithSession(?Session $session)
+    private function mockRequestStackWithSession(?Session $session): RequestStack
     {
         $requestStack = $this->createMock(RequestStack::class);
 
