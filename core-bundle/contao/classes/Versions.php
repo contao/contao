@@ -743,12 +743,13 @@ class Versions extends Controller
 
 		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
+		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
 			$pairs['do'] = 'user';
 			$pairs['id'] = BackendUser::getInstance()->id;
-			$pairs['rt'] = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		if (isset($pairs['act']))
