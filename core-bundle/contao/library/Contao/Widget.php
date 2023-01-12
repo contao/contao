@@ -1433,6 +1433,17 @@ abstract class Widget extends Controller
 			}
 		}
 
+		// add custom logic from DCA
+		if (\is_array($arrData['attributes_callback'] ?? null))
+		{
+			$arrCallback = $arrData['attributes_callback'];
+			$arrAttributes = static::importStatic($arrCallback[0])->{$arrCallback[1]}($arrAttributes, $objDca);
+		}
+		elseif (\is_callable($arrData['attributes_callback'] ?? null))
+		{
+			$arrAttributes = $arrData['attributes_callback']($arrAttributes, $objDca);
+		}
+
 		return $arrAttributes;
 	}
 
