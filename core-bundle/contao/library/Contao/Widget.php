@@ -1424,16 +1424,7 @@ abstract class Widget extends Controller
 			$arrAttributes['rootNodes'] = $arrData['rootNodes'];
 		}
 
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && \is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback)
-			{
-				$arrAttributes = static::importStatic($callback[0])->{$callback[1]}($arrAttributes, $objDca);
-			}
-		}
-
-		// add custom logic from DCA
+		// Add custom logic from DCA
 		if (\is_array($arrData['attributes_callback'] ?? null))
 		{
 			$arrCallback = $arrData['attributes_callback'];
@@ -1442,6 +1433,15 @@ abstract class Widget extends Controller
 		elseif (\is_callable($arrData['attributes_callback'] ?? null))
 		{
 			$arrAttributes = $arrData['attributes_callback']($arrAttributes, $objDca);
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && \is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback)
+			{
+				$arrAttributes = static::importStatic($callback[0])->{$callback[1]}($arrAttributes, $objDca);
+			}
 		}
 
 		return $arrAttributes;
