@@ -320,7 +320,7 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.toggle_nodes_label:
+    contao.listener.data_container.toggle_nodes_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
         arguments:
             - '@request_stack'
