@@ -250,14 +250,23 @@ class ConfigurationTest extends TestCase
                     'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
                     'workers' => [
                         [
+                            'transports' => ['prio_low'],
+                        ],
+                        [
                             'transports' => ['prio_normal'],
+                            'options' => ['--sleep=10', '--time-limit=60'],
+                            'autoscale' => [
+                                'desired_size' => 10,
+                                'max' => 20,
+                            ],
                         ],
                         [
                             'transports' => ['prio_high'],
                             'options' => ['--sleep=5', '--time-limit=60'],
                             'autoscale' => [
-                                'desired_size' => 10,
+                                'desired_size' => 5,
                                 'max' => 30,
+                                'min' => 4,
                             ],
                         ],
                     ],
@@ -272,18 +281,28 @@ class ConfigurationTest extends TestCase
                 'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
                 'workers' => [
                     [
-                        'transports' => ['prio_normal'],
+                        'transports' => ['prio_low'],
                         'options' => ['--time-limit=60'],
                         'autoscale' => [
                             'enabled' => false,
                         ],
                     ],
                     [
+                        'transports' => ['prio_normal'],
+                        'options' => ['--sleep=10', '--time-limit=60'],
+                        'autoscale' => [
+                            'desired_size' => 10,
+                            'max' => 20,
+                            'enabled' => true,
+                        ],
+                    ],
+                    [
                         'transports' => ['prio_high'],
                         'options' => ['--sleep=5', '--time-limit=60'],
                         'autoscale' => [
-                            'desired_size' => 10,
+                            'desired_size' => 5,
                             'max' => 30,
+                            'min' => 4,
                             'enabled' => true,
                         ],
                     ],

@@ -36,7 +36,7 @@ class MessengerCronTest extends TestCase
     /**
      * @dataProvider autoscalingProvider
      */
-    public function testCorrectAmountOfWorkersAreCreated(int $messageCount, int $desiredSize, int $max, array $expectedWorkers): void
+    public function testCorrectAmountOfWorkersAreCreated(int $messageCount, int $desiredSize, int $max, int $min, array $expectedWorkers): void
     {
         $container = new Container();
         $container->set('prio_normal', $this->mockMessengerTransporter(0, false));
@@ -57,7 +57,7 @@ class MessengerCronTest extends TestCase
             )
         ;
 
-        $cron = new MessengerCron($container, $processUtil, 'bin/console', $this->getWorkers($desiredSize, $max));
+        $cron = new MessengerCron($container, $processUtil, 'bin/console', $this->getWorkers($desiredSize, $max, $min));
         $promise = $cron(Cron::SCOPE_CLI);
 
         $processes = [];
@@ -75,12 +75,26 @@ class MessengerCronTest extends TestCase
 
     public function autoscalingProvider(): \Generator
     {
-        yield 'Test minimum workers if no message count' => [
+        yield 'Test minimum workers if no message count (minimum to 1)' => [
             0, // queue empty
             10,
             15,
+            1,
             [
                 'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+            ],
+        ];
+
+        yield 'Test minimum workers if no message count (minimum to 3)' => [
+            0, // queue empty
+            10,
+            15,
+            3,
+            [
+                'bin/console messenger:consume --time-limit=60 prio_normal',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
+                'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
                 'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
             ],
         ];
@@ -89,6 +103,7 @@ class MessengerCronTest extends TestCase
             10, // exactly desired target
             10,
             15,
+            1,
             [
                 'bin/console messenger:consume --time-limit=60 prio_normal',
                 'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
@@ -99,6 +114,7 @@ class MessengerCronTest extends TestCase
             20, // exactly double the desired target
             10,
             15,
+            1,
             [
                 'bin/console messenger:consume --time-limit=60 prio_normal',
                 'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
@@ -110,6 +126,7 @@ class MessengerCronTest extends TestCase
             60,
             10,
             15,
+            1,
             [
                 'bin/console messenger:consume --time-limit=60 prio_normal',
                 'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
@@ -125,6 +142,7 @@ class MessengerCronTest extends TestCase
             9999, // very long queue
             10,
             15,
+            1,
             [
                 'bin/console messenger:consume --time-limit=60 prio_normal',
                 'bin/console messenger:consume --sleep=5 --time-limit=60 prio_high',
@@ -174,7 +192,7 @@ class MessengerCronTest extends TestCase
         return $transport;
     }
 
-    private function getWorkers(int $desiredSize, int $max): array
+    private function getWorkers(int $desiredSize, int $max, int $min): array
     {
         return [
             [
@@ -190,6 +208,7 @@ class MessengerCronTest extends TestCase
                 'autoscale' => [
                     'desired_size' => $desiredSize,
                     'max' => $max,
+                    'min' => $min,
                     'enabled' => true,
                 ],
             ],
