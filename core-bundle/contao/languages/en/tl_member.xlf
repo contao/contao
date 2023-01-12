@@ -74,12 +74,6 @@
       <trans-unit id="tl_member.mobile.1">
         <source>Please enter the cell phone number.</source>
       </trans-unit>
-      <trans-unit id="tl_member.fax.0">
-        <source>Fax number</source>
-      </trans-unit>
-      <trans-unit id="tl_member.fax.1">
-        <source>Please enter the fax number.</source>
-      </trans-unit>
       <trans-unit id="tl_member.email.0">
         <source>E-mail address</source>
       </trans-unit>

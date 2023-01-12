@@ -659,7 +659,7 @@ abstract class DataContainer extends Backend
 		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
-		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && preg_grep('/^w\d+$/', $arrClasses))
 		{
 			$arrClasses[] = 'cbx';
 		}

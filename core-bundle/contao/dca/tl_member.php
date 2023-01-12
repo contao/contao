@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('login', 'assignDir'),
-		'default'                     => '{personal_legend},firstname,lastname,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,fax,email,website,language;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
+		'default'                     => '{personal_legend},firstname,lastname,language,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,email,website;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
 	),
 
 	// Subpalettes
@@ -133,7 +133,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'dateOfBirth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(11) NOT NULL default ''"
 		),
 		'gender' => array
@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'select',
 			'options'                 => array('male', 'female', 'other'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'company' => array
@@ -200,13 +200,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'mobile' => array
-		(
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'fax' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
