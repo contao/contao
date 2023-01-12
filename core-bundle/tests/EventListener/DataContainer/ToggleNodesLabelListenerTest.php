@@ -191,18 +191,11 @@ class ToggleNodesLabelListenerTest extends TestCase
 
     private function mockRequestStackWithSession(?Session $session)
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getSession')
-            ->willReturn($session)
-        ;
-
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->expects($this->once())
-            ->method('getCurrentRequest')
-            ->willReturn($request)
+            ->method('getSession')
+            ->willReturn($session)
         ;
 
         return $requestStack;

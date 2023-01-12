@@ -36,8 +36,7 @@ class ToggleNodesLabelListener
                 'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
                 && 'tg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
             )
-            || null === ($request = $this->requestStack->getCurrentRequest())
-            || null === ($session = $request->getSession())
+            || null === ($session = $this->requestStack->getSession())
         ) {
             return;
         }
