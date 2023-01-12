@@ -599,4 +599,3 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
-            - '@contao.csrf.token_manager'

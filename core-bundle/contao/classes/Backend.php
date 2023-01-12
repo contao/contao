@@ -444,7 +444,6 @@ abstract class Backend extends Controller
 								'table' => $table,
 								'id' => $objRow->id,
 								'ref' => $request->attributes->get('_contao_referer_id'),
-								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
 							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
