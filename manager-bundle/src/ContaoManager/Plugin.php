@@ -384,10 +384,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
-            $userPassword = $this->encodeUrlParameter($user);
+            $userPassword = $this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$this->encodeUrlParameter($password);
+                $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $userPassword .= '@';
@@ -396,7 +396,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$this->encodeUrlParameter($name);
+            $dbName = '/'.$this->encodeUrlParameter((string) $name);
         }
 
         return sprintf(
@@ -418,15 +418,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $parameters = [];
 
         if ($user = $container->getParameter('mailer_user')) {
-            $parameters[] = 'username='.$this->encodeUrlParameter($user);
+            $parameters[] = 'username='.$this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('mailer_password')) {
-                $parameters[] = 'password='.$this->encodeUrlParameter($password);
+                $parameters[] = 'password='.$this->encodeUrlParameter((string) $password);
             }
         }
 
         if ($encryption = $container->getParameter('mailer_encryption')) {
-            $parameters[] = 'encryption='.$this->encodeUrlParameter($encryption);
+            $parameters[] = 'encryption='.$this->encodeUrlParameter((string) $encryption);
         }
 
         $qs = '';

@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.37] (2022-11-28)
+
+**Fixed issues:**
+
+- [#5528] Increase padding on selects in Firefox ([fritzmg])
+- [#5534] Fix javascript error in popups ([ausi])
+
 ## [4.9.36] (2022-11-15)
 
 **Fixed issues:**
@@ -1060,6 +1067,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.37]: https://github.com/contao/contao/releases/tag/4.9.37
 [4.9.36]: https://github.com/contao/contao/releases/tag/4.9.36
 [4.9.35]: https://github.com/contao/contao/releases/tag/4.9.35
 [4.9.34]: https://github.com/contao/contao/releases/tag/4.9.34
@@ -1138,6 +1146,8 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5528]: https://github.com/contao/contao/pull/5528
+[#5534]: https://github.com/contao/contao/pull/5534
 [#5500]: https://github.com/contao/contao/pull/5500
 [#5486]: https://github.com/contao/contao/pull/5486
 [#5415]: https://github.com/contao/contao/pull/5415

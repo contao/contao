@@ -37,6 +37,11 @@ class ContentDownload extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		// Return if there is no file
 		if (!$this->singleSRC)
 		{
