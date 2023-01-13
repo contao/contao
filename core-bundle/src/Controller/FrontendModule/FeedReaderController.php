@@ -92,12 +92,12 @@ class FeedReaderController extends AbstractFrontendModuleController
             $param = 'page_r'.$model->id;
             $page = $request->query->getInt($param, 1);
 
-            $config = $this->container->get('contao.framework')->getAdapter(Config::class);
-
             // Do not index or cache the page if the page number is outside the range
             if ($page < 1 || $page > max(ceil(\count($elements) / $model->perPage), 1)) {
                 throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
             }
+
+            $config = $this->getContaoAdapter(Config::class);
 
             // Set limit and offset
             $offset = ($page - 1) * $model->perPage;
