@@ -165,19 +165,19 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'showLevel' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50 clr'),
+			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'hardLimit' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'defineRoot' => array
@@ -225,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'showHidden' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'customLabel' => array

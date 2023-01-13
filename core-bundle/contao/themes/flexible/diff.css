@@ -62,21 +62,19 @@ h2 {
 }
 
 #diff .replace.left, #diff .delete.left {
-	background: var(--diff-left-bg);
+	background: var(--diff-left);
 }
 
 #diff .replace.right, #diff .insert.right {
-	background: var(--diff-right-bg);
+	background: var(--diff-right);
 }
 
 #diff .replace ins {
-	color: var(--diff-ins);
-	background: var(--diff-ins-bg);
+	background: var(--diff-ins);
 }
 
 #diff .replace del {
-	color: var(--diff-del);
-	background: var(--diff-del-bg);
+	background: var(--diff-del);
 }
 
 #diff ins, #diff del {
@@ -92,6 +90,7 @@ h2 {
 #diff dt, #diff dd {
 	margin: 0;
 	padding: 0 6px;
+	word-break: break-word;
 	line-height: 1.25;
 }
 

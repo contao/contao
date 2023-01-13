@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Widget;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Contao\Image;
@@ -30,7 +29,6 @@ class RootPageDependentSelectListener
         private Connection $connection,
         private UrlGeneratorInterface $router,
         private TranslatorInterface $translator,
-        private ContaoCsrfTokenManager $csrfTokenManager,
     ) {
     }
 
@@ -100,7 +98,7 @@ class RootPageDependentSelectListener
             }
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
-            $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1', 'rt' => $this->csrfTokenManager->getDefaultTokenValue()]);
+            $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1']);
 
             $wizards[$rootPage] = sprintf(
                 ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',

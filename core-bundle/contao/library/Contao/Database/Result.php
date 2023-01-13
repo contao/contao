@@ -99,10 +99,7 @@ class Result
 	 */
 	public function __destruct()
 	{
-		if ($this->resResult)
-		{
-			$this->resResult->free();
-		}
+		$this->resResult?->free();
 	}
 
 	/**

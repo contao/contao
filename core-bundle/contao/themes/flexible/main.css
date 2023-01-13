@@ -6,6 +6,26 @@
  * @license LGPL-3.0-or-later
  */
 
+:root {
+	--icon-logo: url("icons/logo.svg");
+	--icon-profile: url("icons/profile_small.svg");
+	--icon-security: url("icons/shield_small.svg");
+	--icon-favorites: url("icons/favorites_small.svg");
+	--icon-color-scheme: url("icons/color-scheme_small.svg");
+	--icon-logout: url("icons/exit.svg");
+	--icon-toggle-all: url("icons/folPlus.svg");
+}
+
+html[data-color-scheme="dark"] {
+	--icon-logo: url("icons-dark/logo.svg");
+	--icon-profile: url("icons-dark/profile_small.svg");
+	--icon-security: url("icons-dark/shield_small.svg");
+	--icon-favorites: url("icons-dark/favorites_small.svg");
+	--icon-color-scheme: url("icons-dark/color-scheme_small.svg");
+	--icon-logout: url("icons-dark/exit.svg");
+	--icon-toggle-all: url("icons-dark/folPlus.svg");
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -31,7 +51,7 @@ body.popup {
 	display: block;
 	height: 16px;
 	padding: 12px 12px 12px 42px;
-	background: url("icons/logo.svg") no-repeat 10px center;
+	background: var(--icon-logo) no-repeat 10px center;
 	font-weight: 400;
 }
 
@@ -59,10 +79,6 @@ body.popup {
 	margin: 0;
 	padding: 13px 12px;
 	display: inline-block;
-}
-
-#tmenu img {
-	vertical-align: top;
 }
 
 #tmenu sup {
@@ -124,10 +140,10 @@ body.popup {
 	position: absolute;
 	right: 6px;
 	margin-top: 5px;
-	padding: 6px 0 9px;
 	background: var(--content-bg);
-	box-shadow: 0 0 3px var(--gray);
-	z-index: 1;
+	border: 1px solid var(--content-border);
+	box-shadow: 0 1px 6px rgba(0,0,0,.2);
+	z-index: 2;
 	color: var(--text);
 	text-align: left;
 	opacity: 0;
@@ -153,7 +169,7 @@ body.popup {
 
 #tmenu ul.menu_level_1 .info {
 	color: var(--info);
-	padding: 9px 20px 15px;
+	padding: 15px 20px;
 	border-bottom: 1px solid var(--border);
 	line-height: 1.4;
 	margin-bottom: 9px;
@@ -180,10 +196,20 @@ body.popup {
 #tmenu ul.menu_level_1:after {
 	content: "";
 	display: block;
-	width: 100%;
-	height: 5px;
+	width: 9px;
+	height: 9px;
 	position: absolute;
-	top: -5px;
+	top: -6px;
+	right: 11px;
+	border-top: 1px solid var(--content-border);
+	border-right: 1px solid var(--content-border);
+	transform: rotateZ(-45deg);
+}
+
+#tmenu ul.menu_level_1 .color-scheme {
+	margin-top: 9px;
+	padding: 6px 0;
+	border-top: 1px solid var(--border);
 }
 
 #tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual {
@@ -211,20 +237,24 @@ body.popup {
 	background: url("icons/manual.svg") center center no-repeat;
 }
 
+#tmenu .icon-color-scheme {
+	background: var(--icon-color-scheme) 20px center no-repeat;
+}
+
 #tmenu .icon-profile {
-	background: url("icons/profile_dark.svg") 20px center no-repeat;
+	background: var(--icon-profile) 20px center no-repeat;
 }
 
 #tmenu .icon-security {
-	background: url("icons/shield_dark.svg") 20px center no-repeat;
+	background: var(--icon-security) 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {
-	background: url("icons/favorites_dark.svg") 20px center no-repeat;
+	background: var(--icon-favorites) 20px center no-repeat;
 }
 
 #tmenu .icon-logout {
-	background: url("icons/exit_dark.svg") 20px center no-repeat;
+	background: var(--icon-logout) 20px center no-repeat;
 }
 
 /* Container */
@@ -531,6 +561,10 @@ h2.sub_headline {
 	color: var(--red);
 }
 
+.tl_gerror a, .tl_error a {
+	text-decoration: underline;
+}
+
 .tl_confirm, .tl_confirm a {
 	color: var(--green);
 }
@@ -620,6 +654,7 @@ h2.sub_headline {
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
+	border: 1px solid var(--active-border);
 }
 
 .tl_filter {
@@ -718,15 +753,6 @@ h2.sub_headline {
 
 .tl_help a:hover, .tl_help a:focus, .tl_help a:active {
 	text-decoration: underline;
-}
-
-.tl_formbody_edit.nogrid .w50 {
-	float: none;
-}
-
-.tl_formbody_edit.nogrid .m12 {
-	margin-top: 0;
-	margin-bottom: 0;
 }
 
 #tl_buttons + .tl_edit_form .tl_formbody_edit {
@@ -852,7 +878,7 @@ h2.sub_headline {
 
 #tl_crawl .progress-bar.running {
 	background-color: var(--progress-running);
-	background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+	background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
 	animation: crawl-progress-bar-stripes 1s linear infinite;
 }
 
@@ -1101,7 +1127,7 @@ table.tl_listing {
 }
 
 .tl_right_nowrap {
-	padding: 6px 0;
+	padding: 6px;
 	vertical-align: top;
 	text-align: right;
 	white-space: nowrap;
@@ -1189,7 +1215,7 @@ table.tl_listing {
 }
 
 .tl_listing_container + .tl_empty {
-	margin-top: -32px;
+	margin-top: -18px;
 }
 
 .tl_noopt {
@@ -1716,9 +1742,9 @@ label.tl_change_selected {
 	margin: 0 0 12px;
 	padding: 4px 6px;
 	overflow: hidden;
-	background: var(--table-header);
-	border: solid var(--tree-header-border);
-	border-width: 1px 0;
+	background: var(--active-bg);
+	border: 1px solid var(--active-border);
+	border-radius: 2px;
 	line-height: 24px;
 }
 
@@ -1869,10 +1895,6 @@ ul.sgallery li {
 	width: 32px;
 	white-space: nowrap;
 	text-align: right;
-}
-
-#tl_versions img.undo {
-	padding-right: 2px;
 }
 
 #tl_versions .pagination {
@@ -2058,6 +2080,12 @@ ul.sgallery li {
 }
 
 /* List wizard */
+.tl_listwizard {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 .tl_listwizard .tl_text {
 	width: 78%;
 }
@@ -2317,7 +2345,7 @@ ul.sortable button[disabled] {
 }
 
 ul.sortable button[disabled]:hover {
-	background: rgba(255, 255, 255, .7);
+	background: rgba(255,255,255,.7);
 }
 
 #picker-menu {
@@ -2465,10 +2493,6 @@ time[title] {
 	background-image: url("icons/all.svg");
 }
 
-.header_delete_all {
-	background-image: url("icons/deleteAll.svg");
-}
-
 .header_new_folder {
 	padding-left: 24px;
 	background-image: url("icons/newfolder.svg");
@@ -2488,7 +2512,7 @@ time[title] {
 }
 
 .header_toggle {
-	background-image: url("icons/folPlus.svg");
+	background-image: var(--icon-toggle-all);
 }
 
 .header_sync {
@@ -2497,7 +2521,7 @@ time[title] {
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */
 .tl_text_trbl, .tl_imageSize_0, .tl_imageSize_1, #ctrl_playerSize input {
-	background: url("icons/hints.svg") no-repeat right 1px top 2px;
+	background: var(--form-bg) url("icons/hints.svg") no-repeat right 1px top 2px;
 }
 
 #ctrl_playerSize_1, .tl_imageSize_1 {
@@ -2720,6 +2744,7 @@ fieldset.collapsed > legend {
 	min-height: auto !important;
 	border: 3px dashed var(--border) !important;
 	border-radius: 2px;
+	background: var(--form-bg) !important;
 }
 
 .dropzone-filetree {

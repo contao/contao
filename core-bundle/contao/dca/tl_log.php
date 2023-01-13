@@ -114,6 +114,18 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'sorting'                 => true,
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'uri' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "varchar(2048) NOT NULL default ''"
+		),
+		'page' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		)
 	)
 );

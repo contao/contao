@@ -6,12 +6,16 @@
  * @license LGPL-3.0-or-later
  */
 
+body {
+	background: #fff;
+}
+
 body, th, td {
 	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	font-weight: 400;
 	font-size: .875rem;
 	line-height: 1.2;
-	color: var(--text);
+	color: #222;
 }
 
 h1, h2, h3, h4, h5, h6, strong, b, th {

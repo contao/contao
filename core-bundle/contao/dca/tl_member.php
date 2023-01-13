@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('login', 'assignDir'),
-		'default'                     => '{personal_legend},firstname,lastname,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,fax,email,website,language;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
+		'default'                     => '{personal_legend},firstname,lastname,language,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,email,website,fax;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
 	),
 
 	// Subpalettes
@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -133,7 +133,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'dateOfBirth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(11) NOT NULL default ''"
 		),
 		'gender' => array
@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'select',
 			'options'                 => array('male', 'female', 'other'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'company' => array
@@ -325,16 +325,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['currentLogin'],
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
-		),
-		'loginAttempts' => array
-		(
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'locked' => array
-		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),

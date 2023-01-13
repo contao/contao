@@ -70,8 +70,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property boolean           $useTwoFactor
  * @property integer           $lastLogin
  * @property integer           $currentLogin
- * @property integer           $loginAttempts
- * @property integer           $locked
  * @property string|null       $backupCodes
  * @property integer           $trustedTokenVersion
  * @property string            $firstname

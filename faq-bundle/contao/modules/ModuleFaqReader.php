@@ -140,10 +140,7 @@ class ModuleFaqReader extends Module
 				->enableLightbox($objFaq->fullsize)
 				->buildIfResourceExists();
 
-			if (null !== $figure)
-			{
-				$figure->applyLegacyTemplateData($this->Template, null, $objFaq->floating);
-			}
+			$figure?->applyLegacyTemplateData($this->Template, null, $objFaq->floating);
 		}
 
 		$this->Template->enclosure = array();

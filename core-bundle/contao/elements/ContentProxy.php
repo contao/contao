@@ -50,6 +50,11 @@ class ContentProxy extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))

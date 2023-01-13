@@ -78,7 +78,6 @@ class BackendMain extends Backend
 				'act' => 'edit',
 				'id' => $this->User->id,
 				'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-				'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 			));
 
 			$this->redirect($strUrl);

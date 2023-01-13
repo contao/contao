@@ -239,17 +239,20 @@ class Newsletter extends Backend
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
-				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $referer . '"\',1000)</script>';
-				echo '<a href="' . Environment::get('base') . $referer . '">Please click here to proceed if you are not using JavaScript</a>';
+				$href = Environment::get('base') . ltrim($referer, '/');
+
+				echo '<script>setTimeout(\'window.location="' . $href . '"\',1000)</script>';
+				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			// Redirect to the next cycle
 			else
 			{
 				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
+				$href = Environment::get('base') . ltrim($url, '/');
 
-				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
-				echo '<a href="' . Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
+				echo '<script>setTimeout(\'window.location="' . $href . '"\',' . ($intTimeout * 1000) . ')</script>';
+				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			echo '</div></div>';

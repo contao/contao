@@ -91,6 +91,7 @@ class ContentElementTestCase extends TestCase
 
     /**
      * @param array<string, mixed> $modelData
+     *
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null): Response
