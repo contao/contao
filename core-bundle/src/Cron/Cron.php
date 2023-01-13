@@ -157,6 +157,9 @@ class Cron
                     continue;
                 }
 
+                // Store the previous run in case the cronjob skips itself
+                $cron->setPreviousRun($lastRunEntity->getLastRun());
+
                 // Update the cron entry
                 $lastRunEntity->setLastRun($now);
 
@@ -169,42 +172,69 @@ class Cron
             $repository->unlockTable();
         }
 
-        $this->executeCrons($cronJobsToBeRun, $scope);
+        $this->executeCrons($cronJobsToBeRun, $scope, $repository, $entityManager);
     }
 
     /**
      * @param array<CronJob> $crons
      */
-    private function executeCrons(array $crons, string $scope): void
+    private function executeCrons(array $crons, string $scope, CronJobRepository $repository, EntityManagerInterface $entityManager): void
     {
         /** @var array<string, PromiseInterface> $promises */
         $promises = [];
 
+        $exception = null;
+
+        $onSkip = static function(CronJob $cron) use ($repository, $entityManager) {
+            // Restore previous run date in case cronjob skips itself
+            $lastRunEntity = $repository->findOneByName($cron->getName());
+            $lastRunEntity->setLastRun($cron->getPreviousRun());
+            $entityManager->flush();
+        };
+
         foreach ($crons as $cron) {
-            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
+            try {
+                $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
-            $promise = $cron($scope);
+                $promise = $cron($scope);
 
-            if (!$promise instanceof PromiseInterface) {
-                continue;
-            }
-
-            $promise->then(
-                function () use ($cron): void {
-                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
-                },
-                function ($reason) use ($cron): void {
-                    $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                if (!$promise instanceof PromiseInterface) {
+                    continue;
                 }
-            );
 
-            $promises[] = $promise;
+                $promise->then(
+                    function () use ($cron): void {
+                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                    },
+                    function ($reason) use ($onSkip, $cron): void {
+                        if ($reason instanceof CronExecutionSkippedException) {
+                            $onSkip($cron);
+                        } else {
+                            $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                        }
+                    }
+                );
+
+                $promises[] = $promise;
+            } catch (CronExecutionSkippedException $e) {
+                $onSkip($cron);
+            } catch (\Throwable $e) {
+                // Catch any exceptions so that other cronjobs are still executed
+                $this->logger?->error((string) $e);
+
+                if (null === $exception) {
+                    $exception = $e;
+                }
+            }
         }
 
-        if (0 === \count($promises)) {
-            return;
+        if (0 !== \count($promises)) {
+            Utils::settle($promises)->wait();
         }
 
-        Utils::settle($promises)->wait();
+        // Throw the first exception
+        if (null !== $exception) {
+            throw $exception;
+        }
     }
 }
