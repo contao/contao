@@ -312,6 +312,53 @@ class ConfigurationTest extends TestCase
             ],
             $configuration['messenger']
         );
+
+        try {
+            (new Processor())->processConfiguration($this->configuration, [
+                'contao' => [
+                    'messenger' => [
+                        'workers' => [
+                            [
+                                'transports' => ['prio_normal'],
+                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'autoscale' => [
+                                    'enabled' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        } catch (InvalidConfigurationException $exception) {
+            $this->assertStringContainsString(
+                'The child config "desired_size" under "contao.messenger.workers.0.autoscale" must be configured',
+                $exception->getMessage()
+            );
+        }
+
+        try {
+            (new Processor())->processConfiguration($this->configuration, [
+                'contao' => [
+                    'messenger' => [
+                        'workers' => [
+                            [
+                                'transports' => ['prio_normal'],
+                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'autoscale' => [
+                                    'enabled' => true,
+                                    'desired_size' => 10,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        } catch (InvalidConfigurationException $exception) {
+            $this->assertStringContainsString(
+                'The child config "max" under "contao.messenger.workers.0.autoscale" must be configured',
+                $exception->getMessage()
+            );
+        }
     }
 
     /**
