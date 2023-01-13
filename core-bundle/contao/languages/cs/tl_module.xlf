@@ -350,16 +350,14 @@
         <target>Doba ukládání do cache</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
-        <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Zde můžete určit, jak dlouho bude RSS kanál uložen ve vyrovnávací paměti.</target>
+        <source>Here you can define how long the feed is being cached.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
         <target>URL kanálu</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
-        <source>Please enter the URL of one or more RSS feeds.</source>
-        <target>Prosím vložte URL jednoho nebo více RSS kanálů.</target>
+        <source>Please enter the URL of one or more feeds.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>
@@ -539,7 +537,7 @@
       </trans-unit>
       <trans-unit id="tl_module.config_legend">
         <source>Module configuration</source>
-        <target>Nastavení mudulu</target>
+        <target>Nastavení modulu</target>
       </trans-unit>
       <trans-unit id="tl_module.include_legend">
         <source>Include settings</source>

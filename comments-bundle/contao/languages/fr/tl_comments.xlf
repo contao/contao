@@ -90,8 +90,8 @@
         <target>Saisir la réponse.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>Publier le commentaire</target>
+        <source>Published</source>
+        <target>Publié</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

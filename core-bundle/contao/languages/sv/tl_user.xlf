@@ -81,6 +81,12 @@
         <source>Use the code editor to modify code elements.</source>
         <target>Använd kodeditorn för att modifiera kodelement.</target>
       </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.0">
+        <source>Do not collapse content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.1">
+        <source>Do not collapse content elements in the back end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
         <target>Lösenordsbyte är nödvändigt</target>

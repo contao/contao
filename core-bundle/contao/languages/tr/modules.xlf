@@ -161,6 +161,14 @@
         <source>Change your personal data or set a new password</source>
         <target>Kişisel verilerinizi ve parolanızı güncelleyin</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+        <target>Sık kullanılanlar</target>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+        <target>Yönetim bölümü menüsündeki sık kullanıları yönetin</target>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>İçerik bileşenleri</target>
@@ -398,12 +406,17 @@
         <target>Özel bir kalıba eklenecek bir modül oluşturur.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>RSS okuyucu</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Sayfaya bir RSS akışı ekler</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

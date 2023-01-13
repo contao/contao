@@ -6,11 +6,11 @@
         <target>Token</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
-        <source>Confirmed on</source>
+        <source>Confirmed at</source>
         <target>Bestätigt am</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.removeOn">
-        <source>Remove on</source>
+        <source>Remove at</source>
         <target>Entfernen am</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.invalidatedThrough">

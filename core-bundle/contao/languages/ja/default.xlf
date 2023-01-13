@@ -161,9 +161,8 @@
         <source>Your username and password must not be the same!</source>
         <target>ユーザー名とパスワードは同一にはできません。</target>
       </trans-unit>
-      <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>このアカウントはロックされています。%d分後に再びログインできるようになります。</target>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -364,6 +363,12 @@
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>終了時刻は開始時刻よりも後でなければなりません。</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1569,14 +1574,6 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>初めてのログインのようですね。Contaoへようこそ!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-        <target>ログインの試み</target>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-        <target>ロック状態</target>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
         <target>ドラッグアンドドロップで項目を移動</target>
@@ -2001,6 +1998,18 @@
         <source>Collapse node</source>
         <target>ノードを折り畳み</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>公開フォルダー</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>保護されたフォルダー</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%sファイル</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>データを読み込み中</target>
@@ -2024,6 +2033,9 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
         <target>コピー</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2110,8 +2122,7 @@
         <target>保護した状態</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
-        <target>ゲスト</target>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2490,8 +2501,8 @@
         <target>ログイン状態を保持</target>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
-        <target>作成した日時</target>
+        <source>Created at</source>
+        <target>作成日時</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
         <source>Activation token</source>
@@ -2653,6 +2664,15 @@
         <source>Trust this device</source>
         <target>この機器を信頼</target>
       </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>テンプレートエディターにアクセス権のある通常ユーザーが存在します。テンプレートはPHPファイルですので、これらのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
@@ -2780,6 +2800,15 @@
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
         <target>%sから%sまで表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

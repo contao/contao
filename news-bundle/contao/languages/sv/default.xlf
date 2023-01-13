@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>
+        <target>Nyhetsflöde</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
         <source>Create an RSS, Atom or JSON feed from your news archives.</source>
+        <target>Skapa ett RSS-, Atom- eller JSON-flöde från dina nyhetsarkiv.</target>
       </trans-unit>
     </body>
   </file>
