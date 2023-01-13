@@ -185,7 +185,7 @@ class Cron
 
         $exception = null;
 
-        $onSkip = static function(CronJob $cron) use ($repository, $entityManager) {
+        $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
             // Restore previous run date in case cronjob skips itself
             $lastRunEntity = $repository->findOneByName($cron->getName());
             $lastRunEntity->setLastRun($cron->getPreviousRun());
