@@ -424,4 +424,54 @@ class CronTest extends TestCase
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingMethod'));
         $cron->run(Cron::SCOPE_CLI);
     }
+
+    public function testResetsLastRunForSkippedAsyncCronJobs(): void
+    {
+        $lastRun = (new \DateTime())->modify('-1 hours');
+
+        $entity = $this->createMock(CronJobEntity::class);
+        $entity
+            ->expects($this->exactly(2))
+            ->method('setLastRun')
+            ->withConsecutive([$this->anything()], [$lastRun])
+        ;
+
+        $entity
+            ->method('getName')
+            ->willReturn('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod')
+        ;
+
+        $entity
+            ->method('getLastRun')
+            ->willReturn($lastRun)
+        ;
+
+        $repository = $this->createMock(CronJobRepository::class);
+        $repository
+            ->expects($this->exactly(2))
+            ->method('__call')
+            ->with(
+                $this->equalTo('findOneByName'),
+                $this->equalTo(['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod'])
+            )
+            ->willReturn($entity)
+        ;
+
+        $cronjob = new TestCronJob();
+
+        $manager = $this->createMock(EntityManagerInterface::class);
+        $manager
+            ->expects($this->exactly(2))
+            ->method('flush')
+        ;
+
+        $cron = new Cron(
+            static fn () => $repository,
+            static fn () => $manager,
+            new ArrayAdapter()
+        );
+
+        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingAsyncMethod'));
+        $cron->run(Cron::SCOPE_CLI);
+    }
 }
