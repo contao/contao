@@ -468,7 +468,7 @@ class CronTest extends TestCase
         $cron = new Cron(
             static fn () => $repository,
             static fn () => $manager,
-            new ArrayAdapter()
+            $this->createMock(CacheItemPoolInterface::class)
         );
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingAsyncMethod'));

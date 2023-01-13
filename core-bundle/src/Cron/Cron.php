@@ -189,7 +189,6 @@ class Cron
     {
         /** @var array<string, PromiseInterface> $promises */
         $promises = [];
-
         $exception = null;
 
         foreach ($crons as $cron) {
@@ -216,7 +215,7 @@ class Cron
                 );
 
                 $promises[] = $promise;
-            } catch (CronExecutionSkippedException $e) {
+            } catch (CronExecutionSkippedException) {
                 $onSkip($cron);
             } catch (\Throwable $e) {
                 // Catch any exceptions so that other cronjobs are still executed
