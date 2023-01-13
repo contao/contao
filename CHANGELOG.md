@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.8] (2023-01-13)
+
+**Fixed issues:**
+
+- [#5566] Remove basic entities from SerpPreview ([a-v-l])
+- [#5668] Fix the URLs for the newsletter sending process ([leofeyer])
+- [#5632] Reset the list wizard list-style ([aschempp])
+- [#5590] Fix the `tl_page.accesskey` database type ([fritzmg])
+- [#5584] Add the missing files to the "prepareFormData" hook ([Toflar])
+- [#5585] Fix `PageModel::getPreviewUrl` on Windows ([fritzmg])
+- [#5573] Do not handle downloads for other elements on the same page ([m-vo])
+- [#5570] Correctly assign the `reverseToggle` flag ([leofeyer])
+- [#5562] Update TL_LANGUAGE deprecation ([ausi])
+- [#5543] Provide roles when authenticating a frontend member ([bytehead])
+
 ## [5.0.7] (2022-11-30)
 
 ## [5.0.6] (2022-11-16)
@@ -397,6 +412,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.8]: https://github.com/contao/contao/releases/tag/5.0.8
 [5.0.7]: https://github.com/contao/contao/releases/tag/5.0.7
 [5.0.6]: https://github.com/contao/contao/releases/tag/5.0.6
 [5.0.5]: https://github.com/contao/contao/releases/tag/5.0.5
@@ -409,6 +425,7 @@ This project adheres to [Semantic Versioning].
 [5.0.0-RC3]: https://github.com/contao/contao/releases/tag/5.0.0-RC3
 [5.0.0-RC2]: https://github.com/contao/contao/releases/tag/5.0.0-RC2
 [5.0.0-RC1]: https://github.com/contao/contao/releases/tag/5.0.0-RC1
+[a-v-l]: https://github.com/a-v-l
 [ameotoko]: https://github.com/ameotoko
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -422,6 +439,16 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
+[#5566]: https://github.com/contao/contao/pull/5566
+[#5668]: https://github.com/contao/contao/pull/5668
+[#5632]: https://github.com/contao/contao/pull/5632
+[#5590]: https://github.com/contao/contao/pull/5590
+[#5584]: https://github.com/contao/contao/pull/5584
+[#5585]: https://github.com/contao/contao/pull/5585
+[#5573]: https://github.com/contao/contao/pull/5573
+[#5570]: https://github.com/contao/contao/pull/5570
+[#5562]: https://github.com/contao/contao/pull/5562
+[#5543]: https://github.com/contao/contao/pull/5543
 [#5507]: https://github.com/contao/contao/pull/5507
 [#5428]: https://github.com/contao/contao/pull/5428
 [#5487]: https://github.com/contao/contao/pull/5487

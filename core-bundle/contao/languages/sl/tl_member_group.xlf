@@ -1,0 +1,94 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_member_group.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="tl_member_group.name.0">
+        <source>Title</source>
+        <target>Naziv</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Vnesite unikatno ime skupine.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.0">
+        <source>Redirect on login</source>
+        <target>Preusmeri ob prijavi</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.1">
+        <source>Redirect group members to a custom page when they log in.</source>
+        <target>Ob prijavi preusmeri člane supine na prilagojeno stran.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Pojdi na stran</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.1">
+        <source>Please choose the page to which the group members will be redirected.</source>
+        <target>Prosimo, izberite stran, kamor želite preusmeriti člane skupine.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.0">
+        <source>Deactivate</source>
+        <target>Onemogoči</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Začasno onemogoči skupino.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.0">
+        <source>Activate on</source>
+        <target>Omogoči na</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite omogočiti skupino z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Onemogoči na</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite onemogočiti skupino z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.title_legend">
+        <source>Title</source>
+        <target>Naziv</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect_legend">
+        <source>Auto-redirect</source>
+        <target>Samodejna preusmeritev</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
+        <target>Nastavitve skupine</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.0">
+        <source>New</source>
+        <target>Nov</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.1">
+        <source>Create a new member group</source>
+        <target>Ustvari novo skupino članov</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
+        <target>Prikaži podrobnosti skupine članov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
+        <target>Uredi skupino članov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
+        <target>Podvoji skupino članov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
+        <target>Izbriši skupino članov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
+        <target>Omogoči/onemogoči skupino članov z ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
