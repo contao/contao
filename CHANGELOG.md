@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.15] (2023-01-13)
+
+**Fixed issues:**
+
+- [#5667] Correctly sort images and downloads by date ([leofeyer])
+- [#5662] Handle symlinked upload directories outside the Contao root ([qzminski])
+- [#5625] Correctly handle invalid size in TextArea widget ([aschempp])
+- [#5643] Fix array index check in tl_calendar_events ([Defcon0])
+- [#5629] Fix PHP8 Warning picture_default ([zonky2])
+- [#5618] Correctly handle numeric paths ([m-vo])
+- [#5603] Set $useLastModified in FilesystemConfiguration::addDefaultDbafs() ([Toflar])
+- [#5620] Fix `{{date::Y}}` caching ([fritzmg])
+- [#5587] Also display the visible root trail when searching/filtering ([Toflar])
+- [#5575] Ensure parameters are strings ([fritzmg])
+- [#5526] Correctly sort tree items when PID can be null ([aschempp])
+- [#5564] Do not run our Twig filesystem warmer on sub requests ([m-vo])
+- [#5559] Allow data-lightbox in TinyMCE by default ([fritzmg])
+- [#5556] Fix SitemapController not working for protected pages ([Toflar])
+- [#5540] Fix a PHP 8 warning in the StyleSheets class ([fritzmg])
+
 ## [4.13.14] (2022-11-28)
 
 **Fixed issues:**
@@ -547,6 +567,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.15]: https://github.com/contao/contao/releases/tag/4.13.15
 [4.13.14]: https://github.com/contao/contao/releases/tag/4.13.14
 [4.13.13]: https://github.com/contao/contao/releases/tag/4.13.13
 [4.13.12]: https://github.com/contao/contao/releases/tag/4.13.12
@@ -574,6 +595,7 @@ This project adheres to [Semantic Versioning].
 [christianbarkowsky]: https://github.com/christianbarkowsky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
+[Defcon0]: https://github.com/Defcon0
 [dennisbohn]: https://github.com/dennisbohn
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
@@ -592,6 +614,22 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[zonky2]: https://github.com/zonky2
+[#5667]: https://github.com/contao/contao/pull/5667
+[#5662]: https://github.com/contao/contao/pull/5662
+[#5625]: https://github.com/contao/contao/pull/5625
+[#5643]: https://github.com/contao/contao/pull/5643
+[#5629]: https://github.com/contao/contao/pull/5629
+[#5618]: https://github.com/contao/contao/pull/5618
+[#5603]: https://github.com/contao/contao/pull/5603
+[#5620]: https://github.com/contao/contao/pull/5620
+[#5587]: https://github.com/contao/contao/pull/5587
+[#5575]: https://github.com/contao/contao/pull/5575
+[#5526]: https://github.com/contao/contao/pull/5526
+[#5564]: https://github.com/contao/contao/pull/5564
+[#5559]: https://github.com/contao/contao/pull/5559
+[#5556]: https://github.com/contao/contao/pull/5556
+[#5540]: https://github.com/contao/contao/pull/5540
 [#5518]: https://github.com/contao/contao/pull/5518
 [#5532]: https://github.com/contao/contao/pull/5532
 [#5333]: https://github.com/contao/contao/pull/5333

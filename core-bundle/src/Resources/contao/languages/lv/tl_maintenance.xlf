@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
         <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Saīsina tabulas &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; un &lt;code&gt;tl_search_term&lt;/code&gt;. Pēc tam ir jāatjauno meklēšanas indekss (skatīt iepriekš).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>
@@ -42,6 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.1">
         <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Saīsina tabulu &lt;code&gt;tl_undo&lt;/code&gt;, kurā glabājas dzēstie ieraksti. Šis uzdevums neatgriezeniski dzēš šos ierakstus</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.0">
         <source>Purge the version table</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Saīsina tabulu &lt;code&gt;tl_version&lt;/code&gt;, kurā tiek saglabātas ieraksta iepriekšējās versijas. Šis uzdevums neatgriezeniski dzēš šos ierakstus.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
@@ -56,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Nogriež &lt;code&gt;tl_log tabulu&lt;/code&gt;, kurā glabājas visi sistēmas žurnāla ieraksti. Šis uzdevums neatgriezeniski dzēš šos ierakstus.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
@@ -63,6 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Saīsina tabulu &lt;code&gt;tl_crawl_queue&lt;/code&gt;, kurā glabājas visa informācija par rindām no pārmeklēšanas procesiem.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -78,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Noņem automātiski ģenerētos priekšskatījuma attēlus un pēc tam attīra koplietošanas kešatmiņu, lai nebūtu saites uz dzēstiem resursiem.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -108,6 +114,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Atkārtoti izveido XML datnes &lt;code&gt;koplietojamajā&lt;/code&gt; mapē un pēc tam iztīra koplietojamo kešatmiņu, lai nebūtu saites uz dzēstiem resursiem.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -115,6 +122,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Atjauno simbolu saites publiskajā mapē (dokumenta saknē).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
@@ -146,12 +154,15 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLog">
         <source>Debug log</source>
+        <target>Atkļūdošanas žurnāls</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Ja ir radušās kļūdas vai lapas tika izlaistas, pārbaudiet atkļūdošanas žurnālu, lai iegūtu vairāk informācijas.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Lejupielādēt žurnālu</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
