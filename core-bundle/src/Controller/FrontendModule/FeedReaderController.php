@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Config;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Environment;
 use Contao\ModuleModel;
@@ -30,9 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-/**
- * @FrontendModule(category="miscellaneous")
- */
+#[AsFrontendModule(category: 'miscellaneous')]
 class FeedReaderController extends AbstractFrontendModuleController
 {
     public function __construct(private readonly FeedIo $feedIo, private readonly LoggerInterface $logger, private readonly CacheInterface $cache)
@@ -47,18 +45,22 @@ class FeedReaderController extends AbstractFrontendModuleController
 
         foreach (StringUtil::trimsplit('[\n\t ]', trim($model->rss_feed)) as $url) {
             try {
-                $feed = $this->cache->get('feed_reader_'.$model->id.'_'.md5($url), function (ItemInterface $item) use ($url, $model) {
-                    $readerResult = $this->feedIo->read($url, new Feed());
+                $feed = $this->cache->get(
+                    'feed_reader_'.$model->id.'_'.md5($url),
+                    function (ItemInterface $item) use ($url, $model) {
+                        $readerResult = $this->feedIo->read($url, new Feed());
 
-                    if ($model->rss_cache > 0) {
-                        $item->expiresAfter($model->rss_cache);
+                        if ($model->rss_cache > 0) {
+                            $item->expiresAfter($model->rss_cache);
+                        }
+
+                        return $readerResult->getFeed();
                     }
-
-                    return $readerResult->getFeed();
-                });
+                );
             } catch (\Exception $exception) {
                 $feed = null;
                 $this->logger->error(sprintf('Could not read feed %s: %s', $url, $exception->getMessage()));
+
                 continue;
             }
 
@@ -89,6 +91,7 @@ class FeedReaderController extends AbstractFrontendModuleController
         if ($model->perPage > 0) {
             $param = 'page_r'.$model->id;
             $page = $request->query->getInt($param, 1);
+
             $config = $this->container->get('contao.framework')->getAdapter(Config::class);
 
             // Do not index or cache the page if the page number is outside the range

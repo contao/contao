@@ -1043,11 +1043,6 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
 
-    contao.twig.sanitizer_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
-        arguments:
-            - '@contao.framework'
-
     contao.twig.inspector:
         class: Contao\CoreBundle\Twig\Inspector\Inspector
         public: true
@@ -1077,6 +1072,11 @@ services:
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
+
+    contao.twig.sanitizer_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
+        arguments:
+            - '@contao.framework'
 
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime

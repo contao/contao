@@ -13,7 +13,7 @@
     %}
 
     {# Wrapper element around headline and content #}
-<{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
+    <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
     {%- block inner %}
         {% if headline.text %}
             {{ block('headline_component') }}

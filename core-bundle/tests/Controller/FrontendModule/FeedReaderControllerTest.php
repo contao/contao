@@ -175,7 +175,15 @@ class FeedReaderControllerTest extends TestCase
 
     public function testHandlesPaginatedList(): void
     {
-        $GLOBALS['TL_LANG']['MSC'] = ['first' => '', 'next' => '', 'previous' => '', 'last' => '', 'totalPages' => '', 'pagination' => '', 'goToPage' => ''];
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'first' => '',
+            'next' => '',
+            'previous' => '',
+            'last' => '',
+            'totalPages' => '',
+            'pagination' => '',
+            'goToPage' => '',
+        ];
 
         $feedUrl = 'htts://example.org/feed';
         $feed = $this->getDummyFeed();
@@ -223,7 +231,15 @@ class FeedReaderControllerTest extends TestCase
 
     public function testThrowExceptionIfRequestedPageIsOutOfBounds(): void
     {
-        $GLOBALS['TL_LANG']['MSC'] = ['first' => '', 'next' => '', 'previous' => '', 'last' => '', 'totalPages' => '', 'pagination' => '', 'goToPage' => ''];
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'first' => '',
+            'next' => '',
+            'previous' => '',
+            'last' => '',
+            'totalPages' => '',
+            'pagination' => '',
+            'goToPage' => '',
+        ];
 
         $feedUrl = 'htts://example.org/feed';
         $feed = $this->getDummyFeed();
@@ -251,16 +267,16 @@ class FeedReaderControllerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $controller = $this->getController($feedIo, $cache, $requestStack);
+
         $this->expectException(PageNotFoundException::class);
 
-        $controller = $this->getController($feedIo, $cache, $requestStack);
         $controller($request, $model, 'main');
     }
 
     private function getDummyFeed(): FeedInterface
     {
         $feed = new Feed();
-
         $feed->setTitle('Example');
         $feed->setDescription('This is an example feed');
 

@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 
-trigger_deprecation('contao/core-bundle', '5.1', sprintf('The "%s" has been deprecated and will be removed in Contao 6. Use the Feed Reader Module instead.', __CLASS__));
+trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s" has been deprecated and will no longer work in Contao 6. Use the feed reader module instead.', __CLASS__);
 
 /**
  * Front end module "rss reader".

@@ -122,13 +122,13 @@ services:
             - { name: container.service_subscriber, id: contao.cron }
             - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
-
     Contao\CoreBundle\Controller\FrontendModule\FeedReaderController:
         arguments:
             - '@contao.feed.feedio'
             - '@logger'
             - '@cache.system'
+
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
