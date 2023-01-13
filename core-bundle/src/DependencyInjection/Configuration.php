@@ -161,6 +161,7 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->integerNode('min')
                                         ->min(1)
+                                        ->defaultValue(1)
                                         ->info('Contao will never scale down to less than this configured number of workers.')
                                     ->end()
                                     ->integerNode('max')

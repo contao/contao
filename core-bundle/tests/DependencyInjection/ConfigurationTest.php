@@ -285,6 +285,7 @@ class ConfigurationTest extends TestCase
                         'options' => ['--time-limit=60'],
                         'autoscale' => [
                             'enabled' => false,
+                            'min' => 1,
                         ],
                     ],
                     [
@@ -294,6 +295,7 @@ class ConfigurationTest extends TestCase
                             'desired_size' => 10,
                             'max' => 20,
                             'enabled' => true,
+                            'min' => 1,
                         ],
                     ],
                     [
