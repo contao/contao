@@ -104,6 +104,7 @@
         "symfony-cmf/routing-bundle": "^2.4 || ^3.0",
         "symfony/asset": "^5.4 || ^6.0",
         "symfony/cache": "^5.4 || ^6.0",
+        "symfony/cache-contracts": "^2.5",
         "symfony/config": "^5.4 || ^6.0",
         "symfony/console": "^5.4 || ^6.0",
         "symfony/debug-bundle": "^5.4 || ^6.0",

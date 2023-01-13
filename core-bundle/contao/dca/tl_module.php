@@ -96,6 +96,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),

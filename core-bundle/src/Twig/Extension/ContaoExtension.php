@@ -32,6 +32,7 @@ use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
+use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
@@ -242,6 +243,11 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'format_bytes',
                 [FormatterRuntime::class, 'formatBytes'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFilter(
+                'sanitize_html',
+                [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']]
             ),
         ];

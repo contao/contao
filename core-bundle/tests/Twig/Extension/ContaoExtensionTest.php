@@ -112,8 +112,6 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(7, $filters);
-
         $expectedFilters = [
             'escape',
             'e',
@@ -122,7 +120,10 @@ class ContaoExtensionTest extends TestCase
             'highlight',
             'highlight_auto',
             'format_bytes',
+            'sanitize_html',
         ];
+
+        $this->assertCount(\count($expectedFilters), $filters);
 
         foreach ($filters as $filter) {
             $this->assertInstanceOf(TwigFilter::class, $filter);

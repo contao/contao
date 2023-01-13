@@ -201,6 +201,16 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    contao.feed.feedio:
+        class: FeedIo\FeedIo
+        arguments:
+            - '@contao.feed.http_adapter'
+
+    contao.feed.http_adapter:
+        class: FeedIo\Adapter\Http\Client
+        arguments:
+            - '@psr18.http_client'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -1062,6 +1072,11 @@ services:
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
+
+    contao.twig.sanitizer_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
+        arguments:
+            - '@contao.framework'
 
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
