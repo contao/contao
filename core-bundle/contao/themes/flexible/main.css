@@ -2080,6 +2080,12 @@ ul.sgallery li {
 }
 
 /* List wizard */
+.tl_listwizard {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 .tl_listwizard .tl_text {
 	width: 78%;
 }
