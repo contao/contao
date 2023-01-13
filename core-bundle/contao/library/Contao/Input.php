@@ -545,15 +545,15 @@ class Input
 	/**
 	 * Strip HTML and PHP tags preserving HTML comments
 	 *
-	 * @param mixed                                       $varValue             A string or array
-	 * @param string                                      $strAllowedTags       A string of tags to preserve
-	 * @param string|list<array{key:string,value:string}> $strAllowedAttributes A serialized string of attributes to preserve
+	 * @param mixed                                       $varValue          A string or array
+	 * @param string                                      $strAllowedTags    A string of tags to preserve
+	 * @param string|list<array{key:string,value:string}> $allowedAttributes A serialized string or array of attributes to preserve
 	 *
 	 * @return mixed The cleaned string or array
 	 */
-	public static function stripTags($varValue, $strAllowedTags='', $strAllowedAttributes='')
+	public static function stripTags($varValue, $strAllowedTags='', $allowedAttributes='')
 	{
-		if ($strAllowedTags === '' || $strAllowedAttributes === '')
+		if ($strAllowedTags === '' || $allowedAttributes === '')
 		{
 			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 		}
@@ -568,7 +568,7 @@ class Input
 		{
 			foreach ($varValue as $k=>$v)
 			{
-				$varValue[$k] = static::stripTags($v, $strAllowedTags, $strAllowedAttributes);
+				$varValue[$k] = static::stripTags($v, $strAllowedTags, $allowedAttributes);
 			}
 
 			return $varValue;
@@ -576,7 +576,7 @@ class Input
 
 		$arrAllowedAttributes = array();
 
-		foreach (StringUtil::deserialize($strAllowedAttributes, true) as $arrRow)
+		foreach (StringUtil::deserialize($allowedAttributes, true) as $arrRow)
 		{
 			if (!empty($arrRow['key']) && !empty($arrRow['value']))
 			{
