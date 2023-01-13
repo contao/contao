@@ -316,6 +316,7 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Nezināms lietotājvārds: %s</target>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>

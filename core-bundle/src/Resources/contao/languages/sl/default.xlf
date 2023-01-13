@@ -319,6 +319,7 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Neznano uporabniško ime: %s</target>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
@@ -1878,6 +1879,7 @@
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Upravljanje različic</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1925,12 +1927,15 @@
       </trans-unit>
       <trans-unit id="MSC.folderC">
         <source>Public folder</source>
+        <target>Javno dostopna mapa</target>
       </trans-unit>
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
+        <target>Zaščitena mapa</target>
       </trans-unit>
       <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
+        <target>%s datoteka</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2884,6 +2889,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>%d URI(jev) je bilo izvzetih.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

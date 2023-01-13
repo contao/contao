@@ -157,6 +157,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDebugLogExplain">
         <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>V primeru napak ali izvzetih strani si v dnevniku oglejte podrobnejše informacije.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>

@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.38] (2023-01-13)
+
+**Fixed issues:**
+
+- [#5654] Allow cronjobs to be skipped ([fritzmg])
+- [#5641] Fix the z-index of the user menu ([fritzmg])
+- [#5615] Fix the foreignKey handling when showColumns is enabled ([Toflar])
+- [#5637] Correctly check for hidden content elements ([aschempp])
+- [#5265] Fix filter options with options callback ([aschempp])
+- [#5581] Remove unnecessary special treatment for tl_undo ([aschempp])
+- [#5577] Adjust the anchor target in the navigation templates ([leofeyer])
+- [#5574] Ensure parameters are strings ([fritzmg])
+- [#5537] Fix a PHP 8 issue in the PageTree widget ([Tastaturberuf])
+- [#5548] Fix the missing module references in the newsletter-bundle hooks ([Toflar])
+
 ## [4.9.37] (2022-11-28)
 
 **Fixed issues:**
@@ -1067,6 +1082,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.38]: https://github.com/contao/contao/releases/tag/4.9.38
 [4.9.37]: https://github.com/contao/contao/releases/tag/4.9.37
 [4.9.36]: https://github.com/contao/contao/releases/tag/4.9.36
 [4.9.35]: https://github.com/contao/contao/releases/tag/4.9.35
@@ -1146,6 +1162,16 @@ This project adheres to [Semantic Versioning].
 [xprojects-de]: https://github.com/xprojects-de
 [zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
+[#5654]: https://github.com/contao/contao/pull/5654
+[#5641]: https://github.com/contao/contao/pull/5641
+[#5615]: https://github.com/contao/contao/pull/5615
+[#5637]: https://github.com/contao/contao/pull/5637
+[#5265]: https://github.com/contao/contao/pull/5265
+[#5581]: https://github.com/contao/contao/pull/5581
+[#5577]: https://github.com/contao/contao/pull/5577
+[#5574]: https://github.com/contao/contao/pull/5574
+[#5537]: https://github.com/contao/contao/pull/5537
+[#5548]: https://github.com/contao/contao/pull/5548
 [#5528]: https://github.com/contao/contao/pull/5528
 [#5534]: https://github.com/contao/contao/pull/5534
 [#5500]: https://github.com/contao/contao/pull/5500
