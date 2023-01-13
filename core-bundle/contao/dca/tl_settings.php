@@ -32,18 +32,18 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'dateFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'datimFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'timeZone' => array
 		(
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			{
 				return array_values(DateTimeZone::listIdentifiers());
 			},
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w25')
 		),
 		'adminEmail' => array
 		(

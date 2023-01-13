@@ -813,10 +813,14 @@ a.tl_submit {
 	display: table;
 }
 
-.w50 {
+.w25, .w33, .w50, .w66, .w75 {
 	width: calc(50% - 30px);
 	float: left;
 	min-height: 80px;
+}
+
+.nogrid .w25, .nogrid .w33, .nogrid .w50, .nogrid .w66, .nogrid .w75 {
+	float: none;
 }
 
 .long {
@@ -854,6 +858,10 @@ a.tl_submit {
 	padding: 18px 0 16px;
 }
 
+.nogrid .m12 {
+	padding: 0;
+}
+
 .cbx {
 	min-height: 46px;
 }
@@ -861,6 +869,10 @@ a.tl_submit {
 .cbx.m12 {
 	min-height: 80px;
 	box-sizing: border-box;
+}
+
+.nogrid .cbx {
+	min-height: 32px;
 }
 
 .subpal {
@@ -943,8 +955,24 @@ a.tl_submit {
 	}
 }
 
-/* Split button */
+/* Large screens */
 @media (min-width: 1280px) {
+	.w25 {
+		width: calc(25% - 30px);
+	}
+
+	.w33 {
+		width: calc(33.3333% - 30px);
+	}
+
+	.w66 {
+		width: calc(66.6666% - 30px);
+	}
+
+	.w75 {
+		width: calc(75% - 30px);
+	}
+
 	#sbtog {
 		display: none;
 	}
@@ -964,6 +992,7 @@ a.tl_submit {
 	}
 }
 
+/* Split button */
 @media (max-width: 1279px) {
 	.split-button {
 		display: inline-flex;
@@ -1053,7 +1082,7 @@ a.tl_submit {
 
 /* Handheld */
 @media (max-width: 767px) {
-	.w50 {
+	.w25, .w33, .w50, .w66, .w75 {
 		float: none;
 		width: calc(100% - 30px);
 	}
