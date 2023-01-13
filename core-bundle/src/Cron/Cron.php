@@ -172,25 +172,25 @@ class Cron
             $repository->unlockTable();
         }
 
-        $this->executeCrons($cronJobsToBeRun, $scope, $repository, $entityManager);
+        // Callback to restore previous run date in case cronjob skips itself
+        $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
+            $lastRunEntity = $repository->findOneByName($cron->getName());
+            $lastRunEntity->setLastRun($cron->getPreviousRun());
+            $entityManager->flush();
+        };
+
+        $this->executeCrons($cronJobsToBeRun, $scope, $onSkip);
     }
 
     /**
      * @param array<CronJob> $crons
      */
-    private function executeCrons(array $crons, string $scope, CronJobRepository $repository, EntityManagerInterface $entityManager): void
+    private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
     {
         /** @var array<string, PromiseInterface> $promises */
         $promises = [];
 
         $exception = null;
-
-        $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
-            // Restore previous run date in case cronjob skips itself
-            $lastRunEntity = $repository->findOneByName($cron->getName());
-            $lastRunEntity->setLastRun($cron->getPreviousRun());
-            $entityManager->flush();
-        };
 
         foreach ($crons as $cron) {
             try {
