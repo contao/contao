@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -71,17 +72,16 @@ class BackendFavoritesListenerTest extends TestCase
 
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('generate')
-            ->willReturnOnConsecutiveCalls(
-                '/contao',
-                '/contao?do=pages&mtg=favorites&ref=foobar'
-            )
+            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
         ;
 
         $session = $this->mockSession();
-        $sessionData['backend_modules']['favorites'] = $collapsed ? 0 : null;
-        $session->replace($sessionData);
+
+        /** @var AttributeBagInterface $bag */
+        $bag = $session->getBag('contao_backend');
+        $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
         $request->attributes->set('_contao_referer_id', 'foobar');
@@ -152,7 +152,8 @@ class BackendFavoritesListenerTest extends TestCase
         $linkAttributes = [
             'class' => 'group-favorites',
             'title' => $collapsed ? 'Expand node' : 'Collapse node',
-            'onclick' => "return AjaxRequest.toggleNavigation(this, 'favorites', '/contao')",
+            'data-action' => 'contao--toggle-navigation#toggle:prevent',
+            'data-contao--toggle-navigation-category-param' => 'favorites',
             'aria-controls' => 'favorites',
         ];
 
@@ -248,12 +249,9 @@ class BackendFavoritesListenerTest extends TestCase
 
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('generate')
-            ->willReturnOnConsecutiveCalls(
-                '/contao',
-                '/contao?do=pages&mtg=favorites&ref=foobar'
-            )
+            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
         ;
 
         $session = $this->mockSession();
