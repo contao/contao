@@ -348,16 +348,14 @@
         <target>Cache time-out</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
-        <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Hier kunt u bepalen hoe lang de RSS feed tijdelijk wordt opgeslagen.</target>
+        <source>Here you can define how long the feed is being cached.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
         <target>RSS feed URLs</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
-        <source>Please enter the URL of one or more RSS feeds.</source>
-        <target>Geef de URLs van een of meerdere RSS feeds op.</target>
+        <source>Please enter the URL of one or more feeds.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>

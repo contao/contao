@@ -6,12 +6,6 @@
 window.AjaxRequest =
 {
 	/**
-	 * The theme path
-	 * @member {string}
-	 */
-	themePath: Contao.script_url + 'system/themes/' + Contao.theme + '/',
-
-	/**
 	 * Toggle the navigation menu
 	 *
 	 * @param {object} el  The DOM element
@@ -58,17 +52,25 @@ window.AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getElement('img');
+			images = $(el).getElements('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
+				});
+
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
+				});
+
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -123,7 +125,11 @@ window.AjaxRequest =
 				});
 
 				$(el).setAttribute('title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
+				});
+
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
 
@@ -149,17 +155,25 @@ window.AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getElement('img');
+			images = $(el).getElements('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
+				});
+
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
+				});
+
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -194,7 +208,11 @@ window.AjaxRequest =
 				});
 
 				$(el).setAttribute('title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
+				});
+
 				AjaxRequest.hideBox();
 
 				// HOOK
@@ -402,16 +420,24 @@ window.AjaxRequest =
 		el.blur();
 
 		var item = $(id),
-			image = $(el).getElement('img');
+			images = $(el).getElements('img');
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
+				});
+
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+
+				images.forEach(function (image) {
+					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
+				});
+
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return true;

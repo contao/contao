@@ -161,9 +161,9 @@
         <source>Your username and password must not be the same!</source>
         <target>Der Benutzername und das Passwort dürfen nicht gleich sein!</target>
       </trans-unit>
-      <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>Das Konto wurde gesperrt! Sie können sich in %d Minuten erneut anmelden.</target>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
+        <target>Zu viele fehlgeschlagene Anmeldeversuche, bitte versuchen Sie es später noch einmal.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -364,6 +364,14 @@
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Die Endzeit muss nach der Anfangszeit liegen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>Es ist keine Administrator-E-Mail-Adresse in den &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;System-Einstellungen&lt;/a&gt; hinterlegt.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>Es ist keine Administrator-E-Mail-Adresse hinterlegt. Bitte wenden Sie sich an den Administrator der Webseite.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1569,14 +1577,6 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Dies scheint Ihre erste Anmeldung zu sein. Willkommen bei Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-        <target>Anmeldeversuche</target>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-        <target>Gesperrt</target>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
         <target>Das Element durch Ziehen und Ablegen verschieben</target>
@@ -2001,6 +2001,18 @@
         <source>Collapse node</source>
         <target>Bereich schließen</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Öffentlicher Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Geschützter Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s-Datei</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Die Daten werden geladen</target>
@@ -2024,6 +2036,10 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
         <target>Kopieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+        <target>Mehrfach kopieren</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2110,8 +2126,8 @@
         <target>geschützt</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
-        <target>Gäste</target>
+        <source>Guests (not logged in)</source>
+        <target>Gäste (nicht angemeldet)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2490,7 +2506,7 @@
         <target>Angemeldet bleiben</target>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
         <target>Erstellt am</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
@@ -2653,6 +2669,18 @@
         <source>Trust this device</source>
         <target>Diesem Gerät vertrauen</target>
       </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+        <target>Favoriten</target>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+        <target>URL als Favorit speichern</target>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+        <target>Favoriten bearbeiten</target>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Mindestens ein regulärer Benutzer hat Zugriff auf den Template-Editor. Da Templates PHP-Dateien sind, haben diese Benutzer implizit die volle Kontrolle über das System!</target>
@@ -2780,6 +2808,18 @@
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
         <target>sichtbar von %s bis %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
+        <target>Nicht %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+        <target>Dunkles Design</target>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
+        <target>Helles Design</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

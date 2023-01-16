@@ -33,6 +33,10 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>Ungültiges Quell- oder Zielverzeichnis &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="tl_templates.hasErrors">
+        <source>The template &quot;%s&quot; has errors and cannot be inspected: %s</source>
+        <target>Das Template &quot;%s&quot; ist fehlerhaft und kann nicht inspiziert werden: %s</target>
+      </trans-unit>
       <trans-unit id="tl_templates.overridesAnotherTpl">
         <source>This template overrides &quot;%s&quot;.</source>
         <target>Dieses Template überschreibt &quot;%s&quot;.</target>

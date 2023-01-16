@@ -347,16 +347,14 @@
         <target>Timeout de cache</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
-        <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Aqui você pode definir o período de tempo pelo qual o &quot;feed&quot; de RSS fica em cache.</target>
+        <source>Here you can define how long the feed is being cached.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
         <target>URL de &quot;feed&quot; de RSS</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
-        <source>Please enter the URL of one or more RSS feeds.</source>
-        <target>Favor informar a URL do &quot;feed&quot; de RSS</target>
+        <source>Please enter the URL of one or more feeds.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>

@@ -81,6 +81,12 @@
         <source>Use the code editor to modify code elements.</source>
         <target>コードのコンテント要素の修正にコードエディターを使用します。</target>
       </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.0">
+        <source>Do not collapse content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.1">
+        <source>Do not collapse content elements in the back end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
         <target>パスワードの変更を必要</target>

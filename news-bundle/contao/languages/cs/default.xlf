@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>
+        <target>Kanály novinek</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
         <source>Create an RSS, Atom or JSON feed from your news archives.</source>
+        <target>Vytvoří kanál z novinek ve formátu RSS, Atom nebo JSON.</target>
       </trans-unit>
     </body>
   </file>

@@ -161,9 +161,9 @@
         <source>Your username and password must not be the same!</source>
         <target>Kullanıcı adı ile parola aynı olmamalıdır!</target>
       </trans-unit>
-      <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>Bu hesap kilitlenmiş! %d dakika sonra yeniden oturum açabilirsiniz.</target>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
+        <target>Çok sayıda başarısız oturum açma girişiminde bulunuldu. Lütfen bir süre sonra yeniden deneyin.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -364,6 +364,12 @@
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Bitiş zamanı başlangıç zamanından sonra olmalıdır.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1569,14 +1575,6 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>İlk kez oturum açıyorsunuz gibi görünüyor. Contao uygulamasına hoş geldiniz!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-        <target>Oturum açma girişimleri</target>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-        <target>Kilitli</target>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
         <target>Ögeyi sürükleyip bırakarak sıralayın</target>
@@ -2001,6 +1999,18 @@
         <source>Collapse node</source>
         <target>Düğümü daralt</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Herkese açık klasör</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Korunmuş klasör</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s dosya</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Veriler yükleniyor</target>
@@ -2024,6 +2034,10 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
         <target>Kopyala</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+        <target>Yeniden kopyala</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2110,8 +2124,8 @@
         <target>korunmuş</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
-        <target>Konuklar</target>
+        <source>Guests (not logged in)</source>
+        <target>Konuk (oturum açmadı)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2490,7 +2504,7 @@
         <target>Beni hatırla</target>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
         <target>Oluşturulma</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
@@ -2653,6 +2667,18 @@
         <source>Trust this device</source>
         <target>Bu aygıta güven</target>
       </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+        <target>Sık kullanılanlar</target>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+        <target>Adresi sık kullanılan olarak kaydet</target>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+        <target>Sık kullanılanları düzenle</target>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Kalıp düzenleyiciye erişimi olan en az bir normal kullanıcı var. Kalıplar PHP dosyaları olduğundan, bu kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
@@ -2780,6 +2806,16 @@
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
         <target>%s ile %s zamanları arasında görüntülenecek</target>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
+        <target>%s değil</target>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

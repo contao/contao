@@ -90,8 +90,8 @@
         <target>您可以在这里输入回复。</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>发布评论</target>
+        <source>Published</source>
+        <target>已发布</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

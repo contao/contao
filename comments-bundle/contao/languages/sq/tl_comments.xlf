@@ -90,7 +90,7 @@
         <target>Këtu mund të epeni përgjigje.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
+        <source>Published</source>
         <target>Publikuar</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">

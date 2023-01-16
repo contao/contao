@@ -41,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>サーバーのタイムゾーンを選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableCron.0">
-        <source>Disable the command scheduler</source>
-        <target>コマンドスケジューラーを不使用</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
-        <target>定期的なコマンドのスケジューラーを使用しないで、(手動で設定がしなければならない)本当のcronのジョブを経由して&lt;em&gt;_contao/cron&lt;/em&gt;を起動します。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
         <target>1ページの項目</target>
@@ -180,10 +172,6 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>アップロードの設定</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Cron job settings</source>
-        <target>Cronジョブの設定</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
