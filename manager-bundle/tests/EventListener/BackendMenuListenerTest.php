@@ -42,10 +42,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $listener($event);
     }
 
-    /**
-     * @dataProvider getItems
-     */
-    public function testAddsTheDebugButton(string $itemName, array $expect): void
+    public function testAddsTheDebugButton(): void
     {
         $request = new Request();
         $request->server->set('QUERY_STRING', 'do=page');
@@ -72,10 +69,10 @@ class BackendMenuListenerTest extends ContaoTestCase
         ;
 
         $factory = new MenuFactory();
-        $item = $factory->createItem($itemName);
 
         $menu = $factory->createItem('headerMenu');
-        $menu->addChild($item);
+        $menu->addChild($factory->createItem('submenu'));
+        $menu->addChild($factory->createItem('burger'));
 
         $event = new MenuEvent($factory, $menu);
         $jwtManager = $this->createMock(JwtManager::class);
@@ -86,8 +83,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $event->getTree()->getChildren();
 
-        $this->assertCount(2, $children);
-        $this->assertSame($expect, array_keys($children));
+        $this->assertCount(3, $children);
+        $this->assertSame(['debug', 'submenu', 'burger'], array_keys($children));
 
         $debug = $children['debug'];
 
@@ -95,12 +92,6 @@ class BackendMenuListenerTest extends ContaoTestCase
         $this->assertSame('/contao?do=debug&key=enable&referer=ZG89cGFnZQ==&ref=foo', $debug->getUri());
         $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode'], $debug->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
-    }
-
-    public function getItems(): \Generator
-    {
-        yield ['alerts', ['alerts', 'debug']];
-        yield ['preview', ['debug', 'preview']];
     }
 
     public function testAddsTheHoverClassIfTheDebugModeIsEnabled(): void
@@ -112,10 +103,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
 
         $factory = new MenuFactory();
-        $item = $factory->createItem('alerts');
-
         $menu = $factory->createItem('headerMenu');
-        $menu->addChild($item);
 
         $event = new MenuEvent($factory, $menu);
         $jwtManager = $this->createMock(JwtManager::class);

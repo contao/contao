@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Knp\Menu\Util\MenuManipulator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -59,23 +60,10 @@ class BackendPreviewListener
             ->setExtra('translation_domain', 'contao_default')
         ;
 
-        $children = [];
+        $tree->addChild($preview);
 
-        // Try adding the preview button after the alerts button
-        foreach ($tree->getChildren() as $name => $item) {
-            $children[$name] = $item;
-
-            if ('alerts' === $name) {
-                $children['preview'] = $preview;
-            }
-        }
-
-        // Prepend the preview button if it could not be added above
-        if (!isset($children['preview'])) {
-            $children = ['preview' => $preview] + $children;
-        }
-
-        $tree->setChildren($children);
+        // The last two items are "submenu" and "burger", so make this the third to last
+        (new MenuManipulator())->moveToPosition($preview, $tree->count() - 3);
     }
 
     private function getPreviewUrl(): string
