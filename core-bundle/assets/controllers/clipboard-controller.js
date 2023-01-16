@@ -1,25 +1,43 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller {
+export default class ClipboardController extends Controller {
+    static instances = [];
+    static classes = ['written'];
     static values = {
         content: String
     }
 
-    write () {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(this.contentValue).catch(this.clipboardFallback.bind(this));
-        } else {
-            this.clipboardFallback();
+    connect() {
+        if (!ClipboardController.instances.contains(this)) {
+            ClipboardController.instances.push(this);
         }
     }
 
-    clipboardFallback  () {
-        const input = document.createElement('input');
-        input.value = this.contentValue;
-        document.body.appendChild(input);
-        input.select();
-        input.setSelectionRange(0, 99999);
-        document.execCommand('copy');
-        document.body.removeChild(input);
+    disconnect() {
+        ClipboardController.instances = ClipboardController.instances.filter(v => v !== this);
+    }
+
+    write () {
+        navigator.clipboard
+            .writeText(this.contentValue)
+            .then(() => {
+                // (Re-) add "written" class to give a visual feedback
+                this.reset();
+
+                requestAnimationFrame(() => {
+                    this.element.classList.add(this.writtenClass);
+                });
+
+                // Notify others
+                ClipboardController.instances
+                    .filter(i => i !== this)
+                    .forEach(i => i.reset())
+                ;
+            })
+        ;
+    }
+
+    reset() {
+        this.element.classList.remove(this.writtenClass);
     }
 }

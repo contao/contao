@@ -177,7 +177,7 @@ class HtmlAttributesTest extends TestCase
     public function testRejectsInvalidAttributeNamesWhenConstructingFromArray(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter and must not end with a underscore\/hyphen, got ".*"\./');
 
         new HtmlAttributes([$name => 'bar']);
     }
@@ -190,7 +190,7 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter and must not end with a underscore\/hyphen, got ".*"\./');
 
         $attributes->set($name, 'bar');
     }
@@ -201,9 +201,7 @@ class HtmlAttributesTest extends TestCase
         yield 'invalid non-utf8 character' => ["f\xC2"];
         yield 'does not start with a-z' => ['2foo'];
         yield 'ends with a hyphen' => ['foo-'];
-        yield 'contains two hyphens in a row' => ['foo--bar'];
         yield 'ends with an underscore' => ['foo_'];
-        yield 'contains two underscores in a row' => ['foo__bar'];
         yield 'opening tag only' => ['<'];
         yield 'contains opening tag as first char' => ['<foo'];
         yield 'contains opening tag as second char' => ['f<oo'];
@@ -433,9 +431,9 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "foo--2000".');
+        $this->expectExceptionMessage('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter and must not end with a underscore/hyphen, got "foo2000-".');
 
-        $attributes['foo--2000'] = 'bar';
+        $attributes['foo2000-'] = 'bar';
     }
 
     public function testThrowsIfPropertyDoesNotExistWhenUsingArrayAccess(): void

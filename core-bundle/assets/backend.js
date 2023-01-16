@@ -21,3 +21,6 @@ application.load(context.keys().map((key) => {
         return definitionForModuleAndIdentifier(context(key), `contao--${ identifier }`);
     }
 }).filter((value) => value));
+
+// Styles
+import './styles/clipboard.pcss';
