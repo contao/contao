@@ -24,10 +24,12 @@ class ProcessUtilTest extends TestCase
     {
         $util = new ProcessUtil();
         $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
+
         $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
 
         $util = new ProcessUtil('vendor/bin/contao-console');
         $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
+
         $this->assertSame('vendor/bin/contao-console foobar argument-1 argument-2', $this->getCommandLine($process));
     }
 

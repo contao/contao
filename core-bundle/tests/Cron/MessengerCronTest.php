@@ -42,10 +42,12 @@ class MessengerCronTest extends TestCase
         $container->set('prio_normal', $this->mockMessengerTransporter(0, false));
         $container->set('prio_high', $this->mockMessengerTransporter($messageCount, true));
 
-        $processUtil = $this->getMockBuilder(ProcessUtil::class)
+        $processUtil = $this
+            ->getMockBuilder(ProcessUtil::class)
             ->onlyMethods(['createPromise'])
             ->getMock()
         ;
+
         $processUtil
             ->expects($this->exactly(\count($expectedWorkers)))
             ->method('createPromise')
