@@ -60,7 +60,7 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $this->framework->initialize();
 
-        $ids = $this->getPageIdsFromNames([$name]);
+        $ids = $this->getIdsFromRouteNames([$name], 'tl_page');
 
         if (empty($ids)) {
             throw new RouteNotFoundException('Route name does not match a page ID');
@@ -93,7 +93,7 @@ class RouteProvider extends AbstractPageRouteProvider
         if (null === $names) {
             $pages = $pageModel->findAll();
         } else {
-            $ids = $this->getPageIdsFromNames($names);
+            $ids = $this->getIdsFromRouteNames($names, 'tl_page');
 
             if (empty($ids)) {
                 return [];

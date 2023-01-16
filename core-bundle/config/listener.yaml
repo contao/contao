@@ -187,6 +187,23 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.rewrite.name_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Rewrite\NameValidationListener
+        arguments:
+            - '@contao.framework'
+
+    contao.listener.data_container.rewrite.request_requirement_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Rewrite\RequestRequirementsValidationListener
+
+    contao.listener.data_container.rewrite.response_code_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\Rewrite\ResponseCodeOptionsListener
+
+    contao.listener.data_container.rewrite.rewrite_examples:
+        class: Contao\CoreBundle\EventListener\DataContainer\Rewrite\RewriteExamplesListener
+
+    contao.listener.data_container.rewrite.rewrite_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\Rewrite\RewriteLabelListener
+
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
