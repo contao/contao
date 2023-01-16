@@ -340,15 +340,6 @@ services:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
 
-    contao.listener.menu.backend_color_scheme:
-        class: Contao\CoreBundle\EventListener\Menu\BackendColorSchemeListener
-        arguments:
-            - '@security.helper'
-            - '@translator'
-        tags:
-            # Make sure this listener comes last
-            - { name: kernel.event_listener, priority: -96 }
-
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:
@@ -369,7 +360,7 @@ services:
             - '@security.logout_url_generator'
             - '@translator'
         tags:
-            - kernel.event_listener
+            - { name: kernel.event_listener, priority: -96 }
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -380,7 +371,7 @@ services:
             - '@translator'
             - '@event_dispatcher'
         tags:
-            - kernel.event_listener
+            - { name: kernel.event_listener, priority: -48 }
 
     contao.listener.messenger.worker:
         class: Contao\CoreBundle\Messenger\EventListener\WorkerListener

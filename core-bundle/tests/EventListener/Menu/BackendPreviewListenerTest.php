@@ -53,9 +53,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $factory = new MenuFactory();
-        $event = new MenuEvent($factory, $factory->createItem('headerMenu'));
-
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->once())
@@ -70,6 +67,14 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ))
         ;
 
+        $factory = new MenuFactory();
+
+        $menu = $factory->createItem('headerMenu');
+        $menu->addChild($factory->createItem('submenu'));
+        $menu->addChild($factory->createItem('burger'));
+
+        $event = new MenuEvent($factory, $menu);
+
         $listener = new BackendPreviewListener(
             $security,
             $router,
@@ -82,8 +87,8 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
         $children = $event->getTree()->getChildren();
 
-        $this->assertCount(1, $children);
-        $this->assertSame(['preview'], array_keys($children));
+        $this->assertCount(3, $children);
+        $this->assertSame(['preview', 'submenu', 'burger'], array_keys($children));
 
         $this->assertSame('MSC.fePreview', $children['preview']->getLabel());
         $this->assertSame(['translation_domain' => 'contao_default'], $children['preview']->getExtras());
@@ -105,62 +110,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
         yield ['page', 42];
         yield ['article', 3];
         yield ['news', 1];
-    }
-
-    /**
-     * @dataProvider getItemNames
-     */
-    public function testAddsThePreviewButtonAfterTheAlertsButton(string $itemName, array $expect): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_backend_preview')
-            ->willReturn('/contao/preview')
-        ;
-
-        $request = new Request();
-        $request->query->set('do', 'page');
-        $request->query->set('table', 'tl_page');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $factory = new MenuFactory();
-
-        $menu = $factory->createItem('headerMenu');
-        $menu->addChild($factory->createItem($itemName));
-
-        $event = new MenuEvent($factory, $menu);
-
-        $listener = new BackendPreviewListener(
-            $security,
-            $router,
-            $requestStack,
-            $this->getTranslator(),
-            $this->createMock(EventDispatcher::class)
-        );
-
-        $listener($event);
-
-        $children = $event->getTree()->getChildren();
-
-        $this->assertCount(2, $children);
-        $this->assertSame($expect, array_keys($children));
-    }
-
-    public function getItemNames(): \Generator
-    {
-        yield ['alerts', ['alerts', 'preview']];
-        yield ['debug', ['preview', 'debug']];
     }
 
     public function testDoesNotAddThePreviewButtonIfTheUserRoleIsNotGranted(): void
