@@ -22,6 +22,10 @@ class ProcessUtil implements ResetInterface
 {
     private string|null $phpBinary = null;
 
+    public function __construct(private readonly string $consolePath = 'bin/console')
+    {
+    }
+
     /**
      * Creates a GuzzleHttp/Promise for a Symfony Process instance.
      *
@@ -48,9 +52,9 @@ class ProcessUtil implements ResetInterface
         return $promise;
     }
 
-    public function createSymfonyConsoleProcess(string $consolePath, string $command, string ...$commandArguments): Process
+    public function createSymfonyConsoleProcess(string $command, string ...$commandArguments): Process
     {
-        return new Process(array_merge([$this->getPhpBinary(), $consolePath, $command], $commandArguments));
+        return new Process(array_merge([$this->getPhpBinary(), $this->consolePath, $command], $commandArguments));
     }
 
     public function reset(): void

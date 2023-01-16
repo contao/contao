@@ -20,6 +20,19 @@ use Symfony\Component\Process\Process;
 
 class ProcessUtilTest extends TestCase
 {
+    public function testCreateSymfonyConsoleProcess(): void
+    {
+        $util = new ProcessUtil();
+        $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
+
+        $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
+
+        $util = new ProcessUtil('vendor/bin/contao-console');
+        $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
+
+        $this->assertSame('vendor/bin/contao-console foobar argument-1 argument-2', $this->getCommandLine($process));
+    }
+
     /**
      * @dataProvider promiseTestProvider
      */
@@ -52,6 +65,13 @@ class ProcessUtilTest extends TestCase
         yield 'Successful, non-autostart promise' => [true, false];
         yield 'Unsuccessful, autostart promise' => [false, true];
         yield 'Unsuccessful,non-autostart promise' => [false, false];
+    }
+
+    private function getCommandLine(Process $process): string
+    {
+        // Remove the PHP binary path and undo proper quoting (not relevant for
+        // this test and required for easier cross-platform CI runs
+        return str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 
     private function mockProcess(bool $isSuccessful, bool $autostart): Process

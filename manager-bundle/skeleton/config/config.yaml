@@ -56,8 +56,8 @@ framework:
 # Contao configuration
 contao:
     preview_script: /preview.php
+    console_path: '%kernel.project_dir%/vendor/bin/contao-console'
     messenger:
-        console_path: '%kernel.project_dir%/vendor/bin/contao-console'
         workers:
             -
                 transports:
