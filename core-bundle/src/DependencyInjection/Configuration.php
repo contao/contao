@@ -105,7 +105,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('console_path')
-                    ->info('The path to the Symfony console. Parameter can be used by various services.')
+                    ->info('The path to the Symfony console.')
                     ->defaultValue('%kernel.project_dir%/bin/console')
                 ->end()
                 ->append($this->addMessengerNode())
