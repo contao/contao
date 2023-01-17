@@ -21,6 +21,8 @@ use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InsertTagsTest extends TestCase
 {
@@ -642,14 +644,21 @@ class InsertTagsTest extends TestCase
      */
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
     {
-        $page = $this->createMock(PageModel::class);
-        $page
-            ->method('__get')
-            ->with('language')
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getLocale')
             ->willReturn($pageLanguage)
         ;
 
-        $GLOBALS['objPage'] = $page;
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
+
+        $this->setContainerWithContaoConfiguration([
+            'request_stack' => $requestStack,
+        ]);
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
@@ -680,8 +689,6 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame($expected, $insertTagParser->replace($source));
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
-
-        unset($GLOBALS['objPage']);
     }
 
     public function languageInsertTagsProvider(): \Generator
