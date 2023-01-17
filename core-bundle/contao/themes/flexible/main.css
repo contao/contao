@@ -13,6 +13,11 @@
 	--icon-favorites: url("icons/favorites_small.svg");
 	--icon-logout: url("icons/exit.svg");
 	--icon-toggle-all: url("icons/folPlus.svg");
+	--icon-alert: url("icons/alert.svg");
+	--icon-favorite: url("icons/favorite.svg");
+	--icon-favorite--active: url("icons/favorite_active.svg");
+	--icon-manual: url("icons/manual.svg");
+	--icon-color-scheme: url("icons/color_scheme.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -22,6 +27,11 @@ html[data-color-scheme="dark"] {
 	--icon-favorites: url("icons-dark/favorites_small.svg");
 	--icon-logout: url("icons-dark/exit.svg");
 	--icon-toggle-all: url("icons-dark/folPlus.svg");
+	--icon-alert: url("icons-dark/alert.svg");
+	--icon-favorite: url("icons-dark/favorite.svg");
+	--icon-favorite--active: url("icons-dark/favorite_active.svg");
+	--icon-manual: url("icons-dark/manual.svg");
+	--icon-color-scheme: url("icons-dark/color_scheme.svg");
 }
 
 /* Body */
@@ -220,23 +230,23 @@ body.popup {
 }
 
 #tmenu .icon-alert {
-	background: url("icons/alert.svg") center center no-repeat;
+	background: var(--icon-alert) center center no-repeat;
 }
 
 #tmenu .icon-favorite {
-	background: url("icons/favorite.svg") center center no-repeat;
+	background: var(--icon-favorite) center center no-repeat;
 }
 
 #tmenu .icon-favorite--active {
-	background: url("icons/favorite_active.svg") center center no-repeat;
+	background: var(--icon-favorite--active) center center no-repeat;
 }
 
 #tmenu .icon-manual {
-	background: url("icons/manual.svg") center center no-repeat;
+	background: var(--icon-manual) center center no-repeat;
 }
 
 #tmenu .icon-color-scheme {
-	background: url("icons/color-scheme_small.svg") center center no-repeat;
+	background: var(--icon-color-scheme) center center no-repeat;
 }
 
 #tmenu .icon-profile {
