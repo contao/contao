@@ -152,18 +152,18 @@ class SitemapController extends AbstractController
             ) {
                 try {
                     $urls = [$pageModel->getAbsoluteUrl()];
-                } catch (ExceptionInterface $exception) {
-                    continue;
-                }
 
-                // Get articles with teaser
-                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                    foreach ($articleModels as $articleModel) {
-                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    // Get articles with teaser
+                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                        foreach ($articleModels as $articleModel) {
+                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                        }
                     }
-                }
 
-                $result[] = $urls;
+                    $result[] = $urls;
+                } catch (ExceptionInterface $exception) {
+                    // Skip URL for this page but generate child pages
+                }
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
