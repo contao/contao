@@ -95,7 +95,8 @@ html[data-color-scheme="dark"] {
 	--hover-row: #1b325f;
 	--header-bg: #292c32;
 	--header-bg-hover: #202327;
-	--invert-bg: #7e8695;
+	--header-text: #ddd;
+	--invert-bg: #8f96a3;
 	--invert-text: #222;
 	--table-header: #232529;
 	--table-odd: #1b1d21;
