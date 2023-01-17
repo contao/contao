@@ -1430,6 +1430,130 @@ window.Backend =
 	},
 
 	/**
+	 * Module wizard
+	 *
+	 * @param {string} id The ID of the target element
+	 */
+	moduleWizard: function(id) {
+		var table = $(id),
+			tbody = table.getElement('tbody'),
+			makeSortable = function(tbody) {
+				var rows = tbody.getChildren(),
+					childs, i, j, select, input;
+
+				for (i=0; i<rows.length; i++) {
+					childs = rows[i].getChildren();
+					for (j=0; j<childs.length; j++) {
+						if (select = childs[j].getElement('select')) {
+							select.name = select.name.replace(/\[[0-9]+]/g, '[' + i + ']');
+						}
+						if (input = childs[j].getElement('input[type="checkbox"]')) {
+							input.set('tabindex', -1);
+							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
+						}
+					}
+				}
+
+				new Sortables(tbody, {
+					constrain: true,
+					opacity: 0.6,
+					handle: '.drag-handle',
+					onComplete: function() {
+						makeSortable(tbody);
+					}
+				});
+			},
+			addEventsTo = function(tr) {
+				var command, select, next, ntr, childs, cbx, i;
+				tr.getElements('button').each(function(bt) {
+					if (bt.hasEvent('click')) return;
+					command = bt.getProperty('data-command');
+
+					switch (command) {
+						case 'copy':
+							bt.addEvent('click', function() {
+								Backend.getScrollOffset();
+								ntr = new Element('tr');
+								childs = tr.getChildren();
+								for (i=0; i<childs.length; i++) {
+									next = childs[i].clone(true).inject(ntr, 'bottom');
+									if (select = childs[i].getElement('select')) {
+										next.getElement('select').value = select.value;
+									}
+									next.querySelectorAll('[data-original-title]').forEach(function (el) {
+										el.setAttribute('title', el.getAttribute('data-original-title'));
+										el.removeAttribute('data-original-title');
+									});
+								}
+								ntr.inject(tr, 'after');
+								ntr.getElement('.chzn-container').destroy();
+								new Chosen(ntr.getElement('select.tl_select'));
+								addEventsTo(ntr);
+								makeSortable(tbody);
+							});
+							break;
+						case 'delete':
+							bt.addEvent('click', function() {
+								Backend.getScrollOffset();
+								if (tbody.getChildren().length > 1) {
+									tr.destroy();
+								}
+								makeSortable(tbody);
+							});
+							break;
+						case 'enable':
+							bt.addEvent('click', function() {
+								Backend.getScrollOffset();
+								cbx = bt.getPrevious('input[type="checkbox"]');
+								if (cbx.checked) {
+									cbx.checked = '';
+									bt.getElements('img').forEach(function (image) {
+										image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'invisible.svg';
+									});
+								} else {
+									cbx.checked = 'checked';
+									bt.getElements('img').forEach(function (image) {
+										image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'visible.svg';
+									});
+								}
+								makeSortable(tbody);
+							});
+							break;
+						case null:
+							bt.addEvent('keydown', function(e) {
+								if (e.event.keyCode == 38) {
+									e.preventDefault();
+									if (ntr = tr.getPrevious('tr')) {
+										tr.inject(ntr, 'before');
+									} else {
+										tr.inject(tbody, 'bottom');
+									}
+									bt.focus();
+									makeSortable(tbody);
+								} else if (e.event.keyCode == 40) {
+									e.preventDefault();
+									if (ntr = tr.getNext('tr')) {
+										tr.inject(ntr, 'after');
+									} else {
+										tr.inject(tbody, 'top');
+									}
+									bt.focus();
+									makeSortable(tbody);
+								}
+							});
+							break;
+					}
+				});
+			};
+
+		makeSortable(tbody);
+
+		tbody.getChildren().each(function(tr) {
+			addEventsTo(tr);
+		});
+	},
+
+	/**
 	 * Options wizard
 	 *
 	 * @param {string} id The ID of the target element
@@ -1673,6 +1797,26 @@ window.Backend =
 		container.getChildren().each(function(span) {
 			addEventsTo(span);
 		});
+	},
+
+	/**
+	 * Update the "edit module" links in the module wizard
+	 *
+	 * @param {object} el The DOM element
+	 */
+	updateModuleLink: function(el) {
+		var td = el.getParent('tr').getLast('td'),
+			a = td.getElement('a.module_link');
+
+		a.href = a.href.replace(/id=[0-9]+/, 'id=' + el.value);
+
+		if (el.value > 0) {
+			td.getElement('a.module_link').setStyle('display', null);
+			td.getElement('img.module_image').setStyle('display', 'none');
+		} else {
+			td.getElement('a.module_link').setStyle('display', 'none');
+			td.getElement('img.module_image').setStyle('display', null);
+		}
 	},
 
 	/**
