@@ -12,6 +12,11 @@ services:
         arguments:
             - '@kernel'
 
+    contao_manager.command.install_bin_dir:
+        class: Contao\ManagerBundle\Command\InstallBinDirCommand
+        arguments:
+            - '%kernel.project_dir%'
+
     contao_manager.command.install_web_dir:
         class: Contao\ManagerBundle\Command\InstallWebDirCommand
         arguments:

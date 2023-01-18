@@ -180,23 +180,6 @@ class ConfigurationTest extends TestCase
         yield ['right_bottom'];
     }
 
-    public function testSetsTheConsolePath(): void
-    {
-        $configuration = (new Processor())->processConfiguration($this->configuration, []);
-
-        $this->assertSame('%kernel.project_dir%/bin/console', $configuration['console_path']);
-
-        $params = [
-            'contao' => [
-                'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
-            ],
-        ];
-
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
-
-        $this->assertSame('%kernel.project_dir%/vendor/bin/contao-console', $configuration['console_path']);
-    }
-
     public function testDeniesInvalidCrawlUris(): void
     {
         $params = [
