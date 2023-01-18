@@ -61,6 +61,7 @@
                             initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
+                            // Remove the ID of the select before initializing Chosen
                             const select = ntr.querySelector('select.tl_select')
                             select.removeAttribute('id');
 
