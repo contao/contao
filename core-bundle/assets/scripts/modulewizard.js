@@ -60,8 +60,11 @@
 
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
+                            const select = ntr.querySelector('select.tl_select')
+                            select.removeAttribute('id');
+
                             ntr.querySelector('.chzn-container').remove();
-                            new Chosen(ntr.querySelector('select.tl_select'));
+                            new Chosen(select);
 
                             addEventsTo(ntr);
                             makeSortable(tbody);
