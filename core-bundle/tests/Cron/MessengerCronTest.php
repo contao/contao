@@ -45,6 +45,7 @@ class MessengerCronTest extends TestCase
         $processUtil = $this
             ->getMockBuilder(ProcessUtil::class)
             ->onlyMethods(['createPromise'])
+            ->setConstructorArgs(['bin/console'])
             ->getMock()
         ;
 
