@@ -104,7 +104,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.yaml');
 
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
-        $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -241,7 +240,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(2, $config['messenger']['workers']);
+        $cron->setArgument(2, $config['messenger']['console_path']);
+        $cron->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

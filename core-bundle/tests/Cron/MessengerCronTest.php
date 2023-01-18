@@ -26,7 +26,7 @@ class MessengerCronTest extends TestCase
 {
     public function testIsSkippedIfNotOnCli(): void
     {
-        $cron = new MessengerCron(new Container(), new ProcessUtil(), []);
+        $cron = new MessengerCron(new Container(), new ProcessUtil(), 'bin/console', []);
 
         $this->expectException(CronExecutionSkippedException::class);
 
@@ -42,12 +42,7 @@ class MessengerCronTest extends TestCase
         $container->set('prio_normal', $this->mockMessengerTransporter(0, false));
         $container->set('prio_high', $this->mockMessengerTransporter($messageCount, true));
 
-        $processUtil = $this
-            ->getMockBuilder(ProcessUtil::class)
-            ->onlyMethods(['createPromise'])
-            ->getMock()
-        ;
-
+        $processUtil = $this->createPartialMock(ProcessUtil::class, ['createPromise']);
         $processUtil
             ->expects($this->exactly(\count($expectedWorkers)))
             ->method('createPromise')
@@ -62,7 +57,7 @@ class MessengerCronTest extends TestCase
             )
         ;
 
-        $cron = new MessengerCron($container, $processUtil, $this->getWorkers($desiredSize, $max, $min));
+        $cron = new MessengerCron($container, $processUtil, 'bin/console', $this->getWorkers($desiredSize, $max, $min));
         $promise = $cron(Cron::SCOPE_CLI);
 
         $processes = [];

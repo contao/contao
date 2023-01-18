@@ -1090,8 +1090,6 @@ services:
 
     contao.util.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
-        arguments:
-            - '%contao.console_path%'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

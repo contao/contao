@@ -26,7 +26,7 @@ class MessengerCron
     /**
      * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int, 'min': int}}> $workers
      */
-    public function __construct(private ContainerInterface $messengerTransportLocator, private ProcessUtil $processUtil, private array $workers)
+    public function __construct(private ContainerInterface $messengerTransportLocator, private ProcessUtil $processUtil, private string $consolePath, private array $workers)
     {
     }
 
@@ -75,6 +75,7 @@ class MessengerCron
     private function createProcessPromiseForWorker(array $worker): PromiseInterface
     {
         $process = $this->processUtil->createSymfonyConsoleProcess(
+            $this->consolePath,
             'messenger:consume',
             ...array_merge($worker['options'], $worker['transports'])
         );
