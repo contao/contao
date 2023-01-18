@@ -58,6 +58,7 @@
                                 el.removeAttribute('data-original-title');
                             });
 
+                            initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
                             const select = ntr.querySelector('select.tl_select')
