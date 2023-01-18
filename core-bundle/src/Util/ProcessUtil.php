@@ -22,7 +22,7 @@ class ProcessUtil implements ResetInterface
 {
     private string|null $phpBinary = null;
 
-    public function __construct(private readonly string $consolePath = 'bin/console')
+    public function __construct(private readonly string $consolePath)
     {
     }
 
