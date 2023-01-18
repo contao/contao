@@ -107,7 +107,7 @@ class PageUrlListenerTest extends TestCase
             'bar/foo',
         ];
 
-        yield 'Test alias when changing the title and without folder url' => [
+        yield 'Test alias when changing the title and without folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
@@ -121,7 +121,7 @@ class PageUrlListenerTest extends TestCase
             'bar',
         ];
 
-        yield 'Test alias when changing the title and folder url' => [
+        yield 'Test alias when changing the title and folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
