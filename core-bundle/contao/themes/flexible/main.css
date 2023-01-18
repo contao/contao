@@ -20,6 +20,8 @@
 	--icon-color-scheme: url("icons/color_scheme.svg");
 	--icon-arrow-left: url("icons/arrow_left.svg");
 	--icon-arrow-right: url("icons/arrow_right.svg");
+	--icon-visible: url("icons/visible.svg");
+	--icon-invisible: url("icons/invisible.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -36,6 +38,8 @@ html[data-color-scheme="dark"] {
 	--icon-color-scheme: url("icons-dark/color_scheme.svg");
 	--icon-arrow-left: url("icons-dark/arrow_left.svg");
 	--icon-arrow-right: url("icons-dark/arrow_right.svg");
+	--icon-visible: url("icons-dark/visible.svg");
+	--icon-invisible: url("icons-dark/invisible.svg");
 }
 
 /* Body */
@@ -1988,15 +1992,19 @@ ul.sgallery li {
 	margin: 2px 0;
 }
 
-.js .tl_modulewizard input.mw_enable {
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
+.tl_modulewizard input.mw_enable + button, .js .tl_modulewizard input.mw_enable {
+	display: none;
+}
+
+.js .tl_modulewizard input.mw_enable + button {
+	display: inline;
+	width: 16px;
+	height: 16px;
+	background: var(--icon-invisible) 0 0 no-repeat;
+}
+
+.js .tl_modulewizard input.mw_enable:checked + button {
+	background-image: var(--icon-visible);
 }
 
 .tl_modulewizard img.mw_enable {

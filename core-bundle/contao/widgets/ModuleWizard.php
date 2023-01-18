@@ -191,7 +191,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -219,7 +219,7 @@ class ModuleWizard extends Widget
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="-1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '">' . Image::getHtml((($this->varValue[$i]['enable'] ?? null) ? 'visible.svg' : 'invisible.svg')) . '</button>';
+					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
 				}
 				else
 				{
@@ -233,7 +233,6 @@ class ModuleWizard extends Widget
 
 		return $return . '
   </tbody>
-  </table>
-  <script>Backend.moduleWizard("ctrl_' . $this->strId . '")</script>';
+  </table>';
 	}
 }
