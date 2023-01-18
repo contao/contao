@@ -150,10 +150,10 @@ class Image
 			if (file_exists(Path::join($projectDir, $darkSrc)))
 			{
 				$darkAttributes = new HtmlAttributes($attributes);
-				$darkAttributes->mergeWith(['class' => 'color-scheme--dark', 'loading' => 'lazy']);
+				$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
 
 				$lightAttributes = new HtmlAttributes($attributes);
-				$lightAttributes->mergeWith(['class' => 'color-scheme--light', 'loading' => 'lazy']);
+				$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
 
 				return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
 			}
