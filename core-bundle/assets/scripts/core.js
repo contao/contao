@@ -1811,12 +1811,14 @@ window.Backend =
 		a.href = a.href.replace(/id=[0-9]+/, 'id=' + el.value);
 
 		if (el.value > 0) {
-			td.getElement('a.module_link').setStyle('display', null);
-			td.getElement('img.module_image').setStyle('display', 'none');
+			a.classList.remove('hidden');
 		} else {
-			td.getElement('a.module_link').setStyle('display', 'none');
-			td.getElement('img.module_image').setStyle('display', null);
+			a.classList.add('hidden');
 		}
+
+		td.getElements('img.module_image').forEach(function (image) {
+			image.classList.toggle('hidden');
+		});
 	},
 
 	/**
