@@ -84,14 +84,6 @@ gulp.task('minify-dark-theme-icons', function (cb) {
 gulp.task('watch', function () {
     gulp.watch(
         [
-            'core-bundle/public/core.js',
-            'core-bundle/public/mootao.js'
-        ],
-        gulp.series('minify-public')
-    );
-
-    gulp.watch(
-        [
             'core-bundle/contao/themes/flexible/*.js',
             '!core-bundle/contao/themes/flexible/*.min.js'
         ],

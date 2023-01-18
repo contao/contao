@@ -414,6 +414,10 @@ p {
 	margin-right: 3px;
 }
 
+.widget legend {
+	padding: 0;
+}
+
 .widget legend img {
 	vertical-align: -1px;
 }

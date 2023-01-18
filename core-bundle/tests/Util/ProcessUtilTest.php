@@ -22,7 +22,7 @@ class ProcessUtilTest extends TestCase
 {
     public function testCreateSymfonyConsoleProcess(): void
     {
-        $util = new ProcessUtil();
+        $util = new ProcessUtil('bin/console');
         $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
 
         $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
@@ -38,7 +38,7 @@ class ProcessUtilTest extends TestCase
      */
     public function testPromise(bool $successful, bool $autostart): void
     {
-        $util = new ProcessUtil();
+        $util = new ProcessUtil('bin/console');
         $process = $this->mockProcess($successful, $autostart);
         $promise = $util->createPromise($process, $autostart);
 
