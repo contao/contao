@@ -367,7 +367,7 @@ class Installer extends Controller
 					unset($field['index'], $field['origtype']);
 
 					// Field type
-					if ($field['length'])
+					if ($field['length'] ?? null)
 					{
 						$field['type'] .= '(' . $field['length'] . (isset($field['precision']) ? ',' . $field['precision'] : '') . ')';
 
