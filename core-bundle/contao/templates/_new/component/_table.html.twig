@@ -165,7 +165,7 @@
                                 mutations.forEach(function (mutation) {
                                     initTree(mutation.target)
                                 });
-                            }).observe(document.documentElement, {
+                            }).observe(document, {
                                 childList: true,
                                 subtree: true
                             });
