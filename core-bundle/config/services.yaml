@@ -1076,7 +1076,7 @@ services:
     contao.twig.sanitizer_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
         arguments:
-            - '@?twig.extension.htmlsanitizer'
+            - '@twig.extension.htmlsanitizer'
 
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
