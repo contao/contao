@@ -87,6 +87,43 @@ class HtmlAttributesTest extends TestCase
             '  ',
             [],
         ];
+
+        yield 'complex styles' => [
+            'style=" content:&quot; foo : bar ; baz ( &quot;; foo : url(https://example.com/foo;bar) ; " STYLE=color:red',
+            ['style' => 'content:" foo : bar ; baz ( ";foo:url(https://example.com/foo;bar);color:red'],
+        ];
+
+        yield 'double styles' => [
+            'style="color: fallback; color: cutting-edge(foo);"',
+            ['style' => 'color:fallback;color:cutting-edge(foo)'],
+        ];
+
+        yield 'escaped name' => [
+            'style="c\6F lor: red;"',
+            ['style' => 'c\6F lor:red'],
+        ];
+
+        yield 'escaped value' => [
+            'style="color: r\&quot;ed"',
+            ['style' => 'color:r\"ed'],
+        ];
+
+        yield 'escaped string' => [
+            "style=\"color: 'r\\'ed'\"",
+            ['style' => "color:'r\\'ed'"],
+        ];
+
+        yield 'invalid block' => [
+            'style="{ foo: red } bar: green; baz: blue"',
+            ['style' => 'baz:blue'],
+        ];
+
+        /*
+        yield 'completely invalid' => [
+            'style="{ foo: red; bar: green; baz: blue"',
+            [],
+        ];
+        */
     }
 
     public function testCreatesAttributesFromIterable(): void
@@ -133,6 +170,7 @@ class HtmlAttributesTest extends TestCase
         $attributesA = new HtmlAttributes([
             'foO_bAr' => 'bar',
             'class' => 'class1',
+            'style' => 'color: red',
         ]);
 
         $attributesB = new HtmlAttributes([
@@ -140,17 +178,19 @@ class HtmlAttributesTest extends TestCase
             'foo-foo' => 'foo',
         ]);
 
-        $attributesC = 'BAZ123 = "" class="class2"';
+        $attributesC = 'BAZ123 = "" class="class2" style=background:red';
 
         $attributesD = [
             'other' => null,
             'foo-foo' => false,
             'class' => 'class1 class3',
+            'style' => 'color: blue',
         ];
 
         $expectedProperties = [
             'foo_bar' => 'bar',
             'class' => 'class1 class2 class3',
+            'style' => 'color:blue;background:red',
             'bar-bar' => '42',
             'baz123' => '',
             'other' => '',
@@ -366,6 +406,70 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('', $attributes->toString());
     }
 
+    public function testAddAndRemoveStyles(): void
+    {
+        // Whitespaces should get normalized by default
+        $attributes = new HtmlAttributes(['style' => " \ffoo:  bar;\tother1\n:other2\r  ;"]);
+
+        $this->assertSame('foo:bar;other1:other2', $attributes['style']);
+
+        // And remove classes
+        $attributes->addStyle('baz: 1');
+        $attributes->addStyle('foo: red; foobar: baz');
+        $attributes->addStyle(['foo2: bar', 'foo3: bar; foo4: bar', 'foobar' => 'red']);
+        $attributes->removeStyle('other2');
+        $attributes->removeStyle('thing: x; other1: red;');
+        $attributes->removeStyle(['foo3 : x', ' foo4 ']);
+
+        $this->assertSame('foo:red;baz:1;foobar:red;foo2:bar', $attributes['style']);
+    }
+
+    public function testAddAndRemoveConditionalStyles(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->addStyle('foo: a', null);
+        $attributes->addStyle('foo: b', false);
+        $attributes->addStyle('foo: c', 0);
+        $attributes->addStyle('foo: d', '');
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addStyle('a: foo', condition: true);
+        $attributes->addStyle('b: foo', condition: 1);
+        $attributes->addStyle('c: foo', condition: 'true');
+        $attributes->addStyle('d: foo', condition: '1');
+
+        $this->assertSame(['style' => 'a:foo;b:foo;c:foo;d:foo'], iterator_to_array($attributes));
+
+        $attributes->removeStyle('a: foo', null);
+        $attributes->removeStyle('b: foo', false);
+        $attributes->removeStyle('c', 0);
+        $attributes->removeStyle('d: foo', '');
+
+        $this->assertSame(['style' => 'a:foo;b:foo;c:foo;d:foo'], iterator_to_array($attributes));
+
+        $attributes->removeStyle('a: foo', condition: true);
+        $attributes->removeStyle('b', condition: 1);
+        $attributes->removeStyle('c: foo', condition: 'true');
+        $attributes->removeStyle(['d'], condition: '1');
+
+        $this->assertSame([], iterator_to_array($attributes));
+    }
+
+    public function testDoesNotOutputEmptyStyleAttribute(): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->addStyle('');
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->addStyle('foo');
+        $attributes->removeStyle('foo');
+
+        $this->assertSame('', $attributes->toString());
+    }
+
     public function testAllowsChaining(): void
     {
         $attributes = (new HtmlAttributes())
@@ -375,7 +479,7 @@ class HtmlAttributesTest extends TestCase
             ->setIfExists('data-foo', null)
         ;
 
-        $this->assertSame(' class="block headline" style="color: red;"', (string) $attributes);
+        $this->assertSame(' class="block headline" style="color:red"', (string) $attributes);
     }
 
     public function testEscapesAttributesWhenRenderingAsString(): void

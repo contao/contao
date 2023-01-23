@@ -59,6 +59,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
                 $this->addClass($value);
+            } elseif ('style' === $name) {
+                $this->addStyle($value);
             } else {
                 $this->set($name, $value);
             }
@@ -114,6 +116,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         // Normalize class names
         if ('class' === $name) {
             $this->addClass('');
+        } elseif ('style' === $name) {
+            $this->addStyle([]);
         }
 
         return $this;
@@ -177,7 +181,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
+     * Remove a single style ("color") or multiple from a style string ("color: red; background: blue").
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -203,6 +207,87 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         if (empty($this->attributes['class'])) {
             unset($this->attributes['class']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a single style ("color: red")
+     * or multiple from a style string ("color: red; background: blue")
+     * or a style array (['color' => 'red', 'background' => 'blue']).
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string,string> $styles
+     */
+    public function addStyle(array|string $styles, mixed $condition = true): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($styles)) {
+            foreach ($styles as $prop => $value) {
+                if (\is_string($prop)) {
+                    $styles[$prop] = "$prop:$value";
+                }
+            }
+
+            $styles = implode(';', $styles);
+        }
+
+        $mergedStyles = array_merge(
+            $this->parseStyles($this->attributes['style'] ?? ''),
+            $this->parseStyles($styles),
+        );
+
+        $this->attributes['style'] = $this->serializeStyles($mergedStyles);
+
+        if (empty($this->attributes['style'])) {
+            unset($this->attributes['style']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a single style ("color")
+     * or multiple from a style string ("color: red; background: blue")
+     * or a style list (['color', 'background']).
+     * or a style array (['color' => 'red', 'background' => 'blue']).
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|list<string>|array<string,string> $styles
+     */
+    public function removeStyle(array|string $styles, mixed $condition = true): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        $styles = (array) $styles;
+
+        foreach ($styles as $prop => $value) {
+            if (\is_string($prop)) {
+                $styles[$prop] = "$prop:$value";
+            } elseif (!str_contains($value, ':')) {
+                $styles[$prop] = "$value:";
+            }
+        }
+
+        $styles = implode(';', $styles);
+
+        $mergedStyles = array_diff_key(
+            $this->parseStyles($this->attributes['style'] ?? ''),
+            $this->parseStyles($styles),
+        );
+
+        $this->attributes['style'] = $this->serializeStyles($mergedStyles);
+
+        if (empty($this->attributes['style'])) {
+            unset($this->attributes['style']);
         }
 
         return $this;
@@ -310,7 +395,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         foreach ($matches as [1 => $name, 2 => $value]) {
-            yield $name => html_entity_decode($value ?? '', ENT_QUOTES);
+            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES);
         }
     }
 
@@ -323,5 +408,66 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+    }
+
+    private function parseStyles(string $styles): array
+    {
+        // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
+        $declarationRegex = <<<'EOD'
+            (
+                \s*+                                           # Optional white space
+                (                                              # Property name
+                    (?!\d)                                     # Must not start with a digit
+                    (?!-\d)                                    # Must not start with a dash followed by a digit
+                    -?+                                        # Optional leading dash
+                    (?:
+                        [a-z0-9\x80-\xFF_-]
+                        |\\(?:                                 # Escape
+                            [0-9a-f]{1,6}\s?
+                            |[^0-9a-f\n]
+                        )
+                    )++
+                )
+                \s*+                                           # Optional white space
+                :                                              # Colon
+                (                                              # Value
+                    (?:
+                        \\.                                    # Escape
+                        |"(?:\\.|[^"\n])*(?:"|(*SKIP)(*FAIL))  # String token double quotes
+                        |'(?:\\.|[^'\n])*(?:'|(*SKIP)(*FAIL))  # String token single quotes
+                        |\{(?:;|(?-1))*(?:\}|(*SKIP)(*FAIL))   # {}-block
+                        |\[(?:;|(?-1))*(?:\]|(*SKIP)(*FAIL))   # []-block
+                        |\((?:;|(?-1))*(?:\)|(*SKIP)(*FAIL))   # ()-block
+                        |[^;{}\[\]()"']                        # Anything else
+                    )*+
+                )
+                |(?-1)                                        # Skip to the next declaration
+            )ix
+            EOD;
+
+        preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+
+        $result = [];
+
+        foreach ($matches as [1 => $property, 2 => $value]) {
+            if ($property) {
+                $result[$property][] = trim($value);
+            }
+        }
+
+        return $result;
+    }
+
+    private function serializeStyles(array $styles): string
+    {
+        $serialized = [];
+
+        foreach ($styles as $prop => $values) {
+            foreach ($values as $value) {
+                $serialized[] = "$prop:$value";
+            }
+        }
+
+        return implode(';', $serialized);
     }
 }
