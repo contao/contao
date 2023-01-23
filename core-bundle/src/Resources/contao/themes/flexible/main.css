@@ -1068,6 +1068,7 @@ table.tl_listing {
 	border:0;
 	height:16px;
 	background:none;
+	vertical-align:baseline;
 }
 .cte_type {
 	margin:2px 0 6px;
