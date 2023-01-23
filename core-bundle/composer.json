@@ -138,7 +138,7 @@
         "symfony/security-core": "^6.1",
         "symfony/security-csrf": "^6.0",
         "symfony/security-http": "^6.0",
-        "symfony/service-contracts": "^1.1 || ^2.0",
+        "symfony/service-contracts": "^2.2",
         "symfony/string": "^5.4 || ^6.0",
         "symfony/translation": "^5.4 || ^6.0",
         "symfony/translation-contracts": "^2.3",
