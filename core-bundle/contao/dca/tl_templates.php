@@ -56,23 +56,23 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			'new' => array
 			(
 				'href'                => 'act=paste&amp;mode=create',
-				'class'               => 'header_new_folder'
+				'class'               => 'header_icon header_new_folder'
 			),
 			'new_tpl' => array
 			(
 				'href'                => 'key=new_tpl',
-				'class'               => 'header_new'
+				'class'               => 'header_icon header_new'
 			),
 			'toggleNodes' => array
 			(
 				'href'                => 'tg=all',
-				'class'               => 'header_toggle',
+				'class'               => 'header_icon header_toggle',
 				'showOnSelect'        => true
 			),
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		),
@@ -420,7 +420,7 @@ class tl_templates extends Backend
 </div>' : '') . '
 
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $this->getReferer(true) . '" class="header_icon header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
 <form id="tl_create_template" class="tl_form tl_edit_form" method="post">

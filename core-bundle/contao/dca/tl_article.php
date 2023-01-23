@@ -75,13 +75,13 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'toggleNodes' => array
 			(
 				'href'                => '&amp;ptg=all',
-				'class'               => 'header_toggle',
+				'class'               => 'header_icon header_toggle',
 				'showOnSelect'        => true
 			),
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		),

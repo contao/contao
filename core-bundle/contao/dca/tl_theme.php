@@ -65,19 +65,19 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'importTheme' => array
 			(
 				'href'                => 'key=importTheme',
-				'class'               => 'header_theme_import',
+				'class'               => 'header_icon header_theme_import',
 				'button_callback'     => array('tl_theme', 'importTheme')
 			),
 			'store' => array
 			(
 				'href'                => 'key=themeStore',
-				'class'               => 'header_store',
+				'class'               => 'header_icon header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		),
@@ -299,7 +299,7 @@ class tl_theme extends Backend
 	 */
 	public function themeStore()
 	{
-		return '<a href="https://themes.contao.org" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
+		return '<a href="https://themes.contao.org" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_icon header_store" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
 	}
 
 	/**

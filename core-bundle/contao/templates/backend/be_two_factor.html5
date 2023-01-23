@@ -1,6 +1,6 @@
 
 <div id="tl_buttons">
-  <a href="<?= $this->href ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.backBTTitle')) ?>"><?= $this->trans('MSC.backBT') ?></a>
+  <a href="<?= $this->href ?>" class="header_icon header_back" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.backBTTitle')) ?>"><?= $this->trans('MSC.backBT') ?></a>
 </div>
 
 <div class="two-factor">

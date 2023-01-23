@@ -70,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		)

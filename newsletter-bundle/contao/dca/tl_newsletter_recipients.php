@@ -65,13 +65,13 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'import' => array
 			(
 				'href'                => 'key=import',
-				'class'               => 'header_css_import',
+				'class'               => 'header_icon header_css_import',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		),

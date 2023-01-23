@@ -267,7 +267,7 @@ class Newsletter extends Backend
 		// Preview newsletter
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $this->getReferer(true) . '" class="header_icon header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form action="' . System::getContainer()->get('router')->generate('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
@@ -585,7 +585,7 @@ class Newsletter extends Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('requestUri'))) . '" class="header_icon header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 ' . Message::generate() . '
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">

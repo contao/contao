@@ -51,13 +51,13 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'toggleNodes' => array
 			(
 				'href'                => 'ptg=all',
-				'class'               => 'header_toggle',
+				'class'               => 'header_icon header_toggle',
 				'showOnSelect'        => true
 			),
 			'all' => array
 			(
 				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
+				'class'               => 'header_icon header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
 			)
 		),
