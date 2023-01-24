@@ -36,7 +36,7 @@ class InstallBinDirCommand extends Command
         $fs = new Filesystem();
         $io = new SymfonyStyle($input, $output);
 
-        $sourcePath = __DIR__.'/../../skeleton/bin/console';
+        $sourcePath = Path::canonicalize(__DIR__.'/../../skeleton/bin/console');
         $targetPath = Path::join($this->projectDir, 'bin/console');
 
         $fs->copy($sourcePath, $targetPath, true);

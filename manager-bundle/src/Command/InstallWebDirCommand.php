@@ -62,7 +62,7 @@ class InstallWebDirCommand extends Command
      */
     private function addHtaccess(string $webDir): void
     {
-        $sourcePath = __DIR__.'/../../skeleton/public/.htaccess';
+        $sourcePath = Path::canonicalize(__DIR__.'/../../skeleton/public/.htaccess');
         $targetPath = Path::join($webDir, '.htaccess');
 
         if (!$this->fs->exists($targetPath)) {
