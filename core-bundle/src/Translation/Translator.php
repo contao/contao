@@ -76,7 +76,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue($locale = null): MessageCatalogue
+    public function getCatalogue($locale = null): MessageCatalogueInterface
     {
         $parentCatalog = $this->translator->getCatalogue($locale);
 
