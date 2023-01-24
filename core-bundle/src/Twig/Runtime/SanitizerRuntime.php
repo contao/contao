@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 use Contao\Input;
 use Contao\InputEncodingMode;
 use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
+use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class SanitizerRuntime implements RuntimeExtensionInterface
@@ -22,13 +23,13 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private readonly HtmlSanitizerExtension $sanitizerExtension)
+    public function __construct(readonly private Environment $twig)
     {
     }
 
     public function sanitizeHtml(string $html, string $sanitizer = null): string
     {
-        $html = $this->sanitizerExtension->sanitize($html, $sanitizer);
+        $html = $this->twig->getExtension(HtmlSanitizerExtension::class)->sanitize($html, $sanitizer);
 
         // Encode Contao-specific special characters like insert tags
         return Input::encodeInput($html, InputEncodingMode::encodeNone);
