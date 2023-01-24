@@ -134,11 +134,11 @@ html[data-color-scheme="dark"] {
 }
 
 html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {
-	display: none !important;
+	display: none;
 }
 
 html[data-color-scheme="dark"] .color-scheme--dark, .color-scheme--light {
-	display: initial !important;
+	display: initial;
 }
 
 /* HTML */
@@ -284,7 +284,7 @@ p {
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .unselectable {
@@ -412,6 +412,10 @@ p {
 
 .widget h3 img {
 	margin-right: 3px;
+}
+
+.widget legend {
+	padding: 0;
 }
 
 .widget legend img {
