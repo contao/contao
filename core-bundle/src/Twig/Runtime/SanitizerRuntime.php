@@ -23,7 +23,7 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(readonly private Environment $twig)
+    public function __construct(private readonly Environment $twig)
     {
     }
 
