@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Finder;
 
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FinderFactory
@@ -24,7 +25,7 @@ class FinderFactory
     public function __construct(
         private readonly TemplateHierarchyInterface $hierarchy,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorBagInterface|TranslatorInterface $translator,
     ) {
     }
 

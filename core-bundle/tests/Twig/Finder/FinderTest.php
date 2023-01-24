@@ -13,11 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Finder;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class FinderTest extends TestCase
 {
@@ -142,7 +143,29 @@ class FinderTest extends TestCase
         $this->assertSame($expected, $options);
     }
 
-    private function getFinder(): Finder
+    public function testGetAsTemplateOptionsWithCustomTranslations(): void
+    {
+        $translations = [
+            'TEMPLATE.content_element/text' => 'Text default',
+            'TEMPLATE.content_element/text/foo' => 'Foo variant',
+        ];
+
+        $options = $this->getFinder($translations)
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->asTemplateOptions()
+        ;
+
+        $expected = [
+            '' => 'Text default [content_element/text • App, ContaoCore]',
+            'content_element/text/foo' => 'Foo variant [content_element/text/foo • App]',
+            'content_element/text/bar' => 'content_element/text/bar [App]',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
+    private function getFinder(array $translations = []): Finder
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
@@ -187,20 +210,37 @@ class FinderTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(Translator::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $id, array $parameters, string $domain) {
+                function (string $id, array $parameters, string $domain) use ($translations) {
                     $this->assertSame('contao_default', $domain);
 
                     return match ($id) {
                         'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
                         'MSC.global' => 'Global',
-                        default => throw new \LogicException('Unsupported translation id.')
+                        default => $translations[$id] ?? throw new \LogicException('Unsupported translation id.')
                     };
                 }
             )
+        ;
+
+        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue
+            ->method('has')
+            ->willReturnCallback(
+                function (string $id, string $domain) use ($translations): bool {
+                    $this->assertSame('contao_default', $domain);
+
+                    return \array_key_exists($id, $translations);
+                }
+            )
+        ;
+
+        $translator
+            ->method('getCatalogue')
+            ->willReturn($catalogue)
         ;
 
         return (new FinderFactory($hierarchy, new ThemeNamespace(), $translator))->create();
