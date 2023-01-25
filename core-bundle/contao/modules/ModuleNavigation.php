@@ -82,6 +82,6 @@ class ModuleNavigation extends Module
 		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
-		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host, $lang);
+		$this->Template->items = isset($trail[$level]) ? $this->renderNavigation($trail[$level], 1, $host, $lang) : '';
 	}
 }
