@@ -655,9 +655,7 @@ class InsertTagsTest extends TestCase
             ->willReturn($request)
         ;
 
-        $this->setContainerWithContaoConfiguration([
-            'request_stack' => $requestStack,
-        ]);
+        $this->setContainerWithContaoConfiguration(['request_stack' => $requestStack]);
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
