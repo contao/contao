@@ -145,11 +145,8 @@ class ModuleCalendar extends Events
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		$firstDay = date('Ymd', min($dateFrom, $time));
-		$lastDay = date('Ymd', max($dateTo, $repeatUntil, $time));
-
 		// The given day is out of scope
-		if ($day && ($day < $firstDay || $day > $lastDay))
+		if ($day && ($day < date('Ymd', min($dateFrom, $time)) || $day > date('Ymd', max($dateTo, $repeatUntil, $time))))
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
