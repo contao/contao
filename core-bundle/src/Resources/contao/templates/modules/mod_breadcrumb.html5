@@ -1,6 +1,11 @@
 
 <!-- indexer::stop -->
 <nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="Breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+
+  <?php if ($this->headline): ?>
+  <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
     <ul>
       <?php foreach ($this->items as $position => $item): ?>
         <?php if ($item['isActive']): ?>
