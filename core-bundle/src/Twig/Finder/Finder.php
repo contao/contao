@@ -123,15 +123,13 @@ final class Finder implements \IteratorAggregate, \Countable
         };
 
         $getCustomLabel = function (string $identifier, array $sourceLabels): string|null {
-            $translationId = "TEMPLATE.$identifier";
-
-            if (!$this->translator->getCatalogue()->has($translationId, 'contao_default')) {
+            if (!$this->translator->getCatalogue()->has($identifier, 'templates')) {
                 return null;
             }
 
             return sprintf(
                 '%s [%s • %s]',
-                $this->translator->trans($translationId, [], 'contao_default'),
+                $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
                 implode(', ', $sourceLabels)
             );

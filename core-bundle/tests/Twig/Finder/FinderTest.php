@@ -146,8 +146,8 @@ class FinderTest extends TestCase
     public function testGetAsTemplateOptionsWithCustomTranslations(): void
     {
         $translations = [
-            'TEMPLATE.content_element/text' => 'Text default',
-            'TEMPLATE.content_element/text/foo' => 'Foo variant',
+            'content_element/text' => 'Text default',
+            'content_element/text/foo' => 'Foo variant',
         ];
 
         $options = $this->getFinder($translations)
@@ -215,12 +215,16 @@ class FinderTest extends TestCase
             ->method('trans')
             ->willReturnCallback(
                 function (string $id, array $parameters, string $domain) use ($translations) {
+                    if ('templates' === $domain) {
+                        return $translations[$id] ?? throw new \LogicException('Undefined templates translation id.');
+                    }
+
                     $this->assertSame('contao_default', $domain);
 
                     return match ($id) {
                         'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
                         'MSC.global' => 'Global',
-                        default => $translations[$id] ?? throw new \LogicException('Unsupported translation id.')
+                        default => throw new \LogicException('Unsupported translation id.')
                     };
                 }
             )
@@ -231,7 +235,7 @@ class FinderTest extends TestCase
             ->method('has')
             ->willReturnCallback(
                 function (string $id, string $domain) use ($translations): bool {
-                    $this->assertSame('contao_default', $domain);
+                    $this->assertSame('templates', $domain);
 
                     return \array_key_exists($id, $translations);
                 }
