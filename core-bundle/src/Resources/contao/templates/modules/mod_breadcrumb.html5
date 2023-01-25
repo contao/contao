@@ -3,9 +3,9 @@
 <nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="Breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
 
   <?php $this->block('headline'); ?>
-  <?php if ($this->headline): ?>
-  <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+    <?php if ($this->headline): ?>
+      <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+    <?php endif; ?>
   <?php $this->endblock(); ?>
 
   <?php $this->block('content'); ?>
