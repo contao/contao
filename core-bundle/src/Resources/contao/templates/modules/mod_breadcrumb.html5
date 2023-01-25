@@ -2,14 +2,16 @@
 
 <?php $this->block('content'); ?>
 
+<nav aria-label="Breadcrumb">
   <ul itemprop="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
     <?php foreach ($this->items as $position => $item): ?>
       <?php if ($item['isActive']): ?>
-        <li class="active<?php if ($item['class']): ?> <?= $item['class'] ?><?php endif; ?> last"><?= $item['link'] ?></li>
+        <li class="active<?php if ($item['class']): ?> <?= $item['class'] ?><?php endif; ?> last" aria-current="page"><?= $item['link'] ?></li>
       <?php else: ?>
         <li<?php if ($item['class']): ?> class="<?= $item['class'] ?>"<?php endif; ?> itemscope itemtype="http://schema.org/ListItem" itemprop="itemListElement"><a href="<?= $item['href'] ?: './' ?>" title="<?= $item['title'] ?>" itemprop="item"><span itemprop="name"><?= $item['link'] ?></span></a><meta itemprop="position" content="<?= $position + 1 ?>"></li>
       <?php endif; ?>
     <?php endforeach; ?>
   </ul>
+</nav>
 
 <?php $this->endblock(); ?>
