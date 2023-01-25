@@ -1527,7 +1527,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{
