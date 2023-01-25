@@ -22,6 +22,7 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend"})
@@ -149,16 +150,20 @@ class SitemapController extends AbstractController
                 && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
-                $urls = [$pageModel->getAbsoluteUrl()];
+                try {
+                    $urls = [$pageModel->getAbsoluteUrl()];
 
-                // Get articles with teaser
-                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                    foreach ($articleModels as $articleModel) {
-                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    // Get articles with teaser
+                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                        foreach ($articleModels as $articleModel) {
+                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                        }
                     }
-                }
 
-                $result[] = $urls;
+                    $result[] = $urls;
+                } catch (ExceptionInterface $exception) {
+                    // Skip URL for this page but generate child pages
+                }
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
