@@ -59,6 +59,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
                 $this->addClass($value);
+            } elseif ('style' === $name) {
+                $this->addStyle($value);
             } else {
                 $this->set($name, $value);
             }
@@ -120,7 +122,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Set the property $name to $value if the value is truthy.
+     * Sets the property $name to $value if the value is truthy.
      */
     public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
@@ -132,7 +134,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Unset the property $name.
+     * Unsets the property $name.
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
@@ -148,7 +150,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Add a single class ("foo") or multiple from a class string ("foo bar baz").
+     * Adds a single class ("foo") or multiple from a class string ("foo bar baz").
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -166,7 +168,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $this->attributes['class'] = implode(
             ' ',
-            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes))
+            array_unique($this->splitClasses(($this->attributes['class'] ?? '').' '.$classes))
         );
 
         if (empty($this->attributes['class'])) {
@@ -177,7 +179,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
+     * Removes a single class ("foo") or multiple from a class string ("foo bar baz").
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -196,13 +198,75 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $this->attributes['class'] = implode(
             ' ',
             array_diff(
-                $this->split($this->attributes['class'] ?? ''),
-                $this->split($classes)
+                $this->splitClasses($this->attributes['class'] ?? ''),
+                $this->splitClasses($classes)
             )
         );
 
         if (empty($this->attributes['class'])) {
             unset($this->attributes['class']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds an inline style definition.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $style
+     */
+    public function addStyle(array|string $style, mixed $condition = true): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($style)) {
+            $style = implode(';', $style);
+        }
+
+        $buffer = $this->splitStyles(($this->attributes['style'] ?? '').';'.$style);
+
+        $this->attributes['style'] = implode(
+            ';',
+            array_map(fn($k, $v) => "$k:$v", array_keys($buffer), array_values($buffer))
+        );
+
+        if (empty($this->attributes['style'])) {
+            unset($this->attributes['style']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes an inline style definition.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $style
+     */
+    public function removeStyle(array|string $style, mixed $condition = true): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($style)) {
+            $style = implode(';', $style);
+        }
+
+        $buffer = $this->splitStyles(($this->attributes['style'] ?? '').';'.$style);
+
+        $this->attributes['style'] = implode(
+            ';',
+            array_map(fn($k, $v) => "$k:$v", array_keys($buffer), array_values($buffer))
+        );
+
+        if (empty($this->attributes['style'])) {
+            unset($this->attributes['style']);
         }
 
         return $this;
@@ -278,13 +342,31 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * @return array<string>
      */
-    private function split(string $value): array
+    private function splitClasses(string $value): array
     {
         return array_filter(preg_split('/\s+/', $value));
     }
 
     /**
-     * Parse attributes from an attribute string like 'foo="bar" baz="42'.
+     * @return array<string>
+     */
+    private function splitStyles(string $value): array
+    {
+        $value = preg_replace('/\s+/', '', $value);
+        $pairs = array_filter(explode(';', $value));
+
+        $buffer = [];
+
+        foreach ($pairs as $pair) {
+            [$key, $value] = explode(':', $pair, 2) + [null, null];
+            $buffer[$key] = $value;
+        }
+
+        return array_filter($buffer);
+    }
+
+    /**
+     * Parses attributes from an attribute string like 'foo="bar" baz="42'.
      *
      * @return \Generator<string, string>
      */

@@ -138,20 +138,22 @@ class HtmlAttributesTest extends TestCase
         $attributesB = new HtmlAttributes([
             'bar-bar' => 42,
             'foo-foo' => 'foo',
+            'style' => 'color:#fff'
         ]);
 
-        $attributesC = 'BAZ123 = "" class="class2"';
+        $attributesC = 'BAZ123 = "" class="class2" style="color: #f00; font-size: 12px"';
 
         $attributesD = [
             'other' => null,
             'foo-foo' => false,
-            'class' => 'class1 class3',
+            'class' => 'class1  class3',
         ];
 
         $expectedProperties = [
             'foo_bar' => 'bar',
             'class' => 'class1 class2 class3',
             'bar-bar' => '42',
+            'style' => 'color:#f00;font-size:12px',
             'baz123' => '',
             'other' => '',
         ];
@@ -309,15 +311,39 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame('foo bar other1 other2', $attributes['class']);
 
-        // And remove classes
+        // Add classes
         $attributes->addClass('baz');
-        $attributes->addClass('foo foobar');
+        $attributes->addClass('foo  foobar');
         $attributes->addClass(['foo2', 'foobar2']);
+
+        $this->assertSame('foo bar other1 other2 baz foobar foo2 foobar2', $attributes['class']);
+
+        // And remove classes
         $attributes->removeClass(' other1');
-        $attributes->removeClass('thing other2');
+        $attributes->removeClass('thing  other2');
         $attributes->removeClass(['foo2', ' foobar ']);
 
         $this->assertSame('foo bar baz foobar2', $attributes['class']);
+    }
+
+    public function testAddAndRemoveStyles(): void
+    {
+        // Whitespaces should get normalized by default
+        $attributes = new HtmlAttributes(['style' => " \fcolor:#fff;\tline-height : 16px;\nfont-size: 12px\r  "]);
+
+        $this->assertSame('color:#fff;line-height:16px;font-size:12px', $attributes['style']);
+
+        // Add styles
+        $attributes->addStyle('color:#f00');
+        $attributes->addStyle(['font-size:14px;', 'border-radius: 3px']);
+
+        $this->assertSame('color:#f00;line-height:16px;font-size:14px;border-radius:3px', $attributes['style']);
+
+        // And remove styles
+        $attributes->removeStyle('line-height');
+        $attributes->removeStyle(['color', 'border-radius']);
+
+        $this->assertSame('font-size:14px', $attributes['style']);
     }
 
     public function testAddAndRemoveConditionalClasses(): void
@@ -353,15 +379,11 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame([], iterator_to_array($attributes));
     }
 
-    public function testDoesNotOutputEmptyClassAttribute(): void
+    public function testDoesNotOutputEmptyClassOrStyleAttribute(): void
     {
         $attributes = new HtmlAttributes();
         $attributes->addClass('');
-
-        $this->assertSame('', $attributes->toString());
-
-        $attributes->addClass('foo');
-        $attributes->removeClass('foo');
+        $attributes->addStyle('');
 
         $this->assertSame('', $attributes->toString());
     }
