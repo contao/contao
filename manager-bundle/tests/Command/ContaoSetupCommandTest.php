@@ -64,8 +64,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-bin-dir', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', 'public', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'skeleton:install', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
@@ -80,7 +79,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         (new CommandTester($command))->execute([], $options);
 
-        $this->assertSame(8, $invocationCount);
+        $this->assertSame(7, $invocationCount);
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -236,7 +235,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $processes = [];
 
-        for ($i = 1; $i <= 8; ++$i) {
+        for ($i = 1; $i <= 7; ++$i) {
             $process = $this->createMock(Process::class);
             $process
                 ->method('isSuccessful')
