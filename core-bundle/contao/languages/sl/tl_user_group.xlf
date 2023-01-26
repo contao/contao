@@ -1,0 +1,114 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user_group.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="tl_user_group.name.0">
+        <source>Title</source>
+        <target>Naziv</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Vnesite unikatno ime skupine.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.0">
+        <source>Allowed fields</source>
+        <target>Izključena polja</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.1">
+        <source>Here you can choose which fields will be editable.</source>
+        <target>Tu lahko izberete katera polja se bodo lahko urejala.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.0">
+        <source>Deactivate</source>
+        <target>Onemogoči</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Začasno onemogoči skupino.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.0">
+        <source>Activate on</source>
+        <target>Omogoči na</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite omogočiti skupino z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Onemogoči na</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite onemogočiti skupino z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.title_legend">
+        <source>Title</source>
+        <target>Naziv</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.modules_legend">
+        <source>Allowed modules</source>
+        <target>Dovoljeni moduli</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
+        <target>Dovoljeni elementi</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.pagemounts_legend">
+        <source>Pagemounts</source>
+        <target>Vključene strani</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.filemounts_legend">
+        <source>Filemounts</source>
+        <target>Vključene datoteke</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Velikosti slik</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.forms_legend">
+        <source>Form permissions</source>
+        <target>Dovoljenja obrazca</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Dovoljene skupine uporabnikov</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf_legend">
+        <source>Allowed fields</source>
+        <target>Izključena polja</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Group settings</source>
+        <target>Nastavitve skupine</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.0">
+        <source>New</source>
+        <target>Nov</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.1">
+        <source>Create a new user group</source>
+        <target>Ustvari novo skupino uporabnikov</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>Prikaži podrobnosti skupine uporabnikov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>Uredi skupino uporabnikov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>Podvoji skupino uporabnikov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>Izbriši skupino uporabnikov z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
+        <target>Omogoči/onemogoči skupino uporabnikov z ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
