@@ -459,10 +459,11 @@ class ContentElementTestCase extends TestCase
         $articleAdapter = $this->mockAdapter(['findPublishedById']);
         $articleAdapter
             ->method('findPublishedById')
-            ->willReturnCallback(static fn (int $id) => [
+            ->willReturnCallback(static fn (int $id) => match ($id) {
                 self::ARTICLE1 => $article1,
                 self::ARTICLE2 => $article2,
-            ][$id] ?? null)
+                default => null,
+            })
         ;
 
         return $this->mockContaoFramework([
