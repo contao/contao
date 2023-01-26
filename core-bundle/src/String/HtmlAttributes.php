@@ -181,7 +181,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Remove a single style ("color") or multiple from a style string ("color: red; background: blue").
+     * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
