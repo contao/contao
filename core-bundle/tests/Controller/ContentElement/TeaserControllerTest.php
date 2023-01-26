@@ -36,6 +36,25 @@ class TeaserControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    public function testHandlesArticleWithoutATeaserText(): void
+    {
+        $response = $this->renderWithModelData(
+            new TeaserController(),
+            [
+                'type' => 'teaser',
+                'article' => self::ARTICLE2,
+            ]
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-teaser">
+                <a href title="translated(contao_default:MSC.readMore[Just a title, no teaser])">translated(contao_default:MSC.more)</a>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
     public function testDoesNotOutputTeaserIfPageDoesNotExist(): void
     {
         $response = $this->renderWithModelData(

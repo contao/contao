@@ -134,9 +134,9 @@ class FinderTest extends TestCase
 
         $expected = [
             '' => 'content_element/text [Theme my_theme, App, ContaoCore]',
-            'content_element/text/foo' => 'content_element/text/foo [App]',
             'content_element/text/bar' => 'content_element/text/bar [App]',
             'content_element/text/baz' => 'content_element/text/baz [Theme my_theme]',
+            'content_element/text/foo' => 'content_element/text/foo [App]',
         ];
 
         $this->assertSame($expected, $options);

@@ -319,7 +319,7 @@ class tl_templates extends Backend
 				$content = $container->get('twig')->render(
 					'@Contao/backend/template_skeleton.html.twig',
 					array(
-						'type' => str_starts_with('@Contao/component', $template) ? 'use' : 'extends',
+						'type' => str_starts_with($template, '@Contao/component') ? 'use' : 'extends',
 						'template' => $info,
 					)
 				);
