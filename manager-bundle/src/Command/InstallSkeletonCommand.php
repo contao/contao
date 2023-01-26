@@ -60,7 +60,7 @@ class InstallSkeletonCommand extends Command
     }
 
     /**
-     * Adds files from skeleton/public to the application's public directory.
+     * Adds the bin/console entry point.
      */
     private function addConsole(): void
     {
