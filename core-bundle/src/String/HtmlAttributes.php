@@ -113,7 +113,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $this->attributes[$name] = true === $value ? '' : (string) $value;
 
-        // Normalize class names
+        // Normalize class names and style attributes
         if ('class' === $name) {
             $this->addClass('');
         } elseif ('style' === $name) {
@@ -213,8 +213,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Add a single style ("color: red")
-     * or multiple from a style string ("color: red; background: blue")
+     * Adds a single style ("color: red")
+     * or multiple styles from a style string ("color: red; background: blue")
      * or a style array (['color' => 'red', 'background' => 'blue']).
      *
      * If a falsy $condition is specified, the method is a no-op.
@@ -252,9 +252,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Remove a single style ("color")
-     * or multiple from a style string ("color: red; background: blue")
-     * or a style list (['color', 'background']).
+     * Removes a single style ("color")
+     * or multiple styles from a style string ("color: red; background: blue")
+     * or a style list (['color', 'background'])
      * or a style array (['color' => 'red', 'background' => 'blue']).
      *
      * If a falsy $condition is specified, the method is a no-op.
