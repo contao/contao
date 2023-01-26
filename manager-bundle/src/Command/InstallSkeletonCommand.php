@@ -25,7 +25,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(
     name: 'skeleton:install',
-    description: 'Installs the skeleton files of the Contao Managed Edition.',
+    description: 'Installs the skeleton files of the manager bundle.',
     aliases: ['contao:install-web-dir'] // Backwards compatibility
 )]
 class InstallSkeletonCommand extends Command
