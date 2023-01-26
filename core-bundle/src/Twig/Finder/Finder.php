@@ -132,6 +132,9 @@ final class Finder implements \IteratorAggregate, \Countable
             $options[$identifier !== $this->identifier ? $identifier : ''] = $label;
         }
 
+        // Make sure the default option is the first one (see #5719)
+        ksort($options);
+
         return $options;
     }
 
