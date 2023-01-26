@@ -482,7 +482,8 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame('', $attributes->toString());
 
-        $attributes->addStyle('foo');
+        $attributes->addStyle('foo: bar');
+        $attributes->addStyle('invalid style');
         $attributes->removeStyle('foo');
 
         $this->assertSame('', $attributes->toString());
