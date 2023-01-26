@@ -98,6 +98,21 @@ class HtmlAttributesTest extends TestCase
             ['style' => 'color:fallback;color:cutting-edge(foo)'],
         ];
 
+        yield 'inline svg single quotes' => [
+            'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
+            ['style' => 'background:url(\'data:image/svg+xml;utf8,<svg/>\')'],
+        ];
+
+        yield 'inline svg double quotes' => [
+            'style="background: url(&quot;data:image/svg+xml;utf8,<svg/>&quot;);"',
+            ['style' => 'background:url("data:image/svg+xml;utf8,<svg/>")'],
+        ];
+
+        yield 'inline svg no quotes' => [
+            'style="background: url(data:image/svg+xml;utf8,<svg/>);"',
+            ['style' => 'background:url(data:image/svg+xml;utf8,<svg/>)'],
+        ];
+
         yield 'escaped name' => [
             'style="c\6F lor: red;"',
             ['style' => 'c\6F lor:red'],
@@ -113,17 +128,20 @@ class HtmlAttributesTest extends TestCase
             ['style' => "color:'r\\'ed'"],
         ];
 
+        yield 'newline' => [
+            "style=\"content:'new\\\nline'\"",
+            ['style' => "content:'new\\\nline'"],
+        ];
+
         yield 'invalid block' => [
             'style="{ foo: red } bar: green; baz: blue"',
             ['style' => 'baz:blue'],
         ];
 
-        /*
         yield 'completely invalid' => [
             'style="{ foo: red; bar: green; baz: blue"',
             [],
         ];
-        */
     }
 
     public function testCreatesAttributesFromIterable(): void
