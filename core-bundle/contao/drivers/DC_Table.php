@@ -2184,7 +2184,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intCurrentPid : '&amp;act=copy&amp;id=' . $this->intCurrentPid;
+					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId : '&amp;act=copy&amp;id=' . $this->intId;
 				}
 
 				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
