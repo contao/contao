@@ -29,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
@@ -372,6 +373,69 @@ class SitemapControllerTest extends TestCase
             ->method('isRoutable')
             ->withConsecutive([$page1], [$page2])
             ->willReturn(false, true)
+        ;
+
+        $controller = new SitemapController($registry);
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
+    }
+
+    public function testSkipsPagesWithRoutingException(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'type' => 'error_404',
+            'groups' => [],
+            'published' => '1',
+            'rootLanguage' => 'en',
+        ]);
+
+        $page1
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willThrowException(new RuntimeException())
+        ;
+
+        $page2 = $this->mockPage(
+            [
+                'id' => 44,
+                'pid' => 43,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page2.html']
+        );
+
+        $pages = [
+            42 => [$page1],
+            43 => [$page2],
+            44 => null,
+            21 => null,
+        ];
+
+        $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
+        $container = $this->getContainer($framework);
+
+        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
+        $registry
+            ->expects($this->exactly(2))
+            ->method('supportsContentComposition')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(true, true)
+        ;
+
+        $registry
+            ->expects($this->exactly(2))
+            ->method('isRoutable')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(true, true)
         ;
 
         $controller = new SitemapController($registry);
