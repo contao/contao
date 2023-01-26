@@ -49,12 +49,11 @@ class InstallSkeletonCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $webDir = $input->getArgument('web-dir') ?? 'public';
-        $path = Path::join($this->projectDir, $webDir);
 
         $this->addConsole();
-        $this->addHtaccess($path);
-        $this->addFiles($path);
-        $this->purgeOldFiles($path);
+        $this->addHtaccess($webDir);
+        $this->addFiles($webDir);
+        $this->purgeOldFiles($webDir);
 
         return Command::SUCCESS;
     }
@@ -68,7 +67,7 @@ class InstallSkeletonCommand extends Command
         $targetPath = Path::join($this->projectDir, 'bin/console');
 
         $this->fs->copy($sourcePath, $targetPath, true);
-        $this->io->writeln("Added the <comment>$targetPath</comment> file.");
+        $this->io->writeln('Added the <comment>bin/console</comment> file.');
     }
 
     /**
@@ -77,11 +76,11 @@ class InstallSkeletonCommand extends Command
     private function addHtaccess(string $webDir): void
     {
         $sourcePath = Path::canonicalize(__DIR__.'/../../skeleton/public/.htaccess');
-        $targetPath = Path::join($webDir, '.htaccess');
+        $targetPath = Path::join($this->projectDir, $webDir, '.htaccess');
 
         if (!$this->fs->exists($targetPath)) {
             $this->fs->copy($sourcePath, $targetPath, true);
-            $this->io->writeln("Added the <comment>$targetPath</comment> file.");
+            $this->io->writeln("Added the <comment>$webDir/.htaccess</comment> file.");
 
             return;
         }
@@ -94,7 +93,7 @@ class InstallSkeletonCommand extends Command
         }
 
         $this->fs->dumpFile($targetPath, $existingContent."\n\n".file_get_contents($sourcePath));
-        $this->io->writeln("Updated the <comment>$targetPath</comment> file.");
+        $this->io->writeln("Updated the <comment>$webDir/.htaccess</comment> file.");
     }
 
     /**
@@ -106,10 +105,10 @@ class InstallSkeletonCommand extends Command
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $targetPath = Path::join($webDir, $file->getRelativePathname());
+            $targetPath = Path::join($this->projectDir, $webDir, $file->getRelativePathname());
 
             $this->fs->copy($file->getPathname(), $targetPath, true);
-            $this->io->writeln("Added the <comment>$targetPath</comment> file.");
+            $this->io->writeln(sprintf('Added the <comment>%s/%s</comment> file.', $webDir, $file->getFilename()));
         }
     }
 
@@ -119,9 +118,9 @@ class InstallSkeletonCommand extends Command
     private function purgeOldFiles(string $webDir): void
     {
         foreach (['app_dev.php', 'install.php'] as $file) {
-            if ($this->fs->exists($path = Path::join($webDir, $file))) {
+            if ($this->fs->exists($path = Path::join($this->projectDir, $webDir, $file))) {
                 $this->fs->remove($path);
-                $this->io->writeln("Deleted the <comment>$path</comment> file.");
+                $this->io->writeln("Deleted the <comment>$webDir/$file</comment> file.");
             }
         }
     }
