@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\ManagerBundle\Command\InstallWebDirCommand;
+use Contao\ManagerBundle\Command\InstallSkeletonCommand;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -22,9 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class InstallWebDirCommandTest extends ContaoTestCase
+class InstallSkeletonCommandTest extends ContaoTestCase
 {
-    private InstallWebDirCommand $command;
+    private InstallSkeletonCommand $command;
     private Filesystem $filesystem;
     private Finder $webFiles;
 
@@ -32,7 +32,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $this->command = new InstallWebDirCommand($this->getTempDir());
+        $this->command = new InstallSkeletonCommand($this->getTempDir());
         $this->command->setApplication($this->getApplication());
         $this->filesystem = new Filesystem();
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../skeleton/public');
@@ -40,6 +40,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
+        $this->filesystem->remove($this->getTempDir().'/bin');
         $this->filesystem->remove($this->getTempDir().'/public');
 
         $this->resetStaticProperties([Terminal::class]);
@@ -49,12 +50,17 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testNameAndArguments(): void
     {
-        $this->assertSame('contao:install-web-dir', $this->command->getName());
-        $this->assertTrue($this->command->getDefinition()->hasArgument('target'));
+        $this->assertSame('skeleton:install', $this->command->getName());
+        $this->assertTrue($this->command->getDefinition()->hasArgument('web-dir'));
+
+        // Backwards compatibility
+        $this->assertSame(['contao:install-web-dir'], $this->command->getAliases());
     }
 
     public function testCommandRegular(): void
     {
+        $this->assertFileDoesNotExist($this->getTempDir().'/bin/console');
+
         foreach ($this->webFiles as $file) {
             $this->assertFileDoesNotExist($this->getTempDir().'/public/'.$file->getFilename());
         }
@@ -62,13 +68,10 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
+        $this->assertFileExists($this->getTempDir().'/bin/console');
+
         foreach ($this->webFiles as $file) {
             $this->assertFileExists($this->getTempDir().'/public/'.$file->getRelativePathname());
-
-            $expectedString = file_get_contents($file->getPathname());
-            $expectedString = str_replace(['{root-dir}', '{vendor-dir}'], ['../app', '../vendor'], $expectedString);
-
-            $this->assertStringEqualsFile($this->getTempDir().'/public/'.$file->getRelativePathname(), $expectedString);
         }
     }
 
@@ -126,12 +129,12 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->assertFileDoesNotExist($this->getTempDir().'/public/install.php');
     }
 
-    public function testUsesACustomTargetDirectory(): void
+    public function testUsesACustomWebDirectory(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['target' => 'public']);
+        $commandTester->execute(['web-dir' => 'web']);
 
-        $this->assertFileExists($this->getTempDir().'/public/index.php');
+        $this->assertFileExists($this->getTempDir().'/web/index.php');
     }
 
     private function getApplication(): Application

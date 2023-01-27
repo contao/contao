@@ -24,10 +24,11 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(
-    name: 'contao:install-web-dir',
-    description: 'Installs the files in the public directory.'
+    name: 'skeleton:install',
+    description: 'Installs the skeleton files of the manager bundle.',
+    aliases: ['contao:install-web-dir'] // Backwards compatibility
 )]
-class InstallWebDirCommand extends Command
+class InstallSkeletonCommand extends Command
 {
     private Filesystem|null $fs = null;
     private SymfonyStyle|null $io = null;
@@ -39,7 +40,7 @@ class InstallWebDirCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
+        $this->addArgument('web-dir', InputArgument::OPTIONAL, 'The web directory (defaults to "public")');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,14 +48,26 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = $input->getArgument('target') ?? 'public';
-        $path = Path::join($this->projectDir, $webDir);
+        $webDir = $input->getArgument('web-dir') ?? 'public';
 
-        $this->addHtaccess($path);
-        $this->addFiles($path);
-        $this->purgeOldFiles($path);
+        $this->addConsole();
+        $this->addHtaccess($webDir);
+        $this->addFiles($webDir);
+        $this->purgeOldFiles($webDir);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Adds the bin/console entry point.
+     */
+    private function addConsole(): void
+    {
+        $sourcePath = Path::canonicalize(__DIR__.'/../../skeleton/bin/console');
+        $targetPath = Path::join($this->projectDir, 'bin/console');
+
+        $this->fs->copy($sourcePath, $targetPath, true);
+        $this->io->writeln('Added the <comment>bin/console</comment> file.');
     }
 
     /**
@@ -62,8 +75,8 @@ class InstallWebDirCommand extends Command
      */
     private function addHtaccess(string $webDir): void
     {
-        $sourcePath = __DIR__.'/../../skeleton/public/.htaccess';
-        $targetPath = Path::join($webDir, '.htaccess');
+        $sourcePath = Path::canonicalize(__DIR__.'/../../skeleton/public/.htaccess');
+        $targetPath = Path::join($this->projectDir, $webDir, '.htaccess');
 
         if (!$this->fs->exists($targetPath)) {
             $this->fs->copy($sourcePath, $targetPath, true);
@@ -92,7 +105,9 @@ class InstallWebDirCommand extends Command
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $this->fs->copy($file->getPathname(), Path::join($webDir, $file->getRelativePathname()), true);
+            $targetPath = Path::join($this->projectDir, $webDir, $file->getRelativePathname());
+
+            $this->fs->copy($file->getPathname(), $targetPath, true);
             $this->io->writeln(sprintf('Added the <comment>%s/%s</comment> file.', $webDir, $file->getFilename()));
         }
     }
@@ -103,7 +118,7 @@ class InstallWebDirCommand extends Command
     private function purgeOldFiles(string $webDir): void
     {
         foreach (['app_dev.php', 'install.php'] as $file) {
-            if ($this->fs->exists($path = Path::join($webDir, $file))) {
+            if ($this->fs->exists($path = Path::join($this->projectDir, $webDir, $file))) {
                 $this->fs->remove($path);
                 $this->io->writeln("Deleted the <comment>$webDir/$file</comment> file.");
             }
