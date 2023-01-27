@@ -13,6 +13,15 @@
 	--icon-favorites: url("icons/favorites_small.svg");
 	--icon-logout: url("icons/exit.svg");
 	--icon-toggle-all: url("icons/folPlus.svg");
+	--icon-alert: url("icons/alert.svg");
+	--icon-favorite: url("icons/favorite.svg");
+	--icon-favorite--active: url("icons/favorite_active.svg");
+	--icon-manual: url("icons/manual.svg");
+	--icon-color-scheme: url("icons/color_scheme.svg");
+	--icon-arrow-left: url("icons/arrow_left.svg");
+	--icon-arrow-right: url("icons/arrow_right.svg");
+	--icon-visible: url("icons/visible.svg");
+	--icon-invisible: url("icons/invisible.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -22,6 +31,15 @@ html[data-color-scheme="dark"] {
 	--icon-favorites: url("icons-dark/favorites_small.svg");
 	--icon-logout: url("icons-dark/exit.svg");
 	--icon-toggle-all: url("icons-dark/folPlus.svg");
+	--icon-alert: url("icons-dark/alert.svg");
+	--icon-favorite: url("icons-dark/favorite.svg");
+	--icon-favorite--active: url("icons-dark/favorite_active.svg");
+	--icon-manual: url("icons-dark/manual.svg");
+	--icon-color-scheme: url("icons-dark/color_scheme.svg");
+	--icon-arrow-left: url("icons-dark/arrow_left.svg");
+	--icon-arrow-right: url("icons-dark/arrow_right.svg");
+	--icon-visible: url("icons-dark/visible.svg");
+	--icon-invisible: url("icons-dark/invisible.svg");
 }
 
 /* Body */
@@ -220,23 +238,23 @@ body.popup {
 }
 
 #tmenu .icon-alert {
-	background: url("icons/alert.svg") center center no-repeat;
+	background: var(--icon-alert) center center no-repeat;
 }
 
 #tmenu .icon-favorite {
-	background: url("icons/favorite.svg") center center no-repeat;
+	background: var(--icon-favorite) center center no-repeat;
 }
 
 #tmenu .icon-favorite--active {
-	background: url("icons/favorite_active.svg") center center no-repeat;
+	background: var(--icon-favorite--active) center center no-repeat;
 }
 
 #tmenu .icon-manual {
-	background: url("icons/manual.svg") center center no-repeat;
+	background: var(--icon-manual) center center no-repeat;
 }
 
 #tmenu .icon-color-scheme {
-	background: url("icons/color-scheme_small.svg") center center no-repeat;
+	background: var(--icon-color-scheme) center center no-repeat;
 }
 
 #tmenu .icon-profile {
@@ -1282,6 +1300,10 @@ table.tl_listing {
 	background-color: var(--content-bg);
 }
 
+.tl_content.draft .inside {
+	min-height: 16px;
+}
+
 .tl_content.draft > *, .tl_folder.draft > *, .tl_file.draft > *, .hover-row.draft > td {
 	opacity: 0.5;
 }
@@ -1966,9 +1988,8 @@ ul.sgallery li {
 	white-space: nowrap;
 }
 
-.tl_modulewizard img {
-	position: relative;
-	top: 1px;
+.tl_modulewizard .tl_select, .tl_modulewizard .tl_select_column {
+	margin: 2px 0;
 }
 
 .tl_modulewizard input.mw_enable + button, .js .tl_modulewizard input.mw_enable {
@@ -1979,11 +2000,11 @@ ul.sgallery li {
 	display: inline;
 	width: 16px;
 	height: 16px;
-	background: url("icons/invisible.svg") 0 0 no-repeat;
+	background: var(--icon-invisible) 0 0 no-repeat;
 }
 
 .js .tl_modulewizard input.mw_enable:checked + button {
-	background-image: url("icons/visible.svg");
+	background-image: var(--icon-visible);
 }
 
 .tl_modulewizard img.mw_enable {
@@ -2035,6 +2056,10 @@ ul.sgallery li {
 	white-space: nowrap;
 }
 
+.tl_optionwizard .tl_text {
+	margin: 2px 0;
+}
+
 .tl_optionwizard img, .tl_key_value_wizard img {
 	position: relative;
 	top: 1px;
@@ -2077,15 +2102,20 @@ ul.sgallery li {
 	vertical-align: top;
 }
 
+.tl_tablewizard .tl_textarea {
+	margin: 2px 0;
+}
+
 /* List wizard */
 .tl_listwizard {
-	margin: 0;
+	margin: 1px 0;
 	padding: 0;
 	list-style: none;
 }
 
 .tl_listwizard .tl_text {
 	width: 78%;
+	margin: 2px 0;
 }
 
 /* Checkbox wizard */
@@ -2215,7 +2245,7 @@ ul.sgallery li {
 	top: 0;
 	right: 30px;
 	padding: 0 36px 24px 0;
-	background: url("icons/arrow_right.svg") bottom right no-repeat;
+	background: var(--icon-arrow-right) bottom right no-repeat;
 	transform: rotate(-1deg);
 }
 
@@ -2227,7 +2257,7 @@ ul.sgallery li {
 	top: -50px;
 	left: 160px;
 	padding: 0 6px 24px 42px;
-	background: url("icons/arrow_left.svg") 6px bottom no-repeat;
+	background: var(--icon-arrow-left) 6px bottom no-repeat;
 	transform: rotate(-2deg);
 }
 

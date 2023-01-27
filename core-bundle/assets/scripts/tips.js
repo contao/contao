@@ -21,6 +21,7 @@
                 text = el.innerHTML;
             } else {
                 text = el.getAttribute('title');
+                el.setAttribute('data-original-title', text);
                 el.removeAttribute('title')
             }
 
@@ -58,8 +59,9 @@
         })
 
         el.addEventListener('mouseleave', function () {
-            if (!useContent && text && !el.hasAttribute('title')) {
-                el.setAttribute('title', text);
+            if (el.hasAttribute('data-original-title')) {
+                el.setAttribute('title', el.getAttribute('data-original-title'));
+                el.removeAttribute('data-original-title')
             }
 
             clearTimeout(timer)

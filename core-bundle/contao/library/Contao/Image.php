@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\DeferredImageInterface;
 use Symfony\Component\Filesystem\Path;
 
@@ -148,7 +149,13 @@ class Image
 
 			if (file_exists(Path::join($projectDir, $darkSrc)))
 			{
-				return '<img class="color-scheme--dark" src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '" loading="lazy"' . ($attributes ? ' ' . $attributes : '') . '><img class="color-scheme--light" src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '" loading="lazy"' . ($attributes ? ' ' . $attributes : '') . '>';
+				$darkAttributes = new HtmlAttributes($attributes);
+				$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
+
+				$lightAttributes = new HtmlAttributes($attributes);
+				$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
+
+				return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
 			}
 		}
 

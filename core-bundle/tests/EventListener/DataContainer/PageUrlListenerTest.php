@@ -37,7 +37,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider generatesAliasProvider
      */
-    public function testGeneratesAlias(array $currentRecord, string $expectedAlias): void
+    public function testGeneratesAlias(array $currentRecord, array $input, string $slugResult, string $expectedAlias): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
@@ -52,23 +52,21 @@ class PageUrlListenerTest extends TestCase
         $framework = $this->mockContaoFramework(
             [
                 PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
+                Input::class => $this->mockInputAdapter($input),
             ]
         );
+
+        $expectedTitle = $input['title'] ?? $page->title;
 
         $slug = $this->createMock(Slug::class);
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($page->title, $page->id, $this->isType('callable'))
-            ->willReturn($page->alias)
+            ->with($expectedTitle, $page->id, $this->isType('callable'))
+            ->willReturn($slugResult)
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($currentRecord)
-        ;
 
         $listener = new PageUrlListener(
             $framework,
@@ -85,37 +83,56 @@ class PageUrlListenerTest extends TestCase
 
     public function generatesAliasProvider(): \Generator
     {
-        yield [
+        yield 'Test alias without changes and no folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
-                'alias' => 'foo',
                 'useFolderUrl' => false,
                 'folderUrl' => '',
             ],
+            [],
+            'foo',
             'foo',
         ];
 
-        yield [
-            [
-                'id' => 22,
-                'title' => 'Bar',
-                'alias' => 'bar',
-                'useFolderUrl' => false,
-                'folderUrl' => '',
-            ],
-            'bar',
-        ];
-
-        yield [
+        yield 'Test alias without changes and folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
-                'alias' => 'foo',
                 'useFolderUrl' => true,
                 'folderUrl' => 'bar/',
             ],
+            [],
+            'foo',
             'bar/foo',
+        ];
+
+        yield 'Test alias when changing the title and without folderUrl' => [
+            [
+                'id' => 17,
+                'title' => 'Foo',
+                'useFolderUrl' => false,
+                'folderUrl' => '',
+            ],
+            [
+                'title' => 'Bar',
+            ],
+            'bar',
+            'bar',
+        ];
+
+        yield 'Test alias when changing the title and folderUrl' => [
+            [
+                'id' => 17,
+                'title' => 'Foo',
+                'useFolderUrl' => true,
+                'folderUrl' => 'bar/',
+            ],
+            [
+                'title' => 'Bar',
+            ],
+            'bar',
+            'bar/bar',
         ];
     }
 

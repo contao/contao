@@ -72,6 +72,7 @@ class ContentElementTestCase extends TestCase
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
     final public const ARTICLE1 = 123;
+    final public const ARTICLE2 = 456;
     final public const PAGE1 = 5;
 
     protected function tearDown(): void
@@ -450,10 +451,20 @@ class ContentElementTestCase extends TestCase
         $article1->title = 'A title';
         $article1->teaser = '<p>This will tease you to read article 1.</p>';
 
+        $article2 = $this->mockClassWithProperties(ArticleModel::class);
+        $article2->id = self::ARTICLE2;
+        $article2->pid = self::PAGE1;
+        $article2->title = 'Just a title, no teaser';
+        $article2->teaser = null;
+
         $articleAdapter = $this->mockAdapter(['findPublishedById']);
         $articleAdapter
             ->method('findPublishedById')
-            ->willReturnCallback(static fn (int $id) => [self::ARTICLE1 => $article1][$id] ?? null)
+            ->willReturnCallback(static fn (int $id) => match ($id) {
+                self::ARTICLE1 => $article1,
+                self::ARTICLE2 => $article2,
+                default => null,
+            })
         ;
 
         return $this->mockContaoFramework([

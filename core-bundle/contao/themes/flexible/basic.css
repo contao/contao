@@ -95,7 +95,8 @@ html[data-color-scheme="dark"] {
 	--hover-row: #1b325f;
 	--header-bg: #292c32;
 	--header-bg-hover: #202327;
-	--invert-bg: #7e8695;
+	--header-text: #ddd;
+	--invert-bg: #8f96a3;
 	--invert-text: #222;
 	--table-header: #232529;
 	--table-odd: #1b1d21;
@@ -133,11 +134,11 @@ html[data-color-scheme="dark"] {
 }
 
 html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {
-	display: none !important;
+	display: none;
 }
 
 html[data-color-scheme="dark"] .color-scheme--dark, .color-scheme--light {
-	display: initial !important;
+	display: initial;
 }
 
 /* HTML */
@@ -283,7 +284,7 @@ p {
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .unselectable {
@@ -411,6 +412,10 @@ p {
 
 .widget h3 img {
 	margin-right: 3px;
+}
+
+.widget legend {
+	padding: 0;
 }
 
 .widget legend img {
