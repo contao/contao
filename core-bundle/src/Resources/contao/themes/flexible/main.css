@@ -55,9 +55,6 @@ body:not(.fullscreen) #header .inner {
 	padding:13px 12px;
 	display:inline-block;
 }
-#tmenu img {
-	vertical-align:top;
-}
 #tmenu sup {
 	position:absolute;
 	top:5px;
@@ -79,7 +76,6 @@ body:not(.fullscreen) #header .inner {
 	padding:8px 10px 9px;
 	background:none;
 	border:0;
-	vertical-align:top;
 }
 #tmenu .burger svg {
 	margin-bottom:-1px;
@@ -430,7 +426,6 @@ h2.sub_headline {
 	overflow:hidden;
 	position:relative;
 	top:9px;
-	vertical-align:top;
 	cursor:pointer;
 }
 .filter_apply {
