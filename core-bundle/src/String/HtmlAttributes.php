@@ -447,7 +447,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $result = [];
 
         foreach ($matches as [0 => $declaration]) {
-            [$property, $value] = explode(':', (string) $declaration, 2) + [null, null];
+            [$property, $value] = explode(':', $declaration, 2) + [null, null];
             $property = trim($property, " \n\r\t\v\f\x00");
 
             if (null !== $value && preg_match($propertyRegex, $property)) {
