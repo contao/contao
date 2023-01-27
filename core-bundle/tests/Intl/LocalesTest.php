@@ -154,7 +154,7 @@ class LocalesTest extends TestCase
 
         $this->assertSame(
             [
-                'gsw_Hans_AT' => 'Schwiizertüütsch (Veräifachti Chineesischi Schrift, Ööschtriich)',
+                'gsw_Hans_AT' => 'Schwiizertüütsch (Veräifachti Chineesischi Schrift, Ööschtriich) - Schweizerdeutsch (Vereinfacht, Österreich)',
                 'de_CH' => 'Tüütsch (Schwiiz) - Deutsch (Schweiz)',
             ],
             $this->getLocalesService()->getDisplayNames(['gsw_Hans_AT', 'de_CH'], 'gsw', true)
