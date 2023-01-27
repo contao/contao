@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.9] (2023-01-27)
+
+**Fixed issues:**
+
+- [#5728] Handle inline styles in the HtmlAttributes class ([ausi])
+- [#5725] Use the correct ID for URL parameters when saving and duplicating ([bytehead])
+- [#5716] Fix rendering article teasers when there is no text ([m-vo])
+- [#5720] List the default template first in the template selection drop-down ([m-vo])
+- [#5724] Fix the number of bound variables in the MemberModel class ([bytehead])
+- [#5715] Fix component detection in template skeleton ([m-vo])
+- [#5705] Observe document instead of document.documentElement ([leofeyer])
+- [#5698] Fix wrong page alias when changing the title of a page ([Toflar])
+
 ## [5.0.8] (2023-01-13)
 
 **Fixed issues:**
@@ -157,7 +170,7 @@ This project adheres to [Semantic Versioning].
 - [#4826] Throw correct exceptions on error in DC ([aschempp])
 - [#5035] Check DCA config when adding default operations ([aschempp])
 - [#4939] Fix sectionwizard.js ([fritzmg])
-- [#5036] Don’t cast null values in Model::convertToPhpValue ([ausi])
+- [#5036]  Don’t cast null values in Model::convertToPhpValue  ([ausi])
 - [#5093] Fix undefined array key breadcrumb ([ausi])
 - [#5094] Fix compatibility with doctrine/dbal 3.3.8 ([ausi])
 - [#5070] Fix DcaLoader exceptions ([ausi])
@@ -190,7 +203,7 @@ This project adheres to [Semantic Versioning].
 - [#4903] Show until/from values for content elements ([ameotoko])
 - [#4709] Add a generic voter for editable table fields ([aschempp])
 - [#4343] Implement the new Symfony 6.x security interfaces ([bytehead])
-- [#4823] Modern fragments: video content elements ([m-vo])
+- [#4823]  Modern fragments: video content elements ([m-vo])
 - [#4958] Remove the Contao 4 migrations ([leofeyer])
 - [#4935] Remove the install tool ([m-vo])
 - [#4915] Modern fragments: template for the markdown element ([m-vo])
@@ -243,7 +256,7 @@ This project adheres to [Semantic Versioning].
 - [#4738] Remove some deprecated constants ([ausi])
 - [#4737] Remove contao:version command ([ausi])
 - [#4721] Remove support for deprecated value in tl_article.printable ([Toflar])
-- [#4716] Add two more FilesystemItemIterator related helper functions ([m-vo])
+- [#4716] Add two more FilesystemItemIterator related helper functions  ([m-vo])
 - [#4715] Support our template hierarchy in the Twig "use" tag ([m-vo])
 - [#4375] Rewrite fieldset toggling to vanilla JS ([aschempp])
 - [#4706] Remove deprecated TL_CRON support ([fritzmg])
@@ -325,7 +338,7 @@ This project adheres to [Semantic Versioning].
 - [#4342] Rewrite the Backend.limitPreviewHeight to vanilla JS ([aschempp])
 - [#4416] Some small improvements for the HtmlAttribute class ([m-vo])
 - [#4381] Allow to json-serialize the HtmlAttributes class ([m-vo])
-- [#4368] Remove all sorts of deprecated stuff in the Database namespace ([ausi], [Toflar])
+- [#4368] Remove all sorts of deprecated stuff in the Database namespace ([Toflar])
 - [#4365] Removed deprecated FrontendCron controller ([Toflar])
 - [#4361] Documented missing UPGRADE.md entries ([Toflar])
 - [#4362] Use gulp-uglify-es ([aschempp])
@@ -412,6 +425,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.9]: https://github.com/contao/contao/releases/tag/5.0.9
 [5.0.8]: https://github.com/contao/contao/releases/tag/5.0.8
 [5.0.7]: https://github.com/contao/contao/releases/tag/5.0.7
 [5.0.6]: https://github.com/contao/contao/releases/tag/5.0.6
@@ -780,3 +794,11 @@ This project adheres to [Semantic Versioning].
 [#5590]: https://github.com/contao/contao/pull/5590
 [#5632]: https://github.com/contao/contao/pull/5632
 [#5668]: https://github.com/contao/contao/pull/5668
+[#5698]: https://github.com/contao/contao/pull/5698
+[#5705]: https://github.com/contao/contao/pull/5705
+[#5715]: https://github.com/contao/contao/pull/5715
+[#5716]: https://github.com/contao/contao/pull/5716
+[#5720]: https://github.com/contao/contao/pull/5720
+[#5724]: https://github.com/contao/contao/pull/5724
+[#5725]: https://github.com/contao/contao/pull/5725
+[#5728]: https://github.com/contao/contao/pull/5728
