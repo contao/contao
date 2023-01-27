@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>ログインの失敗の回数が多すぎます、後でやり直してください。</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;システム設定&lt;/a&gt;に管理者のメールアドレスが設定されていません。</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2036,6 +2039,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>繰り返してコピー</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2123,6 +2127,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>ゲスト(ログインなし)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2666,12 +2671,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>お気に入り</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>URLをお気に入りとして保存</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>お気に入りを編集</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2803,12 +2811,15 @@
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>%sでない</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>ダークモード</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>ライトモード</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

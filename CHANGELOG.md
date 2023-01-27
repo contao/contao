@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.0-RC2] (2023-01-27)
+
+**Fixed issues:**
+
+- [#5704] Do not require overwriting the console path ([leofeyer])
+- [#5714] Use the HTML sanitizer component as Twig filter ([ausi])
+- [#5697] Fix the module wizard ([leofeyer])
+- [#5703] Fix the Gulp watch task ([fritzmg])
+- [#5702] Make `$consolePath` a required argument ([leofeyer])
+- [#5695] Use two different icons for light and dark mode ([leofeyer])
+- [#5691] Correctly toggle the favorites menu group ([leofeyer])
+- [#5687] Move the dark mode toggle to the header bar ([leofeyer])
+- [#5689] Make console_path a general Contao configuration ([Toflar])
+- [#5690] Fix the icons when toggling structures in dark mode ([leofeyer])
+
 ## [5.1.0-RC1] (2023-01-13)
 
 **New features:**
@@ -57,6 +72,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.0-RC2]: https://github.com/contao/contao/releases/tag/5.1.0-RC2
 [5.1.0-RC1]: https://github.com/contao/contao/releases/tag/5.1.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -115,3 +131,13 @@ This project adheres to [Semantic Versioning].
 [#5680]: https://github.com/contao/contao/pull/5680
 [#5682]: https://github.com/contao/contao/pull/5682
 [#5683]: https://github.com/contao/contao/pull/5683
+[#5687]: https://github.com/contao/contao/pull/5687
+[#5689]: https://github.com/contao/contao/pull/5689
+[#5690]: https://github.com/contao/contao/pull/5690
+[#5691]: https://github.com/contao/contao/pull/5691
+[#5695]: https://github.com/contao/contao/pull/5695
+[#5697]: https://github.com/contao/contao/pull/5697
+[#5702]: https://github.com/contao/contao/pull/5702
+[#5703]: https://github.com/contao/contao/pull/5703
+[#5704]: https://github.com/contao/contao/pull/5704
+[#5714]: https://github.com/contao/contao/pull/5714

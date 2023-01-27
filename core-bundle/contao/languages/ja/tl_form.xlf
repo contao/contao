@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_form.confirmation.0">
         <source>Confirmation message</source>
+        <target>確認のメッセージ</target>
       </trans-unit>
       <trans-unit id="tl_form.confirmation.1">
         <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>フォームを提出した後に表示するメッセージを入力できます。シンプルトークン、&lt;code&gt;##field_name##&lt;/code&gt;といったシンプルトークンとして提出したフォームのデータを使用できます。確認のメッセージは&lt;code&gt;{{form_confirmation}}&lt;/code&gt;という挿入タグでも利用できます。</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -193,9 +195,11 @@
       </trans-unit>
       <trans-unit id="tl_form.ajax.0">
         <source>Submit via Ajax</source>
+        <target>Ajaxで提出</target>
       </trans-unit>
       <trans-unit id="tl_form.ajax.1">
         <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>ページを再読み込みする代わりにAjaxでフォームを提出します。</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>

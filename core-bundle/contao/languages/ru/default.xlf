@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>Слишком много неудачных попыток входа, повторите попытку позже.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>Адрес электронной почты администратора не указан в &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;системных настройках&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>Адрес электронной почты администратора не указан, обратитесь к администратору сайта.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2036,6 +2039,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>Многократное копирование</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2123,6 +2127,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>Гости (не вошли в систему)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2666,12 +2671,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>Избранное</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>Сохранить URL в избранное</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>Редактировать избранное</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2803,12 +2811,15 @@
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>Нет %s</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>Темный режим</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>Светлый режим</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
