@@ -37,7 +37,7 @@ class DbafsManager
     {
         $this->dbafs[$pathPrefix] = $dbafs;
 
-        krsort($this->dbafs);
+        krsort($this->dbafs, SORT_NATURAL);
 
         if (\count($this->dbafs) > 1) {
             $this->validateTransitiveProperties();
@@ -266,7 +266,7 @@ class DbafsManager
         }
 
         // Ensure a consistent order
-        ksort($dbafsAndPathsByPrefix);
+        ksort($dbafsAndPathsByPrefix, SORT_NATURAL);
 
         $changeSet = ChangeSet::createEmpty();
 

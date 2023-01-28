@@ -319,6 +319,15 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
+        // Historically, PHP's ksort() function put numeric indices last, but
+        // this behavior was changed in a bugfix release (see
+        // https://github.com/php/php-src/issues/9296). In order to get stable
+        // results, we use our own implementation, that mimics the old behavior.
+        $ksort = static fn (array &$array) => uksort(
+            $array,
+            static fn ($a, $b) => is_numeric($a) <=> is_numeric($b) ?: $a <=> $b
+        );
+
         foreach ($filesystemIterator as $path => $type) {
             $name = basename($path);
             $parentDir = \dirname($path);
@@ -362,7 +371,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Compute directory hash
                 $childHashes = array_filter($childHashes);
-                ksort($childHashes);
+                $ksort($childHashes);
+
                 $hash = $this->hashGenerator->hashString(implode("\0", $childHashes));
 
                 unset($dirHashesParts[$path]);
@@ -446,7 +456,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
 
         if ($hasMoves) {
-            ksort($itemsToUpdate, SORT_DESC);
+            $ksort($itemsToUpdate);
         } else {
             $itemsToUpdate = array_reverse($itemsToUpdate, true);
         }

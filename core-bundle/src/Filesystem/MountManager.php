@@ -52,7 +52,7 @@ class MountManager
     {
         $this->mounts[$path] = $adapter;
 
-        krsort($this->mounts);
+        krsort($this->mounts, SORT_NATURAL);
 
         return $this;
     }
@@ -318,7 +318,7 @@ class MountManager
             $virtualPathsSet[$mountPath] = true;
         }
 
-        ksort($virtualPathsSet);
+        ksort($virtualPathsSet, SORT_NATURAL);
 
         // Yield items and track all traversed directories
         foreach ($this->doListContents($path, $deep) as $item) {
