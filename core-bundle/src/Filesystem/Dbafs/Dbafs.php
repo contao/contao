@@ -508,7 +508,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * @param array<string|int, mixed> $row
+     * @param array<string, mixed> $row
      */
     private function populateRecord(array $row): void
     {

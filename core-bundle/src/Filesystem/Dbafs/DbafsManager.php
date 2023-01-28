@@ -29,7 +29,7 @@ use Symfony\Component\Uid\Uuid;
 class DbafsManager
 {
     /**
-     * @var array<DbafsInterface>
+     * @var array<string|int, DbafsInterface>
      */
     private array $dbafs = [];
 
@@ -246,7 +246,7 @@ class DbafsManager
      */
     public function sync(string ...$paths): ChangeSet
     {
-        /** @var array<string, array{0: DbafsInterface, 1:array<string>}> $dbafsAndPathsByPrefix */
+        /** @var array<string|int, array{0: DbafsInterface, 1:array<string>}> $dbafsAndPathsByPrefix */
         $dbafsAndPathsByPrefix = [];
 
         // Sync all DBAFS if no paths are supplied, otherwise individually
@@ -271,7 +271,7 @@ class DbafsManager
         $changeSet = ChangeSet::createEmpty();
 
         foreach ($dbafsAndPathsByPrefix as $prefix => [$dbafs, $matchingPaths]) {
-            $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), $prefix);
+            $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), (string) $prefix);
         }
 
         return $changeSet;
@@ -295,7 +295,7 @@ class DbafsManager
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$prefix", "/$dbafsPrefix")) {
-                yield $dbafsPrefix => $dbafs;
+                yield (string) $dbafsPrefix => $dbafs;
             }
         }
     }
@@ -307,7 +307,7 @@ class DbafsManager
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$dbafsPrefix", "/$path")) {
-                yield $dbafsPrefix => $dbafs;
+                yield (string) $dbafsPrefix => $dbafs;
             }
         }
     }
@@ -325,7 +325,7 @@ class DbafsManager
         $currentPrefix = '';
         $supportedFeatures = DbafsInterface::FEATURES_NONE;
 
-        foreach (array_reverse($this->dbafs) as $prefix => $dbafs) {
+        foreach (array_reverse($this->dbafs, true) as $prefix => $dbafs) {
             if (Path::isBasePath("/$currentPrefix", "/$prefix")) {
                 // Find all feature flags that are required but not supported
                 $nonTransitive = $supportedFeatures & ~$dbafs->getSupportedFeatures();
