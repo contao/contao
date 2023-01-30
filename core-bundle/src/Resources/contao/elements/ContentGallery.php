@@ -69,7 +69,7 @@ class ContentGallery extends ContentElement
 		}
 
 		// Make sure we have at least one row to prevent division by zero
-		$this->perRow = max($this->perRow, 1);
+		$this->perRow = max((int) $this->perRow, 1);
 
 		return parent::generate();
 	}
