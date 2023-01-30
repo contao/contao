@@ -124,7 +124,7 @@
                                     <td>
                                         {%- block table_body_cell_content %}
                                             {%- block table_cell_content %}
-                                                {{- cell|raw -}}
+                                                {{- cell|insert_tag|raw -}}
                                             {% endblock -%}
                                         {% endblock -%}
                                     </td>
