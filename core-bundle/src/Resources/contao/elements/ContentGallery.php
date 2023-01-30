@@ -68,6 +68,9 @@ class ContentGallery extends ContentElement
 			return '';
 		}
 
+		// Make sure we have at least one row to prevent division by zero
+		$this->perRow = max($this->perRow, 1);
+
 		return parent::generate();
 	}
 
@@ -250,7 +253,7 @@ class ContentGallery extends ContentElement
 		}
 
 		$rowcount = 0;
-		$colwidth = $this->perRow > 0 ? floor(100/$this->perRow) : 100;
+		$colwidth = floor(100/$this->perRow);
 		$strLightboxId = 'lb' . $this->id;
 		$body = array();
 
