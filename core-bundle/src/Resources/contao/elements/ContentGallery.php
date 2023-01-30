@@ -250,7 +250,7 @@ class ContentGallery extends ContentElement
 		}
 
 		$rowcount = 0;
-		$colwidth = floor(100/$this->perRow);
+		$colwidth = $this->perRow > 0 ? floor(100/$this->perRow) : 100;
 		$strLightboxId = 'lb' . $this->id;
 		$body = array();
 
