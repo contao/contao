@@ -120,15 +120,15 @@ class DbafsTest extends FunctionalTestCase
         $itemsToUpdate = $changeSet->getItemsToUpdate();
         $this->assertCount(2, $itemsToUpdate);
 
-        $this->assertSame('file1', $itemsToUpdate[0]->getExistingPath());
-        $this->assertTrue($itemsToUpdate[0]->updatesPath());
-        $this->assertFalse($itemsToUpdate[0]->updatesHash());
-        $this->assertSame('123/file1', $itemsToUpdate[0]->getNewPath());
+        $this->assertSame('123', $itemsToUpdate[0]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesPath());
+        $this->assertTrue($itemsToUpdate[0]->updatesHash());
+        $this->assertSame('56840dad0dd1d66fe8f3c3a0f41879b1', $itemsToUpdate[0]->getNewHash());
 
-        $this->assertSame('123', $itemsToUpdate[1]->getExistingPath());
-        $this->assertFalse($itemsToUpdate[1]->updatesPath());
-        $this->assertTrue($itemsToUpdate[1]->updatesHash());
-        $this->assertSame('56840dad0dd1d66fe8f3c3a0f41879b1', $itemsToUpdate[1]->getNewHash());
+        $this->assertSame('file1', $itemsToUpdate[1]->getExistingPath());
+        $this->assertTrue($itemsToUpdate[1]->updatesPath());
+        $this->assertFalse($itemsToUpdate[1]->updatesHash());
+        $this->assertSame('123/file1', $itemsToUpdate[1]->getNewPath());
 
         // Items to delete
         $this->assertEmpty($changeSet->getItemsToDelete());
