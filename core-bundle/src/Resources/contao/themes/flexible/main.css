@@ -118,7 +118,7 @@ body:not(.fullscreen) #header .inner {
 	padding:6px 0 9px;
 	background:#fff;
 	box-shadow:0 0 3px #999;
-	z-index:1;
+	z-index:2;
 	color:#444;
 	text-align:left;
 	opacity:0;

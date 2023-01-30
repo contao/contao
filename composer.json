@@ -296,10 +296,10 @@
     },
     "scripts": {
         "all": [
-            "@unit-tests",
-            "@functional-tests",
             "@cs-fixer",
             "@service-linter",
+            "@unit-tests",
+            "@functional-tests",
             "@phpstan",
             "@require-checker",
             "@monorepo-tools"
