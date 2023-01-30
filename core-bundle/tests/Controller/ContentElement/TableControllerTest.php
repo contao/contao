@@ -65,7 +65,7 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['header1', 'header2'], ['foo', 'bar'], ['footer1', 'footer2'],
+                    ['header1', 'header2'], ['foo', '<a href="foo">bar</a>'], ['footer1', 'footer2'],
                 ]),
                 'thead' => true,
                 'tfoot' => true,
@@ -97,7 +97,7 @@ class TableControllerTest extends ContentElementTestCase
                     <tbody>
                         <tr>
                             <th scope="row">foo</th>
-                            <td>bar</td>
+                            <td><a href="foo">bar</a></td>
                         </tr>
                     </tbody>
                 </table>
