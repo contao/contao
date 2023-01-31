@@ -197,9 +197,8 @@ class TwigIntegrationTest extends TestCase
             {{ unsafe|insert_tag_raw }}
             TEMPLATE;
 
-        // With 'preserve_safety' set, we expect the unescaped versions in the
-        // first two lines, while the unsafe parameter is still escaped (last
-        // line):
+        // With 'preserve_safety' set, we expect the unescaped versions in the first
+        // two lines, while the unsafe parameter is still escaped (last line):
         $expectedOutput = <<<'TEMPLATE'
             <i>foo</i><br>
             <i>foo</i><br>
@@ -207,7 +206,6 @@ class TwigIntegrationTest extends TestCase
             TEMPLATE;
 
         $parser = $this->createMock(InsertTagParser::class);
-
         $parser
             ->method('replaceChunked')
             ->willReturnCallback(
@@ -235,12 +233,7 @@ class TwigIntegrationTest extends TestCase
             )
         );
 
-        $output = $environment->render(
-            'test.html.twig',
-            [
-                'unsafe' => '<i>foo</i>{{br}}',
-            ]
-        );
+        $output = $environment->render('test.html.twig', ['unsafe' => '<i>foo</i>{{br}}']);
 
         $this->assertSame($expectedOutput, $output);
     }
