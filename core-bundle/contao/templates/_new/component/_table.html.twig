@@ -72,7 +72,7 @@
             {% if caption %}
                 {% block table_caption %}
                     <caption{{ table_caption_attributes|default }}>
-                        {%- block table_caption_inner %}{{ caption|insert_tag_raw }}{% endblock -%}
+                        {%- block table_caption_inner %}{{ caption }}{% endblock -%}
                     </caption>
                 {% endblock %}
             {% endif %}
@@ -124,7 +124,7 @@
                                     <td>
                                         {%- block table_body_cell_content %}
                                             {%- block table_cell_content %}
-                                                {{- cell|insert_tag_raw -}}
+                                                {{- cell -}}
                                             {% endblock -%}
                                         {% endblock -%}
                                     </td>
