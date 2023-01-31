@@ -81,10 +81,12 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             );
 
             foreach ($values as $id => $value) {
-                $value = StringUtil::restoreBasicEntities(StringUtil::deserialize($value));
+                $value = StringUtil::deserialize($value);
 
                 if (\is_array($value)) {
-                    $value = serialize($value);
+                    $value = serialize(array_map(static fn ($v) => StringUtil::restoreBasicEntities($v), $value));
+                } else {
+                    $value = StringUtil::restoreBasicEntities($value);
                 }
 
                 $this->connection->update($table, [$column => $value], ['id' => (int) $id]);
