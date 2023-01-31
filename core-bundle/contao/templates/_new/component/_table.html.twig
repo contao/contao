@@ -81,14 +81,18 @@
             {% if header %}
                 {% block table_header %}
                     <thead{{ table_header_attributes|default }}>
-                    {% block header_inner %}
+                    {% block table_header_inner %}
                         <tr>
                             {% for cell in header %}
-                                {% set header_cell_attributes = attrs(default_header_cell_attributes|default)
+                                {% set table_header_cell_attributes = attrs(default_header_cell_attributes|default)
                                     .set('data-sort-method', 'none', sorting and loop.first and use_row_headers)
                                     .set('data-sort-default', '', sorting.column|default == loop.index0)
                                 %}
-                                <th{{ header_cell_attributes }}>{{ block('table_cell_content') }}</th>
+                                <th{{ table_header_cell_attributes }}>
+                                    {%- block table_header_cell_content %}
+                                        {{- block('table_cell_content') -}}
+                                    {% endblock -%}
+                                </th>
                             {% endfor %}
                         </tr>
                     {% endblock %}
@@ -103,7 +107,11 @@
                     {% block table_footer_inner %}
                         <tr>
                             {% for cell in footer %}
-                                <td>{{ block('table_cell_content') }}</td>
+                                <td>
+                                    {%- block table_footer_cell_content %}
+                                        {{- block('table_cell_content') -}}
+                                    {% endblock -%}
+                                </td>
                             {% endfor %}
                         </tr>
                     {% endblock %}
@@ -138,7 +146,7 @@
         </table>
     {% endblock %}
 
-    {% block script %}
+    {% block table_script %}
         {% if sorting %}
             {% add "tablesort_script" to head %}
                 <script>
