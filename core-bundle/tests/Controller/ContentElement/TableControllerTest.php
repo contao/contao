@@ -24,7 +24,7 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['foo', 'bar'], ['foobar', 'baz'],
+                    ['foo', 'bar'], ['foobar', "baz\nbaz"],
                 ]),
                 'summary' => 'My caption',
                 'sortable' => true,
@@ -47,7 +47,7 @@ class TableControllerTest extends ContentElementTestCase
                         </tr>
                         <tr>
                             <td>foobar</td>
-                            <td>baz</td>
+                            <td>baz<br> baz</td>
                         </tr>
                     </tbody>
                 </table>
