@@ -41,6 +41,11 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
 
         $cssID = StringUtil::deserialize($module->cssID, true);
+
+        if ($idAttribute = $request->attributes->get('templateProperties', [])['cssID'] ?? null) {
+            $cssID[0] = substr($idAttribute, 5, -1);
+        }
+
         $cssID[1] = trim(sprintf('%s %s', $cssID[1], implode(' ', $model->classes)));
         $module->cssID = $cssID;
 
