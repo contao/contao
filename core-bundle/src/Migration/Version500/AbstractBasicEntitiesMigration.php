@@ -84,7 +84,8 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 $value = StringUtil::deserialize($value);
 
                 if (\is_array($value)) {
-                    $value = serialize(array_map(static fn ($v) => StringUtil::restoreBasicEntities($v), $value));
+                    array_walk_recursive($value, static fn (&$v) => $v = StringUtil::restoreBasicEntities($v));
+                    $value = serialize($value);
                 } else {
                     $value = StringUtil::restoreBasicEntities($value);
                 }
