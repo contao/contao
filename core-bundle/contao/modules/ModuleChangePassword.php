@@ -127,6 +127,7 @@ class ModuleChangePassword extends Module
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 			$objWidget->storeValues = true;
+			$objWidget->currentRecord = $objMember->id;
 
 			// Store the widget objects
 			$strVar  = 'obj' . ucfirst($strKey);
