@@ -170,7 +170,7 @@ th, td {
 	text-align: left;
 }
 
-input, select, button, label, img, a.tl_submit, .tl_select {
+input, select, label, img, a.tl_submit, .tl_select {
 	vertical-align: middle;
 }
 
