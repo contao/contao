@@ -118,7 +118,6 @@ body.popup {
 	padding: 8px 10px 9px;
 	background: none;
 	border: 0;
-	vertical-align: top;
 }
 
 #tmenu .burger svg {
@@ -637,7 +636,6 @@ h2.sub_headline {
 	overflow: hidden;
 	position: relative;
 	top: 9px;
-	vertical-align: top;
 	cursor: pointer;
 }
 

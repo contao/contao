@@ -226,11 +226,13 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFilter(
                 'insert_tag',
-                [InsertTagRuntime::class, 'replaceInsertTags']
+                [InsertTagRuntime::class, 'replaceInsertTags'],
+                ['preserves_safety' => ['html']]
             ),
             new TwigFilter(
                 'insert_tag_raw',
-                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
+                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
+                ['preserves_safety' => ['html']]
             ),
             new TwigFilter(
                 'highlight',

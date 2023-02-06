@@ -26,7 +26,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * @phpstan-type DatabasePaths array<string, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
+ * @phpstan-type DatabasePaths array<string|int, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
  * @phpstan-type FilesystemPaths \Generator<string, self::RESOURCE_*>
  * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: array<string, mixed>}
  *
@@ -51,9 +51,9 @@ class Dbafs implements DbafsInterface, ResetInterface
     private bool $useLastModified = true;
 
     /**
-     * @var array<string, array|null>
+     * @var array<string|int, array|null>
      *
-     * @phpstan-var array<string, Record|null>
+     * @phpstan-var array<string|int, Record|null>
      */
     private array $records = [];
 
@@ -272,11 +272,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * @param array<string, int>      $dbPaths
-     * @param array<string, string>   $allDbHashesByPath
-     * @param array<string, int|null> $allLastModifiedByPath
-     * @param \Generator<string, int> $filesystemIterator
-     * @param array<string>           $searchPaths
+     * @param array<string|int, int>      $dbPaths
+     * @param array<string|int, string>   $allDbHashesByPath
+     * @param array<string|int, int|null> $allLastModifiedByPath
+     * @param \Generator<string, int>     $filesystemIterator
+     * @param array<string>               $searchPaths
      *
      * @phpstan-param DatabasePaths   $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
@@ -302,7 +302,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         /** @var array<string|int, array<string>> $dirHashesParts */
         $dirHashesParts = [];
 
-        /** @var array<string, int|null> $lastModifiedUpdates */
+        /** @var array<string|int, int|null> $lastModifiedUpdates */
         $lastModifiedUpdates = [];
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
@@ -338,9 +338,9 @@ class Dbafs implements DbafsInterface, ResetInterface
                     $directChildrenPattern = sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
 
                     foreach ($allDbHashesByPath as $childPath => $childHash) {
-                        $childName = basename($childPath);
+                        $childName = basename((string) $childPath);
 
-                        if (\array_key_exists($childName, $childHashes) || 1 !== preg_match($directChildrenPattern, $childPath)) {
+                        if (\array_key_exists($childName, $childHashes) || 1 !== preg_match($directChildrenPattern, (string) $childPath)) {
                             continue;
                         }
 
@@ -350,7 +350,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Compute directory hash
                 $childHashes = array_filter($childHashes);
-                ksort($childHashes);
+                ksort($childHashes, SORT_STRING);
+
                 $hash = $this->hashGenerator->hashString(implode("\0", $childHashes));
 
                 unset($dirHashesParts[$path]);
@@ -434,9 +435,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
 
         if ($hasMoves) {
-            ksort($itemsToUpdate, SORT_DESC);
+            ksort($itemsToUpdate, SORT_NATURAL);
         } else {
-            $itemsToUpdate = array_reverse($itemsToUpdate);
+            $itemsToUpdate = array_reverse($itemsToUpdate, true);
         }
 
         return new ChangeSet(
@@ -526,7 +527,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * Updates the database from a given change set. We're using chunked inserts
      * for better performance.
      *
-     * @param array<string, string> $allUuidsByPath
+     * @param array<string|int, string> $allUuidsByPath
      */
     private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath): void
     {
@@ -656,9 +657,9 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @param array<string> $searchPaths       non-empty list of search paths
      * @param array<string> $parentDirectories parent directories to consider
      *
-     * @return array<array<string, string|int|null>>
+     * @return array<array<string|int, string|int|null>>
      *
-     * @phpstan-return array{0: DatabasePaths, 1: array<string, string>, 2: array<string, int|null>, 3: array<string, string>}
+     * @phpstan-return array{0: DatabasePaths, 1: array<string|int, string>, 2: array<string|int, int|null>, 3: array<string|int, string|int>}
      */
     private function getDatabaseEntries(array $searchPaths, array $parentDirectories): array
     {
@@ -774,8 +775,9 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                // Analyze parent path
-                $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
+                // Analyze parent path. Do not use array_merge or array
+                // unpacking here, because there could be integer keys!
+                $analyzedPaths = $analyzeDirectory(Path::getDirectory($searchPath)) + $analyzedPaths;
                 $isDir = $analyzedPaths[$searchPath] ??= false;
             }
 
