@@ -290,8 +290,8 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @param \Generator<string, int>     $filesystemIterator
      * @param array<string>               $searchPaths
      *
-     * @phpstan-param DatabasePaths       $dbPaths
-     * @phpstan-param FilesystemPaths     $filesystemIterator
+     * @phpstan-param DatabasePaths   $dbPaths
+     * @phpstan-param FilesystemPaths $filesystemIterator
      */
     private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, array $searchPaths): ChangeSet
     {
@@ -795,7 +795,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                // Analyze parent path. Note: Do not use array_merge or
+                // Analyze parent path. Do not use array_merge or array
                 // unpacking here, because there could be integer keys!
                 $analyzedPaths = $analyzeDirectory(Path::getDirectory($searchPath)) + $analyzedPaths;
                 $isDir = $analyzedPaths[$searchPath] ??= false;
