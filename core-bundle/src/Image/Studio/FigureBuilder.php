@@ -666,7 +666,7 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
+            $target = rawurldecode($target);
 
             $filePath = Path::isAbsolute($target)
                 ? Path::canonicalize($target)
