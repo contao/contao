@@ -65,7 +65,7 @@ class ConfigurationTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
 
         $params = [
-           [
+            [
                 'web_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
