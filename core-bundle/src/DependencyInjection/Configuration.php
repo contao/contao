@@ -134,6 +134,7 @@ class Configuration implements ConfigurationInterface
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
                 ->arrayNode('workers')
+                    ->performNoDeepMerging()
                     ->arrayPrototype()
                         ->children()
                             ->arrayNode('transports')
