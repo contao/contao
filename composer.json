@@ -299,11 +299,11 @@
     },
     "scripts": {
         "all": [
-            "@unit-tests",
-            "@functional-tests",
             "@rector",
             "@cs-fixer",
             "@service-linter",
+            "@unit-tests",
+            "@functional-tests",
             "@phpstan",
             "@require-checker",
             "@monorepo-tools"

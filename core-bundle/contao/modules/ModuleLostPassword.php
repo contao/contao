@@ -227,6 +227,8 @@ class ModuleLostPassword extends Module
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
+		$objWidget->currentRecord = $objMember->id;
+
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Validate the field

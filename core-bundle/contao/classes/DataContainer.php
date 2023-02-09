@@ -1039,7 +1039,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
