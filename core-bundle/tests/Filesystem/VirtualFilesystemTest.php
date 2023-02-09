@@ -951,7 +951,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->createDirectory("b\xE4r");
 
         $this->expectException(VirtualFilesystemException::class);
-        $this->expectErrorMessage("The path \"b\xE4r\" is not supported, because it contains non-UTF-8 characters.");
+        $this->expectExceptionMessage("The path \"b\xE4r\" is not supported, because it contains non-UTF-8 characters.");
 
         iterator_to_array($filesystem->listContents('', true));
     }

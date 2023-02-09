@@ -146,7 +146,7 @@ class FilesystemItemIteratorTest extends TestCase
         $iterator = new FilesystemItemIterator([]);
 
         $this->expectException(\OutOfRangeException::class);
-        $this->expectDeprecationMessage('Illegal limit value "-1", must be greater or equal to zero.');
+        $this->expectExceptionMessage('Illegal limit value "-1", must be greater or equal to zero.');
 
         $iterator->limit(-1);
     }
