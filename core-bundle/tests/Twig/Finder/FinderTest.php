@@ -158,8 +158,8 @@ class FinderTest extends TestCase
 
         $expected = [
             '' => 'Text default [content_element/text • App, ContaoCore]',
-            'content_element/text/foo' => 'Foo variant [content_element/text/foo • App]',
             'content_element/text/bar' => 'content_element/text/bar [App]',
+            'content_element/text/foo' => 'Foo variant [content_element/text/foo • App]',
         ];
 
         $this->assertSame($expected, $options);
