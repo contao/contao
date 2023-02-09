@@ -22,7 +22,7 @@ composer require contao/maker-bundle --dev
 This bundle provides several commands under the `make:` namespace. You can list them all with the following command:
 
 ```
-php vendor/bin/contao-console list make:contao
+php bin/console list make:contao
 
 Available commands for the "make:contao" namespace:
   make:contao:content-element  Creates a new content element

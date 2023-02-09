@@ -8,7 +8,7 @@
 
 {% block content %}
     {% block teaser %}
-        {{ article.teaser|insert_tag|raw }}
+        {{ article.teaser|default|insert_tag|raw }}
     {% endblock %}
 
     {% block link %}

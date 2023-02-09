@@ -187,13 +187,15 @@ class MemberModel extends Model
 		$time = Date::floorToMinute();
 
 		$arrColumns = array("$t.email=? AND $t.login=1 AND $t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')");
+		$arrValues = array($strEmail);
 
 		if ($strUsername !== null)
 		{
 			$arrColumns[] = "$t.username=?";
+			$arrValues[] = $strUsername;
 		}
 
-		return static::findOneBy($arrColumns, array($strEmail, $strUsername), $arrOptions);
+		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
 
 	/**

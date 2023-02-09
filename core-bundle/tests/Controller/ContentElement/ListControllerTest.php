@@ -48,7 +48,7 @@ class ListControllerTest extends ContentElementTestCase
             new ListController(),
             [
                 'type' => 'list',
-                'listitems' => serialize(['foo', 'bar{{br}}baz <i>plain</i>']),
+                'listitems' => serialize(['foo', 'bar{{br}}baz <i>HTML</i>']),
                 'listtype' => 'unordered',
                 'cssID' => serialize(['', 'my-class']),
             ],
@@ -58,7 +58,7 @@ class ListControllerTest extends ContentElementTestCase
             <div class="my-class content-list">
                 <ul>
                     <li>foo</li>
-                    <li>bar<br>baz &lt;i&gt;plain&lt;/i&gt;</li>
+                    <li>bar<br>baz <i>HTML</i></li>
                 </ul>
             </div>
             HTML;

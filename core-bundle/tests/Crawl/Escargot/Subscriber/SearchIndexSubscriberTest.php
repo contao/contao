@@ -512,19 +512,12 @@ class SearchIndexSubscriberTest extends TestCase
             ->method('getInfo')
             ->willReturnCallback(
                 static function (string $key) use ($statusCode, $url) {
-                    switch ($key) {
-                        case 'http_code':
-                            return $statusCode;
-
-                        case 'url':
-                            return $url;
-
-                        case 'response_headers':
-                            return [];
-
-                        default:
-                            return null;
-                    }
+                    return match ($key) {
+                        'http_code' => $statusCode,
+                        'url' => $url,
+                        'response_headers' => [],
+                        default => null,
+                    };
                 }
             )
         ;

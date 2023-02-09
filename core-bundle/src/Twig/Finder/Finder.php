@@ -150,6 +150,9 @@ final class Finder implements \IteratorAggregate, \Countable
             $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }
 
+        // Make sure the default option is the first one (see #5719)
+        ksort($options);
+
         return $options;
     }
 
