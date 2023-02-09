@@ -282,9 +282,9 @@ class Result
 	 */
 	public function fetchField($intOffset=0)
 	{
-		$arrFields = array_values($this->resultSet[$this->intIndex]);
+		$result = $this->resultSet[$this->intIndex] ?? throw new \OutOfBoundsException('There is no result to fetch.');
 
-		return $arrFields[$intOffset];
+		return array_values($result)[$intOffset] ?? throw new \OutOfBoundsException(sprintf('The result does not contain any data at offset %d.', $intOffset));
 	}
 
 	/**
