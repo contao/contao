@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.0-RC3] (2023-02-09)
+
 ## [5.1.0-RC2] (2023-01-27)
 
 **Fixed issues:**
@@ -72,6 +74,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
 [5.1.0-RC2]: https://github.com/contao/contao/releases/tag/5.1.0-RC2
 [5.1.0-RC1]: https://github.com/contao/contao/releases/tag/5.1.0-RC1
 [aschempp]: https://github.com/aschempp
