@@ -101,4 +101,30 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
+
+    public function testOutputsEmptyLinkIfUrlIsNull(): void
+    {
+        $response = $this->renderWithModelData(
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            [
+                'type' => 'hyperlink',
+                'url' => null,
+                'linkTitle' => '',
+                'target' => false,
+                'embed' => '',
+                'useImage' => false,
+                'singleSRC' => '',
+                'size' => '',
+                'rel' => '',
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-hyperlink">
+                <a href></a>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
 }
