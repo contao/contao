@@ -199,6 +199,7 @@ class ModulePersonalData extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
+			$objWidget->currentRecord = $objMember->id;
 
 			if ($objWidget instanceof FormPassword && $objMember->password)
 			{
