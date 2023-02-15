@@ -277,7 +277,8 @@
             "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "contao-components/installer": true,
-            "contao/manager-plugin": true
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
         }
     },
     "extra": {
