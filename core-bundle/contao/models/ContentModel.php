@@ -53,7 +53,7 @@ use Contao\Model\Collection;
  * @property string            $highlight
  * @property string            $markdownSource
  * @property string|null       $code
- * @property string            $url
+ * @property string|null       $url
  * @property boolean           $target
  * @property boolean           $overwriteLink
  * @property string            $titleText
