@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.39] (2023-02-16)
+
+**Fixed issues:**
+
+- [#5706] Do not add `target="_blank"` to the `{{link}}` insert tag for non-redirect pages ([fritzmg])
+- [#5742] Prevent division by zero in gallery element ([aschempp])
+- [#5775] Only check for registration opt-in tokens when purging registrations ([fritzmg])
+- [#5776] Disallow Composer plugin from `php-http/discovery` ([fritzmg])
+- [#5756] Fix "variable must be of type array, null given" ([chberger])
+- [#5723] Validate the given month or day in the calendar module ([leofeyer])
+- [#5732] Do not overwrite the default vertical button alignment ([leofeyer])
+- [#5730] Ignore empy layout selection ([fritzmg])
+- [#5721] Correctly describe our breadcrumbs with WAI-ARIA tags ([Toflar])
+
 ## [4.9.38] (2023-01-13)
 
 **Fixed issues:**
@@ -1082,6 +1096,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.39]: https://github.com/contao/contao/releases/tag/4.9.39
 [4.9.38]: https://github.com/contao/contao/releases/tag/4.9.38
 [4.9.37]: https://github.com/contao/contao/releases/tag/4.9.37
 [4.9.36]: https://github.com/contao/contao/releases/tag/4.9.36
@@ -1139,6 +1154,7 @@ This project adheres to [Semantic Versioning].
 [Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
+[chberger]: https://github.com/chberger
 [cliffparnitzky]: https://github.com/cliffparnitzky
 [dennisbohn]: https://github.com/dennisbohn
 [denniserdmann]: https://github.com/denniserdmann
@@ -2010,3 +2026,12 @@ This project adheres to [Semantic Versioning].
 [#5637]: https://github.com/contao/contao/pull/5637
 [#5641]: https://github.com/contao/contao/pull/5641
 [#5654]: https://github.com/contao/contao/pull/5654
+[#5706]: https://github.com/contao/contao/pull/5706
+[#5721]: https://github.com/contao/contao/pull/5721
+[#5723]: https://github.com/contao/contao/pull/5723
+[#5730]: https://github.com/contao/contao/pull/5730
+[#5732]: https://github.com/contao/contao/pull/5732
+[#5742]: https://github.com/contao/contao/pull/5742
+[#5756]: https://github.com/contao/contao/pull/5756
+[#5775]: https://github.com/contao/contao/pull/5775
+[#5776]: https://github.com/contao/contao/pull/5776

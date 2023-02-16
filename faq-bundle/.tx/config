@@ -1,38 +1,38 @@
 [main]
 host = https://www.transifex.com
-type = XLIFF
 
-[faq-bundle.v4_9-default]
+[o:contao:p:faq-bundle:r:v4_9-default]
+file_filter = src/Resources/contao/languages/<lang>/default.xlf
 source_file = src/Resources/contao/languages/en/default.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
 
-[faq-bundle.v4_9-modules]
+[o:contao:p:faq-bundle:r:v4_9-modules]
+file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 source_file = src/Resources/contao/languages/en/modules.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 
-[faq-bundle.v4_9-tl_faq]
+[o:contao:p:faq-bundle:r:v4_9-tl_faq]
+file_filter = src/Resources/contao/languages/<lang>/tl_faq.xlf
 source_file = src/Resources/contao/languages/en/tl_faq.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_faq.xlf
 
-[faq-bundle.v4_9-tl_faq_category]
+[o:contao:p:faq-bundle:r:v4_9-tl_faq_category]
+file_filter = src/Resources/contao/languages/<lang>/tl_faq_category.xlf
 source_file = src/Resources/contao/languages/en/tl_faq_category.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_faq_category.xlf
 
-[faq-bundle.v4_9-tl_module]
+[o:contao:p:faq-bundle:r:v4_9-tl_module]
+file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 
-[faq-bundle.v4_9-tl_user]
+[o:contao:p:faq-bundle:r:v4_9-tl_user]
+file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 source_file = src/Resources/contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 
-[faq-bundle.v4_9-tl_user_group]
+[o:contao:p:faq-bundle:r:v4_9-tl_user_group]
+file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
 source_file = src/Resources/contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
+
