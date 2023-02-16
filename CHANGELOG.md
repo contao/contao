@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.0.10] (2023-02-16)
+
+**Fixed issues:**
+
+- [#5768] Harden hyperlink controller against URLs that are null ([m-vo])
+- [#5747] Prevent "array to string conversion" errors when migrating basic entities ([leofeyer])
+- [#5743] Render HTML in the table and list elements again ([leofeyer])
+- [#5748] Preserve safe HTML in the Twig insert tag filters ([m-vo])
+- [#5746] Adjust the blocks in the table component template ([m-vo])
+
 ## [5.0.9] (2023-01-27)
 
 **Fixed issues:**
@@ -425,6 +435,7 @@ This project adheres to [Semantic Versioning].
 - [#4190] Remove left-over url field in tl_module ([bytehead])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.0.10]: https://github.com/contao/contao/releases/tag/5.0.10
 [5.0.9]: https://github.com/contao/contao/releases/tag/5.0.9
 [5.0.8]: https://github.com/contao/contao/releases/tag/5.0.8
 [5.0.7]: https://github.com/contao/contao/releases/tag/5.0.7
@@ -802,3 +813,8 @@ This project adheres to [Semantic Versioning].
 [#5724]: https://github.com/contao/contao/pull/5724
 [#5725]: https://github.com/contao/contao/pull/5725
 [#5728]: https://github.com/contao/contao/pull/5728
+[#5743]: https://github.com/contao/contao/pull/5743
+[#5746]: https://github.com/contao/contao/pull/5746
+[#5747]: https://github.com/contao/contao/pull/5747
+[#5748]: https://github.com/contao/contao/pull/5748
+[#5768]: https://github.com/contao/contao/pull/5768

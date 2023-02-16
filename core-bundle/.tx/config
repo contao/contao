@@ -1,138 +1,138 @@
 [main]
 host = https://www.transifex.com
-type = XLIFF
 
-[core-bundle.v5_0-default]
+[o:contao:p:core-bundle:r:v5_0-default]
+file_filter = contao/languages/<lang>/default.xlf
 source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/default.xlf
 
-[core-bundle.v5_0-exception]
+[o:contao:p:core-bundle:r:v5_0-exception]
+file_filter = contao/languages/<lang>/exception.xlf
 source_file = contao/languages/en/exception.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/exception.xlf
 
-[core-bundle.v5_0-explain]
+[o:contao:p:core-bundle:r:v5_0-explain]
+file_filter = contao/languages/<lang>/explain.xlf
 source_file = contao/languages/en/explain.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/explain.xlf
 
-[core-bundle.v5_0-modules]
+[o:contao:p:core-bundle:r:v5_0-modules]
+file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/modules.xlf
 
-[core-bundle.v5_0-tl_article]
+[o:contao:p:core-bundle:r:v5_0-tl_article]
+file_filter = contao/languages/<lang>/tl_article.xlf
 source_file = contao/languages/en/tl_article.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_article.xlf
 
-[core-bundle.v5_0-tl_content]
+[o:contao:p:core-bundle:r:v5_0-tl_content]
+file_filter = contao/languages/<lang>/tl_content.xlf
 source_file = contao/languages/en/tl_content.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_content.xlf
 
-[core-bundle.v5_0-tl_files]
+[o:contao:p:core-bundle:r:v5_0-tl_files]
+file_filter = contao/languages/<lang>/tl_files.xlf
 source_file = contao/languages/en/tl_files.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_files.xlf
 
-[core-bundle.v5_0-tl_form]
+[o:contao:p:core-bundle:r:v5_0-tl_form]
+file_filter = contao/languages/<lang>/tl_form.xlf
 source_file = contao/languages/en/tl_form.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_form.xlf
 
-[core-bundle.v5_0-tl_form_field]
+[o:contao:p:core-bundle:r:v5_0-tl_form_field]
+file_filter = contao/languages/<lang>/tl_form_field.xlf
 source_file = contao/languages/en/tl_form_field.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_form_field.xlf
 
-[core-bundle.v5_0-tl_image_size]
+[o:contao:p:core-bundle:r:v5_0-tl_image_size]
+file_filter = contao/languages/<lang>/tl_image_size.xlf
 source_file = contao/languages/en/tl_image_size.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_image_size.xlf
 
-[core-bundle.v5_0-tl_image_size_item]
+[o:contao:p:core-bundle:r:v5_0-tl_image_size_item]
+file_filter = contao/languages/<lang>/tl_image_size_item.xlf
 source_file = contao/languages/en/tl_image_size_item.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_image_size_item.xlf
 
-[core-bundle.v5_0-tl_layout]
+[o:contao:p:core-bundle:r:v5_0-tl_layout]
+file_filter = contao/languages/<lang>/tl_layout.xlf
 source_file = contao/languages/en/tl_layout.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_layout.xlf
 
-[core-bundle.v5_0-tl_log]
+[o:contao:p:core-bundle:r:v5_0-tl_log]
+file_filter = contao/languages/<lang>/tl_log.xlf
 source_file = contao/languages/en/tl_log.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_log.xlf
 
-[core-bundle.v5_0-tl_maintenance]
+[o:contao:p:core-bundle:r:v5_0-tl_maintenance]
+file_filter = contao/languages/<lang>/tl_maintenance.xlf
 source_file = contao/languages/en/tl_maintenance.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_maintenance.xlf
 
-[core-bundle.v5_0-tl_member]
+[o:contao:p:core-bundle:r:v5_0-tl_member]
+file_filter = contao/languages/<lang>/tl_member.xlf
 source_file = contao/languages/en/tl_member.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_member.xlf
 
-[core-bundle.v5_0-tl_member_group]
+[o:contao:p:core-bundle:r:v5_0-tl_member_group]
+file_filter = contao/languages/<lang>/tl_member_group.xlf
 source_file = contao/languages/en/tl_member_group.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_member_group.xlf
 
-[core-bundle.v5_0-tl_module]
+[o:contao:p:core-bundle:r:v5_0-tl_module]
+file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_module.xlf
 
-[core-bundle.v5_0-tl_opt_in]
+[o:contao:p:core-bundle:r:v5_0-tl_opt_in]
+file_filter = contao/languages/<lang>/tl_opt_in.xlf
 source_file = contao/languages/en/tl_opt_in.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_opt_in.xlf
 
-[core-bundle.v5_0-tl_opt_in_related]
+[o:contao:p:core-bundle:r:v5_0-tl_opt_in_related]
+file_filter = contao/languages/<lang>/tl_opt_in_related.xlf
 source_file = contao/languages/en/tl_opt_in_related.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_opt_in_related.xlf
 
-[core-bundle.v5_0-tl_page]
+[o:contao:p:core-bundle:r:v5_0-tl_page]
+file_filter = contao/languages/<lang>/tl_page.xlf
 source_file = contao/languages/en/tl_page.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_page.xlf
 
-[core-bundle.v5_0-tl_preview_link]
+[o:contao:p:core-bundle:r:v5_0-tl_preview_link]
+file_filter = contao/languages/<lang>/tl_preview_link.xlf
 source_file = contao/languages/en/tl_preview_link.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_preview_link.xlf
 
-[core-bundle.v5_0-tl_settings]
+[o:contao:p:core-bundle:r:v5_0-tl_settings]
+file_filter = contao/languages/<lang>/tl_settings.xlf
 source_file = contao/languages/en/tl_settings.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_settings.xlf
 
-[core-bundle.v5_0-tl_templates]
+[o:contao:p:core-bundle:r:v5_0-tl_templates]
+file_filter = contao/languages/<lang>/tl_templates.xlf
 source_file = contao/languages/en/tl_templates.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_templates.xlf
 
-[core-bundle.v5_0-tl_theme]
+[o:contao:p:core-bundle:r:v5_0-tl_theme]
+file_filter = contao/languages/<lang>/tl_theme.xlf
 source_file = contao/languages/en/tl_theme.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_theme.xlf
 
-[core-bundle.v5_0-tl_undo]
+[o:contao:p:core-bundle:r:v5_0-tl_undo]
+file_filter = contao/languages/<lang>/tl_undo.xlf
 source_file = contao/languages/en/tl_undo.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_undo.xlf
 
-[core-bundle.v5_0-tl_user]
+[o:contao:p:core-bundle:r:v5_0-tl_user]
+file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_user.xlf
 
-[core-bundle.v5_0-tl_user_group]
+[o:contao:p:core-bundle:r:v5_0-tl_user_group]
+file_filter = contao/languages/<lang>/tl_user_group.xlf
 source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_user_group.xlf
+

@@ -255,11 +255,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>将来のイベント</target>
+        <target>特別なイベント</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
-        <target>イベントを将来のイベントリストに表示</target>
+        <target>イベントを特別なイベントリストに表示</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
