@@ -1,0 +1,198 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Twig\Finder;
+
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+/**
+ * @experimental
+ * @implements \IteratorAggregate<string, string>
+ */
+final class Finder implements \IteratorAggregate, \Countable
+{
+    private TemplateHierarchyInterface $hierarchy;
+    private ThemeNamespace $themeNamespace;
+    private TranslatorInterface $translator;
+
+    private ?string $identifier = null;
+    private ?string $themeSlug = null;
+    private ?string $extension = null;
+    private bool $variantsExclusive = false;
+    private bool $variants = false;
+
+    /**
+     * @var array<string, list<string>>
+     */
+    private array $sources = [];
+
+    /**
+     * @internal
+     */
+    public function __construct(TemplateHierarchyInterface $hierarchy, ThemeNamespace $themeNamespace, TranslatorInterface $translator)
+    {
+        $this->hierarchy = $hierarchy;
+        $this->themeNamespace = $themeNamespace;
+        $this->translator = $translator;
+    }
+
+    /**
+     * Filters templates based on the identifier, e.g. "content_element/text".
+     */
+    public function identifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * Filters templates based on the file extension, e.g. "html.twig" or "json.twig".
+     */
+    public function extension(string $extension): self
+    {
+        $this->extension = $extension;
+
+        return $this;
+    }
+
+    /**
+     * Filters templates based on the logical name or short name, e.g.
+     * "@Contao/content_element/text.html.twig" or "content_element/text.html.twig".
+     */
+    public function name(string $name): self
+    {
+        $this->identifier = ContaoTwigUtil::getIdentifier($name);
+        $this->extension = ContaoTwigUtil::getExtension($name);
+
+        return $this;
+    }
+
+    /**
+     * Also includes variant templates, e.g: "content_element/text/special" when
+     * filtering for "content_element/text". If $exclusive is set to true, only
+     * the variants will be output.
+     */
+    public function withVariants(bool $exclusive = false): self
+    {
+        $this->variants = true;
+        $this->variantsExclusive = $exclusive;
+
+        return $this;
+    }
+
+    /**
+     * Also includes templates of a certain theme. Only one theme at a time can
+     * be queried.
+     */
+    public function withTheme(string $themeSlug): self
+    {
+        $this->themeSlug = $themeSlug;
+
+        return $this;
+    }
+
+    /**
+     * Returns the result as template options.
+     *
+     * @return array<string, string>
+     */
+    public function asTemplateOptions(): array
+    {
+        $options = [];
+
+        $getSourceLabel = function (string $name): string {
+            if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
+                return $this->translator->trans('MSC.templatesTheme', [$themeSlug], 'contao_default');
+            }
+
+            if (preg_match('/^@Contao_([^\/]+?)(?:Bundle)?\//', $name, $matches)) {
+                return $matches[1];
+            }
+
+            return $this->translator->trans('MSC.global', [], 'contao_default');
+        };
+
+        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
+            $label = sprintf(
+                '%s [%s]',
+                $identifier,
+                implode(', ', array_map($getSourceLabel, $this->sources[$identifier]))
+            );
+
+            $options[$identifier !== $this->identifier ? $identifier : ''] = $label;
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return \Generator<string, string>
+     */
+    public function getIterator(): \Generator
+    {
+        // Only include chains that contain at least one non-legacy template
+        $chains = array_filter(
+            $this->hierarchy->getInheritanceChains($this->themeSlug),
+            static function (array $chain) {
+                foreach (array_keys($chain) as $path) {
+                    if ('html5' !== Path::getExtension($path, true)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        );
+
+        $this->sources = [];
+
+        $matchIdentifier = function (string $identifier): bool {
+            if (!$this->variantsExclusive && $this->identifier === $identifier) {
+                return true;
+            }
+
+            if (!$this->variants) {
+                return false;
+            }
+
+            return str_starts_with($identifier, "$this->identifier/");
+        };
+
+        foreach ($chains as $identifier => $chain) {
+            if ($this->identifier && !$matchIdentifier($identifier)) {
+                continue;
+            }
+
+            // The loader makes sure that all files grouped under one
+            // identifier have the same extension
+            $extension = ContaoTwigUtil::getExtension(array_key_first($chain));
+
+            if (null !== $this->extension && $this->extension !== $extension) {
+                continue;
+            }
+
+            $this->sources[$identifier] = array_values($chain);
+
+            yield $identifier => $extension;
+        }
+    }
+
+    public function count(): int
+    {
+        return iterator_count($this->getIterator());
+    }
+}

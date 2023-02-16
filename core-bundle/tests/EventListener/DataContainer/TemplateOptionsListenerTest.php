@@ -13,18 +13,26 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentProxy;
+use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
 use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Database\Result;
+use Contao\CoreBundle\Twig\Finder\Finder;
+use Contao\CoreBundle\Twig\Finder\FinderFactory;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\Database\Result as ContaoResult;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TemplateOptionsListenerTest extends TestCase
 {
@@ -34,14 +42,12 @@ class TemplateOptionsListenerTest extends TestCase
 
         $GLOBALS['TL_CTE'] = [
             'foobar' => [
-                'fragment_element' => ContentProxy::class,
                 'legacy_element' => LegacyElement::class,
             ],
         ];
 
         $GLOBALS['FE_MOD'] = [
             'foobar' => [
-                'fragment_module' => ModuleProxy::class,
                 'legacy_module' => LegacyModule::class,
             ],
         ];
@@ -54,98 +60,211 @@ class TemplateOptionsListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testReturnsTheDefaultElementTemplate(): void
+    public function testReturnsElementTemplates(): void
     {
-        $callback = new TemplateOptionsListener(
-            $this->mockFramework(),
-            new RequestStack(),
-            'ce_',
-            ContentProxy::class
+        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class);
+
+        $this->assertSame(
+            [
+                '' => 'content_element/foo [App]',
+                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+            ],
+            $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type']))
         );
 
         $this->assertSame(
-            ['' => 'ce_fragment_element'],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element']))
+            [
+                '' => 'ce_legacy_fragment_element',
+                'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
+            ],
+            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_fragment_element']))
         );
     }
 
-    public function testReturnsTheDefaultModuleTemplate(): void
+    public function testReturnsModuleTemplates(): void
     {
-        $callback = new TemplateOptionsListener(
-            $this->mockFramework(),
-            new RequestStack(),
-            'mod_',
-            ModuleProxy::class
+        $callback = $this->getDefaultTemplateOptionsListener('mod_', ModuleProxy::class);
+
+        $this->assertSame(
+            ['' => 'frontend_module/foo [App]'],
+            $callback($this->mockDataContainer('tl_module', ['type' => 'foo_module_type']))
         );
 
         $this->assertSame(
-            ['' => 'mod_fragment_module'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module']))
+            ['' => 'mod_legacy_fragment_module'],
+            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_fragment_module']))
         );
     }
 
-    public function testReturnsTheCustomElementTemplate(): void
+    /**
+     * @dataProvider provideOverrideAllScenarios
+     */
+    public function testReturnsCommonElementTemplatesInOverrideAllMode(?string $commonType, array $expectedOptions): void
     {
-        $callback = new TemplateOptionsListener(
-            $this->mockFramework(),
-            new RequestStack(),
-            'ce_',
-            ContentProxy::class
-        );
+        $session = $this->mockSession();
+        $session->replace(['CURRENT' => ['IDS' => [1, 2, 3]]]);
 
-        $callback->setCustomTemplates(['fragment_element' => 'ce_custom_fragment_template']);
+        $request = new Request(['act' => 'overrideAll']);
+        $request->setSession($session);
 
-        $this->assertSame(
-            ['' => 'ce_custom_fragment_template'],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element']))
-        );
-
-        $this->assertSame(
-            ['' => 'ce_custom_legacy_template'],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_element']))
-        );
-    }
-
-    public function testReturnsTheCustomModuleTemplate(): void
-    {
-        $callback = new TemplateOptionsListener(
-            $this->mockFramework(),
-            new RequestStack(),
-            'mod_',
-            ModuleProxy::class
-        );
-
-        $callback->setCustomTemplates(['fragment_module' => 'mod_custom_fragment_template']);
-
-        $this->assertSame(
-            ['' => 'mod_custom_fragment_template'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module']))
-        );
-
-        $this->assertSame(
-            ['' => 'mod_custom_legacy_template'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_module']))
-        );
-    }
-
-    public function testReturnsAllElementTemplatesInOverrideAllMode(): void
-    {
         $requestStack = new RequestStack();
-        $requestStack->push(new Request(['act' => 'overrideAll']));
+        $requestStack->push($request);
 
-        $callback = new TemplateOptionsListener($this->mockFramework(), $requestStack, 'ce_', ContentProxy::class);
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('rowCount')
+            ->willReturn(null !== $commonType ? 1 : 2)
+        ;
 
-        $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback($this->mockDataContainer('tl_content')));
+        if (null !== $commonType) {
+            $result
+                ->method('fetchOne')
+                ->willReturn($commonType)
+            ;
+        }
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
+            ->method('executeQuery')
+            ->with(
+                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_foo'),
+                [[1, 2, 3]],
+                [Connection::PARAM_INT_ARRAY]
+            )
+            ->willReturn($result)
+        ;
+
+        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class, $requestStack, $connection);
+
+        $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_foo')));
     }
 
-    public function testReturnsAllModuleTemplatesInOverrideAllMode(): void
+    public function provideOverrideAllScenarios(): \Generator
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request(['act' => 'overrideAll']));
+        yield 'selected items share a common type' => [
+            'foo_element_type',
+            [
+                '' => 'content_element/foo [App]',
+                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+            ],
+        ];
 
-        $callback = new TemplateOptionsListener($this->mockFramework(), $requestStack, 'mod_', ModuleProxy::class);
+        yield 'selected legacy items share a common type' => [
+            'legacy_fragment_element',
+            [
+                '' => 'ce_legacy_fragment_element',
+                'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
+            ],
+        ];
 
-        $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
+        yield 'selected items have different types' => [
+            null,
+            ['' => '-'],
+        ];
+    }
+
+    public function testUsesLegacyTemplatesForOptInLegacyContentElements(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter
+            ->method('getTemplateGroup')
+            ->with('ce_text_', [], 'ce_text')
+            ->willReturn(['' => '[result from legacy class]'])
+        ;
+
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+
+        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
+        $listener->setDefaultIdentifiersByType(['text' => 'content_element/text']);
+
+        $GLOBALS['TL_CTE']['texts']['text'] = ContentText::class;
+
+        $this->assertSame(
+            ['' => '[result from legacy class]'],
+            $listener($this->mockDataContainer('tl_content', ['type' => 'text']))
+        );
+    }
+
+    public function testUsesLegacyTemplatesIfDefined(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter
+            ->method('getTemplateGroup')
+            ->with('ce_custom_', [], 'ce_custom')
+            ->willReturn(['' => '[result from legacy class]'])
+        ;
+
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+
+        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
+        $listener->setDefaultIdentifiersByType(['example' => 'ce_custom']);
+
+        $this->assertSame(
+            ['' => '[result from legacy class]'],
+            $listener($this->mockDataContainer('tl_content', ['type' => 'example']))
+        );
+    }
+
+    private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack $requestStack = null, Connection $connection = null): TemplateOptionsListener
+    {
+        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $hierarchy
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'content_element/foo' => [
+                    '/templates/content_element/foo.html.twig' => '@Contao_App/content_element/foo.html.twig',
+                ],
+                'content_element/foo/variant' => [
+                    '/templates/content_element/foo/variant.html.twig' => '@Contao_Global/content_element/foo/variant.html.twig',
+                ],
+                'frontend_module/foo' => [
+                    '/templates/frontend_module/foo.html.twig' => '@Contao_App/frontend_module/foo.html.twig',
+                ],
+            ])
+        ;
+
+        $listener = $this->getTemplateOptionsListener($legacyTemplatePrefix, $legacyProxyClass, null, $requestStack, $connection, $hierarchy);
+
+        $listener->setDefaultIdentifiersByType([
+            'foo_element_type' => 'content_element/foo',
+            'foo_module_type' => 'frontend_module/foo',
+        ]);
+
+        return $listener;
+    }
+
+    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework $framework = null, RequestStack $requestStack = null, Connection $connection = null, TemplateHierarchyInterface $hierarchy = null): TemplateOptionsListener
+    {
+        $hierarchy = $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class);
+        $connection = $connection ?? $this->createMock(Connection::class);
+        $framework = $framework ?? $this->mockFramework();
+        $requestStack = $requestStack ?? new RequestStack();
+
+        $finder = new Finder(
+            $hierarchy,
+            $this->createMock(ThemeNamespace::class),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $finderFactory = $this->createMock(FinderFactory::class);
+        $finderFactory
+            ->method('create')
+            ->willReturn($finder)
+        ;
+
+        return new TemplateOptionsListener(
+            $finderFactory,
+            $connection,
+            $framework,
+            $requestStack,
+            $legacyTemplatePrefix,
+            $legacyProxyClass
+        );
     }
 
     /**
@@ -157,14 +276,17 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter
             ->method('getTemplateGroup')
             ->willReturnMap([
-                ['ce_', ['ce_all' => 'ce_all']],
-                ['ce_fragment_element_', [], 'ce_fragment_element', ['' => 'ce_fragment_element']],
-                ['ce_custom_fragment_template_', [], 'ce_custom_fragment_template', ['' => 'ce_custom_fragment_template']],
-                ['ce_custom_legacy_template_', [], 'ce_custom_legacy_template', ['' => 'ce_custom_legacy_template']],
-                ['mod_', ['mod_all' => 'mod_all']],
-                ['mod_fragment_module_', [], 'mod_fragment_module', ['' => 'mod_fragment_module']],
-                ['mod_custom_fragment_template_', [], 'mod_custom_fragment_template', ['' => 'mod_custom_fragment_template']],
-                ['mod_custom_legacy_template_', [], 'mod_custom_legacy_template', ['' => 'mod_custom_legacy_template']],
+                [
+                    'ce_legacy_fragment_element_', [], 'ce_legacy_fragment_element', [
+                        '' => 'ce_legacy_fragment_element',
+                        'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
+                    ],
+                ],
+                [
+                    'mod_legacy_fragment_module_', [], 'mod_legacy_fragment_module', [
+                        '' => 'mod_legacy_fragment_module',
+                    ],
+                ],
             ])
         ;
 
@@ -180,7 +302,7 @@ class TemplateOptionsListenerTest extends TestCase
         $dc->table = $table;
 
         if (!empty($activeRecord)) {
-            $dc->activeRecord = $this->mockClassWithProperties(Result::class, $activeRecord);
+            $dc->activeRecord = $this->mockClassWithProperties(ContaoResult::class, $activeRecord);
         }
 
         return $dc;

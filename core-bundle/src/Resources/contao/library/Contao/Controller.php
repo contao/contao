@@ -109,6 +109,11 @@ abstract class Controller extends System
 	 */
 	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
+		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
+		{
+			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+		}
+
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
 

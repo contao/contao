@@ -137,7 +137,7 @@ class TemplateLocator
         $finder = (new Finder())
             ->files()
             ->in($path)
-            ->name('/(\.html\.twig|\.html5)$/')
+            ->name('/(\.twig|\.html5)$/')
             ->sortByName()
         ;
 
