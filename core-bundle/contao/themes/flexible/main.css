@@ -102,6 +102,7 @@ body.popup {
 	top: 5px;
 	left: 20px;
 	font-size: .6rem;
+	color: var(--header-bg);
 	background: var(--header-text);
 	padding: 2px;
 	border-radius: 2px;
