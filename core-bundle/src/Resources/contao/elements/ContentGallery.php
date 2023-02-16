@@ -68,6 +68,12 @@ class ContentGallery extends ContentElement
 			return '';
 		}
 
+		// Make sure we have at least one item per row to prevent division by zero
+		if ($this->perRow < 1)
+		{
+			$this->perRow = 1;
+		}
+
 		return parent::generate();
 	}
 
