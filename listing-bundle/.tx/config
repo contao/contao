@@ -1,13 +1,13 @@
 [main]
 host = https://www.transifex.com
-type = XLIFF
 
-[listing-bundle.v5_1-modules]
+[o:contao:p:listing-bundle:r:v5_1-modules]
+file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/modules.xlf
 
-[listing-bundle.v5_1-tl_module]
+[o:contao:p:listing-bundle:r:v5_1-tl_module]
+file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_module.xlf
+

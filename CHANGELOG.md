@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.0] (2023-02-16)
+
+**Fixed issues:**
+
+- [#5760] Do not deep merge messenger workers ([Toflar])
+- [#5762] Fix header notification color ([ausi])
+
 ## [5.1.0-RC3] (2023-02-09)
 
 ## [5.1.0-RC2] (2023-01-27)
@@ -74,6 +81,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.0]: https://github.com/contao/contao/releases/tag/5.1.0
 [5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
 [5.1.0-RC2]: https://github.com/contao/contao/releases/tag/5.1.0-RC2
 [5.1.0-RC1]: https://github.com/contao/contao/releases/tag/5.1.0-RC1
@@ -144,3 +152,5 @@ This project adheres to [Semantic Versioning].
 [#5703]: https://github.com/contao/contao/pull/5703
 [#5704]: https://github.com/contao/contao/pull/5704
 [#5714]: https://github.com/contao/contao/pull/5714
+[#5760]: https://github.com/contao/contao/pull/5760
+[#5762]: https://github.com/contao/contao/pull/5762

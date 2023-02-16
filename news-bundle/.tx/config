@@ -1,43 +1,43 @@
 [main]
 host = https://www.transifex.com
-type = XLIFF
 
-[news-bundle.v5_1-default]
+[o:contao:p:news-bundle:r:v5_1-default]
+file_filter = contao/languages/<lang>/default.xlf
 source_file = contao/languages/en/default.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/default.xlf
 
-[news-bundle.v5_1-modules]
+[o:contao:p:news-bundle:r:v5_1-modules]
+file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/modules.xlf
 
-[news-bundle.v5_1-tl_layout]
+[o:contao:p:news-bundle:r:v5_1-tl_layout]
+file_filter = contao/languages/<lang>/tl_layout.xlf
 source_file = contao/languages/en/tl_layout.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_layout.xlf
 
-[news-bundle.v5_1-tl_module]
+[o:contao:p:news-bundle:r:v5_1-tl_module]
+file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_module.xlf
 
-[news-bundle.v5_1-tl_news]
+[o:contao:p:news-bundle:r:v5_1-tl_news]
+file_filter = contao/languages/<lang>/tl_news.xlf
 source_file = contao/languages/en/tl_news.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_news.xlf
 
-[news-bundle.v5_1-tl_news_archive]
+[o:contao:p:news-bundle:r:v5_1-tl_news_archive]
+file_filter = contao/languages/<lang>/tl_news_archive.xlf
 source_file = contao/languages/en/tl_news_archive.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_news_archive.xlf
 
-[news-bundle.v5_1-tl_user]
+[o:contao:p:news-bundle:r:v5_1-tl_user]
+file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_user.xlf
 
-[news-bundle.v5_1-tl_user_group]
+[o:contao:p:news-bundle:r:v5_1-tl_user_group]
+file_filter = contao/languages/<lang>/tl_user_group.xlf
 source_file = contao/languages/en/tl_user_group.xlf
 source_lang = en
-file_filter = contao/languages/<lang>/tl_user_group.xlf
+
