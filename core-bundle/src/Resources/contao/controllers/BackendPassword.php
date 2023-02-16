@@ -63,6 +63,7 @@ class BackendPassword extends Backend
 		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 		$widget->wizard = Backend::getTogglePasswordWizard('password');
+		$widget->currentRecord = $this->User->id;
 
 		$objTemplate = new BackendTemplate('be_password');
 		$objTemplate->widget = $widget->parse();

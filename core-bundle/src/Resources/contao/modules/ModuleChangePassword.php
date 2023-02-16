@@ -127,9 +127,9 @@ class ModuleChangePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+			$objWidget->currentRecord = $objMember->id;
 
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)
