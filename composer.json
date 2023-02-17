@@ -273,7 +273,8 @@
             "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "contao-components/installer": true,
-            "contao/manager-plugin": true
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
         }
     },
     "extra": {
@@ -296,10 +297,10 @@
     },
     "scripts": {
         "all": [
-            "@unit-tests",
-            "@functional-tests",
             "@cs-fixer",
             "@service-linter",
+            "@unit-tests",
+            "@functional-tests",
             "@phpstan",
             "@require-checker",
             "@monorepo-tools"

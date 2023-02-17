@@ -25,6 +25,7 @@ jobs:
 
             - name: Add the label
               uses: christianvuerings/add-labels@v1
+              if: join(github.event.pull_request.labels) == ''
               with:
                   labels: bug
               env:

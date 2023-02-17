@@ -211,6 +211,8 @@ services:
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
             - ce_
@@ -352,6 +354,8 @@ services:
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
             - mod_
