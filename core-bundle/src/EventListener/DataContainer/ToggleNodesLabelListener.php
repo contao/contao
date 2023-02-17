@@ -12,16 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 class ToggleNodesLabelListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -30,14 +28,18 @@ class ToggleNodesLabelListener
 
     public function __invoke(string $table): void
     {
-        if (
-            !isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])
-            || isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'])
-            || (
-                'ptg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
-                && 'tg=all' !== ($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null)
-            )
-        ) {
+        if (!isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])) {
+            return;
+        }
+
+        // Return if there is a custom label
+        if (isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['label'])) {
+            return;
+        }
+
+        $href = $GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes']['href'] ?? null;
+
+        if ('ptg=all' !== $href && 'tg=all' !== $href) {
             return;
         }
 
@@ -53,7 +55,7 @@ class ToggleNodesLabelListener
 
         $node = $table.'_tree';
 
-        if (6 === (int) ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? 0)) {
+        if (DataContainer::MODE_TREE_EXTENDED === (int) ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? 0)) {
             $node = $table.'_'.($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? '').'_tree';
         }
 
