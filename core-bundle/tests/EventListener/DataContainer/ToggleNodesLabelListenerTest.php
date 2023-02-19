@@ -40,13 +40,13 @@ class ToggleNodesLabelListenerTest extends TestCase
 
     public function testDoesNothingIfNotBackendRequest(): void
     {
-        $requestStack = $this->mockRequestStack(null);
+        $requestStack = $this->mockRequestStack();
         $requestStack
             ->expects($this->never())
             ->method('getSession')
         ;
 
-        $listener = new ToggleNodesLabelListener($this->mockRequestStack(null), $this->mockScopeMatcher());
+        $listener = new ToggleNodesLabelListener($this->mockRequestStack(), $this->mockScopeMatcher());
         $listener('tl_foobar');
     }
 
@@ -56,7 +56,7 @@ class ToggleNodesLabelListenerTest extends TestCase
             'global_operations' => [],
         ];
 
-        $requestStack = $this->mockRequestStack();
+        $requestStack = $this->mockRequestStack('backend');
         $requestStack
             ->expects($this->never())
             ->method('getSession')
@@ -78,7 +78,7 @@ class ToggleNodesLabelListenerTest extends TestCase
             ],
         ];
 
-        $requestStack = $this->mockRequestStack();
+        $requestStack = $this->mockRequestStack('backend');
         $requestStack
             ->expects($this->never())
             ->method('getSession')
@@ -100,7 +100,7 @@ class ToggleNodesLabelListenerTest extends TestCase
             ],
         ];
 
-        $requestStack = $this->mockRequestStack();
+        $requestStack = $this->mockRequestStack('backend');
         $requestStack
             ->expects($this->never())
             ->method('getSession')
@@ -122,7 +122,7 @@ class ToggleNodesLabelListenerTest extends TestCase
             ],
         ];
 
-        $requestStack = $this->mockRequestStackWithSession(null);
+        $requestStack = $this->mockRequestStackWithSession();
 
         $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
@@ -259,9 +259,9 @@ class ToggleNodesLabelListenerTest extends TestCase
     /**
      * @return RequestStack&MockObject
      */
-    private function mockRequestStackWithSession(?Session $session): RequestStack
+    private function mockRequestStackWithSession(Session $session = null): RequestStack
     {
-        $requestStack = $this->mockRequestStack();
+        $requestStack = $this->mockRequestStack('backend');
 
         if (null === $session) {
             $requestStack
@@ -283,7 +283,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     /**
      * @return RequestStack&MockObject
      */
-    private function mockRequestStack(?string $scope = 'backend'): RequestStack
+    private function mockRequestStack(string $scope = null): RequestStack
     {
         $attributes = [];
 
@@ -291,12 +291,10 @@ class ToggleNodesLabelListenerTest extends TestCase
             $attributes['_scope'] = $scope;
         }
 
-        $request = new Request([], [], $attributes);
-
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($request)
+            ->willReturn(new Request([], [], $attributes))
         ;
 
         return $requestStack;
