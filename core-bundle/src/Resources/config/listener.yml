@@ -163,6 +163,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
         arguments:
             - '@request_stack'
+            - '@contao.routing.scope_matcher'
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 

@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -37,19 +39,31 @@ class ToggleNodesLabelListenerTest extends TestCase
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
     }
 
+    public function testDoesNothingIfNotBackendRequest(): void
+    {
+        $requestStack = $this->mockRequestStack(null);
+        $requestStack
+            ->expects($this->never())
+            ->method('getSession')
+        ;
+
+        $listener = new ToggleNodesLabelListener($this->mockRequestStack(null), $this->mockScopeMatcher());
+        $listener('tl_foobar');
+    }
+
     public function testDoesNothingIfTheOperationDoesNotExist(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar'] = [
             'global_operations' => [],
         ];
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->mockRequestStack();
         $requestStack
             ->expects($this->never())
-            ->method('getCurrentRequest')
+            ->method('getSession')
         ;
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
     }
 
@@ -65,13 +79,13 @@ class ToggleNodesLabelListenerTest extends TestCase
             ],
         ];
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->mockRequestStack();
         $requestStack
             ->expects($this->never())
-            ->method('getCurrentRequest')
+            ->method('getSession')
         ;
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
     }
 
@@ -87,13 +101,13 @@ class ToggleNodesLabelListenerTest extends TestCase
             ],
         ];
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->mockRequestStack();
         $requestStack
             ->expects($this->never())
-            ->method('getCurrentRequest')
+            ->method('getSession')
         ;
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
     }
 
@@ -111,7 +125,7 @@ class ToggleNodesLabelListenerTest extends TestCase
 
         $requestStack = $this->mockRequestStackWithSession(null);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
     }
 
@@ -134,7 +148,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $session = $this->mockSessionWithData([]);
         $requestStack = $this->mockRequestStackWithSession($session);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
 
         $this->assertSame('Expand all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
@@ -159,7 +173,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $session = $this->mockSessionWithData(['tl_foobar_tree' => 'foo']);
         $requestStack = $this->mockRequestStackWithSession($session);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
 
         $this->assertSame('Expand all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
@@ -184,7 +198,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $session = $this->mockSessionWithData(['tl_foobar_tree' => [0]]);
         $requestStack = $this->mockRequestStackWithSession($session);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
 
         $this->assertSame('Expand all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
@@ -209,7 +223,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $session = $this->mockSessionWithData(['tl_foobar_tree' => [1]]);
         $requestStack = $this->mockRequestStackWithSession($session);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
 
         $this->assertSame('Collapse all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
@@ -237,7 +251,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $session = $this->mockSessionWithData(['tl_foobar_tl_bar_tree' => [1]]);
         $requestStack = $this->mockRequestStackWithSession($session);
 
-        $listener = new ToggleNodesLabelListener($requestStack);
+        $listener = new ToggleNodesLabelListener($requestStack, $this->mockScopeMatcher());
         $listener('tl_foobar');
 
         $this->assertSame('Collapse all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
@@ -248,7 +262,7 @@ class ToggleNodesLabelListenerTest extends TestCase
      */
     private function mockRequestStackWithSession(?Session $session): RequestStack
     {
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->mockRequestStack();
 
         if (null === $session) {
             $requestStack
@@ -263,6 +277,28 @@ class ToggleNodesLabelListenerTest extends TestCase
                 ->willReturn($session)
             ;
         }
+
+        return $requestStack;
+    }
+
+    /**
+     * @return RequestStack&MockObject
+     */
+    private function mockRequestStack(?string $scope = 'backend'): RequestStack
+    {
+        $attributes = [];
+
+        if ($scope) {
+            $attributes['_scope'] = $scope;
+        }
+        
+        $request = new Request([], [], $attributes);
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
 
         return $requestStack;
     }
