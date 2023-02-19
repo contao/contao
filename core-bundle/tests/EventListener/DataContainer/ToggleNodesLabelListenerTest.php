@@ -290,7 +290,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         if ($scope) {
             $attributes['_scope'] = $scope;
         }
-        
+
         $request = new Request([], [], $attributes);
 
         $requestStack = $this->createMock(RequestStack::class);
