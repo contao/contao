@@ -86,7 +86,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
                 foreach ($themes as $theme) {
                     $packageVersion = $version;
                     $packageName = 'system/themes/'.$theme->getBasename();
-                    $serviceId = 'assets._packages_'.$packageName;
+                    $serviceId = 'assets._package_'.$packageName;
 
                     if (is_file($manifestPath = Path::join($path, $theme->getBasename(), 'manifest.json'))) {
                         $def = new ChildDefinition('assets.json_manifest_version_strategy');
