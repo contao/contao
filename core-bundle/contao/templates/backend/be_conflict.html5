@@ -8,13 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="<?php
-    $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
-    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
-    $objCombiner->add('system/themes/'.$this->theme.'/diff.min.css');
-    echo $objCombiner->getCombinedFile();
-  ?>">
+  <link rel="stylesheet" href="<?= $this->asset('diff.css', 'system/themes/'.$this->theme) ?>">
   <link rel="stylesheet" href="<?= Contao\Controller::addAssetsUrlTo('system/themes/'.$this->theme.'/conflict.min.css') ?>">
   <?= $this->stylesheets ?>
 

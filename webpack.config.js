@@ -12,6 +12,35 @@ Encore
     .addEntry('backend', './core-bundle/assets/backend.js')
 ;
 
-const coreConfig = Encore.getWebpackConfig();
+const jsConfig = Encore.getWebpackConfig();
 
-module.exports = [coreConfig];
+Encore.reset();
+
+Encore
+    .setOutputPath('core-bundle/contao/themes/flexible')
+    .setPublicPath('/system/themes/flexible')
+    .setManifestKeyPrefix('')
+    .cleanupOutputBeforeBuild([
+        '**/*',
+        '!fonts/**',
+        '!icons/**',
+        '!icons-dark/**',
+        '!styles/**',
+    ])
+    .disableSingleRuntimeChunk()
+    .enableSourceMaps()
+    .enableVersioning()
+    .configureCssLoader(config => {
+        config.url = false;
+    })
+    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
+    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
+    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
+    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
+    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
+    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
+;
+
+const themeConfig = Encore.getWebpackConfig();
+
+module.exports = [jsConfig, themeConfig];

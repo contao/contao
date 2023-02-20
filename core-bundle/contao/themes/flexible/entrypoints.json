@@ -1,0 +1,34 @@
+{
+  "entrypoints": {
+    "backend": {
+      "css": [
+        "/system/themes/flexible/backend.184cb3bc.css"
+      ]
+    },
+    "confirm": {
+      "css": [
+        "/system/themes/flexible/confirm.1d753462.css"
+      ]
+    },
+    "diff": {
+      "css": [
+        "/system/themes/flexible/diff.47d6f219.css"
+      ]
+    },
+    "help": {
+      "css": [
+        "/system/themes/flexible/help.7e20191d.css"
+      ]
+    },
+    "login": {
+      "css": [
+        "/system/themes/flexible/login.151677e0.css"
+      ]
+    },
+    "popup": {
+      "css": [
+        "/system/themes/flexible/popup.cce92f0b.css"
+      ]
+    }
+  }
+}
