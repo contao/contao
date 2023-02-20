@@ -496,7 +496,6 @@ class StringUtilTest extends TestCase
         yield [INF, \InvalidArgumentException::class];
         yield [NAN, \InvalidArgumentException::class];
         yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
-        yield ['string', \TypeError::class];
         yield [1.2, \InvalidArgumentException::class, -2];
         yield [1.2, \InvalidArgumentException::class, 0];
         yield [1.2, \InvalidArgumentException::class, 1];

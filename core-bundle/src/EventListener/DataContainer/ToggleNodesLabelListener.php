@@ -20,13 +20,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 class ToggleNodesLabelListener
 {
-    private RequestStack $requestStack;
-    private ScopeMatcher $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher)
+    public function __construct(private RequestStack $requestStack, private ScopeMatcher $scopeMatcher)
     {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(string $table): void
@@ -55,7 +50,7 @@ class ToggleNodesLabelListener
 
         try {
             $session = $this->requestStack->getSession();
-        } catch (SessionNotFoundException $e) {
+        } catch (SessionNotFoundException) {
             return;
         }
 
