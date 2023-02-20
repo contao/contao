@@ -10,7 +10,6 @@
         "gulp-ignore": "^3.0",
         "gulp-rename": "^2.0",
         "gulp-svgo": "^2.2.1",
-        "gulp-uglify-es": "^3.0",
         "pump": "^3.0",
         "webpack": "^5.75.0",
         "webpack-cli": "^5.0.1"
