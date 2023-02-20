@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,14 +21,23 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 class ToggleNodesLabelListener
 {
     private RequestStack $requestStack;
+    private ScopeMatcher $scopeMatcher;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(string $table): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+
+        // Ignore if not in the back end
+        if (!$request || !$this->scopeMatcher->isBackendRequest($request)) {
+            return;
+        }
+
         if (!isset($GLOBALS['TL_DCA'][$table]['list']['global_operations']['toggleNodes'])) {
             return;
         }
