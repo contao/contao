@@ -379,7 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
-        <target>Nízev a typ souboru</target>
+        <target>Název a typ pole</target>
       </trans-unit>
       <trans-unit id="tl_form_field.text_legend">
         <source>Text/HTML</source>

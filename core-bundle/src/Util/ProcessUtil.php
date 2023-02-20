@@ -14,16 +14,24 @@ namespace Contao\CoreBundle\Util;
 
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Symfony\Contracts\Service\ResetInterface;
 
-class ProcessUtil
+class ProcessUtil implements ResetInterface
 {
+    private string|null $phpBinary = null;
+
+    public function __construct(private readonly string $consolePath)
+    {
+    }
+
     /**
      * Creates a GuzzleHttp/Promise for a Symfony Process instance.
      *
      * @param bool $start automatically calls Process::start() if true
      */
-    public static function createPromise(Process $process, bool $start = true): PromiseInterface
+    public function createPromise(Process $process, bool $start = true): PromiseInterface
     {
         $promise = new Promise(
             static function () use (&$promise, $process): void {
@@ -42,5 +50,25 @@ class ProcessUtil
         }
 
         return $promise;
+    }
+
+    public function createSymfonyConsoleProcess(string $command, string ...$commandArguments): Process
+    {
+        return new Process(array_merge([$this->getPhpBinary(), $this->consolePath, $command], $commandArguments));
+    }
+
+    public function reset(): void
+    {
+        $this->phpBinary = null;
+    }
+
+    private function getPhpBinary(): string
+    {
+        if (null === $this->phpBinary) {
+            $executableFinder = new PhpExecutableFinder();
+            $this->phpBinary = $executableFinder->find();
+        }
+
+        return $this->phpBinary;
     }
 }

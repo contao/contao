@@ -95,8 +95,6 @@ class UserPasswordCommand extends Command
             'tl_user',
             [
                 'password' => $hash,
-                'locked' => 0,
-                'loginAttempts' => 0,
                 'pwChange' => (bool) $input->getOption('require-change'),
             ],
             ['username' => $input->getArgument('username')],

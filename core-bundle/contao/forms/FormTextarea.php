@@ -100,8 +100,16 @@ class FormTextarea extends Widget
 
 			case 'size':
 				$arrSize = StringUtil::deserialize($varValue);
-				$this->intRows = $arrSize[0];
-				$this->intCols = $arrSize[1];
+
+				if (isset($arrSize[0]))
+				{
+					$this->intRows = $arrSize[0];
+				}
+
+				if (isset($arrSize[1]))
+				{
+					$this->intCols = $arrSize[1];
+				}
 				break;
 
 			case 'rows':

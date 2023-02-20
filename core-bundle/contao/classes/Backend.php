@@ -444,7 +444,6 @@ abstract class Backend extends Controller
 								'table' => $table,
 								'id' => $objRow->id,
 								'ref' => $request->attributes->get('_contao_referer_id'),
-								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
 							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
@@ -682,7 +681,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getUrl(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1)))) . '" data-icon-disabled="' . Image::getUrl(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0)))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)

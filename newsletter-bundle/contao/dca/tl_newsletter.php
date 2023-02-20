@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},mailerTransport,sender,senderName;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Subpalettes
@@ -215,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('tl_class'=>'w33', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -224,7 +224,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
@@ -234,10 +234,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'senderName' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')

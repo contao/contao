@@ -90,8 +90,8 @@
         <target>Овде можете унети одговор.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>Објави коментар</target>
+        <source>Published</source>
+        <target>Објављено</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

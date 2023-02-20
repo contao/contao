@@ -80,6 +80,7 @@ security:
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
             switch_user: true
+            login_throttling: ~
 
             contao_login:
                 remember_me: false
@@ -92,6 +93,7 @@ security:
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
             switch_user: false
+            login_throttling: ~
 
             contao_login:
                 remember_me: true

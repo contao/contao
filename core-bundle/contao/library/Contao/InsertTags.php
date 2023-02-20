@@ -181,7 +181,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] === 'form_confirmation' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -702,6 +702,18 @@ class InsertTags extends Controller
 					/** @var AutoExpiringAttribute|null $attribute */
 					$attribute = $request?->getSession()->get(Form::SESSION_KEY);
 					$arrCache[$strTag] = $attribute?->getValue()[$elements[1]] ?? null;
+					break;
+
+				// Form confirmation message
+				case 'form_confirmation':
+					if ($request?->getSession()->getFlashBag()->has(Form::SESSION_CONFIRMATION_KEY))
+					{
+						$arrCache[$strTag] = $request->getSession()->getFlashBag()->get(Form::SESSION_CONFIRMATION_KEY)['message'] ?? null;
+					}
+					else
+					{
+						$arrCache[$strTag] = null;
+					}
 					break;
 
 				// Conditional tags (if, if not)
@@ -1448,7 +1460,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{

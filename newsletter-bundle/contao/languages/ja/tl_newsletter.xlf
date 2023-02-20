@@ -162,8 +162,7 @@
         <target>送信状態</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
-        <source>Sent on %s</source>
-        <target>%sに送信済み</target>
+        <source>Sent at %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

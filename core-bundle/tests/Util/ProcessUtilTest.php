@@ -20,13 +20,22 @@ use Symfony\Component\Process\Process;
 
 class ProcessUtilTest extends TestCase
 {
+    public function testCreateSymfonyConsoleProcess(): void
+    {
+        $util = new ProcessUtil('bin/console');
+        $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
+
+        $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
+    }
+
     /**
      * @dataProvider promiseTestProvider
      */
     public function testPromise(bool $successful, bool $autostart): void
     {
+        $util = new ProcessUtil('bin/console');
         $process = $this->mockProcess($successful, $autostart);
-        $promise = ProcessUtil::createPromise($process, $autostart);
+        $promise = $util->createPromise($process, $autostart);
 
         $this->assertTrue(Is::pending($promise));
 
@@ -51,6 +60,13 @@ class ProcessUtilTest extends TestCase
         yield 'Successful, non-autostart promise' => [true, false];
         yield 'Unsuccessful, autostart promise' => [false, true];
         yield 'Unsuccessful,non-autostart promise' => [false, false];
+    }
+
+    private function getCommandLine(Process $process): string
+    {
+        // Remove the PHP binary path and undo proper quoting (not relevant for
+        // this test and required for easier cross-platform CI runs
+        return str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 
     private function mockProcess(bool $isSuccessful, bool $autostart): Process

@@ -117,7 +117,7 @@ class ModulePersonalData extends Module
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id)));
 		$objVersions->initialize();
 
 		$arrSubmitted = array();
@@ -199,6 +199,7 @@ class ModulePersonalData extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
+			$objWidget->currentRecord = $objMember->id;
 
 			if ($objWidget instanceof FormPassword && $objMember->password)
 			{

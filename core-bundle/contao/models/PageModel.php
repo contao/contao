@@ -820,14 +820,7 @@ class PageModel extends Model
 	 */
 	public static function findWithDetails($intId)
 	{
-		$objPage = static::findByPk($intId);
-
-		if ($objPage === null)
-		{
-			return null;
-		}
-
-		return $objPage->loadDetails();
+		return static::findByPk($intId)?->loadDetails();
 	}
 
 	/**
@@ -879,7 +872,7 @@ class PageModel extends Model
 
 		// Set some default values
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : 0;
+		$this->layout = ($this->includeLayout && $this->layout) ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : 0;
@@ -1171,7 +1164,7 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		$context->setBaseUrl(rtrim(\dirname($baseUrl), '/') . $previewScript);
+		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
 		$objRouter = System::getContainer()->get('router');
 

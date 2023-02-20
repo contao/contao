@@ -1,4 +1,6 @@
 {
-  "backend.js": "/bundles/contaocore/backend.c9c34f6e.js",
-  "backend.c9c34f6e.js.map": "/bundles/contaocore/backend.c9c34f6e.js.map"
+  "ajax-form.js": "/bundles/contaocore/ajax-form.8d9f14a4.js",
+  "backend.js": "/bundles/contaocore/backend.b6443d10.js",
+  "ajax-form.8d9f14a4.js.map": "/bundles/contaocore/ajax-form.8d9f14a4.js.map",
+  "backend.b6443d10.js.map": "/bundles/contaocore/backend.b6443d10.js.map"
 }

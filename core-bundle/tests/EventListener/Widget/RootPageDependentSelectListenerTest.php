@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -39,8 +38,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -58,19 +56,12 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->willReturn('title')
         ;
 
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
-        $csrfTokenManager
-            ->expects($this->exactly(3))
-            ->method('getDefaultTokenValue')
-        ;
-
         System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
 
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $translator,
-            $csrfTokenManager,
+            $translator
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -91,8 +82,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
@@ -106,8 +96,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertSame(
@@ -139,8 +128,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertSame(
@@ -183,8 +171,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertSame(

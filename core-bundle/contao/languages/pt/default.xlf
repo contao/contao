@@ -160,9 +160,8 @@
         <source>Your username and password must not be the same!</source>
         <target>Seu nome de usuário e senha não podem ser os mesmos!</target>
       </trans-unit>
-      <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>Esta conta foi bloqueada! Você pode realizar o login em $d minutos.</target>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -357,6 +356,12 @@
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1552,14 +1557,6 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Este aparenta ser o seu primeiro inicio de sessão. Bem-Vindo ao Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-        <target>Tentativas de inicio de sessão</target>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-        <target>Bloqueado</target>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
         <target>Mover o item via arrastar e largar</target>
@@ -1983,6 +1980,15 @@
         <source>Collapse node</source>
         <target>Fechar nó</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Carregamento de dados</target>
@@ -2006,6 +2012,9 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
         <target>Copiar</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2092,8 +2101,7 @@
         <target>protegido</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
-        <target>Convidados</target>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2472,7 +2480,7 @@
         <target>Lembre-me</target>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
         <target>Criado em</target>
       </trans-unit>
       <trans-unit id="MSC.activation">
@@ -2634,6 +2642,15 @@
         <source>Trust this device</source>
         <target>Confie neste aparelho</target>
       </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+      </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
         <target>Existe pelo menos um utilizador regular com acesso ao editor de templates. Uma vez que os templates são ficheiros PHP, estes utilizadores têem implicitamente controlo total sobre o sistema!</target>
@@ -2754,6 +2771,15 @@
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

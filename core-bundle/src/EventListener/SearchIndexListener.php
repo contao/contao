@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Search\Document;
-use Contao\CoreBundle\Search\Indexer\IndexerException;
-use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * @internal
@@ -29,7 +29,7 @@ class SearchIndexListener
     final public const FEATURE_DELETE = 0b10;
 
     public function __construct(
-        private IndexerInterface $indexer,
+        private MessageBusInterface $messageBus,
         private string $fragmentPath = '_fragment',
         private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
     ) {
@@ -49,19 +49,14 @@ class SearchIndexListener
         $request = $event->getRequest();
         $document = Document::createFromRequestResponse($request, $response);
         $needsIndex = $this->needsIndex($request, $response, $document);
+        $success = $event->getResponse()->isSuccessful();
 
-        try {
-            $success = $event->getResponse()->isSuccessful();
+        if ($needsIndex && $success && $this->enabledFeatures & self::FEATURE_INDEX) {
+            $this->messageBus->dispatch(SearchIndexMessage::createWithIndex($document));
+        }
 
-            if ($needsIndex && $success && $this->enabledFeatures & self::FEATURE_INDEX) {
-                $this->indexer->index($document);
-            }
-
-            if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
-                $this->indexer->delete($document);
-            }
-        } catch (IndexerException) {
-            // ignore
+        if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
+            $this->messageBus->dispatch(SearchIndexMessage::createWithDelete($document));
         }
     }
 

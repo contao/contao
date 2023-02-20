@@ -11,25 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News archive permissions</source>
+        <target>Permisos de archivo de noticias</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news archive permissions.</source>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Feeds de noticias permitidos</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Aquí puede conceder el acceso a una o mas fuentes de noticia. </target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Permisos de noticias en tiempo real</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Aquí puede definir los permisos de fuentes de noticia.</target>
+        <target>Aquí puede definir los permisos del archivo de noticias.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>

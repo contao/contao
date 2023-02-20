@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Util;
 /**
  * @template TKey
  * @template TValue
+ *
  * @implements \IteratorAggregate<TKey, TValue>
  */
 class CachingTraversable implements \IteratorAggregate

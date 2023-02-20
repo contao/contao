@@ -42,10 +42,7 @@ class ContentAccordion extends ContentElement
 				->enableLightbox($this->fullsize)
 				->buildIfResourceExists();
 
-			if (null !== $figure)
-			{
-				$figure->applyLegacyTemplateData($this->Template, null, $this->floating);
-			}
+			$figure?->applyLegacyTemplateData($this->Template, null, $this->floating);
 		}
 
 		$classes = StringUtil::deserialize($this->mooClasses, true) + array(null, null);

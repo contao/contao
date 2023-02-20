@@ -17,7 +17,7 @@ window.tinymce && tinymce.init({
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   promotion: false,
-  skin: 'tinymce-5',
+  skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),
   setup: function(editor) {
     editor.getElement().removeAttribute('required');
     document.querySelectorAll('[accesskey]').forEach(function(el) {
@@ -44,7 +44,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('content_css'); ?>
-    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+    content_css: 'system/themes/<?= Backend::getTheme() ?>/' + (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-dark.min.css' :  'tinymce.min.css'),
   <?php $this->endblock(); ?>
 
   <?php $this->block('plugins'); ?>

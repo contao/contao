@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
+        <target>Här kan du ange filens metadata. För att lägga till ett språk, skapa en matchande webbplatsrotsida.</target>
       </trans-unit>
       <trans-unit id="tl_files.metaRgxpError">
         <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>

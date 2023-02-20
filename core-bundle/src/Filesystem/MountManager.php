@@ -27,14 +27,16 @@ use Symfony\Component\Filesystem\Path;
  * the path (prefix) each adapter is registered with.
  *
  * Note: In general, user code should not directly interface with the
- *       MountManager, but use the @see VirtualFilesystem instead.
+ *       MountManager, but use the VirtualFilesystem instead.
+ *
+ * @see VirtualFilesystem
  *
  * @experimental
  */
 class MountManager
 {
     /**
-     * @var array<string, FilesystemAdapter>
+     * @var array<string|int, FilesystemAdapter>
      */
     private array $mounts = [];
 
@@ -49,13 +51,13 @@ class MountManager
     {
         $this->mounts[$path] = $adapter;
 
-        krsort($this->mounts);
+        krsort($this->mounts, SORT_NATURAL);
 
         return $this;
     }
 
     /**
-     * @return array<string, FilesystemAdapter>
+     * @return array<string|int, FilesystemAdapter>
      */
     public function getMounts(): array
     {
@@ -289,7 +291,7 @@ class MountManager
         $virtualPathsSet = [];
 
         foreach (array_keys($this->mounts) as $mountPath) {
-            $relativeSearchPath = Path::makeRelative($mountPath, $path);
+            $relativeSearchPath = Path::makeRelative((string) $mountPath, $path);
 
             if ('' === $relativeSearchPath || str_starts_with($relativeSearchPath, '..')) {
                 continue;
@@ -302,7 +304,7 @@ class MountManager
             $virtualPathsSet[$mountPath] = true;
         }
 
-        ksort($virtualPathsSet);
+        ksort($virtualPathsSet, SORT_NATURAL);
 
         // Yield items and track all traversed directories
         foreach ($this->doListContents($path, $deep) as $item) {
@@ -315,10 +317,10 @@ class MountManager
 
         // Yield remaining virtual paths
         foreach (array_keys($virtualPathsSet) as $virtualPath) {
-            yield new FilesystemItem(false, $virtualPath);
+            yield new FilesystemItem(false, (string) $virtualPath);
 
             if ($deep) {
-                yield from $this->doListContents($virtualPath, true);
+                yield from $this->doListContents((string) $virtualPath, true);
             }
         }
     }

@@ -159,11 +159,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sent">
         <source>Sent</source>
-        <target>Gönder</target>
+        <target>Gönderildi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
-        <source>Sent on %s</source>
-        <target>%s zamanında gönder</target>
+        <source>Sent at %s</source>
+        <target>%s zamanında gönderildi</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

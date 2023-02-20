@@ -36,21 +36,12 @@ class MethodDefinition
 
     public function getBody(): string
     {
-        switch ($this->returnType) {
-            case 'string':
-                return "return '';";
-
-            case '?string':
-                return 'return null;';
-
-            case 'array':
-                return 'return [];';
-
-            case 'bool':
-                return 'return true;';
-
-            default:
-                return '// Do something';
-        }
+        return match ($this->returnType) {
+            'string' => "return '';",
+            '?string' => 'return null;',
+            'array' => 'return [];',
+            'bool' => 'return true;',
+            default => '// Do something',
+        };
     }
 }

@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\DeferredImageInterface;
+use Symfony\Component\Filesystem\Path;
 
 class Image
 {
@@ -56,12 +58,6 @@ class Image
 		}
 
 		$theme = Backend::getTheme();
-
-		if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-		{
-			return 'system/themes/' . $theme . '/icons/' . $src;
-		}
-
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
 		// Prefer SVG icons
@@ -144,6 +140,23 @@ class Image
 		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
 			$src = substr($src, \strlen($webDir) + 1);
+		}
+
+		// Check for a dark theme icon and return a picture element if there is one
+		if ($objFile->mime == 'image/svg+xml' && str_contains($src, 'system/themes/'))
+		{
+			$darkSrc = 'system/themes/' . Backend::getTheme() . '/icons-dark/' . $objFile->filename . '.svg';
+
+			if (file_exists(Path::join($projectDir, $darkSrc)))
+			{
+				$darkAttributes = new HtmlAttributes($attributes);
+				$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
+
+				$lightAttributes = new HtmlAttributes($attributes);
+				$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
+
+				return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
+			}
 		}
 
 		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';

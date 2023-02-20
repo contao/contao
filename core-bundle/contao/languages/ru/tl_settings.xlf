@@ -41,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Выберите часовой пояс сервера.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableCron.0">
-        <source>Disable the command scheduler</source>
-        <target>Отключить планировщик команд</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
-        <target>Отключить планировщик периодических команд и запускать &lt;em&gt;_contao/cron&lt;/em&gt; как задания cron (необходимо установить вручную).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
         <target>Элементов на странице</target>
@@ -180,10 +172,6 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>Настройки загрузки на сервер</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Cron job settings</source>
-        <target>Настройки заданий cron</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

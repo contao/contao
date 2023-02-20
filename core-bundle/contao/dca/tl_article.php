@@ -535,8 +535,8 @@ class tl_article extends Backend
 
 		$attributes = sprintf(
 			'data-icon="%s" data-icon-disabled="%s"',
-			Image::getUrl($row['protected'] ? 'articles_2.svg' : 'articles.svg'),
-			Image::getUrl($row['protected'] ? 'articles_3.svg' : 'articles_1.svg'),
+			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
+			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
@@ -861,6 +861,6 @@ class tl_article extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 }

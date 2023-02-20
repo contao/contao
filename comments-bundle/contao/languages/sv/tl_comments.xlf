@@ -90,7 +90,7 @@
         <target>Ange ditt svar till kommentaren.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
+        <source>Published</source>
         <target>Publicerad</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">

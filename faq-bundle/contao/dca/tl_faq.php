@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
@@ -104,9 +104,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'sorting' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
@@ -116,7 +113,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'question' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
@@ -138,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',

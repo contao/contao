@@ -131,10 +131,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,perRow,fullsize,perPage,numberOfItems;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
-		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerSize,playerOptions,playerStart,playerStop,playerCaption,playerPreload;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,youtubeOptions,playerStart,playerStop,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},playerSize,vimeoOptions,playerStart,playerColor,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
+		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},youtubeOptions,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -345,19 +345,19 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'thead' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tfoot' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tleft' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'sortable' => array
@@ -598,13 +598,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerStart' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerStop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerCaption' => array
@@ -639,7 +639,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'youtubeOptions' => array
@@ -664,26 +664,26 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
 		),
 		'sliderStartSlide' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sliderContinuous' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
@@ -1310,7 +1310,7 @@ class tl_content extends Backend
 		}
 
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1', 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}
@@ -1357,7 +1357,7 @@ class tl_content extends Backend
 		}
 
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1', 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}
@@ -1648,6 +1648,6 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

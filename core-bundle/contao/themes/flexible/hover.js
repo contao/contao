@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
-var Theme = {
+Theme = {
 
 	/**
 	 * Check for WebKit
@@ -209,16 +209,15 @@ var Theme = {
 	 * Hide the menu on scroll
 	 */
 	hideMenuOnScroll: function() {
-		if (!$('header')) {
-			return;
-		}
+		var header = $('header');
+		if (!header) return;
 
 		var wh = window.getSize().y,
 			dh = window.getScrollSize().y - wh,
 			anchor = 0;
 
 		if (!('ontouchmove' in window) || wh >= dh) {
-			$('header').removeClass('down');
+			header.removeClass('down');
 			return;
 		}
 
@@ -229,16 +228,16 @@ var Theme = {
 				if (Math.abs(anchor - ws) < 20) return;
 
 				if (ws > 0 && ws > anchor) {
-					$('header').addClass('down');
+					header.addClass('down');
 				} else {
-					$('header').removeClass('down');
+					header.removeClass('down');
 				}
 
 				anchor = ws;
 			})
 			.addEvent('scroll', function() {
 				if (window.getScroll().y < 1) {
-					$('header').removeClass('down');
+					header.removeClass('down');
 				}
 			})
 		;

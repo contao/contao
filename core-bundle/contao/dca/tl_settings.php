@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{security_legend:hide},allowedTags,allowedAttributes;{files_legend:hide},allowedDownload;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{security_legend:hide},allowedTags,allowedAttributes;{files_legend:hide},allowedDownload;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -32,18 +32,18 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'dateFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'datimFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'timeZone' => array
 		(
@@ -52,17 +52,12 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			{
 				return array_values(DateTimeZone::listIdentifiers());
 			},
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w25')
 		),
 		'adminEmail' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'tl_class'=>'w50')
-		),
-		'disableCron' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
 		),
 		'resultsPerPage' => array
 		(

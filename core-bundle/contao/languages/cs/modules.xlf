@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Účty</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -161,6 +162,12 @@
         <source>Change your personal data or set a new password</source>
         <target>Tento modul umožňuje změnit osobní údaje nebo nastavit nové heslo</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>Elementy pro vytváření obsahu</target>
@@ -183,7 +190,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
-        <target>Muduly frontendu</target>
+        <target>Moduly frontendu</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
@@ -398,12 +405,17 @@
         <target>Vytvoří modul pro vložení vlastní předlohy.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>RSS čtečka</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Import RSS</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

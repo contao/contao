@@ -12,8 +12,8 @@ services:
         arguments:
             - '@kernel'
 
-    contao_manager.command.install_web_dir:
-        class: Contao\ManagerBundle\Command\InstallWebDirCommand
+    contao_manager.command.install_skeleton:
+        class: Contao\ManagerBundle\Command\InstallSkeletonCommand
         arguments:
             - '%kernel.project_dir%'
 

@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_news.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Aquí puede anular el texto del enlace predeterminado &quot;leer más...&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -290,6 +291,7 @@
       </trans-unit>
       <trans-unit id="tl_news.children">
         <source>Edit the content elements of news item ID %s</source>
+        <target>Edite los elementos de contenido de la ID de la noticia %s</target>
       </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>

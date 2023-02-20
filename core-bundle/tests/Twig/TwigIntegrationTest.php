@@ -14,11 +14,14 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -184,5 +187,54 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame($expectedOutput, $output);
 
         $this->resetStaticProperties([Highlighter::class]);
+    }
+
+    public function testPreservesSafetyInInsertTagFilters(): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            {{ '<i>foo</i>{{br}}'|insert_tag_raw }}
+            {{ unsafe|raw|insert_tag }}
+            {{ unsafe|insert_tag_raw }}
+            TEMPLATE;
+
+        // With 'preserve_safety' set, we expect the unescaped versions in the first
+        // two lines, while the unsafe parameter is still escaped (last line):
+        $expectedOutput = <<<'TEMPLATE'
+            <i>foo</i><br>
+            <i>foo</i><br>
+            &lt;i&gt;foo&lt;/i&gt;<br>
+            TEMPLATE;
+
+        $parser = $this->createMock(InsertTagParser::class);
+        $parser
+            ->method('replaceChunked')
+            ->willReturnCallback(
+                static fn (string $input): ChunkedText => match ($input) {
+                    '<i>foo</i>{{br}}' => new ChunkedText(['<i>foo</i>', '<br>']),
+                    default => new ChunkedText([$input])
+                }
+            )
+        ;
+
+        $parser
+            ->method('replaceInline')
+            ->with('<i>foo</i>{{br}}')
+            ->willReturn('<i>foo</i><br>')
+        ;
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+        $environment->addRuntimeLoader(new FactoryRuntimeLoader([InsertTagRuntime::class => static fn () => new InsertTagRuntime($parser)]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
+
+        $output = $environment->render('test.html.twig', ['unsafe' => '<i>foo</i>{{br}}']);
+
+        $this->assertSame($expectedOutput, $output);
     }
 }

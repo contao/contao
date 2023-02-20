@@ -41,7 +41,7 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(private string $projectDir, string $webDir, private string|null $kernelSecret, \Closure $createProcessHandler = null)
+    public function __construct(private string $projectDir, string $webDir, #[\SensitiveParameter] private string|null $kernelSecret, \Closure $createProcessHandler = null)
     {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
@@ -93,7 +93,7 @@ class ContaoSetupCommand extends Command
         }
 
         $commands = [
-            ['contao:install-web-dir', $this->webDir, '--env=prod'],
+            ['skeleton:install', $this->webDir, '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
             ['contao:symlinks', $this->webDir, '--env=prod'],
@@ -140,18 +140,11 @@ class ContaoSetupCommand extends Command
 
     private function getVerbosityFlag(OutputInterface $output): string
     {
-        switch ($output->getVerbosity()) {
-            case OutputInterface::VERBOSITY_DEBUG:
-                return '-vvv';
-
-            case OutputInterface::VERBOSITY_VERY_VERBOSE:
-                return '-vv';
-
-            case OutputInterface::VERBOSITY_VERBOSE:
-                return '-v';
-
-            default:
-                return '';
-        }
+        return match ($output->getVerbosity()) {
+            OutputInterface::VERBOSITY_DEBUG => '-vvv',
+            OutputInterface::VERBOSITY_VERY_VERBOSE => '-vv',
+            OutputInterface::VERBOSITY_VERBOSE => '-v',
+            default => '',
+        };
     }
 }

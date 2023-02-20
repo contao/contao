@@ -122,8 +122,8 @@
       <trans-unit id="ERR.passwordName">
         <source>Your username and password must not be the same!</source>
       </trans-unit>
-      <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -274,6 +274,12 @@
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href="%s" target="_top"&gt;system settings&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1178,12 +1184,6 @@
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
-        <source>Login attempts</source>
-      </trans-unit>
-      <trans-unit id="MSC.locked">
-        <source>Locked</source>
-      </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
       </trans-unit>
@@ -1529,6 +1529,9 @@
       <trans-unit id="MSC.copySelected">
         <source>Copy</source>
       </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+      </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
       </trans-unit>
@@ -1593,7 +1596,7 @@
         <source>protected</source>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>Guests</source>
+        <source>Guests (not logged in)</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -1878,7 +1881,7 @@
         <source>Remember me</source>
       </trans-unit>
       <trans-unit id="MSC.createdOn">
-        <source>Created on</source>
+        <source>Created at</source>
       </trans-unit>
       <trans-unit id="MSC.activation">
         <source>Activation token</source>
@@ -2107,6 +2110,12 @@
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
