@@ -3462,6 +3462,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		if (isset($new_records[$this->strTable]))
+		{
+			unset($new_records[$this->strTable]);
+			$objSessionBag->set('new_records', $new_records);
+		}
+
 		// Delete all new but incomplete records (tstamp=0)
 		if ($strReviseTable = Input::get('revise'))
 		{
