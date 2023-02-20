@@ -27,6 +27,7 @@ use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\InMemoryQueue;
+use Terminal42\Escargot\Queue\LazyQueue;
 
 class CrawlCommandTest extends TestCase
 {
@@ -93,6 +94,57 @@ class CrawlCommandTest extends TestCase
         $this->assertSame(20, $command->getEscargot()->getRequestDelay());
         $this->assertSame(20, $command->getEscargot()->getMaxRequests());
         $this->assertSame(20, $command->getEscargot()->getMaxDepth());
+    }
+
+    public function testSubsequentCrawlCommandsWithDoctrineQueue(): void
+    {
+        $client = new MockHttpClient();
+        $queue = new InMemoryQueue();
+        $escargotFactory = $this->createMock(Factory::class);
+        $escargotFactory
+            ->expects($this->exactly(2))
+            ->method('getCrawlUriCollection')
+            ->willReturn($this->getBaseUriCollection())
+        ;
+
+        $jobId = null;
+
+        $escargotFactory
+            ->expects($this->once())
+            ->method('create')
+            ->willReturnCallback(
+                function () use ($client, $queue, &$jobId) {
+                    $escargot = Escargot::create($this->getBaseUriCollection(), $queue)->withHttpClient($client);
+                    $jobId = $escargot->getJobId();
+
+                    return $escargot;
+                }
+            )
+        ;
+
+        $escargotFactory
+            ->expects($this->exactly(2))
+            ->method('createLazyQueue')
+            ->willReturn(new LazyQueue(new InMemoryQueue(), $queue))
+        ;
+
+        $escargotFactory
+            ->expects($this->once())
+            ->method('createFromJobId')
+            ->willReturnCallback(static fn (string $jobId) => Escargot::createFromJobId($jobId, $queue)->withHttpClient($client))
+        ;
+
+        $command = new CrawlCommand($escargotFactory, new Filesystem());
+
+        $tester = new CommandTester($command);
+        $tester->execute(['-q' => 'doctrine']);
+
+        $expectCli = sprintf('[Job ID: %s]', $jobId);
+
+        $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
+
+        $tester->execute(['-q' => 'doctrine', 'job' => $jobId]);
+        $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
     }
 
     public function testEmitsWarningIfLocalhostIsInCollection(): void
@@ -172,6 +224,11 @@ class CrawlCommandTest extends TestCase
             $escargotFactory
                 ->expects($this->never())
                 ->method('create')
+            ;
+
+            $escargotFactory
+                ->expects($this->never())
+                ->method('createLazyQueue')
             ;
 
             return $escargotFactory;

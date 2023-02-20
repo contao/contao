@@ -68,6 +68,7 @@ class CrawlCommand extends Command
     {
         $this
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
+            ->addOption('queue', 'q', InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
@@ -86,7 +87,6 @@ class CrawlCommand extends Command
         $io->title('Contao Crawler');
 
         $subscribers = $input->getOption('subscribers');
-        $queue = new InMemoryQueue();
         $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
         if ($baseUris->containsHost('localhost')) {
@@ -94,6 +94,20 @@ class CrawlCommand extends Command
         }
 
         try {
+            switch ($input->getOption('queue')) {
+                case 'memory':
+                    $queue = new InMemoryQueue();
+                    break;
+                case 'doctrine':
+                    $queue = $this->escargotFactory->createLazyQueue();
+                    break;
+
+                default:
+                    $io->error('Only "memory" or "doctrine" are allowed for the "queue" option.');
+
+                    return 1;
+            }
+
             if ($jobId = $input->getArgument('job')) {
                 $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
             } else {
@@ -127,7 +141,12 @@ class CrawlCommand extends Command
 
         $output->writeln('');
         $output->writeln('');
-        $io->comment('Finished crawling! Find the details for each subscriber below:');
+        $io->comment(
+            sprintf(
+                '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
+                $this->escargot->getJobId()
+            )
+        );
 
         $errored = false;
 
