@@ -211,7 +211,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
 								 ->execute($strEmail, strtotime('-24 hours'));
 

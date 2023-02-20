@@ -187,6 +187,14 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.toggle_nodes_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
