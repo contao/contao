@@ -666,6 +666,14 @@ services:
             - '@database_connection'
             - '@contao.routing.page_registry'
 
+    contao.routing.page_finder:
+        class: Contao\CoreBundle\Routing\PageFinder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.nested_matcher'
+            - '@contao.routing.nested_404_matcher'
+
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
         public: true

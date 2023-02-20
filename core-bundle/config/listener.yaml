@@ -434,6 +434,7 @@ services:
             - '@security.helper'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+            - '@contao.routing.page_finder'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, priority: -96 }
