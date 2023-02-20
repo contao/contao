@@ -133,37 +133,25 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
-        if ('dev' !== $kernel->getEnvironment()) {
-            return null;
+        $routeCollection = new RouteCollection();
+
+        if ('dev' === $kernel->getEnvironment()) {
+            $files = [
+                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+            ];
+
+            foreach ($files as $prefix => $file) {
+                /** @var RouteCollection $collection */
+                $collection = $resolver->resolve($file)->load($file);
+                $collection->addPrefix($prefix);
+
+                $routeCollection->addCollection($collection);
+            }
         }
-
-        $collections = [];
-
-        $files = [
-            '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
-        ];
-
-        foreach ($files as $prefix => $file) {
-            /** @var RouteCollection $collection */
-            $collection = $resolver->resolve($file)->load($file);
-            $collection->addPrefix($prefix);
-
-            $collections[] = $collection;
-        }
-
-        $collection = array_reduce(
-            $collections,
-            static function (RouteCollection $carry, RouteCollection $item): RouteCollection {
-                $carry->addCollection($item);
-
-                return $carry;
-            },
-            new RouteCollection()
-        );
 
         // Redirect the deprecated install.php file
-        $collection->add(
+        $routeCollection->add(
             'contao_install_redirect',
             new Route(
                 '/install.php',
@@ -176,7 +164,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             )
         );
 
-        return $collection;
+        return $routeCollection;
     }
 
     public function getApiFeatures(): array
