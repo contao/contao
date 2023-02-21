@@ -88,6 +88,14 @@ class BackendAccessVoter extends Voter implements ResetInterface
      */
     private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
     {
+        if ($user->isAdmin) {
+            return true;
+        }
+
+        if (null === $subject) {
+            return \is_array($user->$field) && 0 !== \count($user->$field);
+        }
+
         if (!\is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
