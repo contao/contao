@@ -219,7 +219,7 @@ class Files
 
 			$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName, true);
 		}
-		catch (IOException)
+		catch (IOException $e)
 		{
 			return false;
 		}
@@ -283,7 +283,7 @@ class Files
 		{
 			(new Filesystem())->remove($this->strRootDir . '/' . $strFile);
 		}
-		catch (IOException)
+		catch (IOException $e)
 		{
 			return false;
 		}
