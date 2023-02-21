@@ -100,6 +100,8 @@ security:
             user_checker: contao.security.user_checker
             switch_user: false
             login_throttling: ~
+            access_token:
+                token_handler: contao.security.access_token_handler
 
             contao_login:
                 remember_me: true
