@@ -27,9 +27,9 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function renderModule(string|int $type, array $data = []): string
+    public function renderModule(string|int $typeOrId, array $data = []): string
     {
-        $model = $this->getModel(ModuleModel::class, $type, $data);
+        $model = $this->getModel(ModuleModel::class, $typeOrId, $data);
 
         return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
     }
