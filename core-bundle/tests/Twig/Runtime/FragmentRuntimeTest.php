@@ -26,11 +26,13 @@ class FragmentRuntimeTest extends TestCase
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
-            ->with($this->callback(function (ModuleModel $model) {
-                $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], $model->row());
+            ->with($this->callback(
+                function (ModuleModel $model) {
+                    $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], $model->row());
 
-                return true;
-            }))
+                    return true;
+                }
+            ))
             ->willReturn('runtime-result')
         ;
 
@@ -52,11 +54,13 @@ class FragmentRuntimeTest extends TestCase
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
-            ->with($this->callback(function (ModuleModel $model) {
-                $this->assertSame(['id' => 42, 'type' => 'navigation', 'foo' => 'bar'], $model->row());
+            ->with($this->callback(
+                function (ModuleModel $model) {
+                    $this->assertSame(['id' => 42, 'type' => 'navigation', 'foo' => 'bar'], $model->row());
 
-                return true;
-            }))
+                    return true;
+                }
+            ))
             ->willReturn('runtime-result')
         ;
 
@@ -70,7 +74,7 @@ class FragmentRuntimeTest extends TestCase
 
         $framework = $this->mockContaoFramework([
             Controller::class => $controllerAdapter,
-            ModuleModel::class => $moduleAdapter
+            ModuleModel::class => $moduleAdapter,
         ]);
 
         $runtime = new FragmentRuntime($framework);
@@ -85,11 +89,13 @@ class FragmentRuntimeTest extends TestCase
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
-            ->with($this->callback(function (ContentModel $model) {
-                $this->assertSame(['type' => 'text', 'foo' => 'bar'], $model->row());
+            ->with($this->callback(
+                function (ContentModel $model) {
+                    $this->assertSame(['type' => 'text', 'foo' => 'bar'], $model->row());
 
-                return true;
-            }))
+                    return true;
+                }
+            ))
             ->willReturn('runtime-result')
         ;
 
@@ -111,11 +117,13 @@ class FragmentRuntimeTest extends TestCase
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
-            ->with($this->callback(function (ContentModel $model) {
-                $this->assertSame(['id' => 42, 'type' => 'text', 'foo' => 'bar'], $model->row());
+            ->with($this->callback(
+                function (ContentModel $model) {
+                    $this->assertSame(['id' => 42, 'type' => 'text', 'foo' => 'bar'], $model->row());
 
-                return true;
-            }))
+                    return true;
+                }
+            ))
             ->willReturn('runtime-result')
         ;
 
@@ -129,7 +137,7 @@ class FragmentRuntimeTest extends TestCase
 
         $framework = $this->mockContaoFramework([
             Controller::class => $controllerAdapter,
-            ContentModel::class => $contentAdapter
+            ContentModel::class => $contentAdapter,
         ]);
 
         $runtime = new FragmentRuntime($framework);
