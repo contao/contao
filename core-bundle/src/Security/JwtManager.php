@@ -18,6 +18,9 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 class JwtManager
 {
+    /**
+     * @param non-empty-string $secret
+     */
     public function __construct(string $secret, private Configuration|null $configuration = null)
     {
         $this->configuration = $configuration ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
@@ -49,6 +52,7 @@ class JwtManager
         $parser = new Parser(new JoseEncoder());
 
         try {
+            /** @var UnencryptedToken $token */
             $token = $parser->parse($data);
         } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound) {
             return null;
