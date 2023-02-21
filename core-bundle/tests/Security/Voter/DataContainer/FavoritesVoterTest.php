@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter;
+namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -18,14 +18,14 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\BackendFavoritesVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
 
-class BackendFavoritesVoterTest extends TestCase
+class FavoritesVoterTest extends TestCase
 {
     public function testVoter(): void
     {
@@ -50,7 +50,7 @@ class BackendFavoritesVoterTest extends TestCase
             )
         ;
 
-        $voter = new BackendFavoritesVoter($security, $connection);
+        $voter = new FavoritesVoter($security, $connection);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_favorites'));
         $this->assertTrue($voter->supportsType(CreateAction::class));

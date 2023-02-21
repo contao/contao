@@ -93,7 +93,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
                 $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
-
                 $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {

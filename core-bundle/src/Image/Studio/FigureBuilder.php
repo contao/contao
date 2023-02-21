@@ -666,6 +666,9 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
+        /**
+         * @param ImageInterface|string $target Image object, URL or absolute file path
+         */
         $getResourceOrUrl = function ($target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
@@ -682,11 +685,12 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
-
-            $filePath = Path::isAbsolute($target)
-                ? Path::canonicalize($target)
-                : Path::makeAbsolute($target, $this->projectDir);
+            if (Path::isAbsolute($target)) {
+                $filePath = Path::canonicalize($target);
+            } else {
+                // URL relative to the project directory
+                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            }
 
             if (!is_file($filePath)) {
                 $filePath = null;

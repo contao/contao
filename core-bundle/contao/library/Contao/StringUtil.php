@@ -1115,6 +1115,17 @@ class StringUtil
 			$precision = (int) \ini_get('precision');
 		}
 
+		// Special value from PHP ini
+		if ($precision === -1)
+		{
+			$precision = 14;
+		}
+
+		if ($precision <= 1)
+		{
+			throw new \InvalidArgumentException(sprintf('Precision must be greater than 1, "%s" given.', $precision));
+		}
+
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
 			throw new \InvalidArgumentException(sprintf('Unable to convert "%s" into a string representation.', $number));
