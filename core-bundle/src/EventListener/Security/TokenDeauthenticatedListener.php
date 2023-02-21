@@ -18,11 +18,8 @@ use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 
 class TokenDeauthenticatedListener
 {
-    private RememberMeRepository $rememberMeRepository;
-
-    public function __construct(RememberMeRepository $rememberMeRepository)
+    public function __construct(private RememberMeRepository $rememberMeRepository)
     {
-        $this->rememberMeRepository = $rememberMeRepository;
     }
 
     public function __invoke(TokenDeauthenticatedEvent $tokenDeauthenticatedEvent): void
