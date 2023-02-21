@@ -19,10 +19,8 @@ class CspParser
     /**
      * @param string $cspString The Content-Security-Policy header content.
      */
-    public function fromCspHeader(string $cspString): CSPBuilder
+    public function parse(CSPBuilder $csp, string $cspString): CSPBuilder
     {
-        $csp = new CSPBuilder();
-
         $directives = explode(';', $cspString);
 
         foreach ($directives as $directive) {

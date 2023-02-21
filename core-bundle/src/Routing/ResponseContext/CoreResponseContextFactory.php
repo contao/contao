@@ -120,8 +120,10 @@ class CoreResponseContextFactory
         ;
 
         if ($pageModel->enableCsp) {
+            $csp = new CSPBuilder();
+
             if ($cspHeader = trim((string) $pageModel->csp)) {
-                $csp = $this->cspParser->fromCspHeader($cspHeader);
+                $csp = $this->cspParser->parse($csp, $cspHeader);
             } else {
                 $csp = new CSPBuilder();
                 $csp->setSelfAllowed('default-src', true);

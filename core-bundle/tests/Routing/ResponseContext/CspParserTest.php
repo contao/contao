@@ -49,7 +49,7 @@ class CspParserTest extends TestCase
         yield ["img-src 'self' data:; script-src 'self' example.com"];
         yield ["frame-ancestors 'self' https://example.org https://example.com https://store.example.com"];
         yield ["default-src 'self'; script-src https://example.com"];
-        yield ["base-uri 'self'"];
+        yield ["base-uri 'self'; report-to https://example.org/csp"];
         yield ["font-src https://example.com/"];
     }
 }
