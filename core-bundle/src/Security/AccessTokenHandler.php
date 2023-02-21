@@ -30,7 +30,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
     public function __construct(
         private readonly AccessTokenRepository $accessTokenRepository,
         string $secret,
-        private Configuration|null $configuration = null
+        private Configuration|null $configuration = null,
     ) {
         $this->configuration = $configuration ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
         $this->configuration->setValidationConstraints(new SignedWith($this->configuration->signer(), $this->configuration->signingKey()));
@@ -76,7 +76,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         return $token;
     }
 
-    public function validateToken(UnencryptedToken $token, string $username) :bool
+    public function validateToken(UnencryptedToken $token, string $username): bool
     {
         $claims = $token->claims();
         $now = new \DateTimeImmutable();
