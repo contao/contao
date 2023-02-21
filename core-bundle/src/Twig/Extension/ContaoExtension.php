@@ -27,6 +27,7 @@ use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -190,6 +191,16 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
+            ),
+            new TwigFunction(
+                'insert_module',
+                [FragmentRuntime::class, 'renderModule'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'insert_content',
+                [FragmentRuntime::class, 'renderContent'],
+                ['is_safe' => ['html']]
             ),
         ];
     }
