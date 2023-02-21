@@ -18,7 +18,7 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 class JwtManager
 {
-    public function __construct(string $secret, private ?Configuration $configuration = null)
+    public function __construct(string $secret, private Configuration|null $configuration = null)
     {
         $this->configuration = $configuration ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
         $this->configuration->setValidationConstraints(new SignedWith($this->configuration->signer(), $this->configuration->signingKey()));
@@ -26,7 +26,7 @@ class JwtManager
 
     public function getJwtTokenForUsername(string $username): string
     {
-        return ($this->issueToken(['username' => $username]))->toString();
+        return $this->issueToken(['username' => $username])->toString();
     }
 
     public function issueToken(array $payload = []): Plain
@@ -44,7 +44,7 @@ class JwtManager
         ;
     }
 
-    public function parseToken(string $data): ?UnencryptedToken
+    public function parseToken(string $data): UnencryptedToken|null
     {
         $parser = new Parser(new JoseEncoder());
 

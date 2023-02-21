@@ -25,7 +25,7 @@ class JwtAuthenticator extends AbstractAuthenticator
     ) {
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool|null
     {
         return $request->headers->has('Authorization') && str_starts_with($request->headers->get('Authorization'), 'Bearer ');
     }
@@ -44,15 +44,15 @@ class JwtAuthenticator extends AbstractAuthenticator
         return new SelfValidatingPassport(new UserBadge($token->claims()->get('username'), [$this->userProvider, 'loadUserByIdentifier']));
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response|null
     {
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         return new JsonResponse([
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
         ], Response::HTTP_UNAUTHORIZED);
     }
 }
