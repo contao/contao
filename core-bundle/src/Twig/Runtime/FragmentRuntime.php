@@ -46,7 +46,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         if (is_numeric($typeOrId)) {
             $model = $this->framework->getAdapter($class)->findByPk($typeOrId);
         } else {
-            $model = new $class();
+            $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;
         }
 
