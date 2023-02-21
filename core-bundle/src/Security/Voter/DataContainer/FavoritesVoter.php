@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\Voter;
+namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Security;
 /**
  * @internal
  */
-class BackendFavoritesVoter implements VoterInterface, CacheableVoterInterface
+class FavoritesVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(private Security $security, private Connection $connection)
     {
