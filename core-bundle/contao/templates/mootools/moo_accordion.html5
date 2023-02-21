@@ -1,5 +1,5 @@
 
-<script>
+<script nonce="<?= $this->nonce('script-src') ?>">
   window.addEvent('domready', function() {
     new Fx.Accordion($$('.toggler'), $$('.accordion'), {
       opacity: false,

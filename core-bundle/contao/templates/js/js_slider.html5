@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = 'assets/swipe/css/swipe.min.css|static';
 ?>
 
 <script src="<?= $this->asset('js/swipe.min.js', 'contao-components/swipe') ?>"></script>
-<script>
+<script nonce="<?= $this->nonce('script-src') ?>">
   (function() {
     var e = document.querySelectorAll('.content-slider, .slider-control'), c, i;
     for (i=0; i<e.length; i+=2) {

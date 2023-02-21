@@ -25,6 +25,8 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\CspAddSourceRuntime;
+use Contao\CoreBundle\Twig\Runtime\CspNonceRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
@@ -190,6 +192,14 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
+            ),
+            new TwigFunction(
+                'contao_csp_nonce',
+                [CspNonceRuntime::class, 'getNonce'],
+            ),
+            new TwigFunction(
+                'add_csp_source',
+                [CspAddSourceRuntime::class, 'addSource'],
             ),
         ];
     }

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\PageModel;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -32,6 +33,7 @@ class CoreResponseContextFactory
         private HtmlDecoder $htmlDecoder,
         private RequestStack $requestStack,
         private InsertTagParser $insertTagParser,
+        private CspParser $cspParser,
     ) {
     }
 
@@ -116,6 +118,28 @@ class CoreResponseContextFactory
                 )
             )
         ;
+
+        if ($pageModel->enableCsp) {
+            if ($cspHeader = trim((string) $pageModel->csp)) {
+                $csp = $this->cspParser->fromCspHeader($cspHeader);
+            } else {
+                $csp = new CSPBuilder();
+                $csp->setSelfAllowed('default-src', true);
+                $csp->setSelfAllowed('frame-ancestors', true);
+                $csp->setSelfAllowed('style-src', true);
+                $csp->setSelfAllowed('script-src', true);
+            }
+
+            if ($pageModel->staticFiles) {
+                $csp->addSource('default-src', $pageModel->staticFiles);
+            }
+
+            if ($pageModel->staticPlugins) {
+                $csp->addSource('default-src', $pageModel->staticPlugins);
+            }
+
+            $context->add($csp);
+        }
 
         return $context;
     }

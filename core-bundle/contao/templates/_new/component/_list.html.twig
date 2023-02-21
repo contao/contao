@@ -94,7 +94,7 @@
     {% if randomize_order or add_pagination or limit_elements %}
         {% block list_script %}
             {% add "list_script" to body %}
-                <script>
+                <script nonce="{{ contao_csp_nonce('script-src') }}">
                     {# Shuffle lists #}
                     document.querySelectorAll('*[data-list-random]').forEach(list => {
                         {# Shuffle order of children by appending them at a random position. #}

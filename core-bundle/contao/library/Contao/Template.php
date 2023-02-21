@@ -15,6 +15,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
@@ -417,6 +418,49 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Returns a nonce for the given CSP directive.
+	 */
+	public function nonce(string $directive): string
+	{
+		return self::getNonce($directive);
+	}
+
+	/**
+	 * Returns a nonce for the given CSP directive.
+	 */
+	public static function getNonce(string $directive): string
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
+		{
+			return '';
+		}
+
+		/** @var CSPBuilder $csp */
+		$csp = $responseContext->get(CSPBuilder::class);
+
+		return $csp->nonce($directive);
+	}
+
+	/**
+	 * Adds a source to the given CSP directive.
+	 */
+	public function addCspSource(string $directive, string $source): void
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
+		{
+			return;
+		}
+
+		/** @var CSPBuilder $csp */
+		$csp = $responseContext->get(CSPBuilder::class);
+		$csp->addSource($directive, $source);
+	}
+
+	/**
 	 * Render a figure
 	 *
 	 * The provided configuration array is used to configure a FigureBuilder.
@@ -640,7 +684,7 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		return '<style>' . $script . '</style>';
+		return '<style nonce="' . self::getNonce('style-src') . '">' . $script . '</style>';
 	}
 
 	/**
@@ -697,7 +741,7 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		return '<script>' . $script . '</script>';
+		return '<script nonce="' . self::getNonce('script-src') . '">' . $script . '</script>';
 	}
 
 	/**

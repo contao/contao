@@ -85,6 +85,7 @@
         "nikic/php-parser": "^4.9",
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
+        "paragonie/csp-builder": "^2.8",
         "phpspec/php-diff": "^1.0",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/container": "^1",

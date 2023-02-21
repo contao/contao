@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = 'assets/tablesorter/css/tablesorter.min.css|static';
 ?>
 
 <script src="<?= $this->asset('js/tablesorter.min.js', 'contao-components/tablesorter') ?>"></script>
-<script>
+<script nonce="<?= $this->nonce('script-src') ?>">
   jQuery(function($) {
     $('.ce_table .sortable').each(function(i, table) {
       var attr = $(table).attr('data-sort-default'),

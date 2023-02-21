@@ -169,7 +169,7 @@ class FrontendTemplate extends Template
 		{
 			$response->setSharedMaxAge($objPage->cache); // Automatically sets the response to public
 
-			/**
+			/*
 			 * We vary on cookies if a response is cacheable by the shared
 			 * cache, so a reverse proxy does not load a response from cache if
 			 * the _request_ contains a cookie.

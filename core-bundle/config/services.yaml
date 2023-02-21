@@ -690,6 +690,9 @@ services:
             - '@contao.routing.route_provider'
             - '@contao.routing.page_registry'
             - '@?logger'
+    
+    contao.routing.csp_parser:
+        class: Contao\CoreBundle\Routing\ResponseContext\CspParser
 
     contao.routing.response_context_accessor:
         class: Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor
@@ -707,6 +710,7 @@ services:
             - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
+            - '@contao.routing.csp_parser'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -1069,6 +1073,16 @@ services:
 
     contao.twig.loader.theme_namespace:
         class: Contao\CoreBundle\Twig\Loader\ThemeNamespace
+
+    contao.twig.add_csp_source_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\CspAddSourceRuntime
+        arguments:
+            - '@contao.routing.response_context_accessor'
+
+    contao.twig.csp_nonce_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\CspNonceRuntime
+        arguments:
+            - '@contao.routing.response_context_accessor'
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime

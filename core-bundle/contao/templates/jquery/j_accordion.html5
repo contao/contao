@@ -1,6 +1,6 @@
 
 <script src="<?= $this->asset('js/jquery-ui.min.js', 'contao-components/jquery-ui') ?>"></script>
-<script>
+<script nonce="<?= $this->nonce('script-src') ?>">
   jQuery(function($) {
     $(document).accordion({
       // Put custom options here

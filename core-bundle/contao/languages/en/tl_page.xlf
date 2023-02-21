@@ -350,6 +350,18 @@
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this domain.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Enter custom Content Security Policy directives here.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
       </trans-unit>
@@ -409,6 +421,9 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactor_legend">
         <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>

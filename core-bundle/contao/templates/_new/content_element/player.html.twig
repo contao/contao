@@ -21,6 +21,7 @@
 {% block media %}
     <{{ figure.media.type }}{{ figure.media.attributes }}>
         {% for source_attributes in figure.media.sources %}
+            {% do add_csp_source('media-src', source_attributes.src) %}
             <source{{ source_attributes }}>
         {% endfor %}
     </{{ figure.media.type }}>
