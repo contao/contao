@@ -27,23 +27,35 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function renderModule(string $type, array $data = []): string
+    public function renderModule(string|int $type, array $data = []): string
     {
-        $data['type'] = $type;
-        $model = new ModuleModel();
-        $model->setRow($data);
-        $model->preventSaving(false);
+        $model = $this->getModel(ModuleModel::class, $type, $data);
 
         return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
     }
 
     public function renderContent(string $type, array $data = []): string
     {
-        $data['type'] = $type;
-        $model = new ContentModel();
-        $model->setRow($data);
-        $model->preventSaving(false);
+        $model = $this->getModel(ContentModel::class, $type, $data);
 
         return $this->framework->getAdapter(Controller::class)->getContentElement($model);
+    }
+
+    private function getModel(string $class, string|int $type, array $data = []): ModuleModel|ContentModel
+    {
+        if (is_numeric($type)) {
+            $model = $this->framework->getAdapter($class)->findByPk($type);
+        } else {
+            $model = new $class;
+            $model->type = $type;
+        }
+
+        foreach ($data as $k => $v) {
+            $model->$k = $v;
+        }
+
+        $model->preventSaving(false);
+
+        return $model;
     }
 }
