@@ -39,7 +39,7 @@ class FragmentRuntimeTest extends TestCase
         $framework = $this->mockContaoFramework([
             Controller::class => $controllerAdapter,
         ], [
-            ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)
+            ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class),
         ]);
 
         $runtime = new FragmentRuntime($framework);
@@ -102,7 +102,7 @@ class FragmentRuntimeTest extends TestCase
         $framework = $this->mockContaoFramework([
             Controller::class => $controllerAdapter,
         ], [
-            ContentModel::class => $this->mockClassWithProperties(ContentModel::class)
+            ContentModel::class => $this->mockClassWithProperties(ContentModel::class),
         ]);
 
         $runtime = new FragmentRuntime($framework);
