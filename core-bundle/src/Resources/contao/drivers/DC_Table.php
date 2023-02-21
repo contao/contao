@@ -4004,7 +4004,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Toggle nodes
 		if (Input::get('ptg'))
 		{
-			$session[$node][Input::get('ptg')] = (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1) ? 0 : 1;
+			if (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1)
+			{
+				unset($session[$node][Input::get('ptg')]);
+			}
+			else
+			{
+				$session[$node][Input::get('ptg')] = 1;
+			}
+
 			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('request')));
 		}

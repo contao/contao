@@ -2556,7 +2556,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))
 		{
-			$session['filetree'][Input::get('tg')] = (isset($session['filetree'][Input::get('tg')]) && $session['filetree'][Input::get('tg')] == 1) ? 0 : 1;
+			if (isset($session['filetree'][Input::get('tg')]) && $session['filetree'][Input::get('tg')] == 1)
+			{
+				unset($session['filetree'][Input::get('tg')]);
+			}
+			else
+			{
+				$session['filetree'][Input::get('tg')] = 1;
+			}
+
 			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('request')));
 		}
