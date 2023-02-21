@@ -44,7 +44,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('content_css'); ?>
-    content_css: 'system/themes/<?= Backend::getTheme() ?>/styles/' + (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-dark.css' :  'tinymce.css'),
+    content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.Backend::getTheme()) ?>' :  '<?= $this->asset('tinymce.css', 'system/themes/'.Backend::getTheme()) ?>',
   <?php $this->endblock(); ?>
 
   <?php $this->block('plugins'); ?>

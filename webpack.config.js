@@ -20,13 +20,7 @@ Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
     .setPublicPath('/system/themes/flexible')
     .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild([
-        '**/*',
-        '!fonts/**',
-        '!icons/**',
-        '!icons-dark/**',
-        '!styles/**',
-    ])
+    .cleanupOutputBeforeBuild(['*.css', '*.json'])
     .disableSingleRuntimeChunk()
     .enableSourceMaps()
     .enableVersioning()
@@ -39,6 +33,8 @@ Encore
     .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
     .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
     .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
+    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/tinymce.css')
+    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/tinymce-dark.css')
 ;
 
 const themeConfig = Encore.getWebpackConfig();

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -81,7 +80,8 @@ class AddAssetsPackagesPass implements CompilerPassInterface
                 $themes = Finder::create()
                     ->directories()
                     ->depth(0)
-                    ->in($path);
+                    ->in($path)
+                ;
 
                 foreach ($themes as $theme) {
                     $packageVersion = $version;
