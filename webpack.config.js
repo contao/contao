@@ -29,6 +29,7 @@ Encore
     })
     .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
+    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/conflict.css')
     .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
     .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
     .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')

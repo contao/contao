@@ -10,6 +10,11 @@
         "/system/themes/flexible/confirm.1d753462.css"
       ]
     },
+    "conflict": {
+      "css": [
+        "/system/themes/flexible/conflict.ec5e8f49.css"
+      ]
+    },
     "diff": {
       "css": [
         "/system/themes/flexible/diff.47d6f219.css"
