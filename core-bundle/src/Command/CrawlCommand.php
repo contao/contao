@@ -93,21 +93,21 @@ class CrawlCommand extends Command
             $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context.');
         }
 
+        switch ($input->getOption('queue')) {
+            case 'memory':
+                $queue = new InMemoryQueue();
+                break;
+            case 'doctrine':
+                $queue = $this->escargotFactory->createLazyQueue();
+                break;
+
+            default:
+                $io->error('Only "memory" or "doctrine" are allowed for the "queue" option.');
+
+                return 1;
+        }
+
         try {
-            switch ($input->getOption('queue')) {
-                case 'memory':
-                    $queue = new InMemoryQueue();
-                    break;
-                case 'doctrine':
-                    $queue = $this->escargotFactory->createLazyQueue();
-                    break;
-
-                default:
-                    $io->error('Only "memory" or "doctrine" are allowed for the "queue" option.');
-
-                    return 1;
-            }
-
             if ($jobId = $input->getArgument('job')) {
                 $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
             } else {
