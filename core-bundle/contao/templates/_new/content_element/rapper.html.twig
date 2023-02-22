@@ -1,0 +1,14 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block attributes %} style="border: 5px solid red"{% endblock %}
+
+{% block inner %}
+    {% for slot, elements in nested_elements %}
+        <fieldset>
+            <legend>Slot {{ slot }}</legend>
+            {% for element in elements %}
+                {{ render(element) }}
+            {% endfor %}
+        </fieldset>
+    {% endfor %}
+{% endblock %}

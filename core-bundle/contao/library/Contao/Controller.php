@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -565,8 +566,17 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		/** @var ContentElement $objElement */
-		$objElement = new $strClass($objRow, $strColumn);
+		if (is_a($strClass, ContentProxy::class, true) && System::getContainer()->get('contao.fragment.compositor')->isNested(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		{
+			$nestedElements = System::getContainer()->get('contao.fragment.compositor')->getNestedContentElements(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id);
+			$objElement = new $strClass($objRow, $strColumn, $nestedElements);
+		}
+		else
+		{
+			/** @var ContentElement $objElement */
+			$objElement = new $strClass($objRow, $strColumn);
+		}
+
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
