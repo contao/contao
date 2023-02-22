@@ -106,8 +106,8 @@ final class ContaoCorePermissions
 
     /**
      * Access is granted if the current user can access the form field type.
-     * Subject can be a content element type (e.g. "hidden")
-     * or NULL to check if any field type is allowed.
+     * Subject can be a content element type (e.g. "hidden") or null to
+     * check if any field type is allowed.
      */
     public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
