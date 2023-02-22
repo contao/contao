@@ -15,7 +15,7 @@
 
   <input type="text" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="captcha mandatory<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" value="" aria-describedby="captcha_text_<?= $this->id ?>"<?= $this->getAttributes() ?>>
   <span id="captcha_text_<?= $this->id ?>" class="captcha_text<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"><?= $this->getQuestion() ?></span>
-  <input type="hidden" name="<?= $this->name ?>_hash" value="<?= $this->getHash() ?>">
+  <input type="hidden" name="<?= $this->name ?>_hash" value="<?= $this->hasErrors() ? $this->getHash() : '' ?>">
 
   <?php if (!$this->hasErrors()): ?>
     <div style="display:none">
@@ -34,7 +34,13 @@
         e.required = false;
         p.style.display = 'none';
 
-        setTimeout(function() { e.value = '<?= $this->getSum() ?>'; }, 5000);
+        setTimeout(() => {
+          fetch(<?= json_encode(Contao\System::getContainer()->get('router')->generate('contao_frontend_captcha', ['_locale' => Contao\System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale()])) ?>).then((r) => r.json()).then((d) => {
+            e.value = d.sum;
+            e.form.elements[<?= json_encode($this->name.'_hash') ?>].value = d.hash;
+            document.getElementById('captcha_text_<?= $this->id ?>').textContent = d.question;
+          });
+        }, 5000);
       })();
     </script>
   <?php endif ?>

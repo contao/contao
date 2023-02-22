@@ -15,6 +15,8 @@ namespace Contao;
  *
  * @property string $name
  * @property string $question
+ * @property int    $sum
+ * @property string $hash
  * @property string $placeholder
  * @property string $rowClass
  */
@@ -106,6 +108,12 @@ class FormCaptcha extends Widget
 
 			case 'question':
 				return $this->getQuestion();
+
+			case 'sum':
+				return $this->getSum();
+
+			case 'hash':
+				return $this->getHash();
 
 			default:
 				return parent::__get($strKey);
