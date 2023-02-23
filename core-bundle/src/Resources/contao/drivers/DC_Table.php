@@ -4691,7 +4691,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make items sortable
-		if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+		if ($blnHasSorting)
 		{
 			$return .= '
 </ul>
