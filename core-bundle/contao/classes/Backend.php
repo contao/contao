@@ -919,7 +919,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
-		return ' ' . Image::getHtml('visible.svg', '', 'title="' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '" id="pw_' . $inputName . '"') . '
+		return ' <a href="#" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showPassword']) . '" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg') . '</a>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -927,12 +927,16 @@ abstract class Backend extends Controller
       el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
-        this.src = this.src.replace("visible.svg", "visible_.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
+        this.getElements("img").forEach(function (image) {
+          image.src = image.src.replace("visible.svg", "visible_.svg");
+        });
       } else {
         el.type = "password";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
-        this.src = this.src.replace("visible_.svg", "visible.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
+        this.getElements("img").forEach(function (image) {
+          image.src = image.src.replace("visible_.svg", "visible.svg");
+        });
       }
     });
   </script>';
