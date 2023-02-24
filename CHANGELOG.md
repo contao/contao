@@ -2,6 +2,36 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.16] (2023-02-22)
+
+**Fixed issues:**
+
+- [#5809] Fix the "root page dependent modules" module ([bytehead])
+- [#5790] Load app routes before everything else ([aschempp])
+- [#5811] Clear the session value when toggle is closed ([aschempp])
+- [#5802] Fix public folder renaming on Windows ([fritzmg])
+- [#5792] Skip invalid article links if the URL cannot be generated ([aschempp])
+- [#5797] Purge the new records when revising tables ([ausi])
+- [#5799] Define line endings for templates ([fritzmg])
+- [#5787] Disable `ToggleNodesLabelListener` if not in back end ([fritzmg])
+- [#5785] Fix file uploads erroneously overwriting existing files ([fritzmg])
+- [#5786] Handle negative PHP ini precision in StringUtil ([ausi])
+- [#5674] Dynamically change the "expand/collapse all" label ([aschempp])
+- [#5782] Fix the remaining opt-in token validation queries ([leofeyer])
+- [#5619] Allow using both modern fragments and Twig templates in extensions ([m-vo])
+- [#5777] Do not URL-decode file paths in FigureBuilder ([ausi])
+- [#5692] Unify newlines in textarea widgets ([aschempp])
+- [#5759] Fix the image encoding in the RSS feeds ([qzminski])
+- [#5753] Always set `currentRecord` when initializing widgets ([leofeyer])
+- [#5740] Correctly handle numeric paths (part 2) ([m-vo])
+- [#5544] Merge CSS classes in the "root page dependent modules" module ([bytehead])
+- [#5696] Fix installer issue if SQL field has no precision ([aschempp])
+- [#5741] Fix reordering trees when the PID is null ([aschempp])
+- [#5708] Add the missing null check for button_callback ([aschempp])
+- [#5606] Use the request language to match `iflng` tags ([aschempp])
+- [#5709] Check for trail page before rendering the navigation ([aschempp])
+- [#5669] Skip pages in sitemap.xml if URL cannot be generated ([aschempp])
+
 ## [4.13.15] (2023-01-13)
 
 **Fixed issues:**
@@ -567,6 +597,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.16]: https://github.com/contao/contao/releases/tag/4.13.16
 [4.13.15]: https://github.com/contao/contao/releases/tag/4.13.15
 [4.13.14]: https://github.com/contao/contao/releases/tag/4.13.14
 [4.13.13]: https://github.com/contao/contao/releases/tag/4.13.13
@@ -1052,16 +1083,41 @@ This project adheres to [Semantic Versioning].
 [#5526]: https://github.com/contao/contao/pull/5526
 [#5532]: https://github.com/contao/contao/pull/5532
 [#5540]: https://github.com/contao/contao/pull/5540
+[#5544]: https://github.com/contao/contao/pull/5544
 [#5556]: https://github.com/contao/contao/pull/5556
 [#5559]: https://github.com/contao/contao/pull/5559
 [#5564]: https://github.com/contao/contao/pull/5564
 [#5575]: https://github.com/contao/contao/pull/5575
 [#5587]: https://github.com/contao/contao/pull/5587
 [#5603]: https://github.com/contao/contao/pull/5603
+[#5606]: https://github.com/contao/contao/pull/5606
 [#5618]: https://github.com/contao/contao/pull/5618
+[#5619]: https://github.com/contao/contao/pull/5619
 [#5620]: https://github.com/contao/contao/pull/5620
 [#5625]: https://github.com/contao/contao/pull/5625
 [#5629]: https://github.com/contao/contao/pull/5629
 [#5643]: https://github.com/contao/contao/pull/5643
 [#5662]: https://github.com/contao/contao/pull/5662
 [#5667]: https://github.com/contao/contao/pull/5667
+[#5669]: https://github.com/contao/contao/pull/5669
+[#5674]: https://github.com/contao/contao/pull/5674
+[#5692]: https://github.com/contao/contao/pull/5692
+[#5696]: https://github.com/contao/contao/pull/5696
+[#5708]: https://github.com/contao/contao/pull/5708
+[#5709]: https://github.com/contao/contao/pull/5709
+[#5740]: https://github.com/contao/contao/pull/5740
+[#5741]: https://github.com/contao/contao/pull/5741
+[#5753]: https://github.com/contao/contao/pull/5753
+[#5759]: https://github.com/contao/contao/pull/5759
+[#5777]: https://github.com/contao/contao/pull/5777
+[#5782]: https://github.com/contao/contao/pull/5782
+[#5785]: https://github.com/contao/contao/pull/5785
+[#5786]: https://github.com/contao/contao/pull/5786
+[#5787]: https://github.com/contao/contao/pull/5787
+[#5790]: https://github.com/contao/contao/pull/5790
+[#5792]: https://github.com/contao/contao/pull/5792
+[#5797]: https://github.com/contao/contao/pull/5797
+[#5799]: https://github.com/contao/contao/pull/5799
+[#5802]: https://github.com/contao/contao/pull/5802
+[#5809]: https://github.com/contao/contao/pull/5809
+[#5811]: https://github.com/contao/contao/pull/5811
