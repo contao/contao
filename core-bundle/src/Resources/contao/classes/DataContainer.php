@@ -1110,7 +1110,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
-			$return .= '<a href="' . $href . '" class="' . ($v['class'] ?? '') . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
 		}
 
 		return $return;
