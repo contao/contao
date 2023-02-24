@@ -4700,7 +4700,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$return .= '
 <script>
-	Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
+  Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
 </script>';
 			}
 		}
