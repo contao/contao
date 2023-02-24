@@ -100,14 +100,14 @@ class CrawlCommandTest extends TestCase
     {
         $client = new MockHttpClient();
         $queue = new InMemoryQueue();
+        $jobId = null;
+
         $escargotFactory = $this->createMock(Factory::class);
         $escargotFactory
             ->expects($this->exactly(2))
             ->method('getCrawlUriCollection')
             ->willReturn($this->getBaseUriCollection())
         ;
-
-        $jobId = null;
 
         $escargotFactory
             ->expects($this->once())
@@ -144,6 +144,7 @@ class CrawlCommandTest extends TestCase
         $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
 
         $tester->execute(['-q' => 'doctrine', 'job' => $jobId]);
+
         $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
     }
 

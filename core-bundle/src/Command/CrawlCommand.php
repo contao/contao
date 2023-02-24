@@ -97,6 +97,7 @@ class CrawlCommand extends Command
             case 'memory':
                 $queue = new InMemoryQueue();
                 break;
+
             case 'doctrine':
                 $queue = $this->escargotFactory->createLazyQueue();
                 break;
@@ -141,6 +142,7 @@ class CrawlCommand extends Command
 
         $output->writeln('');
         $output->writeln('');
+
         $io->comment(
             sprintf(
                 '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
