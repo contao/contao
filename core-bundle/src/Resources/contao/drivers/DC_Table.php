@@ -4694,10 +4694,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($blnHasSorting)
 		{
 			$return .= '
-</ul>
+</ul>';
+
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+			{
+				$return .= '
 <script>
-  Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
+	Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
 </script>';
+			}
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '
