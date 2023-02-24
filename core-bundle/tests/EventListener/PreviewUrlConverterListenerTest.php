@@ -225,29 +225,6 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertSame($expectedUrl, $event->getUrl());
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(PageRoute $route = null): PageRegistry
-    {
-        $pageRegistry = $this->createMock(PageRegistry::class);
-
-        if (null === $route) {
-            $pageRegistry
-                ->expects($this->never())
-                ->method('getRoute')
-            ;
-        } else {
-            $pageRegistry
-                ->expects($this->once())
-                ->method('getRoute')
-                ->willReturn($route)
-            ;
-        }
-
-        return $pageRegistry;
-    }
-
     public function testReturnsEmptyUrlForFailedRouteGenerationForPageWithRequireItem(): void
     {
         $request = new Request();
@@ -289,5 +266,28 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener($event);
 
         $this->assertNull($event->getUrl());
+    }
+
+    /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(PageRoute $route = null): PageRegistry
+    {
+        $pageRegistry = $this->createMock(PageRegistry::class);
+
+        if (null === $route) {
+            $pageRegistry
+                ->expects($this->never())
+                ->method('getRoute')
+            ;
+        } else {
+            $pageRegistry
+                ->expects($this->once())
+                ->method('getRoute')
+                ->willReturn($route)
+            ;
+        }
+
+        return $pageRegistry;
     }
 }
