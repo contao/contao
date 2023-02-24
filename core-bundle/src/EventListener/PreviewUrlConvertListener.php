@@ -24,7 +24,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 /**
  * @internal
