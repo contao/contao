@@ -152,6 +152,12 @@ abstract class Model
 			// Create the related models
 			foreach ($arrRelated as $key=>$row)
 			{
+				if (!isset($this->arrRelations[$key]['table']))
+				{
+					$this->arrRelated[$key] = null;
+					continue;
+				}
+
 				$table = $this->arrRelations[$key]['table'];
 
 				/** @var static $strClass */
