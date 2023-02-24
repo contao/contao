@@ -226,9 +226,17 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertSame($expectedUrl, $event->getUrl());
     }
 
-    public function testReturnsEmptyUrlForFailedRouteGenerationForPageWithRequireItem(): void
+    public function testReturnsEmptyUrlForPagesThatRequireAnItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en', 'requireItem' => '1']);
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 42,
+                'rootLanguage' => 'en',
+                'requireItem' => '1',
+            ]
+        );
+
         $route = new PageRoute($pageModel);
 
         $pageModel

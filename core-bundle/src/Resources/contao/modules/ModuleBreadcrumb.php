@@ -96,8 +96,8 @@ class ModuleBreadcrumb extends Module
 
 		for ($i=(\count($pages)-1); $i>0; $i--)
 		{
-			// Skip pages that require an item (see #3450)
-			if (($pages[$i]->hide && !$this->showHidden) || $pages[$i]->requireItem || (!$pages[$i]->published && !$blnShowUnpublished))
+			// Skip pages that require an item (see #3450) and hidden or unpublished pages
+			if ($pages[$i]->requireItem || ($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
 			{
 				continue;
 			}
@@ -137,7 +137,7 @@ class ModuleBreadcrumb extends Module
 			}
 
 			// Do not add non-root pages with an empty URL to the breadcrumbs
-			if ('' !== $href)
+			if ($href)
 			{
 				$items[] = array
 				(

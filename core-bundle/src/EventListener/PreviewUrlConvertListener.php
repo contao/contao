@@ -73,7 +73,7 @@ class PreviewUrlConvertListener
                     $event->setUrl($this->getFragmentUrl($request, $page));
                 }
 
-                // Swallow exception and set no url for pages with requireItem (see #3525)
+                // Ignore the exception and set no URL for pages with requireItem (see #3525)
             } catch (ExceptionInterface $e) {
                 $event->setUrl($this->getFragmentUrl($request, $page));
             }
