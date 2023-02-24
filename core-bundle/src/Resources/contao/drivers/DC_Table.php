@@ -129,19 +129,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
-		// Set IDs and redirect
-		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		// Set IDs
+		if (Input::post('FORM_SUBMIT') == 'tl_select' || (\in_array(Input::post('FORM_SUBMIT'), array($strTable, $strTable . '_all')) && \in_array(Input::get('act'), array('editAll', 'overrideAll'))))
 		{
 			$ids = Input::post('IDS');
 
+			if (!empty($ids) && \is_array($ids))
+			{
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = $ids;
+				$objSession->replace($session);
+			}
+		}
+
+		// Redirect
+		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		{
 			if (empty($ids) || !\is_array($ids))
 			{
 				$this->reload();
 			}
-
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = $ids;
-			$objSession->replace($session);
 
 			if (isset($_POST['edit']))
 			{
@@ -2607,7 +2614,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($this->noReload ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
 <div class="tl_formbody_submit">
@@ -2681,7 +2689,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
@@ -3055,7 +3064,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($this->noReload ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
 <div class="tl_formbody_submit">
@@ -3128,7 +3138,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
