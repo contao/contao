@@ -25,8 +25,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PreviewUrlConverterListenerTest extends TestCase
 {
@@ -227,44 +229,47 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testReturnsEmptyUrlForFailedRouteGenerationForPageWithRequireItem(): void
     {
-        $request = new Request();
-        $request->query->set('page', '42');
-
-        $pageModel = $this->createMock(PageModel::class);
-        $route = $this->createMock(PageRoute::class);
-        $previous = new InvalidParameterException();
-        $exception = new RouteParametersException($route, [], 0, $previous);
-
-        $route
-            ->expects($this->once())
-            ->method('getPageModel')
-            ->willReturn($pageModel)
-        ;
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en', 'requireItem' => '1']);
+        $route = new PageRoute($pageModel);
 
         $pageModel
             ->expects($this->once())
             ->method('getPreviewUrl')
-            ->with(null)
-            ->willThrowException($exception)
+            ->willThrowException(
+                new RouteParametersException(
+                    $route,
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL,
+                    new MissingMandatoryParametersException()
+                )
+            )
         ;
 
-        $pageModel
-            ->expects($this->once())
-            ->method('__get')
-            ->with('requireItem')
-            ->willReturn(true)
-        ;
+        $request = $this->createMock(Request::class);
+        $request->query = new ParameterBag(['page' => '42']);
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
         ];
 
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->never())
+            ->method('sign')
+        ;
+
         $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry(),
+            $uriSigner
+        );
+
         $listener($event);
 
+        $this->assertNull($event->getResponse());
         $this->assertNull($event->getUrl());
     }
 

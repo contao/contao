@@ -70,7 +70,7 @@ class PreviewUrlConvertListener
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
-                if (!$e->getPrevious() instanceof InvalidParameterException || !$route instanceof PageRoute || !$route->getPageModel()->requireItem) {
+                if (!$route instanceof PageRoute || !$route->getPageModel()->requireItem) {
                     $event->setUrl($this->getFragmentUrl($request, $page));
                 }
 
