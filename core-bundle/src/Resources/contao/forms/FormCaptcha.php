@@ -224,6 +224,21 @@ class FormCaptcha extends Widget
 	}
 
 	/**
+	 * Get the AJAX URL
+	 *
+	 * @return string The AJAX URL
+	 */
+	protected function getAjaxUrl()
+	{
+		$container = System::getContainer();
+
+		return $container->get('router')->generate(
+			'contao_frontend_captcha',
+			array('_locale' => $container->get('request_stack')->getCurrentRequest()->getLocale())
+		);
+	}
+
+	/**
 	 * Generate the label and return it as string
 	 *
 	 * @return string The label markup

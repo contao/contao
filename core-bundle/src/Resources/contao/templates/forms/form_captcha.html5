@@ -35,7 +35,7 @@
         p.style.display = 'none';
 
         setTimeout(() => {
-          fetch(<?= json_encode(Contao\System::getContainer()->get('router')->generate('contao_frontend_captcha', ['_locale' => Contao\System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale()])) ?>).then((r) => r.json()).then((d) => {
+          fetch(<?= json_encode($this->getAjaxUrl()) ?>).then(r => r.json()).then(d => {
             e.value = d.sum;
             e.form.elements[<?= json_encode($this->name.'_hash') ?>].value = d.hash;
             document.getElementById('captcha_text_<?= $this->id ?>').textContent = d.question;
