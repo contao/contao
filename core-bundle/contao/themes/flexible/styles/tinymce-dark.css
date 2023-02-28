@@ -1,13 +1,9 @@
-/*!
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
+html {
+	color-scheme: dark;
+}
 
 body {
-	background: #fff;
+	background: #151619;
 }
 
 body, th, td {
@@ -15,7 +11,7 @@ body, th, td {
 	font-weight: 400;
 	font-size: .875rem;
 	line-height: 1.2;
-	color: #222;
+	color: #ddd;
 }
 
 h1, h2, h3, h4, h5, h6, strong, b, th {
