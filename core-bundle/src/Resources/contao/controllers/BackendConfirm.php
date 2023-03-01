@@ -73,6 +73,12 @@ class BackendConfirm extends Backend
 			$vars[$key] = $value;
 		}
 
+		// A valid back end request must point to a back end module
+		if (empty($vars['do']))
+		{
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
+		}
+
 		$arrInfo = array();
 
 		// Provide more information about the link (see #4007)
@@ -107,7 +113,10 @@ class BackendConfirm extends Backend
 			}
 		}
 
-		System::loadLanguageFile($arrInfo['table']);
+		if (!empty($arrInfo['table']))
+		{
+			System::loadLanguageFile($arrInfo['table']);
+		}
 
 		// Override the action label
 		if (isset($arrInfo['clipboard']))
