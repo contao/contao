@@ -91,7 +91,7 @@ class BackendConfirm extends Backend
 					break;
 
 				case 'do':
-					$arrInfo['do'] = $GLOBALS['TL_LANG']['MOD'][$v][0];
+					$arrInfo['do'] = $GLOBALS['TL_LANG']['MOD'][$v][0] ?? $v;
 					break;
 
 				case 'id':
