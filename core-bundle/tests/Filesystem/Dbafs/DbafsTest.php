@@ -320,6 +320,11 @@ class DbafsTest extends TestCase
                 'baz' => 'complex c',
             ]
         );
+
+        // Assert internal cache is cleared and file item correctly contains new metadata
+        $item = $dbafs->getRecord('some/path');
+        $this->assertSame('complex a', $item->getExtraMetadata()['foo']);
+        $this->assertSame('complex c', $item->getExtraMetadata()['baz']);
     }
 
     public function testSetExtraMetadataThrowsOnInvalidPath(): void
