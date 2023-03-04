@@ -1,0 +1,80 @@
+{
+    "name": "contao/oauth-bundle",
+    "description": "Adds OAuth login functionality to Contao",
+    "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
+        }
+    ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/oauth-bundle",
+        "docs": "https://docs.contao.org"
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://to.contao.org/donate"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "contao/core-bundle": "self.version",
+        "knpuniversity/oauth2-client-bundle": "^2.11",
+        "league/oauth2-client": "^2.6",
+        "symfony/event-dispatcher": "^5.4 || ^6.0",
+        "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
+        "symfony/translation": "^5.4 || ^6.0",
+        "symfony/translation-contracts": "^2.3"
+    },
+    "require-dev": {
+        "adam-paterson/oauth2-slack": "^1.1",
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "self.version",
+        "league/oauth2-facebook": "^2.2",
+        "league/oauth2-google": "^4.0",
+        "phpunit/phpunit": "^9.5",
+        "symfony/phpunit-bridge": "^5.4 || ^6.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\OAuthBundle\\": "src/"
+        },
+        "classmap": [
+            "contao/"
+        ],
+        "exclude-from-classmap": [
+            "contao/config/",
+            "contao/dca/",
+            "contao/languages/",
+            "contao/templates/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\OAuthBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\OAuthBundle\\ContaoManager\\Plugin"
+    }
+}

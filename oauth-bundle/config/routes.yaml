@@ -1,0 +1,3 @@
+contao_oauth.controller:
+    resource: ../src/Controller
+    type: attribute

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/modules.php" source-language="en">
+    <body>
+      <trans-unit id="MOD.oauth.0">
+        <source>OAuth clients</source>
+      </trans-unit>
+      <trans-unit id="MOD.oauth.1">
+        <source>Manage available OAuth clients</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_oauth_client">
+        <source>OAuth clients</source>
+      </trans-unit>
+      <trans-unit id="FMD.oauth_connect.0">
+        <source>OAuth connect</source>
+      </trans-unit>
+      <trans-unit id="FMD.oauth_connect.1">
+        <source>Connects a front end user via different OAuth clients.</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_member_oauth">
+        <source>OAuth connections</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

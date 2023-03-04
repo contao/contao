@@ -27,6 +27,7 @@ The monorepo is automatically split into separate packages:
  * [ManagerBundle](https://github.com/contao/manager-bundle)
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
+ * [OAuthBundle](https://github.com/contao/oauth-bundle)
 
 **Please do not use `contao/contao` in production**! Use the split packages instead.
 

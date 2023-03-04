@@ -1,0 +1,57 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao_oauth.client_generator:
+        class: Contao\OAuthBundle\OAuthClientGenerator
+        arguments:
+            - '@database_connection'
+            - '@request_stack'
+            - '@router'
+
+    contao_oauth.controller.frontend_module.oauth_connect:
+        class: Contao\OAuthBundle\Controller\FrontendModule\OAuthConnectController
+        arguments:
+            - '@uri_signer'
+            - '@contao.csrf.token_manager'
+            - '@database_connection'
+            - '@contao_oauth.client_generator'
+            - '@security.authentication_utils'
+            - '@translator'
+            - '@?logger'
+
+    contao_oauth.listener.data_container.oauth_client_check:
+        class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientCheckListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '%kernel.bundles%'
+
+    contao_oauth.listener.data_container.oauth_client_type_options:
+        class: Contao\OAuthBundle\EventListener\DataContainer\OAuthClientTypeOptionsListener
+        arguments:
+            - '%contao_oauth.enabled_providers%'
+
+    contao_oauth.listener.facebook_connect:
+        class: Contao\OAuthBundle\EventListener\FacebookConnectListener
+        tags: [kernel.event_listener]
+
+    contao_oauth.listener.google_connect:
+        class: Contao\OAuthBundle\EventListener\GoogleConnectListener
+        tags: [kernel.event_listener]
+
+    contao_oauth.listener.slack_connect:
+        class: Contao\OAuthBundle\EventListener\SlackConnectListener
+        tags: [kernel.event_listener]
+
+    Contao\OAuthBundle\Security\OAuthAuthenticator:
+        arguments:
+            - '@contao_oauth.client_generator'
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.slug'
+            - '@event_dispatcher'
+            - '@security.helper'
+
+    Contao\OAuthBundle\OAuthClientGenerator: '@contao_oauth.client_generator'

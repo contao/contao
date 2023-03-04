@@ -44,6 +44,9 @@
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
-        "Symfony\\Bundle\\MonologBundle\\MonologBundle"
+        "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+        "AdamPaterson\\OAuth2\\Client\\Provider\\SlackResourceOwner",
+        "League\\OAuth2\\Client\\Provider\\FacebookUser",
+        "League\\OAuth2\\Client\\Provider\\GoogleUser"
     ]
 }
