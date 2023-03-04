@@ -194,6 +194,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'width' => 150,
                 'height' => 250,
                 'items' => [],
+                'preserveMetadata' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -201,6 +202,7 @@ class ContaoCoreExtensionTest extends TestCase
             '_bar' => [
                 'width' => 150,
                 'items' => [],
+                'preserveMetadata' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -224,6 +226,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'sizes' => '50vw',
                     'media' => '(max-width: 900px)',
                 ]],
+                'preserveMetadata' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],

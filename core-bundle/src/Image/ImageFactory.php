@@ -31,6 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
+    private array $preserveMetadata = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
@@ -46,6 +47,7 @@ class ImageFactory implements ImageFactoryInterface
         private array $validExtensions,
         private string $uploadDir,
     ) {
+        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -54,6 +56,11 @@ class ImageFactory implements ImageFactoryInterface
     public function setPredefinedSizes(array $predefinedSizes): void
     {
         $this->predefinedSizes = $predefinedSizes;
+    }
+
+    public function setPreserveMetadata(array $preserveMetadata): void
+    {
+        $this->preserveMetadata = $preserveMetadata;
     }
 
     public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
@@ -183,6 +190,7 @@ class ImageFactory implements ImageFactoryInterface
 
         $config = new ResizeConfiguration();
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
 
         if (isset($size[2])) {
             // Database record

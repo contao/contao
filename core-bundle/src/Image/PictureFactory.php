@@ -43,6 +43,7 @@ class PictureFactory implements PictureFactoryInterface
     private array $imageSizeItemsCache = [];
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
+    private array $preserveMetadata = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
@@ -54,6 +55,7 @@ class PictureFactory implements PictureFactoryInterface
         private bool $bypassCache,
         private array $imagineOptions,
     ) {
+        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     public function setDefaultDensities(string $densities): static
@@ -69,6 +71,11 @@ class PictureFactory implements PictureFactoryInterface
     public function setPredefinedSizes(array $predefinedSizes): void
     {
         $this->predefinedSizes = $predefinedSizes;
+    }
+
+    public function setPreserveMetadata(array $preserveMetadata): void
+    {
+        $this->preserveMetadata = $preserveMetadata;
     }
 
     public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface
@@ -99,12 +106,14 @@ class PictureFactory implements PictureFactoryInterface
 
         if ($size instanceof PictureConfiguration) {
             $config = $size;
+            $configOptions = new ResizeOptions();
+            $configOptions->setPreserveCopyrightMetadata($this->preserveMetadata);
         } else {
             [$config, $attributes, $configOptions] = $this->createConfig($size);
         }
 
         // Always prefer options passed to this function
-        $options ??= $configOptions ?? new ResizeOptions();
+        $options ??= $configOptions;
 
         if (!$options->getImagineOptions()) {
             $options->setImagineOptions($this->imagineOptions);
@@ -131,6 +140,8 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
+
         $config = new PictureConfiguration();
         $attributes = [];
 
@@ -209,6 +220,9 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setSize($this->createConfigItem($imageSizes));
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
+                $options->setPreserveCopyrightMetadata(
+                    array_merge($options->getPreserveCopyrightMetadata(), $imageSizes['preserveMetadata'] ?? [])
+                );
 
                 if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
