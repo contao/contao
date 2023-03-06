@@ -1053,6 +1053,11 @@ abstract class Backend extends Controller
 			$label = '<span>' . $label . '</span>';
 		}
 
+		if ($row['requireItem'])
+		{
+			return Image::getHtml($image, '', $imageAttribute) . $label;
+		}
+
 		// Return the image
 		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
