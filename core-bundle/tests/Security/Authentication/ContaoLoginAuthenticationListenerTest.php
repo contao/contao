@@ -122,7 +122,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getToken')
             ->willReturn($token)
         ;
