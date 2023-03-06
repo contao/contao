@@ -38,8 +38,8 @@ class CaptchaController extends AbstractController
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();
-
         $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+
         $captcha = new FormCaptcha();
 
         return new JsonResponse([

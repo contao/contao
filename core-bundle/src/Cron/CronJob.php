@@ -18,11 +18,7 @@ class CronJob
     private ?string $method;
     private string $interval;
     private string $name;
-
-    /**
-     * @var \DateTimeInterface
-     */
-    private $previousRun;
+    private \DateTimeInterface $previousRun;
 
     public function __construct(object $service, string $interval, string $method = null)
     {
