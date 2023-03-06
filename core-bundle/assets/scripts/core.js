@@ -81,7 +81,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: true,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
@@ -184,7 +184,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: true,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
@@ -259,7 +259,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: false,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {

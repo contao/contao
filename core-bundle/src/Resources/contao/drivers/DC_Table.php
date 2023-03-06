@@ -138,11 +138,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
-		// Set IDs and redirect
-		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		// Set IDs
+		if (Input::post('FORM_SUBMIT') == 'tl_select' || (\in_array(Input::post('FORM_SUBMIT'), array($strTable, $strTable . '_all')) && \in_array(Input::get('act'), array('editAll', 'overrideAll'))))
 		{
 			$ids = Input::post('IDS');
 
+			if (!empty($ids) && \is_array($ids))
+			{
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = $ids;
+				$objSession->replace($session);
+			}
+		}
+
+		// Redirect
+		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		{
 			if (empty($ids) || !\is_array($ids))
 			{
 				$this->reload();
@@ -2653,7 +2664,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2716,7 +2729,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
@@ -3019,7 +3033,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -3081,7 +3097,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
@@ -3534,6 +3551,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$reload = true;
 				}
 			}
+		}
+
+		if (isset($new_records[$this->strTable]))
+		{
+			unset($new_records[$this->strTable]);
+			$objSessionBag->set('new_records', $new_records);
 		}
 
 		// Delete all new but incomplete records (tstamp=0)
@@ -4091,7 +4114,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Toggle nodes
 		if (Input::get('ptg'))
 		{
-			$session[$node][Input::get('ptg')] = (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1) ? 0 : 1;
+			if (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1)
+			{
+				unset($session[$node][Input::get('ptg')]);
+			}
+			else
+			{
+				$session[$node][Input::get('ptg')] = 1;
+			}
+
 			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
@@ -4818,13 +4849,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make items sortable
-		if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+		if ($blnHasSorting)
 		{
 			$return .= '
-</ul>
+</ul>';
+
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+			{
+				$return .= '
 <script>
   Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
 </script>';
+			}
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '

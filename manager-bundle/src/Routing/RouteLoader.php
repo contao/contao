@@ -38,6 +38,18 @@ class RouteLoader implements RouteLoaderInterface
      */
     public function loadFromPlugins(): RouteCollection
     {
+        $collection = new RouteCollection();
+
+        // Load the routing.yaml file first if it exists, so it takes
+        // precedence over all other routes (see #2718)
+        if ($configFile = $this->getConfigFile()) {
+            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        }
+
         $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
             function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {
@@ -49,7 +61,7 @@ class RouteLoader implements RouteLoaderInterface
 
                 return $collection;
             },
-            new RouteCollection()
+            $collection
         );
 
         // Load the routing.yaml file if it exists
