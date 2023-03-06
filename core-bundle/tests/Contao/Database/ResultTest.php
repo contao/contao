@@ -50,9 +50,7 @@ class ResultTest extends TestCase
             }
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
-
-        $results[1]->fetchField();
+        $this->assertSame(0, $results[1]->count());
     }
 
     public function testSingleRow(): void
@@ -92,7 +90,10 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->fetchField());
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
+        $this->assertSame('value1', $results[1]->fetchField(0));
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The result does not contain any data at offset 1.');
 
         $results[1]->fetchField(1);
     }
@@ -139,7 +140,10 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->fetchField());
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
+        $this->assertSame('value2', $results[1]->fetchField(0));
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The result does not contain any data at offset 1.');
 
         $results[1]->fetchField(1);
     }
