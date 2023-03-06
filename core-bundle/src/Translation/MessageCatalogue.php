@@ -57,7 +57,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         return $this->parent->all($domain);
     }
 
-    public function set($id, $translation, $domain = 'messages'): void
+    public function set(string $id, string $translation, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
@@ -66,7 +66,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->parent->set($id, $translation, $domain);
     }
 
-    public function has($id, $domain = 'messages'): bool
+    public function has(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
             return $this->parent->has($id, $domain);
@@ -75,7 +75,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         return null !== $this->loadMessage($id, $domain);
     }
 
-    public function defines($id, $domain = 'messages'): bool
+    public function defines(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
             return $this->parent->defines($id, $domain);
@@ -84,7 +84,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         return null !== $this->loadMessage($id, $domain);
     }
 
-    public function get($id, $domain = 'messages'): string
+    public function get(string $id, string $domain = 'messages'): string
     {
         if (!$this->isContaoDomain($domain)) {
             return $this->parent->get($id, $domain);
@@ -93,7 +93,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         return $this->loadMessage($id, $domain) ?? $id;
     }
 
-    public function replace($messages, $domain = 'messages'): void
+    public function replace(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
@@ -102,7 +102,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->parent->replace($messages, $domain);
     }
 
-    public function add($messages, $domain = 'messages'): void
+    public function add(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
