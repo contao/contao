@@ -175,10 +175,10 @@
 
     document.querySelectorAll('.tl_modulewizard tr').forEach(init);
 
-    new MutationObserver(function (mutationsList) {
+    new MutationObserver(function(mutationsList) {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function (element) {
+                mutation.addedNodes.forEach(function(element) {
                     if (element.matches && element.matches('.tl_modulewizard tr, .tl_modulewizard tr *')) {
                         init(element.closest('tr'));
                     }

@@ -56,6 +56,14 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\CaptchaController:
+        arguments:
+            - '@contao.framework'
+            - '%kernel.project_dir%'
+            - '@contao.cache.entity_tags'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
