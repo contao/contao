@@ -311,7 +311,7 @@ class ModuleSearch extends Module
 			}
 
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+			$figureBuilder->fromPath(ltrim($v['https://schema.org/primaryImageOfPage']['contentUrl'], '/'));
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
