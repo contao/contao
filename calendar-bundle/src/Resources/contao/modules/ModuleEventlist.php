@@ -401,7 +401,7 @@ class ModuleEventlist extends Events
 				if (null !== $figure)
 				{
 					// Rebuild with link to event if none is set
-					if (!$figure->getLinkHref())
+					if (!$figure->getLinkHref() && $event['href'] != Environment::get('request'))
 					{
 						$figure = $figureBuilder
 							->setLinkHref($event['href'])

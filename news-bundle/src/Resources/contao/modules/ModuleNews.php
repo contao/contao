@@ -184,7 +184,7 @@ abstract class ModuleNews extends Module
 			if (null !== ($figure = $figureBuilder->buildIfResourceExists()))
 			{
 				// Rebuild with link to news article if none is set
-				if (!$figure->getLinkHref())
+				if (!$figure->getLinkHref() && $objTemplate->link != Environment::get('request'))
 				{
 					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
