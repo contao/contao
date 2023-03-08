@@ -49,13 +49,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $request = $event->getRequest();
-
-        if (false === $request->attributes->get('_token_check')) {
-            return;
-        }
-
-        $this->tokenStorage->initialize($this->getTokensFromCookies($request->cookies));
+        $this->tokenStorage->initialize($this->getTokensFromCookies($event->getRequest()->cookies));
     }
 
     /**
