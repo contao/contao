@@ -817,20 +817,13 @@ class Versions extends Controller
 	 */
 	protected function getUsername()
 	{
-		if ($this->strUsername !== null)
-		{
-			return $this->strUsername;
-		}
-
-		$this->import(BackendUser::class, 'User');
-
-		return $this->User->username;
+		return $this->strUsername ?? System::getContainer()->get('security.helper')->getUser()->getUserIdentifier();
 	}
 
 	/**
 	 * Return the user ID
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getUserId()
 	{
@@ -839,9 +832,12 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		{
+			return $user->id;
+		}
 
-		return $this->User->id;
+		return 0;
 	}
 
 	/**
