@@ -32,8 +32,8 @@ class CsrfTokenCookieSubscriberTest extends TestCase
     public function testInitializesTheStorage(): void
     {
         $token = (new UriSafeTokenGenerator())->generateToken();
-
         $request = Request::create('https://foobar.com');
+
         $request->cookies = new InputBag([
             'csrf_foo' => 'bar',
             'csrf_generated' => $token,
@@ -75,6 +75,32 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 
         $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
         $listener->onKernelRequest($requestEvent);
+    }
+
+    public function testDoesNotInitializeTheStorageIfTheTokenCheckHasBeenDisabled(): void
+    {
+        $token = (new UriSafeTokenGenerator())->generateToken();
+
+        $request = Request::create('https://foobar.com');
+        $request->attributes->set('_token_check', false);
+
+        $request->cookies = new InputBag([
+            'csrf_foo' => 'bar',
+            'csrf_generated' => $token,
+            'not_csrf' => 'baz',
+            'csrf_bar' => '"<>!&', // ignore invalid characters
+        ]);
+
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
+        $listener->onKernelRequest($this->getRequestEvent($request));
     }
 
     public function testAddsTheTokenCookiesToTheResponse(): void
@@ -126,6 +152,28 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             ->expects($this->once())
             ->method('getUsedTokens')
             ->willReturn(['foo' => 'bar'])
+        ;
+
+        $response = new Response();
+
+        $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertCount(0, $response->headers->getCookies());
+    }
+
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfTheTokenCheckHasBeenDisabled(): void
+    {
+        $request = Request::create('https://foobar.com');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->attributes->set('_token_check', false);
+
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
         ;
 
         $response = new Response();
