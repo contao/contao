@@ -933,13 +933,13 @@ abstract class Backend extends Controller
       if (el.type == "password") {
         el.type = "text";
         this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
-        this.getElements("img").forEach(function (image) {
+        this.getElements("img").forEach(function(image) {
           image.src = image.src.replace("visible.svg", "visible_.svg");
         });
       } else {
         el.type = "password";
         this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
-        this.getElements("img").forEach(function (image) {
+        this.getElements("img").forEach(function(image) {
           image.src = image.src.replace("visible_.svg", "visible.svg");
         });
       }
