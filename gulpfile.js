@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     svgo = require('gulp-svgo'),
     pump = require('pump');
 
-gulp.task('minify-theme-icons', function (cb) {
+gulp.task('minify-theme-icons', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/icons/*.svg'),
@@ -22,7 +22,7 @@ gulp.task('minify-theme-icons', function (cb) {
     );
 });
 
-gulp.task('minify-dark-theme-icons', function (cb) {
+gulp.task('minify-dark-theme-icons', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/icons-dark/*.svg'),
@@ -40,7 +40,7 @@ gulp.task('minify-dark-theme-icons', function (cb) {
     );
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch('core-bundle/contao/themes/flexible/icons/*.svg', gulp.series('minify-theme-icons'));
     gulp.watch('core-bundle/contao/themes/flexible/icons-dark/*.svg', gulp.series('minify-dark-theme-icons'));
 });

@@ -48,7 +48,7 @@ window.AjaxRequest =
 	 *
 	 * @returns {boolean}
 	 */
-	toggleStructure: function (el, id, level, mode) {
+	toggleStructure: function(el, id, level, mode) {
 		el.blur();
 
 		var item = $(id),
@@ -58,7 +58,7 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
 				});
 
@@ -67,7 +67,7 @@ window.AjaxRequest =
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
 				});
 
@@ -81,7 +81,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: true,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
@@ -126,7 +126,7 @@ window.AjaxRequest =
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
 				});
 
@@ -151,7 +151,7 @@ window.AjaxRequest =
 	 *
 	 * @returns {boolean}
 	 */
-	toggleFileManager: function (el, id, folder, level) {
+	toggleFileManager: function(el, id, folder, level) {
 		el.blur();
 
 		var item = $(id),
@@ -161,7 +161,7 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
 				});
 
@@ -170,7 +170,7 @@ window.AjaxRequest =
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
 				});
 
@@ -184,7 +184,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: true,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
@@ -209,7 +209,7 @@ window.AjaxRequest =
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
 				});
 
@@ -230,7 +230,7 @@ window.AjaxRequest =
 	 * @param {string} id    The ID of the target element
 	 * @param {string} field The field name
 	 */
-	toggleSubpalette: function (el, id, field) {
+	toggleSubpalette: function(el, id, field) {
 		el.blur();
 		var item = $(id);
 
@@ -259,7 +259,7 @@ window.AjaxRequest =
 			field: el,
 			evalScripts: false,
 			onRequest: function() {
-				AjaxRequest.displayBox(Contao.lang.loading + ' …')
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
 			},
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
@@ -396,7 +396,7 @@ window.AjaxRequest =
 		}
 
 		// Send request
-		images.forEach(function (image) {
+		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
 			image.set('data-state', !published ? 1 : 0);
@@ -426,7 +426,7 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
 				});
 
@@ -434,7 +434,7 @@ window.AjaxRequest =
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function (image) {
+				images.forEach(function(image) {
 					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
 				});
 
@@ -2003,7 +2003,7 @@ window.Backend =
 			}
 		});
 
-		dz.on('drop', function (event) {
+		dz.on('drop', function(event) {
 			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
 				return;
 			}
@@ -2240,7 +2240,7 @@ window.Theme =
 
 		if (window.matchMedia) {
 			var matchMedia = window.matchMedia('(max-width:991px)');
-			var setAriaControls = function () {
+			var setAriaControls = function() {
 				if (matchMedia.matches) {
 					burger.setAttribute('aria-controls', 'left')
 					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
