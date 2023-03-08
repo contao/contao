@@ -1538,6 +1538,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (null === $currentRecord)
 		{
+			if ($blnDoNotRedirect)
+			{
+				return;
+			}
+
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
