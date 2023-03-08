@@ -838,6 +838,13 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
+.wizard > .image-button {
+	padding: 0;
+	border: 0;
+	background: none;
+	vertical-align: middle;
+}
+
 .wizard .tl_text, .wizard .tl_select {
 	width: calc(100% - 24px);
 }
