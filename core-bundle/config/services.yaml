@@ -787,17 +787,17 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    contao.security.backend_favorites_voter:
-        class: Contao\CoreBundle\Security\Voter\BackendFavoritesVoter
-        arguments:
-            - '@security.helper'
-            - '@database_connection'
-
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
             - Contao\BackendUser
+
+    contao.security.data_container.favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
