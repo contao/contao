@@ -76,7 +76,7 @@ class ModuleLogin extends Module
 			}
 		}
 		// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (#5860)
-		elseif ($this->redirectBack && ($referer = $request->headers->get('referer')) && str_starts_with($referer, $request->getSchemeAndHttpHost()))
+		elseif ($this->redirectBack && ($referer = $request->headers->get('referer')) && str_starts_with($referer, $request->getSchemeAndHttpHost().'/'))
 		{
 			$this->targetPath = $referer;
 		}
