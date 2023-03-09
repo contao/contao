@@ -86,8 +86,7 @@ class ModuleLogin extends Module
 				$refererUri->getScheme() === $requestUri->getScheme() &&
 				$refererUri->getHost() === $requestUri->getHost() &&
 				$refererUri->getPort() === $requestUri->getPort()
-			)
-			{
+			) {
 				$this->targetPath = $referer;
 			}
 		}
