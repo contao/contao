@@ -66,28 +66,31 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
+		elseif ($this->redirectBack && $request)
 		{
-			$uriSigner = System::getContainer()->get('uri_signer');
-
-			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			if ($request->query->has('redirect'))
 			{
-				$this->targetPath = $request->query->get('redirect');
-			}
-		}
-		// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (#5860)
-		elseif ($this->redirectBack && $referer = $request->headers->get('referer'))
-		{
-			$refererUri = new Uri($referer);
-			$requestUri = new Uri($request->getUri());
+				$uriSigner = System::getContainer()->get('uri_signer');
 
-			if (
-				$refererUri->getScheme() === $requestUri->getScheme() &&
-				$refererUri->getHost() === $requestUri->getHost() &&
-				$refererUri->getPort() === $requestUri->getPort()
-			) {
-				$this->targetPath = $referer;
+				// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+				if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+				{
+					$this->targetPath = $request->query->get('redirect');
+				}
+			}
+			// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (#5860)
+			elseif ($referer = $request->headers->get('referer'))
+			{
+				$refererUri = new Uri($referer);
+				$requestUri = new Uri($request->getUri());
+
+				if (
+					$refererUri->getScheme() === $requestUri->getScheme() &&
+					$refererUri->getHost() === $requestUri->getHost() &&
+					$refererUri->getPort() === $requestUri->getPort()
+				) {
+					$this->targetPath = $referer;
+				}
 			}
 		}
 
