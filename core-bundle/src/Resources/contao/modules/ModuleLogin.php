@@ -66,7 +66,7 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && $request)
+		elseif ($request && $this->redirectBack)
 		{
 			if ($request->query->has('redirect'))
 			{
