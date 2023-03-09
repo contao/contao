@@ -817,7 +817,17 @@ class Versions extends Controller
 	 */
 	protected function getUsername()
 	{
-		return $this->strUsername ?? System::getContainer()->get('security.helper')->getUser()->getUserIdentifier();
+		if ($this->strUsername !== null)
+		{
+			return $this->strUsername;
+		}
+
+		if ($user = System::getContainer()->get('security.helper')->getUser())
+		{
+			return $user->getUserIdentifier();
+		}
+
+		throw new \LogicException('No user logged in. Provide the username via "setUsername()" or call "create(true)" to create a version without user.');
 	}
 
 	/**
