@@ -785,7 +785,6 @@ a.tl_submit {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
-	vertical-align: middle;
 }
 
 .split-button ul, .split-button li {
