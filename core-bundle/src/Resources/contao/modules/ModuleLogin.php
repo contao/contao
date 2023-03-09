@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\Exception\LockedException;
+use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -76,9 +77,19 @@ class ModuleLogin extends Module
 			}
 		}
 		// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (#5860)
-		elseif ($this->redirectBack && ($referer = $request->headers->get('referer')) && str_starts_with($referer, $request->getSchemeAndHttpHost().'/'))
+		elseif ($this->redirectBack && $referer = $request->headers->get('referer'))
 		{
-			$this->targetPath = $referer;
+			$refererUri = new Uri($referer);
+			$requestUri = new Uri($request->getUri());
+
+			if (
+				$refererUri->getScheme() === $requestUri->getScheme() &&
+				$refererUri->getHost() === $requestUri->getHost() &&
+				$refererUri->getPort() === $requestUri->getPort()
+			)
+			{
+				$this->targetPath = $referer;
+			}
 		}
 
 		return parent::generate();
