@@ -311,6 +311,7 @@ class ModuleSearch extends Module
 			}
 
 			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
