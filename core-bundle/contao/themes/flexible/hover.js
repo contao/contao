@@ -156,7 +156,7 @@ Theme = {
 
 		if (window.matchMedia) {
 			var matchMedia = window.matchMedia('(max-width:991px)');
-			var setAriaControls = function () {
+			var setAriaControls = function() {
 				if (matchMedia.matches) {
 					burger.setAttribute('aria-controls', 'left')
 					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')

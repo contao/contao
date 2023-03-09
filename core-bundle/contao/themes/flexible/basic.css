@@ -785,7 +785,6 @@ a.tl_submit {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
-	vertical-align: middle;
 }
 
 .split-button ul, .split-button li {
@@ -835,6 +834,13 @@ a.tl_submit {
 .wizard > a {
 	position: relative;
 	top: -2px;
+	vertical-align: middle;
+}
+
+.wizard > .image-button {
+	padding: 0;
+	border: 0;
+	background: none;
 	vertical-align: middle;
 }
 
