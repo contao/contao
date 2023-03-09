@@ -75,6 +75,10 @@ class ModuleLogin extends Module
 				$this->targetPath = $request->query->get('redirect');
 			}
 		}
+		elseif ($this->redirectBack && ($referer = $request->headers->get('referer')) && str_starts_with($referer, $request->getSchemeAndHttpHost()))
+		{
+			$this->targetPath = $referer;
+		}
 
 		return parent::generate();
 	}
