@@ -86,7 +86,7 @@ class ModuleLogin extends Module
 				// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
 				if ($refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort())
 				{
-					$this->targetPath = $referer;
+					$this->targetPath = (string) $refererUri;
 				}
 			}
 		}
