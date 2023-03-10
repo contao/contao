@@ -444,43 +444,31 @@ class Ajax extends Backend
 				{
 					if (Input::get('act') == 'editAll')
 					{
-						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
-
-						$objVersions = new Versions($dc->table, $this->strAjaxId);
-						$objVersions->initialize();
-
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
-
-						$objVersions->create();
-
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+						$id = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+						$this->strAjaxId = $id;
 					}
 					else
 					{
-						$objVersions = new Versions($dc->table, $dc->id);
-						$objVersions->initialize();
+						$id = $dc->id;
+						$this->strAjaxId = null;
+					}
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+					$objVersions = new Versions($dc->table, $id);
+					$objVersions->initialize();
 
-						$objVersions->create();
+					$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($id);
 
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
-						}
+					$objVersions->create();
 
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+					if (Input::post('load'))
+					{
+						$action = Input::get('act') == 'editAll' ? 'editAll' : 'edit';
+						throw new ResponseException($this->convertToResponse($dc->$action($this->strAjaxId, Input::post('id'))));
+					}
+
+					if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+					{
+						throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 					}
 				}
 				elseif ($dc instanceof DC_File)
