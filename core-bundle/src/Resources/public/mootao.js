@@ -45,6 +45,8 @@ Request.Contao = new Class(
 		var url = this.getHeader('X-Ajax-Location'),
 			json;
 
+		this.redirectIfUnauthorized();
+
 		if (url && this.options.followRedirects) {
 			location.replace(url);
 			return;
@@ -80,12 +82,23 @@ Request.Contao = new Class(
 	failure: function() {
 		var url = this.getHeader('X-Ajax-Location');
 
+		this.redirectIfUnauthorized();
+
 		if (url && this.options.followRedirects && this.status >= 300 && this.status < 400) {
 			location.replace(url);
 			return;
 		}
 
 		this.onFailure();
+	},
+
+	redirectIfUnauthorized: function() {
+		var url = this.getHeader('X-Ajax-Location'),
+			unauthorized = null !== this.getHeader('X-Is-Unauthorized');
+
+		if (url && unauthorized) {
+			location.replace(url);
+		}
 	}
 });
 

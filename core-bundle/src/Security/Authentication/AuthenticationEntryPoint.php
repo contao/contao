@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -47,7 +48,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         throw new UnauthorizedHttpException('', 'Not authorized');
     }
 
-    private function redirectToBackend(Request $request): RedirectResponse
+    private function redirectToBackend(Request $request): Response
     {
         $url = $this->router->generate(
             'contao_backend_login',
@@ -55,6 +56,12 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return new RedirectResponse($this->uriSigner->sign($url));
+        $location = $this->uriSigner->sign($url);
+
+        if ($request->isXmlHttpRequest()) {
+            return new Response($location, 303, ['X-Is-Unauthorized' => 'true', 'X-Ajax-Location' => $location]);
+        }
+
+        return new RedirectResponse($location, 302);
     }
 }
