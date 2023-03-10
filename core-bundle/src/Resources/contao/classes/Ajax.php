@@ -453,12 +453,7 @@ class Ajax extends Backend
 						$this->strAjaxId = null;
 					}
 
-					$objVersions = new Versions($dc->table, $id);
-					$objVersions->initialize();
-
-					$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($id);
-
-					$objVersions->create();
+					$dc->toggle($id, Input::post('field'), true);
 
 					if (Input::post('load'))
 					{
@@ -466,7 +461,7 @@ class Ajax extends Backend
 						throw new ResponseException($this->convertToResponse($dc->$action($this->strAjaxId, Input::post('id'))));
 					}
 
-					if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+					if (($intLatestVersion = (new Versions($dc->table, $id))->getLatestVersion()) !== null)
 					{
 						throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 					}
