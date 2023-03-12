@@ -77,10 +77,9 @@ abstract class Controller extends System
 	public static function getTemplate($strTemplate)
 	{
 		$strTemplate = basename($strTemplate);
-
-		// Check for a theme folder
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
+		// Check for a theme folder
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			/** @var PageModel|null $objPage */
