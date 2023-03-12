@@ -79,7 +79,9 @@ abstract class Controller extends System
 		$strTemplate = basename($strTemplate);
 
 		// Check for a theme folder
-		if (\defined('TL_MODE') && TL_MODE == 'FE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			/** @var PageModel|null $objPage */
 			global $objPage;
