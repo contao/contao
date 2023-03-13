@@ -47,6 +47,14 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\CaptchaController:
+        arguments:
+            - '@contao.framework'
+            - '%kernel.project_dir%'
+            - '@contao.cache.entity_tags'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\ContentElement\MarkdownController:
         tags:
             - { name: contao.content_element, category: texts }

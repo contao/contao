@@ -40,7 +40,7 @@ class FrontendPreviewTokenTest extends TestCase
         $token = new FrontendPreviewToken(null, false);
 
         $this->assertTrue($token->isAuthenticated());
-        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
+        $this->assertSame('anon.', $token->getUser());
     }
 
     public function testReturnsThePublicationStatus(): void

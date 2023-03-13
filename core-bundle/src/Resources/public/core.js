@@ -84,7 +84,9 @@ var AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -173,7 +175,9 @@ var AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -243,7 +247,9 @@ var AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -314,7 +320,9 @@ var AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -383,7 +391,9 @@ var AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: false,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
@@ -1068,7 +1078,9 @@ var Backend =
 				new Request.Contao({
 					field: field,
 					evalScripts: false,
-					onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+					onRequest: function() {
+						AjaxRequest.displayBox(Contao.lang.loading + ' …');
+					},
 					onSuccess: function(txt, json) {
 						$('ctrl_' + opt.id).getParent('div').set('html', json.content);
 						json.javascript && Browser.exec(json.javascript);

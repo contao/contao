@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     assign-pr:
-        name: Assign
+        name: Assign PR
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
