@@ -999,7 +999,7 @@ abstract class Backend extends Controller
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -1051,6 +1051,11 @@ abstract class Backend extends Controller
 		else
 		{
 			$label = '<span>' . $label . '</span>';
+		}
+
+		if ($row['requireItem'])
+		{
+			return Image::getHtml($image, '', $imageAttribute) . $label;
 		}
 
 		// Return the image
@@ -1182,7 +1187,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">

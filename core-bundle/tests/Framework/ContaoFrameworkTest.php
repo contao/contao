@@ -355,13 +355,13 @@ class ContaoFrameworkTest extends TestCase
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('isBackendRequest')
             ->willReturn(false)
         ;
 
         $scopeMatcher
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('isFrontendRequest')
             ->willReturn(false)
         ;
