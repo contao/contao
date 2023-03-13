@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify-es').default,
     pump = require('pump');
 
-gulp.task('minify-theme-js', function (cb) {
+gulp.task('minify-theme-js', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/*.js'),
@@ -27,7 +27,7 @@ gulp.task('minify-theme-js', function (cb) {
     );
 });
 
-gulp.task('minify-theme-css', function (cb) {
+gulp.task('minify-theme-css', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/*.css'),
@@ -45,7 +45,7 @@ gulp.task('minify-theme-css', function (cb) {
     );
 });
 
-gulp.task('minify-theme-icons', function (cb) {
+gulp.task('minify-theme-icons', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/icons/*.svg'),
@@ -63,7 +63,7 @@ gulp.task('minify-theme-icons', function (cb) {
     );
 });
 
-gulp.task('minify-dark-theme-icons', function (cb) {
+gulp.task('minify-dark-theme-icons', function(cb) {
     pump(
         [
             gulp.src('core-bundle/contao/themes/flexible/icons-dark/*.svg'),
@@ -81,7 +81,7 @@ gulp.task('minify-dark-theme-icons', function (cb) {
     );
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch(
         [
             'core-bundle/contao/themes/flexible/*.js',
