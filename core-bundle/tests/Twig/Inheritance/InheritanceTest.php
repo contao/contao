@@ -62,12 +62,24 @@ class InheritanceTest extends TestCase
 
     public function testThrowsIfTemplatesAreAmbiguous(): void
     {
-        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
+        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('There cannot be more than one "foo" template in "'.$bundlePath.'/templates".');
+        $this->expectExceptionMessage('There cannot be more than one "foo.html.twig" template in "'.$bundlePath.'/templates".');
 
-        $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
+        $this->getDemoEnvironment(['InvalidBundle1' => ['path' => $bundlePath]]);
+    }
+
+    public function testThrowsIfTemplateTypesAreAmbiguous(): void
+    {
+        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2');
+        $file1 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/contao/templates/some/random/text.html.twig');
+        $file2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates/text.json.twig');
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig/html5" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
+
+        $this->getDemoEnvironment(['InvalidBundle2' => ['path' => $bundlePath]]);
     }
 
     private function getDemoEnvironment(array $bundlesMetadata = null): Environment

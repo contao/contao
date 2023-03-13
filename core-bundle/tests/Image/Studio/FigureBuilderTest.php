@@ -234,6 +234,90 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->build();
     }
 
+    public function testFromUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('images/d%75mmy.jpg')->build();
+    }
+
+    public function testFromPathAbsoluteUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('/images/d%75mmy.jpg')->build();
+    }
+
+    public function testFromUrlRelativeToBaseUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'https://example.com/folder/images/d%75mmy.jpg',
+                ['https://not.example.com', 'https://example.com/folder/'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlRelativeToRelativeBaseUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'folder/subfolder/images/d%75mmy.jpg',
+                ['folder/subfolder'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl(
+                'https://example.com/images/d%75mmy.jpg',
+                ['https://not.example.com'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToNoBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('https://example.com/images/d%75mmy.jpg')
+            ->build()
+        ;
+    }
+
+    public function testFromUrlInvalidPercentEncoding(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/contains invalid percent encoding/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('images%2Fdummy.jpg')
+            ->build()
+        ;
+    }
+
     public function testFromImage(): void
     {
         [, , $projectDir] = $this->getTestFilePaths();
@@ -1052,12 +1136,24 @@ class FigureBuilderTest extends TestCase
             'this/does/not/exist.png', [], false,
         ];
 
-        yield 'file path with special chars to an existing resource' => [
+        yield 'file URL with special chars to an existing resource' => [
             'files/public/foo%20%28bar%29.jpg',
             [
                 Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
                 null,
             ],
+        ];
+
+        yield 'absolute file path with special chars to an existing resource' => [
+            __DIR__.'/../../Fixtures/files/public/foo (bar).jpg',
+            [
+                Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
+                null,
+            ],
+        ];
+
+        yield 'absolute file path with special URL chars to an non-existing resource' => [
+            __DIR__.'/../../Fixtures/files/public/foo%20(bar).jpg', [], false,
         ];
     }
 

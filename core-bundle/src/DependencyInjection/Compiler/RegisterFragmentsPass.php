@@ -101,9 +101,14 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
-                if (!empty($attributes['template'])) {
-                    $templates[$attributes['type']] = $attributes['template'];
-                }
+                // Set a default template name if not defined. We are falling back to "ce_<type>" and
+                // "mod_<type>" in Contao 4.13; as of Contao 5 this will be "content_element/<type"
+                // and "frontend_module/<type>" instead.
+                $attributes['template'] = $attributes['template'] ??
+                    ['content_element' => 'ce_', 'frontend_module' => 'mod_'][substr($tag, 7)].$attributes['type']
+                ;
+
+                $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -140,7 +145,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addGlobalsMapListener($globals, $container);
 
         if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setCustomTemplates', [$templates]);
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
         }
     }
 

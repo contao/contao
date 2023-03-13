@@ -237,7 +237,7 @@ class tl_templates extends Backend
 		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['breadcrumb'] .= '
+		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">

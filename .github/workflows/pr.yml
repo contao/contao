@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     assign-pr:
-        name: Assign
+        name: Assign PR
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
@@ -25,6 +25,7 @@ jobs:
 
             - name: Add the label
               uses: christianvuerings/add-labels@v1
+              if: join(github.event.pull_request.labels) == ''
               with:
                   labels: bug
               env:

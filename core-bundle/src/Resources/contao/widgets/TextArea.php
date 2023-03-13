@@ -99,6 +99,15 @@ class TextArea extends Widget
 	}
 
 	/**
+	 * Unify newline characters to UNIX style.
+	 * This will also prevent our maxlength from counting newlines as two characters.
+	 */
+	protected function getPost($strKey)
+	{
+		return str_replace("\r\n", "\n", parent::getPost($strKey));
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string

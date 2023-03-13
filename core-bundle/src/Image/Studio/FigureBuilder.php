@@ -24,6 +24,7 @@ use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Validator;
+use Nyholm\Psr7\Uri;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -236,6 +237,46 @@ class FigureBuilder
         }
 
         return $this;
+    }
+
+    /**
+     * Sets the image resource from an absolute or relative URL.
+     *
+     * @param list<string> $baseUrls a list of allowed base URLs, the first match gets stripped from the resource URL
+     */
+    public function fromUrl(string $url, array $baseUrls = []): self
+    {
+        $this->lastException = null;
+
+        $uri = new Uri($url);
+        $path = null;
+
+        foreach ($baseUrls as $baseUrl) {
+            $baseUri = new Uri($baseUrl);
+
+            if ($baseUri->getHost() === $uri->getHost() && Path::isBasePath($baseUri->getPath(), $uri->getPath())) {
+                $path = Path::makeRelative($uri->getPath(), $baseUri->getPath().'/');
+                break;
+            }
+        }
+
+        if (null === $path) {
+            if ('' !== $uri->getHost()) {
+                $this->lastException = new InvalidResourceException(sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
+
+                return $this;
+            }
+
+            $path = $uri->getPath();
+        }
+
+        if (preg_match('/%2f|%5c/i', $path)) {
+            $this->lastException = new InvalidResourceException(sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
+
+            return $this;
+        }
+
+        return $this->fromPath(urldecode(ltrim($path, '/')));
     }
 
     /**
@@ -650,6 +691,9 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
+        /**
+         * @param ImageInterface|string $target Image object, URL or absolute file path
+         */
         $getResourceOrUrl = function ($target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
@@ -666,11 +710,12 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
-
-            $filePath = Path::isAbsolute($target)
-                ? Path::canonicalize($target)
-                : Path::makeAbsolute($target, $this->projectDir);
+            if (Path::isAbsolute($target)) {
+                $filePath = Path::canonicalize($target);
+            } else {
+                // URL relative to the project directory
+                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            }
 
             if (!is_file($filePath)) {
                 $filePath = null;

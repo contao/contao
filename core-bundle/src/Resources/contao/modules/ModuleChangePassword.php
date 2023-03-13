@@ -105,7 +105,6 @@ class ModuleChangePassword extends Module
 		// Initialize the versioning (see #8301)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
-		$objVersions->setUserId(0);
 		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
 		$objVersions->initialize();
 
@@ -127,9 +126,9 @@ class ModuleChangePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+			$objWidget->currentRecord = $objMember->id;
 
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)

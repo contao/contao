@@ -584,7 +584,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strTarget = ($objNextPage->target && 'redirect' === $objNextPage->type) ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
@@ -1527,7 +1527,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{

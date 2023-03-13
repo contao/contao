@@ -355,13 +355,13 @@ class ContaoFrameworkTest extends TestCase
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('isBackendRequest')
             ->willReturn(false)
         ;
 
         $scopeMatcher
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('isFrontendRequest')
             ->willReturn(false)
         ;
@@ -593,7 +593,7 @@ class ContaoFrameworkTest extends TestCase
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_HOOKS'] = [
             'getPageLayout' => [
                 ['test.listener.c', 'onGetPageLayout'],
