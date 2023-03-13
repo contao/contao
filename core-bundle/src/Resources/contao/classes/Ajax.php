@@ -458,6 +458,7 @@ class Ajax extends Backend
 					if (Input::post('load'))
 					{
 						$action = Input::get('act') == 'editAll' ? 'editAll' : 'edit';
+
 						throw new ResponseException($this->convertToResponse($dc->$action($this->strAjaxId, Input::post('id'))));
 					}
 
