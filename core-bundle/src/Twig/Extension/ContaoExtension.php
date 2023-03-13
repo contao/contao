@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -165,8 +166,9 @@ final class ContaoExtension extends AbstractExtension
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type ?
-                        $chunk : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    $parts[] = ChunkedText::TYPE_RAW === $type
+                        ? $chunk
+                        : twig_escape_filter($env, $chunk, $strategy, $charset);
                 }
 
                 return implode('', $parts);
@@ -199,8 +201,8 @@ final class ContaoExtension extends AbstractExtension
     }
 
     /**
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor
+     * @see PhpTemplateProxyNode
+     * @see PhpTemplateProxyNodeVisitor
      *
      * @internal
      */

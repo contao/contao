@@ -117,6 +117,7 @@
         "symfony/password-hasher": "^5.4",
         "symfony/polyfill-intl-idn": "^1.0",
         "symfony/polyfill-mbstring": "^1.0",
+        "symfony/polyfill-php80": "^1.26",
         "symfony/process": "^5.4",
         "symfony/property-access": "^5.4",
         "symfony/routing": "^5.4",
@@ -158,6 +159,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
+        "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8 || 6.2.0 || 6.2.1",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },
@@ -191,7 +193,8 @@
     "config": {
         "allow-plugins": {
             "contao-components/installer": true,
-            "contao/manager-plugin": true
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
         }
     },
     "extra": {

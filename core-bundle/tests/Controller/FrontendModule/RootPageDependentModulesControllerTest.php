@@ -113,7 +113,7 @@ class RootPageDependentModulesControllerTest extends TestCase
     public function testReturnsEmptyResponseWhenNoModulesConfigured(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->rootId = '1';
+        $page->rootId = 1;
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $module->rootPageDependentModules = serialize([]);
@@ -134,10 +134,11 @@ class RootPageDependentModulesControllerTest extends TestCase
     public function testPopulatesTheTemplateWithTheModule(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->rootId = '1';
+        $page->rootId = 1;
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $module->rootPageDependentModules = serialize([1 => '10']);
+        $module->classes = ['foo', 'bar'];
 
         $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
 
@@ -167,6 +168,13 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     private function mockContainer(RequestStack $requestStack = null, string $content = null): ContainerBuilder
     {
+        $moduleAdapter = $this->mockAdapter(['findByPk']);
+        $moduleAdapter
+            ->expects($content ? $this->once() : $this->never())
+            ->method('findByPk')
+            ->willReturn($this->createMock(ModuleModel::class))
+        ;
+
         $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
         $controllerAdapter
             ->expects($content ? $this->once() : $this->never())
@@ -174,7 +182,7 @@ class RootPageDependentModulesControllerTest extends TestCase
             ->willReturn($content ?? '')
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter, ModuleModel::class => $moduleAdapter]);
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());

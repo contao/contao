@@ -17,6 +17,14 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Prikaži neobjavljene strani in elemente pri deljenju te povezave</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+        <target>Onemogoči dostop do določenega naslova URL</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Omogoči dostop samo do navedenega naslova URL namesto do celotne strani.</target>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Ustvarjeno ob</target>
@@ -32,14 +40,6 @@
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
         <target>Uporabnik, ki je ustvaril povezavo za predogled.</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Poteče po</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Izberite, koliko časa naj bo veljavna povezava za predogled.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>

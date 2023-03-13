@@ -109,10 +109,8 @@ class DefaultIndexer implements IndexerInterface
 
     public function delete(Document $document): void
     {
-        $this->framework->initialize();
-
         $search = $this->framework->getAdapter(Search::class);
-        $search->removeEntry((string) $document->getUri());
+        $search->removeEntry((string) $document->getUri(), $this->connection);
     }
 
     public function clear(): void

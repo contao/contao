@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -465,7 +466,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		$strUrl = System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
+		$strUrl = System::getContainer()->get('router')->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;
@@ -498,7 +499,14 @@ abstract class Frontend extends Controller
 
 		if ($intId > 0 && ($intId != $objPage->id || $blnForceRedirect) && ($objNextPage = PageModel::findPublishedById($intId)) !== null)
 		{
-			$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
+			if (!$strForceLang)
+			{
+				$this->redirect($objNextPage->getAbsoluteUrl($strParams));
+			}
+			else
+			{
+				$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
+			}
 		}
 
 		$this->reload();

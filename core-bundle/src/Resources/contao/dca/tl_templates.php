@@ -18,7 +18,6 @@ use Contao\DC_Folder;
 use Contao\DiffRenderer;
 use Contao\Environment;
 use Contao\File;
-use Contao\Files;
 use Contao\Folder;
 use Contao\Image;
 use Contao\Input;
@@ -26,6 +25,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\TemplateLoader;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -237,7 +237,7 @@ class tl_templates extends Backend
 		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['breadcrumb'] .= '
+		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -257,11 +257,26 @@ class tl_templates extends Backend
 
 		/** @var SplFileInfo[] $files */
 		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		foreach ($files as $file)
 		{
-			$strRelpath = StringUtil::stripRootDir($file->getPathname());
-			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
+			// Do not use "StringUtil::stripRootDir()" here, because for
+			// symlinked bundles, the path will be outside the project dir.
+			$strRelpath = Path::makeRelative($file->getPathname(), $projectDir);
+
+			$modulePatterns = array(
+				"vendor/([^/]+/[^/]+)",
+				"\\.\\..*?([^/]+/[^/]+)/(?:src/Resources/contao/templates|contao/templates)",
+				"system/modules/([^/]+)"
+			);
+
+			preg_match('@^(?|' . implode('|', $modulePatterns) . ')/.*$@', $strRelpath, $matches);
+
+			// Use the matched "module" group and fall back to the full
+			// directory path (e.g. "contao/templates" in the app).
+			$strModule = $matches[1] ?? dirname($strRelpath);
+
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
@@ -270,21 +285,12 @@ class tl_templates extends Backend
 		// Copy an existing template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$strOriginal = Input::post('original', true);
-
-			if (Validator::isInsecurePath($strOriginal))
-			{
-				throw new RuntimeException('Invalid path ' . $strOriginal);
-			}
-
 			$strTarget = Input::post('target', true);
 
 			if (Validator::isInsecurePath($strTarget))
 			{
 				throw new RuntimeException('Invalid path ' . $strTarget);
 			}
-
-			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			// Validate the target path
 			if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))
@@ -294,6 +300,7 @@ class tl_templates extends Backend
 			else
 			{
 				$blnFound = false;
+				$strOriginal = Input::post('original', true);
 
 				// Validate the source path
 				foreach ($arrAllTemplates as $arrTemplates)
@@ -320,8 +327,11 @@ class tl_templates extends Backend
 					}
 					else
 					{
-						$this->import(Files::class, 'Files');
-						$this->Files->copy($strOriginal, $strTarget);
+						(new Filesystem())->copy(
+							Path::makeAbsolute($strOriginal, $projectDir),
+							Path::makeAbsolute($strTarget, $projectDir)
+						);
+
 						$this->redirect($this->getReferer());
 					}
 				}
@@ -346,7 +356,7 @@ class tl_templates extends Backend
 		// Show form
 		return ($strError ? '
 <div class="tl_message">
-<p class="tl_error">' . $strError . '</p>
+<p class="tl_error">' . StringUtil::specialchars($strError) . '</p>
 </div>' : '') . '
 
 <div id="tl_buttons">

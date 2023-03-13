@@ -596,10 +596,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
-            $userPassword = $this->encodeUrlParameter($user);
+            $userPassword = $this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$this->encodeUrlParameter($password);
+                $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $userPassword .= '@';
@@ -608,11 +608,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName .= '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter((string) $name);
         }
 
         if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
-            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
         return sprintf(
@@ -714,10 +714,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if (!empty($options['username'])) {
-            $credentials .= $this->encodeUrlParameter($options['username']);
+            $credentials .= $this->encodeUrlParameter((string) $options['username']);
 
             if (!empty($options['password'])) {
-                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
+                $credentials .= ':'.$this->encodeUrlParameter((string) $options['password']);
             }
 
             $credentials .= '@';
@@ -752,10 +752,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         if ($user = $container->getParameter('mailer_user')) {
-            $credentials .= $this->encodeUrlParameter($user);
+            $credentials .= $this->encodeUrlParameter((string) $user);
 
             if ($password = $container->getParameter('mailer_password')) {
-                $credentials .= ':'.$this->encodeUrlParameter($password);
+                $credentials .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $credentials .= '@';

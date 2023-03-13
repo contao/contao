@@ -125,9 +125,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @dataProvider getShowUnpublishedData
+     * @dataProvider getShowUnpublishedPreviewLinkIdData
      */
-    public function testAuthenticatesAFrontendGuest(bool $showUnpublished): void
+    public function testAuthenticatesAFrontendGuest(bool $showUnpublished, ?int $previewLinkId): void
     {
         $security = $this->createMock(Security::class);
         $security
@@ -138,14 +138,23 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $authenticator = $this->getAuthenticator($security, $session);
 
-        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished));
+        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished, $previewLinkId));
         $this->assertTrue($session->has('_security_contao_frontend'));
 
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
+        $this->assertSame('anon.', $token->getUser());
         $this->assertSame($showUnpublished, $token->showUnpublished());
+        $this->assertSame($previewLinkId, $token->getPreviewLinkId());
+    }
+
+    public function getShowUnpublishedPreviewLinkIdData(): \Generator
+    {
+        yield [true, null];
+        yield [true, 123];
+        yield [false, null];
+        yield [false, 123];
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void

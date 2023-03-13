@@ -18,8 +18,9 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 class FrontendPreviewToken extends AbstractToken
 {
     private bool $showUnpublished;
+    private ?int $previewLinkId;
 
-    public function __construct(?FrontendUser $user, bool $showUnpublished)
+    public function __construct(?FrontendUser $user, bool $showUnpublished, int $previewLinkId = null)
     {
         if (null === $user) {
             parent::__construct();
@@ -30,18 +31,19 @@ class FrontendPreviewToken extends AbstractToken
         }
 
         $this->showUnpublished = $showUnpublished;
+        $this->previewLinkId = $previewLinkId;
 
         $this->setAuthenticated(true);
     }
 
     public function __serialize(): array
     {
-        return [$this->showUnpublished, parent::__serialize()];
+        return [$this->showUnpublished, parent::__serialize(), $this->previewLinkId];
     }
 
     public function __unserialize(array $data): void
     {
-        [$this->showUnpublished, $parentData] = $data;
+        [$this->showUnpublished, $parentData, $this->previewLinkId] = $data + [null, null, null];
 
         parent::__unserialize($parentData);
     }
@@ -54,5 +56,10 @@ class FrontendPreviewToken extends AbstractToken
     public function showUnpublished(): bool
     {
         return $this->showUnpublished;
+    }
+
+    public function getPreviewLinkId(): ?int
+    {
+        return $this->previewLinkId;
     }
 }

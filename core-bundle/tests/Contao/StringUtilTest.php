@@ -423,4 +423,60 @@ class StringUtilTest extends TestCase
         yield 'Array' => [[]];
         yield 'Non-stringable object' => [new \stdClass()];
     }
+
+    /**
+     * @param float|int $source
+     *
+     * @dataProvider numberToStringProvider
+     */
+    public function testNumberToString($source, string $expected, int $precision = null): void
+    {
+        $this->assertSame($expected, StringUtil::numberToString($source, $precision));
+    }
+
+    public function numberToStringProvider(): \Generator
+    {
+        yield [0, '0'];
+        yield [1, '1'];
+        yield [-0, '0'];
+        yield [-1, '-1'];
+        yield [0.0, '0'];
+        yield [1.0, '1'];
+        yield [-0.0, '0'];
+        yield [-1.0, '-1'];
+        yield [0.00000000000000000000000000000000000000000000001, '0.00000000000000000000000000000000000000000000001'];
+        yield [1000000000000000000000000000000000000000000000000, '1000000000000000000000000000000000000000000000000'];
+        yield [123456789012345678901234567890, '123456789012350000000000000000'];
+        yield [PHP_INT_MAX, '9223372036854775807'];
+        yield [PHP_INT_MAX, '9223400000000000000', 5];
+        yield [(float) PHP_INT_MAX, '9223372036854800000'];
+        yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
+        yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
+        yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+        yield [1.23456, '1.23456', -1];
+        yield [1.23456, '1.2', 2];
+    }
+
+    /**
+     * @param float|int $source
+     *
+     * @dataProvider numberToStringFailsProvider
+     */
+    public function testNumberToStringFails($source, string $exception, int $precision = null): void
+    {
+        $this->expectException($exception);
+
+        StringUtil::numberToString($source, $precision);
+    }
+
+    public function numberToStringFailsProvider(): \Generator
+    {
+        yield [INF, \InvalidArgumentException::class];
+        yield [NAN, \InvalidArgumentException::class];
+        yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
+        yield ['string', \TypeError::class];
+        yield [1.2, \InvalidArgumentException::class, -2];
+        yield [1.2, \InvalidArgumentException::class, 0];
+        yield [1.2, \InvalidArgumentException::class, 1];
+    }
 }

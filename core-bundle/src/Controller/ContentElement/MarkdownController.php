@@ -34,6 +34,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownController extends AbstractContentElementController
 {
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.insert_tag.parser'] = InsertTagParser::class;
+
+        return $services;
+    }
+
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();
@@ -97,6 +106,8 @@ class MarkdownController extends AbstractContentElementController
         }
 
         $filesAdapter = $this->getContaoAdapter(FilesModel::class);
+
+        /** @var FilesModel|null $filesModel */
         $filesModel = $filesAdapter->findByPk($file);
 
         if (null === $filesModel) {
@@ -110,14 +121,5 @@ class MarkdownController extends AbstractContentElementController
         }
 
         return (string) file_get_contents($path);
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        $services = parent::getSubscribedServices();
-
-        $services['contao.insert_tag.parser'] = InsertTagParser::class;
-
-        return $services;
     }
 }

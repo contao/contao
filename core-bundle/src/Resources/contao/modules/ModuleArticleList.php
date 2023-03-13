@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "article list".
  */
@@ -96,6 +98,15 @@ class ModuleArticleList extends Module
 				continue;
 			}
 
+			try
+			{
+				$href = $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id));
+			}
+			catch (ExceptionInterface $exception)
+			{
+				continue;
+			}
+
 			$cssID = StringUtil::deserialize($objArticles->cssID, true);
 
 			$articles[] = array
@@ -104,7 +115,7 @@ class ModuleArticleList extends Module
 				'title' => StringUtil::specialchars($objArticles->title),
 				'id' => ($cssID[0] ?? null) ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id,
-				'href' => $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id))
+				'href' => $href
 			);
 		}
 

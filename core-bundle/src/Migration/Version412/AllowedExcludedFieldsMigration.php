@@ -101,13 +101,13 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
                 ]
             );
 
-            $this->connection
-                ->prepare('UPDATE tl_user_group SET alexf = :alexf WHERE id = :id')
-                ->executeStatement([
-                    ':id' => $group['id'],
-                    ':alexf' => serialize($alexf),
-                ])
-            ;
+            $this->connection->executeStatement(
+                'UPDATE tl_user_group SET alexf = :alexf WHERE id = :id',
+                [
+                    'id' => $group['id'],
+                    'alexf' => serialize($alexf),
+                ]
+            );
         }
 
         return $this->createResult(true);

@@ -22,6 +22,11 @@ class ContentAlias extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		$objElement = ContentModel::findByPk($this->cteAlias);
 
 		if ($objElement === null)
@@ -51,8 +56,17 @@ class ContentAlias extends ContentElement
 				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
+			// Tag the alias element (see #5249)
+			if ($this->objModel !== null)
+			{
+				System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			}
+
 			return $proxy->generate();
 		}
+
+		// Tag the included element (see #5248)
+		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objElement);
 
 		$objElement->origId = $objElement->origId ?: $objElement->id;
 		$objElement->id = $this->id;

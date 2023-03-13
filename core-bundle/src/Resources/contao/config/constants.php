@@ -11,8 +11,8 @@
 // Backwards compatibility
 // Core version
 define('VERSION', '4.13');
-define('BUILD', '8');
-define('LONG_TERM_SUPPORT', false);
+define('BUILD', '16');
+define('LONG_TERM_SUPPORT', true);
 
 // Backwards compatibility
 // Link constants

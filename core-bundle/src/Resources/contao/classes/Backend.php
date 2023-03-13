@@ -692,7 +692,7 @@ abstract class Backend extends Controller
 		$mode = Input::get('mode');
 
 		// For these actions the id parameter refers to the parent record
-		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		if (($act === 'paste' && $mode !== 'copy' && $mode !== 'cut') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
 		{
 			return $id;
 		}
@@ -999,7 +999,7 @@ abstract class Backend extends Controller
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -1051,6 +1051,11 @@ abstract class Backend extends Controller
 		else
 		{
 			$label = '<span>' . $label . '</span>';
+		}
+
+		if ($row['requireItem'])
+		{
+			return Image::getHtml($image, '', $imageAttribute) . $label;
 		}
 
 		// Return the image
@@ -1182,7 +1187,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -1272,6 +1277,7 @@ abstract class Backend extends Controller
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
       var el = $("ctrl_' . $inputName . '");
+      el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
         this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
@@ -1524,7 +1530,7 @@ abstract class Backend extends Controller
 			// Folders
 			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$strFolders .=  $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
+				$strFolders .= $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
 			}
 
 			// Files

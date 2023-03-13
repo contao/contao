@@ -51,6 +51,10 @@ class InsertTagParser implements ResetInterface
     {
         $chunked = iterator_to_array($this->replaceInlineChunked('{{'.$input.'}}'));
 
+        if (!$chunked) {
+            return '';
+        }
+
         if (1 !== \count($chunked) || ChunkedText::TYPE_RAW !== $chunked[0][0] || !\is_string($chunked[0][1])) {
             throw new \RuntimeException('Rendering a single insert tag has to return a single raw chunk');
         }

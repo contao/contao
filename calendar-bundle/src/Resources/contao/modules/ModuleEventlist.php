@@ -70,7 +70,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->cal_readerModule > 0 && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
@@ -273,7 +273,7 @@ class ModuleEventlist extends Events
 		if ($this->perPage > 0)
 		{
 			$id = 'page_e' . $this->id;
-			$page = Input::get($id) ?? 1;
+			$page = (int) (Input::get($id) ?? 1);
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))

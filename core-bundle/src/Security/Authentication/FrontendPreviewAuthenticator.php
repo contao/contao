@@ -55,9 +55,9 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    public function authenticateFrontendGuest(bool $showUnpublished): bool
+    public function authenticateFrontendGuest(bool $showUnpublished, int $previewLinkId = null): bool
     {
-        $token = new FrontendPreviewToken(null, $showUnpublished);
+        $token = new FrontendPreviewToken(null, $showUnpublished, $previewLinkId);
 
         $this->session->set('_security_contao_frontend', serialize($token));
 

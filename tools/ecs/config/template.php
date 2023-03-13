@@ -32,6 +32,7 @@ return static function (ECSConfig $ecsConfig): void {
     ]);
 
     $ecsConfig->parallel();
+    $ecsConfig->lineEnding("\n");
 
     $parameters = $ecsConfig->parameters();
     $parameters->set(Option::FILE_EXTENSIONS, ['html5']);

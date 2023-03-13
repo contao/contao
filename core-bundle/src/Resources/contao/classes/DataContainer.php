@@ -431,7 +431,6 @@ abstract class DataContainer extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
-
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -514,6 +513,12 @@ abstract class DataContainer extends Backend
 					try
 					{
 						$this->save($varValue);
+
+						// Confirm password changes
+						if ($objWidget instanceof Password)
+						{
+							Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+						}
 					}
 					catch (ResponseException $e)
 					{
@@ -747,7 +752,16 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+
+					try
+					{
+						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					}
+					catch (\Exception $e)
+					{
+						Message::addError($e->getMessage());
+						$image = Image::getPath('placeholder.svg');
+					}
 				}
 				else
 				{
@@ -1077,7 +1091,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1096,7 +1110,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
-			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
 		}
 
 		return $return;

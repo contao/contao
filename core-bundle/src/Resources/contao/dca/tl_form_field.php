@@ -672,12 +672,6 @@ class tl_form_field extends Backend
 	public function listFormFields($arrRow)
 	{
 		$arrRow['required'] = $arrRow['mandatory'];
-		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-
-		$strType = '
-<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
-
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']] ?? null;
 
 		if (!class_exists($strClass))
@@ -687,6 +681,11 @@ class tl_form_field extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
+		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
+
+		$strType = '
+<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
+<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h32' : '') . '">';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
@@ -767,7 +766,7 @@ class tl_form_field extends Backend
 	{
 		if (Input::get('act') == 'overrideAll')
 		{
-			return $this->getTemplateGroup('form_');
+			return array_merge(array('' => '-'), $this->getTemplateGroup('form_'));
 		}
 
 		$default = 'form_' . $dc->activeRecord->type;

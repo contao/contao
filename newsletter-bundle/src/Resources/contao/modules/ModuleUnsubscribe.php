@@ -263,7 +263,7 @@ class ModuleUnsubscribe extends Module
 			foreach ($GLOBALS['TL_HOOKS']['removeRecipient'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($strEmail, $arrRemove);
+				$this->{$callback[0]}->{$callback[1]}($strEmail, $arrRemove, $this);
 			}
 		}
 
@@ -274,8 +274,8 @@ class ModuleUnsubscribe extends Module
 
 		// Confirmation e-mail
 		$objEmail = new Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
 		$objEmail->text = System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);

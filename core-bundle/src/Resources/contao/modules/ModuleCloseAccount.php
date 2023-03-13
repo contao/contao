@@ -61,6 +61,7 @@ class ModuleCloseAccount extends Module
 		$this->loadDataContainer('tl_member');
 
 		$container = System::getContainer();
+		$objMember = MemberModel::findByPk($this->User->id);
 
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
@@ -69,6 +70,7 @@ class ModuleCloseAccount extends Module
 
 		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';
+		$objWidget->currentRecord = $objMember->id;
 
 		$strFormId = 'tl_close_account_' . $this->id;
 
@@ -98,8 +100,6 @@ class ModuleCloseAccount extends Module
 						$this->{$callback[0]}->{$callback[1]}($this->User->id, $this->reg_close, $this);
 					}
 				}
-
-				$objMember = MemberModel::findByPk($this->User->id);
 
 				// Remove the account
 				if ($this->reg_close == 'close_delete')

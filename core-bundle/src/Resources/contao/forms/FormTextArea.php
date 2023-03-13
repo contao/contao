@@ -102,8 +102,16 @@ class FormTextArea extends Widget
 
 			case 'size':
 				$arrSize = StringUtil::deserialize($varValue);
-				$this->intRows = $arrSize[0];
-				$this->intCols = $arrSize[1];
+
+				if (isset($arrSize[0]))
+				{
+					$this->intRows = $arrSize[0];
+				}
+
+				if (isset($arrSize[1]))
+				{
+					$this->intCols = $arrSize[1];
+				}
 				break;
 
 			case 'rows':
@@ -148,6 +156,15 @@ class FormTextArea extends Widget
 			default:
 				return parent::__get($strKey);
 		}
+	}
+
+	/**
+	 * Unify newline characters to UNIX style.
+	 * This will also prevent our maxlength from counting newlines as two characters.
+	 */
+	protected function getPost($strKey)
+	{
+		return str_replace("\r\n", "\n", parent::getPost($strKey));
 	}
 
 	/**

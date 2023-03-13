@@ -126,10 +126,9 @@ class FilesystemConfiguration
      */
     public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
     {
-        $path = Path::isAbsolute($filesystemPath) ?
-            Path::canonicalize($filesystemPath) :
-            Path::join('%kernel.project_dir%', $filesystemPath)
-        ;
+        $path = Path::isAbsolute($filesystemPath)
+            ? Path::canonicalize($filesystemPath)
+            : Path::join('%kernel.project_dir%', $filesystemPath);
 
         $path = $this->container->getParameterBag()->resolveValue($path);
 
@@ -192,6 +191,7 @@ class FilesystemConfiguration
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));
+        $definition->addMethodCall('useLastModified', [$useLastModified]);
         $definition->addTag('kernel.reset', ['method' => 'reset']);
 
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);

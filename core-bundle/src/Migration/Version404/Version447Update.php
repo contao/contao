@@ -92,35 +92,25 @@ class Version447Update extends AbstractMigration
             $count = 0;
 
             // Find the oldest, active subscription preferring real subscriptions over imported ones
-            $stmt = $this->connection->prepare("
-                SELECT
-                    *
-                FROM
-                    tl_newsletter_recipients
-                WHERE
-                    pid = :pid AND email = :email
-                ORDER BY
-                    active = '1' DESC, addedOn != '' DESC, id
-            ");
-
-            $subscriptions = $stmt
-                ->executeQuery(['pid' => $duplicate['pid'], 'email' => $duplicate['email']])
-                ->fetchAllAssociative()
-            ;
+            $subscriptions = $this->connection->fetchAllAssociative(
+                "
+                    SELECT *
+                    FROM tl_newsletter_recipients
+                    WHERE pid = :pid AND email = :email
+                    ORDER BY active = '1' DESC, addedOn != '' DESC, id
+                ",
+                ['pid' => $duplicate['pid'], 'email' => $duplicate['email']]
+            );
 
             foreach ($subscriptions as $subscription) {
                 if (0 === $count++) {
                     continue; // keep the first subscription
                 }
 
-                $delete = $this->connection->prepare('
-                    DELETE FROM
-                        tl_newsletter_recipients
-                    WHERE
-                        id = :id
-                ');
-
-                $delete->executeStatement(['id' => $subscription['id']]);
+                $this->connection->executeStatement(
+                    'DELETE FROM tl_newsletter_recipients WHERE id = :id',
+                    ['id' => $subscription['id']]
+                );
             }
 
             $messages[] = $duplicate['email'];

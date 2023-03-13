@@ -243,7 +243,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 					{
 						$offset = 1;
 
-						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder);
+						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder, true);
 						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
 
 						foreach ($arrFiles as $strFile)

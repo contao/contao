@@ -48,17 +48,36 @@ class BackendPassword extends Backend
 	 */
 	public function run()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		Controller::loadDataContainer('tl_user');
+
+		$dc = new DC_Table('tl_user');
+		$dc->id = $this->User->id;
+		$dc->activeRecord = $this->User;
+
+		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
+		$widget->template = 'be_widget_chpw';
+		$widget->dataContainer = $dc;
+		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
+		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
+		$widget->wizard = Backend::getTogglePasswordWizard('password');
+		$widget->currentRecord = $this->User->id;
+
 		$objTemplate = new BackendTemplate('be_password');
+		$objTemplate->widget = $widget->parse();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
+			$widget->validate();
+
+			// $widget->value returns the password hash, so get the value from the request object
 			$pw = $request->request->get('password');
 
-			// Password too short
-			if (mb_strlen($pw) < Config::get('minPasswordLength'))
+			if ($widget->hasErrors())
 			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
+				Message::addError($widget->getErrorAsString());
 			}
 			// Password and username are the same
 			elseif ($pw == $this->User->username)
@@ -68,7 +87,7 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
+				$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
 				// Make sure the password has been changed
 				if ($passwordHasher->verify($this->User->password, $pw))
@@ -77,8 +96,6 @@ class BackendPassword extends Backend
 				}
 				else
 				{
-					$this->loadDataContainer('tl_user');
-
 					// Trigger the save_callback
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] ?? null))
 					{
@@ -121,9 +138,7 @@ class BackendPassword extends Backend
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
-		$objTemplate->wizard = Backend::getTogglePasswordWizard('password');
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 
 		return $objTemplate->getResponse();
 	}
