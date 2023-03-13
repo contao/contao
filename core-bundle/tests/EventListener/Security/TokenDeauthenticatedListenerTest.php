@@ -51,7 +51,7 @@ class TokenDeauthenticatedListenerTest extends ContaoTestCase
         $listener($event);
     }
 
-    public function testDoesNotingIfNoContaoUserPresent(): void
+    public function testDoesNothingIfThereIsNoContaoUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
         $repository = $this->createMock(RememberMeRepository::class);

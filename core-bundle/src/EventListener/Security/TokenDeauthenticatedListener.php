@@ -24,8 +24,7 @@ class TokenDeauthenticatedListener
 
     public function __invoke(TokenDeauthenticatedEvent $tokenDeauthenticatedEvent): void
     {
-        $originalToken = $tokenDeauthenticatedEvent->getOriginalToken();
-        $user = $originalToken->getUser();
+        $user = $tokenDeauthenticatedEvent->getOriginalToken()->getUser();
 
         if (!$user instanceof User) {
             return;
