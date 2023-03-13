@@ -118,6 +118,9 @@ class Image
 	{
 		trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Image" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.factory" service instead.');
 
+		// Make sure the image physically exists
+		$file->createIfDeferred();
+
 		// Check whether the file exists
 		if (!$file->exists())
 		{
