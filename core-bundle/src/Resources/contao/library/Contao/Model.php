@@ -154,8 +154,7 @@ abstract class Model
 			{
 				if (!isset($this->arrRelations[$key]['table']))
 				{
-					$this->arrRelated[$key] = null;
-					continue;
+					throw new \Exception('Incomplete relation defined for ' . static::$strTable . '.' . $key);
 				}
 
 				$table = $this->arrRelations[$key]['table'];
