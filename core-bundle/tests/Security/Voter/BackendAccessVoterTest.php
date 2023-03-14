@@ -74,6 +74,30 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'foo', ['contao_user.alexf']));
     }
 
+    public function testGrantsAccessIfTheSubjectIsNullAndTheFieldIsNotEmpty(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, ['fields' => ['text', 'select']]))
+        ;
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, null, ['contao_user.fields']));
+    }
+
+    public function testDeniesAccessIfTheSubjectIsNullAndTheFieldIsEmpty(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, ['fields' => []]))
+        ;
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, null, ['contao_user.fields']));
+    }
+
     public function testDeniesAccessIfTheSubjectIsNotAScalarOrArray(): void
     {
         $token = $this->createMock(TokenInterface::class);

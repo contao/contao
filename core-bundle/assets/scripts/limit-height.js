@@ -1,5 +1,5 @@
-window.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('div.limit_height').forEach(function (div) {
+window.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('div.limit_height').forEach(function(div) {
         const parent = div.parentNode.closest('.tl_content');
 
         // Return if the element is a wrapper
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', function () {
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
 
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             if (div.style.height == 'auto') {
                 div.style.height = hgt+'px';
             } else {

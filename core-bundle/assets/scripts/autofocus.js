@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function() {
     const edit = document.querySelector('#main .tl_formbody_edit');
     if (!edit) return;
 
