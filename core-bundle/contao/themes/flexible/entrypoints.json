@@ -1,0 +1,49 @@
+{
+  "entrypoints": {
+    "backend": {
+      "css": [
+        "/system/themes/flexible/backend.64fdf00d.css"
+      ]
+    },
+    "confirm": {
+      "css": [
+        "/system/themes/flexible/confirm.25614be1.css"
+      ]
+    },
+    "conflict": {
+      "css": [
+        "/system/themes/flexible/conflict.143ef075.css"
+      ]
+    },
+    "diff": {
+      "css": [
+        "/system/themes/flexible/diff.07abcb9a.css"
+      ]
+    },
+    "help": {
+      "css": [
+        "/system/themes/flexible/help.fb1783b7.css"
+      ]
+    },
+    "login": {
+      "css": [
+        "/system/themes/flexible/login.04eb63b3.css"
+      ]
+    },
+    "popup": {
+      "css": [
+        "/system/themes/flexible/popup.a1fbdf50.css"
+      ]
+    },
+    "tinymce": {
+      "css": [
+        "/system/themes/flexible/tinymce.e5009f94.css"
+      ]
+    },
+    "tinymce-dark": {
+      "css": [
+        "/system/themes/flexible/tinymce-dark.596023db.css"
+      ]
+    }
+  }
+}
