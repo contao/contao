@@ -2740,6 +2740,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * Toggle a field (e.g. "published" or "disable")
 	 *
 	 * @param integer $intId
+	 * @param string  $strSelectorField
+	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @throws AccessDeniedException
 	 * @throws InternalServerErrorException
@@ -2756,7 +2758,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->intId = $intId;
 		}
 
-		$this->strField = $strSelectorField ?: Input::get('field');
+		$this->strField = $strSelectorField ?? Input::get('field');
 
 		if (null === $strSelectorField && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
 		{
@@ -2796,8 +2798,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$prevSubmit = Input::post('FORM_SUBMIT', true);
 		Input::setPost('FORM_SUBMIT', $this->strTable);
-		$this->varValue = $objRow->{$this->strField};
 
+		$this->varValue = $objRow->{$this->strField};
 		$this->save($this->varValue ? '' : '1');
 
 		// Trigger the onsubmit_callback

@@ -442,15 +442,13 @@ class Ajax extends Backend
 
 				if ($dc instanceof DC_Table)
 				{
+					$id = $dc->id;
+					$this->strAjaxId = null;
+
 					if (Input::get('act') == 'editAll')
 					{
 						$id = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 						$this->strAjaxId = $id;
-					}
-					else
-					{
-						$id = $dc->id;
-						$this->strAjaxId = null;
 					}
 
 					$dc->toggle($id, Input::post('field'), true);
