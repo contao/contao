@@ -119,6 +119,7 @@ services:
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
             - '@contao.cache.entity_tags'
         tags:
@@ -180,7 +181,7 @@ services:
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
-            - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
@@ -188,5 +189,6 @@ services:
     Contao\CoreBundle\Controller\SitemapController:
         arguments:
             - '@contao.routing.page_registry'
+            - '@contao.routing.page_finder'
         tags:
             - controller.service_arguments

@@ -31,32 +31,77 @@ class PageFinder
         $this->notFoundRequestMatcher = $notFoundRequestMatcher;
     }
 
-    public function findRootPageByHost(string $hostname, bool $https, string $acceptLanguage): ?PageModel
+    /**
+     * Find the root page matching the request host and optionally an Accept-Language header.
+     * If $acceptLanguage is not given, it will always return the fallback root page.
+     */
+    public function findRootPageForHost(string $hostname, string $acceptLanguage = null): ?PageModel
     {
-        $request = Request::create(($https ? 'https' : 'http').'://'.$hostname);
-        $request->headers->set('Accept-Language', $acceptLanguage);
+        $request = Request::create('http://'.$hostname);
+        $request->headers->set('Accept-Language', $acceptLanguage ?? '');
 
         return $this->matchRootPageForRequest($request);
     }
 
-    public function findRootPageByRequest(Request $request): ?PageModel
+    /**
+     * Finds all root pages matching the given host name. It will first look for a matching
+     * root page through routing and then find all root pages with the same tl_page.dns value.
+     *
+     * @return array<PageModel>
+     */
+    public function findAllRootPagesForHost(string $hostname): array
     {
-        $pageModel = $request->attributes->get('pageModel');
+        $pageModel = $this->findRootPageForHost($hostname);
 
-        if (!$pageModel instanceof PageModel) {
-            return $this->findRootPageByHost($request->getHost(), $request->isSecure(), $request->headers->get('Accept-Language'));
+        if (null === $pageModel) {
+            return [];
         }
 
-        return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
+        $this->framework->initialize();
+        $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages(['dns' => $pageModel->dns]);
+
+        return $rootPages ? $rootPages->getModels() : [];
     }
 
-    public function findFirstPageTypeByRequestHost(Request $request, string $type): ?PageModel
+    /**
+     * Finds the root page matching the request host and Accept-Language.
+     */
+    public function findRootPageForRequest(Request $request): ?PageModel
+    {
+        $this->framework->initialize();
+
+        if (($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+            return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
+        }
+
+        return $this->findRootPageForHost($request->getHost(), $request->headers->get('Accept-Language'));
+    }
+
+    /**
+     * Finds all root pages matching the host of the given request. It will first look for a matching
+     * root page through routing and then find all root pages with the same tl_page.dns value.
+     *
+     * @return array<PageModel>
+     */
+    public function findAllRootPagesForRequest(Request $request): array
+    {
+        return $this->findAllRootPagesForHost($request->getHost());
+    }
+
+    /**
+     * Finds the first sub-page of a given page for a request host and Accept-Language.
+     * This is mainly useful to retrieve an error page for the current host,
+     * or any other page type that only exists once per root page.
+     */
+    public function findFirstPageOfTypeForRequest(Request $request, string $type): ?PageModel
     {
         $pageModel = $request->attributes->get('pageModel');
 
         if (!$pageModel instanceof PageModel) {
-            $pageModel = $this->findRootPageByHost($request->getHost(), $request->isSecure(), $request->headers->get('Accept-Language'));
+            $pageModel = $this->findRootPageForRequest($request);
         }
+
+        $this->framework->initialize();
 
         return $this->framework->getAdapter(PageModel::class)->findFirstPublishedByTypeAndPid($type, $pageModel->loadDetails()->rootId);
     }
@@ -73,6 +118,8 @@ class PageFinder
             return $pageModel;
         }
 
+        $this->framework->initialize();
+
         return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
     }
 
@@ -88,8 +135,8 @@ class PageFinder
             }
         }
 
-        $rootPage = $arrParameters['pageModel'] ?? null;
+        $pageModel = $arrParameters['pageModel'] ?? null;
 
-        return $rootPage instanceof PageModel ? $rootPage : null;
+        return $pageModel instanceof PageModel ? $pageModel : null;
     }
 }

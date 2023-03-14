@@ -57,14 +57,7 @@ class RobotsTxtListener
             $directiveList->add(new Directive('Disallow', '/_contao/'));
         }
 
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
-
-        // Only fetch the fallback page because there can only be one sitemap per host
-        $rootPage = $pageModel->findPublishedFallbackByHostname($event->getRootPage()->dns);
-
-        if (null === $rootPage) {
-            return;
-        }
+        $rootPage = $event->getRootPage();
 
         $sitemap = sprintf(
             '%s%s/sitemap.xml',
