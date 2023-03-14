@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\RouterInterface;
@@ -107,7 +106,6 @@ class AuthenticationEntryPointTest extends TestCase
 
         $response = $entryPoint->start($request);
 
-        $this->assertInstanceOf(Response::class, $response);
         $this->assertFalse($response->headers->has('Location'));
         $this->assertSame(401, $response->getStatusCode());
         $this->assertSame('http://localhost/contao/login?_hash=%2FxSCw6cwMlws5DEhBCvs0%2F75oQA8q%2FgMkZEnYCf6QSE%3D&redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html', $response->headers->get('X-Ajax-Location'));

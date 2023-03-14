@@ -39,7 +39,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
@@ -62,6 +62,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             return new Response($location, 401, ['X-Ajax-Location' => $location]);
         }
 
-        return new RedirectResponse($location, 302);
+        return new RedirectResponse($location);
     }
 }
