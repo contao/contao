@@ -59,7 +59,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $location = $this->uriSigner->sign($url);
 
         if ($request->isXmlHttpRequest()) {
-            return new Response($location, 303, ['X-Is-Unauthorized' => 'true', 'X-Ajax-Location' => $location]);
+            return new Response($location, 401, ['X-Ajax-Location' => $location]);
         }
 
         return new RedirectResponse($location, 302);

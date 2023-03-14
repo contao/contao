@@ -109,7 +109,7 @@ class AuthenticationEntryPointTest extends TestCase
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertFalse($response->headers->has('Location'));
-        $this->assertTrue($response->headers->has('X-Is-Unauthorized'));
+        $this->assertSame(401, $response->getStatusCode());
         $this->assertSame('http://localhost/contao/login?_hash=%2FxSCw6cwMlws5DEhBCvs0%2F75oQA8q%2FgMkZEnYCf6QSE%3D&redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html', $response->headers->get('X-Ajax-Location'));
     }
 
