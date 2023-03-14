@@ -1,0 +1,83 @@
+<style>
+  .ce_accordion .toggler button {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: inherit;
+  }
+
+  .ce_accordion .accordion {
+    display: none;
+    overflow: hidden;
+    height: 0;
+    -webkit-transition: height 0.1s ease 0.1s;
+    transition: height 0.1s ease 0.1s;
+  }
+
+  .ce_accordion .accordion.open {
+    display: block;
+    -webkit-transition: height 0.2s ease;
+    transition: height 0.2s ease;
+  }
+
+  .ce_accordion .accordion.active {
+    overflow: visible;
+  }
+</style>
+<script src="https://unpkg.com/handorgel@0.5/lib/js/umd/handorgel.min.js"></script>
+<script>
+  (function () {
+    const addNextAccordions = (el, accordion) => {
+      if (el && el.classList.contains('ce_accordion')) {
+        const toggler = el.querySelector('.toggler');
+        const element = el.querySelector('.accordion');
+
+        if (!toggler || !element) {
+          return;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.innerHTML = toggler.innerHTML;
+        toggler.innerHTML = '';
+        toggler.appendChild(button);
+
+        addNextAccordions(el.nextElementSibling, accordion);
+
+        accordion.insertBefore(element, accordion.firstChild);
+        accordion.insertBefore(toggler, accordion.firstChild);
+
+        el.remove();
+      }
+    };
+
+    document.querySelectorAll('.ce_accordion').forEach((el) => {
+      if (el.querySelector('.accordion')) {
+        const accordion = document.createElement('div');
+        accordion.classList.add('ce_accordion');
+
+        el.parentNode.insertBefore(accordion, el);
+
+        addNextAccordions(el, accordion);
+
+        const orgel = new handorgel(accordion, {
+          multiSelectable: false,
+          headerOpenClass: 'open',
+          contentOpenClass: 'open',
+          headerOpenedClass: 'active',
+          contentOpenedClass: 'active',
+          headerFocusClass: 'focus',
+          contentFocusClass: 'focus',
+          headerDisabledClass: 'disabled',
+          contentDisabledClass: 'disabled',
+        });
+      }
+    });
+  })();
+</script>
