@@ -2400,8 +2400,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				// Begin current row
-				$strAjax = '';
+				$arrAjax = array();
 				$blnAjax = false;
+				$thisId = '';
 				$return .= '
 <div class="' . $class . ' cf">';
 
@@ -2428,10 +2429,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS_' . $id . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">';
+							if ($ajaxId == $thisId)
+							{
+								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+								{
+									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+								}
+
+								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS_' . $id . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">';
+							}
 						}
 
-						$blnAjax = false;
+						if (\count($arrAjax) > 1)
+						{
+							$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+							unset($arrAjax[$thisId]);
+							end($arrAjax);
+							$thisId = key($arrAjax);
+							$arrAjax[$thisId] .= $current;
+						}
+
 						$return .= "\n  " . '</div>';
 
 						continue;
@@ -2440,7 +2457,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if (preg_match('/^\[.*]$/', $v))
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+						$arrAjax[$thisId] = '';
+						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
 						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
@@ -2493,7 +2511,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
 				}
 
 				// Close box
