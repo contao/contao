@@ -2473,8 +2473,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					// Begin current row
-					$strAjax = '';
+					$arrAjax = array();
 					$blnAjax = false;
+					$thisId = '';
 					$box = '';
 
 					$excludedFields = array();
@@ -2496,10 +2497,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($blnAjax && Environment::get('isAjaxRequest'))
 							{
-								return $strAjax;
+								if ($ajaxId == $thisId)
+								{
+									if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+									{
+										$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+									}
+
+									return $arrAjax[$thisId];
+								}
+
+								if (\count($arrAjax) > 1)
+								{
+									$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+									unset($arrAjax[$thisId]);
+									end($arrAjax);
+									$thisId = key($arrAjax);
+									$arrAjax[$thisId] .= $current;
+								}
 							}
 
-							$blnAjax = false;
 							$box .= "\n  " . '</div>';
 
 							continue;
@@ -2508,7 +2525,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (preg_match('/^\[.*]$/', $v))
 						{
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+							$arrAjax[$thisId] = '';
+							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
 							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 							continue;
@@ -2567,7 +2585,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+						$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
 					}
 
 					// Save record
