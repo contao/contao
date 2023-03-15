@@ -2760,6 +2760,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->strField = $strSelectorField ?? Input::get('field');
 
+		// If the selector field is read from the query string, check that toggling it is allowed
 		if (null === $strSelectorField && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
