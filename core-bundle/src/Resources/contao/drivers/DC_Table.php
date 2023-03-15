@@ -2770,7 +2770,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['exclude'] ?? false) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
 		{
 			throw new AccessDeniedException('Not enough permissions to toggle field ' . $this->strTable . '.' . $this->strField . ' of record ID ' . $intId . '.');
 		}

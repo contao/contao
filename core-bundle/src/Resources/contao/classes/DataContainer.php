@@ -968,7 +968,7 @@ abstract class DataContainer extends Backend
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
 						// Hide the toggle icon if the user does not have access to the field
-						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['exclude'] ?? false) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field'])))
 						{
 							continue;
 						}
@@ -1222,7 +1222,7 @@ abstract class DataContainer extends Backend
 				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 				{
 					// Hide the toggle icon if the user does not have access to the field
-					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
+					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['exclude'] ?? false) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field'])))
 					{
 						continue;
 					}
