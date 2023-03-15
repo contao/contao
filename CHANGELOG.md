@@ -36,7 +36,7 @@ This project adheres to [Semantic Versioning].
 - [#5673] Add an attributes_callback for DCA fields ([aschempp])
 - [#5671] Allow a minimum amount of workers for autoscaling ([Toflar])
 - [#3694] Add the URI and page ID to log entries ([SeverinGloeckle])
-- [#5427] Check the administrator email address ([fritzmg])
+- [#5427] Check the administrator e-mail address ([fritzmg])
 - [#5405] Introduce background workers ([Toflar])
 - [#5631] Implement a dark scheme toggle ([aschempp])
 - [#5368] Enable the login rate limit ([bytehead])
