@@ -59,7 +59,7 @@ class UserCreateCommand extends Command
         $this
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
-            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The email address')
+            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The e-mail address')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The password')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The user language (ISO 639-1 language code)')
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Give admin permissions to the new user')
@@ -84,14 +84,14 @@ class UserCreateCommand extends Command
 
         $emailCallback = static function ($value) {
             if (!Validator::isEmail($value)) {
-                throw new \InvalidArgumentException('The email address is invalid.');
+                throw new \InvalidArgumentException('The e-mail address is invalid.');
             }
 
             return $value;
         };
 
         if (null === $input->getOption('email')) {
-            $email = $this->ask('Please enter the email address: ', $input, $output, $emailCallback);
+            $email = $this->ask('Please enter the e-mail address: ', $input, $output, $emailCallback);
 
             $input->setOption('email', $email);
         } else {
