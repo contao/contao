@@ -318,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'listitems' => array
 		(
 			'inputType'               => 'listWizard',
-			'eval'                    => array('allowHtml'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
 			(
 				array('tl_content', 'listImportWizard')
@@ -328,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tableitems' => array
 		(
 			'inputType'               => 'tableWizard',
-			'eval'                    => array('allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
 			'xlabel' => array
 			(
 				array('tl_content', 'tableImportWizard')

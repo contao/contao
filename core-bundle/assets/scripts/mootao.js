@@ -72,6 +72,11 @@ Request.Contao = new Class(
 	failure: function() {
 		var url = this.getHeader('X-Ajax-Location');
 
+		if (url && 401 === this.status) {
+			location.replace(url);
+			return;
+		}
+
 		if (url && this.options.followRedirects && this.status >= 300 && this.status < 400) {
 			location.replace(url);
 			return;
