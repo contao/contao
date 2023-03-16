@@ -1545,8 +1545,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Invalidate cache tags (no need to invalidate the parent)
 			$this->invalidateCacheTags();
 
-			// Delete the records
-			foreach ($delete as $table=>$fields)
+			// Delete the records in the reverse order to start from child records and avoid foreign key errors
+			foreach (array_reverse($delete) as $table=>$fields)
 			{
 				foreach ($fields as $v)
 				{
