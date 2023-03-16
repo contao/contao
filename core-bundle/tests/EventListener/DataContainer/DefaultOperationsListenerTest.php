@@ -26,8 +26,16 @@ use Symfony\Component\Security\Core\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
+    /**
+     * @var Security|\PHPUnit\Framework\MockObject\MockObject|(Security&\PHPUnit\Framework\MockObject\MockObject)
+     */
     private Security $security;
+
+    /**
+     * @var Connection|(Connection&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
+     */
     private Connection $connection;
+
     private DefaultOperationsListener $listener;
 
     protected function setUp(): void
