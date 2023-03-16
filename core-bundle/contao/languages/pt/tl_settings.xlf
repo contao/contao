@@ -57,14 +57,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Este limite global tem efeito se o usuário escolhe a opção &quot;mostrar todos os registros&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-        <target>Não colapsar elementos</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-        <target>Não colapsar elementos de conteúdo e outros recursos quando pré-visualizado no backend.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Tags HTML permitidas</target>

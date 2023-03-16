@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.1] (2023-03-16)
+
+**Fixed issues:**
+
+- [#5788] Add the TokenDeauthenticatedListener ([bytehead])
+- [#5870] Explicitly set the legacy template in the TwoFactorController ([m-vo])
+- [#5857] Fix the split button alignment ([leofeyer])
+- [#5819] Surround the `togglePassword` images with a button ([cliffparnitzky])
+- [#5840] Fix deleting multiple records ([Toflar])
+- [#5838] Add missing type hints to translation classes ([ausi])
+- [#5821] Remove tl_settings.doNotCollapse ([aschempp])
+- [#5828] Return BinaryFileResponse when handling downloads ([m-vo])
+- [#5780] Fix PHPUnit deprecation warnings ([m-vo])
+- [#5803] Move the favorites voter to the correct namespace ([aschempp])
+
 ## [5.1.0] (2023-02-16)
 
 **Fixed issues:**
@@ -81,6 +96,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.1]: https://github.com/contao/contao/releases/tag/5.1.1
 [5.1.0]: https://github.com/contao/contao/releases/tag/5.1.0
 [5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
 [5.1.0-RC2]: https://github.com/contao/contao/releases/tag/5.1.0-RC2
@@ -89,6 +105,7 @@ This project adheres to [Semantic Versioning].
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
+[cliffparnitzky]: https://github.com/cliffparnitzky
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
@@ -154,3 +171,13 @@ This project adheres to [Semantic Versioning].
 [#5714]: https://github.com/contao/contao/pull/5714
 [#5760]: https://github.com/contao/contao/pull/5760
 [#5762]: https://github.com/contao/contao/pull/5762
+[#5780]: https://github.com/contao/contao/pull/5780
+[#5788]: https://github.com/contao/contao/pull/5788
+[#5803]: https://github.com/contao/contao/pull/5803
+[#5819]: https://github.com/contao/contao/pull/5819
+[#5821]: https://github.com/contao/contao/pull/5821
+[#5828]: https://github.com/contao/contao/pull/5828
+[#5838]: https://github.com/contao/contao/pull/5838
+[#5840]: https://github.com/contao/contao/pull/5840
+[#5857]: https://github.com/contao/contao/pull/5857
+[#5870]: https://github.com/contao/contao/pull/5870
