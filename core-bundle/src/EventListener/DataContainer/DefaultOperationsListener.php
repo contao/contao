@@ -225,7 +225,7 @@ class DefaultOperationsListener
     {
         $new = $operation->getRecord();
         unset($new['id']);
-        $new['sorting'] = ($new['sorting'] ?? 0) + 1;
+        $new['tstamp'] = 0;
 
         return new CreateAction($table, $new);
     }

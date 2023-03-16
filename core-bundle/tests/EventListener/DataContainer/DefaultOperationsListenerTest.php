@@ -14,6 +14,11 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
@@ -21,6 +26,8 @@ use Symfony\Component\Security\Core\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
+    private Security $security;
+    private Connection $connection;
     private DefaultOperationsListener $listener;
 
     protected function setUp(): void
@@ -29,10 +36,10 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
-        $security = $this->createMock(Security::class);
-        $connection = $this->createMock(Connection::class);
+        $this->security = $this->createMock(Security::class);
+        $this->connection = $this->createMock(Connection::class);
 
-        $this->listener = new DefaultOperationsListener($security, $connection);
+        $this->listener = new DefaultOperationsListener($this->security, $this->connection);
     }
 
     protected function tearDown(): void
@@ -510,6 +517,121 @@ class DefaultOperationsListenerTest extends TestCase
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['children', 'show'], array_keys($operations));
+    }
+
+    /**
+     * @dataProvider checkPermissionsProvider
+     */
+    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array $newRecord = null): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
+
+        ($this->listener)('tl_foo');
+
+        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(
+                ContaoCorePermissions::DC_PREFIX.'tl_foo',
+                $this->callback(
+                    function (AbstractAction $action) use ($actionClass, $record, $newRecord) {
+                        $this->assertInstanceOf($actionClass, $action);
+                        $this->assertSame('tl_foo', $action->getDataSource());
+
+                        if ($action instanceof UpdateAction || $action instanceof DeleteAction) {
+                            $this->assertSame($record, $action->getCurrent());
+                        }
+
+                        if ($action instanceof CreateAction) {
+                            $this->assertSame($newRecord ?? $record, $action->getNew());
+                        }
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn(true)
+        ;
+
+        $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
+        $operation['button_callback']($config);
+    }
+
+    public function checkPermissionsProvider(): \Generator
+    {
+        yield 'edit operation' => [
+            'edit',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+        ];
+
+        yield 'copy operation' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            [],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'delete operation' => [
+            'delete',
+            DeleteAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+        ];
+
+        yield 'copy operation in tree mode' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'copy operation with parent table' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['config' => ['ptable' => 'tl_bar']],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'copyChilds operation in tree mode' => [
+            'copyChilds',
+            CreateAction::class,
+            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'cut operation in tree mode' => [
+            'cut',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+        ];
+
+        yield 'cut operation with parent table' => [
+            'cut',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['config' => ['ptable' => 'tl_bar']],
+        ];
+
+        yield 'toggle operation' => [
+            'toggle',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['fields' => ['foo' => ['toggle' => true]]],
+        ];
+
+        yield 'reverse toggle operation' => [
+            'toggle',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['fields' => ['foo' => ['reverseToggle' => true]]],
+        ];
     }
 
     private function assertOperation(array $operation, string $href, string $icon, bool $hasCallback): void
