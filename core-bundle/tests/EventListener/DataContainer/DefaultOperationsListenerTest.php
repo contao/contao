@@ -22,17 +22,18 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
     /**
-     * @var Security|\PHPUnit\Framework\MockObject\MockObject|(Security&\PHPUnit\Framework\MockObject\MockObject)
+     * @var Security|MockObject
      */
     private Security $security;
 
     /**
-     * @var Connection|(Connection&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
+     * @var Connection|MockObject
      */
     private Connection $connection;
 
