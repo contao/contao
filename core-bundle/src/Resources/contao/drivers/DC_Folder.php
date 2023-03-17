@@ -168,6 +168,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if (!empty($ids) && \is_array($ids))
 			{
+				// Decode the values (see #5764)
+				$ids = array_map('rawurldecode', $ids);
+
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = $ids;
 				$objSession->replace($session);
@@ -181,9 +184,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->reload();
 			}
-
-			// Decode the values (see #5764)
-			$ids = array_map('rawurldecode', $ids);
 
 			if (isset($_POST['edit']))
 			{
