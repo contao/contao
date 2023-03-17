@@ -65,7 +65,7 @@ class CrawlCommand extends Command
     {
         $this
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
-            ->addOption('queue', 'q', InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
+            ->addOption('queue', null, InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
