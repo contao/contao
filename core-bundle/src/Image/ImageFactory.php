@@ -200,6 +200,19 @@ class ImageFactory implements ImageFactoryInterface
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
+
+                    if (!$imageSize->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true)) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $preserveMetadata,
+                                ),
+                            ),
+                        );
+                    }
                 }
 
                 return [$config, null, $options];
@@ -209,6 +222,9 @@ class ImageFactory implements ImageFactoryInterface
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
+                $options->setPreserveCopyrightMetadata(
+                    array_merge($options->getPreserveCopyrightMetadata(), $this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [])
+                );
 
                 return [$config, null, $options];
             }

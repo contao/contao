@@ -15,6 +15,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
+use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
@@ -95,7 +96,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
+		'__selector__'                => array('preserveMetadata'),
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{expert_legend:hide},formats,preserveMetadata,cssClass,skipIfDimensionsMatch'
+	),
+
+	// Subpalettes
+	'subpalettes' => array
+	(
+		'preserveMetadata'            => 'metadata'
 	),
 
 	// Fields
@@ -176,6 +184,19 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
+		),
+		'preserveMetadata' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
+		),
+		'metadata' => array
+		(
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('tl_image_size', 'getMetadata'),
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
 		),
 		'skipIfDimensionsMatch' => array
 		(
@@ -412,6 +433,23 @@ class tl_image_size extends Backend
 			$chunks = array_values(array_diff(explode(',', $to), array($from)));
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Return the image metadata options
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getMetadata(DataContainer $dc=null)
+	{
+		foreach ((new ResizeOptions())->getPreserveCopyrightMetadata() as $key => $value)
+		{
+			$options[serialize(array($key => $value))] = strtoupper($key) . ' (' . implode(', ', iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($value)))) . ')';
 		}
 
 		return $options;

@@ -156,6 +156,19 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
+                    if (!$imageSizes->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSizes->metadata, true)) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $preserveMetadata,
+                                ),
+                            ),
+                        );
+                    }
+
                     $formats = [];
 
                     if ('' !== $imageSizes->formats) {
