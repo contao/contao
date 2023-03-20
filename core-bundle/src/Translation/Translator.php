@@ -28,7 +28,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     private \SplObjectStorage $catalogues;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
+     * @internal
      */
     public function __construct(
         private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,

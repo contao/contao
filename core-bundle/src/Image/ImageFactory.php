@@ -33,7 +33,7 @@ class ImageFactory implements ImageFactoryInterface
     private array $predefinedSizes = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
+     * @internal
      */
     public function __construct(
         private ResizerInterface $resizer,

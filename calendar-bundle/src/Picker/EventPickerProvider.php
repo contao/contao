@@ -29,7 +29,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     use FrameworkAwareTrait;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
+     * @internal
      */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
