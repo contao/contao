@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "security.access.decision_manager" service instead
+     * @internal
      */
     public function __construct(
         private AccessDecisionManagerInterface $inner,

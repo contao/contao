@@ -59,15 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
+        <target>İstek adresi</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
+        <target>İsteğin adresi</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
+        <target>Sayfa kodu</target>
       </trans-unit>
       <trans-unit id="tl_log.page.1">
         <source>The ID of the page</source>
+        <target>Sayfanın kodu</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>

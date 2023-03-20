@@ -27,7 +27,7 @@ class ImageSizes implements ResetInterface
     private array|null $options = null;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
+     * @internal
      */
     public function __construct(
         private Connection $connection,

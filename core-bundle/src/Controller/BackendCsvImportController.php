@@ -35,7 +35,7 @@ class BackendCsvImportController
     final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
-     * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
+     * @internal
      */
     public function __construct(
         private ContaoFramework $framework,

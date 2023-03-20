@@ -407,6 +407,7 @@
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader (deprecated)</source>
+        <target>RSS okuyucu (kullanımdan kaldırıldı)</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
@@ -414,9 +415,11 @@
       </trans-unit>
       <trans-unit id="FMD.feed_reader.0">
         <source>Feed reader</source>
+        <target>Akış okuyucu</target>
       </trans-unit>
       <trans-unit id="FMD.feed_reader.1">
         <source>Adds an RSS, Atom or JSON feed to the page</source>
+        <target>Sayfaya bir RSS, Atom ya da JSON akışı ekler</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
