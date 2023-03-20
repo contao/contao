@@ -2036,6 +2036,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
 		{
 			$strSource = System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('source');
+			$strSource = str_replace("\r\n", "\n", $strSource); // see #5096
 
 			// Save the file
 			if (md5($strContent) != md5($strSource))
