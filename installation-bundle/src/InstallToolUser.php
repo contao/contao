@@ -20,7 +20,7 @@ class InstallToolUser
     private int $timeout = 300;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_installation.install_tool_user" service instead
+     * @internal
      */
     public function __construct(Session $session)
     {

@@ -22,7 +22,7 @@ class ScopeMatcher
     private RequestMatcherInterface $frontendMatcher;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.scope_matcher" service instead
+     * @internal
      */
     public function __construct(RequestMatcherInterface $backendMatcher, RequestMatcherInterface $frontendMatcher)
     {

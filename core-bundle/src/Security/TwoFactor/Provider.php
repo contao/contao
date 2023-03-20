@@ -22,7 +22,7 @@ class Provider implements TwoFactorProviderInterface
     private Authenticator $authenticator;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.two_factor.provider" service instead
+     * @internal
      */
     public function __construct(Authenticator $authenticator)
     {

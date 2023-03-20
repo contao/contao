@@ -28,7 +28,7 @@ class PublishedFilter implements RouteFilterInterface
     private TokenChecker $tokenChecker;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.matcher.published_filter" service instead
+     * @internal
      */
     public function __construct(TokenChecker $tokenChecker)
     {
