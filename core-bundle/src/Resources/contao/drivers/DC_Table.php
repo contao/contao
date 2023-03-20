@@ -1545,8 +1545,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Invalidate cache tags (no need to invalidate the parent)
 			$this->invalidateCacheTags();
 
-			// Delete the records
-			foreach ($delete as $table=>$fields)
+			// Delete the records in the reverse order to start from child records and avoid foreign key errors
+			foreach (array_reverse($delete) as $table=>$fields)
 			{
 				foreach ($fields as $v)
 				{
@@ -2740,11 +2740,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * Toggle a field (e.g. "published" or "disable")
 	 *
 	 * @param integer $intId
+	 * @param string  $strSelectorField
+	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @throws AccessDeniedException
 	 * @throws InternalServerErrorException
 	 */
-	public function toggle($intId=null)
+	public function toggle($intId=null, $strSelectorField=null, $blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
@@ -2756,9 +2758,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->intId = $intId;
 		}
 
-		$this->strField = Input::get('field');
+		$this->strField = $strSelectorField ?? Input::get('field');
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
+		// If the selector field is read from the query string, check that toggling it is allowed
+		if (null === $strSelectorField && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
 		}
@@ -2794,9 +2797,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions = new Versions($this->strTable, $this->intId);
 		$objVersions->initialize();
 
+		$prevSubmit = Input::post('FORM_SUBMIT', true);
 		Input::setPost('FORM_SUBMIT', $this->strTable);
-		$this->varValue = $objRow->{$this->strField};
 
+		$this->varValue = $objRow->{$this->strField};
 		$this->save($this->varValue ? '' : '1');
 
 		// Trigger the onsubmit_callback
@@ -2855,7 +2859,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->invalidateCacheTags();
 
-		$this->redirect($this->getReferer());
+		Input::setPost('FORM_SUBMIT', $prevSubmit);
+
+		if (!$blnDoNotRedirect)
+		{
+			$this->redirect($this->getReferer());
+		}
 	}
 
 	/**
