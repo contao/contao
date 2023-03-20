@@ -31,7 +31,7 @@ class RouteProvider extends AbstractPageRouteProvider
     private bool $prependLocale;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
     {

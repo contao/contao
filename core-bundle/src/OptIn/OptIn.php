@@ -21,7 +21,7 @@ class OptIn implements OptInInterface
     private ContaoFramework $framework;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.opt_in" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework)
     {

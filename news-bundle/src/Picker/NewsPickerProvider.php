@@ -31,7 +31,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     private Security $security;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
+     * @internal
      */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
