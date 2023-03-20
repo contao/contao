@@ -28,7 +28,7 @@ class DataContainerOperation implements \ArrayAccess
      */
     public function __construct(private readonly string $name, array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
     {
-        $id = StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? 0)));
+        $id = StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
         $operation = StringUtil::resolveReferences($operation);

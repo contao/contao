@@ -28,14 +28,9 @@ use Symfony\Component\Security\Core\Security;
 class DefaultOperationsListenerTest extends TestCase
 {
     /**
-     * @var Security|MockObject
+     * @var Security&MockObject
      */
     private Security $security;
-
-    /**
-     * @var Connection|MockObject
-     */
-    private Connection $connection;
 
     private DefaultOperationsListener $listener;
 
@@ -46,9 +41,7 @@ class DefaultOperationsListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']);
 
         $this->security = $this->createMock(Security::class);
-        $this->connection = $this->createMock(Connection::class);
-
-        $this->listener = new DefaultOperationsListener($this->security, $this->connection);
+        $this->listener = new DefaultOperationsListener($this->security, $this->createMock(Connection::class));
     }
 
     protected function tearDown(): void

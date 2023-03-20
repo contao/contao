@@ -2231,7 +2231,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">' . $GLOBALS['TL_LANG']['MSC']['saveNcreate'] . '</button>';
 
-					// If generic CreateAction is granted and we're editing a record, we already know we have permissions to copy the current record
 					if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 					{
 						$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">' . $GLOBALS['TL_LANG']['MSC']['saveNduplicate'] . '</button>';
