@@ -41,7 +41,7 @@ class SerpPreview extends Widget
 		}
 
 		$id = $model->id;
-		$title = StringUtil::substr(str_replace(array('&nbsp;', '&shy;'), array(' ', ''), $this->getTitle($model)), 64);
+		$title = StringUtil::substr(str_replace(array('[nbsp]', '[-]'), array(' ', ''), $this->getTitle($model)), 64);
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
 
