@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageModel;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;

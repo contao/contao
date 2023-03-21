@@ -101,6 +101,10 @@ class PageFinder
             $pageModel = $this->findRootPageForRequest($request);
         }
 
+        if (!$pageModel instanceof PageModel) {
+            return null;
+        }
+
         $this->framework->initialize();
 
         return $this->framework->getAdapter(PageModel::class)->findFirstPublishedByTypeAndPid($type, $pageModel->loadDetails()->rootId);

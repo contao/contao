@@ -744,8 +744,6 @@ class SitemapControllerTest extends TestCase
      */
     private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
     {
-
-
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
 
         $pageModelAdapter
