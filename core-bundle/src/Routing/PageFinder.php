@@ -60,7 +60,10 @@ class PageFinder
         $this->framework->initialize();
         $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages(['dns' => $pageModel->dns]);
 
-        return $rootPages ? $rootPages->getModels() : [];
+        /** @var array<PageModel> $models */
+        $models = $rootPages ? $rootPages->getModels() : [];
+
+        return $models;
     }
 
     /**

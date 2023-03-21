@@ -787,13 +787,11 @@ class SitemapControllerTest extends TestCase
             ;
         }
 
-        $framework = $this->mockContaoFramework([
+        return $this->mockContaoFramework([
             PageModel::class => $pageModelAdapter,
             ArticleModel::class => $articleModelAdapter,
             System::class => $systemAdapter,
         ]);
-
-        return $framework;
     }
 
     /**
