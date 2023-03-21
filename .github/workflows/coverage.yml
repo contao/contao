@@ -21,8 +21,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: pcov
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -38,4 +36,4 @@ jobs:
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
-                  token: ${{ secrets.CODECOV_TOKEN }}
+                  token: 6ec51b7a-f2e6-4310-a60c-d2ee69ecd8ba
