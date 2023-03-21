@@ -27,7 +27,7 @@ class DcaSchemaProvider
     private ?int $defaultIndexLength;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
     {

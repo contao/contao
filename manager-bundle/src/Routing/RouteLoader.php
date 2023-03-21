@@ -28,7 +28,7 @@ class RouteLoader implements RouteLoaderInterface
     private string $projectDir;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
+     * @internal
      */
     public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
     {

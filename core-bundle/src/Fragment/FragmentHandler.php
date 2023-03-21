@@ -29,7 +29,7 @@ class FragmentHandler extends BaseFragmentHandler
     private array $initialized = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
+     * @internal
      */
     public function __construct(ContainerInterface $renderers, BaseFragmentHandler $fragmentHandler, RequestStack $requestStack, FragmentRegistryInterface $fragmentRegistry, ContainerInterface $preHandlers, bool $debug = false)
     {

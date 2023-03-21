@@ -30,7 +30,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     private ScopeMatcher $scopeMatcher;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.authentication_entry_point" service instead
+     * @internal
      */
     public function __construct(RouterInterface $router, UriSigner $uriSigner, ScopeMatcher $scopeMatcher)
     {
