@@ -671,8 +671,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
-            - '@contao.routing.nested_matcher'
-            - '@contao.routing.nested_404_matcher'
+            - '@router'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry

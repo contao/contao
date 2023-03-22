@@ -21,14 +21,12 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 class PageFinder
 {
     private ContaoFramework $framework;
-    private RequestMatcherInterface $pageRequestMatcher;
-    private RequestMatcherInterface $notFoundRequestMatcher;
+    private RequestMatcherInterface $requestMatcher;
 
-    public function __construct(ContaoFramework $framework, RequestMatcherInterface $pageRequestMatcher, RequestMatcherInterface $notFoundRequestMatcher)
+    public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher)
     {
         $this->framework = $framework;
-        $this->pageRequestMatcher = $pageRequestMatcher;
-        $this->notFoundRequestMatcher = $notFoundRequestMatcher;
+        $this->requestMatcher = $requestMatcher;
     }
 
     /**
@@ -133,13 +131,9 @@ class PageFinder
     private function matchPageForRequest(Request $request): ?PageModel
     {
         try {
-            $arrParameters = $this->pageRequestMatcher->matchRequest($request);
+            $arrParameters = $this->requestMatcher->matchRequest($request);
         } catch (RoutingExceptionInterface $exception) {
-            try {
-                $arrParameters = $this->notFoundRequestMatcher->matchRequest($request);
-            } catch (RoutingExceptionInterface $exception) {
-                return null;
-            }
+            return null;
         }
 
         $pageModel = $arrParameters['pageModel'] ?? null;
