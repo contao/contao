@@ -69,9 +69,9 @@ class PageFinder
      */
     public function findRootPageForRequest(Request $request): ?PageModel
     {
-        $this->framework->initialize();
-
         if (($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+            $this->framework->initialize();
+
             return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
         }
 
@@ -100,10 +100,10 @@ class PageFinder
 
         if (!$pageModel instanceof PageModel) {
             $pageModel = $this->findRootPageForRequest($request);
-        }
 
-        if (!$pageModel instanceof PageModel) {
-            return null;
+            if (!$pageModel instanceof PageModel) {
+                return null;
+            }
         }
 
         $this->framework->initialize();
@@ -131,12 +131,12 @@ class PageFinder
     private function matchPageForRequest(Request $request): ?PageModel
     {
         try {
-            $arrParameters = $this->requestMatcher->matchRequest($request);
-        } catch (RoutingExceptionInterface $exception) {
+            $parameters = $this->requestMatcher->matchRequest($request);
+        } catch (RoutingExceptionInterface) {
             return null;
         }
 
-        $pageModel = $arrParameters['pageModel'] ?? null;
+        $pageModel = $parameters['pageModel'] ?? null;
 
         return $pageModel instanceof PageModel ? $pageModel : null;
     }
