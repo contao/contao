@@ -20,13 +20,8 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class PageFinder
 {
-    private ContaoFramework $framework;
-    private RequestMatcherInterface $requestMatcher;
-
-    public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher)
+    public function __construct(private ContaoFramework $framework, private RequestMatcherInterface $requestMatcher)
     {
-        $this->framework = $framework;
-        $this->requestMatcher = $requestMatcher;
     }
 
     /**
