@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'alias' => array
