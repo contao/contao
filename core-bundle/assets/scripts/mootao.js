@@ -328,7 +328,7 @@ Contao.SerpPreview = new Class(
 	},
 
 	html2string: function(html) {
-		return new DOMParser().parseFromString(html, 'text/html').body.textContent;
+		return new DOMParser().parseFromString(html, 'text/html').body.textContent.replace(/\[-]/g, '\xAD').replace(/\[nbsp]/g, '\xA0');
 	},
 
 	getTinymce: function() {
@@ -353,9 +353,9 @@ Contao.SerpPreview = new Class(
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
-				serpTitle.set('text', this.shorten(titleTag.replace(/%s/, titleField.value).replace(/%%/g, '%').replace(/\[-\]/g, '\xAD').replace(/\[nbsp\]/g, '\xA0'), 64));
+				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleField.value)).replace(/%%/g, '%'), 64));
 			} else if (titleFallbackField && titleFallbackField.value) {
-				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%').replace(/\[-\]/g, '\xAD').replace(/\[nbsp\]/g, '\xA0'), 64));
+				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%'), 64));
 			} else {
 				serpTitle.set('text', '');
 			}
@@ -363,7 +363,7 @@ Contao.SerpPreview = new Class(
 
 		titleFallbackField && titleFallbackField.addEvent('input', function() {
 			if (titleField && titleField.value) return;
-			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%').replace(/\[-\]/g, '\xAD').replace(/\[nbsp\]/g, '\xA0'), 64));
+			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%'), 64));
 		}.bind(this));
 
 		aliasField && aliasField.addEvent('input', function() {
