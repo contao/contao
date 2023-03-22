@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 class ContaoCacheClearer implements CacheClearerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.cache.clearer" service instead
+     * @internal
      */
     public function __construct(private Filesystem $filesystem)
     {

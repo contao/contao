@@ -55,6 +55,11 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
+
+        if (false === $request->attributes->get('_token_check')) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($this->requiresCsrf($request, $response)) {

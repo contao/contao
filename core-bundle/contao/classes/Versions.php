@@ -783,15 +783,18 @@ class Versions extends Controller
 			return $this->strUsername;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if ($user = System::getContainer()->get('security.helper')->getUser())
+		{
+			return $user->getUserIdentifier();
+		}
 
-		return $this->User->username;
+		throw new \LogicException('No user logged in. Provide the username via "setUsername()" or call "create(true)" to create a version without user.');
 	}
 
 	/**
 	 * Return the user ID
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getUserId()
 	{
@@ -800,9 +803,12 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		{
+			return $user->id;
+		}
 
-		return $this->User->id;
+		return 0;
 	}
 
 	/**

@@ -23,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteLoader implements RouteLoaderInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
+     * @internal
      */
     public function __construct(
         private LoaderInterface $loader,
