@@ -33,7 +33,7 @@ class PageFinder
      * Find the root page matching the request host and optionally an Accept-Language header.
      * If $acceptLanguage is not given, it will always return the fallback root page.
      */
-    public function findRootPageForHost(string $hostname, string $acceptLanguage = null): ?PageModel
+    public function findRootPageForHost(string $hostname, string $acceptLanguage = null): PageModel|null
     {
         $request = Request::create('http://'.$hostname);
         $request->headers->set('Accept-Language', $acceptLanguage ?? '');
@@ -67,7 +67,7 @@ class PageFinder
     /**
      * Finds the root page matching the request host and Accept-Language.
      */
-    public function findRootPageForRequest(Request $request): ?PageModel
+    public function findRootPageForRequest(Request $request): PageModel|null
     {
         if (($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
             $this->framework->initialize();
@@ -94,7 +94,7 @@ class PageFinder
      * This is mainly useful to retrieve an error page for the current host,
      * or any other page type that only exists once per root page.
      */
-    public function findFirstPageOfTypeForRequest(Request $request, string $type): ?PageModel
+    public function findFirstPageOfTypeForRequest(Request $request, string $type): PageModel|null
     {
         $pageModel = $request->attributes->get('pageModel');
 
@@ -111,7 +111,7 @@ class PageFinder
         return $this->framework->getAdapter(PageModel::class)->findFirstPublishedByTypeAndPid($type, $pageModel->loadDetails()->rootId);
     }
 
-    private function matchRootPageForRequest(Request $request): ?PageModel
+    private function matchRootPageForRequest(Request $request): PageModel|null
     {
         $pageModel = $this->matchPageForRequest($request);
 
@@ -128,7 +128,7 @@ class PageFinder
         return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
     }
 
-    private function matchPageForRequest(Request $request): ?PageModel
+    private function matchPageForRequest(Request $request): PageModel|null
     {
         try {
             $parameters = $this->requestMatcher->matchRequest($request);

@@ -118,7 +118,7 @@ class PageFinderTest extends TestCase
         $requestMatcher
             ->expects($this->once())
             ->method('matchRequest')
-            ->with($this->callback(fn (Request $r) => $r !== $request))
+            ->with($this->callback(static fn (Request $r) => $r !== $request))
             ->willReturn(['pageModel' => $pageModel])
         ;
 
@@ -165,7 +165,7 @@ class PageFinderTest extends TestCase
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(PageModel|null|false $pageModel): RequestMatcherInterface
+    private function mockRequestMatcher(PageModel|false|null $pageModel): RequestMatcherInterface
     {
         $requestMatcher = $this->createMock(RequestMatcherInterface::class);
 
