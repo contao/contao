@@ -608,6 +608,7 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
+            - '@request_stack'
         tags:
             - contao.page_router_enhancer
 

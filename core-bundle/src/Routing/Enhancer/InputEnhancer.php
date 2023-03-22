@@ -18,6 +18,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancer implements RouteEnhancerInterface
@@ -25,7 +26,7 @@ class InputEnhancer implements RouteEnhancerInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)
     {
     }
 
@@ -34,6 +35,12 @@ class InputEnhancer implements RouteEnhancerInterface
         $page = $defaults['pageModel'] ?? null;
 
         if (!$page instanceof PageModel) {
+            return $defaults;
+        }
+
+        $mainRequest = $this->requestStack->getMainRequest();
+
+        if ($request !== $mainRequest) {
             return $defaults;
         }
 
