@@ -35,7 +35,8 @@ class ModelTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn($this->createSchema(true))
         ;
 
