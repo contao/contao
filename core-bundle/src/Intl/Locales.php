@@ -93,13 +93,11 @@ class Locales
             foreach ($allLocales as $localeId => $localeLabel) {
                 $locale = \Locale::parseLocale($localeId);
 
-                if (!isset($locale[\Locale::REGION_TAG])) {
-                    $locales[$localeId] = $localeLabel;
+                if (!isset($locale[\Locale::LANG_TAG])) {
                     continue;
                 }
 
-                unset($locale[\Locale::REGION_TAG]);
-                $languageId = \Locale::composeLocale($locale);
+                $languageId = \Locale::composeLocale([\Locale::LANG_TAG => $locale[\Locale::LANG_TAG]]);
 
                 if (!isset($allLocales[$languageId])) {
                     $locales[$languageId] = $localeLabel;
@@ -165,13 +163,11 @@ class Locales
             static function ($localeId) {
                 $locale = \Locale::parseLocale($localeId);
 
-                if (!isset($locale[\Locale::REGION_TAG])) {
-                    return $localeId;
+                if (!isset($locale[\Locale::LANG_TAG])) {
+                    return null;
                 }
 
-                unset($locale[\Locale::REGION_TAG]);
-
-                return \Locale::composeLocale($locale);
+                return \Locale::composeLocale([\Locale::LANG_TAG => $locale[\Locale::LANG_TAG]]);
             },
             $this->locales
         );
