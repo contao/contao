@@ -399,9 +399,19 @@ abstract class Model
 	 */
 	public static function getColumnCastTypesFromDatabase(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
-		);
+		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
+
+		// Backwards compatibility with doctrine/dbal < 3.5
+		if (method_exists($schemaManager, 'introspectSchema'))
+		{
+			$schema = $schemaManager->introspectSchema();
+		}
+		else
+		{
+			$schema = $schemaManager->createSchema();
+		}
+
+		return static::getColumnCastTypesFromSchema($schema);
 	}
 
 	/**
@@ -411,9 +421,7 @@ abstract class Model
 	 */
 	public static function getColumnCastTypesFromDca(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
-		);
+		return static::getColumnCastTypesFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
 	}
 
 	private static function getColumnCastTypesFromSchema(Schema $schema): array

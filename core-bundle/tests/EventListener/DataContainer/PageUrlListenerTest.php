@@ -25,7 +25,6 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -1743,16 +1742,10 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnectionWithStatement(): Connection
     {
-        $statement = $this->createMock(Result::class);
-        $statement
-            ->method('fetchAll')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('executeQuery')
-            ->willReturn($statement)
+            ->method('fetchOne')
+            ->willReturn(0)
         ;
 
         return $connection;
