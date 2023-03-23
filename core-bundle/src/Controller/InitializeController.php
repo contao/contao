@@ -46,6 +46,8 @@ class InitializeController
     private HttpKernelInterface $httpKernel;
     private KernelInterface $kernel;
 
+    private $hasExceptionResponse = false;
+
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, HttpKernelInterface $httpKernel, KernelInterface $kernel)
     {
         $this->framework = $framework;
@@ -114,7 +116,11 @@ class InitializeController
         $response = new Response();
 
         ob_start(
-            static function ($buffer) use ($response) {
+            function ($buffer) use ($response) {
+                if ($this->hasExceptionResponse) {
+                    return $buffer;
+                }
+
                 $response->setContent($response->getContent().$buffer);
 
                 return '';
@@ -127,8 +133,17 @@ class InitializeController
         $self = $this;
 
         register_shutdown_function(
-            static function () use ($self, $realRequest, $response): void {
+            function () use ($self, $realRequest, $response): void {
+                if ($this->hasExceptionResponse) {
+                    return;
+                }
+
                 @ob_end_clean();
+
+                if (is_numeric($statusCode = http_response_code())) {
+                    $response->setStatusCode($statusCode);
+                }
+
                 $self->handleResponse($realRequest, $response);
             }
         );
@@ -185,6 +200,7 @@ class InitializeController
             // ignore and continue with original response
         }
 
+        $this->hasExceptionResponse = true;
         $response->send();
 
         if ($this->kernel instanceof TerminableInterface) {
