@@ -46,7 +46,7 @@ class InitializeController
     private HttpKernelInterface $httpKernel;
     private KernelInterface $kernel;
 
-    private $hasExceptionResponse = false;
+    private bool $hasExceptionResponse = false;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, HttpKernelInterface $httpKernel, KernelInterface $kernel)
     {
