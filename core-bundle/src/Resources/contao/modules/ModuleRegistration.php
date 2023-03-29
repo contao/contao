@@ -319,12 +319,14 @@ class ModuleRegistration extends Module
 
 			$this->Template->fields .= $temp;
 
-			if (!isset($arrFields[$arrData['eval']['feGroup']][$field]))
-			{
-				$arrFields[$arrData['eval']['feGroup']][$field] = '';
-			}
+            if (!empty($arrData['eval']['feGroup']))
+            {
+                if (!isset($arrFields[$arrData['eval']['feGroup']][$field])) {
+                    $arrFields[$arrData['eval']['feGroup']][$field] = '';
+                }
 
-			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
+                $arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
+            }
 
 			++$i;
 		}
