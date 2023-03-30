@@ -4923,7 +4923,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 					{
-						$orderBy[$k] = "CAST(" . $orderBy[$k] . " AS SIGNED)"; // see #5503						
+						$orderBy[$k] = "CAST(" . $orderBy[$k] . " AS SIGNED)"; // see #5503
 					}
 
 					if ($direction)
