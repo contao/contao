@@ -237,6 +237,18 @@ class ContaoKernelTest extends ContaoTestCase
         ];
 
         yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigsPhp',
+            'prod',
+            ['services.php'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigsXml',
+            'prod',
+            ['services.xml'],
+        ];
+
+        yield [
             __DIR__.'/../Fixtures/HttpKernel/WithAppNamespace',
             'prod',
             ['services.php'],
