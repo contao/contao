@@ -4914,7 +4914,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				else
 				{
 					$orderBy[$k] = $key;
-					
+
 					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
 					{
 						$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey'], 2);
@@ -4925,7 +4925,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$orderBy[$k] = "CAST(" . $orderBy[$k] . " AS SIGNED)"; // see #5503						
 					}
-					
+
 					if ($direction)
 					{
 						$orderBy[$k] .= ' ' . $direction;
