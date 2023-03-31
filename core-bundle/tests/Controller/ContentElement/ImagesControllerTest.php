@@ -23,7 +23,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'image',
                 'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
@@ -54,7 +54,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'gallery',
                 'multiSRC' => serialize([
@@ -96,7 +96,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'image',
                 'singleSRC' => null,
@@ -108,7 +108,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $this->assertSame('', $response->getContent());
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'gallery',
                 'multiSRC' => null,
