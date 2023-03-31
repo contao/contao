@@ -4873,7 +4873,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
 
 				$orderBy[$k] = $key;
-				
+
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
 				{
