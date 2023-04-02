@@ -16,6 +16,12 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
+	private const REMOVED_ICONS = array
+	(
+		'header' => 'edit',
+		'settings' => 'wrench',
+	);
+
 	/**
 	 * Get the relative path to an image
 	 *
@@ -64,6 +70,11 @@ class Image
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 		{
 			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+		}
+
+		if (isset(self::REMOVED_ICONS[$filename]) && !file_exists($projectDir . '/system/themes/' . $theme . '/images/' . $src))
+		{
+			return 'system/themes/' . $theme . '/icons/' . self::REMOVED_ICONS[$filename] . '.svg';
 		}
 
 		return 'system/themes/' . $theme . '/images/' . $src;
