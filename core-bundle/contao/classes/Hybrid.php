@@ -219,7 +219,7 @@ abstract class Hybrid extends Frontend
 	 */
 	public function generate()
 	{
-		if ($this->isHidden())
+		if ($this->isHidden() || !$this->arrData)
 		{
 			return '';
 		}
