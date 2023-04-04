@@ -20,7 +20,7 @@ class ImageResultStub extends ImageResult
 {
     public function __construct(private readonly array $img, private readonly array $sources = [])
     {
-        // do not call parent constructor
+        // Do not call parent constructor
     }
 
     public function getPicture(): PictureInterface
