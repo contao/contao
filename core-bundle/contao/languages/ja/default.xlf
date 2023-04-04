@@ -30,12 +30,12 @@
         <target>&quot;%s&quot;の欄は%d文字以下で入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>&quot;%s&quot;の欄は%d以上の値を入力してください。</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>&quot;%s&quot;の欄は少なくとも%s以上でなければなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>&quot;%s&quot;の欄は%d未満の値を入力してください。</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>&quot;%s&quot;の欄は%sを超えてはなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

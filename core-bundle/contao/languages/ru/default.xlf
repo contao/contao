@@ -30,12 +30,12 @@
         <target>Поле &quot;%s&quot; должно быть длиной не более %d символов!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Поле &quot;%s&quot; должно быть не менее %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Поле &quot;%s&quot; должно быть не менее %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Поле &quot;%s&quot; должно быть не более %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Поле &quot;%s&quot; должно быть не более %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

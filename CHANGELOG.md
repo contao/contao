@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.2] (2023-04-04)
+
+**Fixed issues:**
+
+- [#5921] Fix bug in Hybrid::generate() with missing ID ([ausi])
+- [#5919] Add a unit test for invalid files to the ImagesController ([m-vo])
+- [#5916] Filter non-image files in the ImagesController ([leofeyer])
+- [#5906] Handle `null` in the `html.html.twig` template ([fritzmg])
+- [#5897] Handle basic entities in the SERP preview ([leofeyer])
+- [#5900] Allow using basic entities in texts ([heimseiten])
+- [#5895] Allow using basic entities in headlines ([leofeyer])
+- [#5804] Add the missing data container permission checks ([aschempp])
+- [#5885] Always allow toggling a field that is not excluded ([aschempp])
+
 ## [5.1.1] (2023-03-16)
 
 **Fixed issues:**
@@ -107,6 +121,7 @@ This project adheres to [Semantic Versioning].
 [bytehead]: https://github.com/bytehead
 [cliffparnitzky]: https://github.com/cliffparnitzky
 [fritzmg]: https://github.com/fritzmg
+[heimseiten]: https://github.com/heimseiten
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
@@ -174,6 +189,7 @@ This project adheres to [Semantic Versioning].
 [#5780]: https://github.com/contao/contao/pull/5780
 [#5788]: https://github.com/contao/contao/pull/5788
 [#5803]: https://github.com/contao/contao/pull/5803
+[#5804]: https://github.com/contao/contao/pull/5804
 [#5819]: https://github.com/contao/contao/pull/5819
 [#5821]: https://github.com/contao/contao/pull/5821
 [#5828]: https://github.com/contao/contao/pull/5828
@@ -181,3 +197,11 @@ This project adheres to [Semantic Versioning].
 [#5840]: https://github.com/contao/contao/pull/5840
 [#5857]: https://github.com/contao/contao/pull/5857
 [#5870]: https://github.com/contao/contao/pull/5870
+[#5885]: https://github.com/contao/contao/pull/5885
+[#5895]: https://github.com/contao/contao/pull/5895
+[#5897]: https://github.com/contao/contao/pull/5897
+[#5900]: https://github.com/contao/contao/pull/5900
+[#5906]: https://github.com/contao/contao/pull/5906
+[#5916]: https://github.com/contao/contao/pull/5916
+[#5919]: https://github.com/contao/contao/pull/5919
+[#5921]: https://github.com/contao/contao/pull/5921
