@@ -29,17 +29,17 @@
  * Daniel Jahnsmüller ([Tastaturberuf](https://github.com/Tastaturberuf))
  * Michael Roitzsch ([mroi](https://github.com/mroi))
  * Oliver Hoff ([backbone87](https://github.com/backbone87))
- * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * Cliff Parnitzky ([cliffparnitzky](https://github.com/cliffparnitzky))
+ * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * gmpf ([gmpf](https://github.com/gmpf))
  * Markus Nestmann
- * ameotoko ([ameotoko](https://github.com/ameotoko))
- * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
  * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
- * Blair Winans ([blairwinans](https://github.com/blairwinans))
+ * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
+ * ameotoko ([ameotoko](https://github.com/ameotoko))
  * Andreas Burg ([Aybee](https://github.com/Aybee))
  * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Benjamin Hummel
+ * Blair Winans ([blairwinans](https://github.com/blairwinans))
  * CMSworker ([CMSworker](https://github.com/CMSworker))
  * Christian Eggeling ([amisso](https://github.com/amisso))
  * Daniele Sciannimanica
@@ -58,48 +58,49 @@
  * Takahiro Kambe ([taca](https://github.com/taca))
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * kroka ([kroka](https://github.com/kroka))
- * Defcon0 ([Defcon0](https://github.com/Defcon0))
  * Alex ([Alex](https://github.com/Alex))
+ * Arndt H. Ziegler
+ * Christian Romeni ([christianromeni](https://github.com/christianromeni))
+ * Defcon0 ([Defcon0](https://github.com/Defcon0))
  * Joe Ray Gregory ([may17](https://github.com/may17))
  * Leopold Seckendorff ([poddus](https://github.com/poddus))
- * zonky2 ([zonky2](https://github.com/zonky2))
  * Patrick Landolt ([scuben](https://github.com/scuben))
- * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
- * Arndt H. Ziegler
  * de-es ([de-es](https://github.com/de-es))
- * Christian Romeni ([christianromeni](https://github.com/christianromeni))
+ * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
+ * zonky2 ([zonky2](https://github.com/zonky2))
  * Benny Born ([bennyborn](https://github.com/bennyborn))
  * Mathias Arzberger ([MDevster](https://github.com/MDevster))
  * Patrick Froch ([eS-IT](https://github.com/eS-IT))
  * Simon Reitinger ([simonreitinger](https://github.com/simonreitinger))
- * Andreas Fieger ([fiedsch](https://github.com/fiedsch))
+ * Adrián Granado ([playmono](https://github.com/playmono))
+ * Alexej Kossmann
  * Andreas Allacher ([AndreasA](https://github.com/AndreasA))
+ * Andreas Fieger ([fiedsch](https://github.com/fiedsch))
+ * Anthony Clark
+ * Christian Barkowsky
+ * Christian Berger
+ * Christian Kolb ([christian-kolb](https://github.com/christian-kolb))
+ * Cédric Morin ([Cerdic](https://github.com/Cerdic))
+ * Daniel Nemeth ([daniel-nemeth](https://github.com/daniel-nemeth))
+ * Dennis Erdmann ([denniserdmann](https://github.com/denniserdmann))
+ * Florian Krohmer ([Floxn](https://github.com/Floxn))
+ * Florian Otto
+ * Florian Reuschel ([loilo](https://github.com/loilo))
+ * Andreas ([Glumanda](https://github.com/Glumanda))
+ * Janosch Oltmanns
+ * Jens Dutzi ([Blog404DE](https://github.com/Blog404DE))
+ * Marc Reimann ([MacKP](https://github.com/MacKP))
+ * Marko Cupic
+ * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
+ * Sebastian Zoglowek
  * Stefan Schleich ([stefanschleich](https://github.com/stefanschleich))
  * Stephan Gehle ([SGehle](https://github.com/SGehle))
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))
- * Martin Hauke ([soxrepo](https://github.com/soxrepo))
- * Christian Berger
- * Christian Barkowsky
- * Alexej Kossmann
  * Tsarma ([Tsarma](https://github.com/Tsarma))
  * Vladimir Reznichenko ([kalessil](https://github.com/kalessil))
- * Adrián Granado ([playmono](https://github.com/playmono))
  * Alexander Stulnikov ([alarstyle](https://github.com/alarstyle))
- * Anthony Clark
- * Marc Reimann ([MacKP](https://github.com/MacKP))
- * Jens Dutzi ([Blog404DE](https://github.com/Blog404DE))
- * Marko Cupic
- * Andreas ([Glumanda](https://github.com/Glumanda))
- * Florian Reuschel ([loilo](https://github.com/loilo))
- * Florian Otto
  * leonexcc ([leonexcc](https://github.com/leonexcc))
  * Martin Schumann ([martinschumann](https://github.com/martinschumann))
- * Florian Krohmer ([Floxn](https://github.com/Floxn))
- * Dennis Erdmann ([denniserdmann](https://github.com/denniserdmann))
  * mkt ([mktcode](https://github.com/mktcode))
  * Mike ([mvscheidt](https://github.com/mvscheidt))
- * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
- * Daniel Nemeth ([daniel-nemeth](https://github.com/daniel-nemeth))
- * Cédric Morin ([Cerdic](https://github.com/Cerdic))
- * Sebastian Zoglowek
- * Christian Kolb ([christian-kolb](https://github.com/christian-kolb))
+ * Martin Hauke ([soxrepo](https://github.com/soxrepo))

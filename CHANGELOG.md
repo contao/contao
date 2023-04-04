@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.19] (2023-04-04)
+
+**Fixed issues:**
+
+- [#5914] Regenerate the symlinks when moving or duplicating folders ([leofeyer])
+- [#5910] Support PHP and XML config files in the app ([Toflar])
+- [#5913] Fix a PHP 8 issue in the `mod_breadcrumb.html5` template ([leofeyer])
+- [#5892] Normalize the line endings in the file editor ([leofeyer])
+- [#5890] Fix the incorrect formatting of numbers with decimal places ([qzminski])
+- [#5888] Remove the @internal hints at constructor level ([leofeyer])
+- [#5876] Always allow toggling a field that is not excluded ([aschempp])
+- [#5884] Prevent foreign key check errors when deleting a parent record with children ([qzminski])
+- [#5883] Add psr/log ^2.0 and ^3.0 ([JanoschOltmanns])
+- [#5887] Fix urlencoded paths in DC_Folder ([ausi])
+
 ## [4.13.18] (2023-03-16)
 
 **Fixed issues:**
@@ -665,6 +680,7 @@ This project adheres to [Semantic Versioning].
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
 [fritzmg]: https://github.com/fritzmg
+[JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
@@ -1176,4 +1192,15 @@ This project adheres to [Semantic Versioning].
 [#5864]: https://github.com/contao/contao/pull/5864
 [#5868]: https://github.com/contao/contao/pull/5868
 [#5873]: https://github.com/contao/contao/pull/5873
+[#5876]: https://github.com/contao/contao/pull/5876
 [#5879]: https://github.com/contao/contao/pull/5879
+[#5883]: https://github.com/contao/contao/pull/5883
+[#5884]: https://github.com/contao/contao/pull/5884
+[#5887]: https://github.com/contao/contao/pull/5887
+[#5888]: https://github.com/contao/contao/pull/5888
+[#5890]: https://github.com/contao/contao/pull/5890
+[#5892]: https://github.com/contao/contao/pull/5892
+[#5894]: https://github.com/contao/contao/pull/5894
+[#5910]: https://github.com/contao/contao/pull/5910
+[#5913]: https://github.com/contao/contao/pull/5913
+[#5914]: https://github.com/contao/contao/pull/5914
