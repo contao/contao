@@ -153,10 +153,14 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
+                  composer -dcore-bundle install --no-interaction --no-progress
                   composer bin require-checker install --no-interaction --no-progress
 
-            - name: Run the require checker for contao/contao
+            - name: Check for unknown symbols (contao/contao)
               run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json --ansi
+
+            - name: Check for unknown symbols (contao/core-bundle)
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json --ansi
 
     tests:
         name: PHP ${{ matrix.php }}

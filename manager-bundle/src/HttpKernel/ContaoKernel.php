@@ -304,8 +304,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $projectDir = $this->getProjectDir();
 
-        if (file_exists($path = Path::join($projectDir, 'config', $file.'.yaml'))) {
-            return $path;
+        foreach (['.yaml', '.php', '.xml'] as $ext) {
+            if (file_exists($path = Path::join($projectDir, 'config', $file.$ext))) {
+                return $path;
+            }
         }
 
         if (file_exists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
