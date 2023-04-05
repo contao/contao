@@ -372,7 +372,7 @@ class Newsletter extends Backend
 		}
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20channel%20' . $objNewsletter->pid .'>');
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20channel%20' . $objNewsletter->pid . '>');
 
 		return $objEmail;
 	}
