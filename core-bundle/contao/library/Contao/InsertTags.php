@@ -1252,7 +1252,7 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * @return array<string|null, array>
+	 * @return array{string|null, array}
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
