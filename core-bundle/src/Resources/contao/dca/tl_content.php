@@ -1736,7 +1736,7 @@ class tl_content extends Backend
 			while ($objArticle->next())
 			{
 				$key = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
-				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
+				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?? $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
 			}
 		}
 
