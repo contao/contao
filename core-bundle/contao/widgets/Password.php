@@ -149,11 +149,11 @@ class Password extends Widget
 			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" placeholder="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->varValue ? '*****' : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
+			$this->varValue ? '*****' : '',
 			$this->getAttributes(),
 			$this->wizard,
-			(($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : '')
+			($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : ''
 		);
 	}
 }

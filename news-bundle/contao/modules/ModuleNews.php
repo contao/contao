@@ -114,8 +114,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id)
-			{
+			$objTemplate->text = function () use ($id) {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -130,8 +129,7 @@ abstract class ModuleNews extends Module
 				return $strText;
 			};
 
-			$objTemplate->hasText = static function () use ($objArticle)
-			{
+			$objTemplate->hasText = static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
 		}
@@ -234,8 +232,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array
-		{
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -309,9 +306,9 @@ abstract class ModuleNews extends Module
 			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
-			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
+			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
 			$strLink,
-			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
+			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
 		);
 	}
 }

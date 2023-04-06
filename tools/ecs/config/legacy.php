@@ -14,10 +14,12 @@ use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
-use PhpCsFixer\Fixer\Basic\BracesFixer;
+use PhpCsFixer\Fixer\Basic\CurlyBracesPositionFixer;
+use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoSpacesAfterFunctionNameFixer;
@@ -70,6 +72,7 @@ return static function (ECSConfig $ecsConfig): void {
         PhpdocScalarFixer::class,
         PhpdocSeparationFixer::class,
         PhpdocSummaryFixer::class,
+        PsrAutoloadingFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
         StrictComparisonFixer::class,
@@ -90,14 +93,16 @@ return static function (ECSConfig $ecsConfig): void {
         'syntax' => 'long',
     ]);
 
-    $ecsConfig->ruleWithConfiguration(BracesFixer::class, [
-        'allow_single_line_closure' => true,
-        'position_after_anonymous_constructs' => BracesFixer::LINE_NEXT,
-        'position_after_control_structures' => BracesFixer::LINE_NEXT,
+    $ecsConfig->ruleWithConfiguration(CurlyBracesPositionFixer::class, [
+        'control_structures_opening_brace' => CurlyBracesPositionFixer::NEXT_LINE_UNLESS_NEWLINE_AT_SIGNATURE_END,
     ]);
 
     $ecsConfig->ruleWithConfiguration(ConcatSpaceFixer::class, [
         'spacing' => 'one',
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(ControlStructureContinuationPositionFixer::class, [
+        'position' => ControlStructureContinuationPositionFixer::NEXT_LINE,
     ]);
 
     $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
@@ -121,7 +126,5 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->parallel();
     $ecsConfig->indentation(Option::INDENTATION_TAB);
     $ecsConfig->lineEnding("\n");
-
-    $parameters = $ecsConfig->parameters();
-    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_legacy_cache');
+    $ecsConfig->cacheDirectory(sys_get_temp_dir().'/ecs_legacy_cache');
 };

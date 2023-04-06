@@ -467,7 +467,7 @@ class Versions extends Controller
 							}
 						}
 
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null))
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null)
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -486,12 +486,12 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
+								if (!\is_array($to[$k]) && \is_array($tmp = StringUtil::deserialize($to[$k])))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
-								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
+								if (!\is_array($from[$k]) && \is_array($tmp = StringUtil::deserialize($from[$k])))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
@@ -678,7 +678,7 @@ class Versions extends Controller
 			$arrRow = $objVersions->row();
 
 			// Add some parameters
-			$arrRow['from'] = max(($objVersions->version - 1), 1); // see #4828
+			$arrRow['from'] = max($objVersions->version - 1, 1); // see #4828
 			$arrRow['to'] = $objVersions->version;
 			$arrRow['date'] = date(Config::get('datimFormat'), $objVersions->tstamp);
 			$arrRow['description'] = StringUtil::substr($arrRow['description'], 32);

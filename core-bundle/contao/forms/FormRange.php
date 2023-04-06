@@ -111,7 +111,7 @@ class FormRange extends Widget
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

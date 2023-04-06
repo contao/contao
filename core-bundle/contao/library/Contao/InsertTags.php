@@ -133,8 +133,7 @@ class InsertTags extends Controller
 		if (static::$strAllowedTagsRegex === null)
 		{
 			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
-				static function ($allowedTag)
-				{
+				static function ($allowedTag) {
 					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
 				},
 				$container->getParameter('contao.insert_tags.allowed_tags')
@@ -1265,8 +1264,7 @@ class InsertTags extends Controller
 		parse_str($query, $attributes);
 
 		// Cast and encode values
-		array_walk_recursive($attributes, static function (&$value)
-		{
+		array_walk_recursive($attributes, static function (&$value) {
 			if (is_numeric($value))
 			{
 				$value = (int) $value;

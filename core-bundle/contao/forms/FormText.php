@@ -278,8 +278,8 @@ class FormText extends Widget
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->hideInput ? ' password' : ''),
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->hideInput ? ' password' : '',
+			$this->strClass ? ' ' . $this->strClass : '',
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

@@ -76,9 +76,9 @@ class PreviewFactory
     }
 
     /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
-     *
      * @return iterable<ImageInterface>
+     *
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
     public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {

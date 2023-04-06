@@ -20,6 +20,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * Annotation class for @Page().
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
  *
  * @see Route
