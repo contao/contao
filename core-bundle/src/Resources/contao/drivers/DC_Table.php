@@ -4872,6 +4872,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
 
+				$orderBy[$k] = $key;
+
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
 				{
@@ -4885,10 +4887,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
+				{
+					$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey'], 2);
+					$orderBy[$k] = "(SELECT " . Database::quoteIdentifier($chunks[1]) . " FROM " . $chunks[0] . " WHERE " . $chunks[0] . ".id=" . $this->strTable . "." . $key . ")";
+				}
+
+				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+				{
+					$orderBy[$k] = "CAST(" . $orderBy[$k] . " AS SIGNED)"; // see #5503
+				}
+
+				if ($direction)
+				{
+					$orderBy[$k] .= ' ' . $direction;
+				}
+
 				if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['eval']['findInSet'] ?? null)
 				{
-					$direction = null;
-
 					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'] ?? null))
 					{
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][0];
@@ -4912,15 +4928,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					$orderBy[$k] = $this->Database->findInSet($v, $keys);
-				}
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
-				{
-					$orderBy[$k] = "CAST($key AS SIGNED)"; // see #5503
-				}
-
-				if ($direction)
-				{
-					$orderBy[$k] = $key . ' ' . $direction;
 				}
 			}
 

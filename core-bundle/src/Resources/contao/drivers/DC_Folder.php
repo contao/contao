@@ -380,18 +380,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 			}
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
-										  ->execute($for, $for);
-			}
-			else
-			{
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-										  ->execute($for);
-			}
+			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+									  ->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -2929,17 +2919,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 			}
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
-				$this->values[] = $searchValue;
-			}
-			else
-			{
-				$this->procedure[] = $strPattern;
-			}
-
+			$this->procedure[] = $strPattern;
 			$this->values[] = $searchValue;
 		}
 
