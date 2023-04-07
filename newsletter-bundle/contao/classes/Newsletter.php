@@ -740,7 +740,7 @@ class Newsletter extends Backend
 		if ($objUser->numRows)
 		{
 			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), ($blnDisabled ? 0 : 1), $objUser->email);
+						   ->execute(time(), $blnDisabled ? 0 : 1, $objUser->email);
 		}
 
 		return $blnDisabled;
@@ -824,7 +824,7 @@ class Newsletter extends Backend
 			if ($objRecipient->count < 1)
 			{
 				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-							   ->execute($intId, $objUser->email, ($objUser->disable ? '' : 1), ($blnIsFrontend ? $time : ''));
+							   ->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
@@ -910,7 +910,7 @@ class Newsletter extends Backend
 				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);
+								   ->execute(Input::post('disable') ? '' : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}

@@ -111,8 +111,7 @@ class ArrayUtil
 		}
 
 		// Remove empty (not replaced) entries
-		$arrOrder = array_filter($arrOrder, static function ($item)
-		{
+		$arrOrder = array_filter($arrOrder, static function ($item) {
 			return $item !== null;
 		});
 

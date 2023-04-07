@@ -249,7 +249,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
 							{
 								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
+								$intValue = (int) substr($strFile, strrpos($strFile, '_') + 1);
 
 								$offset = max($offset, $intValue);
 							}
@@ -311,7 +311,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			'<input type="file" name="%s" id="ctrl_%s" class="upload%s"%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->strTagEnding
 		);

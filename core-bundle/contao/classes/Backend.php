@@ -420,7 +420,7 @@ abstract class Backend extends Controller
 
 				$request = $container->get('request_stack')->getCurrentRequest();
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null, DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -898,7 +898,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -1080,7 +1080,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1182,7 +1182,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : ''), StringUtil::specialchars($strFile));
+				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

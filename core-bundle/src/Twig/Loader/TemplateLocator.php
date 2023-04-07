@@ -47,9 +47,9 @@ class TemplateLocator
     }
 
     /**
-     * @throws InvalidThemePathException
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidThemePathException
      */
     public function findThemeDirectories(): array
     {

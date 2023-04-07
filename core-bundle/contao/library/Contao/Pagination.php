@@ -268,14 +268,14 @@ class Pagination
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage - 1)
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage + 1)
 		);
 
 		$objTemplate->last = array

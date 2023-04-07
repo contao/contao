@@ -283,8 +283,7 @@ class Installer extends Controller
 					$index_fields = implode(
 						', ',
 						array_map(
-							static function ($item) use ($quote)
-							{
+							static function ($item) use ($quote) {
 								if (strpos($item, '(') === false)
 								{
 									return $quote($item);

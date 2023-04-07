@@ -153,8 +153,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(32) NOT NULL default ''"

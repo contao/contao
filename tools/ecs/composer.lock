@@ -4,26 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfbce4e9ae46a0d37dd10d37b3deb4a2",
+    "content-hash": "82402cbb1256fa2c95ccc2357c3f3aca",
     "packages": [
         {
             "name": "contao/easy-coding-standard",
-            "version": "5.4.2",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620"
+                "reference": "a8f7fa1fdedbd9c1ce9051e770927bcd4a89a212"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620",
-                "reference": "55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/a8f7fa1fdedbd9c1ce9051e770927bcd4a89a212",
+                "reference": "a8f7fa1fdedbd9c1ce9051e770927bcd4a89a212",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
                 "slevomat/coding-standard": "^7.0 || ^8.0",
-                "symplify/easy-coding-standard": "^10.0"
+                "symplify/easy-coding-standard": "^11.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -47,7 +47,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/5.4.2"
+                "source": "https://github.com/contao/easy-coding-standard/tree/6.0.0"
             },
             "funding": [
                 {
@@ -55,7 +55,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-01-06T10:46:16+00:00"
+            "time": "2023-04-07T14:10:46+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -137,16 +137,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.15.3",
+            "version": "1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "61800f71a5526081d1b5633766aa88341f1ade76"
+                "reference": "d3753fcb3abc6f78f5de6f72153d4b9c99c72dee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/61800f71a5526081d1b5633766aa88341f1ade76",
-                "reference": "61800f71a5526081d1b5633766aa88341f1ade76",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/d3753fcb3abc6f78f5de6f72153d4b9c99c72dee",
+                "reference": "d3753fcb3abc6f78f5de6f72153d4b9c99c72dee",
                 "shasum": ""
             },
             "require": {
@@ -176,38 +176,38 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.15.3"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.17.1"
             },
-            "time": "2022-12-20T20:56:55+00:00"
+            "time": "2023-04-04T11:11:22+00:00"
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.8.0",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "59e25146a4ef0a7b194c5bc55b32dd414345db89"
+                "reference": "c9b39061ebd5c58b71ecae26042eb7b054c380dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/59e25146a4ef0a7b194c5bc55b32dd414345db89",
-                "reference": "59e25146a4ef0a7b194c5bc55b32dd414345db89",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/c9b39061ebd5c58b71ecae26042eb7b054c380dd",
+                "reference": "c9b39061ebd5c58b71ecae26042eb7b054c380dd",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.0",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpdoc-parser": ">=1.15.2 <1.16.0",
+                "phpstan/phpdoc-parser": ">=1.16.0 <1.18.0",
                 "squizlabs/php_codesniffer": "^3.7.1"
             },
             "require-dev": {
                 "phing/phing": "2.17.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.2",
-                "phpstan/phpstan": "1.4.10|1.9.6",
-                "phpstan/phpstan-deprecation-rules": "1.1.1",
-                "phpstan/phpstan-phpunit": "1.0.0|1.3.3",
-                "phpstan/phpstan-strict-rules": "1.4.4",
-                "phpunit/phpunit": "7.5.20|8.5.21|9.5.27"
+                "phpstan/phpstan": "1.4.10|1.10.11",
+                "phpstan/phpstan-deprecation-rules": "1.1.3",
+                "phpstan/phpstan-phpunit": "1.0.0|1.3.11",
+                "phpstan/phpstan-strict-rules": "1.5.1",
+                "phpunit/phpunit": "7.5.20|8.5.21|9.6.6"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -217,7 +217,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "SlevomatCodingStandard\\": "SlevomatCodingStandard"
+                    "SlevomatCodingStandard\\": "SlevomatCodingStandard/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -231,7 +231,7 @@
             ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.8.0"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.9.2"
             },
             "funding": [
                 {
@@ -243,7 +243,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-09T10:46:13+00:00"
+            "time": "2023-04-05T06:23:58+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -304,16 +304,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "10.3.3",
+            "version": "11.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "c93878b3c052321231519b6540e227380f90be17"
+                "url": "https://github.com/easy-coding-standard/easy-coding-standard.git",
+                "reference": "d4159e06c0970e71a2a58d350160241e7cb3994b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/c93878b3c052321231519b6540e227380f90be17",
-                "reference": "c93878b3c052321231519b6540e227380f90be17",
+                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/d4159e06c0970e71a2a58d350160241e7cb3994b",
+                "reference": "d4159e06c0970e71a2a58d350160241e7cb3994b",
                 "shasum": ""
             },
             "require": {
@@ -321,17 +321,13 @@
             },
             "conflict": {
                 "friendsofphp/php-cs-fixer": "<3.0",
-                "squizlabs/php_codesniffer": "<3.6"
+                "squizlabs/php_codesniffer": "<3.6",
+                "symplify/coding-standard": "<11.3"
             },
             "bin": [
                 "bin/ecs"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "10.3-dev"
-                }
-            },
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -341,9 +337,16 @@
             "license": [
                 "MIT"
             ],
-            "description": "Prefixed scoped version of ECS package",
+            "description": "Use Coding Standard with 0-knowledge of PHP-CS-Fixer and PHP_CodeSniffer",
+            "keywords": [
+                "Code style",
+                "automation",
+                "fixer",
+                "static analysis"
+            ],
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/10.3.3"
+                "issues": "https://github.com/easy-coding-standard/easy-coding-standard/issues",
+                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/11.3.2"
             },
             "funding": [
                 {
@@ -355,7 +358,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-13T14:03:37+00:00"
+            "time": "2023-03-22T15:28:51+00:00"
         }
     ],
     "packages-dev": [],

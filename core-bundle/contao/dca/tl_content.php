@@ -534,8 +534,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'galleryTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('gallery_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -857,7 +856,7 @@ class tl_content extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
@@ -873,7 +872,7 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				// no break
 
 			default:

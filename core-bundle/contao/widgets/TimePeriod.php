@@ -152,7 +152,7 @@ class TimePeriod extends Widget
 			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_interval%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			self::specialcharsValue($this->varValue['value'] ?? ''),
 			$this->getAttributes(),
 			$this->strName,

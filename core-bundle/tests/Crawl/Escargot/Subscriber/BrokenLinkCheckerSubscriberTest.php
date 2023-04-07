@@ -93,18 +93,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     public function shouldRequestProvider(): \Generator
     {
         yield 'Test skips URIs that do not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://github.com'), 0)),
+            new CrawlUri(new Uri('https://github.com'), 0),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it is not part of the base URI collection or was not found on one of that is.',
         ];
 
         yield 'Test skips URIs that were found on an URI that did not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://gitlab.com'), 1, false, new Uri('https://github.com'))),
+            new CrawlUri(new Uri('https://gitlab.com'), 1, false, new Uri('https://github.com')),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it is not part of the base URI collection or was not found on one of that is.',
-            (new CrawlUri(new Uri('https://github.com'), 0, true)),
+            new CrawlUri(new Uri('https://github.com'), 0, true),
         ];
 
         yield 'Test skips URIs that were marked to be skipped by the data attribue' => [
@@ -112,11 +112,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.',
-            (new CrawlUri(new Uri('https://github.com'), 0, true)),
+            new CrawlUri(new Uri('https://github.com'), 0, true),
         ];
 
         yield 'Test requests if everything is okay' => [
-            (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
+            new CrawlUri(new Uri('https://contao.org/foobar'), 0),
             SubscriberInterface::DECISION_POSITIVE,
         ];
     }
