@@ -174,7 +174,7 @@ class FormTextarea extends Widget
 			'<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),

@@ -991,7 +991,7 @@ abstract class Model
 	 * Find a single record by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
@@ -1017,7 +1017,7 @@ abstract class Model
 	 * Find records by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return static|Collection|null A model, model collection or null if the result is empty
@@ -1180,11 +1180,11 @@ abstract class Model
 
 		if (!isset($arrOptions['value']))
 		{
-			$arrOptions['value'] = array();
+			$arrOptions['value'] = \is_string($arrOptions['column'] ?? null) ? array(null) : array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
+		$objResult = $objStatement->execute(...(array) $arrOptions['value']);
 
 		if ($objResult->numRows < 1)
 		{

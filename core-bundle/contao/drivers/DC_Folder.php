@@ -368,18 +368,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
-										  ->execute($for, $for);
-			}
-			else
-			{
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-										  ->execute($for);
-			}
+			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+									  ->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -433,7 +423,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
-			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
 		}
 		else
 		{
@@ -441,7 +431,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				if ($this->arrFilemounts[$i] && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
+					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), $blnClipboard ? $arrClipboard : false, $arrFound);
 				}
 			}
 		}
@@ -2187,8 +2177,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	private function purgeCache(string ...$affectedPaths): void
 	{
 		$extensions = array_unique(array_map(
-			static function (string $path): string
-			{
+			static function (string $path): string {
 				return Path::getExtension($path, true);
 			},
 			$affectedPaths
@@ -2202,8 +2191,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$bundleTemplatePaths = array_filter(
 			$affectedPaths,
-			static function (string $path): bool
-			{
+			static function (string $path): bool {
 				return Path::isBasePath('templates/bundles', $path) && empty(Path::getExtension($path));
 			}
 		);
@@ -2525,7 +2513,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$this->import(BackendUser::class, 'User');
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level * 18), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree($this->strRootDir . '/' . $strFolder, $level * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
 
 	/**
@@ -2736,7 +2724,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			if (!empty($content) && $blnIsOpen)
 			{
 				$return .= '<li class="parent" id="filetree_' . $md5 . '"><ul class="level_' . $level . '">';
-				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $arrFound);
+				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
 			}
 		}
@@ -2879,17 +2867,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
-				$this->values[] = $searchValue;
-			}
-			else
-			{
-				$this->procedure[] = $strPattern;
-			}
-
+			$this->procedure[] = $strPattern;
 			$this->values[] = $searchValue;
 		}
 

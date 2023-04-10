@@ -199,8 +199,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('fe_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -272,8 +271,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -290,8 +288,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -301,8 +298,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('analytics_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -318,8 +314,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('js_');
 			},
 			'eval'                    => array('multiple'=>true),

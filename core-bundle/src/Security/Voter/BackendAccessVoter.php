@@ -187,7 +187,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             }
         }
 
-        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize(($row['chmod'] ?? null), true)];
+        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize($row['chmod'] ?? null, true)];
 
         foreach ($cacheIds as $cacheId) {
             $this->pagePermissionsCache[$cacheId] = $result;

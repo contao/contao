@@ -288,8 +288,7 @@ class tl_templates extends Backend
 		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void
-			{
+			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void {
 				$filesystem = new Filesystem();
 				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
 
@@ -327,8 +326,7 @@ class tl_templates extends Backend
 				$filesystem->dumpFile($targetFile, $content);
 			};
 
-			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
-			{
+			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void {
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Validate the target path
@@ -407,7 +405,7 @@ class tl_templates extends Backend
 
 			foreach ($v as $kk=>$vv)
 			{
-				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, ((Input::post('original') == $kk) ? ' selected="selected"' : ''), $vv);
+				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, (Input::post('original') == $kk) ? ' selected="selected"' : '', $vv);
 			}
 
 			$strAllTemplates .= '</optgroup>';
@@ -627,8 +625,8 @@ class tl_templates extends Backend
 			}
 
 			$strRelPath = $strFolder . '/' . $strFile;
-			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, ((Input::post('target') == $strRelPath) ? ' selected="selected"' : ''), str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
-			$strFolders .= $this->getTargetFolders($strRelPath, ($intLevel + 1));
+			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, (Input::post('target') == $strRelPath) ? ' selected="selected"' : '', str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
+			$strFolders .= $this->getTargetFolders($strRelPath, $intLevel + 1);
 		}
 
 		return $strFolders;

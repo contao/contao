@@ -72,7 +72,7 @@ class ContentTable extends ContentElement
 		// Table footer
 		if ($this->tfoot)
 		{
-			foreach ($rows[(\count($rows)-1)] as $v)
+			foreach ($rows[\count($rows) - 1] as $v)
 			{
 				$arrFooter[] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}

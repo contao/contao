@@ -310,6 +310,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     /**
      * @dataProvider provideTemplateFilemtimeSamples
+     *
      * @preserveGlobalState disabled
      * @runInSeparateProcess because filemtime gets mocked
      */

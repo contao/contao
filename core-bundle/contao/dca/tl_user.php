@@ -171,8 +171,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -180,8 +179,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'backendTheme' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Backend::getThemes();
 			},
 			'eval'                    => array('tl_class'=>'w50'),
@@ -335,8 +333,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
