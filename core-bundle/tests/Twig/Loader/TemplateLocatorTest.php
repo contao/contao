@@ -145,14 +145,11 @@ class TemplateLocatorTest extends TestCase
     public function testFindsResourcesPathsIgnoresSubdirectoriesInNamespaceRoots(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/explicit-roots');
-
         $locator = $this->getTemplateLocator($projectDir);
-
-        $paths = $locator->findResourcesPaths();
 
         $this->assertSame(
             ['App' => [Path::join($projectDir, 'contao/templates')]],
-            $paths,
+            $locator->findResourcesPaths(),
             'should not contain the "content_element" sub-directory'
         );
     }
