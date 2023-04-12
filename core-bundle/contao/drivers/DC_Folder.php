@@ -2898,7 +2898,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return false;
 		}
 
-		if (empty($this->arrFilemounts))
+		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
 			return true;
 		}
@@ -3059,7 +3059,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Allow only those roots that are allowed in root nodes
-			if (!empty($this->arrFilemounts))
+			if (!empty($this->arrFilemounts) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) === false)
 			{
 				$blnValid = false;
 
