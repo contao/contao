@@ -2529,6 +2529,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
+		$this->isValid($strFolder);
+
+		if (!is_dir($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		{
+			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or cannot be found.');
+		}
+
 		$objSession = System::getContainer()->get('session');
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
