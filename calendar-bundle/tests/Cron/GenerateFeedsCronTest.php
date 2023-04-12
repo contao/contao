@@ -14,19 +14,27 @@ namespace Contao\CalendarBundle\Tests\Cron;
 
 use Contao\Calendar;
 use Contao\CalendarBundle\Cron\GenerateFeedsCron;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 
 class GenerateFeedsCronTest extends ContaoTestCase
 {
     public function testExecutesGenerateFeeds(): void
     {
-        $calendarUtil = $this->createMock(Calendar::class);
-        $calendarUtil
+        $calendar = $this->createMock(Calendar::class);
+        $calendar
             ->expects($this->once())
             ->method('generateFeeds')
         ;
 
-        $framework = $this->mockContaoFramework([], [Calendar::class => $calendarUtil]);
+        $system = $this->mockAdapter(['loadLanguageFile']);
+        $system
+            ->expects($this->once())
+            ->method('loadLanguageFile')
+            ->with('default')
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $system], [Calendar::class => $calendar]);
 
         (new GenerateFeedsCron($framework))();
     }
