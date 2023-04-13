@@ -50,7 +50,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         try {
             $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
         } catch (InvalidKeyProvided $exception) {
-            throw new InvalidKeyProvided('Failed to store trusted token. Make sure your APP_SECRET is at least 32 characters long.', $exception->getCode(), $exception);
+            throw new InvalidKeyProvided('Failed to store trusted token. Make sure your APP_SECRET is at least 32 characters long. '.$exception->getMessage(), $exception->getCode(), $exception);
         }
 
         $trustedDevice = new TrustedDevice($user);
