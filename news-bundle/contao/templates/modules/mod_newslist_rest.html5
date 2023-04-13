@@ -1,0 +1,27 @@
+<!--- Do not show headline and message if empty -->
+<!--- Good for listing a rest of news; if there are none, we do not want to see a headline or a message -->
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('headline'); ?>
+
+<?php if (empty($this->articles)) : ?>
+<?php else : ?>
+  <?php if ($this->headline) : ?>
+    <<?= $this->hl ?>>
+      <?= $this->headline ?>
+    </<?= $this->hl ?>>
+  <?php endif; ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>
+
+
+<?php $this->block('content'); ?>
+
+<?php if (empty($this->articles)) : ?>
+<?php else : ?>
+  <?= implode('', $this->articles) ?>
+  <?= $this->pagination ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>
