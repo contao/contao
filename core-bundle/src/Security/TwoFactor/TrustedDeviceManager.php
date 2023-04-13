@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Lcobucci\JWT\Exception;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +47,14 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        try {
+            $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        } catch (Exception $exception) {
+            // Ignore exceptions in trusted device manager, we might just not store the trusted device
+            // see https://github.com/contao/contao/issues/5693
+
+            return;
+        }
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
