@@ -41,6 +41,9 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         return $this->framework->getAdapter(Controller::class)->getContentElement($model);
     }
 
+    /**
+     * @param class-string<ContentModel|ModuleModel> $class
+     */
     private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel
     {
         if (is_numeric($typeOrId)) {

@@ -194,12 +194,12 @@ final class ContaoExtension extends AbstractExtension
                 [UrlRuntime::class, 'prefixUrl'],
             ),
             new TwigFunction(
-                'insert_module',
+                'frontend_module',
                 [FragmentRuntime::class, 'renderModule'],
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
-                'insert_content',
+                'content_element',
                 [FragmentRuntime::class, 'renderContent'],
                 ['is_safe' => ['html']]
             ),
