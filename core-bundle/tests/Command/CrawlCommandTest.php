@@ -137,13 +137,13 @@ class CrawlCommandTest extends TestCase
         $command = new CrawlCommand($escargotFactory, new Filesystem());
 
         $tester = new CommandTester($command);
-        $tester->execute(['-q' => 'doctrine']);
+        $tester->execute(['--queue' => 'doctrine']);
 
         $expectCli = sprintf('[Job ID: %s]', $jobId);
 
         $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
 
-        $tester->execute(['-q' => 'doctrine', 'job' => $jobId]);
+        $tester->execute(['--queue' => 'doctrine', 'job' => $jobId]);
 
         $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
     }

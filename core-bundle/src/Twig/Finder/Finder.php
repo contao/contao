@@ -16,6 +16,7 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -42,7 +43,7 @@ final class Finder implements \IteratorAggregate, \Countable
     public function __construct(
         private readonly TemplateHierarchyInterface $hierarchy,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorBagInterface|TranslatorInterface $translator,
     ) {
     }
 
@@ -109,8 +110,6 @@ final class Finder implements \IteratorAggregate, \Countable
      */
     public function asTemplateOptions(): array
     {
-        $options = [];
-
         $getSourceLabel = function (string $name): string {
             if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
                 return $this->translator->trans('MSC.templatesTheme', [$themeSlug], 'contao_default');
@@ -123,14 +122,32 @@ final class Finder implements \IteratorAggregate, \Countable
             return $this->translator->trans('MSC.global', [], 'contao_default');
         };
 
-        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
-            $label = sprintf(
-                '%s [%s]',
-                $identifier,
-                implode(', ', array_map($getSourceLabel, $this->sources[$identifier]))
-            );
+        $getCustomLabel = function (string $identifier, array $sourceLabels): string|null {
+            if (!$this->translator->getCatalogue()->has($identifier, 'templates')) {
+                return null;
+            }
 
-            $options[$identifier !== $this->identifier ? $identifier : ''] = $label;
+            return sprintf(
+                '%s [%s • %s]',
+                $this->translator->trans($identifier, [], 'templates'),
+                $identifier,
+                implode(', ', $sourceLabels)
+            );
+        };
+
+        $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
+            '%s [%s]',
+            $identifier,
+            implode(', ', $sourceLabels)
+        );
+
+        $options = [];
+
+        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
+            $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
+            $key = $identifier !== $this->identifier ? $identifier : '';
+
+            $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }
 
         // Make sure the default option is the first one (see #5719)

@@ -78,8 +78,8 @@ use Contao\Model\Collection;
  * @property string|array      $cssID
  * @property string|array|null $rootPageDependentModules
  *
- * @property string $typePrefix
- * @property array  $classes
+ * @property string     $typePrefix
+ * @property array|null $classes
  *
  * @method static ModuleModel|null findById($id, array $opt=array())
  * @method static ModuleModel|null findByPk($id, array $opt=array())

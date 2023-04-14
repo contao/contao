@@ -29,7 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
 class Route404Provider extends AbstractPageRouteProvider
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {

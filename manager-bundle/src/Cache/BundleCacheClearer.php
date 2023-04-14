@@ -21,7 +21,7 @@ class BundleCacheClearer implements CacheClearerInterface
     private Filesystem $filesystem;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.cache.clear_bundle" service instead
+     * @internal
      */
     public function __construct(Filesystem $filesystem = null)
     {

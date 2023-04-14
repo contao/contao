@@ -29,7 +29,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     use FrameworkAwareTrait;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
+     * @internal
      */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
