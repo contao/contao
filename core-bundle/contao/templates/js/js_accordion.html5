@@ -1,32 +1,17 @@
 <style>
-  .ce_accordion .toggler button {
-    display: block;
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    color: inherit;
-    cursor: pointer;
-    font-size: inherit;
-    font-weight: inherit;
-    text-align: inherit;
-  }
-
-  .ce_accordion .accordion {
+  .handorgel .accordion {
     display: none;
     overflow: hidden;
     height: 0;
-    -webkit-transition: height 0.1s ease 0.1s;
     transition: height 0.1s ease 0.1s;
   }
 
-  .ce_accordion .accordion.open {
+  .handorgel .accordion.open {
     display: block;
-    -webkit-transition: height 0.2s ease;
     transition: height 0.2s ease;
   }
 
-  .ce_accordion .accordion.active {
+  .handorgel .accordion.active {
     overflow: visible;
   }
 </style>
@@ -60,7 +45,7 @@
     document.querySelectorAll('.ce_accordion').forEach((el) => {
       if (el.querySelector('.accordion')) {
         const accordion = document.createElement('div');
-        accordion.classList.add('ce_accordion');
+        accordion.className = 'ce_accordion handorgel';
 
         el.parentNode.insertBefore(accordion, el);
 
