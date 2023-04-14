@@ -36,11 +36,10 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework([
-            Controller::class => $controllerAdapter,
-        ], [
-            ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class),
-        ]);
+        $framework = $this->mockContaoFramework(
+            [Controller::class => $controllerAdapter],
+            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)]
+        );
 
         $runtime = new FragmentRuntime($framework);
         $result = $runtime->renderModule('navigation', ['foo' => 'bar']);
@@ -99,11 +98,10 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework([
-            Controller::class => $controllerAdapter,
-        ], [
-            ContentModel::class => $this->mockClassWithProperties(ContentModel::class),
-        ]);
+        $framework = $this->mockContaoFramework(
+            [Controller::class => $controllerAdapter],
+            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)]
+        );
 
         $runtime = new FragmentRuntime($framework);
         $result = $runtime->renderContent('text', ['foo' => 'bar']);
