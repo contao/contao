@@ -18,7 +18,7 @@
 	--green: #589b0e;
 	--red: #c33;
 	--blue: #006494;
-	--orange: #d68c23;
+	--orange: #f90;
 	--contao: #f47c00;
 	--border: #e0e0e2;
 	--nav: #d3d6da;
@@ -86,6 +86,7 @@ html[data-color-scheme="dark"] {
 	--black: #fff;
 	--white: #000;
 	--blue: #0073a8;
+	--orange: #d68c23;
 	--contao: #f47c00;
 	--border: #3a3c40;
 	--nav-bg: #1b1d21;
