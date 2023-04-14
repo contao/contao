@@ -31,7 +31,9 @@ class FilesystemUtilTest extends TestCase
         $storage
             ->method('get')
             ->willReturnCallback(
-                static function (Uuid $uuid): FilesystemItem|null {
+                function (Uuid $uuid, int $accessFlags): FilesystemItem|null {
+                    $this->assertSame(VirtualFilesystemInterface::BYPASS_DBAFS, $accessFlags);
+
                     return match ($uuid->toRfc4122()) {
                         'd22b1ea8-dcab-4162-b690-30cb9206f694' => new FilesystemItem(true, 'file1'),
                         'b1817d6d-188a-4c99-9204-b1e33733d5a9' => new FilesystemItem(true, 'file2'),
@@ -130,6 +132,28 @@ class FilesystemUtilTest extends TestCase
             ],
             ['file1', 'directory/file3', 'directory/file4', 'file2'],
         ];
+    }
+
+    public function testListContentsFromSerializedPassesOnAccessFlags(): void
+    {
+        $file = (new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694'));
+
+        $storage = $this->createMock(VirtualFilesystemInterface::class);
+        $storage
+            ->method('get')
+            ->with($file->toRfc4122(), VirtualFilesystemInterface::FORCE_SYNC)
+            ->willReturn(
+                $fileItem = new FilesystemItem(true, 'file1')
+            )
+        ;
+
+        $items = FilesystemUtil::listContentsFromSerialized(
+            $storage,
+            $file->toRfc4122(),
+            VirtualFilesystemInterface::FORCE_SYNC
+        );
+
+        $this->assertSame([$fileItem], $items->toArray());
     }
 
     /**

@@ -34,11 +34,11 @@ class FilesystemUtil
      *
      * @param string|array<string|null> $sources
      */
-    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string $sources): FilesystemItemIterator
+    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string $sources, int $accessFlags = VirtualFilesystemInterface::BYPASS_DBAFS): FilesystemItemIterator
     {
         $uuids = array_filter(StringUtil::deserialize($sources, true));
 
-        return new FilesystemItemIterator(self::doListContentsFromUuids($storage, $uuids));
+        return new FilesystemItemIterator(self::doListContentsFromUuids($storage, $uuids, $accessFlags));
     }
 
     /**
@@ -78,7 +78,7 @@ class FilesystemUtil
      *
      * @return \Generator<FilesystemItem>
      */
-    private static function doListContentsFromUuids(VirtualFilesystemInterface $storage, array $uuids): \Generator
+    private static function doListContentsFromUuids(VirtualFilesystemInterface $storage, array $uuids, int $accessFlags): \Generator
     {
         $paths = [];
 
@@ -103,7 +103,7 @@ class FilesystemUtil
             try {
                 $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
 
-                if (null === ($item = $storage->get($uuidObject))) {
+                if (null === ($item = $storage->get($uuidObject, $accessFlags))) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {
@@ -120,7 +120,7 @@ class FilesystemUtil
 
             // If the item is a directory, yield its files instead
             $listDirectory = $storage
-                ->listContents($item->getPath())
+                ->listContents($item->getPath(), false, VirtualFilesystemInterface::BYPASS_DBAFS)
                 ->files()
                 ->filter(static fn (FilesystemItem $item): bool => $track($item))
             ;
