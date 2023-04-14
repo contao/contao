@@ -91,7 +91,7 @@ class ContaoExtensionTest extends TestCase
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
             'prefix_url' => [],
-            'frontend_element' => ['html'],
+            'frontend_module' => ['html'],
             'content_element' => ['html'],
         ];
 
