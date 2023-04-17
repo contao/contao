@@ -6369,6 +6369,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// $this->root might not have a correct order here, let's make sure it's ordered by sorting but only in case there are no visible root trails (aka
+		// the array does contain only top-level ids)
+		if (empty($this->visibleRootTrails) && $this->Database->fieldExists('sorting', $table))
+		{
+			$this->root = $this->Database->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
+		}
+
 		// Fetch all children of the root
 		if ($this->treeView)
 		{
