@@ -183,8 +183,10 @@ abstract class ModuleNews extends Module
 
 			if (null !== ($figure = $figureBuilder->buildIfResourceExists()))
 			{
-				// Rebuild with link to news article if none is set
-				if (!$figure->getLinkHref() && $intCount !== 0)
+				// Rebuild with link to the news article if we are not in a
+				// newsreader and there is no link yet. $intCount will only be
+				// set by the news list and news archive modules (see #5851).
+				if ($intCount > 0 && !$figure->getLinkHref())
 				{
 					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
