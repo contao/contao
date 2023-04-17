@@ -26,12 +26,12 @@
         <target>Das Feld &quot;%s&quot; darf höchstens %d Zeichen lang sein!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Das Feld &quot;%s&quot; muss mindestens %d sein!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Das Feld &quot;%s&quot; muss mindestens %s sein!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Das Feld &quot;%s&quot; darf nicht größer als %d sein!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Das Feld &quot;%s&quot; darf nicht größer als %s sein!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

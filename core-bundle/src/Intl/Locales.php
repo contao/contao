@@ -91,17 +91,14 @@ class Locales
             $locales = [];
 
             foreach ($allLocales as $localeId => $localeLabel) {
-                $locale = \Locale::parseLocale($localeId);
+                $languageId = \Locale::composeLocale(
+                    array_intersect_key(
+                        \Locale::parseLocale($localeId),
+                        [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
+                    )
+                );
 
-                if (!isset($locale[\Locale::REGION_TAG])) {
-                    $locales[$localeId] = $localeLabel;
-                    continue;
-                }
-
-                unset($locale[\Locale::REGION_TAG]);
-                $languageId = \Locale::composeLocale($locale);
-
-                if (!isset($allLocales[$languageId])) {
+                if (!isset($allLocales[$languageId]) || $localeId === $languageId) {
                     $locales[$languageId] = $localeLabel;
                 }
             }
@@ -163,15 +160,12 @@ class Locales
 
         $localeIds = array_map(
             static function ($localeId) {
-                $locale = \Locale::parseLocale($localeId);
-
-                if (!isset($locale[\Locale::REGION_TAG])) {
-                    return $localeId;
-                }
-
-                unset($locale[\Locale::REGION_TAG]);
-
-                return \Locale::composeLocale($locale);
+                return \Locale::composeLocale(
+                    array_intersect_key(
+                        \Locale::parseLocale($localeId),
+                        [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
+                    )
+                );
             },
             $this->locales
         );

@@ -168,6 +168,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if (!empty($ids) && \is_array($ids))
 			{
+				// Decode the values (see #5764)
+				$ids = array_map('rawurldecode', $ids);
+
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = $ids;
 				$objSession->replace($session);
@@ -181,9 +184,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->reload();
 			}
-
-			// Decode the values (see #5764)
-			$ids = array_map('rawurldecode', $ids);
 
 			if (isset($_POST['edit']))
 			{
@@ -380,18 +380,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 			}
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
-										  ->execute($for, $for);
-			}
-			else
-			{
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-										  ->execute($for);
-			}
+			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+									  ->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -721,7 +711,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
 
-		// Do not move if the target exists and would be overriden (not possible for folders anyway)
+		// Do not move if the target exists and would be overwritten (not possible for folders anyway)
 		if (file_exists($this->strRootDir . '/' . $destination))
 		{
 			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetarget'], basename($source), \dirname($destination)));
@@ -765,6 +755,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$callback($source, $destination, $this);
 					}
 				}
+			}
+
+			// Regenerate the symlinks (see #5903)
+			if (is_dir($this->strRootDir . '/' . $destination))
+			{
+				$this->import(Automator::class, 'Automator');
+				$this->Automator->generateSymlinks();
 			}
 
 			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
@@ -930,6 +927,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$callback($source, $destination, $this);
 				}
 			}
+		}
+
+		// Regenerate the symlinks (see #5903)
+		if (is_dir($this->strRootDir . '/' . $destination))
+		{
+			$this->import(Automator::class, 'Automator');
+			$this->Automator->generateSymlinks();
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
@@ -2036,6 +2040,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
 		{
 			$strSource = System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('source');
+			$strEnding = preg_match_all('/(?<!\r)\n/', $strContent) >= preg_match_all('/\r\n/', $strContent) ? "\n" : "\r\n";
+			$strSource = str_replace("\r\n", $strEnding, $strSource); // see #5096
 
 			// Save the file
 			if (md5($strContent) != md5($strSource))
@@ -2913,17 +2919,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 			}
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
-				$this->values[] = $searchValue;
-			}
-			else
-			{
-				$this->procedure[] = $strPattern;
-			}
-
+			$this->procedure[] = $strPattern;
 			$this->values[] = $searchValue;
 		}
 

@@ -23,7 +23,7 @@ class FrontendLoader extends Loader
     private string $urlSuffix;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.frontend_loader" service instead
+     * @internal
      */
     public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
