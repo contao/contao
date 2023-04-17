@@ -465,7 +465,7 @@ class Versions extends Controller
 				// Find the changed fields and highlight the changes
 				foreach ($to as $k=>$v)
 				{
-					if ($from[$k] != $to[$k])
+					if (($from[$k] ?? null) != ($to[$k] ?? null))
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
 						{
