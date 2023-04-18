@@ -463,9 +463,12 @@ class Versions extends Controller
 				$arrOrderFields = $objDcaExtractor->getOrderFields();
 
 				// Find the changed fields and highlight the changes
-				foreach ($to as $k=>$v)
+				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
-					if (($from[$k] ?? null) != $to[$k])
+					$to[$k] = $to[$k] ?? null;
+					$from[$k] = $from[$k] ?? null;
+
+					if ($from[$k] != $to[$k])
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
 						{
