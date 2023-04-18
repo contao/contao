@@ -465,7 +465,7 @@ class Versions extends Controller
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
-					$deleted = !array_key_exists($k, $to);
+					$deleted = !\array_key_exists($k, $to);
 					$to[$k] ??= null;
 					$from[$k] ??= null;
 
