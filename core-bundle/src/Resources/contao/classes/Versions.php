@@ -465,6 +465,7 @@ class Versions extends Controller
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
+					$deleted = !isset($to[$k]);
 					$to[$k] ??= null;
 					$from[$k] ??= null;
 
@@ -588,6 +589,11 @@ class Versions extends Controller
 						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
 						{
 							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
+						if ($deleted)
+						{
+							$field = "<del>$field</del>";
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
