@@ -492,6 +492,7 @@
       </trans-unit>
       <trans-unit id="tl_module.data.0">
         <source>Template data</source>
+        <target>Veidnes dati</target>
       </trans-unit>
       <trans-unit id="tl_module.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>

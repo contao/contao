@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_style.category.1">
         <source>Categories can be used to group format definitions in the back end.</source>
-        <target>Mit Hilfe von Kategorien können Formatdefinitionen im Backend gruppiert werden.</target>
+        <target>Mithilfe von Kategorien können Formatdefinitionen im Backend gruppiert werden.</target>
       </trans-unit>
       <trans-unit id="tl_style.comment.0">
         <source>Comment</source>

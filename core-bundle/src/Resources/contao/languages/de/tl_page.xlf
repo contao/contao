@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
-        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639 Standards ein (z. B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
+        <target>Bitte geben Sie die Sprache der Seite gemäß dem ISO-639 Standard ein (z. B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
