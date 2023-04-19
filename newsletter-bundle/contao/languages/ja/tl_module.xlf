@@ -22,8 +22,8 @@
         <target>独自のテキスト</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
-        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
-        <target>例えばニュースレターの購読がGDPRに適合させるためのプライバシーの注意を入力できます。</target>
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
+        <target>例えば、ニュースレターの購読をGDPR適合とするためのプライバシーの注意といったものを入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>

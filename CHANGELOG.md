@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.3] (2023-04-19)
+
+**Fixed issues:**
+
+- [#5963] Correctly count the skipped recipients ([leofeyer])
+- [#5964] Add the header.svg and settings.svg icons again ([leofeyer])
+- [#5946] Load the default language when generating the calendar feeds ([leofeyer])
+- [#5960] Prevent double slashes in version URLs ([leofeyer])
+- [#5949] Add the "adjustDca" load callback to tl_news_archive again ([leofeyer])
+- [#5941] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5922] Correctly pass null values in findBy queries ([ausi])
+
 ## [5.1.2] (2023-04-04)
 
 **Fixed issues:**
@@ -110,6 +122,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.2]: https://github.com/contao/contao/releases/tag/5.1.2
 [5.1.1]: https://github.com/contao/contao/releases/tag/5.1.1
 [5.1.0]: https://github.com/contao/contao/releases/tag/5.1.0
 [5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
@@ -205,3 +218,10 @@ This project adheres to [Semantic Versioning].
 [#5916]: https://github.com/contao/contao/pull/5916
 [#5919]: https://github.com/contao/contao/pull/5919
 [#5921]: https://github.com/contao/contao/pull/5921
+[#5922]: https://github.com/contao/contao/pull/5922
+[#5941]: https://github.com/contao/contao/pull/5941
+[#5946]: https://github.com/contao/contao/pull/5946
+[#5949]: https://github.com/contao/contao/pull/5949
+[#5960]: https://github.com/contao/contao/pull/5960
+[#5963]: https://github.com/contao/contao/pull/5963
+[#5964]: https://github.com/contao/contao/pull/5964

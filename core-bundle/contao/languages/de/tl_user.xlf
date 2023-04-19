@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
-        <target>Rich Text Editor verwenden</target>
+        <target>Rich-Text-Editor verwenden</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.1">
         <source>Use the rich text editor to format text elements.</source>
-        <target>Den Rich Text Editor zur Textformatierung verwenden.</target>
+        <target>Den Rich-Text-Editor zur Textformatierung verwenden.</target>
       </trans-unit>
       <trans-unit id="tl_user.useCE.0">
         <source>Enable the code editor</source>
@@ -246,7 +246,7 @@
         <target>Aktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie das Konto erst ab einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
@@ -254,7 +254,7 @@
         <target>Deaktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie das Konto nur bis zu einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">

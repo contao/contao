@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_news.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Šeit varat aizstāt noklusējuma saites &quot;lasīt vairāk...&quot; tekstu.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -213,16 +214,16 @@
         <target>Rādīt no</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Ja nevēlaties, lai jaunumi tiktu rādīti vietnē pirms noteikta datuma / laika, varat tos ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ja vēlaties, lai jaunums netiktu parādīts vietnē pirms noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Rādīt līdz</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Ja nevēlaties, lai jaunumi tiktu rādīti vietnē pēc noteikta datuma / laika, varat tos ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ja vēlaties, lai pēc noteikta datuma/laika jaunums netiktu rādīts tīmekļa vietnē, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -290,6 +291,7 @@
       </trans-unit>
       <trans-unit id="tl_news.children">
         <source>Edit the content elements of news item ID %s</source>
+        <target>Rediģēt jaunuma ID %s satura elementus</target>
       </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>

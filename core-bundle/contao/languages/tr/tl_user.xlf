@@ -246,7 +246,7 @@
         <target>Etkinleştirilme zamanı</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Hesabın belirli bir tarih/saatten önce etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
@@ -254,7 +254,7 @@
         <target>Devre dışı bırakılma zamanı</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Hesabın belirli bir tarih/saatten sonra etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">

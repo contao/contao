@@ -38,7 +38,7 @@
         <target>Aktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Gruppe erst ab einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
@@ -46,7 +46,7 @@
         <target>Deaktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
-        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Gruppe nur bis zu einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
