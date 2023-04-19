@@ -161,8 +161,6 @@ class Newsletter extends Backend
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
-			$arrSkippedRecipients = array();
-
 			// Send newsletter
 			if ($objRecipients->numRows > 0)
 			{
@@ -177,6 +175,7 @@ class Newsletter extends Backend
 				}
 
 				$time = time();
+				$arrSkippedRecipients = $objSession->get('skipped_recipients', array());
 
 				while ($objRecipients->next())
 				{
@@ -200,9 +199,9 @@ class Newsletter extends Backend
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 				}
-			}
 
-			$objSession->set('skipped_recipients', $arrSkippedRecipients);
+				$objSession->set('skipped_recipients', $arrSkippedRecipients);
+			}
 
 			echo '<div style="margin-top:12px">';
 
