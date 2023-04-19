@@ -1,21 +1,11 @@
-<style>
-  .handorgel .accordion {
-    display: none;
-    overflow: hidden;
-    height: 0;
-    transition: height 0.1s ease 0.1s;
-  }
+<?php
 
-  .handorgel .accordion.open {
-    display: block;
-    transition: height 0.2s ease;
-  }
+// Add the swipe style sheet
+$GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/handorgel');
 
-  .handorgel .accordion.active {
-    overflow: visible;
-  }
-</style>
-<script src="https://unpkg.com/handorgel@0.5/lib/js/umd/handorgel.min.js"></script>
+?>
+
+<script src="<?= $this->asset('js/handorgel.min.js', 'contao-components/handorgel') ?>"></script>
 <script>
   (function () {
     const addNextAccordions = (el, accordion) => {
