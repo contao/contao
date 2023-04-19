@@ -1,6 +1,6 @@
 <?php
 
-// Add the swipe style sheet
+// Add the handorgel style sheet
 $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/handorgel');
 
 ?>
