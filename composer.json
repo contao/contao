@@ -140,7 +140,6 @@
         "symfony/polyfill-mbstring": "^1.0",
         "symfony/process": "^5.4 || ^6.0",
         "symfony/property-access": "^5.4 || ^6.0",
-        "symfony/proxy-manager-bridge": "^5.4 || ^6.0",
         "symfony/rate-limiter": "^5.4 || ^6.0",
         "symfony/routing": "^5.4 || ^6.0",
         "symfony/security-bundle": "^6.0.2",

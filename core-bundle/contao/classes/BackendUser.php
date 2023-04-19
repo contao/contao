@@ -181,6 +181,15 @@ class BackendUser extends User
 				}
 			}
 		}
+		elseif ($array == 'pagemounts')
+		{
+			$childIds = $this->Database->getChildRecords($this->pagemounts, 'tl_page');
+
+			if (!empty($childIds) && array_intersect($field, $childIds))
+			{
+				return true;
+			}
+		}
 
 		return false;
 	}

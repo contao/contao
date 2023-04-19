@@ -669,7 +669,6 @@ h2.sub_headline {
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
-	border: 1px solid var(--active-border);
 }
 
 .tl_filter {
@@ -2820,6 +2819,10 @@ fieldset.collapsed > legend {
 .tl_undo_preview td {
 	padding-left: 0 !important;
 	padding-right: 32px !important;
+}
+
+.tl_undo_preview td:empty {
+	display: none;
 }
 
 .tl_undo_preview img {
