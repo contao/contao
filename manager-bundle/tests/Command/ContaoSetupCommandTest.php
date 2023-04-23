@@ -147,7 +147,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $output = $commandTester->getDisplay();
 
         $this->assertStringContainsString('[output 1][output 2][output 3][output 4][output 5][output 6][output 7]', $output);
-        $this->assertStringContainsString('[INFO] Done! Please run the contao:migrate command', $output);
+        $this->assertStringContainsString('[INFO] Done! Please open the Contao install tool or run the contao:migrate', $output);
     }
 
     /**
