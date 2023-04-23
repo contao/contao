@@ -34,12 +34,17 @@ class UnwrapTwigExceptionListener
     {
         if (
             !($throwable = $event->getThrowable()) instanceof RuntimeError ||
-            ($previous = $throwable->getPrevious()) === null ||
-            !\in_array(\get_class($previous), self::$exceptionsToUnwrap, true)
+            ($previous = $throwable->getPrevious()) === null
         ) {
             return;
         }
 
-        $event->setThrowable($previous);
+        foreach (self::$exceptionsToUnwrap as $exceptionToUnwrap) {
+            if ($previous instanceof $exceptionToUnwrap) {
+                $event->setThrowable($previous);
+
+                return;
+            }
+        }
     }
 }
