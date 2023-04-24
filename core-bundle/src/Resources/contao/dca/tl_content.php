@@ -530,7 +530,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true),
+			'eval'                    => array('multiple'=>true, 'mandatory'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true),
 			'sql'                     => "blob NULL",
 			'load_callback' => array
 			(
