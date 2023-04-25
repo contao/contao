@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.21] (2023-04-25)
+
+**Fixed issues:**
+
+- [#5987] Harden the file manager against directory traversal attacks ([ausi])
+
 ## [4.13.20] (2023-04-19)
 
 **Fixed issues:**
@@ -361,7 +367,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS via canonical tags in the front end ([CVE-2022-24899])
+- Prevent XSS via canonical tags in the front end ([ausi])
 
 ## [4.13.2] (2022-03-31)
 
@@ -660,6 +666,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.20]: https://github.com/contao/contao/releases/tag/4.13.20
 [4.13.19]: https://github.com/contao/contao/releases/tag/4.13.19
 [4.13.18]: https://github.com/contao/contao/releases/tag/4.13.18
 [4.13.17]: https://github.com/contao/contao/releases/tag/4.13.17
@@ -683,7 +690,6 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
-[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -1231,3 +1237,4 @@ This project adheres to [Semantic Versioning].
 [#5955]: https://github.com/contao/contao/pull/5955
 [#5959]: https://github.com/contao/contao/pull/5959
 [#5962]: https://github.com/contao/contao/pull/5962
+[#5987]: https://github.com/contao/contao/pull/5987
