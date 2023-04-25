@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.40] (2023-04-25)
+
+**Fixed issues:**
+
+- Harden the file manager against directory traversal attacks ([ausi])
+
 ## [4.9.39] (2023-02-16)
 
 **Fixed issues:**
@@ -438,9 +444,9 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent privilege escalation with the form generator ([CVE-2021-37627])
-- Prevent PHP file inclusion via insert tags ([CVE-2021-37626])
-- Prevent XSS via HTML attributes in the back end ([CVE-2021-35955])
+- Prevent privilege escalation with the form generator ([ausi])
+- Prevent PHP file inclusion via insert tags ([ausi])
+- Prevent XSS via HTML attributes in the back end ([ausi])
 
 ## [4.9.17] (2021-08-04)
 
@@ -478,7 +484,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS in the system log ([CVE-2021-35210])
+- Prevent XSS in the system log ([ausi])
 
 **Fixed issues:**
 
@@ -683,7 +689,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent insert tag injection in forms ([CVE-2020-25768])
+- Prevent insert tag injection in forms ([ausi])
 
 **New features:**
 
@@ -1138,11 +1144,6 @@ This project adheres to [Semantic Versioning].
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
-[CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
-[CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
-[CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
-[CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
-[CVE-2020-25768]: https://github.com/contao/contao/security/advisories/GHSA-f7wm-x4gw-6m23
 [AlexejKossmann]: https://github.com/AlexejKossmann
 [ameotoko]: https://github.com/ameotoko
 [AndreasA]: https://github.com/AndreasA
