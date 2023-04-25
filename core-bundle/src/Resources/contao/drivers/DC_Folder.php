@@ -2525,6 +2525,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return '';
 		}
 
+		$this->isValid($strFolder);
+
+		if (!is_dir($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		{
+			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or cannot be found.');
+		}
+
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
@@ -2947,7 +2954,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return false;
 		}
 
-		if (empty($this->arrFilemounts))
+		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
 			return true;
 		}
