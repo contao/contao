@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.4] (2023-04-25)
+
+**Fixed issues:**
+
+- [#5988] Harden the file manager against directory traversal attacks ([ausi])
+
 ## [5.1.3] (2023-04-19)
 
 **Fixed issues:**
@@ -122,6 +128,8 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.4]: https://github.com/contao/contao/releases/tag/5.1.4
+[5.1.3]: https://github.com/contao/contao/releases/tag/5.1.3
 [5.1.2]: https://github.com/contao/contao/releases/tag/5.1.2
 [5.1.1]: https://github.com/contao/contao/releases/tag/5.1.1
 [5.1.0]: https://github.com/contao/contao/releases/tag/5.1.0
@@ -225,3 +233,4 @@ This project adheres to [Semantic Versioning].
 [#5960]: https://github.com/contao/contao/pull/5960
 [#5963]: https://github.com/contao/contao/pull/5963
 [#5964]: https://github.com/contao/contao/pull/5964
+[#5988]: https://github.com/contao/contao/pull/5988
