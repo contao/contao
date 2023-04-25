@@ -529,12 +529,14 @@ class Database
 			$arrParentIds = array($arrParentIds);
 		}
 
+		// Remove zero IDs
+		$arrParentIds = array_filter(array_map('\intval', $arrParentIds));
+
 		if (empty($arrParentIds))
 		{
 			return $arrReturn;
 		}
 
-		$arrParentIds = array_map('\intval', $arrParentIds);
 		$objChilds = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
 		if ($objChilds->numRows > 0)

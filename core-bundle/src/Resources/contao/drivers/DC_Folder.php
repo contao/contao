@@ -2529,6 +2529,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
+		$this->isValid($strFolder);
+
+		if (!is_dir($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		{
+			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or cannot be found.');
+		}
+
 		$objSession = System::getContainer()->get('session');
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -2950,7 +2957,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return false;
 		}
 
-		if (empty($this->arrFilemounts))
+		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
 			return true;
 		}
@@ -3111,7 +3118,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Allow only those roots that are allowed in root nodes
-			if (!empty($this->arrFilemounts))
+			if (!empty($this->arrFilemounts) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) === false)
 			{
 				$blnValid = false;
 
