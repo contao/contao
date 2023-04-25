@@ -76,7 +76,8 @@ window.tinymce && tinymce.init({
 
   browser_spellcheck: true,
   tabfocus_elements: ':prev,:next',
-  importcss_append: true
+  importcss_append: true,
+  <?php if ($this->readonly): ?>readonly: 1,<?php endif; ?>
 });
 </script>
 <?php endif; ?>

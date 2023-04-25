@@ -697,6 +697,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
+			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = Backend::getTinyMceLanguage();
