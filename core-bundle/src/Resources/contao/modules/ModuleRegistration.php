@@ -185,7 +185,7 @@ class ModuleRegistration extends Module
 
             if (!empty($arrData['inputType']))
             {
-                $strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
+                $strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
             }
 
 			// Continue if the class is not defined
