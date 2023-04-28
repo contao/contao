@@ -405,7 +405,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
+        // TODO: Enable double_encoding once Contao switches from input to output encoding.
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, false);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
