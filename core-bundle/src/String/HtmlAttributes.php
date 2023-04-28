@@ -26,8 +26,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(self|iterable|string|null $attributes = null)
-    {
+    public function __construct(
+        self|iterable|string|null $attributes = null,
+        // TODO: Enable double_encoding once Contao switches from input to output encoding.
+        private bool $doubleEncoding = false,
+    ) {
         $this->mergeWith($attributes);
     }
 
@@ -405,7 +408,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
