@@ -298,13 +298,11 @@ p {
 
 /* Tables */
 .zebra-table th, .zebra-table td {
-	padding: 4px 6px;
 	border: solid var(--border);
 	border-width: 1px 0;
 }
 
 .zebra-table th {
-	padding: 6px;
 	background-color: var(--table-header);
 }
 
@@ -314,6 +312,14 @@ p {
 
 .zebra-table tr:nth-child(even) td {
 	background-color: var(--table-even);
+}
+
+.zebra-table--with-padding th {
+	padding: 6px;
+}
+
+.zebra-table--with-padding td {
+	padding: 4px 6px;
 }
 
 .zebra-table--with-header tr:nth-child(odd) td {

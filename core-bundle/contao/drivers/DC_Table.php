@@ -573,7 +573,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--no-border">';
+		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--with-padding zebra-table--no-border">';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
@@ -5223,7 +5223,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						$return .= '
   <tr>
-    <td colspan="2" class="' . $groupclass . '">' . $group . '</td>
+    <th colspan="2" class="' . $groupclass . '">' . $group . '</th>
   </tr>';
 						$groupclass = 'tl_folder_list';
 					}
