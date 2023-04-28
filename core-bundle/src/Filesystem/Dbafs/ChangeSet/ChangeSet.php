@@ -65,14 +65,14 @@ class ChangeSet
 
         foreach ($changeSet->itemsToCreate as $item) {
             $prefixedPath = Path::join($pathPrefix, $item[self::ATTR_PATH]);
-            $itemsToCreate[$prefixedPath] = array_merge($item, [self::ATTR_PATH => $prefixedPath]);
+            $itemsToCreate[$prefixedPath] = [...$item, self::ATTR_PATH => $prefixedPath];
         }
 
         foreach ($changeSet->itemsToUpdate as $path => $item) {
             $prefixedPath = Path::join($pathPrefix, (string) $path);
 
             if (null !== ($newPath = $item[self::ATTR_PATH] ?? null)) {
-                $item = array_merge($item, [self::ATTR_PATH => Path::join($pathPrefix, $newPath)]);
+                $item = [...$item, self::ATTR_PATH => Path::join($pathPrefix, $newPath)];
             }
 
             $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
