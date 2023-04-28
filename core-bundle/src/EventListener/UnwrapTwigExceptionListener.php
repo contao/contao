@@ -28,7 +28,7 @@ class UnwrapTwigExceptionListener
     {
         if (
             !($throwable = $event->getThrowable()) instanceof RuntimeError ||
-            !is_a($previous = $throwable->getPrevious(), ResponseException::class)
+            !($previous = $throwable->getPrevious()) instanceof ResponseException
         ) {
             return;
         }
