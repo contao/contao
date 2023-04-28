@@ -131,7 +131,7 @@ class ModuleSearch extends Module
 				foreach ($GLOBALS['TL_HOOKS']['customizeSearch'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
+					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this, $objResult, $arrResult);
 				}
 			}
 
@@ -145,7 +145,10 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
+				if (is_null($objResult))
+				{
+					$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -164,7 +167,14 @@ class ModuleSearch extends Module
 				});
 			}
 
-			$count = $objResult->getCount();
+			if(is_null($arrResult))
+			{
+				$count = $objResult->getCount();
+			}
+			else
+			{
+				$count = count($arrResult);
+			}
 
 			$this->Template->count = $count;
 			$this->Template->page = null;
@@ -228,7 +238,10 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
-			$arrResult = $objResult->getResults($to-$from+1, $from-1);
+			if(is_null($arrResult))
+			{
+				$arrResult = $objResult->getResults($to-$from+1, $from-1);
+			}
 
 			// Get the results
 			foreach (array_keys($arrResult) as $i)
