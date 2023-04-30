@@ -518,7 +518,7 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame($expectedString, $attributes->toString(false));
 
         // With double encoding
-        $attributes = new HtmlAttributes($attributes, true);
+        $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
         $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" property-without-value';
 
         $this->assertSame(" $expectedString", $attributes->__toString());

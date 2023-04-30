@@ -23,14 +23,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private array $attributes = [];
 
+    private bool $doubleEncoding = false;
+
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(
-        self|iterable|string|null $attributes = null,
-        // TODO: Enable double_encoding once Contao switches from input to output encoding.
-        private bool $doubleEncoding = false,
-    ) {
+    public function __construct(self|iterable|string|null $attributes = null)
+    {
         $this->mergeWith($attributes);
     }
 
@@ -292,6 +291,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         if (empty($this->attributes['style'])) {
             unset($this->attributes['style']);
         }
+
+        return $this;
+    }
+
+    public function setDoubleEncoding(bool $doubleEncoding): self
+    {
+        $this->doubleEncoding = $doubleEncoding;
 
         return $this;
     }
