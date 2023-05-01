@@ -26,12 +26,12 @@
         <target>&quot;%s&quot; alanı en fazla %d karakter uzunluğunda olmalıdır!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>&quot;%s&quot; alanı en az %d olmalıdır!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>&quot;%s&quot; alanı en az %s olmalıdır!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>&quot;%s&quot; alanı en çok %d olmalıdır!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>&quot;%s&quot; alanı en çok %s olmalıdır!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

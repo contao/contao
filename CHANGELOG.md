@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.21] (2023-04-25)
+
+**Fixed issues:**
+
+- [#5987] Harden the file manager against directory traversal attacks ([ausi])
+
+## [4.13.20] (2023-04-19)
+
+**Fixed issues:**
+
+- [#5962] Fix an undefined array key warning when comparing versions with different fields ([fritzmg])
+- [#5851] Do not auto-link images in the news reader ([leofeyer])
+- [#5959] Remove unnecessary locale tags from languages ([ausi])
+- [#5955] Remove the "symfony/proxy-manager-bridge" dependency ([leofeyer])
+- [#5893] Correctly check the mounted pages in the `hasAccess()` method ([leofeyer])
+- [#5952] Ignore exceptions when adding trusted devices ([aschempp])
+- [#5942] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5908] Correctly handle response status codes from legacy entry points ([aschempp])
+- [#5934] Fix the search query in DC_Folder ([leofeyer])
+- [#5917] Consider foreign keys when sorting the list view ([dennisbohn])
+- [#5927] Fix the version panel alignment ([fritzmg])
+
 ## [4.13.19] (2023-04-04)
 
 **Fixed issues:**
@@ -345,7 +367,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS via canonical tags in the front end ([CVE-2022-24899])
+- Prevent XSS via canonical tags in the front end ([ausi])
 
 ## [4.13.2] (2022-03-31)
 
@@ -644,6 +666,8 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.20]: https://github.com/contao/contao/releases/tag/4.13.20
+[4.13.19]: https://github.com/contao/contao/releases/tag/4.13.19
 [4.13.18]: https://github.com/contao/contao/releases/tag/4.13.18
 [4.13.17]: https://github.com/contao/contao/releases/tag/4.13.17
 [4.13.16]: https://github.com/contao/contao/releases/tag/4.13.16
@@ -666,7 +690,6 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
-[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -1183,6 +1206,7 @@ This project adheres to [Semantic Versioning].
 [#5842]: https://github.com/contao/contao/pull/5842
 [#5843]: https://github.com/contao/contao/pull/5843
 [#5850]: https://github.com/contao/contao/pull/5850
+[#5851]: https://github.com/contao/contao/pull/5851
 [#5854]: https://github.com/contao/contao/pull/5854
 [#5855]: https://github.com/contao/contao/pull/5855
 [#5856]: https://github.com/contao/contao/pull/5856
@@ -1200,7 +1224,17 @@ This project adheres to [Semantic Versioning].
 [#5888]: https://github.com/contao/contao/pull/5888
 [#5890]: https://github.com/contao/contao/pull/5890
 [#5892]: https://github.com/contao/contao/pull/5892
-[#5894]: https://github.com/contao/contao/pull/5894
+[#5893]: https://github.com/contao/contao/pull/5893
+[#5908]: https://github.com/contao/contao/pull/5908
 [#5910]: https://github.com/contao/contao/pull/5910
 [#5913]: https://github.com/contao/contao/pull/5913
 [#5914]: https://github.com/contao/contao/pull/5914
+[#5917]: https://github.com/contao/contao/pull/5917
+[#5927]: https://github.com/contao/contao/pull/5927
+[#5934]: https://github.com/contao/contao/pull/5934
+[#5942]: https://github.com/contao/contao/pull/5942
+[#5952]: https://github.com/contao/contao/pull/5952
+[#5955]: https://github.com/contao/contao/pull/5955
+[#5959]: https://github.com/contao/contao/pull/5959
+[#5962]: https://github.com/contao/contao/pull/5962
+[#5987]: https://github.com/contao/contao/pull/5987
