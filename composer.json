@@ -48,7 +48,7 @@
         "contao-components/contao": "^9.1",
         "contao-components/datepicker": "^3.0",
         "contao-components/dropzone": "^5.0.1",
-        "contao-components/handorgel": "^0.5.0",
+        "contao-components/handorgel": "^0.5",
         "contao-components/jquery": "^3.5",
         "contao-components/jquery-ui": "^1.11.4",
         "contao-components/mediabox": "^1.5",
