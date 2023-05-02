@@ -19,8 +19,7 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
 
         const button = document.createElement('button');
         button.type = 'button';
-        button.innerHTML = toggler.innerHTML;
-        toggler.innerHTML = '';
+        button.append(...toggler.childNodes);
         toggler.appendChild(button);
 
         addNextAccordions(el.nextElementSibling, accordion);
