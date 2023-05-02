@@ -28,16 +28,16 @@
  * Nicky Hoff ([frontendschlampe](https://github.com/frontendschlampe))
  * Daniel Jahnsmüller ([Tastaturberuf](https://github.com/Tastaturberuf))
  * Michael Roitzsch ([mroi](https://github.com/mroi))
- * Oliver Hoff ([backbone87](https://github.com/backbone87))
  * Cliff Parnitzky ([cliffparnitzky](https://github.com/cliffparnitzky))
+ * Oliver Hoff ([backbone87](https://github.com/backbone87))
  * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * gmpf ([gmpf](https://github.com/gmpf))
  * Markus Nestmann
+ * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
  * ameotoko ([ameotoko](https://github.com/ameotoko))
  * Andreas Burg ([Aybee](https://github.com/Aybee))
- * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Benjamin Hummel
  * Blair Winans ([blairwinans](https://github.com/blairwinans))
  * CMSworker ([CMSworker](https://github.com/CMSworker))

@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.22] (2023-05-02)
+
+**Fixed issues:**
+
+- [#6003] Add a method to retrieve the original route path ([aschempp])
+- [#6002] Fix a type error in the meta wizard ([ausi])
+- [#5984] Make the `multiSRC` field mandatory for galleries and downloads ([cliffparnitzky])
+- [#5993] Fix the type hint in the Hybrid class ([leofeyer])
+- [#5951] Auto-generate and dump the APP_SECRET during contao-setup ([m-vo])
+- [#5971] Add an optional class attribute to the figure builder ([a-v-l])
+- [#5986] Allow flysystem-bundle ^3.0 ([Toflar])
+
 ## [4.13.21] (2023-04-25)
 
 **Fixed issues:**
@@ -666,6 +678,8 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.22]: https://github.com/contao/contao/releases/tag/4.13.22
+[4.13.21]: https://github.com/contao/contao/releases/tag/4.13.21
 [4.13.20]: https://github.com/contao/contao/releases/tag/4.13.20
 [4.13.19]: https://github.com/contao/contao/releases/tag/4.13.19
 [4.13.18]: https://github.com/contao/contao/releases/tag/4.13.18
@@ -690,12 +704,14 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[a-v-l]: https://github.com/a-v-l
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [christianbarkowsky]: https://github.com/christianbarkowsky
+[cliffparnitzky]: https://github.com/cliffparnitzky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [Defcon0]: https://github.com/Defcon0
@@ -1233,8 +1249,15 @@ This project adheres to [Semantic Versioning].
 [#5927]: https://github.com/contao/contao/pull/5927
 [#5934]: https://github.com/contao/contao/pull/5934
 [#5942]: https://github.com/contao/contao/pull/5942
+[#5951]: https://github.com/contao/contao/pull/5951
 [#5952]: https://github.com/contao/contao/pull/5952
 [#5955]: https://github.com/contao/contao/pull/5955
 [#5959]: https://github.com/contao/contao/pull/5959
 [#5962]: https://github.com/contao/contao/pull/5962
+[#5971]: https://github.com/contao/contao/pull/5971
+[#5984]: https://github.com/contao/contao/pull/5984
+[#5986]: https://github.com/contao/contao/pull/5986
 [#5987]: https://github.com/contao/contao/pull/5987
+[#5993]: https://github.com/contao/contao/pull/5993
+[#6002]: https://github.com/contao/contao/pull/6002
+[#6003]: https://github.com/contao/contao/pull/6003
