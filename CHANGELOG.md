@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.5] (2023-05-02)
+
+**Fixed issues:**
+
+- [#6000] Add a double encoding setting to the HtmlAttributes class ([ausi])
+- [#5980] Unwrap response exceptions thrown while rendering a template ([m-vo])
+- [#5981] Use the title instead of the filename in the download component ([m-vo])
+
 ## [5.1.4] (2023-04-25)
 
 **Fixed issues:**
@@ -233,4 +241,7 @@ This project adheres to [Semantic Versioning].
 [#5960]: https://github.com/contao/contao/pull/5960
 [#5963]: https://github.com/contao/contao/pull/5963
 [#5964]: https://github.com/contao/contao/pull/5964
+[#5980]: https://github.com/contao/contao/pull/5980
+[#5981]: https://github.com/contao/contao/pull/5981
 [#5988]: https://github.com/contao/contao/pull/5988
+[#6000]: https://github.com/contao/contao/pull/6000
