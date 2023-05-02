@@ -165,7 +165,7 @@ class MetaWizard extends Widget
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
-			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_keys($this->varValue));
+			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_map('strval', array_keys($this->varValue)));
 			$items = array();
 
 			// Add the input fields
