@@ -1901,7 +1901,7 @@ ul.sgallery li {
 	margin-bottom: 0;
 }
 
-#tl_versions td {
+#tl_versions th, #tl_versions td {
 	padding: 6px;
 }
 
@@ -2667,6 +2667,7 @@ fieldset.collapsed > legend {
 
 #tl_maintenance_cache td {
 	line-height: 1.2;
+	padding: 4px 6px 5px;
 }
 
 #tl_maintenance_cache td span {
@@ -2675,10 +2676,6 @@ fieldset.collapsed > legend {
 
 #tl_maintenance_cache td:first-child {
 	width: 16px;
-}
-
-.mac #tl_maintenance_cache td:first-child .tl_checkbox {
-	top: -2px;
 }
 
 #tl_maintenance_cache .nw {
@@ -2690,6 +2687,7 @@ fieldset.collapsed > legend {
 }
 
 #tl_maintenance_cache .tl_checkbox_container label {
+	vertical-align: initial;
 	font-weight: 600;
 }
 

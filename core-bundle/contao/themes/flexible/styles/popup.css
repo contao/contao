@@ -23,6 +23,10 @@ body {
 	white-space: normal;
 }
 
+.tl_show tr.meta td {
+	white-space: initial;
+}
+
 .tl_label {
 	margin-right: 12px;
 	font-weight: 600;
