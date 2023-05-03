@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.23] (2023-05-03)
+
+**Fixed issues:**
+
+- [#5979] Check for the `debug.stopwatch` service ([fritzmg])
+
 ## [4.13.22] (2023-05-02)
 
 **Fixed issues:**
@@ -678,6 +684,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.23]: https://github.com/contao/contao/releases/tag/4.13.23
 [4.13.22]: https://github.com/contao/contao/releases/tag/4.13.22
 [4.13.21]: https://github.com/contao/contao/releases/tag/4.13.21
 [4.13.20]: https://github.com/contao/contao/releases/tag/4.13.20
@@ -1255,6 +1262,7 @@ This project adheres to [Semantic Versioning].
 [#5959]: https://github.com/contao/contao/pull/5959
 [#5962]: https://github.com/contao/contao/pull/5962
 [#5971]: https://github.com/contao/contao/pull/5971
+[#5979]: https://github.com/contao/contao/pull/5979
 [#5984]: https://github.com/contao/contao/pull/5984
 [#5986]: https://github.com/contao/contao/pull/5986
 [#5987]: https://github.com/contao/contao/pull/5987
