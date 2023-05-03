@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.41] (2023-05-03)
+
+**Fixed issues:**
+
+- Auto-generate and dump the APP_SECRET during the setup ([fritzmg])
+
 ## [4.9.40] (2023-04-25)
 
 **Fixed issues:**
@@ -1102,6 +1108,8 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.41]: https://github.com/contao/contao/releases/tag/4.9.41
+[4.9.40]: https://github.com/contao/contao/releases/tag/4.9.40
 [4.9.39]: https://github.com/contao/contao/releases/tag/4.9.39
 [4.9.38]: https://github.com/contao/contao/releases/tag/4.9.38
 [4.9.37]: https://github.com/contao/contao/releases/tag/4.9.37
