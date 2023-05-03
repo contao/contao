@@ -34,7 +34,7 @@ class InstallTool
     private MigrationCollection $migrations;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_installation.install_tool" service instead
+     * @internal
      */
     public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
     {

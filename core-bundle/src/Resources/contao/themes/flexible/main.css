@@ -433,6 +433,9 @@ h2.sub_headline {
 .tl_version_panel .tl_select {
 	max-width:280px;
 }
+.tl_version_panel .tl_submit {
+	vertical-align:middle;
+}
 .tl_version_panel .tl_formbody {
 	position:relative;
 }

@@ -28,6 +28,7 @@ services:
         arguments:
             - '%kernel.project_dir%'
             - '%contao.web_dir%'
+            - '%kernel.secret%'
 
     contao_manager.jwt_manager:
         public: true

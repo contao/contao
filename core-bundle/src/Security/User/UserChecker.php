@@ -27,7 +27,7 @@ class UserChecker implements UserCheckerInterface
     private ContaoFramework $framework;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework)
     {

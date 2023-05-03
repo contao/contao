@@ -24,7 +24,7 @@
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^3.2",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "sensiolabs/ansi-to-html": "^1.1",
         "symfony/config": "^5.4",
         "symfony/console": "^5.4",
