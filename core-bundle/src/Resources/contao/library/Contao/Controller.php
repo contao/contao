@@ -427,7 +427,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -539,7 +539,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -610,7 +610,7 @@ abstract class Controller extends System
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
