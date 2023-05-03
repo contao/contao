@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.6] (2023-05-03)
+
+**Fixed issues:**
+
+- [#5989] Hide fields that are not to be displayed in the undo details ([leofeyer])
+
 ## [5.1.5] (2023-05-02)
 
 **Fixed issues:**
@@ -136,6 +142,8 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.6]: https://github.com/contao/contao/releases/tag/5.1.6
+[5.1.5]: https://github.com/contao/contao/releases/tag/5.1.5
 [5.1.4]: https://github.com/contao/contao/releases/tag/5.1.4
 [5.1.3]: https://github.com/contao/contao/releases/tag/5.1.3
 [5.1.2]: https://github.com/contao/contao/releases/tag/5.1.2
@@ -244,4 +252,5 @@ This project adheres to [Semantic Versioning].
 [#5980]: https://github.com/contao/contao/pull/5980
 [#5981]: https://github.com/contao/contao/pull/5981
 [#5988]: https://github.com/contao/contao/pull/5988
+[#5989]: https://github.com/contao/contao/pull/5989
 [#6000]: https://github.com/contao/contao/pull/6000
