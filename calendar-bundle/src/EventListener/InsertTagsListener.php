@@ -76,34 +76,24 @@ class InsertTagsListener
 
         $events = $this->framework->getAdapter(Events::class);
 
-        switch ($insertTag) {
-            case 'event':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>%s</a>',
-                    $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->title),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $model->title
-                );
-
-            case 'event_open':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>',
-                    $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->title),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
-                );
-
-            case 'event_url':
-                return $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './';
-
-            case 'event_title':
-                return StringUtil::specialcharsAttribute($model->title);
-
-            case 'event_teaser':
-                return $model->teaser;
-        }
-
-        return '';
+        return match ($insertTag) {
+            'event' => sprintf(
+                '<a href="%s" title="%s"%s>%s</a>',
+                $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                StringUtil::specialcharsAttribute($model->title),
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
+                $model->title
+            ),
+            'event_open' => sprintf(
+                '<a href="%s" title="%s"%s>',
+                $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                StringUtil::specialcharsAttribute($model->title),
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
+            ),
+            'event_url' => $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+            'event_title' => StringUtil::specialcharsAttribute($model->title),
+            'event_teaser' => $model->teaser,
+            default => '',
+        };
     }
 }

@@ -340,7 +340,7 @@ class PageModel extends Model
 			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findOneBy($arrColumns, $intId, $arrOptions);
+		return static::findOneBy($arrColumns, array($intId), $arrOptions);
 	}
 
 	/**
@@ -362,7 +362,7 @@ class PageModel extends Model
 			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -390,7 +390,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -417,7 +417,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -472,7 +472,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -499,7 +499,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -526,7 +526,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -610,7 +610,7 @@ class PageModel extends Model
 			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findBy($arrColumns, $varId, $arrOptions);
+		return static::findBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -676,7 +676,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -719,7 +719,7 @@ class PageModel extends Model
 			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findOneBy($arrColumns, $strHost, $arrOptions);
+		return static::findOneBy($arrColumns, array($strHost), $arrOptions);
 	}
 
 	/**
@@ -872,7 +872,7 @@ class PageModel extends Model
 
 		// Set some default values
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : 0;
+		$this->layout = ($this->includeLayout && $this->layout) ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : 0;

@@ -311,6 +311,10 @@ final class Figure
             $templateData['floatClass'] = " float_$floating";
         }
 
+        if (isset($this->getOptions()['attr']['class'])) {
+            $templateData['floatClass'] = ($templateData['floatClass'] ?? '').' '.$this->getOptions()['attr']['class'];
+        }
+
         // Add arbitrary template options
         return array_merge($templateData, $this->getOptions());
     }

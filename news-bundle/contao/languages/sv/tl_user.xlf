@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Här kan du definiera nyhetsarkivets behörigheter.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Tillåtna nyhetsflöden</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Här kan du tilldela åtkomst till ett eller flera nyhetsflöden.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Behörigheter för nyhetsflöden</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Här kan du tilldela åtkomst till nyhetsflöden.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Nyhetsrättigheter</target>

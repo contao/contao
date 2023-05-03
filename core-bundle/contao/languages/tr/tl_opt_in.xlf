@@ -6,12 +6,12 @@
         <target>Belirteç</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
-        <source>Confirmed on</source>
-        <target>Onaylanma tarihi</target>
+        <source>Confirmed at</source>
+        <target>Onaylanma zamanı</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.removeOn">
-        <source>Remove on</source>
-        <target>Kaldırılma tarihi</target>
+        <source>Remove at</source>
+        <target>Kaldırılma zamanı</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.invalidatedThrough">
         <source>Invalidated through</source>

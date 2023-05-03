@@ -548,7 +548,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ($isBackend ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
+		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', $this->arrErrors[$intIndex]) : '';
 	}
 
 	/**
@@ -619,11 +619,11 @@ abstract class Widget extends Controller
 
 		return sprintf(
 			'<label%s%s>%s%s%s</label>',
-			($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
-			($this->strClass ? ' class="' . $this->strClass . '"' : ''),
-			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : '',
+			$this->strClass ? ' class="' . $this->strClass . '"' : '',
+			$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$this->strLabel,
-			($this->mandatory ? '<span class="mandatory">*</span>' : '')
+			$this->mandatory ? '<span class="mandatory">*</span>' : ''
 		);
 	}
 
@@ -1422,6 +1422,22 @@ abstract class Widget extends Controller
 		if (isset($arrData['rootNodes']) && !isset($arrData['eval']['rootNodes']))
 		{
 			$arrAttributes['rootNodes'] = $arrData['rootNodes'];
+		}
+
+		// Add custom logic from DCA
+		if (\is_array($arrData['attributes_callback'] ?? null))
+		{
+			foreach ($arrData['attributes_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$arrAttributes = static::importStatic($callback[0])->{$callback[1]}($arrAttributes, $objDca);
+				}
+				elseif (\is_callable($callback))
+				{
+					$arrAttributes = $callback($arrAttributes, $objDca);
+				}
+			}
 		}
 
 		// HOOK: add custom logic

@@ -243,7 +243,7 @@ class BackendMenuListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
@@ -262,6 +262,22 @@ class BackendMenuListenerTest extends TestCase
         // Alerts
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
+
+        // Color scheme
+        $this->assertSame('color-scheme', $children['color-scheme']->getLabel());
+        $this->assertSame('#', $children['color-scheme']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['color-scheme']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-color-scheme',
+                'title' => '',
+                'data-controller' => 'contao--color-scheme',
+                'data-contao--color-scheme-target' => 'label',
+                'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
+            ],
+            $children['color-scheme']->getLinkAttributes()
+        );
 
         // Submenu
         $this->assertSame('<button type="button">MSC.user foo</button>', $children['submenu']->getLabel());

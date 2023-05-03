@@ -155,7 +155,7 @@ class Form extends Hybrid
 
 		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
 
-		// Add a confirmation to the template and remove it afterwards
+		// Add a confirmation to the template and remove it afterward
 		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 		{
 			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);

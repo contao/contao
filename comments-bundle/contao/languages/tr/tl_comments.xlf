@@ -90,8 +90,8 @@
         <target>Buraya yanıtı yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>Yorumu yayınla</target>
+        <source>Published</source>
+        <target>Yayınlanmış</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

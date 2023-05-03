@@ -43,7 +43,7 @@ class ConfigurationTest extends TestCase
         $this->assertNull($configuration['image']['imagine_service']);
 
         $params = [
-            'contao' => [
+            [
                 'image' => [
                     'imagine_service' => 'my_super_service',
                 ],
@@ -65,7 +65,7 @@ class ConfigurationTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
 
         $params = [
-            'contao' => [
+            [
                 'web_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
@@ -97,7 +97,7 @@ class ConfigurationTest extends TestCase
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
         $params = [
-            'contao' => [
+            [
                 'upload_path' => $uploadPath,
             ],
         ];
@@ -128,7 +128,7 @@ class ConfigurationTest extends TestCase
     public function testFailsIfAPredefinedImageSizeNameContainsOnlyDigits(): void
     {
         $params = [
-            'contao' => [
+            [
                 'image' => [
                     'sizes' => [
                         '123' => ['width' => 100, 'height' => 200],
@@ -149,7 +149,7 @@ class ConfigurationTest extends TestCase
     public function testFailsIfAPredefinedImageSizeNameIsReserved(string $name): void
     {
         $params = [
-            'contao' => [
+            [
                 'image' => [
                     'sizes' => [
                         $name => ['width' => 100, 'height' => 200],
@@ -183,7 +183,7 @@ class ConfigurationTest extends TestCase
     public function testDeniesInvalidCrawlUris(): void
     {
         $params = [
-            'contao' => [
+            [
                 'crawl' => [
                     'additional_uris' => ['invalid.com'],
                 ],
@@ -209,7 +209,7 @@ class ConfigurationTest extends TestCase
     public function testFailsIfABackendAttributeNameContainsInvalidCharacters(): void
     {
         $params = [
-            'contao' => [
+            [
                 'backend' => [
                     'attributes' => [
                         'data-App Name' => 'My App',
@@ -227,7 +227,7 @@ class ConfigurationTest extends TestCase
     public function testFailsOnInvalidBackupKeepIntervals(): void
     {
         $params = [
-            'contao' => [
+            [
                 'backup' => [
                     'keep_intervals' => [
                         'foobar',
@@ -245,19 +245,38 @@ class ConfigurationTest extends TestCase
     public function testMessengerConfiguration(): void
     {
         $params = [
-            'contao' => [
+            // This first configuration should be overridden by the latter (no deep merging), in order to control all the
+            // workers in your app.
+            [
                 'messenger' => [
-                    'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
                     'workers' => [
                         [
+                            'transports' => ['prio_low'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'messenger' => [
+                    'workers' => [
+                        [
+                            'transports' => ['prio_low'],
+                        ],
+                        [
                             'transports' => ['prio_normal'],
+                            'options' => ['--sleep=10', '--time-limit=60'],
+                            'autoscale' => [
+                                'desired_size' => 10,
+                                'max' => 20,
+                            ],
                         ],
                         [
                             'transports' => ['prio_high'],
                             'options' => ['--sleep=5', '--time-limit=60'],
                             'autoscale' => [
-                                'desired_size' => 10,
+                                'desired_size' => 5,
                                 'max' => 30,
+                                'min' => 4,
                             ],
                         ],
                     ],
@@ -269,21 +288,32 @@ class ConfigurationTest extends TestCase
 
         $this->assertSame(
             [
-                'console_path' => '%kernel.project_dir%/vendor/bin/contao-console',
                 'workers' => [
                     [
-                        'transports' => ['prio_normal'],
+                        'transports' => ['prio_low'],
                         'options' => ['--time-limit=60'],
                         'autoscale' => [
                             'enabled' => false,
+                            'min' => 1,
+                        ],
+                    ],
+                    [
+                        'transports' => ['prio_normal'],
+                        'options' => ['--sleep=10', '--time-limit=60'],
+                        'autoscale' => [
+                            'desired_size' => 10,
+                            'max' => 20,
+                            'enabled' => true,
+                            'min' => 1,
                         ],
                     ],
                     [
                         'transports' => ['prio_high'],
                         'options' => ['--sleep=5', '--time-limit=60'],
                         'autoscale' => [
-                            'desired_size' => 10,
+                            'desired_size' => 5,
                             'max' => 30,
+                            'min' => 4,
                             'enabled' => true,
                         ],
                     ],
@@ -291,6 +321,53 @@ class ConfigurationTest extends TestCase
             ],
             $configuration['messenger']
         );
+
+        try {
+            (new Processor())->processConfiguration($this->configuration, [
+                [
+                    'messenger' => [
+                        'workers' => [
+                            [
+                                'transports' => ['prio_normal'],
+                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'autoscale' => [
+                                    'enabled' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        } catch (InvalidConfigurationException $exception) {
+            $this->assertStringContainsString(
+                'The child config "desired_size" under "contao.messenger.workers.0.autoscale" must be configured',
+                $exception->getMessage()
+            );
+        }
+
+        try {
+            (new Processor())->processConfiguration($this->configuration, [
+                [
+                    'messenger' => [
+                        'workers' => [
+                            [
+                                'transports' => ['prio_normal'],
+                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'autoscale' => [
+                                    'enabled' => true,
+                                    'desired_size' => 10,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        } catch (InvalidConfigurationException $exception) {
+            $this->assertStringContainsString(
+                'The child config "max" under "contao.messenger.workers.0.autoscale" must be configured',
+                $exception->getMessage()
+            );
+        }
     }
 
     /**
@@ -306,7 +383,7 @@ class ConfigurationTest extends TestCase
     public function testInvalidCronConfiguration(): void
     {
         $params = [
-            'contao' => [
+            [
                 'cron' => [
                     'web_listener' => 'foobar',
                 ],
@@ -326,15 +403,15 @@ class ConfigurationTest extends TestCase
         ];
 
         yield 'Explicit auto' => [
-            ['contao' => ['cron' => ['web_listener' => 'auto']]], 'auto',
+            [['cron' => ['web_listener' => 'auto']]], 'auto',
         ];
 
         yield 'Explicit false' => [
-            ['contao' => ['cron' => ['web_listener' => false]]], false,
+            [['cron' => ['web_listener' => false]]], false,
         ];
 
         yield 'Explicit true' => [
-            ['contao' => ['cron' => ['web_listener' => true]]], true,
+            [['cron' => ['web_listener' => true]]], true,
         ];
     }
 

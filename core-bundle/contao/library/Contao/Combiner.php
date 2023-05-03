@@ -403,7 +403,7 @@ class Combiner extends System
 		{
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
-			$objCompiler->setOutputStyle(($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
+			$objCompiler->setOutputStyle($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
 
 			if ($blnDebug)
 			{
@@ -452,8 +452,7 @@ class Combiner extends System
 
 		return preg_replace_callback(
 			'/url\(("[^"\n]+"|\'[^\'\n]+\'|[^"\'\s()]+)\)/',
-			static function ($matches) use ($strDirname, $strGlue)
-			{
+			static function ($matches) use ($strDirname, $strGlue) {
 				$strData = $matches[1];
 
 				if ($strData[0] == '"' || $strData[0] == "'")

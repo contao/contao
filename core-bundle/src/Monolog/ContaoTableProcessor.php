@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\PageModel;
 use Monolog\Logger;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ContaoTableProcessor implements ProcessorInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.monolog.processor" service instead
+     * @internal
      */
     public function __construct(private RequestStack $requestStack, private TokenStorageInterface $tokenStorage, private ScopeMatcher $scopeMatcher)
     {
@@ -45,6 +46,8 @@ class ContaoTableProcessor implements ProcessorInterface
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
         $this->updateSource($context, $request);
+        $this->updateUri($context, $request);
+        $this->updatePageId($context, $request);
 
         $record['extra']['contao'] = $context;
         unset($record['context']['contao']);
@@ -92,5 +95,26 @@ class ContaoTableProcessor implements ProcessorInterface
         }
 
         $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
+    }
+
+    private function updateUri(ContaoContext $context, Request $request = null): void
+    {
+        if (null === $request) {
+            return;
+        }
+
+        $context->setUri($request->getUri());
+    }
+
+    private function updatePageId(ContaoContext $context, Request $request = null): void
+    {
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            return;
+        }
+
+        // The request contains either a PageModel or the ID of the page
+        $page = $request->attributes->get('pageModel');
+
+        $context->setPageId($page instanceof PageModel ? (int) $page->id : (int) $page);
     }
 }

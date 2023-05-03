@@ -242,7 +242,7 @@ class ImageSize extends Widget
 		return sprintf(
 			'<div id="ctrl_%s" class="tl_image_size%s"%s>%s</div>%s',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getStimulusAttributes($arrValues),
 			implode(' ', $arrFields),
 			$this->wizard

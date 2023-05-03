@@ -19,9 +19,9 @@ use PhpCsFixer\Fixer\Semicolon\SemicolonAfterInstructionFixer;
 use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
+use PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
-use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
@@ -33,6 +33,7 @@ return static function (ECSConfig $ecsConfig): void {
         NoAlternativeSyntaxFixer::class,
         ReferenceUsedNamesOnlySniff::class,
         SemicolonAfterInstructionFixer::class,
+        StatementIndentationFixer::class,
         StrictComparisonFixer::class,
         StrictParamFixer::class,
         VisibilityRequiredFixer::class,
@@ -40,8 +41,7 @@ return static function (ECSConfig $ecsConfig): void {
     ]);
 
     $ecsConfig->parallel();
-
-    $parameters = $ecsConfig->parameters();
-    $parameters->set(Option::FILE_EXTENSIONS, ['html5']);
-    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_template_cache');
+    $ecsConfig->lineEnding("\n");
+    $ecsConfig->fileExtensions(['html5']);
+    $ecsConfig->cacheDirectory(sys_get_temp_dir().'/ecs_template_cache');
 };

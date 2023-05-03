@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.children">
         <source>Edit the media queries of image size ID %s</source>
+        <target>Edite las consultas de medios de tamaño de imagen con ID%s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>

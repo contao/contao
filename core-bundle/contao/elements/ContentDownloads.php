@@ -101,15 +101,14 @@ class ContentDownloads extends ContentDownload
 	protected function compile()
 	{
 		$files = array();
-		$auxDate = array();
-
-		$objFiles = $this->objFiles;
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
+		$objFiles = $this->objFiles;
 
 		// Get all files
 		while ($objFiles->next())
@@ -193,9 +192,8 @@ class ContentDownloads extends ContentDownload
 					'extension' => $objFile->extension,
 					'path'      => $objFile->dirname,
 					'previews'  => $this->getPreviews($objFile->path, $strHref),
+					'mtime'     => $objFile->mtime,
 				);
-
-				$auxDate[] = $objFile->mtime;
 			}
 
 			// Folders
@@ -281,9 +279,8 @@ class ContentDownloads extends ContentDownload
 						'extension' => $objFile->extension,
 						'path'      => $objFile->dirname,
 						'previews'  => $this->getPreviews($objFile->path, $strHref),
+						'mtime'     => $objFile->mtime,
 					);
-
-					$auxDate[] = $objFile->mtime;
 				}
 			}
 		}
@@ -293,25 +290,27 @@ class ContentDownloads extends ContentDownload
 		{
 			default:
 			case 'name_asc':
-				uksort($files, static function ($a, $b): int
-				{
+				uksort($files, static function ($a, $b): int {
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($files, static function ($a, $b): int
-				{
+				uksort($files, static function ($a, $b): int {
 					return -strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'date_asc':
-				array_multisort($files, SORT_NUMERIC, $auxDate, SORT_ASC);
+				uasort($files, static function (array $a, array $b) {
+					return $a['mtime'] <=> $b['mtime'];
+				});
 				break;
 
 			case 'date_desc':
-				array_multisort($files, SORT_NUMERIC, $auxDate, SORT_DESC);
+				uasort($files, static function (array $a, array $b) {
+					return $b['mtime'] <=> $a['mtime'];
+				});
 				break;
 
 			case 'custom':

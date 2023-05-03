@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
@@ -53,8 +54,26 @@ class PaginationTest extends TestCase
      */
     public function testGeneratesPaginationItems(array $data): void
     {
-        System::getContainer()->set('request_stack', $stack = new RequestStack());
-        $stack->push(new Request(['page' => $data['currentPage'] ?? 1]));
+        $currentPage = $data['currentPage'] ?? 1;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request(['page' => $currentPage]));
+
+        System::getContainer()->set('request_stack', $requestStack);
+
+        $input = $this->mockAdapter(['get']);
+        $input
+            ->method('get')
+            ->with('page')
+            ->willReturn($currentPage)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Environment::class => $this->mockAdapter(['requestUri', 'queryString']),
+            Input::class => $input,
+        ]);
+
+        System::getContainer()->set('contao.framework', $framework);
 
         $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();

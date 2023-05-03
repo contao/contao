@@ -18,6 +18,7 @@ framework:
     session:
         storage_factory_id: session.storage.factory.mock_file
     fragments: { path: /_fragment }
+    http_method_override: false
 
 twig:
     debug: '%kernel.debug%'

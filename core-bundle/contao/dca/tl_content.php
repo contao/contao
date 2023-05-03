@@ -131,10 +131,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,perRow,fullsize,perPage,numberOfItems;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
-		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerSize,playerOptions,playerStart,playerStop,playerCaption,playerPreload;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,youtubeOptions,playerStart,playerStop,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},playerSize,vimeoOptions,playerStart,playerColor,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
+		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},youtubeOptions,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -197,14 +197,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('maxlength'=>200, 'basicEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "mediumtext NULL"
 		),
@@ -318,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'listitems' => array
 		(
 			'inputType'               => 'listWizard',
-			'eval'                    => array('allowHtml'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
 			(
 				array('tl_content', 'listImportWizard')
@@ -328,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tableitems' => array
 		(
 			'inputType'               => 'tableWizard',
-			'eval'                    => array('allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
 			'xlabel' => array
 			(
 				array('tl_content', 'tableImportWizard')
@@ -345,19 +345,19 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'thead' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tfoot' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tleft' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'sortable' => array
@@ -534,8 +534,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'galleryTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('gallery_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -598,13 +597,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerStart' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerStop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'playerCaption' => array
@@ -639,7 +638,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'youtubeOptions' => array
@@ -664,26 +663,26 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
 		),
 		'sliderStartSlide' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sliderContinuous' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
@@ -857,7 +856,7 @@ class tl_content extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
@@ -873,7 +872,7 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				// no break
 
 			default:
@@ -1310,7 +1309,7 @@ class tl_content extends Backend
 		}
 
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1', 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}
@@ -1357,7 +1356,7 @@ class tl_content extends Backend
 		}
 
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1', 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}
@@ -1556,11 +1555,13 @@ class tl_content extends Backend
 				case 'gallery':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = '%contao.image.valid_extensions%';
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = true;
 					break;
 
 				case 'downloads':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isDownloads'] = true;
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = true;
 					break;
 			}
 		}

@@ -545,15 +545,15 @@ class Input
 	/**
 	 * Strip HTML and PHP tags preserving HTML comments
 	 *
-	 * @param mixed  $varValue             A string or array
-	 * @param string $strAllowedTags       A string of tags to preserve
-	 * @param string $strAllowedAttributes A serialized string of attributes to preserve
+	 * @param mixed                                       $varValue          A string or array
+	 * @param string                                      $strAllowedTags    A string of tags to preserve
+	 * @param string|list<array{key:string,value:string}> $allowedAttributes A serialized string or array of attributes to preserve
 	 *
 	 * @return mixed The cleaned string or array
 	 */
-	public static function stripTags($varValue, $strAllowedTags='', $strAllowedAttributes='')
+	public static function stripTags($varValue, $strAllowedTags='', $allowedAttributes='')
 	{
-		if ($strAllowedTags === '' || $strAllowedAttributes === '')
+		if ($strAllowedTags === '' || $allowedAttributes === '')
 		{
 			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 		}
@@ -568,7 +568,7 @@ class Input
 		{
 			foreach ($varValue as $k=>$v)
 			{
-				$varValue[$k] = static::stripTags($v, $strAllowedTags, $strAllowedAttributes);
+				$varValue[$k] = static::stripTags($v, $strAllowedTags, $allowedAttributes);
 			}
 
 			return $varValue;
@@ -576,7 +576,7 @@ class Input
 
 		$arrAllowedAttributes = array();
 
-		foreach (StringUtil::deserialize($strAllowedAttributes, true) as $arrRow)
+		foreach (StringUtil::deserialize($allowedAttributes, true) as $arrRow)
 		{
 			if (!empty($arrRow['key']) && !empty($arrRow['value']))
 			{
@@ -587,8 +587,7 @@ class Input
 		// Encode opening arrow brackets (see #3998)
 		$varValue = preg_replace_callback(
 			'@</?([^\s<>/]*)@',
-			static function ($matches) use ($strAllowedTags)
-			{
+			static function ($matches) use ($strAllowedTags) {
 				if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 				{
 					$matches[0] = str_replace('<', '&#60;', $matches[0]);
@@ -640,8 +639,7 @@ class Input
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
 			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext)
-			{
+			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext) {
 				$strTagName = strtolower($matches[1] ?? '');
 
 				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
@@ -656,8 +654,7 @@ class Input
 					return $matches[0];
 				}
 
-				$encode = static function (string $strText): string
-				{
+				$encode = static function (string $strText): string {
 					return str_replace('&#35;', '#', self::encodeInput($strText, InputEncodingMode::encodeAll, false));
 				};
 
@@ -703,8 +700,7 @@ class Input
 				// Only keep allowed attributes
 				$arrAttributes = array_filter(
 					$arrAttributes,
-					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes)
-					{
+					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes) {
 						// Skip if all attributes are allowed
 						if (\in_array('*', $arrAllowedAttributes[$strTagName] ?? array(), true))
 						{
@@ -860,7 +856,7 @@ class Input
 			'/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\b/is', // javascript
 			'/\bv\s*b\s*s\s*c\s*r\s*i\s*p\s*t\b/is', // vbscript
 			'/\bv\s*b\s*s\s*c\s*r\s*p\s*t\b/is', // vbscrpt
-			'/\bs\s*c\s*r\s*i\s*p\s*t\b/is', //script
+			'/\bs\s*c\s*r\s*i\s*p\s*t\b/is', // script
 			'/\ba\s*p\s*p\s*l\s*e\s*t\b/is', // applet
 			'/\ba\s*l\s*e\s*r\s*t\b/is', // alert
 			'/\bd\s*o\s*c\s*u\s*m\s*e\s*n\s*t\b/is', // document

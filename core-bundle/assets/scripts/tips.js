@@ -1,4 +1,4 @@
-(function () {
+(function() {
     const initialized = [];
 
     const tip = document.createElement('div');
@@ -21,6 +21,7 @@
                 text = el.innerHTML;
             } else {
                 text = el.getAttribute('title');
+                el.setAttribute('data-original-title', text);
                 el.removeAttribute('title')
             }
 
@@ -31,7 +32,7 @@
             clearTimeout(timer);
             tip.style.willChange = 'display,contents';
 
-            timer = setTimeout(function () {
+            timer = setTimeout(function() {
                 const position = el.getBoundingClientRect();
                 const rtl = getComputedStyle(el).direction === 'rtl';
                 const clientWidth = document.html.clientWidth;
@@ -57,9 +58,10 @@
             }, 1000)
         })
 
-        el.addEventListener('mouseleave', function () {
-            if (!useContent && text && !el.hasAttribute('title')) {
-                el.setAttribute('title', text);
+        el.addEventListener('mouseleave', function() {
+            if (el.hasAttribute('data-original-title')) {
+                el.setAttribute('title', el.getAttribute('data-original-title'));
+                el.removeAttribute('data-original-title')
             }
 
             clearTimeout(timer)
@@ -67,7 +69,7 @@
 
             if (tip.style.display === 'block') {
                 tip.style.willChange = 'display';
-                timer = setTimeout(function () {
+                timer = setTimeout(function() {
                     tip.style.display = 'none';
                     tip.style.willChange = 'auto';
                 }, 100)
@@ -78,7 +80,7 @@
 
         // Hide tooltip when clicking a button (usually an operation icon in a wizard widget)
         if (action) {
-            action.addEventListener('click', function () {
+            action.addEventListener('click', function() {
                 clearTimeout(timer);
                 tip.style.display = 'none';
                 tip.style.willChange = 'auto';
@@ -86,45 +88,53 @@
         }
     }
 
+    function select(node, selector) {
+        if (node.matches(selector)) {
+            return [node, ...node.querySelectorAll(selector)];
+        }
+
+        return node.querySelectorAll(selector);
+    }
+
     function setup(node) {
-        node.querySelectorAll('p.tl_tip').forEach(function (el) {
+        select(node, 'p.tl_tip').forEach(function(el) {
             init(el, 0, 23, true);
         });
 
-        node.querySelectorAll('#home').forEach(function (el) {
+        select(node, '#home').forEach(function(el) {
             init(el, 6, 42);
         });
 
-        node.querySelectorAll('#tmenu a[title]').forEach(function (el) {
+        select(node, '#tmenu a[title]').forEach(function(el) {
             init(el, 0, 42);
         });
 
-        node.querySelectorAll('a[title][class^="group-"]').forEach(function (el) {
+        select(node, 'a[title][class^="group-"]').forEach(function(el) {
             init(el, -6, 27);
         });
 
-        node.querySelectorAll('a[title].navigation').forEach(function (el) {
+        select(node, 'a[title].navigation').forEach(function(el) {
             init(el, 25, 32);
         });
 
-        node.querySelectorAll('img[title]').forEach(function (el) {
+        select(node, 'img[title]').forEach(function(el) {
             init(el, -9, el.classList.contains('gimage') ? 60 : 30);
         });
 
         ['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].forEach(function(selector) {
-            node.querySelectorAll(selector).forEach(function (el) {
+            select(node, selector).forEach(function(el) {
                 init(el, -9, ((selector === 'time[title]' || selector === 'span[title]') ? 26 : 30));
             });
         });
     }
 
-    setup(document);
+    setup(document.documentElement);
 
-    new MutationObserver(function (mutationsList) {
+    new MutationObserver(function(mutationsList) {
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function (element) {
-                    if (element.querySelectorAll) {
+                mutation.addedNodes.forEach(function(element) {
+                    if (element.matches && element.querySelectorAll) {
                         setup(element)
                     }
                 })

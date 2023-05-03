@@ -23,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteLoader implements RouteLoaderInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
+     * @internal
      */
     public function __construct(
         private LoaderInterface $loader,
@@ -38,6 +38,18 @@ class RouteLoader implements RouteLoaderInterface
      */
     public function loadFromPlugins(): RouteCollection
     {
+        $collection = new RouteCollection();
+
+        // Load the routing.yaml file first if it exists, so it takes
+        // precedence over all other routes (see #2718)
+        if ($configFile = $this->getConfigFile()) {
+            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        }
+
         $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
             function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {
@@ -49,17 +61,8 @@ class RouteLoader implements RouteLoaderInterface
 
                 return $collection;
             },
-            new RouteCollection()
+            $collection
         );
-
-        // Load the routing.yaml file if it exists
-        if ($configFile = $this->getConfigFile()) {
-            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
-
-            if ($routes instanceof RouteCollection) {
-                $collection->addCollection($routes);
-            }
-        }
 
         // Make sure the Contao frontend routes are always loaded last
         foreach (['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'] as $name) {

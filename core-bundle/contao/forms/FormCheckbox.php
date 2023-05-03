@@ -258,10 +258,10 @@ class FormCheckbox extends Widget
 			return sprintf(
 				'<fieldset id="ctrl_%s" class="checkbox_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
-				($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
+				$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 				$this->strLabel,
-				($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->strError,
 				$this->strName,
 				$this->strTagEnding,
@@ -272,7 +272,7 @@ class FormCheckbox extends Widget
 		return sprintf(
 			'<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->strError,
 			$this->strName,
 			$this->strTagEnding,

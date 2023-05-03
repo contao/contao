@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
@@ -23,16 +24,16 @@ use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 class MessengerCron
 {
     /**
-     * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}}> $workers
+     * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int, 'min': int}}> $workers
      */
-    public function __construct(private ContainerInterface $messengerTransportLocator, private ProcessUtil $processUtil, private string $consolePath, private array $workers)
+    public function __construct(private ContainerInterface $messengerTransportLocator, private ProcessUtil $processUtil, private array $workers)
     {
     }
 
-    public function __invoke(string $scope): PromiseInterface|null
+    public function __invoke(string $scope): PromiseInterface
     {
         if (Cron::SCOPE_CLI !== $scope) {
-            return null;
+            throw new CronExecutionSkippedException();
         }
 
         $workerPromises = [];
@@ -45,7 +46,7 @@ class MessengerCron
     }
 
     /**
-     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}} $worker
+     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int, 'min': int}} $worker
      */
     private function addWorkerPromises(array $worker, array &$workerPromises): void
     {
@@ -59,9 +60,8 @@ class MessengerCron
             // Never more than the max
             $desiredWorkers = min($desiredWorkers, $worker['autoscale']['max']);
 
-            // Subtract by one because we already started one and make sure $desiredWorkers
-            // is never negative (possible if totalMessages is 0)
-            $desiredWorkers = max(0, $desiredWorkers - 1);
+            // Never less than the min (subtract by one because we already started one)
+            $desiredWorkers = max($worker['autoscale']['min'] - 1, $desiredWorkers - 1);
 
             for ($i = 1; $i <= $desiredWorkers; ++$i) {
                 $workerPromises[] = $this->createProcessPromiseForWorker($worker);
@@ -70,12 +70,11 @@ class MessengerCron
     }
 
     /**
-     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int}} $worker
+     * @param array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int, 'min': int}} $worker
      */
     private function createProcessPromiseForWorker(array $worker): PromiseInterface
     {
         $process = $this->processUtil->createSymfonyConsoleProcess(
-            $this->consolePath,
             'messenger:consume',
             ...array_merge($worker['options'], $worker['transports'])
         );

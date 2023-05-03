@@ -50,6 +50,7 @@ class BackendLogoutListener
             ->createItem('logout')
             ->setLabel($this->getLogoutLabel())
             ->setUri($this->getLogoutUrl())
+            ->setAttribute('class', 'logout')
             ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
             ->setExtra('translation_domain', false)

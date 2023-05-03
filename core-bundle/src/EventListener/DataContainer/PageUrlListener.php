@@ -80,12 +80,10 @@ class PageUrlListener
             return $value;
         }
 
-        $currentRecord = $dc->getCurrentRecord();
-
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'] ?? '',
-            (int) ($currentRecord['id'] ?? null),
+            $pageModel->title ?? '',
+            (int) $dc->id,
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -288,6 +286,10 @@ class PageUrlListener
 
         if (null !== ($type = $input->post('type'))) {
             $pageModel->type = $type;
+        }
+
+        if (null !== ($title = $input->post('title'))) {
+            $pageModel->title = $title;
         }
 
         if (null !== ($requireItem = $input->post('requireItem'))) {

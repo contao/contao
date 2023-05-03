@@ -36,6 +36,7 @@ class DcTableTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @dataProvider getPalette
      */
     public function testGetPalette(array $dca, array $row, string $expected): void

@@ -160,7 +160,7 @@ class FaqModel extends Model
 			$arrColumns[] = "$t.published=1";
 		}
 
-		return static::findOneBy($arrColumns, $varId, $arrOptions);
+		return static::findOneBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -186,7 +186,7 @@ class FaqModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
