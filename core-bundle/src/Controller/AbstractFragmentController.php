@@ -149,8 +149,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($headline);
-        $template->headline = \is_array($data) ? $data['value'] : $data;
-        $template->hl = \is_array($data) ? $data['unit'] : 'h1';
+        $template->headline = \is_array($data) ? $data['value'] ?? '' : $data;
+        $template->hl = \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1';
     }
 
     /**

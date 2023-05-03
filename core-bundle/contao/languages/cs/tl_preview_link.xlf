@@ -17,6 +17,12 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Při sdílení tohoto odkazu zobrazit nezveřejněné stránky a elementy.</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Vytvořeno</target>
@@ -32,14 +38,6 @@
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
         <target>Uživatel, který vytvořil odkaz k náhledu.</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Platnost odkazu</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Vyberte, jak dlouho má link platit.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
@@ -98,8 +96,7 @@
         <target>Uložte prosím tento záznam, abyste mohli vytvořit odkaz na náhled.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
-        <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
-        <target>Odkaz náhledu: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
+        <source>Preview link</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>

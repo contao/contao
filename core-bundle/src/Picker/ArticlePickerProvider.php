@@ -20,7 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.picker.article_provider" service instead
+     * @internal
      */
     public function __construct(
         FactoryInterface $menuFactory,

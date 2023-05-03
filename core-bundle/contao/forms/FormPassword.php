@@ -162,7 +162,7 @@ class FormPassword extends Widget
 			'<input type="password" name="%s" id="ctrl_%s" class="text password%s" value="" autocomplete="new-password"%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->strTagEnding
 		);

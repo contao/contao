@@ -226,7 +226,7 @@ class ContaoFrameworkTest extends TestCase
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_HOOKS'] = [
             'getPageLayout' => [
                 ['test.listener.c', 'onGetPageLayout'],
@@ -348,7 +348,8 @@ class ContaoFrameworkTest extends TestCase
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn(new Schema())
         ;
 

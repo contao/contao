@@ -48,3 +48,12 @@ if ($this->hasText) {
 }
 
 $this->addSchemaOrg($schemaOrg);
+
+if ($this->figure) {
+    $primaryImage = [
+        '@type' => 'WebPage',
+        'primaryImageOfPage' => $this->figure->getSchemaOrgData(),
+    ];
+
+    $this->addSchemaOrg($primaryImage);
+}

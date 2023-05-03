@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
+        <target>Konfigurera sidorna på din webbplats(er)</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Konton</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -159,6 +161,12 @@
         <source>Change your personal data or set a new password</source>
         <target>Hantera dina personliga användardata och inställningar, t.ex.namn, E-postadress och lösenord.</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>Innehållselement</target>
@@ -213,6 +221,7 @@
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
         <source>Generates a navigation menu from the pages</source>
+        <target>Genererar en navigeringsmeny från sidorna</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -236,6 +245,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the pages</source>
+        <target>Genererar en rullgardinsmeny från sidorna</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -267,6 +277,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages</source>
+        <target>Genererar en lista över alla sidor</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -393,12 +404,17 @@
         <target>Genererar en modul för att infoga en anpassad mall.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>RSS-läsare</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Lägger till ett RSS-flöde till sidan.</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
@@ -414,6 +430,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
+        <target>Genererar olika moduler beroende på webbplatsens rotsida</target>
       </trans-unit>
     </body>
   </file>

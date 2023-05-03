@@ -88,6 +88,10 @@ class BackendAccessVoter extends Voter implements ResetInterface
      */
     private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
     {
+        if (null === $subject) {
+            return \is_array($user->$field) && 0 !== \count($user->$field);
+        }
+
         if (!\is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
@@ -183,7 +187,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             }
         }
 
-        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize(($row['chmod'] ?? null), true)];
+        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize($row['chmod'] ?? null, true)];
 
         foreach ($cacheIds as $cacheId) {
             $this->pagePermissionsCache[$cacheId] = $result;

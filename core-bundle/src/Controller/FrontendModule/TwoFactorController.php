@@ -34,7 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
-#[AsFrontendModule(category: 'user')]
+#[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
 class TwoFactorController extends AbstractFrontendModuleController
 {
     protected PageModel|null $pageModel = null;

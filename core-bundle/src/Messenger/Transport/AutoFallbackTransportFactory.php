@@ -27,12 +27,13 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
 
     public function createTransport(string $dsn, array $options, SerializerInterface $serializer): TransportInterface
     {
-        if (false === $parsedUrl = parse_url($dsn)) {
+        if (!$parsedUrl = parse_url($dsn)) {
             throw new InvalidArgumentException(sprintf('The given Auto Fallback DSN "%s" is invalid.', $dsn));
         }
 
-        $self = $parsedUrl['host'] ?? '';
         parse_str($parsedUrl['query'] ?? '', $parsedQuery);
+
+        $self = $parsedUrl['host'] ?? '';
         $target = $parsedQuery['target'] ?? '';
         $fallback = $parsedQuery['fallback'] ?? '';
 

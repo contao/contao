@@ -93,14 +93,17 @@ class ModuleCalendar extends Events
 	 */
 	protected function compile()
 	{
+		$month = Input::get('month');
+		$day = Input::get('day');
+
 		// Create the date object
 		try
 		{
-			if (($month = Input::get('month')) && \is_string($month))
+			if (\is_string($month))
 			{
 				$this->Date = new Date($month, 'Ym');
 			}
-			elseif (($day = Input::get('day')) && \is_string($day))
+			elseif (\is_string($day))
 			{
 				$this->Date = new Date($day, 'Ymd');
 			}
@@ -132,6 +135,21 @@ class ModuleCalendar extends Events
 			}
 		}
 
+		$firstMonth = date('Ym', min($dateFrom, $time));
+		$lastMonth = date('Ym', max($dateTo, $repeatUntil, $time));
+
+		// The given month is out of scope
+		if ($month && ($month < $firstMonth || $month > $lastMonth))
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// The given day is out of scope
+		if ($day && ($day < date('Ymd', min($dateFrom, $time)) || $day > date('Ymd', max($dateTo, $repeatUntil, $time))))
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
 		// Store year and month
 		$intYear = (int) date('Y', $this->Date->tstamp);
 		$intMonth = (int) date('m', $this->Date->tstamp);
@@ -143,11 +161,11 @@ class ModuleCalendar extends Events
 		// Previous month
 		$prevMonth = ($intMonth == 1) ? 12 : ($intMonth - 1);
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
-		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
+		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][$prevMonth - 1] . ' ' . $prevYear;
 		$intPrevYm = (int) ($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
 
 		// Only generate a link if there are events (see #4160)
-		if (($dateFrom !== null && $intPrevYm >= date('Ym', $dateFrom)) || $intPrevYm >= date('Ym'))
+		if ($intPrevYm >= $firstMonth)
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
 			$objTemplate->prevTitle = StringUtil::specialchars($lblPrevious);
@@ -156,16 +174,16 @@ class ModuleCalendar extends Events
 		}
 
 		// Current month
-		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] . ' ' . date('Y', $this->Date->tstamp);
+		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][date('m', $this->Date->tstamp) - 1] . ' ' . date('Y', $this->Date->tstamp);
 
 		// Next month
 		$nextMonth = ($intMonth == 12) ? 1 : ($intMonth + 1);
 		$nextYear = ($intMonth == 12) ? ($intYear + 1) : $intYear;
-		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][($nextMonth - 1)] . ' ' . $nextYear;
+		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][$nextMonth - 1] . ' ' . $nextYear;
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)
-		if ($intNextYm <= date('Ym') || ($dateTo !== null && $intNextYm <= date('Ym', max($dateTo, $repeatUntil))))
+		if ($intNextYm <= $lastMonth)
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);

@@ -90,8 +90,8 @@
         <target>Sem můžete zadat Vaši odpověď.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>Publikovat komentář</target>
+        <source>Published</source>
+        <target>Publikováno</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

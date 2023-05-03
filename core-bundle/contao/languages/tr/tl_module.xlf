@@ -350,16 +350,14 @@
         <target>Ön bellek zaman aşımı</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
-        <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Buradan RSS akışının ne kadar süreyle ön bellekte tutulacağını belirtebilirsiniz.</target>
+        <source>Here you can define how long the feed is being cached.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
         <target>Akış adresleri</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
-        <source>Please enter the URL of one or more RSS feeds.</source>
-        <target>Lütfen bir ya da birkaç RSS akışının adresini yazın.</target>
+        <source>Please enter the URL of one or more feeds.</source>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>

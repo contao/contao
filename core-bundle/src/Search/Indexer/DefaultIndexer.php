@@ -20,7 +20,7 @@ use Doctrine\DBAL\Connection;
 class DefaultIndexer implements IndexerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
+     * @internal
      */
     public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
     {

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
         <source>Automatically switch to the newsreader if an item has been selected.</source>
+        <target>Cambia automáticamente al lector de noticias si se ha seleccionado un elemento.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>

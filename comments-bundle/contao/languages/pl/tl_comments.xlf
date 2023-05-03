@@ -90,7 +90,7 @@
         <target>Wprowadź odpowiedź na komentarz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
+        <source>Published</source>
         <target>Opublikowany</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">

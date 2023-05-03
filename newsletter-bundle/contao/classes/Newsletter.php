@@ -161,8 +161,6 @@ class Newsletter extends Backend
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
-			$arrSkippedRecipients = array();
-
 			// Send newsletter
 			if ($objRecipients->numRows > 0)
 			{
@@ -177,6 +175,7 @@ class Newsletter extends Backend
 				}
 
 				$time = time();
+				$arrSkippedRecipients = $objSession->get('skipped_recipients', array());
 
 				while ($objRecipients->next())
 				{
@@ -200,9 +199,9 @@ class Newsletter extends Backend
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 				}
-			}
 
-			$objSession->set('skipped_recipients', $arrSkippedRecipients);
+				$objSession->set('skipped_recipients', $arrSkippedRecipients);
+			}
 
 			echo '<div style="margin-top:12px">';
 
@@ -239,17 +238,20 @@ class Newsletter extends Backend
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
-				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $referer . '"\',1000)</script>';
-				echo '<a href="' . Environment::get('base') . $referer . '">Please click here to proceed if you are not using JavaScript</a>';
+				$href = Environment::get('base') . ltrim($referer, '/');
+
+				echo '<script>setTimeout(\'window.location="' . $href . '"\',1000)</script>';
+				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			// Redirect to the next cycle
 			else
 			{
 				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
+				$href = Environment::get('base') . ltrim($url, '/');
 
-				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
-				echo '<a href="' . Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
+				echo '<script>setTimeout(\'window.location="' . $href . '"\',' . ($intTimeout * 1000) . ')</script>';
+				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			echo '</div></div>';
@@ -737,7 +739,7 @@ class Newsletter extends Backend
 		if ($objUser->numRows)
 		{
 			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), ($blnDisabled ? 0 : 1), $objUser->email);
+						   ->execute(time(), $blnDisabled ? 0 : 1, $objUser->email);
 		}
 
 		return $blnDisabled;
@@ -821,7 +823,7 @@ class Newsletter extends Backend
 			if ($objRecipient->count < 1)
 			{
 				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-							   ->execute($intId, $objUser->email, ($objUser->disable ? '' : 1), ($blnIsFrontend ? $time : ''));
+							   ->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
@@ -907,7 +909,7 @@ class Newsletter extends Backend
 				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);
+								   ->execute(Input::post('disable') ? '' : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}

@@ -201,6 +201,16 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    contao.feed.feedio:
+        class: FeedIo\FeedIo
+        arguments:
+            - '@contao.feed.http_adapter'
+
+    contao.feed.http_adapter:
+        class: FeedIo\Adapter\Http\Client
+        arguments:
+            - '@psr18.http_client'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -768,17 +778,17 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    contao.security.backend_favorites_voter:
-        class: Contao\CoreBundle\Security\Voter\BackendFavoritesVoter
-        arguments:
-            - '@security.helper'
-            - '@database_connection'
-
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
             - Contao\BackendUser
+
+    contao.security.data_container.favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
@@ -1063,6 +1073,11 @@ services:
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
 
+    contao.twig.sanitizer_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
+        arguments:
+            - '@twig'
+
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
         arguments:
@@ -1075,6 +1090,8 @@ services:
 
     contao.util.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
+        arguments:
+            - '%contao.console_path%'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

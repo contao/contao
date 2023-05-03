@@ -66,6 +66,12 @@ class ContentGallery extends ContentElement
 			return '';
 		}
 
+		// Make sure we have at least one item per row to prevent division by zero
+		if ($this->perRow < 1)
+		{
+			$this->perRow = 1;
+		}
+
 		return parent::generate();
 	}
 
@@ -75,14 +81,15 @@ class ContentGallery extends ContentElement
 	protected function compile()
 	{
 		$images = array();
-		$auxDate = array();
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		$objFiles = $this->objFiles;
 
 		// Get all images
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($images[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
+			if (isset($images[$objFiles->path]) || !file_exists($projectDir . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -97,9 +104,11 @@ class ContentGallery extends ContentElement
 					continue;
 				}
 
+				$row = $objFiles->row();
+				$row['mtime'] = $objFile->mtime;
+
 				// Add the image
-				$images[$objFiles->path] = $objFiles->current();
-				$auxDate[] = $objFile->mtime;
+				$images[$objFiles->path] = $row;
 			}
 
 			// Folders
@@ -127,9 +136,11 @@ class ContentGallery extends ContentElement
 						continue;
 					}
 
+					$row = $objSubfiles->row();
+					$row['mtime'] = $objFile->mtime;
+
 					// Add the image
-					$images[$objSubfiles->path] = $objSubfiles->current();
-					$auxDate[] = $objFile->mtime;
+					$images[$objSubfiles->path] = $row;
 				}
 			}
 		}
@@ -139,25 +150,27 @@ class ContentGallery extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($images, static function ($a, $b): int
-				{
+				uksort($images, static function ($a, $b): int {
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($images, static function ($a, $b): int
-				{
+				uksort($images, static function ($a, $b): int {
 					return -strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'date_asc':
-				array_multisort($images, SORT_NUMERIC, $auxDate, SORT_ASC);
+				uasort($images, static function (array $a, array $b) {
+					return $a['mtime'] <=> $b['mtime'];
+				});
 				break;
 
 			case 'date_desc':
-				array_multisort($images, SORT_NUMERIC, $auxDate, SORT_DESC);
+				uasort($images, static function (array $a, array $b) {
+					return $b['mtime'] <=> $a['mtime'];
+				});
 				break;
 
 			case 'custom':
@@ -222,7 +235,7 @@ class ContentGallery extends ContentElement
 				if (($j + $i) < $limit && null !== ($image = $images[$i + $j] ?? null))
 				{
 					$figure = $figureBuilder
-						->fromFilesModel($image)
+						->fromId($image['id'])
 						->build();
 
 					$cellData = $figure->getLegacyTemplateData();

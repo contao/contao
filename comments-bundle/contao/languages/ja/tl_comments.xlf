@@ -90,8 +90,8 @@
         <target>返答を入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>コメントを公開</target>
+        <source>Published</source>
+        <target>公開</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

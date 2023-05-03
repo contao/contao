@@ -164,7 +164,7 @@ class TextField extends Widget
 				$strType,
 				$this->strName,
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
 				self::specialcharsValue($this->varValue),
 				$this->getAttributes(),
 				$this->wizard
@@ -202,7 +202,7 @@ class TextField extends Widget
 		return sprintf(
 			'<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			implode(' ', $arrFields),
 			$this->wizard
 		);

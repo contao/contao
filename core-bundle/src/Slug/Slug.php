@@ -20,7 +20,7 @@ use Contao\StringUtil;
 class Slug
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.slug" service instead
+     * @internal
      */
     public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
     {

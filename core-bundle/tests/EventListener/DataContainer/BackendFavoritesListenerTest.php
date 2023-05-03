@@ -31,7 +31,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testAllowsAddingNewFavorites(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'config' => [
                 'notCreatable' => true,
@@ -82,7 +82,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testDoesNotAllowAddingNewFavoritesIfThereIsNoData(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'config' => [
                 'notCreatable' => true,
@@ -120,7 +120,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testShowsNothingIfThereIsNoUser(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'list' => [
                 'sorting' => [

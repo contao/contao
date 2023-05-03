@@ -75,7 +75,7 @@ class PageControllerTest extends FunctionalTestCase
                         );
 
                         yield $description => [
-                            ['theme', ($withSuffix ? 'root-with-suffix' : 'root-without-suffix'), ($withAlias ? 'page-with-alias' : 'page-without-alias')],
+                            ['theme', $withSuffix ? 'root-with-suffix' : 'root-without-suffix', $withAlias ? 'page-with-alias' : 'page-without-alias'],
                             $request.($withSuffix ? '.html' : ''),
                             '/test/{slug'.($withDefault ? '' : '?').'}',
                             ['slug' => '.+'],

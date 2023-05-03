@@ -20,6 +20,7 @@ use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -31,7 +32,6 @@ use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TemplateOptionsListenerTest extends TestCase
 {
@@ -247,7 +247,7 @@ class TemplateOptionsListenerTest extends TestCase
         $finder = new Finder(
             $hierarchy,
             $this->createMock(ThemeNamespace::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(Translator::class),
         );
 
         $finderFactory = $this->createMock(FinderFactory::class);

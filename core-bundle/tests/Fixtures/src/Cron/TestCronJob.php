@@ -51,4 +51,9 @@ class TestCronJob
     {
         throw new CronExecutionSkippedException();
     }
+
+    public function skippingAsyncMethod(): PromiseInterface
+    {
+        return new Promise(static function (): never { throw new CronExecutionSkippedException(); });
+    }
 }

@@ -219,6 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Aquí puede anular el texto del enlace predeterminado &quot;leer más...&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
@@ -370,6 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.children">
         <source>Edit the content elements of event ID %s</source>
+        <target>Edite los elementos de contenido del evento del ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>

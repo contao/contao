@@ -133,8 +133,7 @@ class InsertTags extends Controller
 		if (static::$strAllowedTagsRegex === null)
 		{
 			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
-				static function ($allowedTag)
-				{
+				static function ($allowedTag) {
 					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
 				},
 				$container->getParameter('contao.insert_tags.allowed_tags')
@@ -542,7 +541,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strTarget = ($objNextPage->target && 'redirect' === $objNextPage->type) ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
@@ -1252,7 +1251,7 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * @return array<string|null, array>
+	 * @return array{string|null, array}
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
@@ -1265,8 +1264,7 @@ class InsertTags extends Controller
 		parse_str($query, $attributes);
 
 		// Cast and encode values
-		array_walk_recursive($attributes, static function (&$value)
-		{
+		array_walk_recursive($attributes, static function (&$value) {
 			if (is_numeric($value))
 			{
 				$value = (int) $value;
@@ -1460,7 +1458,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{

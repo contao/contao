@@ -353,8 +353,7 @@ abstract class System
 			}
 
 			// Remove parameters helper
-			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise'))
-			{
+			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
 				if (!$url || strpos($url, '?') === false)
 				{
 					return $url;
@@ -404,7 +403,7 @@ abstract class System
 		}
 
 		// Do not urldecode here!
-		return preg_replace('/&(amp;)?/i', ($blnEncodeAmpersands ? '&amp;' : '&'), $return);
+		return preg_replace('/&(amp;)?/i', $blnEncodeAmpersands ? '&amp;' : '&', $return);
 	}
 
 	/**

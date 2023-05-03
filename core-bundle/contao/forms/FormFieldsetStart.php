@@ -60,8 +60,8 @@ class FormFieldsetStart extends Widget
 	{
 		return sprintf(
 			'<fieldset%s>%s',
-			($this->strClass ? ' class="' . $this->strClass . '"' : ''),
-			($this->label ? '<legend>' . $this->label . '</legend>' : '')
+			$this->strClass ? ' class="' . $this->strClass . '"' : '',
+			$this->label ? '<legend>' . $this->label . '</legend>' : ''
 		);
 	}
 }

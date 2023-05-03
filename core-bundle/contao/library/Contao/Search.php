@@ -54,7 +54,7 @@ class Search
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
 		{
-			$arrSet['filesize'] = number_format((\strlen($arrData['content']) / 1024), 2, '.', '');
+			$arrSet['filesize'] = number_format(\strlen($arrData['content']) / 1024, 2, '.', '');
 		}
 
 		// Replace special characters
@@ -718,7 +718,7 @@ class Search
 		// Get phrases
 		if (\count($arrPhrasesRegExp))
 		{
-			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
+			$strQuery .= " AND (" . implode($blnOrSearch ? ' OR ' : ' AND ', array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
 			$arrValues = array_merge($arrValues, $arrPhrasesRegExp);
 		}
 

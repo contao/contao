@@ -96,7 +96,7 @@ class SearchIndexSubscriberTest extends TestCase
     public function shouldRequestProvider(): \Generator
     {
         yield 'Test skips URIs where the original URI contained a robots.txt no-follow tag' => [
-            (new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org'))),
+            new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org')),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
@@ -125,7 +125,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test skips URIs that do not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://github.com'), 0)),
+            new CrawlUri(new Uri('https://github.com'), 0),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
@@ -139,7 +139,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test requests if everything is okay' => [
-            (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
+            new CrawlUri(new Uri('https://contao.org/foobar'), 0),
             SubscriberInterface::DECISION_POSITIVE,
         ];
     }
@@ -512,19 +512,12 @@ class SearchIndexSubscriberTest extends TestCase
             ->method('getInfo')
             ->willReturnCallback(
                 static function (string $key) use ($statusCode, $url) {
-                    switch ($key) {
-                        case 'http_code':
-                            return $statusCode;
-
-                        case 'url':
-                            return $url;
-
-                        case 'response_headers':
-                            return [];
-
-                        default:
-                            return null;
-                    }
+                    return match ($key) {
+                        'http_code' => $statusCode,
+                        'url' => $url,
+                        'response_headers' => [],
+                        default => null,
+                    };
                 }
             )
         ;

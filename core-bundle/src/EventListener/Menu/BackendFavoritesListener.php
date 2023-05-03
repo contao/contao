@@ -21,6 +21,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -64,7 +65,6 @@ class BackendFavoritesListener
         }
 
         $factory = $event->getFactory();
-        $path = $this->router->generate('contao_backend');
 
         $params = [
             'do' => $request->query->get('do'),
@@ -72,8 +72,9 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        $session = $this->requestStack->getSession()->all();
-        $collapsed = 0 === ($session['backend_modules']['favorites'] ?? null);
+        /** @var AttributeBagInterface $bag */
+        $bag = $this->requestStack->getSession()->getBag('contao_backend');
+        $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
 
         $tree = $factory
             ->createItem('favorites')
@@ -81,7 +82,8 @@ class BackendFavoritesListener
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', 'group-favorites')
             ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
-            ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, 'favorites', '$path')")
+            ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
+            ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
             ->setLinkAttribute('aria-controls', 'favorites')
             ->setChildrenAttribute('id', 'favorites')
             ->setExtra('translation_domain', false)

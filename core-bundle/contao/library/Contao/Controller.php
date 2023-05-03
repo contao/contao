@@ -250,8 +250,7 @@ abstract class Controller extends System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, static function ($a)
-			{
+			$v = array_filter($v, static function ($a) {
 				return $a != 'root';
 			});
 
@@ -460,7 +459,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, (!$blnIsInsertTag ? $objPage->id : null));
+			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
 			{
@@ -1324,7 +1323,7 @@ abstract class Controller extends System
 		}
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
-		$arrPages = array_intersect($arrPages, $this->Database->getChildRecords(0, $strTable, $blnSorting));
+		$arrPages = array_filter(array_map('intval', $arrPages));
 		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
@@ -1512,8 +1511,7 @@ abstract class Controller extends System
 		;
 
 		// Match the actual regex and filter the files
-		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex)
-		{
+		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex) {
 			$path = $info->getPathname();
 
 			return preg_match($regex, $path) && $info->isFile();

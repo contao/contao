@@ -232,7 +232,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $this->assertSame('k.jones', $context->getUsername());
 
-        $tokenStorage->setToken();
+        $tokenStorage->setToken(null);
 
         $data = [
             'message' => '',

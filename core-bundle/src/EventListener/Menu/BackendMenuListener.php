@@ -133,6 +133,27 @@ class BackendMenuListener
 
         $tree->addChild($alerts);
 
+        $colorScheme = $event
+            ->getFactory()
+            ->createItem('color-scheme')
+            ->setUri('#')
+            ->setLinkAttribute('class', 'icon-color-scheme')
+            ->setLinkAttribute('title', '') // Required for the tips.js script
+            ->setLinkAttribute('data-controller', 'contao--color-scheme')
+            ->setLinkAttribute('data-contao--color-scheme-target', 'label')
+            ->setLinkAttribute(
+                'data-contao--color-scheme-i18n-value',
+                json_encode([
+                    'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
+                    'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
+                ])
+            )
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($colorScheme);
+
         $submenu = $factory
             ->createItem('submenu')
             ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')

@@ -65,7 +65,7 @@ class FrontendController extends AbstractController
      * option is enabled to evaluate the RememberMe cookie and then set
      * the session cookie).
      */
-    #[Route('/_contao/check_cookies', name: 'contao_frontend_check_cookies')]
+    #[Route('/_contao/check_cookies', name: 'contao_frontend_check_cookies', defaults: ['_token_check' => false])]
     public function checkCookiesAction(): Response
     {
         static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
