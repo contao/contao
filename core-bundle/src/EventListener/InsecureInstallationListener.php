@@ -21,6 +21,16 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class InsecureInstallationListener
 {
     /**
+     * @var string
+     */
+    private $secret;
+
+    public function __construct($secret)
+    {
+        $this->secret = $secret;
+    }
+
+    /**
      * Throws an exception if the document root is insecure.
      *
      * @throws InsecureInstallationException
@@ -35,10 +45,13 @@ class InsecureInstallationListener
         }
 
         // The document root is not in a subdirectory
-        if ('' === $request->getBasePath()) {
-            return;
+        if ('' !== $request->getBasePath()) {
+            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
         }
 
-        throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
+        // The secret is still at its default value or empty
+        if (empty($this->secret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret) {
+            throw new InsecureInstallationException('Your installation is not secure. Please set the "secret" in your parameters.yml or "APP_SECRET" in your .env.local.');
+        }
     }
 }

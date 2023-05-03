@@ -7,6 +7,12 @@ services:
         arguments:
             - '@kernel'
 
+    contao.command.generate_app_secret:
+        class: Contao\ManagerBundle\Command\GenerateAppSecretCommand
+        arguments:
+            - '%kernel.project_dir%'
+            - '%kernel.secret%'
+
     contao.command.install-web-dir:
         class: Contao\ManagerBundle\Command\InstallWebDirCommand
         arguments:

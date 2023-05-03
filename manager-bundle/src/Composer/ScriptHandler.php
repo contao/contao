@@ -30,6 +30,7 @@ class ScriptHandler
         $webDir = self::getWebDir($event);
 
         static::purgeCacheFolder($event->getIO());
+        static::executeCommand(['contao:generate-app-secret'], $event);
         static::executeCommand(['contao:install-web-dir'], $event);
         static::executeCommand(['cache:clear', '--no-warmup'], $event);
         static::executeCommand(['cache:clear', '--no-warmup'], $event, 'dev');
