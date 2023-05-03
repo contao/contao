@@ -154,6 +154,12 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_PAGE_TYPE = 'contao_user.alpty';
 
     /**
+     * Access is granted if the given page is mounted for the current user.
+     * Subject must be page ID from tl_page.
+     */
+    public const USER_CAN_ACCESS_PAGE = 'contao_user.pagemounts';
+
+    /**
      * Access is granted if the given path is mounted for the current user.
      * Subject must be path as string (e.g. "files/content/foo").
      */
