@@ -114,7 +114,7 @@ class BackendAccessVoterTest extends TestCase
     /**
      * @dataProvider userDataProvider
      */
-    public function testDeniesAccessIfUserdataDoesNotIntersect(array $userData, string $attribute, string|int|null $subject): void
+    public function testDeniesAccessIfUserdataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
         $userData = array_fill_keys(array_keys($userData), []);
         $user = $this->mockClassWithProperties(BackendUser::class, $userData);
@@ -140,7 +140,7 @@ class BackendAccessVoterTest extends TestCase
     /**
      * @dataProvider userDataProvider
      */
-    public function testGrantsAccessIfUserdataDoesIntersect(array $userData, string $attribute, string|int|null $subject): void
+    public function testGrantsAccessIfUserdataDoesIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, $userData);
 
@@ -159,37 +159,37 @@ class BackendAccessVoterTest extends TestCase
         yield 'Check access on table fields' => [
             ['alexf' => ['tl_user.field']],
             ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE,
-            'tl_user.field'
+            'tl_user.field',
         ];
 
         yield 'Check access on content elements' => [
             ['elements' => ['text']],
             ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE,
-            'text'
+            'text',
         ];
 
         yield 'Compares numeric strings and integers' => [
             ['forms' => [15]],
             ContaoCorePermissions::USER_CAN_ACCESS_FORM,
-            '15'
+            '15',
         ];
 
         yield 'Uses subject from permission' => [
             ['themes' => ['theme_export', 'theme_import']],
             ContaoCorePermissions::USER_CAN_EXPORT_THEMES,
-            null
+            null,
         ];
 
         yield 'Check permission on mounted folder' => [
             ['filemounts' => ['files/foobar']],
             ContaoCorePermissions::USER_CAN_ACCESS_PATH,
-            'files/foobar'
+            'files/foobar',
         ];
 
         yield 'Check permission on mounted pages' => [
             ['pagemounts' => [17]],
             ContaoCorePermissions::USER_CAN_ACCESS_PAGE,
-            17
+            17,
         ];
     }
 
@@ -209,7 +209,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToSubpages(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['pagemounts' => [1,2,3]]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['pagemounts' => [1, 2, 3]]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -222,7 +222,7 @@ class BackendAccessVoterTest extends TestCase
         $database
             ->expects($this->once())
             ->method('getChildRecords')
-            ->willReturn([4,5,6])
+            ->willReturn([4, 5, 6])
         ;
 
         $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
