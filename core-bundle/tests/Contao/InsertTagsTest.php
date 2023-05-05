@@ -978,7 +978,7 @@ class InsertTagsTest extends TestCase
         $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');
-        ini_set('pcre.backtrack_limit', 0);
+        ini_set('pcre.backtrack_limit', '0');
 
         try {
             $insertTagParser->replaceInline($insertTag);
