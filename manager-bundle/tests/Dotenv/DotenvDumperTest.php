@@ -14,9 +14,17 @@ namespace Contao\ManagerBundle\Tests\Dotenv;
 
 use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 class DotenvDumperTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        (new Filesystem())->remove([$this->getTempDir().'/.env', $this->getTempDir().'/.env.local']);
+
+        parent::tearDown();
+    }
+
     public function testDumpsADotenvFile(): void
     {
         $dotenv = new DotenvDumper($this->getTempDir().'/.env');
