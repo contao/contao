@@ -40,6 +40,12 @@ class DotenvDumper
 
     public function setParameter(string $name, $value): void
     {
+        if (($this->parameters[$name] ?? null) === $value) {
+            unset($this->setParameters[$name]);
+
+            return;
+        }
+
         $this->setParameters[$name] = $value;
     }
 
@@ -65,6 +71,10 @@ class DotenvDumper
             $lines = preg_split('/\r\n|\r|\n/', file_get_contents($this->dotenvFile));
         }
 
+        if ('' === end($lines)) {
+            array_pop($lines);
+        }
+
         foreach ($lines as $line) {
             foreach ($this->setParameters as $name => $value) {
                 if (str_starts_with($line, "$name=")) {
@@ -85,6 +95,13 @@ class DotenvDumper
 
         foreach ($this->setParameters as $name => $value) {
             $file .= $name.'='.$this->escape($value)."\n";
+        }
+
+        // Remove the .env file if there are no parameters
+        if ('' === trim($file)) {
+            $this->filesystem->remove($this->dotenvFile);
+
+            return;
         }
 
         $this->filesystem->dumpFile($this->dotenvFile, $file);
