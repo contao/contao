@@ -114,33 +114,7 @@ class BackendAccessVoterTest extends TestCase
     /**
      * @dataProvider userDataProvider
      */
-    public function testDeniesAccessIfUserdataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
-    {
-        $userData = array_fill_keys(array_keys($userData), []);
-        $user = $this->mockClassWithProperties(BackendUser::class, $userData);
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $database = $this->createMock(Database::class);
-        $database
-            ->method('getChildRecords')
-            ->willReturn([])
-        ;
-
-        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $subject, [$attribute]));
-    }
-
-    /**
-     * @dataProvider userDataProvider
-     */
-    public function testGrantsAccessIfUserdataDoesIntersect(array $userData, string $attribute, int|string|null $subject): void
+    public function testGrantsAccessIfTheUserDataIntersects(array $userData, string $attribute, int|string|null $subject): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, $userData);
 
@@ -152,6 +126,31 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, [$attribute]));
+    }
+
+    /**
+     * @dataProvider userDataProvider
+     */
+    public function testDeniesAccessIfTheUserDataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
+    {
+        $userData = array_fill_keys(array_keys($userData), []);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, $userData))
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->method('getChildRecords')
+            ->willReturn([])
+        ;
+
+        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $subject, [$attribute]));
     }
 
     public function userDataProvider(): \Generator
@@ -204,10 +203,13 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]));
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH])
+        );
     }
 
-    public function testGrantsAccessToSubpages(): void
+    public function testGrantsAccessToChildPages(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['pagemounts' => [1, 2, 3]]);
 

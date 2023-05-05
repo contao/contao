@@ -105,7 +105,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return true;
         }
 
-        // Additionally check subfolders of `filemounts`
+        // Additionally check the subfolders of the mounted files
         if ('filemounts' === $field) {
             foreach ($user->filemounts as $folder) {
                 if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
@@ -116,7 +116,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return false;
         }
 
-        // Additionally check for child pages of `pagemounts`
+        // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
             $database = $this->framework->createInstance(Database::class);
             $childIds = $database->getChildRecords($user->pagemounts, 'tl_page');
