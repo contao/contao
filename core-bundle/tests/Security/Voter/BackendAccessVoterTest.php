@@ -167,6 +167,12 @@ class BackendAccessVoterTest extends TestCase
             'text',
         ];
 
+        yield 'Check access on front end module' => [
+            ['elements' => ['navigation']],
+            ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE,
+            'navigation',
+        ];
+
         yield 'Compares numeric strings and integers' => [
             ['forms' => [15]],
             ContaoCorePermissions::USER_CAN_ACCESS_FORM,

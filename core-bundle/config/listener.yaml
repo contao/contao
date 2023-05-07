@@ -19,6 +19,13 @@ services:
             - '@security.helper'
             - '@request_stack'
 
+    contao.listener.data_container.frontend_module_permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+            - '@request_stack'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -207,6 +214,13 @@ services:
         arguments:
             - '@contao.framework'
             - '@twig'
+
+    contao.listener.data_container.frontend_module_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\FrontendModuleOptionsListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - kernel.event_listener
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
