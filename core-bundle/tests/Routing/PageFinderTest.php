@@ -31,7 +31,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(null));
-        $result = $pageFinder->findRootPageForHost('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
 
         $this->assertNull($result);
     }
@@ -51,7 +51,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $requestMatcher);
-        $result = $pageFinder->findRootPageForHost('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
 
         $this->assertNull($result);
     }
@@ -67,7 +67,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel));
-        $result = $pageFinder->findRootPageForHost('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
 
         $this->assertSame($pageModel, $result);
     }
@@ -98,7 +98,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($regularPage));
-        $result = $pageFinder->findRootPageForHost('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
 
         $this->assertSame($rootPage, $result);
     }

@@ -36,7 +36,7 @@ class FaviconController
     #[Route('/favicon.ico')]
     public function __invoke(Request $request): Response
     {
-        $rootPage = $this->pageFinder->findRootPageForHost($request->getHost());
+        $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
         if (null === $rootPage || null === ($favicon = $rootPage->favicon)) {
             throw new NotFoundHttpException();

@@ -31,7 +31,7 @@ class FaviconControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('www.example.org')
             ->willReturn(null)
         ;
@@ -57,7 +57,7 @@ class FaviconControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('www.example.org')
             ->willReturn($pageModel)
         ;
@@ -148,7 +148,7 @@ class FaviconControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('www.example.org')
             ->willReturn($pageModel)
         ;

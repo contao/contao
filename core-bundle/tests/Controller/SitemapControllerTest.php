@@ -49,8 +49,8 @@ class SitemapControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findAllRootPagesForRequest')
-            ->with($request)
+            ->method('findRootPagesForHost')
+            ->with($request->getHost())
             ->willReturn([])
         ;
 
@@ -731,8 +731,8 @@ class SitemapControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findAllRootPagesForRequest')
-            ->with($request)
+            ->method('findRootPagesForHost')
+            ->with($request->getHost())
             ->willReturn([$rootPage1, $rootPage2])
         ;
 

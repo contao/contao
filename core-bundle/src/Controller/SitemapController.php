@@ -37,7 +37,7 @@ class SitemapController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        $rootPages = $this->pageFinder->findAllRootPagesForRequest($request);
+        $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
         if (empty($rootPages)) {
             throw new NotFoundHttpException();

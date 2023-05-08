@@ -30,7 +30,7 @@ class RobotsTxtControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('www.example.org')
             ->willReturn(null)
         ;
@@ -56,7 +56,7 @@ class RobotsTxtControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('www.example.org')
             ->willReturn($pageModel)
         ;
@@ -82,7 +82,7 @@ class RobotsTxtControllerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->expects($this->once())
-            ->method('findRootPageForHost')
+            ->method('findRootPageForHostAndLanguage')
             ->with('localhost')
             ->willReturn($pageModel)
         ;

@@ -28,33 +28,12 @@ class PageFinder
      * Find the root page matching the request host and optionally an Accept-Language header.
      * If $acceptLanguage is not given, it will always return the fallback root page.
      */
-    public function findRootPageForHost(string $hostname, string $acceptLanguage = null): PageModel|null
+    public function findRootPageForHostAndLanguage(string $hostname, string $acceptLanguage = null): PageModel|null
     {
         $request = Request::create('http://'.$hostname);
         $request->headers->set('Accept-Language', $acceptLanguage ?? '');
 
         return $this->matchRootPageForRequest($request);
-    }
-
-    /**
-     * Finds all root pages matching the given host name. It will first look for a matching
-     * root page through routing and then find all root pages with the same tl_page.dns value.
-     *
-     * @return array<PageModel>
-     */
-    public function findAllRootPagesForHost(string $hostname): array
-    {
-        $pageModel = $this->findRootPageForHost($hostname);
-
-        if (null === $pageModel) {
-            return [];
-        }
-
-        $this->framework->initialize();
-        $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages(['dns' => $pageModel->dns]);
-
-        /** @var array<PageModel> */
-        return $rootPages ? $rootPages->getModels() : [];
     }
 
     /**
@@ -68,18 +47,28 @@ class PageFinder
             return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
         }
 
-        return $this->findRootPageForHost($request->getHost(), $request->headers->get('Accept-Language'));
+        return $this->findRootPageForHostAndLanguage($request->getHost(), $request->headers->get('Accept-Language'));
     }
 
     /**
-     * Finds all root pages matching the host of the given request. It will first look for a matching
+     * Finds all root pages matching the given host name. It will first look for a matching
      * root page through routing and then find all root pages with the same tl_page.dns value.
      *
      * @return array<PageModel>
      */
-    public function findAllRootPagesForRequest(Request $request): array
+    public function findRootPagesForHost(string $hostname): array
     {
-        return $this->findAllRootPagesForHost($request->getHost());
+        $pageModel = $this->findRootPageForHostAndLanguage($hostname);
+
+        if (null === $pageModel) {
+            return [];
+        }
+
+        $this->framework->initialize();
+        $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages(['dns' => $pageModel->dns]);
+
+        /** @var array<PageModel> */
+        return $rootPages ? $rootPages->getModels() : [];
     }
 
     /**
