@@ -44,7 +44,7 @@ class BackupListCommandTest extends TestCase
         $expectedOutput = str_replace(
             '<TIMEZONE>',
             BackupListCommand::getFormattedTimeZoneOffset(new \DateTimeZone(date_default_timezone_get())),
-            $normalizedOutput
+            $expectedOutput
         );
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);

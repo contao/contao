@@ -145,7 +145,7 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
+				$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
 			}
 			catch (\Exception $e)
 			{
@@ -159,8 +159,7 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (System::getContainer()->getParameter('contao.search.index_protected'))
 			{
-				$objResult->applyFilter(static function ($v)
-				{
+				$objResult->applyFilter(static function ($v) {
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}

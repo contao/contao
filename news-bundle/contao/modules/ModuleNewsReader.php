@@ -92,7 +92,8 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Redirect if the news item has a target URL (see #1498)
-		switch ($objArticle->source) {
+		switch ($objArticle->source)
+		{
 			case 'internal':
 				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
 				{

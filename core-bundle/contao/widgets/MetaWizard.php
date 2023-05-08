@@ -165,7 +165,7 @@ class MetaWizard extends Widget
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
-			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_keys($this->varValue));
+			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_map('strval', array_keys($this->varValue)));
 			$items = array();
 
 			// Add the input fields
@@ -204,8 +204,7 @@ class MetaWizard extends Widget
 			}
 
 			// Sort the items by language name with the user language on top (see #3818)
-			uksort($items, function ($a, $b) use ($languages)
-			{
+			uksort($items, function ($a, $b) use ($languages) {
 				if ($this->User->language === $a)
 				{
 					return -1;

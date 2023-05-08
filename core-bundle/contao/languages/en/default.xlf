@@ -24,10 +24,10 @@
         <source>Field "%s" must not be longer than %d characters!</source>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field "%s" has to be at least %d!</source>
+        <source>Field "%s" has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field "%s" must not be greater than %d!</source>
+        <source>Field "%s" must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

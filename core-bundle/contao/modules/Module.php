@@ -492,8 +492,7 @@ abstract class Module extends Frontend
 		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
 
 		return array_map(
-			static function (array $row): array
-			{
+			static function (array $row): array {
 				return array(
 					'page' => PageModel::findByPk($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],

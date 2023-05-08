@@ -17,8 +17,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -45,8 +43,6 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false

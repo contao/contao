@@ -1,18 +1,18 @@
 /* Appearance */
 :root {
 	--text: #222;
-	--body-bg: #e2e5e9;
+	--body-bg: #eaeaec;
 	--content-bg: #fff;
-	--content-border: #c5c8cc;
+	--content-border: #cacacc;
 	--black: #000;
 	--white: #fff;
 	--gray: #999;
 	--green: #589b0e;
 	--red: #c33;
 	--blue: #006494;
-	--orange: #d68c23;
+	--orange: #f90;
 	--contao: #f47c00;
-	--border: #e0e0e2;
+	--border: #e6e6e8;
 	--nav: #d3d6da;
 	--nav-hover: #eaedf1;
 	--nav-bg: #0f1c26;
@@ -26,14 +26,14 @@
 	--header-text: #fff;
 	--invert-bg: #333;
 	--invert-text: #fff;
-	--table-header: #f6f6f7;
+	--table-header: #f7f7f8;
 	--table-odd: #fff;
 	--table-even: #fbfbfc;
 	--table-nb-header: #f2f2f3;
 	--table-nb-odd: #fff;
 	--table-nb-even: #f7f7f8;
-	--panel-bg: #f0f0f2;
-	--tree-header: #eaeaec;
+	--panel-bg: #f3f3f5;
+	--tree-header: #f3f3f5;
 	--tree-header-border: #dddddf;
 	--form-text-disabled: #bbb;
 	--form-border: #aaa;
@@ -45,9 +45,9 @@
 	--form-button-hover: #f6f6f6;
 	--form-button-active: #aaa;
 	--form-button-disabled: #e9e9e9;
-	--diff-left: #ffebe9;
+	--diff-left: #ffe8e5;
 	--diff-del: #ffc1bf;
-	--diff-right: #e6ffec;
+	--diff-right: #e0ffe8;
 	--diff-ins: #abf2bc;
 	--code-bg: #f0f0f0;
 	--checkerbox-bg: #ddd;
@@ -74,15 +74,16 @@ html[data-color-scheme="dark"] {
 	--text: #ddd;
 	--body-bg: #121416;
 	--content-bg: #1b1d21;
-	--content-border: #4e5156;
+	--content-border: #414448;
 	--black: #fff;
 	--white: #000;
 	--blue: #0073a8;
+	--orange: #d68c23;
 	--contao: #f47c00;
 	--border: #3a3c40;
 	--nav-bg: #1b1d21;
 	--nav-hover-bg: #1b325f;
-	--nav-current: #292c32;
+	--nav-current: #272a30;
 	--nav-separator: #3f3f3f;
 	--hover-row: #1b325f;
 	--header-bg: #292c32;
@@ -96,8 +97,8 @@ html[data-color-scheme="dark"] {
 	--table-nb-header: #292c32;
 	--table-nb-odd: #1b1d21;
 	--table-nb-even: #23252a;
-	--panel-bg: #292c32;
-	--tree-header: #292c32;
+	--panel-bg: #272a30;
+	--tree-header: #272a30;
 	--tree-header-border: #3f4146;
 	--form-text-disabled: #666;
 	--form-border: #44464b;
@@ -109,9 +110,9 @@ html[data-color-scheme="dark"] {
 	--form-button-hover: #383a42;
 	--form-button-active: #777;
 	--form-button-disabled: #26272c;
-	--diff-left: rgba(248,81,73,.15);
+	--diff-left: rgba(248,81,73,.17);
 	--diff-del: rgba(248,81,73,.4);
-	--diff-right: rgba(46,160,67,.15);
+	--diff-right: rgba(46,160,67,.17);
 	--diff-ins: rgba(46,160,67,.4);
 	--code-bg: #30343b;
 	--checkerbox-bg: #30343b;
@@ -289,13 +290,11 @@ p {
 
 /* Tables */
 .zebra-table th, .zebra-table td {
-	padding: 4px 6px;
 	border: solid var(--border);
 	border-width: 1px 0;
 }
 
 .zebra-table th {
-	padding: 6px;
 	background-color: var(--table-header);
 }
 
@@ -305,6 +304,14 @@ p {
 
 .zebra-table tr:nth-child(even) td {
 	background-color: var(--table-even);
+}
+
+.zebra-table--with-padding th {
+	padding: 6px;
+}
+
+.zebra-table--with-padding td {
+	padding: 4px 6px;
 }
 
 .zebra-table--with-header tr:nth-child(odd) td {

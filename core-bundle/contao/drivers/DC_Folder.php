@@ -368,18 +368,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
-										  ->execute($for, $for);
-			}
-			else
-			{
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-										  ->execute($for);
-			}
+			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+									  ->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -433,7 +423,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
-			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
 		}
 		else
 		{
@@ -441,7 +431,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				if ($this->arrFilemounts[$i] && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
+					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), $blnClipboard ? $arrClipboard : false, $arrFound);
 				}
 			}
 		}
@@ -719,7 +709,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('pid' => $strFolder))
 		);
 
-		// Do not move if the target exists and would be overriden (not possible for folders anyway)
+		// Do not move if the target exists and would be overwritten (not possible for folders anyway)
 		if (file_exists($this->strRootDir . '/' . $destination))
 		{
 			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetarget'], basename($source), \dirname($destination)));
@@ -763,6 +753,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$callback($source, $destination, $this);
 					}
 				}
+			}
+
+			// Regenerate the symlinks (see #5903)
+			if (is_dir($this->strRootDir . '/' . $destination))
+			{
+				$this->import(Automator::class, 'Automator');
+				$this->Automator->generateSymlinks();
 			}
 
 			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
@@ -945,6 +942,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$callback($source, $destination, $this);
 				}
 			}
+		}
+
+		// Regenerate the symlinks (see #5903)
+		if (is_dir($this->strRootDir . '/' . $destination))
+		{
+			$this->import(Automator::class, 'Automator');
+			$this->Automator->generateSymlinks();
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
@@ -2046,6 +2050,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
 		{
 			$strSource = System::getContainer()->get('request_stack')->getCurrentRequest()->request->get('source');
+			$strEnding = preg_match_all('/(?<!\r)\n/', $strContent) >= preg_match_all('/\r\n/', $strContent) ? "\n" : "\r\n";
+			$strSource = str_replace("\r\n", $strEnding, $strSource); // see #5096
 
 			// Save the file
 			if (md5($strContent) != md5($strSource))
@@ -2171,8 +2177,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	private function purgeCache(string ...$affectedPaths): void
 	{
 		$extensions = array_unique(array_map(
-			static function (string $path): string
-			{
+			static function (string $path): string {
 				return Path::getExtension($path, true);
 			},
 			$affectedPaths
@@ -2186,8 +2191,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$bundleTemplatePaths = array_filter(
 			$affectedPaths,
-			static function (string $path): bool
-			{
+			static function (string $path): bool {
 				return Path::isBasePath('templates/bundles', $path) && empty(Path::getExtension($path));
 			}
 		);
@@ -2491,6 +2495,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
+		$this->isValid($strFolder);
+
+		if (!is_dir($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		{
+			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or cannot be found.');
+		}
+
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -2509,7 +2520,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$this->import(BackendUser::class, 'User');
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level * 18), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree($this->strRootDir . '/' . $strFolder, $level * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
 
 	/**
@@ -2720,7 +2731,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			if (!empty($content) && $blnIsOpen)
 			{
 				$return .= '<li class="parent" id="filetree_' . $md5 . '"><ul class="level_' . $level . '">';
-				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $arrFound);
+				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
 			}
 		}
@@ -2863,17 +2874,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
-				$this->values[] = $searchValue;
-			}
-			else
-			{
-				$this->procedure[] = $strPattern;
-			}
-
+			$this->procedure[] = $strPattern;
 			$this->values[] = $searchValue;
 		}
 
@@ -2904,7 +2905,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return false;
 		}
 
-		if (empty($this->arrFilemounts))
+		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
 			return true;
 		}
@@ -3065,7 +3066,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Allow only those roots that are allowed in root nodes
-			if (!empty($this->arrFilemounts))
+			if (!empty($this->arrFilemounts) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) === false)
 			{
 				$blnValid = false;
 

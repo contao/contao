@@ -44,7 +44,8 @@ class PageModelTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn(new Schema())
         ;
 
@@ -131,6 +132,7 @@ class PageModelTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @dataProvider similarAliasProvider
      */
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
@@ -377,6 +379,7 @@ class PageModelTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @runInSeparateProcess
      *
      * @dataProvider folderUrlProvider

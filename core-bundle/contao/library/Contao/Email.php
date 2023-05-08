@@ -574,8 +574,7 @@ class Email
 
 		if ($this->objMessage instanceof EmailMessage)
 		{
-			$addresscb = static function (Address $address)
-			{
+			$addresscb = static function (Address $address) {
 				return $address->getAddress();
 			};
 

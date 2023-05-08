@@ -109,9 +109,9 @@ class BackupManager
     }
 
     /**
-     * @throws BackupManagerException
-     *
      * @return resource
+     *
+     * @throws BackupManagerException
      */
     public function readStream(Backup $backup)
     {

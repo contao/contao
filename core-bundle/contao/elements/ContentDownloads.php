@@ -290,29 +290,25 @@ class ContentDownloads extends ContentDownload
 		{
 			default:
 			case 'name_asc':
-				uksort($files, static function ($a, $b): int
-				{
+				uksort($files, static function ($a, $b): int {
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($files, static function ($a, $b): int
-				{
+				uksort($files, static function ($a, $b): int {
 					return -strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'date_asc':
-				uasort($files, static function (array $a, array $b)
-				{
+				uasort($files, static function (array $a, array $b) {
 					return $a['mtime'] <=> $b['mtime'];
 				});
 				break;
 
 			case 'date_desc':
-				uasort($files, static function (array $a, array $b)
-				{
+				uasort($files, static function (array $a, array $b) {
 					return $b['mtime'] <=> $a['mtime'];
 				});
 				break;

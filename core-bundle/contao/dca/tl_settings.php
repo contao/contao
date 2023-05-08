@@ -48,8 +48,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'timeZone' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return array_values(DateTimeZone::listIdentifiers());
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w25')
@@ -81,8 +80,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'eval'                    => array('tl_class'=>'clr'),
 			'load_callback' => array
 			(
-				static function ($varValue)
-				{
+				static function ($varValue) {
 					$showWarning = false;
 
 					foreach (StringUtil::deserialize($varValue, true) as $row)
@@ -104,8 +102,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			),
 			'save_callback' => array
 			(
-				static function ($strValue)
-				{
+				static function ($strValue) {
 					$arrValue = StringUtil::deserialize($strValue, true);
 					$arrAllowedAttributes = array();
 

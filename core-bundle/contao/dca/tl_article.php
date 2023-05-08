@@ -244,8 +244,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -556,8 +555,7 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			if (in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
 			{
 				return true;

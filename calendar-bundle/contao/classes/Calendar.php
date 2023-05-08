@@ -125,6 +125,9 @@ class Calendar extends Frontend
 			return;
 		}
 
+		// Load the default language file in the feed language (see #5946)
+		System::loadLanguageFile('default', $arrFeed['language'] ?? null);
+
 		$strType = ($arrFeed['format'] == 'atom') ? 'generateAtom' : 'generateRss';
 		$strLink = $arrFeed['feedBase'] ?: Environment::get('base');
 		$strFile = $arrFeed['feedName'];
@@ -311,6 +314,9 @@ class Calendar extends Frontend
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
+
+		// Reset the default language file
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -494,7 +500,7 @@ class Calendar extends Frontend
 	}
 
 	/**
-	 * Return the names of the existing feeds so they are not removed
+	 * Return the names of the existing feeds, so they are not removed
 	 *
 	 * @return array
 	 */
