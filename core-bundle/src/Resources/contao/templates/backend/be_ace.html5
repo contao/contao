@@ -48,7 +48,7 @@ window.ace && window.addEvent('domready', function() {
   editor.commands.bindKey('Ctrl-alt-a|Ctrl-alt-e|Ctrl-alt-h|Ctrl-alt-l|Ctrl-alt-s', null);
 
   // Add readonly if set in DCA
-  <?php if ($this->readonly): ?>editor.setOptions({readOnly, true,});<?php endif; ?>
+  <?php if ($this->readonly): ?>editor.setReadOnly(true);<?php endif; ?>
 
   // Adjust the height of the editor
   var updateHeight = function() {
