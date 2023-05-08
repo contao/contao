@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected'
+		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{permissions_legend:hide},permissions'
 	),
 
 	// Sub-palettes
@@ -126,7 +126,12 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		)
+		),
+		'permissions' => array
+		(
+			// input_field_callback from AddPermissionsListener
+			'eval' => array('target' => 'news'),
+		),
 	)
 );
 
