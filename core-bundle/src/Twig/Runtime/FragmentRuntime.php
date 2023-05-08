@@ -54,6 +54,10 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         }
 
         foreach ($data as $k => $v) {
+            if (null !== $v && !\is_scalar($v)) {
+                $v = serialize($v);
+            }
+
             $model->$k = $v;
         }
 

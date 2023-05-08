@@ -90,7 +90,7 @@ class FragmentRuntimeTest extends TestCase
             ->method('getContentElement')
             ->with($this->callback(
                 function (ContentModel $model) {
-                    $this->assertSame(['type' => 'text', 'foo' => 'bar'], $model->row());
+                    $this->assertSame(['type' => 'text', 'foo' => 'bar', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])], $model->row());
 
                     return true;
                 }
@@ -104,7 +104,7 @@ class FragmentRuntimeTest extends TestCase
         );
 
         $runtime = new FragmentRuntime($framework);
-        $result = $runtime->renderContent('text', ['foo' => 'bar']);
+        $result = $runtime->renderContent('text', ['foo' => 'bar', 'headline' => ['unit' => 'h2', 'value' => 'Test']]);
 
         $this->assertSame('runtime-result', $result);
     }
