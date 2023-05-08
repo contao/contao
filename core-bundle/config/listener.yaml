@@ -613,3 +613,9 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.listener.data_container.permission_reminder:
+        class: Contao\CoreBundle\EventListener\DataContainer\PermissionReminderListener
+        arguments:
+            - '@request_stack'
+            - '@translator'

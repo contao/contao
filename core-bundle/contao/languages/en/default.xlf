@@ -2123,6 +2123,9 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
       </trans-unit>
+      <trans-unit id="MSC.updatePermissions">
+        <source>Please do not forget to update user permissions, if applicable.</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
