@@ -957,7 +957,6 @@ class InsertTagsTest extends TestCase
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
-
         $insertTag = '{{'.str_repeat('a', (int) \ini_get('pcre.backtrack_limit') * 2).'::replaced}}';
 
         $this->assertSame(
@@ -971,14 +970,13 @@ class InsertTagsTest extends TestCase
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
-
         $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');
         ini_set('pcre.backtrack_limit', '0');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
 
         try {
             $insertTagParser->replaceInline($insertTag);
