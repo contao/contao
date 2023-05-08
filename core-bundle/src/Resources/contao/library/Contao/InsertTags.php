@@ -129,10 +129,10 @@ class InsertTags extends Controller
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
 			. '('                        // Match the contents of the tag
 				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
+				. '(?>[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
 
-		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+		$strRegExpEnd = ')*+)}}';        // Ends with two closing curly braces
 
 		$tags = preg_split(
 			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
@@ -140,6 +140,11 @@ class InsertTags extends Controller
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
 		);
+
+		if ($tags === false)
+		{
+			throw new \RuntimeException(sprintf('PCRE: %s', preg_last_error_msg()), preg_last_error());
+		}
 
 		if (\count($tags) < 2)
 		{
