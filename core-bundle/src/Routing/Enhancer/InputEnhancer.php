@@ -34,13 +34,9 @@ class InputEnhancer implements RouteEnhancerInterface
     {
         $page = $defaults['pageModel'] ?? null;
 
-        if (!$page instanceof PageModel) {
-            return $defaults;
-        }
-
-        $mainRequest = $this->requestStack->getMainRequest();
-
-        if ($request !== $mainRequest) {
+        // Route parameters are set to the legacy Input class only if the current route is a Contao page
+        // and only for the main request. This prevents additional routing lookups from modifying Input parameters.
+        if (!$page instanceof PageModel || $request !== $this->requestStack->getMainRequest()) {
             return $defaults;
         }
 
