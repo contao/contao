@@ -92,7 +92,7 @@
       <?php if ($this->metadata): ?>
         <?php foreach ($this->metadata as $format => $table): ?>
           <table class="tl_show zebra-table zebra-table--no-border">
-            <caption><?= Contao\StringUtil::specialchars(strtoupper($format === 'iptc' ? 'IPTC IIM' : $format)) ?> <?= $this->trans('MSC.fileMeta') ?></caption>
+            <caption><?= Contao\StringUtil::specialchars(strtoupper('iptc' === $format ? 'IPTC IIM' : $format)) ?> <?= $this->trans('MSC.fileMeta') ?></caption>
             <?php foreach ($table as $label => $values): ?>
               <tr>
                 <td><span class="tl_label"><?= Contao\StringUtil::specialchars($label) ?></span></td>
