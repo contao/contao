@@ -22,7 +22,6 @@ class PageRoute extends Route implements RouteObjectInterface
 {
     final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
 
-    private PageModel $pageModel;
     private string|null $urlPrefix;
     private string|null $urlSuffix;
 
@@ -77,14 +76,13 @@ class PageRoute extends Route implements RouteObjectInterface
             $methods
         );
 
-        $this->pageModel = $pageModel;
         $this->urlPrefix = $pageModel->urlPrefix;
         $this->urlSuffix = $pageModel->urlSuffix;
     }
 
     public function getPageModel(): PageModel
     {
-        return $this->pageModel;
+        return $this->getDefault('pageModel');
     }
 
     public function getPath(): string
@@ -144,6 +142,6 @@ class PageRoute extends Route implements RouteObjectInterface
 
     public function getRouteKey(): string
     {
-        return 'tl_page.'.$this->pageModel->id;
+        return 'tl_page.'.$this->getPageModel()->id;
     }
 }
