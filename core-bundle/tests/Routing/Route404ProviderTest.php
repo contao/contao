@@ -115,6 +115,7 @@ class Route404ProviderTest extends TestCase
             $pageRegistry
         );
 
+        /** @var array $routes */
         $routes = $provider->getRoutesByNames();
 
         $this->assertIsArray($routes);

@@ -22,7 +22,7 @@
 
   <div id="container">
     <main id="main">
-      <table class="tl_show zebra-table zebra-table--no-border">
+      <table class="tl_show zebra-table zebra-table--with-padding zebra-table--no-border">
         <tr>
           <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
           <td><?= $this->ctime ?></td>

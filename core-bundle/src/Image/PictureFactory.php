@@ -46,7 +46,7 @@ class PictureFactory implements PictureFactoryInterface
     private array $preserveMetadata = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
+     * @internal
      */
     public function __construct(
         private PictureGeneratorInterface $pictureGenerator,

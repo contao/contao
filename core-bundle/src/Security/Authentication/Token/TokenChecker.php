@@ -35,7 +35,7 @@ class TokenChecker
     private array $previewLinks = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
+     * @internal
      */
     public function __construct(
         private RequestStack $requestStack,

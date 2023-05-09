@@ -1044,6 +1044,11 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.twig.fragment_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FragmentRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 

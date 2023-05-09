@@ -137,7 +137,7 @@ class BackupManagerTest extends ContaoTestCase
         // Assert it's gzipped
         $this->assertSame(
             0,
-            mb_strpos($this->vfs->read($config->getBackup()->getFilename()), "\x1f"."\x8b"."\x08", 0, 'US-ASCII')
+            mb_strpos($this->vfs->read($config->getBackup()->getFilename()), "\x1f\x8b\x08", 0, 'US-ASCII')
         );
     }
 

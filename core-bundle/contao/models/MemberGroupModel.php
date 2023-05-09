@@ -83,7 +83,7 @@ class MemberGroupModel extends Model
 			$arrColumns[] = "$t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findOneBy($arrColumns, $intId, $arrOptions);
+		return static::findOneBy($arrColumns, array($intId), $arrOptions);
 	}
 
 	/**

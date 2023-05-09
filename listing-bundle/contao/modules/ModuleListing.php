@@ -172,8 +172,7 @@ class ModuleListing extends Module
 		$strQuery .= $strWhere;
 
 		// Cast date fields to int (see #5609)
-		$isInt = function ($field)
-		{
+		$isInt = function ($field) {
 			return ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'date' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'time' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'datim';
 		};
 
@@ -220,11 +219,11 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, (($page - 1) * $per_page));
+			$objDataStmt->limit($per_page, ($page - 1) * $per_page);
 		}
 		elseif ($this->perPage)
 		{
-			$objDataStmt->limit($this->perPage, (($page - 1) * $per_page));
+			$objDataStmt->limit($this->perPage, ($page - 1) * $per_page);
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);

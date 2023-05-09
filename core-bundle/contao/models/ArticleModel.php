@@ -184,7 +184,7 @@ class ArticleModel extends Model
 			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
-		return static::findOneBy($arrColumns, $intId, $arrOptions);
+		return static::findOneBy($arrColumns, array($intId), $arrOptions);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class ArticleModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
