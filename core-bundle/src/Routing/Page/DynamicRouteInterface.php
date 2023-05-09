@@ -22,9 +22,14 @@ interface DynamicRouteInterface
      * matching page models. Based on the page's "type" property, the route
      * factory creates a default route and asks to configure the route, as
      * only the page knows about dynamic requirements or defaults.
+     *
+     * The return type was previously `void` and has changed, we can't add it
+     * to the interface for backwards compatibility.
+     *
+     * @return PageRoute|null
      */
     #[\ReturnTypeWillChange]
-    public function configurePageRoute(PageRoute $route): PageRoute|null;
+    public function configurePageRoute(PageRoute $route);
 
     /**
      * URL suffixes are used to generate alias candidates, which means
