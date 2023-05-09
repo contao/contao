@@ -23,7 +23,7 @@ interface DynamicRouteInterface
      * factory creates a default route and asks to configure the route, as
      * only the page knows about dynamic requirements or defaults.
      */
-    public function configurePageRoute(PageRoute $route): void;
+    public function configurePageRoute(PageRoute $route): PageRoute|null;
 
     /**
      * URL suffixes are used to generate alias candidates, which means

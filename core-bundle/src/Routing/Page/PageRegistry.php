@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Route;
 
 class PageRegistry
 {
@@ -79,7 +80,11 @@ class PageRegistry
 
         /** @var DynamicRouteInterface $enhancer */
         $enhancer = $this->routeEnhancers[$type];
-        $enhancer->configurePageRoute($route);
+        $newRoute = $enhancer->configurePageRoute($route);
+
+        if ($newRoute instanceof Route) {
+            return $newRoute;
+        }
 
         return $route;
     }

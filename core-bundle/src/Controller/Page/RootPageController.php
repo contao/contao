@@ -15,17 +15,21 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * @internal
  */
 #[AsPage(contentComposition: false)]
-class RootPageController extends AbstractController
+class RootPageController extends AbstractController implements DynamicRouteInterface
 {
-    public function __construct(private LoggerInterface|null $logger = null)
+    public function __construct(private PageRegistry $pageRegistry, private LoggerInterface|null $logger = null)
     {
     }
 
@@ -47,5 +51,19 @@ class RootPageController extends AbstractController
         $this->logger?->error(sprintf('No active page found under root page "%s"', $rootPageId));
 
         throw new NoActivePageFoundException('No active page found under root page.');
+    }
+
+    public function configurePageRoute(PageRoute $route): PageRoute
+    {
+        try {
+            return $this->pageRegistry->getRoute($this->getNextPage($route->getPageModel()->id));
+        } catch (NoActivePageFoundException $exception) {
+            throw new ResourceNotFoundException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    public function getUrlSuffixes(): array
+    {
+        return [];
     }
 }

@@ -167,6 +167,7 @@ services:
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:
+            - '@contao.routing.page_registry'
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: contao.error }
