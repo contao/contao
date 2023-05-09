@@ -56,7 +56,11 @@ class RootPageController extends AbstractController implements DynamicRouteInter
     public function configurePageRoute(PageRoute $route): PageRoute
     {
         try {
-            return $this->pageRegistry->getRoute($this->getNextPage($route->getPageModel()->id));
+            $pageModel = $route->getPageModel();
+            $route = $this->pageRegistry->getRoute($this->getNextPage($pageModel->id));
+            $route->setDefault('pageModel', $pageModel);
+
+            return $route;
         } catch (NoActivePageFoundException $exception) {
             throw new ResourceNotFoundException($exception->getMessage(), $exception->getCode(), $exception);
         }

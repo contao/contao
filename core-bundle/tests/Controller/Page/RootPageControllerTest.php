@@ -128,5 +128,6 @@ class RootPageControllerTest extends TestCase
         $result = $controller->configurePageRoute($rootRoute);
 
         $this->assertSame($childRoute, $result);
+        $this->assertSame($rootPage, $result->getPageModel());
     }
 }
