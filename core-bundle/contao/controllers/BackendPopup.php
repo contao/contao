@@ -138,7 +138,8 @@ class BackendPopup extends Backend
 
 				try
 				{
-					$objTemplate->metadata = $this->buildMetadataTables($projectDir . '/' . $this->strFile);
+					$readerWriter = System::getContainer()->get('contao.image.metadata');
+					$objTemplate->metadata = $readerWriter->toReadable($readerWriter->parse($projectDir . '/' . $this->strFile));
 				}
 				catch (\Throwable)
 				{
@@ -217,91 +218,5 @@ class BackendPopup extends Backend
 		$objTemplate->download = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
 		return $objTemplate->getResponse();
-	}
-
-	private function buildMetadataTables($path): array
-	{
-		$tables = array();
-
-		$metadata = System::getContainer()->get('contao.image.metadata')->parse($path)->getAll();
-
-		foreach ($metadata as $format => $data)
-		{
-			$table = array();
-
-			foreach ($data as $category => $rows)
-			{
-				if (!\is_array($rows) || array_is_list($rows))
-				{
-					if ($format === 'iptc' && (str_starts_with($category, '1#') || str_ends_with($category, '#000')))
-					{
-						continue;
-					}
-					$table[] = array(
-						'path' => StringUtil::specialchars($format . ':' . $category),
-						'label' => StringUtil::specialchars($format === 'iptc' ? $this->iptcLabel($category) : ucfirst($category)),
-						'value' => StringUtil::specialchars($this->arrayToString((array) $rows)),
-					);
-				}
-				else
-				{
-					foreach ($rows as $label => $value)
-					{
-						if ($format === 'xmp' && $label === 'about' && !$value)
-						{
-							continue;
-						}
-						$table[] = array(
-							'path' => StringUtil::specialchars($format . ':' . $category . ':' . $label),
-							'label' => StringUtil::specialchars(ucfirst($label)),
-							'value' => StringUtil::specialchars($this->arrayToString((array) $value)),
-						);
-					}
-				}
-			}
-
-			$tables[StringUtil::specialchars(strtoupper($format === 'iptc' ? 'IPTC IIM' : $format)) . ' ' . $GLOBALS['TL_LANG']['MSC']['fileMeta']] = $table;
-		}
-
-		return array_filter($tables);
-	}
-
-	private function arrayToString(array $values): string
-	{
-		$values = array_map(
-			fn ($value) => \is_array($value) ? $this->arrayToString($value) : $value,
-			$values,
-		);
-
-		return implode(', ', $values);
-	}
-
-	private function iptcLabel(string $key): string
-	{
-		return array(
-			"2#090" => "City",
-			"2#116" => "Copyright Notice",
-			"2#101" => "Country/Primary Location Name",
-			"2#100" => "Country/Primary Location Code",
-			"2#080" => "By-line",
-			"2#085" => "By-line Title",
-			"2#110" => "Credit",
-			"2#055" => "Date Created",
-			"2#060" => "Time Created",
-			"2#062" => "Digital Creation Date",
-			"2#063" => "Digital Creation Time",
-			"2#120" => "Caption/Abstract",
-			"2#122" => "Writer/Editor",
-			"2#105" => "Headline",
-			"2#040" => "Special Instruction",
-			"2#004" => "Object Attribute Reference",
-			"2#103" => "Original Transmission Reference",
-			"2#025" => "Keywords",
-			"2#095" => "Province/State",
-			"2#115" => "Source",
-			"2#012" => "Subject Reference",
-			"2#092" => "Sublocation",
-			"2#005" => "Object Name",
-		)[$key] ?? $key;
 	}
 }
