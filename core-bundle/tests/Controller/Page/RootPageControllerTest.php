@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -59,7 +61,7 @@ class RootPageControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
 
-        $controller = new RootPageController(new NullLogger());
+        $controller = new RootPageController($this->createMock(PageRegistry::class), new NullLogger());
         $controller->setContainer($container);
 
         /** @var RedirectResponse $response */
@@ -85,12 +87,46 @@ class RootPageControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
 
-        $controller = new RootPageController(new NullLogger());
+        $controller = new RootPageController($this->createMock(PageRegistry::class), new NullLogger());
         $controller->setContainer($container);
 
         $this->expectException(NoActivePageFoundException::class);
         $this->expectExceptionMessage('No active page found under root page.');
 
         $controller($rootPage);
+    }
+
+    public function testReturnsPageRouteForFirstSubpage(): void
+    {
+        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $childPage = $this->mockClassWithProperties(PageModel::class);
+        $rootRoute = new PageRoute($rootPage);
+        $childRoute = new PageRoute($childPage);
+
+        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter
+            ->expects($this->once())
+            ->method('findFirstPublishedByPid')
+            ->with(42)
+            ->willReturn($childPage)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->with($childPage)
+            ->willReturn($childRoute)
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
+
+        $controller = new RootPageController($pageRegistry, new NullLogger());
+        $controller->setContainer($container);
+
+        $result = $controller->configurePageRoute($rootRoute);
+
+        $this->assertSame($childRoute, $result);
     }
 }
