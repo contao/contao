@@ -481,6 +481,10 @@ fieldset.tl_checkbox_container .check-all {
 	color: var(--gray);
 }
 
+fieldset.tl_checkbox_container button {
+	vertical-align: middle;
+}
+
 fieldset.checkbox_container, fieldset.radio_container {
 	border: 0;
 	margin: 0;
@@ -724,10 +728,6 @@ select[multiple] {
 /* Radio buttons */
 .tl_radio {
 	margin: 0 1px 0 0;
-}
-
-.win .tl_radio {
-	margin: 1px 1px 3px 0; /* see #4599 */
 }
 
 .tl_tree_radio {
