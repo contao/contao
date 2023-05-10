@@ -1730,7 +1730,9 @@ abstract class DataContainer extends Backend
 					foreach ($row_v as $option)
 					{
 						if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'] ?? null)
+						{
 							$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
+						}
 					}
 
 					$args[$k] = implode(', ', $args_k);
