@@ -1251,6 +1251,7 @@ var Backend =
 			button = new Element('button', {
 				'type': 'button',
 				'html': '<span>...</span>',
+				'title': Contao.lang.expand,
 				'class': 'unselectable',
 				'data-state': 0
 			}).inject(toggler);
