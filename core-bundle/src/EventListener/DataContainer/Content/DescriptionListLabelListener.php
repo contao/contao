@@ -27,10 +27,10 @@ class DescriptionListLabelListener
             return $attributes;
         }
 
-        $attributes['label'] = $this->translator->trans('tl_content.dl_label.0', [], 'contao_default');
-        $attributes['description'] = $this->translator->trans('tl_content.dl_label.1', [], 'contao_default');
-        $attributes['keyLabel'] = $this->translator->trans('tl_content.dl_key', [], 'contao_default');
-        $attributes['valueLabel'] = $this->translator->trans('tl_content.dl_value', [], 'contao_default');
+        $attributes['label'] = $this->translator->trans('tl_content.dl_label.0', [], 'contao_tl_content');
+        $attributes['description'] = $this->translator->trans('tl_content.dl_label.1', [], 'contao_tl_content');
+        $attributes['keyLabel'] = $this->translator->trans('tl_content.dl_key', [], 'contao_tl_content');
+        $attributes['valueLabel'] = $this->translator->trans('tl_content.dl_value', [], 'contao_tl_content');
         $attributes['mandatory'] = true;
         $attributes['allowEmptyKeys'] = true;
 
