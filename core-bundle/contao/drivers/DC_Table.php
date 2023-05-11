@@ -2908,7 +2908,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						try
 						{
-							$currentRecord = $this->getCurrentRecord();
+							$currentRecord = $this->getCurrentRecord($id);
 
 							if ($currentRecord === null)
 							{
