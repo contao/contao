@@ -517,12 +517,12 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
+								if (!\is_array($to[$k] ?? null) && \is_array(($tmp = StringUtil::deserialize($to[$k] ?? null))))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
-								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
+								if (!\is_array($from[$k] ?? null) && \is_array(($tmp = StringUtil::deserialize($from[$k] ?? null))))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
