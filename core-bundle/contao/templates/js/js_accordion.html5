@@ -35,7 +35,6 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
       if (el.querySelector('.accordion')) {
         const accordion = document.createElement('div');
         accordion.className = 'ce_accordion handorgel';
-
         el.parentNode.insertBefore(accordion, el);
 
         addNextAccordions(el, accordion);
