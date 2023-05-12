@@ -707,10 +707,7 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
-        /**
-         * @param ImageInterface|string $target Image object, URL or absolute file path
-         */
-        $getResourceOrUrl = function ($target): array {
+        $getResourceOrUrl = function (ImageInterface|string $target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
             }

@@ -77,10 +77,7 @@ final class FragmentTemplate extends Template
         $this->context[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
     }
