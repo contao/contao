@@ -148,8 +148,7 @@ class ModuleFaqPage extends Module
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
-		$this->Template->getSchemaOrgData = static function () use ($objFaqs)
-		{
+		$this->Template->getSchemaOrgData = static function () use ($objFaqs) {
 			return ModuleFaq::getSchemaOrgData($objFaqs);
 		};
 	}

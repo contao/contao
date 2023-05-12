@@ -145,7 +145,7 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
+				$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
 			}
 			catch (\Exception $e)
 			{
@@ -159,8 +159,7 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (System::getContainer()->getParameter('contao.search.index_protected'))
 			{
-				$objResult->applyFilter(static function ($v)
-				{
+				$objResult->applyFilter(static function ($v) {
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
@@ -302,8 +301,10 @@ class ModuleSearch extends Module
 				continue;
 			}
 
+			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,

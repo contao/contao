@@ -128,9 +128,9 @@ class MountManager
     }
 
     /**
-     * @throws VirtualFilesystemException
-     *
      * @return resource
+     *
+     * @throws VirtualFilesystemException
      */
     public function readStream(string $path)
     {
@@ -281,9 +281,9 @@ class MountManager
     }
 
     /**
-     * @throws VirtualFilesystemException
-     *
      * @return \Generator<FilesystemItem>
+     *
+     * @throws VirtualFilesystemException
      */
     public function listContents(string $path, bool $deep = false): \Generator
     {

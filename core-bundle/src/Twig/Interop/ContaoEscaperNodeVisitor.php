@@ -32,17 +32,15 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
     private array|null $escaperFilterNodes = null;
 
-    /**
-     * We evaluate affected templates on the fly so that rules can be adjusted
-     * after building the container. Expects a list of regular expressions to
-     * be returned. A template counts as "affected" if it matches any of the
-     * rules.
-     */
-    private \Closure $rules;
-
-    public function __construct(\Closure $rules)
-    {
-        $this->rules = $rules;
+    public function __construct(
+        /**
+         * We evaluate affected templates on the fly so that rules can be
+         * adjusted after building the container. Expects a list of regular
+         * expressions to be returned. A template counts as "affected" if it
+         * matches any of the rules.
+         */
+        private \Closure $rules,
+    ) {
     }
 
     /**

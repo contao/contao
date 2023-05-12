@@ -3,5 +3,5 @@
         <pre>{{ html }}</pre>
     {% endblock %}
 {% else %}
-    {% block html %}{{ html|insert_tag|raw }}{% endblock %}
+    {% block html %}{{ html|default|insert_tag|raw }}{% endblock %}
 {% endif %}

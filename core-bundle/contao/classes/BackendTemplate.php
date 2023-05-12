@@ -74,25 +74,11 @@ class BackendTemplate extends Template
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
-			$objCombiner = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
 				$options = StringUtil::resolveFlaggedUrl($stylesheet);
-
-				if ($options->static)
-				{
-					$objCombiner->add($stylesheet, $options->mtime, $options->media);
-				}
-				else
-				{
-					$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
-				}
-			}
-
-			if ($objCombiner->hasEntries())
-			{
-				$strStyleSheets = Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
+				$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -101,32 +87,12 @@ class BackendTemplate extends Template
 		// JavaScripts
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
-			$objCombiner = new Combiner();
-			$objCombinerAsync = new Combiner();
 			$strJavaScripts = '';
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
 				$options = StringUtil::resolveFlaggedUrl($javascript);
-
-				if ($options->static)
-				{
-					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
-				}
-				else
-				{
-					$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
-				}
-			}
-
-			if ($objCombiner->hasEntries())
-			{
-				$strJavaScripts = Template::generateScriptTag($objCombiner->getCombinedFile()) . $strJavaScripts;
-			}
-
-			if ($objCombinerAsync->hasEntries())
-			{
-				$strJavaScripts = Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
+				$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
 			}
 
 			$this->javascripts .= $strJavaScripts;

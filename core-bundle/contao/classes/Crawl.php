@@ -417,8 +417,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 	private function getInputCallback(string $name): \Closure
 	{
-		return static function () use ($name)
-		{
+		return static function () use ($name) {
 			return Input::get($name);
 		};
 	}

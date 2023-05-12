@@ -21,7 +21,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * Annotation to register a Contao picker.
  *
  * @Annotation
+ *
  * @Target({"CLASS"})
+ *
  * @Attributes({
  *     @Attribute("priority", type="int"),
  * })
