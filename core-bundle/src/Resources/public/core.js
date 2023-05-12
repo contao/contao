@@ -1253,7 +1253,6 @@ var Backend =
 				'html': '<span>...</span>',
 				'title': Contao.lang.expand,
 				'class': 'unselectable',
-				'data-state': 0
 			}).inject(toggler);
 
 			size = div.getCoordinates();
@@ -1266,8 +1265,8 @@ var Backend =
 
 			button.addEvent('click', function() {
 				style = toggler.getPrevious('div').getStyle('height').toInt();
+				button.set('title', (style > hgt) ? Contao.lang.expand : Contao.lang.collapse);
 				toggler.getPrevious('div').setStyle('height', ((style > hgt) ? hgt : ''));
-				button.set('data-state', button.get('data-state') ? 0 : 1);
 			});
 
 			toggler.inject(div, 'after');
