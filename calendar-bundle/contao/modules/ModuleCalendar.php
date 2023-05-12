@@ -161,7 +161,7 @@ class ModuleCalendar extends Events
 		// Previous month
 		$prevMonth = ($intMonth == 1) ? 12 : ($intMonth - 1);
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
-		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
+		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][$prevMonth - 1] . ' ' . $prevYear;
 		$intPrevYm = (int) ($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
 
 		// Only generate a link if there are events (see #4160)
@@ -174,12 +174,12 @@ class ModuleCalendar extends Events
 		}
 
 		// Current month
-		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] . ' ' . date('Y', $this->Date->tstamp);
+		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][date('m', $this->Date->tstamp) - 1] . ' ' . date('Y', $this->Date->tstamp);
 
 		// Next month
 		$nextMonth = ($intMonth == 12) ? 1 : ($intMonth + 1);
 		$nextYear = ($intMonth == 12) ? ($intYear + 1) : $intYear;
-		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][($nextMonth - 1)] . ' ' . $nextYear;
+		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][$nextMonth - 1] . ' ' . $nextYear;
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)

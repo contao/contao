@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -96,7 +97,34 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return false;
         }
 
-        return $user->hasAccess($subject, $field);
+        if (!\is_array($subject)) {
+            $subject = [$subject];
+        }
+
+        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
+            return true;
+        }
+
+        // Additionally check the subfolders of the mounted files
+        if ('filemounts' === $field) {
+            foreach ($user->filemounts as $folder) {
+                if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Additionally check the child pages of the mounted pages
+        if ('pagemounts' === $field) {
+            $database = $this->framework->createInstance(Database::class);
+            $childIds = $database->getChildRecords($user->pagemounts, 'tl_page');
+
+            return !empty($childIds) && array_intersect($subject, $childIds);
+        }
+
+        return false;
     }
 
     /**
@@ -187,7 +215,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             }
         }
 
-        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize(($row['chmod'] ?? null), true)];
+        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize($row['chmod'] ?? null, true)];
 
         foreach ($cacheIds as $cacheId) {
             $this->pagePermissionsCache[$cacheId] = $result;

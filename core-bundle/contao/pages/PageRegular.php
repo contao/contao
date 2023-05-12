@@ -628,8 +628,7 @@ class PageRegular extends Frontend
 
 		$this->Template->mootools = $strScripts;
 
-		$this->Template->jsonLdScripts = function ()
-		{
+		$this->Template->jsonLdScripts = function () {
 			if (!$this->responseContext->isInitialized(JsonLdManager::class))
 			{
 				return '';

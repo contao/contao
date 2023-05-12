@@ -90,6 +90,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
+        /** @var Connection */
         return $this->container->get($this->dbalServiceName);
     }
 }

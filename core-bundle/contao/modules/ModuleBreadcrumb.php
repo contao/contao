@@ -217,8 +217,7 @@ class ModuleBreadcrumb extends Module
 			}
 		}
 
-		$this->Template->getSchemaOrgData = static function () use ($items): array
-		{
+		$this->Template->getSchemaOrgData = static function () use ($items): array {
 			$jsonLd = array(
 				'@type' => 'BreadcrumbList',
 				'itemListElement' => array()

@@ -511,6 +511,14 @@ class HtmlAttributesTest extends TestCase
             'property-without-value' => null,
         ]);
 
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" property-without-value';
+
+        $this->assertSame(" $expectedString", $attributes->__toString());
+        $this->assertSame(" $expectedString", $attributes->toString());
+        $this->assertSame($expectedString, $attributes->toString(false));
+
+        // With double encoding
+        $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
         $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" property-without-value';
 
         $this->assertSame(" $expectedString", $attributes->__toString());

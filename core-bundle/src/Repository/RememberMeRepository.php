@@ -67,4 +67,16 @@ class RememberMeRepository extends ServiceEntityRepository
 
         $this->_em->flush();
     }
+
+    public function deleteByUserIdentifier(string $userIdentifier): void
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.userIdentifier = :userIdentifier')
+            ->setParameter('userIdentifier', $userIdentifier)
+        ;
+
+        $qb->getQuery()->execute();
+    }
 }
