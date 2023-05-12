@@ -91,6 +91,8 @@ class ContaoExtensionTest extends TestCase
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
             'prefix_url' => [],
+            'frontend_module' => ['html'],
+            'content_element' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();

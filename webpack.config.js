@@ -19,7 +19,7 @@ Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
     .setPublicPath('/system/themes/flexible')
     .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild(['*.css', '*.json'])
+    .cleanupOutputBeforeBuild(['*.css', '*.json', '*.map'])
     .disableSingleRuntimeChunk()
     .enableSourceMaps()
     .enableVersioning()
