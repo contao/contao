@@ -47,9 +47,9 @@ class TemplateLocator
     }
 
     /**
-     * @throws InvalidThemePathException
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidThemePathException
      */
     public function findThemeDirectories(): array
     {
@@ -153,6 +153,12 @@ class TemplateLocator
      */
     private function expandSubdirectories(string $path): array
     {
+        $paths = [$path];
+
+        if ($this->isNamespaceRoot($path)) {
+            return $paths;
+        }
+
         $namespaceRoots = [];
 
         $finder = (new Finder())
@@ -177,8 +183,6 @@ class TemplateLocator
                 }
             )
         ;
-
-        $paths = [$path];
 
         foreach ($finder as $item) {
             $paths[] = Path::canonicalize($item->getPathname());

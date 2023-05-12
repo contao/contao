@@ -15,6 +15,8 @@ namespace Contao;
  *
  * @property string $name
  * @property string $question
+ * @property int    $sum
+ * @property string $hash
  * @property string $placeholder
  */
 class FormCaptcha extends Widget
@@ -106,6 +108,12 @@ class FormCaptcha extends Widget
 			case 'question':
 				return $this->getQuestion();
 
+			case 'sum':
+				return $this->getSum();
+
+			case 'hash':
+				return $this->getHash();
+
 			default:
 				return parent::__get($strKey);
 		}
@@ -159,8 +167,7 @@ class FormCaptcha extends Widget
 		$time = (int) round(time() / 60 / 30);
 
 		return array_map(
-			static function ($hashTime) use ($sum)
-			{
+			static function ($hashTime) use ($sum) {
 				return hash_hmac('sha256', $sum . "\0" . $hashTime, System::getContainer()->getParameter('kernel.secret'));
 			},
 			array($time, $time - 1)
@@ -215,6 +222,21 @@ class FormCaptcha extends Widget
 	}
 
 	/**
+	 * Get the AJAX URL
+	 *
+	 * @return string The AJAX URL
+	 */
+	protected function getAjaxUrl()
+	{
+		$container = System::getContainer();
+
+		return $container->get('router')->generate(
+			'contao_frontend_captcha',
+			array('_locale' => $container->get('request_stack')->getCurrentRequest()->getLocale())
+		);
+	}
+
+	/**
 	 * Generate the label and return it as string
 	 *
 	 * @return string The label markup
@@ -229,7 +251,7 @@ class FormCaptcha extends Widget
 		return sprintf(
 			'<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$GLOBALS['TL_LANG']['MSC']['mandatory'],
 			$this->strLabel,
 			$this->getQuestion()
@@ -247,7 +269,7 @@ class FormCaptcha extends Widget
 			'<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
 			$this->strCaptchaKey,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->strId,
 			$this->getAttributes(),
 			$this->strTagEnding
@@ -264,7 +286,7 @@ class FormCaptcha extends Widget
 		return sprintf(
 			'<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getQuestion()
 		);
 	}

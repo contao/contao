@@ -23,7 +23,7 @@ class ImagesLoader extends Loader
     private string $pathPrefix;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.images_loader" service instead
+     * @internal
      */
     public function __construct(string $projectDir, string $imageTargetDir)
     {

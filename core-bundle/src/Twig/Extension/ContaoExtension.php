@@ -22,11 +22,13 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -190,6 +192,16 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
+            ),
+            new TwigFunction(
+                'frontend_module',
+                [FragmentRuntime::class, 'renderModule'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'content_element',
+                [FragmentRuntime::class, 'renderContent'],
+                ['is_safe' => ['html']]
             ),
         ];
     }

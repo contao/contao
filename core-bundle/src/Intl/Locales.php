@@ -95,15 +95,12 @@ class Locales
     {
         $localeIds = array_map(
             static function ($localeId) {
-                $locale = \Locale::parseLocale($localeId);
-
-                if (!isset($locale[\Locale::REGION_TAG])) {
-                    return $localeId;
-                }
-
-                unset($locale[\Locale::REGION_TAG]);
-
-                return \Locale::composeLocale($locale);
+                return \Locale::composeLocale(
+                    array_intersect_key(
+                        \Locale::parseLocale($localeId),
+                        [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
+                    )
+                );
             },
             $this->locales
         );

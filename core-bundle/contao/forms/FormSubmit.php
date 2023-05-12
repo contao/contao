@@ -120,7 +120,7 @@ class FormSubmit extends Widget
 				'<input type="image" src="%s" id="ctrl_%s" class="submit%s" title="%s" alt="%s"%s%s',
 				$this->src,
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
 				StringUtil::specialchars($this->slabel),
 				StringUtil::specialchars($this->slabel),
 				$this->getAttributes(),
@@ -132,7 +132,7 @@ class FormSubmit extends Widget
 		return sprintf(
 			'<button type="submit" id="ctrl_%s" class="submit%s"%s>%s</button>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->slabel
 		);

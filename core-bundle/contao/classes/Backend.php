@@ -420,7 +420,7 @@ abstract class Backend extends Controller
 
 				$request = $container->get('request_stack')->getCurrentRequest();
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null, DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -651,7 +651,7 @@ abstract class Backend extends Controller
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -703,6 +703,11 @@ abstract class Backend extends Controller
 		else
 		{
 			$label = '<span>' . $label . '</span>';
+		}
+
+		if ($row['requireItem'])
+		{
+			return Image::getHtml($image, '', $imageAttribute) . $label;
 		}
 
 		// Return the image
@@ -834,7 +839,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -893,7 +898,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -919,7 +924,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
-		return ' ' . Image::getHtml('visible.svg', '', 'title="' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '" id="pw_' . $inputName . '"') . '
+		return ' <button type="button" class="image-button" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showPassword']) . '" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg') . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -927,12 +932,16 @@ abstract class Backend extends Controller
       el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
-        this.src = this.src.replace("visible.svg", "visible_.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
+        this.getElements("img").forEach(function(image) {
+          image.src = image.src.replace("visible.svg", "visible_.svg");
+        });
       } else {
         el.type = "password";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
-        this.src = this.src.replace("visible_.svg", "visible.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
+        this.getElements("img").forEach(function(image) {
+          image.src = image.src.replace("visible_.svg", "visible.svg");
+        });
       }
     });
   </script>';
@@ -1071,7 +1080,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1173,7 +1182,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : ''), StringUtil::specialchars($strFile));
+				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

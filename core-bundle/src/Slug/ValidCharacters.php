@@ -27,7 +27,7 @@ class ValidCharacters
     ];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.slug.valid_characters" service instead
+     * @internal
      */
     public function __construct(private EventDispatcherInterface $eventDispatcher, private TranslatorInterface $translator)
     {

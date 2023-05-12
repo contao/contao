@@ -13,13 +13,7 @@
       <meta name="robots" content="noindex,follow">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?php
-      $objCombiner = new Contao\Combiner();
-      $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
-      $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
-      $objCombiner->add('system/themes/'.$this->theme.'/login.min.css');
-      echo $objCombiner->getCombinedFile();
-    ?>">
+    <link rel="stylesheet" href="<?= $this->asset('login.css', 'system/themes/'.$this->theme) ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>

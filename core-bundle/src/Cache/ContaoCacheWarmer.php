@@ -35,7 +35,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private array $locales;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.cache.warmer" service instead
+     * @internal
      */
     public function __construct(
         private Filesystem $filesystem,

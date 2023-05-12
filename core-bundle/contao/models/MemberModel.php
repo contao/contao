@@ -255,9 +255,9 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find an expired registration by email address that has not been activated for more than 24 hours
+	 * Find an expired registration by e-mail address that has not been activated for more than 24 hours
 	 *
-	 * @param string $strEmail The email address to find the expired registration for
+	 * @param string $strEmail The e-mail address to find the expired registration for
 	 *
 	 * @return static The model or null if there is no expired registration
 	 */

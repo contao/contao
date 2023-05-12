@@ -222,8 +222,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('form_wrapper_', array(), 'form_wrapper');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -477,8 +476,7 @@ class tl_form extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			return $this->Database->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 

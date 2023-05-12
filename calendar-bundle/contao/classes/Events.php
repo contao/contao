@@ -198,7 +198,7 @@ abstract class Events extends Module
 		$intKey = date('Ymd', $intStart);
 		$strDate = Date::parse($objPage->dateFormat, $intStart);
 		$strDay = $GLOBALS['TL_LANG']['DAYS'][date('w', $intStart)];
-		$strMonth = $GLOBALS['TL_LANG']['MONTHS'][(date('n', $intStart)-1)];
+		$strMonth = $GLOBALS['TL_LANG']['MONTHS'][date('n', $intStart) - 1];
 		$span = Calendar::calculateSpan($intStart, $intEnd);
 
 		if ($span > 0)
@@ -318,8 +318,7 @@ abstract class Events extends Module
 		{
 			$id = $objEvents->id;
 
-			$arrEvent['details'] = function () use ($id)
-			{
+			$arrEvent['details'] = function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -334,8 +333,7 @@ abstract class Events extends Module
 				return $strDetails;
 			};
 
-			$arrEvent['hasDetails'] = static function () use ($id)
-			{
+			$arrEvent['hasDetails'] = static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};
 		}

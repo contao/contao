@@ -41,7 +41,7 @@ class RootPageDependentSelect extends SelectMenu
 				$this->strName,
 				sprintf('%s-%s', $this->strId, $rootPage->id),
 				$cssClasses,
-				($this->strClass ? ' ' . $this->strClass : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
 				$this->getAttributes(),
 				implode('', $this->getOptions($rootPage)),
 				$wizard[$rootPage->id] ?? ''

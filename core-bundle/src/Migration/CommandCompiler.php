@@ -21,7 +21,7 @@ use Doctrine\DBAL\Schema\Table;
 class CommandCompiler
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.migration.command_compiler" service instead
+     * @internal
      */
     public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
     {
