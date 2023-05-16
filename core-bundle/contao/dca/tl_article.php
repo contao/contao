@@ -68,7 +68,10 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'fields'                  => array('title', 'inColumn'),
 			'format'                  => '%s <span class="label-info">[%s]</span>',
-			'label_callback'          => array('tl_article', 'addIcon')
+			'label_callback'          => array
+			(
+				array('tl_article', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
