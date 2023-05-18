@@ -1821,7 +1821,7 @@ abstract class DataContainer extends Backend
 	protected function markAsCopy(string $label, string $value): string
 	{
 		// Do not mark as copy more than once (see #6058)
-		if (preg_match('/' . str_replace('%s', '', preg_quote($label, '/')) . '/', StringUtil::decodeEntities($value)))
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
 		{
 			return $value;
 		}
