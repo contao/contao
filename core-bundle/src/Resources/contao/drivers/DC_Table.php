@@ -911,13 +911,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (!empty($value['value']))
 					{
-						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
+						$value['value'] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
 						$this->set[$strKey] = serialize($value);
 					}
 				}
 				elseif (!empty($this->set[$strKey]))
 				{
-					$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+					$this->set[$strKey] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 				}
 			}
 
