@@ -681,7 +681,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata, ?Metadata $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
@@ -721,6 +721,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigureBuilder($studio, $framework)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
+            ->setOverwriteMetadata($overwriteMetadata)
             ->build()
         ;
 
@@ -819,6 +820,20 @@ class FigureBuilderTest extends TestCase
                 Metadata::VALUE_URL => '',
                 Metadata::VALUE_CAPTION => '',
             ],
+        ];
+
+        yield 'overwrite metadata keeping the other values as they are' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 'tt',
+                Metadata::VALUE_ALT => 'a',
+                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_TITLE => 'tt']),
         ];
     }
 
