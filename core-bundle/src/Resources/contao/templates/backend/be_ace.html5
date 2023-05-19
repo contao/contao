@@ -34,6 +34,10 @@ window.ace && window.addEvent('domready', function() {
   editor.getSession().setUseWrapMode(true);
   editor.setAutoScrollEditorIntoView(true);
 
+  <?php if ($this->readonly): ?>
+    editor.setReadOnly(true);
+  <?php endif; ?>
+
   // Add the fullscreen command
   editor.commands.addCommand({
     name: 'Fullscreen',
