@@ -1765,7 +1765,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
@@ -1817,6 +1817,17 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function markAsCopy(string $label, string $value): string
+	{
+		// Do not mark as copy more than once (see #6058)
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		{
+			return $value;
+		}
+
+		return sprintf($label, $value);
 	}
 }
 
