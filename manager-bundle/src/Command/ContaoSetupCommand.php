@@ -74,7 +74,10 @@ class ContaoSetupCommand extends Command
         if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
 
-            $dotenv = new DotenvDumper(realpath(Path::join($this->projectDir, '.env.local')), $filesystem);
+            $dotenvPath = Path::join($this->projectDir, '.env.local');
+            $dotenvPath = realpath($dotenvPath) ?: $dotenvPath;
+
+            $dotenv = new DotenvDumper($dotenvPath, $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
