@@ -77,7 +77,10 @@ class GenerateAppSecretCommand extends Command
 
         $filesystem = new Filesystem();
 
-        $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+        $dotenvPath = Path::join($this->projectDir, '.env.local');
+        $dotenvPath = realpath($dotenvPath) ?: $dotenvPath;
+
+        $dotenv = new DotenvDumper($dotenvPath, $filesystem);
         $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes($length)));
         $dotenv->dump();
 
