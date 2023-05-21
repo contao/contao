@@ -264,6 +264,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
         }
+        
+        if(!parent::isFresh($name, $time))
+        {
+            return false;
+        }
 
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
