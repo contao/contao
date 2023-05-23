@@ -31,9 +31,9 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             return new Response('');
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $modules = array_filter(StringUtil::deserialize($model->rootPageDependentModules, true));
 
-        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
+        if (empty($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
             return new Response('');
         }
 
