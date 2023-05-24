@@ -575,20 +575,20 @@ class News extends Frontend
 	 */
 	private function getPageWithDetails($intPageId)
 	{
-		if (!isset(self::$arrPageCache[$intPageId]))
+		if (!\array_key_exists($intPageId, self::$arrPageCache))
 		{
 			$objPage = self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
 
 			if (null === $objPage)
 			{
-				return null;
+				return $objPage;
 			}
 
 			$objLayout = LayoutModel::findByPk($objPage->layout);
 
 			if (null === $objLayout)
 			{
-				return (self::$arrPageCache[$intPageId] = null);
+				return $objPage;
 			}
 
 			/** @var ThemeModel $objTheme */
