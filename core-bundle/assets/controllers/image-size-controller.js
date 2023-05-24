@@ -14,6 +14,7 @@ export default class extends Controller {
         this.select = this.element.querySelector('select');
         this.button = document.createElement('button');
         this.button.type = 'button';
+        this.button.title = '';
         this.buttonImage = document.createElement('img');
         this.button.append(this.buttonImage);
         this.element.parentNode.classList.add('wizard');
@@ -38,7 +39,7 @@ export default class extends Controller {
             this.button.disabled = false;
             this.buttonImage.src = this.configValue.icon;
         } else {
-            delete this.button.title;
+            this.button.title = '';
             this.button.disabled = true;
             this.buttonImage.src = this.configValue.iconDisabled;
         }
