@@ -281,6 +281,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
+            - '%kernel.secret%'
             - '%contao.web_dir%'
         tags:
             - kernel.event_listener

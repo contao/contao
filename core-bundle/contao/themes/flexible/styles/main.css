@@ -1955,6 +1955,7 @@ ul.sgallery li {
 	padding: 0;
 	border: 0;
 	background: none;
+	vertical-align: middle;
 }
 
 /* Module wizard */

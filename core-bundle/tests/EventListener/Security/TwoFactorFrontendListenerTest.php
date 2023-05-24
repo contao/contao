@@ -475,7 +475,7 @@ class TwoFactorFrontendListenerTest extends TestCase
      *
      * @return T&MockObject
      */
-    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null)
+    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null): MockObject
     {
         $token = $this->createMock($class);
         $user ??= $this->createMock(FrontendUser::class);
