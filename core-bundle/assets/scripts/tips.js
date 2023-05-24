@@ -60,7 +60,10 @@
 
         el.addEventListener('mouseleave', function() {
             if (el.hasAttribute('data-original-title')) {
-                el.setAttribute('title', el.getAttribute('data-original-title'));
+                if (!el.hasAttribute('title')) {
+                    el.setAttribute('title', el.getAttribute('data-original-title'));
+                }
+
                 el.removeAttribute('data-original-title')
             }
 
