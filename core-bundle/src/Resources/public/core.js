@@ -1252,7 +1252,7 @@ var Backend =
 				'type': 'button',
 				'html': '<span>...</span>',
 				'title': Contao.lang.expand,
-				'class': 'unselectable',
+				'class': 'unselectable'
 			}).inject(toggler);
 
 			size = div.getCoordinates();
