@@ -44,7 +44,7 @@ class ImageFactory implements ImageFactoryInterface
     private ?LoggerInterface $logger;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
+     * @internal
      */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
     {

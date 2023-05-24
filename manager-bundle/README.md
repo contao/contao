@@ -22,4 +22,4 @@ Visit the [support page][4] to learn about the available support options.
 [1]: https://symfony.com
 [2]: https://github.com/contao/contao-manager
 [3]: https://contao.org
-[4]: https://contao.org/en/support.html
+[4]: https://to.contao.org/support

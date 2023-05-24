@@ -2,6 +2,93 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.23] (2023-05-03)
+
+**Fixed issues:**
+
+- [#5979] Check for the `debug.stopwatch` service ([fritzmg])
+
+## [4.13.22] (2023-05-02)
+
+**Fixed issues:**
+
+- [#6003] Add a method to retrieve the original route path ([aschempp])
+- [#6002] Fix a type error in the meta wizard ([ausi])
+- [#5984] Make the `multiSRC` field mandatory for galleries and downloads ([cliffparnitzky])
+- [#5993] Fix the type hint in the Hybrid class ([leofeyer])
+- [#5951] Auto-generate and dump the APP_SECRET during contao-setup ([m-vo])
+- [#5971] Add an optional class attribute to the figure builder ([a-v-l])
+- [#5986] Allow flysystem-bundle ^3.0 ([Toflar])
+
+## [4.13.21] (2023-04-25)
+
+**Fixed issues:**
+
+- [#5987] Harden the file manager against directory traversal attacks ([ausi])
+
+## [4.13.20] (2023-04-19)
+
+**Fixed issues:**
+
+- [#5962] Fix an undefined array key warning when comparing versions with different fields ([fritzmg])
+- [#5851] Do not auto-link images in the news reader ([leofeyer])
+- [#5959] Remove unnecessary locale tags from languages ([ausi])
+- [#5955] Remove the "symfony/proxy-manager-bridge" dependency ([leofeyer])
+- [#5893] Correctly check the mounted pages in the `hasAccess()` method ([leofeyer])
+- [#5952] Ignore exceptions when adding trusted devices ([aschempp])
+- [#5942] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5908] Correctly handle response status codes from legacy entry points ([aschempp])
+- [#5934] Fix the search query in DC_Folder ([leofeyer])
+- [#5917] Consider foreign keys when sorting the list view ([dennisbohn])
+- [#5927] Fix the version panel alignment ([fritzmg])
+
+## [4.13.19] (2023-04-04)
+
+**Fixed issues:**
+
+- [#5914] Regenerate the symlinks when moving or duplicating folders ([leofeyer])
+- [#5910] Support PHP and XML config files in the app ([Toflar])
+- [#5913] Fix a PHP 8 issue in the `mod_breadcrumb.html5` template ([leofeyer])
+- [#5892] Normalize the line endings in the file editor ([leofeyer])
+- [#5890] Fix the incorrect formatting of numbers with decimal places ([qzminski])
+- [#5888] Remove the @internal hints at constructor level ([leofeyer])
+- [#5876] Always allow toggling a field that is not excluded ([aschempp])
+- [#5884] Prevent foreign key check errors when deleting a parent record with children ([qzminski])
+- [#5883] Add psr/log ^2.0 and ^3.0 ([JanoschOltmanns])
+- [#5887] Fix urlencoded paths in DC_Folder ([ausi])
+
+## [4.13.18] (2023-03-16)
+
+**Fixed issues:**
+
+- [#5879] Remove the `q` shortcut from `contao:crawl` ([fritzmg])
+
+## [4.13.17] (2023-03-15)
+
+**Fixed issues:**
+
+- [#5864] Fix subpalette toggling ([aschempp])
+- [#5820] Throw an exception if a model relation is incomplete ([aschempp])
+- [#5830] Handle invalid back end confirm requests ([aschempp])
+- [#5868] Always redirect ajax requests when session expired ([Toflar])
+- [#5863] Correctly handle sub-subpalettes in editAll mode ([aschempp])
+- [#5873] Create deferred image in legacy image class ([fritzmg])
+- [#5862] Used parsed referer for target path in login module ([fritzmg])
+- [#5860] Also consider the referer when redirecting back in the login module ([fritzmg])
+- [#5854] Fix an integrity constraint violation in the Versions class ([leofeyer])
+- [#5856] Add the `multiple` attribute to the list and table wizards ([leofeyer])
+- [#5855] Add the `FigureBuilder::fromUrl()` method ([ausi])
+- [#5850] Fix a possible CSRF cookie race condition ([leofeyer])
+- [#5843] Fix possible undefined headline data ([rabauss])
+- [#5842] Fix a PHP8 issue with the back end breadcrumb menu ([leofeyer])
+- [#5834] Refresh the cache after updating metadata in the Dbafs class ([Toflar])
+- [#5815] Make the captcha widget cacheable ([ausi])
+- [#3540] Improve handling of pages with `tl_page.requireItem` ([SeverinGloeckle])
+- [#5774] Ignore if global_operation has no class ([aschempp])
+- [#5793] Do not rely on the current session IDs ([ausi])
+- [#5817] Fix invalid HTML output of `DC_Table` ([fritzmg])
+- [#5795] Add the missing option to resume crawling from CLI ([Toflar])
+
 ## [4.13.16] (2023-02-22)
 
 **Fixed issues:**
@@ -298,7 +385,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS via canonical tags in the front end ([CVE-2022-24899])
+- Prevent XSS via canonical tags in the front end ([ausi])
 
 ## [4.13.2] (2022-03-31)
 
@@ -597,6 +684,13 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.23]: https://github.com/contao/contao/releases/tag/4.13.23
+[4.13.22]: https://github.com/contao/contao/releases/tag/4.13.22
+[4.13.21]: https://github.com/contao/contao/releases/tag/4.13.21
+[4.13.20]: https://github.com/contao/contao/releases/tag/4.13.20
+[4.13.19]: https://github.com/contao/contao/releases/tag/4.13.19
+[4.13.18]: https://github.com/contao/contao/releases/tag/4.13.18
+[4.13.17]: https://github.com/contao/contao/releases/tag/4.13.17
 [4.13.16]: https://github.com/contao/contao/releases/tag/4.13.16
 [4.13.15]: https://github.com/contao/contao/releases/tag/4.13.15
 [4.13.14]: https://github.com/contao/contao/releases/tag/4.13.14
@@ -617,13 +711,14 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
-[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
+[a-v-l]: https://github.com/a-v-l
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [christianbarkowsky]: https://github.com/christianbarkowsky
+[cliffparnitzky]: https://github.com/cliffparnitzky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [Defcon0]: https://github.com/Defcon0
@@ -631,6 +726,7 @@ This project adheres to [Semantic Versioning].
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
 [fritzmg]: https://github.com/fritzmg
+[JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
@@ -670,6 +766,7 @@ This project adheres to [Semantic Versioning].
 [#3524]: https://github.com/contao/contao/pull/3524
 [#3530]: https://github.com/contao/contao/pull/3530
 [#3535]: https://github.com/contao/contao/pull/3535
+[#3540]: https://github.com/contao/contao/pull/3540
 [#3542]: https://github.com/contao/contao/pull/3542
 [#3596]: https://github.com/contao/contao/pull/3596
 [#3602]: https://github.com/contao/contao/pull/3602
@@ -1109,6 +1206,7 @@ This project adheres to [Semantic Versioning].
 [#5741]: https://github.com/contao/contao/pull/5741
 [#5753]: https://github.com/contao/contao/pull/5753
 [#5759]: https://github.com/contao/contao/pull/5759
+[#5774]: https://github.com/contao/contao/pull/5774
 [#5777]: https://github.com/contao/contao/pull/5777
 [#5782]: https://github.com/contao/contao/pull/5782
 [#5785]: https://github.com/contao/contao/pull/5785
@@ -1116,8 +1214,58 @@ This project adheres to [Semantic Versioning].
 [#5787]: https://github.com/contao/contao/pull/5787
 [#5790]: https://github.com/contao/contao/pull/5790
 [#5792]: https://github.com/contao/contao/pull/5792
+[#5793]: https://github.com/contao/contao/pull/5793
+[#5795]: https://github.com/contao/contao/pull/5795
 [#5797]: https://github.com/contao/contao/pull/5797
 [#5799]: https://github.com/contao/contao/pull/5799
 [#5802]: https://github.com/contao/contao/pull/5802
 [#5809]: https://github.com/contao/contao/pull/5809
 [#5811]: https://github.com/contao/contao/pull/5811
+[#5815]: https://github.com/contao/contao/pull/5815
+[#5817]: https://github.com/contao/contao/pull/5817
+[#5820]: https://github.com/contao/contao/pull/5820
+[#5830]: https://github.com/contao/contao/pull/5830
+[#5834]: https://github.com/contao/contao/pull/5834
+[#5842]: https://github.com/contao/contao/pull/5842
+[#5843]: https://github.com/contao/contao/pull/5843
+[#5850]: https://github.com/contao/contao/pull/5850
+[#5851]: https://github.com/contao/contao/pull/5851
+[#5854]: https://github.com/contao/contao/pull/5854
+[#5855]: https://github.com/contao/contao/pull/5855
+[#5856]: https://github.com/contao/contao/pull/5856
+[#5860]: https://github.com/contao/contao/pull/5860
+[#5862]: https://github.com/contao/contao/pull/5862
+[#5863]: https://github.com/contao/contao/pull/5863
+[#5864]: https://github.com/contao/contao/pull/5864
+[#5868]: https://github.com/contao/contao/pull/5868
+[#5873]: https://github.com/contao/contao/pull/5873
+[#5876]: https://github.com/contao/contao/pull/5876
+[#5879]: https://github.com/contao/contao/pull/5879
+[#5883]: https://github.com/contao/contao/pull/5883
+[#5884]: https://github.com/contao/contao/pull/5884
+[#5887]: https://github.com/contao/contao/pull/5887
+[#5888]: https://github.com/contao/contao/pull/5888
+[#5890]: https://github.com/contao/contao/pull/5890
+[#5892]: https://github.com/contao/contao/pull/5892
+[#5893]: https://github.com/contao/contao/pull/5893
+[#5908]: https://github.com/contao/contao/pull/5908
+[#5910]: https://github.com/contao/contao/pull/5910
+[#5913]: https://github.com/contao/contao/pull/5913
+[#5914]: https://github.com/contao/contao/pull/5914
+[#5917]: https://github.com/contao/contao/pull/5917
+[#5927]: https://github.com/contao/contao/pull/5927
+[#5934]: https://github.com/contao/contao/pull/5934
+[#5942]: https://github.com/contao/contao/pull/5942
+[#5951]: https://github.com/contao/contao/pull/5951
+[#5952]: https://github.com/contao/contao/pull/5952
+[#5955]: https://github.com/contao/contao/pull/5955
+[#5959]: https://github.com/contao/contao/pull/5959
+[#5962]: https://github.com/contao/contao/pull/5962
+[#5971]: https://github.com/contao/contao/pull/5971
+[#5979]: https://github.com/contao/contao/pull/5979
+[#5984]: https://github.com/contao/contao/pull/5984
+[#5986]: https://github.com/contao/contao/pull/5986
+[#5987]: https://github.com/contao/contao/pull/5987
+[#5993]: https://github.com/contao/contao/pull/5993
+[#6002]: https://github.com/contao/contao/pull/6002
+[#6003]: https://github.com/contao/contao/pull/6003

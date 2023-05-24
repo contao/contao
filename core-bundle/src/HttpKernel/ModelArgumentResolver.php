@@ -26,7 +26,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
     private ScopeMatcher $scopeMatcher;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {

@@ -305,6 +305,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.0">
         <source>Template data</source>
+        <target>Veidnes dati</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
@@ -778,9 +779,11 @@
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
+        <target>Atskaņot inline (bez pilnekrāna režīma)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Automātiski (iepriekš ielādē visu video)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -828,6 +831,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
+        <target>Atkārtot video</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
@@ -851,6 +855,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_dnt">
         <source>Prevent session data tracking</source>
+        <target>Novērst sesijas datu izsekošanu</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

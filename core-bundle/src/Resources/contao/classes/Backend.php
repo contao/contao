@@ -1055,7 +1055,7 @@ abstract class Backend extends Controller
 
 		if ($row['requireItem'])
 		{
-			return Image::getHtml($image, '', $imageAttribute) . $label;
+			return Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
 		}
 
 		// Return the image

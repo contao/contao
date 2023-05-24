@@ -52,7 +52,6 @@
         "symfony/monolog-bridge": "^5.4",
         "symfony/monolog-bundle": "^3.1",
         "symfony/process": "^5.4",
-        "symfony/proxy-manager-bridge": "^5.4",
         "symfony/routing": "^5.4",
         "symfony/security-bundle": "^5.4",
         "symfony/stopwatch": "^5.4",

@@ -19,7 +19,7 @@ class LegacyCandidates extends AbstractCandidates
     private bool $prependLocale;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.candidates" service instead
+     * @internal
      */
     public function __construct(bool $prependLocale, string $urlSuffix)
     {
