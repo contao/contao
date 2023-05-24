@@ -75,7 +75,7 @@ class ContaoSetupCommand extends Command
             $filesystem = new Filesystem();
 
             $envLocalPath = Path::join($this->projectDir, '.env.local');
-            $envLocalPath = $filesystem->readlink($envLocalPath, true) ?? $envLocalPath;
+            $envLocalPath = realpath($envLocalPath) ?: $envLocalPath;
 
             $dotenv = new DotenvDumper($envLocalPath, $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));

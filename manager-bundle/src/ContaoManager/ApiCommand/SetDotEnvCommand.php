@@ -53,7 +53,7 @@ class SetDotEnvCommand extends Command
         $path = Path::join($this->projectDir, '.env');
 
         $localPath = $path.'.local';
-        $localPath = $filesystem->readlink($localPath, true) ?? $localPath;
+        $localPath = realpath($localPath) ?: $localPath;
 
         $dumper = new DotenvDumper($localPath, $filesystem);
         $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
