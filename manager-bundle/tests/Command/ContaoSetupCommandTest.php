@@ -208,7 +208,6 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $dotEnvLocalTargetFile = Path::join($projectDir, '.env.local.target');
 
         $filesystem = new Filesystem();
-
         $filesystem->touch($dotEnvLocalTargetFile);
         $filesystem->symlink($dotEnvLocalTargetFile, $dotEnvLocalFile);
 

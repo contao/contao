@@ -49,11 +49,13 @@ class SetDotEnvCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filesystem = new Filesystem();
-
         $path = Path::join($this->projectDir, '.env');
-
         $localPath = $path.'.local';
-        $localPath = realpath($localPath) ?: $localPath;
+
+        // Get the realpath in case it is a symlink (see #6066)
+        if ($realpath = realpath($localPath)) {
+            $localPath = $realpath;
+        }
 
         $dumper = new DotenvDumper($localPath, $filesystem);
         $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
