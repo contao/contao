@@ -651,7 +651,7 @@ class Calendar extends Frontend
 
 			if (null === $objLayout)
 			{
-				return null;
+				return (self::$arrPageCache[$intPageId] = null);
 			}
 
 			/** @var ThemeModel $objTheme */
