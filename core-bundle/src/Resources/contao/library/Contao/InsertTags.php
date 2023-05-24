@@ -398,11 +398,11 @@ class InsertTags extends Controller
 
 					if (\count($keys) == 2)
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]] ?? '';
 					}
 					else
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]] ?? '';
 					}
 					break;
 
