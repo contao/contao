@@ -104,8 +104,7 @@ class DotenvDumper
             return;
         }
 
-        // Do not use Filesystem::dumpFile, as this file could be a symlink (see #6065)
-        file_put_contents($this->dotenvFile, $file);
+        $this->filesystem->dumpFile($this->dotenvFile, $file);
     }
 
     /**

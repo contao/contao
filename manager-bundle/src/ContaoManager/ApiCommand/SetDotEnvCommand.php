@@ -48,14 +48,19 @@ class SetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $filesystem = new Filesystem();
+
         $path = Path::join($this->projectDir, '.env');
 
-        $dumper = new DotenvDumper($path.'.local');
+        $localPath = $path.'.local';
+        $localPath = $filesystem->readlink($localPath, true) ?? $localPath;
+
+        $dumper = new DotenvDumper($localPath, $filesystem);
         $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
         $dumper->dump();
 
         if (!file_exists($path)) {
-            (new Filesystem())->touch($path);
+            $filesystem->touch($path);
         }
 
         return 0;
