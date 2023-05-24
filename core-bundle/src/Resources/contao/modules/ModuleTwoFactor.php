@@ -35,6 +35,12 @@ class ModuleTwoFactor extends BackendModule
 	{
 		$container = System::getContainer();
 
+		// Do not render the two-factor module on the command line, there cannot be a firewall or user logged in
+		if (!$container->get('request_stack')->getCurrentRequest())
+		{
+			return '';
+		}
+
 		/** @var Security $security */
 		$security = $container->get('security.helper');
 

@@ -32,6 +32,12 @@ class ModulePassword extends Module
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
+		// Do not render the password module on the command line, there cannot be a firewall or user logged in
+		if (!$request)
+		{
+			return '';
+		}
+
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');

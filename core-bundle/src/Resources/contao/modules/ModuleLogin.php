@@ -48,7 +48,13 @@ class ModuleLogin extends Module
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		// Do not render the login module on the command line, there cannot be a firewall or user logged in
+		if (!$request)
+		{
+			return '';
+		}
+
+		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['login'][0] . ' ###';
@@ -62,11 +68,11 @@ class ModuleLogin extends Module
 
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request && $request->isMethod('POST'))
+		if ($request->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($request && $this->redirectBack)
+		elseif ($this->redirectBack)
 		{
 			if ($request->query->has('redirect'))
 			{

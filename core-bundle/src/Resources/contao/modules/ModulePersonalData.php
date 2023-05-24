@@ -35,7 +35,13 @@ class ModulePersonalData extends Module
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		// Do not render the personal data module on the command line, there cannot be a firewall or user logged in
+		if (!$request)
+		{
+			return '';
+		}
+
+		if ($container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['personalData'][0] . ' ###';
