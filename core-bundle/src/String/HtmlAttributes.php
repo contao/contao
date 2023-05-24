@@ -23,6 +23,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private array $attributes = [];
 
+    private bool $doubleEncoding = false;
+
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
@@ -293,6 +295,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
+    public function setDoubleEncoding(bool $doubleEncoding): self
+    {
+        $this->doubleEncoding = $doubleEncoding;
+
+        return $this;
+    }
+
     /**
      * Outputs the attributes as a string that is safe to be placed inside HTML
      * tags. The output will contain a leading space if $leadingSpace is set to
@@ -405,7 +414,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }

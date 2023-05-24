@@ -74,7 +74,7 @@ class NewsletterRecipientsModel extends Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")"), $strEmail, $arrOptions);
+		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")"), array($strEmail), $arrOptions);
 	}
 
 	/**
@@ -95,7 +95,7 @@ class NewsletterRecipientsModel extends Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ") AND $t.active=0"), $strEmail, $arrOptions);
+		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ") AND $t.active=0"), array($strEmail), $arrOptions);
 	}
 
 	/**

@@ -260,11 +260,11 @@ $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
+$GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
 $GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
 $GLOBALS['TL_CTE']['files']['downloads'] = \Contao\ContentDownloads::class;
 $GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
-$GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['includes']['teaser'] = \Contao\ContentTeaser::class;
 ```
 
@@ -310,7 +310,7 @@ removed. Use the image handling services and the `FileMetadataEvent` instead.
 The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in your custom
 `form_textarea` templates instead.
 
-### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
+### languages.php, getLanguages and `$GLOBALS['TL_LANG']['LNG']`
 
 The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been removed. Use
 or decorate the `contao.intl.locales` service instead.
@@ -318,7 +318,7 @@ or decorate the `contao.intl.locales` service instead.
 To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales` configuration.
 `$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to retrieve language names.
 
-### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
+### countries.php, getCountries and `$GLOBALS['TL_LANG']['CNT']`
 
 The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been removed. Use
 or decorate the `contao.intl.countries` service instead.

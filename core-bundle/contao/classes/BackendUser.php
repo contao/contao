@@ -181,6 +181,15 @@ class BackendUser extends User
 				}
 			}
 		}
+		elseif ($array == 'pagemounts')
+		{
+			$childIds = $this->Database->getChildRecords($this->pagemounts, 'tl_page');
+
+			if (!empty($childIds) && array_intersect($field, $childIds))
+			{
+				return true;
+			}
+		}
 
 		return false;
 	}
@@ -264,7 +273,7 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array())), $value);
+						$this->$field = array_merge(\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array()), $value);
 						$this->$field = array_unique($this->$field);
 					}
 				}

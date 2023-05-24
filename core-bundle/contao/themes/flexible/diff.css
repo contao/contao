@@ -77,10 +77,6 @@ h2 {
 	background: var(--diff-del);
 }
 
-#diff ins, #diff del {
-	text-decoration: none;
-}
-
 #diff dl {
 	margin: 0;
 	padding: 0;
@@ -100,4 +96,8 @@ h2 {
 
 #diff dl dt:last-of-type, #diff dl dd:last-of-type {
 	padding-bottom: 3px;
+}
+
+#diff dl ins, #diff dl del {
+	text-decoration: none;
 }

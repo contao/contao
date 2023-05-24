@@ -431,7 +431,7 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
@@ -1251,8 +1251,7 @@ abstract class DataContainer extends Backend
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
-		$this->objPickerCallback = static function ($value) use ($picker, $provider)
-		{
+		$this->objPickerCallback = static function ($value) use ($picker, $provider) {
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
 

@@ -219,6 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>Šeit varat aizstāt noklusējuma saites &quot;lasīt vairāk...&quot; tekstu.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
@@ -273,16 +274,16 @@
         <target>Rādīt no</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Ja nevēlaties ļaut notikumam parādīties vietnē pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ja vēlaties, lai notikums netiktu parādīts vietnē pirms noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Rādīt līdz</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Ja nevēlaties ļaut notikumam parādīties vietnē pēc noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ja vēlaties, lai notikums netiktu rādīts tīmekļa vietnē pēc noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -370,6 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.children">
         <source>Edit the content elements of event ID %s</source>
+        <target>Pasākuma ID %s satura elementu rediģēšana</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>

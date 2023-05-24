@@ -2,6 +2,52 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.6] (2023-05-03)
+
+**Fixed issues:**
+
+- [#5989] Hide fields that are not to be displayed in the undo details ([leofeyer])
+
+## [5.1.5] (2023-05-02)
+
+**Fixed issues:**
+
+- [#6000] Add a double encoding setting to the HtmlAttributes class ([ausi])
+- [#5980] Unwrap response exceptions thrown while rendering a template ([m-vo])
+- [#5981] Use the title instead of the filename in the download component ([m-vo])
+
+## [5.1.4] (2023-04-25)
+
+**Fixed issues:**
+
+- [#5988] Harden the file manager against directory traversal attacks ([ausi])
+
+## [5.1.3] (2023-04-19)
+
+**Fixed issues:**
+
+- [#5963] Correctly count the skipped recipients ([leofeyer])
+- [#5964] Add the header.svg and settings.svg icons again ([leofeyer])
+- [#5946] Load the default language when generating the calendar feeds ([leofeyer])
+- [#5960] Prevent double slashes in version URLs ([leofeyer])
+- [#5949] Add the "adjustDca" load callback to tl_news_archive again ([leofeyer])
+- [#5941] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5922] Correctly pass null values in findBy queries ([ausi])
+
+## [5.1.2] (2023-04-04)
+
+**Fixed issues:**
+
+- [#5921] Fix bug in Hybrid::generate() with missing ID ([ausi])
+- [#5919] Add a unit test for invalid files to the ImagesController ([m-vo])
+- [#5916] Filter non-image files in the ImagesController ([leofeyer])
+- [#5906] Handle `null` in the `html.html.twig` template ([fritzmg])
+- [#5897] Handle basic entities in the SERP preview ([leofeyer])
+- [#5900] Allow using basic entities in texts ([heimseiten])
+- [#5895] Allow using basic entities in headlines ([leofeyer])
+- [#5804] Add the missing data container permission checks ([aschempp])
+- [#5885] Always allow toggling a field that is not excluded ([aschempp])
+
 ## [5.1.1] (2023-03-16)
 
 **Fixed issues:**
@@ -96,6 +142,11 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.6]: https://github.com/contao/contao/releases/tag/5.1.6
+[5.1.5]: https://github.com/contao/contao/releases/tag/5.1.5
+[5.1.4]: https://github.com/contao/contao/releases/tag/5.1.4
+[5.1.3]: https://github.com/contao/contao/releases/tag/5.1.3
+[5.1.2]: https://github.com/contao/contao/releases/tag/5.1.2
 [5.1.1]: https://github.com/contao/contao/releases/tag/5.1.1
 [5.1.0]: https://github.com/contao/contao/releases/tag/5.1.0
 [5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
@@ -107,6 +158,7 @@ This project adheres to [Semantic Versioning].
 [bytehead]: https://github.com/bytehead
 [cliffparnitzky]: https://github.com/cliffparnitzky
 [fritzmg]: https://github.com/fritzmg
+[heimseiten]: https://github.com/heimseiten
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
@@ -174,6 +226,7 @@ This project adheres to [Semantic Versioning].
 [#5780]: https://github.com/contao/contao/pull/5780
 [#5788]: https://github.com/contao/contao/pull/5788
 [#5803]: https://github.com/contao/contao/pull/5803
+[#5804]: https://github.com/contao/contao/pull/5804
 [#5819]: https://github.com/contao/contao/pull/5819
 [#5821]: https://github.com/contao/contao/pull/5821
 [#5828]: https://github.com/contao/contao/pull/5828
@@ -181,3 +234,23 @@ This project adheres to [Semantic Versioning].
 [#5840]: https://github.com/contao/contao/pull/5840
 [#5857]: https://github.com/contao/contao/pull/5857
 [#5870]: https://github.com/contao/contao/pull/5870
+[#5885]: https://github.com/contao/contao/pull/5885
+[#5895]: https://github.com/contao/contao/pull/5895
+[#5897]: https://github.com/contao/contao/pull/5897
+[#5900]: https://github.com/contao/contao/pull/5900
+[#5906]: https://github.com/contao/contao/pull/5906
+[#5916]: https://github.com/contao/contao/pull/5916
+[#5919]: https://github.com/contao/contao/pull/5919
+[#5921]: https://github.com/contao/contao/pull/5921
+[#5922]: https://github.com/contao/contao/pull/5922
+[#5941]: https://github.com/contao/contao/pull/5941
+[#5946]: https://github.com/contao/contao/pull/5946
+[#5949]: https://github.com/contao/contao/pull/5949
+[#5960]: https://github.com/contao/contao/pull/5960
+[#5963]: https://github.com/contao/contao/pull/5963
+[#5964]: https://github.com/contao/contao/pull/5964
+[#5980]: https://github.com/contao/contao/pull/5980
+[#5981]: https://github.com/contao/contao/pull/5981
+[#5988]: https://github.com/contao/contao/pull/5988
+[#5989]: https://github.com/contao/contao/pull/5989
+[#6000]: https://github.com/contao/contao/pull/6000

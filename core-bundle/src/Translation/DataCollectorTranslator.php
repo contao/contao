@@ -49,7 +49,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
             return $translated;
         }
 
-        $this->collectMessage($this->getLocale(), (string) $domain, $id, $translated, $parameters);
+        $this->collectMessage($this->getLocale(), $domain, $id, $translated, $parameters);
 
         return $translated;
     }

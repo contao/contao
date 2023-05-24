@@ -20,8 +20,6 @@ jobs:
                   php-version: 8.1
                   extensions: json, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3

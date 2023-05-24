@@ -129,8 +129,7 @@ class FrontendTemplate extends Template
 		// Replace literal insert tags (see #670, #3249)
 		$this->strBuffer = preg_replace_callback(
 			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
-			static function ($matches)
-			{
+			static function ($matches) {
 				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
 			},
 			$this->strBuffer

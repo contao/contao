@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_form.subject.1">
         <source>Please enter the e-mail subject.</source>
-        <target>電子メールの件名(Subject)を入力してください。</target>
+        <target>電子メールの件名を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_form.format.0">
         <source>Data format</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_form.confirm_legend">
         <source>Confirmation</source>
-        <target>パスワードの再入力</target>
+        <target>確認</target>
       </trans-unit>
       <trans-unit id="tl_form.template_legend">
         <source>Template settings</source>

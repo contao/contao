@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startTime.1">
         <source>Please enter the start time according to the global time format.</source>
-        <target>Bitte geben Sie die Startzeit gemäß des globalen Zeitformats ein.</target>
+        <target>Bitte geben Sie die Startzeit gemäß dem globalen Zeitformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.0">
         <source>End time</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.1">
         <source>Please enter the start date according to the global date format.</source>
-        <target>Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.</target>
+        <target>Bitte geben Sie das Startdatum gemäß dem globalen Datumsformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.0">
         <source>End date</source>
@@ -274,7 +274,7 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie das Event erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
@@ -282,7 +282,7 @@
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie das Event nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
