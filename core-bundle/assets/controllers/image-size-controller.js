@@ -35,7 +35,7 @@ export default class extends Controller {
     updateWizard () {
         if (this.canEdit()) {
             this.button.title = this.configValue.title;
-            delete this.button.disabled;
+            this.button.disabled = false;
             this.buttonImage.src = this.configValue.icon;
         } else {
             delete this.button.title;
