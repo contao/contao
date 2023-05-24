@@ -73,8 +73,14 @@ class ContaoSetupCommand extends Command
         // Auto-generate a kernel secret if none was set
         if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
+            $localPath = Path::join($this->projectDir, '.env.local');
 
-            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            // Get the realpath in case it is a symlink (see #6066)
+            if ($realpath = realpath($localPath)) {
+                $localPath = $realpath;
+            }
+
+            $dotenv = new DotenvDumper($localPath, $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
