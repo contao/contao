@@ -104,7 +104,7 @@ class DotenvDumper
             return;
         }
 
-        $this->filesystem->dumpFile($this->dotenvFile, $file);
+        file_put_contents($this->dotenvFile, $file);
     }
 
     /**
