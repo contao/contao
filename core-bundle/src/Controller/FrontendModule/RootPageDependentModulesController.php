@@ -30,13 +30,13 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         }
 
         if (!$pageModel = $this->getPageModel()) {
-            return new Response('');
+            return new Response();
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $modules = StringUtil::deserialize($model->rootPageDependentModules, true);
 
-        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
-            return new Response('');
+        if (empty($modules[$pageModel->rootId])) {
+            return new Response();
         }
 
         $framework = $this->container->get('contao.framework');
@@ -44,6 +44,10 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         /** @var ModuleModel $moduleModel */
         $moduleModel = $framework->getAdapter(ModuleModel::class);
         $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
+
+        if (null === $module) {
+            return new Response();
+        }
 
         $cssID = StringUtil::deserialize($module->cssID, true);
 

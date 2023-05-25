@@ -70,7 +70,7 @@ class ImagesController extends AbstractContentElementController
         ;
 
         if ('image' === $model->type) {
-            $figureBuilder->setMetadata($model->getOverwriteMetadata());
+            $figureBuilder->setOverwriteMetadata($model->getOverwriteMetadata());
         }
 
         $imageList = array_map(

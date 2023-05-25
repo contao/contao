@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -1001,6 +1002,47 @@ class InsertTagsTest extends TestCase
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
 
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
+    }
+
+    public function testPcreBacktrackLimit(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTag = '{{'.str_repeat('a', (int) \ini_get('pcre.backtrack_limit') * 2).'::replaced}}';
+
+        $this->assertSame(
+            'replaced',
+            $insertTagParser->replaceInline($insertTag),
+        );
+    }
+
+    public function testPcreErrorIsConvertedToException(): void
+    {
+        InsertTags::reset();
+
+        $resourceLocator = $this->createMock(FileLocatorInterface::class);
+        $resourceLocator
+            ->method('locate')
+            ->willReturn([])
+        ;
+
+        System::getContainer()->set('contao.resource_locator', $resourceLocator);
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
+
+        $backtrackLimit = \ini_get('pcre.backtrack_limit');
+        ini_set('pcre.backtrack_limit', '0');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+
+        try {
+            $insertTagParser->replaceInline($insertTag);
+        } finally {
+            ini_set('pcre.backtrack_limit', $backtrackLimit);
+        }
     }
 
     private function setContainerWithContaoConfiguration(array $configuration = []): void
