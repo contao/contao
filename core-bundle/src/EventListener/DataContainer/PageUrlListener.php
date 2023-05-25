@@ -176,6 +176,7 @@ class PageUrlListener
         foreach ($pages as $page) {
             if ($page->alias && $this->pageRegistry->isRoutable($page)) {
                 // Inherit root page settings from post data
+                $page->loadDetails();
                 $page->domain = $rootPage->domain;
                 $page->urlPrefix = $rootPage->urlPrefix;
                 $page->urlSuffix = $rootPage->urlSuffix;
@@ -226,6 +227,7 @@ class PageUrlListener
 
             // If page has the same root, inherit root page settings from post data
             if ($currentPage->rootId === $aliasPage->rootId) {
+                $aliasPage->loadDetails();
                 $aliasPage->domain = $currentPage->domain;
                 $aliasPage->urlPrefix = $currentPage->urlPrefix;
                 $aliasPage->urlSuffix = $currentPage->urlSuffix;
