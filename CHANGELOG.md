@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.7] (2023-05-25)
+
+**Fixed issues:**
+
+- [#6076] Add a title to the collapsed element button ([aschempp])
+- [#6046] Improve the main navigation hover style ([aschempp])
+- [#6047] Pass the ID to `getCurrentRecord()` in "override all" mode ([leofeyer])
+- [#5998] Fix the list and table wizards in news and events ([leofeyer])
+
 ## [5.1.6] (2023-05-03)
 
 **Fixed issues:**
@@ -142,6 +151,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.7]: https://github.com/contao/contao/releases/tag/5.1.7
 [5.1.6]: https://github.com/contao/contao/releases/tag/5.1.6
 [5.1.5]: https://github.com/contao/contao/releases/tag/5.1.5
 [5.1.4]: https://github.com/contao/contao/releases/tag/5.1.4
@@ -253,4 +263,8 @@ This project adheres to [Semantic Versioning].
 [#5981]: https://github.com/contao/contao/pull/5981
 [#5988]: https://github.com/contao/contao/pull/5988
 [#5989]: https://github.com/contao/contao/pull/5989
+[#5998]: https://github.com/contao/contao/pull/5998
 [#6000]: https://github.com/contao/contao/pull/6000
+[#6046]: https://github.com/contao/contao/pull/6046
+[#6047]: https://github.com/contao/contao/pull/6047
+[#6076]: https://github.com/contao/contao/pull/6076
