@@ -276,10 +276,9 @@ abstract class AbstractFragmentController extends AbstractController implements 
             ->exists("@Contao/$template.html.twig")
         ;
 
-        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate) ?
-            !$this->isBackendScope() :
-            $exists($variantTemplate)
-        ;
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate)
+            ? !$this->isBackendScope()
+            : $exists($variantTemplate);
 
         // Prefer using a custom variant template if defined and applicable
         if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {

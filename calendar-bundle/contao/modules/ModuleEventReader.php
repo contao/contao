@@ -311,7 +311,7 @@ class ModuleEventReader extends Events
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objEvent->getOverwriteMetadata())
+				->setOverwriteMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox($objEvent->fullsize)
 				->buildIfResourceExists();
 

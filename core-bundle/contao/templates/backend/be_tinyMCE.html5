@@ -74,6 +74,10 @@ window.tinymce && tinymce.init({
   <?php $this->block('custom'); ?>
   <?php $this->endblock(); ?>
 
+  <?php if ($this->readonly): ?>
+    readonly: true,
+  <?php endif; ?>
+
   browser_spellcheck: true,
   importcss_append: true
 });
