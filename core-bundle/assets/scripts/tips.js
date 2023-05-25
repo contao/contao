@@ -124,7 +124,23 @@
             init(el, -9, el.classList.contains('gimage') ? 60 : 30);
         });
 
-        ['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].forEach(function(selector) {
+        select(node, 'a[title]').forEach(function(el) {
+            if (el.classList.contains('picker-wizard')) {
+                init(el, -4, 30);
+            } else {
+                init(el, -9, 30);
+            }
+        });
+
+        select(node, 'button[title]').forEach(function(el) {
+            if (el.classList.contains('unselectable')) {
+                init(el, -4, 20);
+            } else {
+                init(el, -9, 30);
+            }
+        });
+
+        ['input[title]', 'time[title]', 'span[title]'].forEach(function(selector) {
             select(node, selector).forEach(function(el) {
                 init(el, -9, ((selector === 'time[title]' || selector === 'span[title]') ? 26 : 30));
             });
@@ -134,11 +150,11 @@
     setup(document.documentElement);
 
     new MutationObserver(function(mutationsList) {
-        for(const mutation of mutationsList) {
+        for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(function(element) {
                     if (element.matches && element.querySelectorAll) {
-                        setup(element)
+                        setup(element);
                     }
                 })
             }

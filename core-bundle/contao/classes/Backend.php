@@ -898,7 +898,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg') . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
