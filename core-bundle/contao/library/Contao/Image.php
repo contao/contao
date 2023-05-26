@@ -137,26 +137,29 @@ class Image
 		$objFile = new File($src);
 
 		// Strip the contao.web_dir directory prefix (see #337)
-		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
+		if (str_starts_with($src, $webDir . '/'))
 		{
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
+		$darkSrc = dirname($objFile->path) . '/' . $objFile->filename . '--dark.' . $objFile->extension;
+
 		// Check for a dark theme icon and return a picture element if there is one
-		if ($objFile->mime == 'image/svg+xml' && str_contains($src, 'system/themes/'))
+		if (file_exists(Path::join($projectDir, $darkSrc)))
 		{
-			$darkSrc = 'system/themes/' . Backend::getTheme() . '/icons-dark/' . $objFile->filename . '.svg';
-
-			if (file_exists(Path::join($projectDir, $darkSrc)))
+			// Strip the contao.web_dir directory prefix (see #337)
+			if (str_starts_with($darkSrc, $webDir . '/'))
 			{
-				$darkAttributes = new HtmlAttributes($attributes);
-				$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
-
-				$lightAttributes = new HtmlAttributes($attributes);
-				$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
-
-				return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
+				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
+
+			$darkAttributes = new HtmlAttributes($attributes);
+			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
+
+			$lightAttributes = new HtmlAttributes($attributes);
+			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
+
+			return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
 		}
 
 		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';

@@ -21,21 +21,21 @@
 }
 
 html[data-color-scheme="dark"] {
-	--icon-logo: url("icons-dark/logo.svg");
-	--icon-profile: url("icons-dark/profile_small.svg");
-	--icon-security: url("icons-dark/shield_small.svg");
-	--icon-favorites: url("icons-dark/favorites_small.svg");
-	--icon-logout: url("icons-dark/exit.svg");
-	--icon-toggle-all: url("icons-dark/folPlus.svg");
-	--icon-alert: url("icons-dark/alert.svg");
-	--icon-favorite: url("icons-dark/favorite.svg");
-	--icon-favorite--active: url("icons-dark/favorite_active.svg");
-	--icon-manual: url("icons-dark/manual.svg");
-	--icon-color-scheme: url("icons-dark/color_scheme.svg");
-	--icon-arrow-left: url("icons-dark/arrow_left.svg");
-	--icon-arrow-right: url("icons-dark/arrow_right.svg");
-	--icon-visible: url("icons-dark/visible.svg");
-	--icon-invisible: url("icons-dark/invisible.svg");
+	--icon-logo: url("icons/logo--dark.svg");
+	--icon-profile: url("icons/profile_small--dark.svg");
+	--icon-security: url("icons/shield_small--dark.svg");
+	--icon-favorites: url("icons/favorites_small--dark.svg");
+	--icon-logout: url("icons/exit--dark.svg");
+	--icon-toggle-all: url("icons/folPlus--dark.svg");
+	--icon-alert: url("icons/alert--dark.svg");
+	--icon-favorite: url("icons/favorite--dark.svg");
+	--icon-favorite--active: url("icons/favorite_active--dark.svg");
+	--icon-manual: url("icons/manual--dark.svg");
+	--icon-color-scheme: url("icons/color_scheme--dark.svg");
+	--icon-arrow-left: url("icons/arrow_left--dark.svg");
+	--icon-arrow-right: url("icons/arrow_right--dark.svg");
+	--icon-visible: url("icons/visible--dark.svg");
+	--icon-invisible: url("icons/invisible--dark.svg");
 }
 
 /* Body */
