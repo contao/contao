@@ -260,7 +260,7 @@ class BackendUser extends User
 
 		foreach ($this->groups as $id)
 		{
-			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')")
+			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
 									   ->limit(1)
 									   ->execute($id);
 
