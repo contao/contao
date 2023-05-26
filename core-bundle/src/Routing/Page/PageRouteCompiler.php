@@ -33,8 +33,16 @@ class PageRouteCompiler extends RouteCompiler
         // Re-add the URL suffix to the original route
         $route->setUrlSuffix($urlSuffix);
 
+        // Make last pattern before suffix non-possessive
+        $regex = $compiledRoute->getRegex();
+        $lastParam = strrpos($regex, '[^/]++)$}sDu');
+
+        if (false !== $lastParam) {
+            $regex = substr_replace($regex, '[^/]+?', $lastParam, 6);
+        }
+
         // Manually add the URL suffix to regex and path tokens
-        $regex = preg_replace('/^{\^([^$]+)\$}/', '{^$1'.preg_quote($urlSuffix, null).'$}', $compiledRoute->getRegex());
+        $regex = preg_replace('/^{\^([^$]+)\$}/', '{^$1'.preg_quote($urlSuffix, null).'$}', $regex);
         $tokens = $compiledRoute->getTokens();
         array_unshift($tokens, ['text', $urlSuffix]);
 
