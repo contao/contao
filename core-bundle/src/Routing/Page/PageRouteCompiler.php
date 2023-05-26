@@ -35,7 +35,7 @@ class PageRouteCompiler extends RouteCompiler
 
         // Make last pattern before suffix non-possessive
         $regex = $compiledRoute->getRegex();
-        $lastParam = strrpos($regex, '[^/]++)$}sDu');
+        $lastParam = strrpos($regex, '[^/]++');
 
         if (false !== $lastParam) {
             $regex = substr_replace($regex, '[^/]+?', $lastParam, 6);
