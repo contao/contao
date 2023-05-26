@@ -142,7 +142,7 @@ class Image
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
-		$darkSrc = dirname($objFile->path) . '/' . $objFile->filename . '--dark.' . $objFile->extension;
+		$darkSrc = \dirname($objFile->path) . '/' . $objFile->filename . '--dark.' . $objFile->extension;
 
 		// Check for a dark theme icon and return a picture element if there is one
 		if (file_exists(Path::join($projectDir, $darkSrc)))
