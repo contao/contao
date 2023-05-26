@@ -33,10 +33,10 @@
  * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * gmpf ([gmpf](https://github.com/gmpf))
  * Markus Nestmann
+ * ameotoko ([ameotoko](https://github.com/ameotoko))
  * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
- * ameotoko ([ameotoko](https://github.com/ameotoko))
  * Andreas Burg ([Aybee](https://github.com/Aybee))
  * Benjamin Hummel
  * Blair Winans ([blairwinans](https://github.com/blairwinans))
@@ -58,6 +58,7 @@
  * Takahiro Kambe ([taca](https://github.com/taca))
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * kroka ([kroka](https://github.com/kroka))
+ * zonky2 ([zonky2](https://github.com/zonky2))
  * Alex ([Alex](https://github.com/Alex))
  * Arndt H. Ziegler
  * Christian Romeni ([christianromeni](https://github.com/christianromeni))
@@ -67,7 +68,6 @@
  * Patrick Landolt ([scuben](https://github.com/scuben))
  * de-es ([de-es](https://github.com/de-es))
  * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
- * zonky2 ([zonky2](https://github.com/zonky2))
  * Benny Born ([bennyborn](https://github.com/bennyborn))
  * Mathias Arzberger ([MDevster](https://github.com/MDevster))
  * Patrick Froch ([eS-IT](https://github.com/eS-IT))
@@ -98,6 +98,7 @@
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))
  * Tsarma ([Tsarma](https://github.com/Tsarma))
  * Vladimir Reznichenko ([kalessil](https://github.com/kalessil))
+ * agonyz ([agonyz](https://github.com/agonyz))
  * Alexander Stulnikov ([alarstyle](https://github.com/alarstyle))
  * leonexcc ([leonexcc](https://github.com/leonexcc))
  * Martin Schumann ([martinschumann](https://github.com/martinschumann))

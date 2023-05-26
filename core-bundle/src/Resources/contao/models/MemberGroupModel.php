@@ -80,7 +80,7 @@ class MemberGroupModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.disable='' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
@@ -98,7 +98,7 @@ class MemberGroupModel extends Model
 		$t = static::$strTable;
 		$time = Date::floorToMinute();
 
-		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')"), null, $arrOptions);
+		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)"), null, $arrOptions);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class MemberGroupModel extends Model
 		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
-		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'$time') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'$time') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
+		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<=$time) AND (g.stop='' OR g.stop>$time) AND p.published='1' AND (p.start='' OR p.start<=$time) AND (p.stop='' OR p.stop>$time) ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
 								 ->limit(1)
 								 ->execute();
 
