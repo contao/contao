@@ -711,8 +711,6 @@ class InsertTagsTest extends TestCase
             ->willReturn($request)
         ;
 
-        $this->setContainerWithContaoConfiguration(['request_stack' => $requestStack]);
-
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
         /** @var InsertTags $insertTags */
@@ -722,7 +720,7 @@ class InsertTagsTest extends TestCase
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag(),
+            new IfLanguageInsertTag($requestStack),
             'replaceInsertTag',
             'iflng',
             'iflng',
@@ -730,7 +728,7 @@ class InsertTagsTest extends TestCase
         ));
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag(),
+            new IfLanguageInsertTag($requestStack),
             'replaceInsertTag',
             'ifnlng',
             'ifnlng',
@@ -1036,7 +1034,7 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
         $insertTag = '{{'.str_repeat('a', (int) \ini_get('pcre.backtrack_limit') * 2).'::replaced}}';
 
         $this->assertSame(
@@ -1057,7 +1055,7 @@ class InsertTagsTest extends TestCase
 
         System::getContainer()->set('contao.resource_locator', $resourceLocator);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class));
         $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');

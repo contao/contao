@@ -18,9 +18,14 @@ use Contao\CoreBundle\InsertTag\ParsedSequence;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class IfLanguageInsertTag
 {
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
+
     #[AsBlockInsertTag('iflng', endTag: 'iflng')]
     #[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
     public function replaceInsertTag(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
@@ -37,7 +42,11 @@ class IfLanguageInsertTag
 
     private function languageMatchesPage(string $language): bool
     {
-        $pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']?->language ?? '');
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return false;
+        }
+
+        $pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
         foreach (StringUtil::trimsplit(',', $language) as $lang) {
             if ($pageLanguage === LocaleUtil::formatAsLocale($lang)) {
