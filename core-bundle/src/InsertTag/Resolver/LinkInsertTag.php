@@ -102,7 +102,7 @@ class LinkInsertTag
                             }
                             break;
                         }
-                    // no break
+                        // no break
 
                     default:
                         try {

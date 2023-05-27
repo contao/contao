@@ -76,7 +76,7 @@ class InsertTagParserTest extends TestCase
      */
     public function testRender(): never
     {
-        //TODO:
+        // TODO:
         $this->markTestSkipped();
 
         /*
@@ -122,10 +122,10 @@ class InsertTagParserTest extends TestCase
 
     public function testParse(): void
     {
-        //$insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class));
-        //$sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b?foo=bar&baz[]={{value|valflag}}&baz[]=1.23|flag1|flag2}}bar{{baz}}');
+        // $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class));
+        // $sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b?foo=bar&baz[]={{value|valflag}}&baz[]=1.23|flag1|flag2}}bar{{baz}}');
 
-        //var_dump($sequence);
+        // var_dump($sequence);
     }
 
     /**
@@ -133,7 +133,7 @@ class InsertTagParserTest extends TestCase
      */
     public function testRenderMixedCase(): never
     {
-        //TODO:
+        // TODO:
         $this->markTestSkipped();
 
         /*
@@ -147,7 +147,7 @@ class InsertTagParserTest extends TestCase
 
     public function testReplaceFragment(): never
     {
-        //TODO:
+        // TODO:
         $this->markTestSkipped();
 
         /*

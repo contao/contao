@@ -725,30 +725,6 @@ class InsertTags extends Controller
 					}
 					break;
 
-				/*
-				// Conditional tags (if, if not)
-				case 'iflng':
-				case 'ifnlng':
-					if (!empty($elements[1]) && $this->languageMatches($elements[1]) === (strtolower($elements[0]) === 'ifnlng'))
-					{
-						// Skip everything until the next tag
-						for (; $_rit<$_cnt; $_rit+=2)
-						{
-							// Case-insensitive match for iflng/ifnlng optionally followed by "::" or "|"
-							if (1 === preg_match('/^' . preg_quote($elements[0], '/') . '(?:$|::|\|)/i', $tags[$_rit+3] ?? ''))
-							{
-								$tags[$_rit+2] = '';
-								break;
-							}
-						}
-					}
-
-					// Does not output anything and the cache must not be used
-					unset($arrCache[$strTag]);
-					$arrBuffer[$_rit+1] = '';
-					continue 2;
-				*/
-
 				// Environment
 				case 'env':
 					$flags[] = 'urlattr';

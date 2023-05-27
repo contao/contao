@@ -121,7 +121,7 @@ class InsertTagParser implements ResetInterface
     {
         return new ChunkedText([$this->replace($input)]);
 
-        //return $this->callLegacyClass($input, true);
+        // return $this->callLegacyClass($input, true);
     }
 
     public function replaceInline(ParsedSequence|string $input): string
@@ -186,7 +186,7 @@ class InsertTagParser implements ResetInterface
     {
         return new ChunkedText([$this->replaceInline($input)]);
 
-        //return $this->callLegacyClass($input, false);
+        // return $this->callLegacyClass($input, false);
     }
 
     /**
@@ -352,8 +352,7 @@ class InsertTagParser implements ResetInterface
     {
         return
             isset($this->subscriptions[$name])
-            || isset($this->blockSubscriptions[$name])
-        ;
+            || isset($this->blockSubscriptions[$name]);
     }
 
     private function renderSubscription(InsertTag $tag): InsertTagResult|null
@@ -517,7 +516,7 @@ class InsertTagParser implements ResetInterface
     private function handleLegacyTagsHook(ParsedSequence $input, bool $allowEsiTags): ParsedSequence
     {
         if (empty($GLOBALS['TL_HOOKS']['replaceInsertTags'])) {
-            //return $input; enable once all insert tags are moved over
+            // return $input; TODO: enable once all insert tags are moved over
         }
 
         $hasLegacyTags = false;
