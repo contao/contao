@@ -12,12 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
+use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -67,8 +71,13 @@ class InsertTagParser implements ResetInterface
      */
     private array $flagCallbacks = [];
 
-    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger, private InsertTags|null $insertTags = null)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private LoggerInterface $logger,
+        private FragmentHandler $fragmentHandler,
+        private RequestStack $requestStack,
+        private InsertTags|null $insertTags = null,
+    ) {
     }
 
     public function addSubscription(InsertTagSubscription $subscription): void
@@ -90,103 +99,28 @@ class InsertTagParser implements ResetInterface
 
     public function replace(ParsedSequence|string $input): string
     {
-        // TODO:
-        return $this->replaceInline($input);
-
-        /*
-        if(!$input instanceof ParsedSequence) {
-            $input = $this->parse($input);
-        }
-
-        $return = '';
-
-        foreach ($input as $item) {
-            if (\is_string($item)) {
-                $return .= $item;
-            } else {
-                try {
-                    $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
-                } catch (\Throwable) {
-                    // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
-                    $return .= $item->serialize();
-                }
-            }
-        }
-
-        return (string) $this->callLegacyClass($return, true);
-        */
+        return implode(
+            '',
+            array_map(static fn ($tagResult) => $tagResult->getValue(), $this->executeReplace($input, true)),
+        );
     }
 
     public function replaceChunked(string $input): ChunkedText
     {
-        return new ChunkedText([$this->replace($input)]);
-
-        // return $this->callLegacyClass($input, true);
+        return $this->toChunkedText($this->executeReplace($input, true));
     }
 
     public function replaceInline(ParsedSequence|string $input): string
     {
-        if (!$input instanceof ParsedSequence) {
-            $input = $this->parse($input);
-        }
-
-        $input = $this->handleLegacyTagsHook($input, false);
-
-        $return = '';
-        $wrapStart = null;
-        $wrapContent = [];
-
-        foreach ($input as $item) {
-            if (
-                $wrapStart
-                && $item instanceof InsertTag
-                && $item->getName() === $this->blockSubscriptions[$wrapStart->getName()]->endTag
-            ) {
-                $return .= $this->replaceInline($this->renderBlockSubscription($wrapStart, new ParsedSequence($wrapContent)));
-
-                $wrapStart = null;
-                $wrapContent = [];
-
-                // Reprocess non-empty end tags to enable chaining block insert tags
-                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
-                if (!\count($item->getParameters()->all())) {
-                    continue;
-                }
-            }
-
-            if ($wrapStart) {
-                $wrapContent[] = $item;
-
-                continue;
-            }
-
-            if (\is_string($item)) {
-                $return .= $item;
-                continue;
-            }
-
-            if ($this->blockSubscriptions[$item->getName()] ?? false) {
-                $wrapStart = $item;
-                continue;
-            }
-
-            $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
-        }
-
-        // Missing end tag
-        if ($wrapStart) {
-            $return .= $wrapStart->serialize();
-            $return .= $this->replaceInline(new ParsedSequence($wrapContent));
-        }
-
-        return $return;
+        return implode(
+            '',
+            array_map(static fn ($tagResult) => $tagResult->getValue(), $this->executeReplace($input, false)),
+        );
     }
 
     public function replaceInlineChunked(string $input): ChunkedText
     {
-        return new ChunkedText([$this->replaceInline($input)]);
-
-        // return $this->callLegacyClass($input, false);
+        return $this->toChunkedText($this->executeReplace($input, false));
     }
 
     /**
@@ -213,7 +147,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (null !== $tag) {
-            $result = $this->renderSubscription($tag);
+            $result = $this->renderSubscription($tag, false);
 
             if (null !== $result) {
                 return $result;
@@ -355,10 +289,81 @@ class InsertTagParser implements ResetInterface
             || isset($this->blockSubscriptions[$name]);
     }
 
-    private function renderSubscription(InsertTag $tag): InsertTagResult|null
+    /**
+     * @return list<InsertTagResult>
+     */
+    private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags): array
+    {
+        if (!$input instanceof ParsedSequence) {
+            $input = $this->parse($input);
+        }
+
+        $input = $this->handleLegacyTagsHook($input, $allowEsiTags);
+
+        $return = [];
+        $wrapStart = null;
+        $wrapContent = [];
+
+        foreach ($input as $item) {
+            if (
+                $wrapStart
+                && $item instanceof InsertTag
+                && $item->getName() === $this->blockSubscriptions[$wrapStart->getName()]->endTag
+            ) {
+                $return = [
+                    ...$return,
+                    ...$this->executeReplace(
+                        $this->renderBlockSubscription($wrapStart, new ParsedSequence($wrapContent)),
+                        $allowEsiTags,
+                    ),
+                ];
+
+                $wrapStart = null;
+                $wrapContent = [];
+
+                // Reprocess non-empty end tags to enable chaining block insert tags
+                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
+                if (!\count($item->getParameters()->all())) {
+                    continue;
+                }
+            }
+
+            if ($wrapStart) {
+                $wrapContent[] = $item;
+
+                continue;
+            }
+
+            if (\is_string($item)) {
+                $return[] = new InsertTagResult($item, OutputType::text);
+                continue;
+            }
+
+            if ($this->blockSubscriptions[$item->getName()] ?? false) {
+                $wrapStart = $item;
+                continue;
+            }
+
+            $return[] = $this->renderSubscription($item, $allowEsiTags) ?? new InsertTagResult($item->serialize(), OutputType::text);
+        }
+
+        // Missing end tag
+        if ($wrapStart) {
+            $return[] = new InsertTagResult($wrapStart->serialize(), OutputType::text);
+            $return = [...$return, ...$this->executeReplace(new ParsedSequence($wrapContent), $allowEsiTags)];
+        }
+
+        return $return;
+    }
+
+    private function renderSubscription(InsertTag $tag, bool $allowEsiTags): InsertTagResult|null
     {
         if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
             return null;
+        }
+
+        if ($allowEsiTags && $subscription->asFragment) {
+            return $this->getFragmentForTag($tag);
         }
 
         if ($subscription->resolveNestedTags) {
@@ -393,6 +398,29 @@ class InsertTagParser implements ResetInterface
         }
 
         return $subscription->service->{$subscription->method}($tag, $content);
+    }
+
+    private function getFragmentForTag(InsertTag $tag): InsertTagResult
+    {
+        $attributes = ['insertTag' => $tag->serialize()];
+
+        if ($scope = $this->requestStack->getCurrentRequest()?->attributes->get('_scope')) {
+            $attributes['_scope'] = $scope;
+        }
+
+        $query = [
+            'clientCache' => $GLOBALS['objPage']->clientCache ?? 0,
+            'pageId' => $GLOBALS['objPage']->id ?? null,
+            'request' => $this->requestStack->getCurrentRequest()?->getRequestUri(),
+        ];
+
+        $esiTag = $this->fragmentHandler->render(
+            new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
+            'esi',
+            ['ignore_errors' => false] // see #48
+        );
+
+        return new InsertTagResult($esiTag, OutputType::html);
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag
@@ -450,6 +478,26 @@ class InsertTagParser implements ResetInterface
         }
 
         return new ResolvedParameters($resolvedParameters);
+    }
+
+    /**
+     * @param list<InsertTagResult> $results
+     */
+    private function toChunkedText(array $results): ChunkedText
+    {
+        $chunked = [];
+
+        foreach ($results as $result) {
+            if (OutputType::html === $result->getOutputType()) {
+                $chunked[] = '';
+                $chunked[] = $result->getValue();
+            } else {
+                $chunked[] = $result->getValue();
+                $chunked[] = '';
+            }
+        }
+
+        return new ChunkedText($chunked);
     }
 
     /**

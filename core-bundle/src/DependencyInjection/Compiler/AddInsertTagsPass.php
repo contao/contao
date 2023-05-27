@@ -53,6 +53,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                             $attributes['name'],
                             $attributes['endTag'] ?? null,
                             $attributes['resolveNestedTags'],
+                            $attributes['asFragment'] ?? false,
                         ],
                     );
                 }

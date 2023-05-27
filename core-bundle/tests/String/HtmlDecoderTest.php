@@ -24,6 +24,7 @@ use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class HtmlDecoderTest extends TestCase
 {
@@ -57,7 +58,7 @@ class HtmlDecoderTest extends TestCase
      */
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class)));
+        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
@@ -91,7 +92,7 @@ class HtmlDecoderTest extends TestCase
      */
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class)));
+        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 

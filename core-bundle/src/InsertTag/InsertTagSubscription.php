@@ -20,6 +20,7 @@ final class InsertTagSubscription
         public readonly string $name,
         public readonly string|null $endTag,
         public readonly bool $resolveNestedTags,
+        public readonly bool $asFragment,
     ) {
     }
 }

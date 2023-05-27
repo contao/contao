@@ -21,6 +21,7 @@ class AsInsertTag
     public function __construct(
         public string $name,
         public bool $resolveNestedTags = true,
+        public bool $asFragment = false,
         public int $priority = 0,
         public string|null $method = null,
     ) {

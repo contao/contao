@@ -415,6 +415,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@monolog.logger.contao.error'
+            - '@fragment.handler'
+            - '@request_stack'
 
     contao.insert_tag.flag.string_util:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
@@ -429,6 +431,9 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.security.token_checker'
+
+    contao.insert_tag.resolver.fragment:
+        class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
 
     contao.intl.countries:
         class: Contao\CoreBundle\Intl\Countries
