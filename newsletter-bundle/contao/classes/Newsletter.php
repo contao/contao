@@ -15,6 +15,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -223,7 +224,7 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
 									   ->execute($strRecipient);
 
-						System::getContainer()->get('monolog.logger.contao.error')->error('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
+						System::getContainer()->get('monolog.logger.contao.general')->info('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
 					}
 				}
 
@@ -445,9 +446,10 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (RfcComplianceException $e)
+		catch (RfcComplianceException|TransportException $e)
 		{
 			$arrRejected[] = $arrRecipient['email'];
+			System::getContainer()->get('monolog.logger.contao.error')->error(sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		// Rejected recipients

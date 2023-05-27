@@ -462,8 +462,9 @@ body.popup {
 	padding-bottom: 5px;
 }
 
-#tl_navigation .menu_level_1 a:hover, #tl_navigation .menu_level_1 li.current a {
+#tl_navigation .menu_level_1 a:hover, #tl_navigation .menu_level_1 li.current > a {
 	color: var(--nav-hover);
+	background-color: var(--nav-current);
 }
 
 #tl_navigation .collapsed .menu_level_1 {
@@ -1955,6 +1956,7 @@ ul.sgallery li {
 	padding: 0;
 	border: 0;
 	background: none;
+	vertical-align: middle;
 }
 
 /* Module wizard */
