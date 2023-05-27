@@ -83,26 +83,14 @@ class ExceptionConverterListener
 
     private function convertToHttpException(\Throwable $exception, string $target): HttpException|null
     {
-        switch ($target) {
-            case 'AccessDeniedHttpException':
-                return new AccessDeniedHttpException($exception->getMessage(), $exception);
-
-            case 'BadRequestHttpException':
-                return new BadRequestHttpException($exception->getMessage(), $exception);
-
-            case 'InternalServerErrorHttpException':
-                return new InternalServerErrorHttpException($exception->getMessage(), $exception);
-
-            case 'NotFoundHttpException':
-                return new NotFoundHttpException($exception->getMessage(), $exception);
-
-            case 'ServiceUnavailableHttpException':
-                return new ServiceUnavailableHttpException('', $exception->getMessage(), $exception);
-
-            case 'UnauthorizedHttpException':
-                return new UnauthorizedHttpException('', $exception->getMessage(), $exception);
-        }
-
-        return null;
+        return match ($target) {
+            'AccessDeniedHttpException' => new AccessDeniedHttpException($exception->getMessage(), $exception),
+            'BadRequestHttpException' => new BadRequestHttpException($exception->getMessage(), $exception),
+            'InternalServerErrorHttpException' => new InternalServerErrorHttpException($exception->getMessage(), $exception),
+            'NotFoundHttpException' => new NotFoundHttpException($exception->getMessage(), $exception),
+            'ServiceUnavailableHttpException' => new ServiceUnavailableHttpException('', $exception->getMessage(), $exception),
+            'UnauthorizedHttpException' => new UnauthorizedHttpException('', $exception->getMessage(), $exception),
+            default => null,
+        };
     }
 }

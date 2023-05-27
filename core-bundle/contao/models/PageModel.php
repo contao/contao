@@ -337,10 +337,10 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findOneBy($arrColumns, $intId, $arrOptions);
+		return static::findOneBy($arrColumns, array($intId), $arrOptions);
 	}
 
 	/**
@@ -359,10 +359,10 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -382,7 +382,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -390,7 +390,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -409,7 +409,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -417,7 +417,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -437,7 +437,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -464,7 +464,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -472,7 +472,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -491,7 +491,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -499,7 +499,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -518,7 +518,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -526,7 +526,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -560,7 +560,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -607,10 +607,10 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findBy($arrColumns, $varId, $arrOptions);
+		return static::findBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -640,7 +640,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -668,7 +668,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -676,7 +676,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -716,10 +716,10 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findOneBy($arrColumns, $strHost, $arrOptions);
+		return static::findOneBy($arrColumns, array($strHost), $arrOptions);
 	}
 
 	/**
@@ -742,7 +742,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
@@ -791,7 +791,7 @@ class PageModel extends Model
 		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
-		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect=1 AND g.disable=0 AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'$time') AND p.published=1 AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'$time') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
+		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect=1 AND g.disable=0 AND (g.start='' OR g.start<=$time) AND (g.stop='' OR g.stop>$time) AND p.published=1 AND (p.start='' OR p.start<=$time) AND (p.stop='' OR p.stop>$time) ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
 								 ->limit(1)
 								 ->execute();
 
@@ -820,14 +820,7 @@ class PageModel extends Model
 	 */
 	public static function findWithDetails($intId)
 	{
-		$objPage = static::findByPk($intId);
-
-		if ($objPage === null)
-		{
-			return null;
-		}
-
-		return $objPage->loadDetails();
+		return static::findByPk($intId)?->loadDetails();
 	}
 
 	/**
@@ -879,7 +872,7 @@ class PageModel extends Model
 
 		// Set some default values
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : 0;
+		$this->layout = ($this->includeLayout && $this->layout) ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : 0;
@@ -1171,7 +1164,7 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		$context->setBaseUrl(rtrim(\dirname($baseUrl), '/') . $previewScript);
+		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
 		$objRouter = System::getContainer()->get('router');
 

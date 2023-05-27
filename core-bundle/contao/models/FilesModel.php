@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * Reads and writes file entries
  *
- * The files themselves reside in the files directory. This class only handles
+ * The files themselves reside in the "files" directory. This class only handles
  * the corresponding database entries (database aided file system).
  *
  * @property integer           $id

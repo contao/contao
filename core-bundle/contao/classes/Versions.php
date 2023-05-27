@@ -443,8 +443,12 @@ class Versions extends Controller
 				$arrFields = $objDcaExtractor->getFields();
 
 				// Find the changed fields and highlight the changes
-				foreach ($to as $k=>$v)
+				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
+					$deleted = !\array_key_exists($k, $to);
+					$to[$k] ??= null;
+					$from[$k] ??= null;
+
 					if ($from[$k] != $to[$k])
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
@@ -467,7 +471,7 @@ class Versions extends Controller
 							}
 						}
 
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null))
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null)
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -486,12 +490,12 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
+								if (!\is_array($to[$k]) && \is_array($tmp = StringUtil::deserialize($to[$k])))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
-								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
+								if (!\is_array($from[$k]) && \is_array($tmp = StringUtil::deserialize($from[$k])))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
@@ -558,6 +562,11 @@ class Versions extends Controller
 						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
 						{
 							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
+						if ($deleted)
+						{
+							$field = "<del>$field</del>";
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
@@ -651,17 +660,17 @@ class Versions extends Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
-		$intLast   = ceil($objTotal->count / 30);
+		$intLast   = ceil($objTotal->count / 15);
 		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
-		$intOffset = ($intPage - 1) * 30;
+		$intOffset = ($intPage - 1) * 15;
 
 		// Create the pagination menu
-		$objPagination = new Pagination($objTotal->count, 30, 7, 'vp', new BackendTemplate('be_pagination'));
+		$objPagination = new Pagination($objTotal->count, 15, 7, 'vp', new BackendTemplate('be_pagination'));
 		$objTemplate->pagination = $objPagination->generate();
 
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
-								   ->limit(30, $intOffset)
+								   ->limit(15, $intOffset)
 								   ->execute(...$params);
 
 		$security = System::getContainer()->get('security.helper');
@@ -678,7 +687,7 @@ class Versions extends Controller
 			$arrRow = $objVersions->row();
 
 			// Add some parameters
-			$arrRow['from'] = max(($objVersions->version - 1), 1); // see #4828
+			$arrRow['from'] = max($objVersions->version - 1, 1); // see #4828
 			$arrRow['to'] = $objVersions->version;
 			$arrRow['date'] = date(Config::get('datimFormat'), $objVersions->tstamp);
 			$arrRow['description'] = StringUtil::substr($arrRow['description'], 32);
@@ -692,7 +701,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -743,12 +752,13 @@ class Versions extends Controller
 
 		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
+		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
 			$pairs['do'] = 'user';
 			$pairs['id'] = BackendUser::getInstance()->id;
-			$pairs['rt'] = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		if (isset($pairs['act']))
@@ -782,15 +792,18 @@ class Versions extends Controller
 			return $this->strUsername;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if ($user = System::getContainer()->get('security.helper')->getUser())
+		{
+			return $user->getUserIdentifier();
+		}
 
-		return $this->User->username;
+		throw new \LogicException('No user logged in. Provide the username via "setUsername()" or call "create(true)" to create a version without user.');
 	}
 
 	/**
 	 * Return the user ID
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getUserId()
 	{
@@ -799,9 +812,12 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		{
+			return $user->id;
+		}
 
-		return $this->User->id;
+		return 0;
 	}
 
 	/**

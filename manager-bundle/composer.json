@@ -57,7 +57,6 @@
         "symfony/monolog-bridge": "^5.4 || ^6.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/process": "^5.4 || ^6.0",
-        "symfony/proxy-manager-bridge": "^5.4 || ^6.0",
         "symfony/routing": "^5.4 || ^6.0",
         "symfony/security-bundle": "^6.0.2",
         "symfony/stopwatch": "^5.4 || ^6.0",
@@ -91,7 +90,8 @@
     "config": {
         "allow-plugins": {
             "contao-components/installer": true,
-            "contao/manager-plugin": true
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
         }
     },
     "extra": {

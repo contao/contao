@@ -221,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'type' => array
@@ -263,7 +263,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'basicEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'language' => array
@@ -274,8 +274,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'sql'                     => "varchar(64) NOT NULL default ''",
 			'save_callback'           => array
 			(
-				static function ($value)
-				{
+				static function ($value) {
 					// Make sure there is at least a basic language
 					if (!preg_match('/^[a-z]{2,}/i', $value))
 					{
@@ -477,8 +476,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'validAliasCharacters' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
@@ -653,7 +651,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -1018,8 +1016,7 @@ class tl_page extends Backend
 		$title = implode(
 			'%s',
 			array_map(
-				static function ($strVal)
-				{
+				static function ($strVal) {
 					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
@@ -1036,13 +1033,11 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act'))
+		if (in_array(Input::get('act'), array('paste', 'select', null)))
 		{
-			return;
+			$messages = new Messages();
+			Message::addRaw($messages->languageFallback());
 		}
-
-		$messages = new Messages();
-		Message::addRaw($messages->languageFallback());
 	}
 
 	/**
@@ -1549,7 +1544,7 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

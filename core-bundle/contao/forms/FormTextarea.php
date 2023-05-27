@@ -100,8 +100,16 @@ class FormTextarea extends Widget
 
 			case 'size':
 				$arrSize = StringUtil::deserialize($varValue);
-				$this->intRows = $arrSize[0];
-				$this->intCols = $arrSize[1];
+
+				if (isset($arrSize[0]))
+				{
+					$this->intRows = $arrSize[0];
+				}
+
+				if (isset($arrSize[1]))
+				{
+					$this->intCols = $arrSize[1];
+				}
 				break;
 
 			case 'rows':
@@ -147,6 +155,15 @@ class FormTextarea extends Widget
 	}
 
 	/**
+	 * Unify newline characters to UNIX style.
+	 * This will also prevent our maxlength from counting newlines as two characters.
+	 */
+	protected function getPost($strKey)
+	{
+		return str_replace("\r\n", "\n", parent::getPost($strKey));
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string The widget markup
@@ -157,7 +174,7 @@ class FormTextarea extends Widget
 			'<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),

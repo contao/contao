@@ -46,8 +46,6 @@ use Contao\Model\Registry;
  * @property integer           $dateAdded
  * @property integer           $lastLogin
  * @property integer           $currentLogin
- * @property integer           $loginAttempts
- * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
  * @property boolean           $useTwoFactor
@@ -87,8 +85,6 @@ use Contao\Model\Registry;
  * @method static MemberModel|null findOneByDateAdded($val, array $opt=array())
  * @method static MemberModel|null findOneByLastLogin($val, array $opt=array())
  * @method static MemberModel|null findOneByCurrentLogin($val, array $opt=array())
- * @method static MemberModel|null findOneByLoginAttempts($val, array $opt=array())
- * @method static MemberModel|null findOneByLocked($val, array $opt=array())
  * @method static MemberModel|null findOneBySession($val, array $opt=array())
  * @method static MemberModel|null findOneBySecret($val, array $opt=array())
  * @method static MemberModel|null findOneByUseTwoFactor($val, array $opt=array())
@@ -123,8 +119,6 @@ use Contao\Model\Registry;
  * @method static Collection|MemberModel[]|MemberModel|null findByDateAdded($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByLastLogin($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByLoginAttempts($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByLocked($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBySession($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBySecret($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByUseTwoFactor($val, array $opt=array())
@@ -164,8 +158,6 @@ use Contao\Model\Registry;
  * @method static integer countByDateAdded($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())
- * @method static integer countByLoginAttempts($val, array $opt=array())
- * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
  * @method static integer countBySecret($val, array $opt=array())
  * @method static integer countByUseTwoFactor($val, array $opt=array())
@@ -194,14 +186,16 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$time = Date::floorToMinute();
 
-		$arrColumns = array("$t.email=? AND $t.login=1 AND $t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')");
+		$arrColumns = array("$t.email=? AND $t.login=1 AND $t.disable=0 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)");
+		$arrValues = array($strEmail);
 
 		if ($strUsername !== null)
 		{
 			$arrColumns[] = "$t.username=?";
+			$arrValues[] = $strUsername;
 		}
 
-		return static::findOneBy($arrColumns, array($strEmail, $strUsername), $arrOptions);
+		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
 
 	/**
@@ -217,7 +211,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
 								 ->execute($strEmail, strtotime('-24 hours'));
 
@@ -249,7 +243,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)
@@ -261,9 +255,9 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find an expired registration by email address that has not been activated for more than 24 hours
+	 * Find an expired registration by e-mail address that has not been activated for more than 24 hours
 	 *
-	 * @param string $strEmail The email address to find the expired registration for
+	 * @param string $strEmail The e-mail address to find the expired registration for
 	 *
 	 * @return static The model or null if there is no expired registration
 	 */
@@ -272,7 +266,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
 								 ->execute($strEmail, strtotime('-24 hours'));
 

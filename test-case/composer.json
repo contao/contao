@@ -1,6 +1,6 @@
 {
     "name": "contao/test-case",
-    "description": "Contao 4 test case",
+    "description": "Contao test case",
     "license": "LGPL-3.0-or-later",
     "type": "library",
     "authors": [
@@ -31,7 +31,8 @@
     },
     "config": {
         "allow-plugins": {
-            "contao-components/installer": true
+            "contao-components/installer": true,
+            "php-http/discovery": false
         }
     }
 }

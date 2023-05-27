@@ -35,7 +35,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private array $locales;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.cache.warmer" service instead
+     * @internal
      */
     public function __construct(
         private Filesystem $filesystem,
@@ -205,7 +205,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/column-types.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypes(), true))
+            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true))
         );
     }
 

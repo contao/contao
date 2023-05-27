@@ -41,7 +41,7 @@ class RootPageDependentSelect extends SelectMenu
 				$this->strName,
 				sprintf('%s-%s', $this->strId, $rootPage->id),
 				$cssClasses,
-				($this->strClass ? ' ' . $this->strClass : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
 				$this->getAttributes(),
 				implode('', $this->getOptions($rootPage)),
 				$wizard[$rootPage->id] ?? ''
@@ -76,7 +76,7 @@ class RootPageDependentSelect extends SelectMenu
 				if ($this->isSelected($option))
 				{
 					$option['label'] = sprintf(
-						'%s <span style="color:#999;padding-left:3px">[%s]</span>',
+						'%s <span class="label-info">[%s]</span>',
 						$option['label'],
 						$rootPage->title,
 					);

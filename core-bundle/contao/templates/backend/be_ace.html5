@@ -25,7 +25,7 @@ window.ace && window.addEvent('domready', function() {
   // Instantiate the editor
   let editor = ace.edit('<?= $this->selector ?>_div');
   editor.$blockScrolling = Infinity;
-  editor.setTheme("ace/theme/clouds");
+  editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
   editor.renderer.setScrollMargin(3, 3, 0, 0);
   editor.renderer.scrollBy(0, -6);
   editor.container.style.lineHeight = 1.45;
@@ -34,6 +34,10 @@ window.ace && window.addEvent('domready', function() {
   editor.getSession().setUseSoftTabs(false);
   editor.getSession().setUseWrapMode(true);
   editor.setAutoScrollEditorIntoView(true);
+
+  <?php if ($this->readonly): ?>
+    editor.setReadOnly(true);
+  <?php endif; ?>
 
   // Auto-detect the indentation
   ws.detectIndentation(editor.getSession());

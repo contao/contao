@@ -159,6 +159,12 @@
         <source>Change your personal data or set a new password</source>
         <target>Este módulo permite que o usuário corrente modifique seus dados pessoais.</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>Elementos de Conteúdo</target>
@@ -391,12 +397,17 @@
         <target>Gera um módulo para inserir um modelo personalizado.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>Leitor de RSS</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Este módulo permite importar &quot;feeds&quot; de RSS</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

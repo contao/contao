@@ -28,6 +28,7 @@ use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Validator;
+use Nyholm\Psr7\Uri;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -78,6 +79,11 @@ class FigureBuilder
      * User defined metadata. This will overwrite the default if set.
      */
     private Metadata|null $metadata = null;
+
+    /**
+     * User defined metadata. This will be added to the default if set.
+     */
+    private Metadata|null $overwriteMetadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
@@ -231,6 +237,46 @@ class FigureBuilder
     }
 
     /**
+     * Sets the image resource from an absolute or relative URL.
+     *
+     * @param list<string> $baseUrls a list of allowed base URLs, the first match gets stripped from the resource URL
+     */
+    public function fromUrl(string $url, array $baseUrls = []): self
+    {
+        $this->lastException = null;
+
+        $uri = new Uri($url);
+        $path = null;
+
+        foreach ($baseUrls as $baseUrl) {
+            $baseUri = new Uri($baseUrl);
+
+            if ($baseUri->getHost() === $uri->getHost() && Path::isBasePath($baseUri->getPath(), $uri->getPath())) {
+                $path = Path::makeRelative($uri->getPath(), $baseUri->getPath().'/');
+                break;
+            }
+        }
+
+        if (null === $path) {
+            if ('' !== $uri->getHost()) {
+                $this->lastException = new InvalidResourceException(sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
+
+                return $this;
+            }
+
+            $path = $uri->getPath();
+        }
+
+        if (preg_match('/%2f|%5c/i', $path)) {
+            $this->lastException = new InvalidResourceException(sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
+
+            return $this;
+        }
+
+        return $this->fromPath(urldecode(ltrim($path, '/')));
+    }
+
+    /**
      * Sets the image resource from an ImageInterface.
      */
     public function fromImage(ImageInterface $image): self
@@ -332,6 +378,18 @@ class FigureBuilder
     public function setMetadata(Metadata|null $metadata): self
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Sets custom overwrite metadata.
+     *
+     * The metadata will be merged with the default metadata from the FilesModel.
+     */
+    public function setOverwriteMetadata(Metadata|null $metadata): self
+    {
+        $this->overwriteMetadata = $metadata;
 
         return $this;
     }
@@ -617,9 +675,13 @@ class FigureBuilder
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
+        $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
         if (null !== $metadata) {
-            return $metadata->with($fileReferenceData);
+            return $metadata
+                ->with($fileReferenceData)
+                ->with($overwriteMetadata)
+            ;
         }
 
         // If no metadata can be obtained from the model, we create a container
@@ -631,7 +693,7 @@ class FigureBuilder
             $fileReferenceData
         );
 
-        return new Metadata($data);
+        return (new Metadata($data))->with($overwriteMetadata);
     }
 
     /**
@@ -666,7 +728,7 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
-        $getResourceOrUrl = function ($target): array {
+        $getResourceOrUrl = function (ImageInterface|string $target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
             }
@@ -682,11 +744,12 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
-
-            $filePath = Path::isAbsolute($target)
-                ? Path::canonicalize($target)
-                : Path::makeAbsolute($target, $this->projectDir);
+            if (Path::isAbsolute($target)) {
+                $filePath = Path::canonicalize($target);
+            } else {
+                // URL relative to the project directory
+                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            }
 
             if (!is_file($filePath)) {
                 $filePath = null;

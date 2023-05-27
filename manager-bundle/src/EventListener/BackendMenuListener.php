@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Knp\Menu\Util\MenuManipulator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -86,23 +87,10 @@ class BackendMenuListener
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
-        $children = [];
+        $tree->addChild($debug);
 
-        // Try adding the debug button after the alerts button
-        foreach ($tree->getChildren() as $name => $item) {
-            $children[$name] = $item;
-
-            if ('alerts' === $name) {
-                $children['debug'] = $debug;
-            }
-        }
-
-        // Prepend the debug button if it could not be added above
-        if (!isset($children['debug'])) {
-            $children = ['debug' => $debug] + $children;
-        }
-
-        $tree->setChildren($children);
+        // The last two items are "submenu" and "burger", so make this the third to last
+        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
     }
 
     /**
@@ -116,14 +104,14 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode) {
+        if (null === $categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
         $item = $event->getFactory()
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
-            ->setUri('/'.$this->managerPath)
+            ->setUri($request->getUriForPath('/'.$this->managerPath))
             ->setLinkAttribute('class', 'navigation contao_manager')
             ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', false)

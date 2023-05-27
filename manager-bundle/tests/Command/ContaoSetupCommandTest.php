@@ -64,7 +64,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', 'public', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'skeleton:install', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
@@ -205,6 +205,41 @@ class ContaoSetupCommandTest extends ContaoTestCase
         }
 
         $filesystem->remove([$dotEnvFile, $dotEnvLocalFile]);
+    }
+
+    public function testKeepsSymlinkedDotEnv(): void
+    {
+        $projectDir = $this->getTempDir();
+
+        $dotEnvFile = Path::join($projectDir, '.env');
+        $dotEnvLocalFile = Path::join($projectDir, '.env.local');
+        $dotEnvLocalTargetFile = Path::join($projectDir, '.env.local.target');
+
+        $filesystem = new Filesystem();
+        $filesystem->touch($dotEnvLocalTargetFile);
+        $filesystem->symlink($dotEnvLocalTargetFile, $dotEnvLocalFile);
+
+        $command = new ContaoSetupCommand(
+            $projectDir,
+            Path::join($projectDir, 'public'),
+            '',
+            $this->getCreateProcessHandler($this->getProcessMocks())
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertFileExists($dotEnvFile);
+        $this->assertFileExists($dotEnvLocalFile);
+        $this->assertFileExists($dotEnvLocalTargetFile);
+        $this->assertTrue(is_link($dotEnvLocalFile));
+
+        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalTargetFile));
+
+        $this->assertArrayHasKey('APP_SECRET', $vars);
+        $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
+
+        $filesystem->remove([$dotEnvFile, $dotEnvLocalFile, $dotEnvLocalTargetFile]);
     }
 
     public function provideKernelSecretValues(): \Generator

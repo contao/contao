@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -106,6 +107,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.yaml');
 
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
+        $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -135,6 +137,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
+        $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
@@ -142,6 +145,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
+        $this->handleCronConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -239,6 +243,23 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->mountLocalAdapter('var/backups', 'backups', 'backups')
             ->addVirtualFilesystem('backups', 'backups')
         ;
+    }
+
+    private function handleMessengerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.cron.messenger')) {
+            return;
+        }
+
+        // No workers defined -> remove our cron job
+        if (0 === \count($config['messenger']['workers'])) {
+            $container->removeDefinition('contao.cron.messenger');
+
+            return;
+        }
+
+        $cron = $container->getDefinition('contao.cron.messenger');
+        $cron->setArgument(2, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -436,6 +457,30 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->removeDefinition('contao.image.fallback_preview_provider');
+    }
+
+    private function handleCronConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.command_scheduler') || !$container->hasDefinition('contao.cron')) {
+            return;
+        }
+
+        if (false === $config['cron']['web_listener']) {
+            $container->removeDefinition('contao.listener.command_scheduler');
+
+            return;
+        }
+
+        $scheduler = $container->getDefinition('contao.listener.command_scheduler');
+        $scheduler->setArgument(3, false);
+
+        if ('auto' === $config['cron']['web_listener']) {
+            $scheduler->setArgument(3, true);
+
+            $container->getDefinition('contao.cron')->addMethodCall('addCronJob', [
+                new Definition(CronJob::class, [new Reference('contao.cron'), '* * * * *', 'updateMinutelyCliCron']),
+            ]);
+        }
     }
 
     private function getComposerPublicDir(string $projectDir): string|null

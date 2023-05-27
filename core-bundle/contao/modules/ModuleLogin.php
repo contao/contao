@@ -10,11 +10,12 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\Exception\LockedException;
+use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 /**
  * Front end module "login".
@@ -65,14 +66,28 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
+		elseif ($request && $this->redirectBack)
 		{
-			$uriSigner = System::getContainer()->get('uri_signer');
-
-			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			if ($request->query->has('redirect'))
 			{
-				$this->targetPath = $request->query->get('redirect');
+				$uriSigner = System::getContainer()->get('uri_signer');
+
+				// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+				if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+				{
+					$this->targetPath = $request->query->get('redirect');
+				}
+			}
+			elseif ($referer = $request->headers->get('referer'))
+			{
+				$refererUri = new Uri($referer);
+				$requestUri = new Uri($request->getUri());
+
+				// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
+				if ($refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort())
+				{
+					$this->targetPath = (string) $refererUri;
+				}
 			}
 		}
 
@@ -135,10 +150,10 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		if ($exception instanceof LockedException)
+		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
 			$this->Template->hasError = true;
-			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes());
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['tooManyLoginAttempts'];
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{

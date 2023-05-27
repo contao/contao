@@ -24,7 +24,7 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function __construct(private iterable $listing)
     {
-        if (!\is_array($listing)) {
+        if ($listing instanceof \Traversable) {
             $this->listing = new CachingTraversable($listing);
         }
     }
@@ -139,10 +139,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     {
         foreach ($this->listing as $item) {
             if (!$item instanceof FilesystemItem) {
-                /** @phpstan-ignore-next-line */
-                $type = \is_object($item) ? $item::class : \gettype($item);
-
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, $type));
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, get_debug_type($item)));
             }
 
             yield $item;

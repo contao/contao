@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'label' => array
 		(
 			'fields'                  => array('tstamp', 'text'),
-			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span> %s',
+			'format'                  => '<span class="label-date">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
 		),
 		'global_operations' => array
@@ -114,6 +114,18 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'sorting'                 => true,
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'uri' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "varchar(2048) NOT NULL default ''"
+		),
+		'page' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		)
 	)
 );

@@ -16,6 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\PageModel;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -231,7 +232,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $this->assertSame('k.jones', $context->getUsername());
 
-        $tokenStorage->setToken();
+        $tokenStorage->setToken(null);
 
         $data = [
             'message' => '',
@@ -299,6 +300,95 @@ class ContaoTableProcessorTest extends TestCase
         yield [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'];
         yield [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'];
         yield [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'];
+    }
+
+    /**
+     * @dataProvider requestProvider
+     */
+    public function testAddsTheRequestUri(Request $request = null, string $uri = null): void
+    {
+        $requestStack = new RequestStack();
+
+        if ($request) {
+            $requestStack->push($request);
+        }
+
+        $data = [
+            'context' => [
+                'contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar'),
+            ],
+            'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => '',
+            'extra' => [],
+            'datetime' => new \DateTimeImmutable(),
+            'message' => '',
+        ];
+
+        $processor = $this->getContaoTableProcessor($requestStack);
+        $record = $processor($data);
+
+        /** @var ContaoContext $context */
+        $context = $record['extra']['contao'];
+
+        $this->assertSame($uri, $context->getUri());
+    }
+
+    public function requestProvider(): \Generator
+    {
+        yield 'regular URL' => [
+            Request::create('https://www.contao.org/foo?bar=baz'),
+            'https://www.contao.org/foo?bar=baz',
+        ];
+
+        yield 'encoded URL' => [
+            Request::create('https://www.contao.org/foo?bar=baz&foo=b%20r'),
+            'https://www.contao.org/foo?bar=baz&foo=b%20r',
+        ];
+
+        yield 'no request' => [null, null];
+    }
+
+    /**
+     * @dataProvider requestWithPageIdProvider
+     */
+    public function testAddsThePageId(Request $request = null, int $pageId = null): void
+    {
+        $requestStack = new RequestStack();
+
+        if ($request) {
+            $requestStack->push($request);
+        }
+
+        $data = [
+            'context' => [
+                'contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar'),
+            ],
+            'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => '',
+            'extra' => [],
+            'datetime' => new \DateTimeImmutable(),
+            'message' => '',
+        ];
+
+        $processor = $this->getContaoTableProcessor($requestStack);
+        $record = $processor($data);
+
+        /** @var ContaoContext $context */
+        $context = $record['extra']['contao'];
+
+        $this->assertSame($pageId, $context->getPageId());
+    }
+
+    public function requestWithPageIdProvider(): \Generator
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 13]);
+
+        yield 'request with page model ID' => [new Request([], [], ['pageModel' => '42']), 42];
+        yield 'request with page model' => [new Request([], [], ['pageModel' => $pageModel]), 13];
+        yield 'request without page model' => [new Request(), null];
+        yield 'no request' => [null, null];
     }
 
     private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor

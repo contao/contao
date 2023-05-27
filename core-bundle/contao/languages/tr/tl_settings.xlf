@@ -41,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Sunucu saat dilimini seçin.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableCron.0">
-        <source>Disable the command scheduler</source>
-        <target>Komut zamanlayıcı kullanılmasın</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
-        <target>Düzenli komut zamanlayıcıyı devre dışı bırakarak &lt;em&gt;_contao/cron&lt;/em&gt; yolunu gerçek bir zamanlanmış görev (el ile ayarlamanız gerekir) ile tetiklemenizi sağlar.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
         <target>Bir sayfadaki öge sayısı</target>
@@ -180,10 +172,6 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>Yükleme ayarları</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Cron job settings</source>
-        <target>Zamanlanmış görev ayarları</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

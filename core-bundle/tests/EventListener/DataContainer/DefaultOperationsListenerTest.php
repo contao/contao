@@ -14,13 +14,24 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
+    /**
+     * @var Security&MockObject
+     */
+    private Security $security;
+
     private DefaultOperationsListener $listener;
 
     protected function setUp(): void
@@ -29,10 +40,8 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
-        $security = $this->createMock(Security::class);
-        $connection = $this->createMock(Connection::class);
-
-        $this->listener = new DefaultOperationsListener($security, $connection);
+        $this->security = $this->createMock(Security::class);
+        $this->listener = new DefaultOperationsListener($this->security, $this->createMock(Connection::class));
     }
 
     protected function tearDown(): void
@@ -44,6 +53,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsDefaultOperations(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -66,6 +76,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsChildrenOperationsWithChildTable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ctable' => ['tl_bar'],
@@ -92,6 +103,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsOperationsWithParentTable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ptable' => ['tl_bar'],
@@ -118,6 +130,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsOperationsInTreeMode(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -142,6 +155,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsToggleOperationIfThereIsOneToggleField(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -174,6 +188,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAddsToggleOperationIfThereIsOneReverseToggleField(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -206,6 +221,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddToggleOperationIfThereAreMultipleToggleField(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -260,7 +276,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations)); // @phpstan-ignore-line
+        $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations));
     }
 
     public function testManuallySortOperations(): void
@@ -283,7 +299,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['delete', 'edit', 'show'], array_keys($operations)); // @phpstan-ignore-line
+        $this->assertSame(['delete', 'edit', 'show'], array_keys($operations));
     }
 
     public function testAppendsCustomOperationsToDefaults(): void
@@ -307,7 +323,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'foo'], array_keys($operations)); // @phpstan-ignore-line
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'foo'], array_keys($operations));
     }
 
     public function testKeepsPositionForNamedOperations(): void
@@ -334,11 +350,12 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'foo', 'show', 'delete'], array_keys($operations)); // @phpstan-ignore-line
+        $this->assertSame(['edit', 'foo', 'show', 'delete'], array_keys($operations));
     }
 
     public function testDoesNotAppendsIfOneOperationHasADefaultName(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'list' => [
                 'sorting' => [
@@ -367,6 +384,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notEditable' => true,
@@ -388,6 +406,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCopyOperationIfTableIsNotCopyable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notCopyable' => true,
@@ -409,6 +428,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCopyOperationIfTableIsClosed(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'closed' => true,
@@ -430,6 +450,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddCutOperationIfTableIsNotSortable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'ptable' => 'tl_bar',
@@ -452,6 +473,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'notDeletable' => true,
@@ -473,6 +495,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     public function testAlwaysAddsChildrenAndShowOperation(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'closed' => true,
@@ -496,6 +519,121 @@ class DefaultOperationsListenerTest extends TestCase
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['children', 'show'], array_keys($operations));
+    }
+
+    /**
+     * @dataProvider checkPermissionsProvider
+     */
+    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array $newRecord = null): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
+
+        ($this->listener)('tl_foo');
+
+        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(
+                ContaoCorePermissions::DC_PREFIX.'tl_foo',
+                $this->callback(
+                    function (AbstractAction $action) use ($actionClass, $record, $newRecord) {
+                        $this->assertInstanceOf($actionClass, $action);
+                        $this->assertSame('tl_foo', $action->getDataSource());
+
+                        if ($action instanceof UpdateAction || $action instanceof DeleteAction) {
+                            $this->assertSame($record, $action->getCurrent());
+                        }
+
+                        if ($action instanceof CreateAction) {
+                            $this->assertSame($newRecord ?? $record, $action->getNew());
+                        }
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn(true)
+        ;
+
+        $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
+        $operation['button_callback']($config);
+    }
+
+    public function checkPermissionsProvider(): \Generator
+    {
+        yield 'edit operation' => [
+            'edit',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+        ];
+
+        yield 'copy operation' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            [],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'delete operation' => [
+            'delete',
+            DeleteAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+        ];
+
+        yield 'copy operation in tree mode' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'copy operation with parent table' => [
+            'copy',
+            CreateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['config' => ['ptable' => 'tl_bar']],
+            ['foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'copyChilds operation in tree mode' => [
+            'copyChilds',
+            CreateAction::class,
+            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+        ];
+
+        yield 'cut operation in tree mode' => [
+            'cut',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
+        ];
+
+        yield 'cut operation with parent table' => [
+            'cut',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['config' => ['ptable' => 'tl_bar']],
+        ];
+
+        yield 'toggle operation' => [
+            'toggle',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['fields' => ['foo' => ['toggle' => true]]],
+        ];
+
+        yield 'reverse toggle operation' => [
+            'toggle',
+            UpdateAction::class,
+            ['id' => 15, 'foo' => 'bar'],
+            ['fields' => ['foo' => ['reverseToggle' => true]]],
+        ];
     }
 
     private function assertOperation(array $operation, string $href, string $icon, bool $hasCallback): void

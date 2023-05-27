@@ -61,7 +61,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'name'
 		),
@@ -172,17 +171,13 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user');
-			},
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'backendTheme' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Backend::getThemes();
 			},
 			'eval'                    => array('tl_class'=>'w50'),
@@ -336,8 +331,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
@@ -423,16 +417,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['lastLogin'],
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
-		),
-		'loginAttempts' => array
-		(
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'locked' => array
-		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
@@ -792,7 +776,7 @@ class tl_user extends Backend
 <div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
-    <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
+    <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
     <input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label><br>
     <input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label><br>
     <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label><br>
@@ -962,6 +946,6 @@ class tl_user extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '"data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

@@ -13,15 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\ServiceAnnotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
+use Symfony\Component\Routing\Annotation\Route;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
  * Annotation class for @Page().
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
  *
- * @see \Symfony\Component\Routing\Annotation\Route
+ * @see Route
  */
 final class Page implements ServiceTagInterface
 {

@@ -126,6 +126,9 @@ class LocalesTest extends TestCase
         $this->assertNotEmpty($languages);
         $this->assertTrue(ArrayUtil::isAssoc($languages));
 
+        $this->assertArrayNotHasKey('en_POSIX', $languages);
+        $this->assertArrayNotHasKey('en_US_POSIX', $languages);
+
         foreach ($languages as $localeId => $label) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
             $this->assertNotEmpty($label);
@@ -154,10 +157,10 @@ class LocalesTest extends TestCase
 
         $this->assertSame(
             [
-                'gsw_Hans_AT' => 'Schwiizertüütsch (Veräifachti Chineesischi Schrift, Ööschtriich)',
+                'gsw_Latn_AT' => 'Schwiizertüütsch (Latiinisch, Ööschtriich)',
                 'de_CH' => 'Tüütsch (Schwiiz) - Deutsch (Schweiz)',
             ],
-            $this->getLocalesService()->getDisplayNames(['gsw_Hans_AT', 'de_CH'], 'gsw', true)
+            $this->getLocalesService()->getDisplayNames(['gsw_Latn_AT', 'de_CH'], 'gsw', true)
         );
     }
 
@@ -273,7 +276,7 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3}|POSIX)(?=_|$)/', '', $localeId),
             $expected
         )));
 

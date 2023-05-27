@@ -122,6 +122,12 @@
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
       </trans-unit>
@@ -300,10 +306,16 @@
         <source>Generates a module to insert a custom template.</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

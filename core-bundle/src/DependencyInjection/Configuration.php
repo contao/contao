@@ -104,6 +104,12 @@ class Configuration implements ConfigurationInterface
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
+                ->scalarNode('console_path')
+                    ->info('The path to the Symfony console. Defaults to %kernel.project_dir%/bin/console.')
+                    ->cannotBeEmpty()
+                    ->defaultValue('%kernel.project_dir%/bin/console')
+                ->end()
+                ->append($this->addMessengerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
@@ -113,10 +119,66 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
+                ->append($this->addCronNode())
             ->end()
         ;
 
         return $treeBuilder;
+    }
+
+    private function addMessengerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('messenger'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
+            ->children()
+                ->arrayNode('workers')
+                    ->performNoDeepMerging()
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('transports')
+                                ->info('The transports/receivers you would like to consume from.')
+                                ->example(['foobar_transport', 'foobar2_transport'])
+                                ->scalarPrototype()
+                                ->end()
+                            ->end()
+                            ->arrayNode('options')
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
+                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->scalarPrototype()->end()
+                                ->defaultValue(['--time-limit=60'])
+                                ->validate()
+                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
+                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                ->end()
+                            ->end()
+                            ->arrayNode('autoscale')
+                                ->info('Enables autoscaling.')
+                                ->canBeEnabled()
+                                ->children()
+                                    ->integerNode('desired_size')
+                                        ->info('Contao will automatically autoscale the number of workers to meet this queue size. Logic: desiredWorkers = ceil(currentSize / desiredSize)')
+                                        ->isRequired()
+                                        ->min(1)
+                                    ->end()
+                                    ->integerNode('min')
+                                        ->min(1)
+                                        ->defaultValue(1)
+                                        ->info('Contao will never scale down to less than this configured number of workers.')
+                                    ->end()
+                                    ->integerNode('max')
+                                        ->isRequired()
+                                        ->min(1)
+                                        ->info('Contao will never scale up to more than this configured number of workers.')
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     private function addImageNode(): NodeDefinition
@@ -685,6 +747,21 @@ class Configuration implements ConfigurationInterface
                             }
                         )
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCronNode(): NodeDefinition
+    {
+        return (new TreeBuilder('cron'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('web_listener')
+                    ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
+                    ->values(['auto', true, false])
+                    ->defaultValue('auto')
                 ->end()
             ->end()
         ;

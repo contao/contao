@@ -67,14 +67,14 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'label' => array
 		(
 			'fields'                  => array('title', 'inColumn'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>',
+			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'label_callback'          => array('tl_article', 'addIcon')
 		),
 		'global_operations' => array
 		(
 			'toggleNodes' => array
 			(
-				'href'                => '&amp;ptg=all',
+				'href'                => 'ptg=all',
 				'class'               => 'header_toggle',
 				'showOnSelect'        => true
 			),
@@ -244,8 +244,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -535,8 +534,8 @@ class tl_article extends Backend
 
 		$attributes = sprintf(
 			'data-icon="%s" data-icon-disabled="%s"',
-			Image::getUrl($row['protected'] ? 'articles_2.svg' : 'articles.svg'),
-			Image::getUrl($row['protected'] ? 'articles_3.svg' : 'articles_1.svg'),
+			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
+			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
@@ -556,8 +555,7 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			if (in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
 			{
 				return true;
@@ -861,6 +859,6 @@ class tl_article extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getUrl('visible.svg') . '" data-icon-disabled="' . Image::getUrl('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 }

@@ -327,47 +327,27 @@ class Ajax extends Backend
 
 				if ($dc instanceof DC_Table)
 				{
+					$id = $dc->id;
+					$this->strAjaxId = null;
+
 					if (Input::get('act') == 'editAll')
 					{
-						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
-
-						$objVersions = new Versions($dc->table, $this->strAjaxId);
-						$objVersions->initialize();
-
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
-						DataContainer::clearCurrentRecordCache($this->strAjaxId, $dc->table);
-
-						$objVersions->create();
-
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+						$id = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+						$this->strAjaxId = $id;
 					}
-					else
+
+					$dc->toggle($id, Input::post('field'), true);
+
+					if (Input::post('load'))
 					{
-						$objVersions = new Versions($dc->table, $dc->id);
-						$objVersions->initialize();
+						$action = Input::get('act') == 'editAll' ? 'editAll' : 'edit';
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
-						DataContainer::clearCurrentRecordCache($dc->id, $dc->table);
+						throw new ResponseException($this->convertToResponse($dc->$action($this->strAjaxId, Input::post('id'))));
+					}
 
-						$objVersions->create();
-
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+					if (($intLatestVersion = (new Versions($dc->table, $id))->getLatestVersion()) !== null)
+					{
+						throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 					}
 				}
 				elseif ($dc instanceof DC_File)

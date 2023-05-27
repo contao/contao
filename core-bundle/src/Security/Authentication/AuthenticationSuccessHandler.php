@@ -38,7 +38,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     private User|null $user = null;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
+     * @internal
      */
     public function __construct(
         private ContaoFramework $framework,
@@ -62,10 +62,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $this->user = $user;
-
-        // Reset login attempts and locked values
-        $this->user->loginAttempts = 0;
-        $this->user->locked = 0;
 
         if ($token instanceof TwoFactorTokenInterface) {
             $this->user->save();

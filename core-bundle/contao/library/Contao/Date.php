@@ -212,8 +212,7 @@ class Date
 
 		return preg_replace_callback(
 			'/[a-zA-Z]/',
-			static function ($matches)
-			{
+			static function ($matches) {
 				// Thanks to Christian Labuda
 				$arrRegexp = array
 				(
@@ -427,20 +426,58 @@ class Date
 		{
 			switch ($v)
 			{
-				case 'D': $chunks[$k] = 'a'; break;
-				case 'j': $chunks[$k] = 'e'; break;
-				case 'l': $chunks[$k] = 'A'; break;
-				case 'S': $chunks[$k] = 'o'; break;
-				case 'F': $chunks[$k] = 'B'; break;
-				case 'M': $chunks[$k] = 'b'; break;
-				case 'a': $chunks[$k] = 'p'; break;
-				case 'A': $chunks[$k] = 'p'; break;
-				case 'g': $chunks[$k] = 'l'; break;
-				case 'G': $chunks[$k] = 'k'; break;
-				case 'h': $chunks[$k] = 'I'; break;
-				case 'i': $chunks[$k] = 'M'; break;
-				case 's': $chunks[$k] = 'S'; break;
-				case 'U': $chunks[$k] = 's'; break;
+				case 'D':
+					$chunks[$k] = 'a';
+					break;
+
+				case 'j':
+					$chunks[$k] = 'e';
+					break;
+
+				case 'l':
+					$chunks[$k] = 'A';
+					break;
+
+				case 'S':
+					$chunks[$k] = 'o';
+					break;
+
+				case 'F':
+					$chunks[$k] = 'B';
+					break;
+
+				case 'M':
+					$chunks[$k] = 'b';
+					break;
+
+				case 'A':
+				case 'a':
+					$chunks[$k] = 'p';
+					break;
+
+				case 'g':
+					$chunks[$k] = 'l';
+					break;
+
+				case 'G':
+					$chunks[$k] = 'k';
+					break;
+
+				case 'h':
+					$chunks[$k] = 'I';
+					break;
+
+				case 'i':
+					$chunks[$k] = 'M';
+					break;
+
+				case 's':
+					$chunks[$k] = 'S';
+					break;
+
+				case 'U':
+					$chunks[$k] = 's';
+					break;
 			}
 		}
 
@@ -633,11 +670,11 @@ class Date
 					break;
 
 				case 3:
-					$strReturn .= $GLOBALS['TL_LANG']['MONTHS'][($index - 1)];
+					$strReturn .= $GLOBALS['TL_LANG']['MONTHS'][$index - 1];
 					break;
 
 				case 4:
-					$strReturn .= $GLOBALS['TL_LANG']['MONTHS_SHORT'][($index - 1)];
+					$strReturn .= $GLOBALS['TL_LANG']['MONTHS_SHORT'][$index - 1];
 					break;
 
 				default:

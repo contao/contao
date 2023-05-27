@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'label' => array
 		(
 			'fields'                  => array('title', 'formID'),
-			'format'                  => '%s <span style="color:#999;padding-left:3px">[%s]</span>'
+			'format'                  => '%s <span class="label-info">[%s]</span>'
 		),
 		'global_operations' => array
 		(
@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},allowTags;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Subpalettes
@@ -153,6 +153,14 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'confirmation' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'textarea',
+			'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true),
+			'explanation'             => 'insertTags',
+			'sql'                     => "text NULL"
 		),
 		'sendViaEmail' => array
 		(
@@ -214,8 +222,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('form_wrapper_', array(), 'form_wrapper');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -247,6 +254,13 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
+		),
+		'ajax' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'allowTags' => array
 		(
@@ -462,8 +476,7 @@ class tl_form extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			return $this->Database->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
@@ -497,7 +510,7 @@ class tl_form extends Backend
 			return $GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options'];
 		}
 
-		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span style="color: #c33;">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
+		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
 		if (!$this->User->isAdmin)
 		{

@@ -20,14 +20,16 @@ use Contao\StringUtil;
 class Slug
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.slug" service instead
+     * @internal
      */
     public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
     {
     }
 
     /**
-     * @param int|iterable $options A page ID, object or options array {@see SlugGeneratorInterface::generate()}
+     * @param int|iterable $options A page ID, object or options array
+     *
+     * @see SlugGeneratorInterface::generate()
      */
     public function generate(string $text, int|iterable $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {

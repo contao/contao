@@ -381,7 +381,7 @@ class ModuleEventlist extends Events
 				$figure = $figureBuilder
 					->from($event['singleSRC'])
 					->setSize($imgSize)
-					->setMetadata($eventModel->getOverwriteMetadata())
+					->setOverwriteMetadata($eventModel->getOverwriteMetadata())
 					->enableLightbox($eventModel->fullsize)
 					->buildIfResourceExists();
 
@@ -409,8 +409,7 @@ class ModuleEventlist extends Events
 			}
 
 			// schema.org information
-			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
-			{
+			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array {
 				$jsonLd = Events::getSchemaOrgData((new CalendarEventsModel())->setRow($event));
 
 				if ($objTemplate->addImage && $objTemplate->figure)

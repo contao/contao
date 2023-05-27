@@ -34,13 +34,16 @@ class ImagesController extends AbstractContentElementController
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
         private readonly Studio $studio,
+        private readonly array $validExtensions,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // Find filesystem items
-        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $this->getSources($model));
+        // Find all images (see #5911)
+        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $this->getSources($model))
+            ->filter(fn ($item) => \in_array($item->getExtension(true), $this->validExtensions, true))
+        ;
 
         // Sort elements; relay to client-side logic if list should be randomized
         if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
@@ -67,7 +70,7 @@ class ImagesController extends AbstractContentElementController
         ;
 
         if ('image' === $model->type) {
-            $figureBuilder->setMetadata($model->getOverwriteMetadata());
+            $figureBuilder->setOverwriteMetadata($model->getOverwriteMetadata());
         }
 
         $imageList = array_map(

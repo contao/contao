@@ -6,7 +6,7 @@
         <target>Zengin metin düzenleyici</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
-        <source>For more information on TinyMCE, please visit &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
+        <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
         <target>TinyMCE hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
@@ -14,7 +14,7 @@
         <target>Eklenebilecek kod imleri</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information on insert tags, please visit &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
         <target>Eklenebilecek kod imleri hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
@@ -22,8 +22,16 @@
         <target>Kod düzenleyici</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
-        <source>For more information on Ace, please visit &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
+        <source>For more information about Ace, see &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
         <target>Ace hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt; adresine bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.0">
+        <source>Markdown</source>
+        <target>Markdown</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.1">
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Markdown hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>

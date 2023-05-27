@@ -140,14 +140,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'source' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'parent' => array
 		(
 			'filter'                  => true,
-			'sorting'                 => true,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'date' => array
@@ -221,6 +219,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
+			'sorting'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'save_callback' => array
@@ -502,7 +501,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -512,7 +511,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -522,7 +521,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->headline . '</a>';
 				}
 				break;
 
@@ -532,7 +531,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->question . '</a>';
 				}
 				break;
 
@@ -542,7 +541,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -567,11 +566,9 @@ class tl_comments extends Backend
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
 		return '
-<div class="comment_wrap">
 <div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="limit_height mark_links' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h60' : '') . '">
 ' . $arrRow['comment'] . '
-</div>
 </div>' . "\n    ";
 	}
 
@@ -641,7 +638,7 @@ class tl_comments extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '"data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

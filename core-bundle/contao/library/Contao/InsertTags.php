@@ -114,10 +114,10 @@ class InsertTags extends Controller
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
 			. '('                        // Match the contents of the tag
 				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
+				. '(?>[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
 
-		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+		$strRegExpEnd = ')*+)}}';        // Ends with two closing curly braces
 
 		$tags = preg_split(
 			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
@@ -125,6 +125,11 @@ class InsertTags extends Controller
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
 		);
+
+		if ($tags === false)
+		{
+			throw new \RuntimeException(sprintf('PCRE: %s', preg_last_error_msg()), preg_last_error());
+		}
 
 		if (\count($tags) < 2)
 		{
@@ -138,8 +143,7 @@ class InsertTags extends Controller
 		if (static::$strAllowedTagsRegex === null)
 		{
 			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
-				static function ($allowedTag)
-				{
+				static function ($allowedTag) {
 					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
 				},
 				$container->getParameter('contao.insert_tags.allowed_tags')
@@ -186,7 +190,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] === 'form_confirmation' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -380,11 +384,11 @@ class InsertTags extends Controller
 
 					if (\count($keys) == 2)
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]] ?? '';
 					}
 					else
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]] ?? '';
 					}
 					break;
 
@@ -547,7 +551,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strTarget = ($objNextPage->target && 'redirect' === $objNextPage->type) ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
@@ -707,6 +711,18 @@ class InsertTags extends Controller
 					/** @var AutoExpiringAttribute|null $attribute */
 					$attribute = $request?->getSession()->get(Form::SESSION_KEY);
 					$arrCache[$strTag] = $attribute?->getValue()[$elements[1]] ?? null;
+					break;
+
+				// Form confirmation message
+				case 'form_confirmation':
+					if ($request?->getSession()->getFlashBag()->has(Form::SESSION_CONFIRMATION_KEY))
+					{
+						$arrCache[$strTag] = $request->getSession()->getFlashBag()->get(Form::SESSION_CONFIRMATION_KEY)['message'] ?? null;
+					}
+					else
+					{
+						$arrCache[$strTag] = null;
+					}
 					break;
 
 				/*
@@ -1256,7 +1272,7 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * @return array<string|null, array>
+	 * @return array{string|null, array}
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
@@ -1269,8 +1285,7 @@ class InsertTags extends Controller
 		parse_str($query, $attributes);
 
 		// Cast and encode values
-		array_walk_recursive($attributes, static function (&$value)
-		{
+		array_walk_recursive($attributes, static function (&$value) {
 			if (is_numeric($value))
 			{
 				$value = (int) $value;
@@ -1466,7 +1481,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{

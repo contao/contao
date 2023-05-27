@@ -28,7 +28,7 @@ class FrontendPreviewAuthenticator
     final public const SESSION_NAME = '_contao_frontend_preview';
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
+     * @internal
      */
     public function __construct(
         private Security $security,
@@ -46,7 +46,7 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $token = new UsernamePasswordToken($user, 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend', $user->getRoles());
 
         try {
             $session = $this->requestStack->getSession();

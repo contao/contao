@@ -30,10 +30,10 @@ class ContentText extends ContentElement
 		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
 			$path = System::getContainer()->getParameter('contao.upload_path') . '/';
-			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
+			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, (string) $this->text);
 		}
 
-		$this->Template->text = StringUtil::encodeEmail($this->text);
+		$this->Template->text = StringUtil::encodeEmail((string) $this->text);
 		$this->Template->addImage = false;
 		$this->Template->addBefore = false;
 
@@ -45,14 +45,11 @@ class ContentText extends ContentElement
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
-				->setMetadata($this->objModel->getOverwriteMetadata())
+				->setOverwriteMetadata($this->objModel->getOverwriteMetadata())
 				->enableLightbox($this->fullsize)
 				->buildIfResourceExists();
 
-			if (null !== $figure)
-			{
-				$figure->applyLegacyTemplateData($this->Template, null, $this->floating);
-			}
+			$figure?->applyLegacyTemplateData($this->Template, null, $this->floating);
 		}
 	}
 }

@@ -91,6 +91,11 @@ abstract class Controller extends System
 	 */
 	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array(), $strDefaultTemplate='')
 	{
+		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
+		{
+			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+		}
+
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
 
@@ -118,10 +123,7 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-
-		$identifierPattern = str_contains($strPrefix, '/')
-			? sprintf('/^%s(\/[^\/]+)$/', preg_quote(rtrim($strPrefix, '_'), '/'))
-			: sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -248,8 +250,7 @@ abstract class Controller extends System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, static function ($a)
-			{
+			$v = array_filter($v, static function ($a) {
 				return $a != 'root';
 			});
 
@@ -397,7 +398,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -458,7 +459,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, (!$blnIsInsertTag ? $objPage->id : null));
+			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
 			{
@@ -486,7 +487,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -557,7 +558,7 @@ abstract class Controller extends System
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -658,7 +659,7 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404', 'error_503'), true) ? $objPage->type : 'regular';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404', 'error_503', 'logout'), true) ? $objPage->type : 'regular';
 		$image = $type . '.svg';
 
 		// Page not published or not active
@@ -1322,7 +1323,7 @@ abstract class Controller extends System
 		}
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
-		$arrPages = array_intersect($arrPages, $this->Database->getChildRecords(0, $strTable, $blnSorting));
+		$arrPages = array_filter(array_map('intval', $arrPages));
 		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
@@ -1453,7 +1454,7 @@ abstract class Controller extends System
 
 		if ($strStaticUrl = $context->getStaticUrl())
 		{
-			return $strStaticUrl . $script;
+			return $strStaticUrl . ltrim($script, '/');
 		}
 
 		return $script;
@@ -1510,8 +1511,7 @@ abstract class Controller extends System
 		;
 
 		// Match the actual regex and filter the files
-		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex)
-		{
+		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex) {
 			$path = $info->getPathname();
 
 			return preg_match($regex, $path) && $info->isFile();

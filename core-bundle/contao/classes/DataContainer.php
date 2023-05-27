@@ -132,6 +132,36 @@ abstract class DataContainer extends Backend
 	public const SORT_DESC = 12;
 
 	/**
+	 * Sort by initial letter ascending and descending
+	 */
+	public const SORT_INITIAL_LETTER_BOTH = 13;
+
+	/**
+	 * Sort by initial two letters ascending and descending
+	 */
+	public const SORT_INITIAL_LETTERS_BOTH = 14;
+
+	/**
+	 * Sort by day ascending and descending
+	 */
+	public const SORT_DAY_BOTH = 15;
+
+	/**
+	 * Sort by month ascending and descending
+	 */
+	public const SORT_MONTH_BOTH = 16;
+
+	/**
+	 * Sort by year ascending and descending
+	 */
+	public const SORT_YEAR_BOTH = 17;
+
+	/**
+	 * Sort ascending and descending
+	 */
+	public const SORT_BOTH = 18;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -368,7 +398,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -401,7 +431,7 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
@@ -629,7 +659,7 @@ abstract class DataContainer extends Backend
 		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
-		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && preg_grep('/^w\d+$/', $arrClasses))
 		{
 			$arrClasses[] = 'cbx';
 		}
@@ -666,6 +696,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
+			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
 
 			$updateMode = $objTemplate->parse();
 
@@ -801,7 +832,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		foreach (Input::getKeys() as $strKey)
 		{
@@ -932,7 +963,7 @@ abstract class DataContainer extends Backend
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
 				// Hide the toggle icon if the user does not have access to the field
-				if ((($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+				if ((($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || (self::isFieldExcluded($strTable, $params['field']) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field'])))
 				{
 					continue;
 				}
@@ -963,7 +994,7 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1039,7 +1070,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1058,7 +1089,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
-			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
 		}
 
 		return $return;
@@ -1164,7 +1195,7 @@ abstract class DataContainer extends Backend
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
 				// Hide the toggle icon if the user does not have access to the field
-				if ((($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
+				if ((($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || (self::isFieldExcluded($strPtable, $params['field']) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field'])))
 				{
 					continue;
 				}
@@ -1189,7 +1220,7 @@ abstract class DataContainer extends Backend
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getUrl($icon) . '" data-icon-disabled="' . Image::getUrl($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{
@@ -1221,8 +1252,7 @@ abstract class DataContainer extends Backend
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
-		$this->objPickerCallback = static function ($value) use ($picker, $provider)
-		{
+		$this->objPickerCallback = static function ($value) use ($picker, $provider) {
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
 
@@ -1587,7 +1617,7 @@ abstract class DataContainer extends Backend
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 			{
 				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 				{
@@ -1651,7 +1681,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
@@ -1703,6 +1733,17 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function markAsCopy(string $label, string $value): string
+	{
+		// Do not mark as copy more than once (see #6058)
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		{
+			return $value;
+		}
+
+		return sprintf($label, $value);
 	}
 
 	/**

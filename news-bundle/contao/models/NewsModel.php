@@ -202,10 +202,10 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findOneBy($arrColumns, $varId, $arrOptions);
+		return static::findOneBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -241,7 +241,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -286,7 +286,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::countBy($arrColumns, null, $arrOptions);
@@ -308,7 +308,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -316,7 +316,7 @@ class NewsModel extends Model
 			$arrOptions['order'] = "$t.date DESC";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -336,7 +336,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -349,7 +349,7 @@ class NewsModel extends Model
 			$arrOptions['limit'] = $intLimit;
 		}
 
-		return static::findBy($arrColumns, $intId, $arrOptions);
+		return static::findBy($arrColumns, array($intId), $arrOptions);
 	}
 
 	/**
@@ -377,7 +377,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -414,7 +414,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);

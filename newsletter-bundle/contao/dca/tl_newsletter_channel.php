@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},mailerTransport,sender,senderName'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName,mailerTransport'
 	),
 
 	// Fields
@@ -153,8 +153,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(32) NOT NULL default ''"
@@ -162,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w33'),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -171,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'senderName' => array
@@ -180,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		)
 	)

@@ -159,6 +159,12 @@
         <source>Change your personal data or set a new password</source>
         <target>Wijzig hier uw persoonlijke gegevens of stel een ander wachtwoord in.</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>Inhoud elementen</target>
@@ -393,12 +399,17 @@
         <target>Genereert een module om een aangepaste template in te voegen.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>RSS lezer</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Voegt een RSS feed aan een pagina toe.</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

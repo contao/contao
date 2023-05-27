@@ -96,6 +96,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),
@@ -164,19 +165,19 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'showLevel' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50 clr'),
+			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'hardLimit' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w25 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'defineRoot' => array
@@ -196,8 +197,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'navigationTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -224,7 +224,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'showHidden' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'customLabel' => array
@@ -269,8 +269,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'memberTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -328,8 +327,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'searchTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -423,8 +421,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rss_template' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -754,7 +751,7 @@ class tl_module extends Backend
 	 */
 	public function listModule($row)
 	{
-		return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
+		return '<div class="tl_content_left">' . $row['name'] . ' <span class="label-info">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

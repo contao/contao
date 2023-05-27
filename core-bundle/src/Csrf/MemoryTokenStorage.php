@@ -34,7 +34,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         return $this->tokens[$tokenId];
     }
 
-    public function setToken(string $tokenId, string $token): void
+    public function setToken(string $tokenId, #[\SensitiveParameter] string $token): void
     {
         $this->assertInitialized();
 
@@ -65,7 +65,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         return $token;
     }
 
-    public function initialize(array $tokens): void
+    public function initialize(#[\SensitiveParameter] array $tokens): void
     {
         $this->tokens = $tokens;
     }

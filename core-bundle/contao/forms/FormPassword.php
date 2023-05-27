@@ -106,7 +106,7 @@ class FormPassword extends Widget
 	 *
 	 * @return mixed The validated user input
 	 */
-	protected function validator($varInput)
+	protected function validator(#[\SensitiveParameter] $varInput)
 	{
 		$this->blnSubmitInput = false;
 
@@ -162,7 +162,7 @@ class FormPassword extends Widget
 			'<input type="password" name="%s" id="ctrl_%s" class="text password%s" value="" autocomplete="new-password"%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->strTagEnding
 		);

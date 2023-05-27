@@ -90,8 +90,8 @@
         <target>اینجا می‌توانید پاسخ را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>انتشار دیدگاه</target>
+        <source>Published</source>
+        <target>منتشر شده</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>

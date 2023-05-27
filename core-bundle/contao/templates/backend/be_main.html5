@@ -12,39 +12,20 @@
       <meta name="referrer" content="origin">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?php
-      $objCombiner = new Contao\Combiner();
-      $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
-      $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
-      $objCombiner->add('assets/chosen/css/chosen.min.css');
-      $objCombiner->add('assets/simplemodal/css/simplemodal.min.css');
-      $objCombiner->add('assets/datepicker/css/datepicker.min.css');
-      $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
-      $objCombiner->add('system/themes/'.$this->theme.'/main.min.css');
-      echo $objCombiner->getCombinedFile();
-    ?>">
+    <link rel="stylesheet" href="<?= $this->asset('css/mooRainbow.min.css', 'contao-components/colorpicker') ?>">
+    <link rel="stylesheet" href="<?= $this->asset('css/chosen.min.css', 'contao-components/chosen') ?>">
+    <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
+    <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
-    <script src="<?php
-      $objCombiner = new Contao\Combiner();
-      $objCombiner->add('assets/mootools/js/mootools.min.js');
-      $objCombiner->add('assets/colorpicker/js/mooRainbow.min.js');
-      $objCombiner->add('assets/chosen/js/chosen.min.js');
-      $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
-      $objCombiner->add('assets/datepicker/js/datepicker.min.js');
-      $objCombiner->add('bundles/contaocore/mootao.min.js');
-      $objCombiner->add('bundles/contaocore/metawizard.min.js');
-      $objCombiner->add('bundles/contaocore/core.min.js');
-      $objCombiner->add('bundles/contaocore/autofocus.min.js');
-      $objCombiner->add('bundles/contaocore/limit-height.min.js');
-      $objCombiner->add('bundles/contaocore/tips.min.js');
-      $objCombiner->add('bundles/contaocore/sectionwizard.min.js');
-      $objCombiner->add('bundles/contaocore/modulewizard.min.js');
-      $objCombiner->add('bundles/contaocore/toggle-fieldset.min.js');
-      $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
-      echo $objCombiner->getCombinedFile();
-    ?>"></script>
+    <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
+    <script src="<?= $this->asset('js/mooRainbow.min.js', 'contao-components/colorpicker') ?>"></script>
+    <script src="<?= $this->asset('js/chosen.min.js', 'contao-components/chosen') ?>"></script>
+    <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
+    <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
+    <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>

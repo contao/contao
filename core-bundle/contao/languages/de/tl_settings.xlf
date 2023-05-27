@@ -41,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Bitte wählen Sie die Zeitzone des Servers aus.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.disableCron.0">
-        <source>Disable the command scheduler</source>
-        <target>Den Command-Scheduler deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
-        <target>Den Periodic Command Scheduler deaktivieren und die &lt;em&gt;_contao/cron&lt;/em&gt;-Route mittels eines echten Cronjobs (den Sie selbst einrichten müssen) ausführen.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
         <target>Elemente pro Seite</target>
@@ -180,10 +172,6 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>Datei-Uploads</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.cron_legend">
-        <source>Cron job settings</source>
-        <target>Cronjob-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

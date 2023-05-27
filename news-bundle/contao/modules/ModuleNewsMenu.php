@@ -117,7 +117,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year ORDER BY year DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year ORDER BY year DESC");
 
 		while ($objDates->next())
 		{
@@ -133,7 +133,7 @@ class ModuleNewsMenu extends ModuleNews
 		foreach ($arrData as $intYear=>$intCount)
 		{
 			$intDate = $intYear;
-			$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
+			$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
@@ -160,7 +160,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
 
 		while ($objDates->next())
 		{
@@ -185,7 +185,7 @@ class ModuleNewsMenu extends ModuleNews
 				$intDate = $intYear . $intMonth;
 				$intMonth = (int) $intMonth - 1;
 
-				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
+				$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
@@ -214,7 +214,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY day ORDER BY day DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY day ORDER BY day DESC");
 
 		while ($objDates->next())
 		{
@@ -250,7 +250,7 @@ class ModuleNewsMenu extends ModuleNews
 		// Previous month
 		$prevMonth = ($intMonth == 1) ? 12 : ($intMonth - 1);
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
-		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
+		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][$prevMonth - 1] . ' ' . $prevYear;
 
 		$this->Template->prevHref = $this->strUrl . '?day=' . $prevYear . ((\strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
 		$this->Template->prevTitle = StringUtil::specialchars($lblPrevious);
@@ -258,12 +258,12 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->prevLabel = $GLOBALS['TL_LANG']['MSC']['news_previous'];
 
 		// Current month
-		$this->Template->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] . ' ' . date('Y', $this->Date->tstamp);
+		$this->Template->current = $GLOBALS['TL_LANG']['MONTHS'][date('m', $this->Date->tstamp) - 1] . ' ' . date('Y', $this->Date->tstamp);
 
 		// Next month
 		$nextMonth = ($intMonth == 12) ? 1 : ($intMonth + 1);
 		$nextYear = ($intMonth == 12) ? ($intYear + 1) : $intYear;
-		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][($nextMonth - 1)] . ' ' . $nextYear;
+		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][$nextMonth - 1] . ' ' . $nextYear;
 
 		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((\strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
 		$this->Template->nextTitle = StringUtil::specialchars($lblNext);

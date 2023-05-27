@@ -18,6 +18,7 @@ framework:
     session:
         storage_factory_id: session.storage.factory.mock_file
     fragments: { path: /_fragment }
+    http_method_override: false
 
 twig:
     debug: '%kernel.debug%'
@@ -43,8 +44,8 @@ doctrine:
         auto_generate_proxy_classes: true
 
 contao:
-    localconfig:
-        disableCron: true
+    cron:
+        web_listener: false
     search:
         default_indexer:
             enable: false

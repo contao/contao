@@ -21,7 +21,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * Annotation to define a controller as content element.
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
+ *
  * @Attributes({
  *     @Attribute("value", type = "string"),
  *     @Attribute("category", required = true, type = "string"),

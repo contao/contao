@@ -95,7 +95,14 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
+            - '@cache.app'
             - '@?logger'
+
+    contao.cron.messenger:
+        class: Contao\CoreBundle\Cron\MessengerCron
+        arguments:
+            - '@messenger.receiver_locator'
+            - '@contao.util.process_util'
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -193,6 +200,16 @@ services:
         public: true
         arguments:
             - '@doctrine.orm.default_entity_manager'
+
+    contao.feed.feedio:
+        class: FeedIo\FeedIo
+        arguments:
+            - '@contao.feed.http_adapter'
+
+    contao.feed.http_adapter:
+        class: FeedIo\Adapter\Http\Client
+        arguments:
+            - '@psr18.http_client'
 
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
@@ -467,6 +484,23 @@ services:
         public: true
         arguments:
             - '@contao.menu.matcher'
+
+    contao.messenger.auto_fallback_notifier:
+        class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
+        arguments:
+            - '@cache.app'
+            - '@messenger.receiver_locator'
+
+    contao.messenger.message_handler.search_index:
+        class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
+        arguments:
+            - '@?contao.search.indexer'
+
+    contao.messenger.transport.auto_fallback_transport_factory:
+        class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -765,6 +799,12 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
+    contao.security.data_container.favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
@@ -998,8 +1038,20 @@ services:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    contao.twig.finder_factory:
+        class: Contao\CoreBundle\Twig\Finder\FinderFactory
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.loader.theme_namespace'
+            - '@translator'
+
     contao.twig.formatter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
+        arguments:
+            - '@contao.framework'
+
+    contao.twig.fragment_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FragmentRuntime
         arguments:
             - '@contao.framework'
 
@@ -1041,6 +1093,11 @@ services:
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
 
+    contao.twig.sanitizer_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
+        arguments:
+            - '@twig'
+
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
         arguments:
@@ -1050,6 +1107,11 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.util.process_util:
+        class: Contao\CoreBundle\Util\ProcessUtil
+        arguments:
+            - '%contao.console_path%'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
@@ -1077,5 +1139,6 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'

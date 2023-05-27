@@ -82,7 +82,7 @@ class tl_content_calendar extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
@@ -98,7 +98,7 @@ class tl_content_calendar extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				// no break
 
 			default:

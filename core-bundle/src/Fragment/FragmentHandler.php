@@ -26,7 +26,7 @@ class FragmentHandler extends BaseFragmentHandler
     private array $initialized = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
+     * @internal
      */
     public function __construct(
         private ContainerInterface $renderers,
@@ -39,10 +39,7 @@ class FragmentHandler extends BaseFragmentHandler
         parent::__construct($requestStack, [], $debug);
     }
 
-    /**
-     * @param string|ControllerReference $uri
-     */
-    public function render($uri, string $renderer = 'inline', array $options = []): string|null
+    public function render(ControllerReference|string $uri, string $renderer = 'inline', array $options = []): string|null
     {
         if (!$uri instanceof FragmentReference) {
             return $this->fragmentHandler->render($uri, $renderer, $options);

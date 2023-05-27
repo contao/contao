@@ -240,9 +240,9 @@ class Installer extends Controller
 					unset($field['index'], $field['origtype']);
 
 					// Field type
-					if ($field['length'])
+					if (isset($field['length']))
 					{
-						$field['type'] .= '(' . $field['length'] . ($field['precision'] ? ',' . $field['precision'] : '') . ')';
+						$field['type'] .= '(' . $field['length'] . (isset($field['precision']) ? ',' . $field['precision'] : '') . ')';
 
 						unset($field['length'], $field['precision']);
 					}
@@ -283,8 +283,7 @@ class Installer extends Controller
 					$index_fields = implode(
 						', ',
 						array_map(
-							static function ($item) use ($quote)
-							{
+							static function ($item) use ($quote) {
 								if (strpos($item, '(') === false)
 								{
 									return $quote($item);

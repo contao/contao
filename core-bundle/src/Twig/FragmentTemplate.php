@@ -72,18 +72,12 @@ final class FragmentTemplate extends Template
         self::throwOnAccess();
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->context[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
     }
@@ -449,7 +443,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function trans($strId, array $arrParams = [], $strDomain = 'contao_default'): never
+    public function trans($strId, array $arrParams = [], $strDomain = 'contao_default', $locale = null): never
     {
         self::throwOnAccess();
     }

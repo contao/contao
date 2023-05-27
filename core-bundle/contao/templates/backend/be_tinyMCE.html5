@@ -17,7 +17,7 @@ window.tinymce && tinymce.init({
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   promotion: false,
-  skin: 'tinymce-5',
+  skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),
   setup: function(editor) {
     editor.getElement().removeAttribute('required');
     document.querySelectorAll('[accesskey]').forEach(function(el) {
@@ -44,7 +44,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('content_css'); ?>
-    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+    content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.Backend::getTheme()) ?>' :  '<?= $this->asset('tinymce.css', 'system/themes/'.Backend::getTheme()) ?>',
   <?php $this->endblock(); ?>
 
   <?php $this->block('plugins'); ?>
@@ -52,7 +52,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('valid_elements'); ?>
-    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption,a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|data-lightbox]',
   <?php $this->endblock(); ?>
 
   <?php $this->block('menubar'); ?>
@@ -73,6 +73,10 @@ window.tinymce && tinymce.init({
 
   <?php $this->block('custom'); ?>
   <?php $this->endblock(); ?>
+
+  <?php if ($this->readonly): ?>
+    readonly: true,
+  <?php endif; ?>
 
   browser_spellcheck: true,
   importcss_append: true

@@ -282,7 +282,7 @@ class MountManagerTest extends TestCase
      */
     public function testWrapsFlysystemExceptionIntoVirtualFilesystemException(array $call, array $expectedDelegateCall): void
     {
-        [$delegateMethod, ,] = $expectedDelegateCall;
+        [$delegateMethod] = $expectedDelegateCall;
 
         $flysystemException = new class() extends \RuntimeException implements FilesystemException {
         };
@@ -297,7 +297,7 @@ class MountManagerTest extends TestCase
         $manager = $this->getMountManagerWithRootAdapter($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
         $manager->mount($adapter, 'some');
 
-        [$method, $arguments,] = $call;
+        [$method, $arguments] = $call;
 
         try {
             $result = $manager->$method('some/place', ...$arguments);

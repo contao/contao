@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{security_legend:hide},allowedTags,allowedAttributes;{files_legend:hide},allowedDownload;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},resultsPerPage,maxResultsPerPage;{security_legend:hide},allowedTags,allowedAttributes;{files_legend:hide},allowedDownload;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -32,37 +32,31 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'dateFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'datimFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
 		),
 		'timeZone' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return array_values(DateTimeZone::listIdentifiers());
 			},
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w25')
 		),
 		'adminEmail' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'tl_class'=>'w50')
-		),
-		'disableCron' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
 		),
 		'resultsPerPage' => array
 		(
@@ -73,11 +67,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
-		'doNotCollapse' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
 		),
 		'allowedTags' => array
 		(
@@ -91,8 +80,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'eval'                    => array('tl_class'=>'clr'),
 			'load_callback' => array
 			(
-				static function ($varValue)
-				{
+				static function ($varValue) {
 					$showWarning = false;
 
 					foreach (StringUtil::deserialize($varValue, true) as $row)
@@ -106,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 
 					if ($showWarning)
 					{
-						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span style="color: #c33;">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
+						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span class="tl_red">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
 					}
 
 					return $varValue;
@@ -114,8 +102,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			),
 			'save_callback' => array
 			(
-				static function ($strValue)
-				{
+				static function ($strValue) {
 					$arrValue = StringUtil::deserialize($strValue, true);
 					$arrAllowedAttributes = array();
 

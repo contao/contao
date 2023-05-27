@@ -1,4 +1,4 @@
-# Contao 4 maker bundle
+# Contao maker bundle
 
 [![](https://img.shields.io/packagist/v/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
 [![](https://img.shields.io/packagist/dt/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
@@ -22,7 +22,7 @@ composer require contao/maker-bundle --dev
 This bundle provides several commands under the `make:` namespace. You can list them all with the following command:
 
 ```
-php vendor/bin/contao-console list make:contao
+php bin/console list make:contao
 
 Available commands for the "make:contao" namespace:
   make:contao:content-element  Creates a new content element
@@ -41,4 +41,4 @@ Contao is licensed under the terms of the LGPLv3.
 Visit the [support page][2] to learn about the available support options.
 
 [1]: https://contao.org
-[2]: https://contao.org/en/support.html
+[2]: https://to.contao.org/support

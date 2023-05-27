@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -26,7 +25,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     use ContainerAwareTrait;
 
     private string $dbalServiceName = 'doctrine.dbal.default_connection';
-    private Statement|null $statement = null;
 
     public function getDbalServiceName(): string
     {
@@ -62,15 +60,13 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     protected function write(array $record): void
     {
-        $this->createStatement();
-
         /** @var \DateTime $date */
         $date = $record['datetime'];
 
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->statement->executeStatement([
+        $this->getConnection()->insert('tl_log', [
             'tstamp' => $date->format('U'),
             'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
@@ -78,6 +74,8 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
             'browser' => StringUtil::specialchars((string) $context->getBrowser()),
+            'uri' => StringUtil::specialchars($context->getUri() ?? ''),
+            'page' => $context->getPageId() ?? 0,
         ]);
     }
 
@@ -86,28 +84,13 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         return new LineFormatter('%message%');
     }
 
-    /**
-     * Verifies the database connection and prepares the statement.
-     */
-    private function createStatement(): void
+    private function getConnection(): Connection
     {
-        if (null !== $this->statement) {
-            return;
-        }
-
         if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
-        /** @var Connection $connection */
-        $connection = $this->container->get($this->dbalServiceName);
-
-        $this->statement = $connection->prepare('
-            INSERT INTO
-                tl_log
-                    (tstamp, source, action, username, text, func, browser)
-                VALUES
-                    (:tstamp, :source, :action, :username, :text, :func, :browser)
-        ');
+        /** @var Connection */
+        return $this->container->get($this->dbalServiceName);
     }
 }

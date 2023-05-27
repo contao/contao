@@ -1,4 +1,4 @@
-# Contao 4 core bundle
+# Contao core bundle
 
 [![](https://img.shields.io/packagist/v/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 [![](https://img.shields.io/packagist/dt/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
@@ -6,7 +6,7 @@
 Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
 maintain. Visit the [project website][1] for more information.
 
-Contao 4 has been designed as a [Symfony][2] bundle, which can be used to add CMS functionality to any Symfony
+Contao has been designed as a [Symfony][2] bundle, which can be used to add CMS functionality to any Symfony
 application. If you do not have an existing Symfony application yet, we recommend using the [Contao managed edition][3]
 as basis for your application.
 
@@ -80,6 +80,7 @@ security:
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
             switch_user: true
+            login_throttling: ~
 
             contao_login:
                 remember_me: false
@@ -92,6 +93,7 @@ security:
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
             switch_user: false
+            login_throttling: ~
 
             contao_login:
                 remember_me: true
@@ -126,6 +128,6 @@ Visit the [support page][5] to learn about the available support options.
 [2]: https://symfony.com
 [3]: https://github.com/contao/managed-edition
 [4]: https://packagist.org/providers/php-http/client-implementation
-[5]: https://contao.org/en/support.html
+[5]: https://to.contao.org/support
 [6]: https://github.com/symfony/recipes-contrib
 [7]: http://symfony.com/doc/current/components/dotenv.html

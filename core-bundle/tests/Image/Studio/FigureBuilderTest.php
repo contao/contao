@@ -227,7 +227,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromPathFailsWithNonExistingResource(): void
     {
-        [, , $projectDir,] = $this->getTestFilePaths();
+        [, , $projectDir] = $this->getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
         $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
@@ -240,6 +240,90 @@ class FigureBuilderTest extends TestCase
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
+    }
+
+    public function testFromUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('images/d%75mmy.jpg')->build();
+    }
+
+    public function testFromPathAbsoluteUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('/images/d%75mmy.jpg')->build();
+    }
+
+    public function testFromUrlRelativeToBaseUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'https://example.com/folder/images/d%75mmy.jpg',
+                ['https://not.example.com', 'https://example.com/folder/'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlRelativeToRelativeBaseUrl(): void
+    {
+        [, , $projectDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'folder/subfolder/images/d%75mmy.jpg',
+                ['folder/subfolder'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl(
+                'https://example.com/images/d%75mmy.jpg',
+                ['https://not.example.com'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToNoBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('https://example.com/images/d%75mmy.jpg')
+            ->build()
+        ;
+    }
+
+    public function testFromUrlInvalidPercentEncoding(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/contains invalid percent encoding/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('images%2Fdummy.jpg')
+            ->build()
+        ;
     }
 
     public function testFromImage(): void
@@ -630,7 +714,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class)));
@@ -668,6 +752,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigureBuilder($studio, $framework)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
+            ->setOverwriteMetadata($overwriteMetadata)
             ->build()
         ;
 
@@ -766,6 +851,20 @@ class FigureBuilderTest extends TestCase
                 Metadata::VALUE_URL => '',
                 Metadata::VALUE_CAPTION => '',
             ],
+        ];
+
+        yield 'overwrite metadata keeping the other values as they are' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 'tt',
+                Metadata::VALUE_ALT => 'a',
+                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_TITLE => 'tt']),
         ];
     }
 
@@ -1043,7 +1142,7 @@ class FigureBuilderTest extends TestCase
 
     public function provideLightboxResourcesOrUrls(): \Generator
     {
-        [$absoluteFilePath, $relativeFilePath, ,] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
         $absoluteFilePathWithInvalidExtension = str_replace('jpg', 'xml', $absoluteFilePath);
         $relativeFilePathWithInvalidExtension = str_replace('jpg', 'xml', $relativeFilePath);
@@ -1086,12 +1185,24 @@ class FigureBuilderTest extends TestCase
             'this/does/not/exist.png', [], false,
         ];
 
-        yield 'file path with special chars to an existing resource' => [
+        yield 'file URL with special chars to an existing resource' => [
             'files/public/foo%20%28bar%29.jpg',
             [
                 Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
                 null,
             ],
+        ];
+
+        yield 'absolute file path with special chars to an existing resource' => [
+            __DIR__.'/../../Fixtures/files/public/foo (bar).jpg',
+            [
+                Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
+                null,
+            ],
+        ];
+
+        yield 'absolute file path with special URL chars to an non-existing resource' => [
+            __DIR__.'/../../Fixtures/files/public/foo%20(bar).jpg', [], false,
         ];
     }
 
@@ -1117,7 +1228,7 @@ class FigureBuilderTest extends TestCase
 
     public function provideLightboxFallbackResources(): \Generator
     {
-        [$absoluteFilePath, , ,] = $this->getTestFilePaths();
+        [$absoluteFilePath] = $this->getTestFilePaths();
 
         $url = 'https://example.com/valid_image.png';
 

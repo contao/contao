@@ -114,8 +114,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id)
-			{
+			$objTemplate->text = function () use ($id) {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -130,8 +129,7 @@ abstract class ModuleNews extends Module
 				return $strText;
 			};
 
-			$objTemplate->hasText = static function () use ($objArticle)
-			{
+			$objTemplate->hasText = static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
 		}
@@ -182,7 +180,7 @@ abstract class ModuleNews extends Module
 				->createFigureBuilder()
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objArticle->getOverwriteMetadata())
+				->setOverwriteMetadata($objArticle->getOverwriteMetadata())
 				->enableLightbox($objArticle->fullsize);
 
 			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
@@ -193,8 +191,10 @@ abstract class ModuleNews extends Module
 
 			if (null !== ($figure = $figureBuilder->buildIfResourceExists()))
 			{
-				// Rebuild with link to news article if none is set
-				if (!$figure->getLinkHref())
+				// Rebuild with link to the news article if we are not in a
+				// newsreader and there is no link yet. $intCount will only be
+				// set by the news list and news archive modules (see #5851).
+				if ($intCount > 0 && !$figure->getLinkHref())
 				{
 					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
@@ -234,8 +234,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array
-		{
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -309,9 +308,9 @@ abstract class ModuleNews extends Module
 			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
-			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
+			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
 			$strLink,
-			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
+			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
 		);
 	}
 }

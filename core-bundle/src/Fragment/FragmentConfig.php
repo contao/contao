@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fragment;
 
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+
 class FragmentConfig
 {
     /**
-     * @see \Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()
+     * @see FragmentHandler::render()
      */
     public function __construct(private string $controller, private string $renderer = 'forward', private array $options = [])
     {

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -40,7 +41,10 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        $request->getSession()->getFlashBag()->add(
+        /** @var Session $session */
+        $session = $request->getSession();
+
+        $session->getFlashBag()->add(
             'contao.BE.info',
             $this->translator->trans('ERR.applicationCache', [], 'contao_default')
         );

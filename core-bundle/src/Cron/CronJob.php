@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
+use GuzzleHttp\Promise\PromiseInterface;
+
 class CronJob
 {
     private string $name;
+    private \DateTimeInterface $previousRun;
 
     public function __construct(private object $service, private string $interval, private string|null $method = null)
     {
@@ -29,13 +32,13 @@ class CronJob
         }
     }
 
-    public function __invoke(string $scope): void
+    public function __invoke(string $scope): PromiseInterface|null
     {
         if (\is_callable($this->service)) {
-            ($this->service)($scope);
-        } else {
-            $this->service->{$this->method}($scope);
+            return ($this->service)($scope);
         }
+
+        return $this->service->{$this->method}($scope);
     }
 
     public function getService(): object
@@ -56,5 +59,17 @@ class CronJob
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setPreviousRun(\DateTimeInterface $previousRun): self
+    {
+        $this->previousRun = $previousRun;
+
+        return $this;
+    }
+
+    public function getPreviousRun(): \DateTimeInterface
+    {
+        return $this->previousRun;
     }
 }

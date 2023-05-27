@@ -30,17 +30,38 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         }
 
         if (!$pageModel = $this->getPageModel()) {
-            return new Response('');
+            return new Response();
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $modules = StringUtil::deserialize($model->rootPageDependentModules, true);
 
-        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
-            return new Response('');
+        if (empty($modules[$pageModel->rootId])) {
+            return new Response();
         }
 
-        $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
-        $content = $controller->getFrontendModule($modules[$pageModel->rootId]);
+        $framework = $this->container->get('contao.framework');
+
+        /** @var ModuleModel $moduleModel */
+        $moduleModel = $framework->getAdapter(ModuleModel::class);
+        $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
+
+        if (null === $module) {
+            return new Response();
+        }
+
+        $cssID = StringUtil::deserialize($module->cssID, true);
+
+        if ($idAttribute = $request->attributes->get('templateProperties', [])['cssID'] ?? null) {
+            $cssID[0] = substr($idAttribute, 5, -1);
+        }
+
+        $cssID[1] = trim(sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
+
+        $module->cssID = $cssID;
+
+        /** @var Controller $controller */
+        $controller = $framework->getAdapter(Controller::class);
+        $content = $controller->getFrontendModule($module);
 
         $this->tagResponse($model);
 

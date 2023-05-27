@@ -21,7 +21,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * Annotation to define a controller as frontend module.
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
+ *
  * @Attributes({
  *     @Attribute("value", type="string"),
  *     @Attribute("category", type="string", required = true),

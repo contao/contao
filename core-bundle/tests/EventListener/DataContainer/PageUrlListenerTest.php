@@ -25,7 +25,6 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -37,7 +36,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider generatesAliasProvider
      */
-    public function testGeneratesAlias(array $currentRecord, string $expectedAlias): void
+    public function testGeneratesAlias(array $currentRecord, array $input, string $slugResult, string $expectedAlias): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
@@ -52,23 +51,21 @@ class PageUrlListenerTest extends TestCase
         $framework = $this->mockContaoFramework(
             [
                 PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
+                Input::class => $this->mockInputAdapter($input),
             ]
         );
+
+        $expectedTitle = $input['title'] ?? $page->title;
 
         $slug = $this->createMock(Slug::class);
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($page->title, $page->id, $this->isType('callable'))
-            ->willReturn($page->alias)
+            ->with($expectedTitle, $page->id, $this->isType('callable'))
+            ->willReturn($slugResult)
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($currentRecord)
-        ;
 
         $listener = new PageUrlListener(
             $framework,
@@ -85,37 +82,56 @@ class PageUrlListenerTest extends TestCase
 
     public function generatesAliasProvider(): \Generator
     {
-        yield [
+        yield 'Test alias without changes and no folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
-                'alias' => 'foo',
                 'useFolderUrl' => false,
                 'folderUrl' => '',
             ],
+            [],
+            'foo',
             'foo',
         ];
 
-        yield [
-            [
-                'id' => 22,
-                'title' => 'Bar',
-                'alias' => 'bar',
-                'useFolderUrl' => false,
-                'folderUrl' => '',
-            ],
-            'bar',
-        ];
-
-        yield [
+        yield 'Test alias without changes and folderUrl' => [
             [
                 'id' => 17,
                 'title' => 'Foo',
-                'alias' => 'foo',
                 'useFolderUrl' => true,
                 'folderUrl' => 'bar/',
             ],
+            [],
+            'foo',
             'bar/foo',
+        ];
+
+        yield 'Test alias when changing the title and without folderUrl' => [
+            [
+                'id' => 17,
+                'title' => 'Foo',
+                'useFolderUrl' => false,
+                'folderUrl' => '',
+            ],
+            [
+                'title' => 'Bar',
+            ],
+            'bar',
+            'bar',
+        ];
+
+        yield 'Test alias when changing the title and folderUrl' => [
+            [
+                'id' => 17,
+                'title' => 'Foo',
+                'useFolderUrl' => true,
+                'folderUrl' => 'bar/',
+            ],
+            [
+                'title' => 'Bar',
+            ],
+            'bar',
+            'bar/bar',
         ];
     }
 
@@ -272,7 +288,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
@@ -324,7 +340,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
         $currentRoute = new PageRoute($currentPage);
@@ -1162,7 +1178,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1256,7 +1272,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(2))
@@ -1490,7 +1506,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1726,16 +1742,10 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnectionWithStatement(): Connection
     {
-        $statement = $this->createMock(Result::class);
-        $statement
-            ->method('fetchAll')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('executeQuery')
-            ->willReturn($statement)
+            ->method('fetchOne')
+            ->willReturn(0)
         ;
 
         return $connection;

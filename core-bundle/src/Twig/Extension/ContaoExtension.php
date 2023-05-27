@@ -22,16 +22,19 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
+use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
@@ -190,6 +193,16 @@ final class ContaoExtension extends AbstractExtension
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
             ),
+            new TwigFunction(
+                'frontend_module',
+                [FragmentRuntime::class, 'renderModule'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'content_element',
+                [FragmentRuntime::class, 'renderContent'],
+                ['is_safe' => ['html']]
+            ),
         ];
     }
 
@@ -225,11 +238,13 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFilter(
                 'insert_tag',
-                [InsertTagRuntime::class, 'replaceInsertTags']
+                [InsertTagRuntime::class, 'replaceInsertTags'],
+                ['preserves_safety' => ['html']]
             ),
             new TwigFilter(
                 'insert_tag_raw',
-                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
+                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
+                ['preserves_safety' => ['html']]
             ),
             new TwigFilter(
                 'highlight',
@@ -244,12 +259,17 @@ final class ContaoExtension extends AbstractExtension
                 [FormatterRuntime::class, 'formatBytes'],
                 ['is_safe' => ['html']]
             ),
+            new TwigFilter(
+                'sanitize_html',
+                [SanitizerRuntime::class, 'sanitizeHtml'],
+                ['is_safe' => ['html']]
+            ),
         ];
     }
 
     /**
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode
-     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor
+     * @see PhpTemplateProxyNode
+     * @see PhpTemplateProxyNodeVisitor
      *
      * @internal
      */
@@ -284,8 +304,8 @@ final class ContaoExtension extends AbstractExtension
     }
 
     /**
-     * @see \Contao\CoreBundle\Twig\ResponseContext\AddNode
-     * @see \Contao\CoreBundle\Twig\ResponseContext\AddTokenParser
+     * @see AddNode
+     * @see AddTokenParser
      *
      * @internal
      */

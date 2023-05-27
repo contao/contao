@@ -673,23 +673,21 @@ class PluginTest extends ContaoTestCase
             $userExtensionConfig,
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
+        $expect = [
+            ...$extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'default_table_options' => [
-                                    'collate' => 'utf8_unicode_ci',
-                                    'collation' => 'utf8_unicode_ci',
-                                ],
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => 'utf8_unicode_ci',
+                                'collation' => 'utf8_unicode_ci',
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -1020,9 +1018,9 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         if ($shouldAdd) {
-            $expect = array_merge(
-                $extensionConfigs,
-                [[
+            $expect = [
+                ...$extensionConfigs,
+                [
                     'orm' => [
                         'entity_managers' => [
                             $defaultEntityManager => [
@@ -1038,8 +1036,8 @@ class PluginTest extends ContaoTestCase
                             ],
                         ],
                     ],
-                ]]
-            );
+                ],
+            ];
         }
 
         $plugin = new Plugin();

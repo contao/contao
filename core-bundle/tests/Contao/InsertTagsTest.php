@@ -20,10 +20,12 @@ use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
-use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InsertTagsTest extends TestCase
 {
@@ -697,20 +699,19 @@ class InsertTagsTest extends TestCase
      */
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
     {
-        $page = $this->createMock(PageModel::class);
-        $page
-            ->method('__get')
-            ->with('language')
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getLocale')
             ->willReturn($pageLanguage)
         ;
 
-        $page
-            ->method('__isset')
-            ->with('language')
-            ->willReturn(true)
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->method('getCurrentRequest')
+            ->willReturn($request)
         ;
 
-        $GLOBALS['objPage'] = $page;
+        $this->setContainerWithContaoConfiguration(['request_stack' => $requestStack]);
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
@@ -763,8 +764,6 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame($expected, $insertTagParser->replace($source));
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
-
-        unset($GLOBALS['objPage']);
     }
 
     public function languageInsertTagsProvider(): \Generator
@@ -1031,6 +1030,47 @@ class InsertTagsTest extends TestCase
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
 
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
+    }
+
+    public function testPcreBacktrackLimit(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTag = '{{'.str_repeat('a', (int) \ini_get('pcre.backtrack_limit') * 2).'::replaced}}';
+
+        $this->assertSame(
+            'replaced',
+            $insertTagParser->replaceInline($insertTag),
+        );
+    }
+
+    public function testPcreErrorIsConvertedToException(): void
+    {
+        InsertTags::reset();
+
+        $resourceLocator = $this->createMock(FileLocatorInterface::class);
+        $resourceLocator
+            ->method('locate')
+            ->willReturn([])
+        ;
+
+        System::getContainer()->set('contao.resource_locator', $resourceLocator);
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
+
+        $backtrackLimit = \ini_get('pcre.backtrack_limit');
+        ini_set('pcre.backtrack_limit', '0');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+
+        try {
+            $insertTagParser->replaceInline($insertTag);
+        } finally {
+            ini_set('pcre.backtrack_limit', $backtrackLimit);
+        }
     }
 
     private function setContainerWithContaoConfiguration(array $configuration = []): void

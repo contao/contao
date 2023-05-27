@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('date'),
+			'fields'                  => array('date DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'headline'
@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'label' => array
 		(
 			'fields' => array('headline', 'date', 'time'),
-			'format' => '%s <span style="color:#999;padding-left:3px">[%s %s]</span>',
+			'format' => '%s <span class="label-info">[%s %s]</span>',
 		),
 		'global_operations' => array
 		(
@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'featured' => array
@@ -174,8 +174,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -187,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'default'                 => time(),
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_MONTH_DESC,
+			'flag'                    => DataContainer::SORT_MONTH_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'load_callback' => array
@@ -248,7 +246,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'addImage' => array
@@ -293,8 +291,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -590,8 +587,7 @@ class tl_news extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			return $this->Database->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
@@ -685,8 +681,7 @@ class tl_news extends Backend
 		$title = implode(
 			'%s',
 			array_map(
-				static function ($strVal)
-				{
+				static function ($strVal) {
 					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)

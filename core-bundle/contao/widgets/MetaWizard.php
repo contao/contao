@@ -165,13 +165,13 @@ class MetaWizard extends Widget
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
-			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_keys($this->varValue));
+			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_map('strval', array_keys($this->varValue)));
 			$items = array();
 
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)
 			{
-				$item = '<li data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)">' . Image::getHtml('delete.svg') . '</button></span>';
+				$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg') . '</button></span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
@@ -180,11 +180,11 @@ class MetaWizard extends Widget
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{
-						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>' . ($meta[$field] ?? '') . '</textarea>';
+						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
 					}
 					else
 					{
-						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
+						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '  data-contao--metawizard-target="input">';
 					}
 
 					// DCA picker
@@ -204,8 +204,7 @@ class MetaWizard extends Widget
 			}
 
 			// Sort the items by language name with the user language on top (see #3818)
-			uksort($items, function ($a, $b) use ($languages)
-			{
+			uksort($items, function ($a, $b) use ($languages) {
 				if ($this->User->language === $a)
 				{
 					return -1;

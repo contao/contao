@@ -6,24 +6,32 @@
         <target>Rich Text Editor</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
-        <source>For more information on TinyMCE, please visit &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
-        <target>Per ulteriori informazioni su TinyMCE, visitate &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</target>
+        <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
+        <target>Per ulteriori informazioni su TinyMCE, visita&lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
         <target>Inserisci tag</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information on insert tags, please visit &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
-        <target>Per ulteriori informazioni sui tag di inserimento, visitate &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
+        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <target>Per ulteriori informazioni sugli insert tags, visitata &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
         <target>Editor Codice</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
-        <source>For more information on Ace, please visit &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
-        <target>Per ulteriori informazioni su Ace, visitate &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</target>
+        <source>For more information about Ace, see &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
+        <target>Per ulteriori informazioni su Ace, visitata &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.0">
+        <source>Markdown</source>
+        <target>Markdown</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.1">
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Per saperne di più sui markdown, vedi il &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Manuale Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -31,6 +39,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
         <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>Contao supporta tutti i formati per data e ora, basati sulla funzione PHP date(). Ad ogni modo, per assicurare che ogni input dell'utente possa essere trasformato in un UNIX timestamp, è possibile usare solo formati numerici (j, d, m, n, y, Y, g, G, h, H, i, s) nel backend &lt;br&gt;&lt;br&gt;&lt;strong&gt;E' possibile utilizzare formati diversi indicandoli nella struttura di una pagina root&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Ecco alcuni esempi di formati validi&lt;/em&gt;:</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>

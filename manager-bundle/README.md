@@ -1,4 +1,4 @@
-# Contao 4 manager bundle
+# Contao manager bundle
 
 [![](https://img.shields.io/packagist/v/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)
 [![](https://img.shields.io/packagist/dt/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)
@@ -20,4 +20,4 @@ Visit the [support page][4] to learn about the available support options.
 [1]: https://symfony.com
 [2]: https://github.com/contao/contao-manager
 [3]: https://contao.org
-[4]: https://contao.org/en/support.html
+[4]: https://to.contao.org/support

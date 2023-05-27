@@ -234,10 +234,10 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
-		return static::findOneBy($arrColumns, $varId, $arrOptions);
+		return static::findOneBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -273,7 +273,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -281,7 +281,7 @@ class CalendarEventsModel extends Model
 			$arrOptions['order']  = "$t.startTime";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -300,7 +300,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -308,7 +308,7 @@ class CalendarEventsModel extends Model
 			$arrOptions['order']  = "$t.startTime DESC";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -331,7 +331,7 @@ class CalendarEventsModel extends Model
 		$time = Date::floorToMinute();
 
 		// Get upcoming events using endTime instead of startTime (see #3917)
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time') AND ($t.endTime>=$time OR ($t.recurring=1 AND ($t.recurrences=0 OR $t.repeatEnd>=$time)))");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.published=1 AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time) AND ($t.endTime>=$time OR ($t.recurring=1 AND ($t.recurrences=0 OR $t.repeatEnd>=$time)))");
 
 		if ($intLimit > 0)
 		{

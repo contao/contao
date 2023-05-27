@@ -2,6 +2,23 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.administrator_email:
+        class: Contao\CoreBundle\EventListener\AdministratorEmailListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+            - '@router'
+            - '@request_stack'
+            - '@security.helper'
+        tags:
+            - { name: contao.hook, hook: getSystemMessages }
+
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -37,9 +54,9 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - '@contao.cron'
-            - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
+            - ~
         tags:
             - kernel.event_listener
 
@@ -170,6 +187,14 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.toggle_nodes_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
@@ -205,14 +230,18 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@messenger.receiver_locator'
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - ce_
             - Contao\ContentProxy
         tags:
@@ -234,8 +263,11 @@ services:
     contao.listener.form_field_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - form_
         tags:
             - { name: contao.callback, table: tl_form_field, target: fields.customTpl.options }
@@ -249,6 +281,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
+            - '%kernel.secret%'
             - '%contao.web_dir%'
         tags:
             - kernel.event_listener
@@ -316,6 +349,18 @@ services:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
 
+    contao.listener.menu.backend_favorites:
+        class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
+        tags:
+            - kernel.event_listener
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
@@ -324,7 +369,7 @@ services:
             - '@security.logout_url_generator'
             - '@translator'
         tags:
-            - kernel.event_listener
+            - { name: kernel.event_listener, priority: -96 }
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -335,7 +380,12 @@ services:
             - '@translator'
             - '@event_dispatcher'
         tags:
-            - kernel.event_listener
+            - { name: kernel.event_listener, priority: -48 }
+
+    contao.listener.messenger.worker:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
 
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
@@ -348,8 +398,11 @@ services:
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
+            - '@contao.twig.filesystem_loader'
             - mod_
             - Contao\ModuleProxy
         tags:
@@ -463,7 +516,7 @@ services:
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
-            - '@contao.search.indexer'
+            - '@messenger.bus.default'
             - '%fragment.path%'
         tags:
             - kernel.event_listener
@@ -486,6 +539,13 @@ services:
         tags:
             - kernel.event_listener
             - { name: monolog.logger, channel: contao.access }
+
+    contao.listener.security.token_deauthenticated:
+        class: Contao\CoreBundle\EventListener\Security\TokenDeauthenticatedListener
+        arguments:
+            - '@contao.repository.remember_me'
+        tags:
+            - kernel.event_listener
 
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
@@ -530,6 +590,12 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.unwrap_twig_exception:
+        class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
+        tags:
+            # The priority must be higher than the exception converter listener (defaults to 96)
+            - { name: kernel.event_listener, priority: 128 }
+
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
         arguments:
@@ -546,4 +612,3 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
-            - '@contao.csrf.token_manager'

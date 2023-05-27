@@ -357,12 +357,13 @@ abstract class Template extends Controller
 	 * @param string $strId
 	 * @param array  $arrParams
 	 * @param string $strDomain
+	 * @param string $locale
 	 *
 	 * @return string
 	 */
-	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
+	public function trans($strId, array $arrParams=array(), $strDomain='contao_default', $locale=null)
 	{
-		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain, $locale);
 	}
 
 	/**
@@ -513,8 +514,7 @@ abstract class Template extends Controller
 		$strType = null;
 
 		// Check for valid JavaScript types (see #7927)
-		$isJavaScript = static function ($strChunk)
-		{
+		$isJavaScript = static function ($strChunk) {
 			$typeMatch = array();
 
 			if (preg_match('/\stype\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !\in_array(strtolower($typeMatch['type']), static::$validJavaScriptTypes))

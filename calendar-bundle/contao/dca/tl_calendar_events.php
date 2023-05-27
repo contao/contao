@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('startTime'),
+			'fields'                  => array('startTime DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'title',
@@ -158,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'featured' => array
@@ -185,8 +185,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
 			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -204,7 +202,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'default'                 => time(),
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_MONTH_DESC,
+			'flag'                    => DataContainer::SORT_MONTH_BOTH,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -287,7 +285,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'addImage' => array
@@ -332,8 +330,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -635,8 +632,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			return $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
@@ -763,8 +759,7 @@ class tl_calendar_events extends Backend
 		$title = implode(
 			'%s',
 			array_map(
-				static function ($strVal)
-				{
+				static function ($strVal) {
 					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
@@ -789,7 +784,7 @@ class tl_calendar_events extends Backend
 
 		if ($span > 0)
 		{
-			$date = Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['endTime']);
+			$date = Date::parse(Config::get($arrRow['addTime'] ? 'datimFormat' : 'dateFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get($arrRow['addTime'] ? 'datimFormat' : 'dateFormat'), $arrRow['endTime']);
 		}
 		elseif ($arrRow['startTime'] == $arrRow['endTime'])
 		{
@@ -800,7 +795,7 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
-		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">[' . $date . ']</span></div>';
+		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span class="label-info">[' . $date . ']</span></div>';
 	}
 
 	/**
@@ -845,7 +840,7 @@ class tl_calendar_events extends Backend
 
 			while ($objAlias->next())
 			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
+				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
 			}
 		}
 
@@ -898,7 +893,7 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Adjust start end end time of the event based on date, span, startTime and endTime
+	 * Adjust the start and end time of the event based on date, span, startTime and endTime
 	 *
 	 * @param DataContainer $dc
 	 */

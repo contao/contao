@@ -110,6 +110,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'data' => array
 		(
 			'search'                  => true,
+			'eval'                    => array('doNotShow'=>true),
 			'sql'                     => "mediumblob NULL"
 		),
 		'preview' => array
@@ -179,6 +180,15 @@ class tl_undo extends Backend
 
 			foreach ($arrTableData as $arrRow)
 			{
+				// Unset fields that are not to be displayed
+				foreach (($GLOBALS['TL_DCA'][$strTable]['fields'] ?? array()) as $key=>$config)
+				{
+					if ($config['eval']['doNotShow'] ?? false)
+					{
+						unset($arrRow[$key]);
+					}
+				}
+
 				$arrBuffer = array();
 
 				foreach ($arrRow as $i=>$v)

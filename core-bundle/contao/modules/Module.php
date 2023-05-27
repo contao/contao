@@ -479,7 +479,7 @@ abstract class Module extends Frontend
 		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<=$time) AND (p2.stop='' OR p2.stop>$time)" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<=$time) AND (p1.stop='' OR p1.stop>$time)" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 
@@ -492,8 +492,7 @@ abstract class Module extends Frontend
 		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
 
 		return array_map(
-			static function (array $row): array
-			{
+			static function (array $row): array {
 				return array(
 					'page' => PageModel::findByPk($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],

@@ -607,7 +607,7 @@ class tl_files extends Backend
 	public function checkFilename($varValue, DataContainer $dc)
 	{
 		$varValue = str_replace('"', '', $varValue);
-		$chunks = array_filter(explode('/', $varValue));
+		$chunks = array_filter(explode('/', $varValue), 'strlen');
 
 		if (count($chunks) < 1)
 		{
@@ -911,12 +911,6 @@ class tl_files extends Backend
 		}
 
 		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
-
-		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
-		{
-			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
-		}
-
 		$class = trim('widget ' . $class);
 
 		return '
@@ -996,12 +990,6 @@ class tl_files extends Backend
 		}
 
 		$class = ($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] ?? '') . ' cbx';
-
-		if (in_array(Input::get('act'), array('editAll', 'overrideAll')))
-		{
-			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
-		}
-
 		$class = trim('widget ' . $class);
 
 		return '

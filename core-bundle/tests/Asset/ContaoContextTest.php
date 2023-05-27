@@ -15,13 +15,14 @@ namespace Contao\CoreBundle\Tests\Asset;
 use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,14 +193,21 @@ class ContaoContextTest extends TestCase
     {
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn(new Schema())
         ;
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.doctrine.schema_provider', $schemaProvider);
+        $container->set('database_connection', $connection);
         $container->set('contao.resource_finder', $finder);
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
 

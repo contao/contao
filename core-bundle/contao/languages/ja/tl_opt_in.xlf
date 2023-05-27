@@ -6,12 +6,10 @@
         <target>トークン</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
-        <source>Confirmed on</source>
-        <target>確認先</target>
+        <source>Confirmed at</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.removeOn">
-        <source>Remove on</source>
-        <target>削除先</target>
+        <source>Remove at</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.invalidatedThrough">
         <source>Invalidated through</source>

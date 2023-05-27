@@ -47,9 +47,9 @@ class TemplateLocator
     }
 
     /**
-     * @throws InvalidThemePathException
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidThemePathException
      */
     public function findThemeDirectories(): array
     {
@@ -124,7 +124,7 @@ class TemplateLocator
         $finder = (new Finder())
             ->files()
             ->in($path)
-            ->name('/(\.html\.twig|\.html5)$/')
+            ->name('/(\.twig|\.html5)$/')
             ->filter(
                 // Never list templates from theme directories unless $path is
                 // a theme path. This ensures that you can still have theme
@@ -153,6 +153,12 @@ class TemplateLocator
      */
     private function expandSubdirectories(string $path): array
     {
+        $paths = [$path];
+
+        if ($this->isNamespaceRoot($path)) {
+            return $paths;
+        }
+
         $namespaceRoots = [];
 
         $finder = (new Finder())
@@ -177,8 +183,6 @@ class TemplateLocator
                 }
             )
         ;
-
-        $paths = [$path];
 
         foreach ($finder as $item) {
             $paths[] = Path::canonicalize($item->getPathname());

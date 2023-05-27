@@ -27,6 +27,8 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  */
 class FormText extends Widget
 {
+	protected const HTML5_DATE_FORMAT = 'Y-m-d';
+
 	/**
 	 * Submit user input
 	 *
@@ -166,7 +168,7 @@ class FormText extends Widget
 					return 'password';
 				}
 
-				// Use the HTML5 types (see #4138) but not the date, time and datetime types (see #5918)
+				// Use the HTML5 types (see #4138) but not the time and datetime types (see #5918)
 				switch ($this->rgxp)
 				{
 					case 'digit':
@@ -189,6 +191,9 @@ class FormText extends Widget
 					case 'url':
 					case HttpUrlListener::RGXP_NAME:
 						return 'url';
+
+					case 'date':
+						return 'date';
 				}
 
 				return 'text';
@@ -245,6 +250,18 @@ class FormText extends Widget
 		{
 			$varInput = Idna::encodeEmail($varInput);
 		}
+		elseif ($this->rgxp == 'date')
+		{
+			$targetFormat = Date::getNumericDateFormat();
+
+			// Check if date format matches the HTML5 standard
+			if (self::HTML5_DATE_FORMAT !== $targetFormat && preg_match('~^' . Date::getRegexp(self::HTML5_DATE_FORMAT) . '$~i', $varInput ?? ''))
+			{
+				// Transform to defined date format (see #5918)
+				$date = \DateTimeImmutable::createFromFormat(self::HTML5_DATE_FORMAT, $varInput);
+				$varInput = $date->format($targetFormat);
+			}
+		}
 
 		return parent::validator($varInput);
 	}
@@ -261,8 +278,8 @@ class FormText extends Widget
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->hideInput ? ' password' : ''),
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->hideInput ? ' password' : '',
+			$this->strClass ? ' ' . $this->strClass : '',
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

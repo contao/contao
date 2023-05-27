@@ -55,7 +55,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
-			'child_record_callback'   => array('tl_newsletter', 'listNewsletters')
+			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
+			'renderAsGrid'            => true
 		),
 		'global_operations' => array
 		(
@@ -106,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},mailerTransport,sender,senderName;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Subpalettes
@@ -192,8 +193,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -214,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('tl_class'=>'w33', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -223,7 +223,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
@@ -233,10 +233,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'senderName' => array
 		(
 			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')
@@ -410,7 +408,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h85' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";
@@ -452,8 +450,7 @@ class tl_newsletter extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = function (string $alias) use ($dc): bool {
 			return $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
