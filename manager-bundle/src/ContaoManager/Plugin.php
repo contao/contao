@@ -205,7 +205,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
-                if (!isset($_SERVER['APP_SECRET'])) {
+                if (!isset($_SERVER['APP_SECRET']) && $container->hasParameter('secret')) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                 }
 
@@ -422,7 +422,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
     {
-        if ('mail' === $container->getParameter('mailer_transport')) {
+        if ($container->hasParameter('mailer_transport') && 'mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
 
@@ -543,10 +543,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $userPassword = '';
 
-        if ($user = $container->getParameter('database_user')) {
+        if ($container->hasParameter('database_user') && $user = $container->getParameter('database_user')) {
             $userPassword = $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('database_password')) {
+            if ($container->hasParameter('database_password') && $password = $container->getParameter('database_password')) {
                 $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
@@ -555,7 +555,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $dbName = '';
 
-        if ($name = $container->getParameter('database_name')) {
+        if ($container->hasParameter('database_name') && $name = $container->getParameter('database_name')) {
             $dbName .= '/'.$this->encodeUrlParameter((string) $name);
         }
 
@@ -567,8 +567,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
-            $container->getParameter('database_host'),
-            (int) $container->getParameter('database_port'),
+            $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
+            $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
             $dbName
         );
     }
@@ -583,21 +583,21 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $credentials = '';
         $portSuffix = '';
 
-        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+        if ($container->hasParameter('mailer_encryption') && ($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
             $transport = 'smtps';
         }
 
-        if ($user = $container->getParameter('mailer_user')) {
+        if ($container->hasParameter('mailer_user') && $user = $container->getParameter('mailer_user')) {
             $credentials .= $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('mailer_password')) {
+            if ($container->hasParameter('mailer_password') && $password = $container->getParameter('mailer_password')) {
                 $credentials .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $credentials .= '@';
         }
 
-        if ($port = $container->getParameter('mailer_port')) {
+        if ($port = $container->hasParameter('mailer_port') ? $container->getParameter('mailer_port') : 25) {
             $portSuffix = ':'.$port;
         }
 
@@ -605,7 +605,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             '%s://%s%s%s',
             $transport,
             $credentials,
-            $container->getParameter('mailer_host'),
+            $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
             $portSuffix
         );
     }
