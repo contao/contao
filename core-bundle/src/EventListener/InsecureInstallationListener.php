@@ -47,7 +47,7 @@ class InsecureInstallationListener
         }
 
         // The secret is still at its default value or empty
-        if (empty($this->secret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret) {
+        if ('contao_install' !== $request->attributes->get('_route') && (empty($this->secret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret)) {
             throw new InsecureInstallationException('Your installation is not secure. Please set the "secret" in your parameters.yml or "APP_SECRET" in your .env.local.');
         }
     }

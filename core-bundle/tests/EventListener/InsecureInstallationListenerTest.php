@@ -70,6 +70,19 @@ class InsecureInstallationListenerTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
+    public function testDoesNotThrowAnExceptionInInstallTool(): void
+    {
+        $request = $this->getRequest();
+        $request->server->set('REQUEST_URI', '/index.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
+        $request->attributes->set('_route', 'contao_install');
+
+        $listener = new InsecureInstallationListener(self::DEFAULT_SECRET);
+        $listener($this->getResponseEvent($request));
+
+        $this->addToAssertionCount(1); // does not throw an exception
+    }
+
     private function getRequest(): Request
     {
         $request = new Request();
