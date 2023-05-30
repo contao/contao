@@ -83,7 +83,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR=FOO\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR='FOO'\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
     }
 
     public function testOverwriteDotEnvIfKeyExists(): void
@@ -96,7 +96,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR=FOO\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR='FOO'\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
     }
 
     public function testEscapesShellArguments(): void

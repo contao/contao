@@ -66,7 +66,7 @@ class HyperlinkController extends AbstractContentElementController
             ->createFigureBuilder()
             ->fromUuid($model->singleSRC ?: '')
             ->setSize($model->size)
-            ->setMetadata($model->getOverwriteMetadata())
+            ->setOverwriteMetadata($model->getOverwriteMetadata())
             ->setLinkAttributes($linkAttributes)
             ->buildIfResourceExists()
         ;

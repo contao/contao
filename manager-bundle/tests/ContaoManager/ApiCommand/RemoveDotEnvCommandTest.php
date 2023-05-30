@@ -66,7 +66,7 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR=FOO\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR='FOO'\n", file_get_contents($this->tempfile));
     }
 
     public function testRemovesDotEnvIfLastKeyIsRemoved(): void
