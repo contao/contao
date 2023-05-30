@@ -72,7 +72,7 @@ class PageFinder
     }
 
     /**
-     * Finds the first sub-page of a given page for a request host and Accept-Language.
+     * Finds the first sub-page of a given type for a request host and Accept-Language.
      * This is mainly useful to retrieve an error page for the current host,
      * or any other page type that only exists once per root page.
      */
