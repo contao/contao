@@ -65,8 +65,7 @@ class PlayerController extends AbstractContentElementController
         // Compile data
         $figureData = $isVideo
             ? $this->buildVideoFigureData($model, $sourceFiles)
-            : $this->buildAudioFigureData($model, $sourceFiles)
-        ;
+            : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
         $template->set('source_files', $sourceFiles);
@@ -101,8 +100,7 @@ class PlayerController extends AbstractContentElementController
 
         $range = $model->playerStart || $model->playerStop
             ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
-            : ''
-        ;
+            : '';
 
         $captions = [$model->playerCaption];
 

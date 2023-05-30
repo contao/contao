@@ -87,8 +87,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
             )
-            && !($request->hasSession() && $request->getSession()->isStarted())
-        ;
+            && !($request->hasSession() && $request->getSession()->isStarted());
     }
 
     public function getDefaultTokenValue(): string

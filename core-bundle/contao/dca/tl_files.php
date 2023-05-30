@@ -607,7 +607,7 @@ class tl_files extends Backend
 	public function checkFilename($varValue, DataContainer $dc)
 	{
 		$varValue = str_replace('"', '', $varValue);
-		$chunks = array_filter(explode('/', $varValue));
+		$chunks = array_filter(explode('/', $varValue), 'strlen');
 
 		if (count($chunks) < 1)
 		{

@@ -66,7 +66,6 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        /** @var PageModel $page */
         $page->loadDetails();
 
         if (empty($page->mailerTransport) || null === $this->transports->getTransport($page->mailerTransport)) {
