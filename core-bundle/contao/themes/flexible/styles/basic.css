@@ -171,6 +171,10 @@ button {
 	cursor: pointer;
 }
 
+button[disabled] {
+	cursor: default;
+}
+
 nav ul, nav li {
 	margin: 0;
 	padding: 0;
