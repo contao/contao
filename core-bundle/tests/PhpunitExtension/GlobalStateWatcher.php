@@ -140,6 +140,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Composer\InstalledVersions',
                 'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
+                'Doctrine\Deprecations\Deprecation',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',

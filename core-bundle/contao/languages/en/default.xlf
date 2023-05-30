@@ -2108,6 +2108,9 @@
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
       </trans-unit>
