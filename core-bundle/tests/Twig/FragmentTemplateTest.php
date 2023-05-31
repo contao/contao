@@ -51,7 +51,7 @@ class FragmentTemplateTest extends TestCase
         $returnedResponse = new Response();
         $preBuiltResponse = new Response();
 
-        $callback = function (FragmentTemplate $reference, Response|null $response) use ($returnedResponse, $preBuiltResponse): Response {
+        $callback = function (FragmentTemplate $reference, Response|null $response) use ($preBuiltResponse, $returnedResponse): Response {
             $this->assertSame('content_element/text', $reference->getName());
             $this->assertSame($preBuiltResponse, $response);
 

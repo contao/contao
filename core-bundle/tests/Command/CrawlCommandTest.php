@@ -113,7 +113,7 @@ class CrawlCommandTest extends TestCase
             ->expects($this->once())
             ->method('create')
             ->willReturnCallback(
-                function () use ($client, $queue, &$jobId) {
+                function () use ($queue, $client, &$jobId) {
                     $escargot = Escargot::create($this->getBaseUriCollection(), $queue)->withHttpClient($client);
                     $jobId = $escargot->getJobId();
 

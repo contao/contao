@@ -258,7 +258,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
         uasort(
             $routes,
-            function (Route $a, Route $b) use ($languages, $routes) {
+            function (Route $a, Route $b) use ($routes, $languages) {
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 

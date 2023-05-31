@@ -632,7 +632,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
-                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
+                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($expected, $imageMock) {
                     $this->assertSame($expected, $options->getSkipIfDimensionsMatch());
 
                     return new Picture(['src' => $imageMock, 'srcset' => []], []);

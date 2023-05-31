@@ -88,7 +88,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $this->view = $templateNameToView($templateName);
         }
 
-        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($isLegacyTemplate, $templateName, $templateNameToView): Response {
             if ($isLegacyTemplate) {
                 // Render using the legacy framework
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);

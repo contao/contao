@@ -34,7 +34,7 @@ class ProcessUtil implements ResetInterface
     public function createPromise(Process $process, bool $start = true): PromiseInterface
     {
         $promise = new Promise(
-            static function () use (&$promise, $process): void {
+            static function () use ($process, &$promise): void {
                 $process->wait();
 
                 if ($process->isSuccessful()) {

@@ -76,7 +76,7 @@ class StatementTest extends TestCase
             ->expects($this->once())
             ->method('executeQuery')
             ->willReturnCallback(
-                function (string $query, array $params) use ($doctrineResult, $expected) {
+                function (string $query, array $params) use ($expected, $doctrineResult) {
                     $params = array_map(
                         static function ($param) {
                             if (\is_bool($param)) {

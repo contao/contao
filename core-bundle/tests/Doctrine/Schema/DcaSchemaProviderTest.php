@@ -307,7 +307,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $connection
             ->method('fetchAssociative')
             ->willReturnCallback(
-                static function ($query) use ($fileFormat, $filePerTable, $largePrefixes) {
+                static function ($query) use ($largePrefixes, $filePerTable, $fileFormat) {
                     $map = [
                         "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $largePrefixes,
                         "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $filePerTable,

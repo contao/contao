@@ -182,7 +182,7 @@ class PageUrlListenerTest extends TestCase
                 $currentRecord['title'],
                 $currentRecord['id'],
                 $this->callback(
-                    function (callable $callback) use ($generated, $expectExists) {
+                    function (callable $callback) use ($expectExists, $generated) {
                         $this->assertSame($expectExists, $callback($generated));
 
                         return true;

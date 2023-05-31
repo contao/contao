@@ -104,7 +104,7 @@ class UserCreateCommand extends Command
         $minLength = $config->get('minPasswordLength');
         $username = $input->getOption('username');
 
-        $passwordCallback = static function ($value) use ($username, $minLength): string {
+        $passwordCallback = static function ($value) use ($minLength, $username): string {
             if ('' === trim($value)) {
                 throw new \RuntimeException('The password cannot be empty');
             }
