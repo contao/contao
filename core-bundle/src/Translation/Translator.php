@@ -44,7 +44,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
      * domain starts with "contao_".
      */
-    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function trans(string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string
     {
         // Forward to the default translator
         if (null === $domain || !str_starts_with($domain, 'contao_')) {
@@ -76,7 +76,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue(string $locale = null): MessageCatalogueInterface
+    public function getCatalogue(string|null $locale = null): MessageCatalogueInterface
     {
         $parentCatalog = $this->translator->getCatalogue($locale);
 

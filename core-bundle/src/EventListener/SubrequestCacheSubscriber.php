@@ -22,7 +22,7 @@ use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * The Symfony HttpCache ships with a ResponseCacheStrategy, which is used to
- * merge the caching information of multiple ESI subrequests with the main
+ * merge the caching information of multiple ESI sub-requests with the main
  * response. It will make sure that the final response has the lowest possible
  * cache time.
  *
@@ -34,7 +34,7 @@ use Symfony\Contracts\Service\ResetInterface;
  * so the page cache time will be set to 5 hours instead.
  *
  * To apply the cache merging, a specific header needs to be present in both
- * the main and subrequest response. The header is automatically set for the
+ * the main and sub-request response. The header is automatically set for the
  * page content and classes implementing the abstract content element and
  * module controllers.
  *

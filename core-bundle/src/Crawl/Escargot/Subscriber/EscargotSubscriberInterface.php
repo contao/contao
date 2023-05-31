@@ -26,5 +26,5 @@ interface EscargotSubscriberInterface extends SubscriberInterface
      * results might be e.g. stored between requests, so you might have a
      * previous result of your subscriber.
      */
-    public function getResult(SubscriberResult $previousResult = null): SubscriberResult;
+    public function getResult(SubscriberResult|null $previousResult = null): SubscriberResult;
 }

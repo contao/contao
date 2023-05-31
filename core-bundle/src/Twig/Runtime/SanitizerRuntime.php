@@ -27,7 +27,7 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function sanitizeHtml(string $html, string $sanitizer = null): string
+    public function sanitizeHtml(string $html, string|null $sanitizer = null): string
     {
         $html = $this->twig->getExtension(HtmlSanitizerExtension::class)->sanitize($html, $sanitizer);
 

@@ -28,7 +28,7 @@ class ParseJwtCookieCommand extends Command
 {
     private JwtManager $jwtManager;
 
-    public function __construct(Application $application, JwtManager $jwtManager = null)
+    public function __construct(Application $application, JwtManager|null $jwtManager = null)
     {
         parent::__construct();
 

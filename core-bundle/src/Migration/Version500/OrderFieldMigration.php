@@ -96,10 +96,10 @@ class OrderFieldMigration extends AbstractMigration
         ");
 
         foreach ($rows as $row) {
-            $items = array_values(array_unique(array_merge(
-                StringUtil::deserialize($row[$orderField], true),
-                StringUtil::deserialize($row[$field], true),
-            )));
+            $items = array_values(array_unique([
+                ...StringUtil::deserialize($row[$orderField], true),
+                ...StringUtil::deserialize($row[$field], true),
+            ]));
 
             $this->connection->executeStatement(
                 "

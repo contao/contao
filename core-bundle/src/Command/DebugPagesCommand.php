@@ -50,7 +50,7 @@ class DebugPagesCommand extends Command
         parent::__construct();
     }
 
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface|null $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 
@@ -87,8 +87,8 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config && $config->getPath() ? $config->getPath() : '*',
-                $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
+                $config?->getPath() ? $config->getPath() : '*',
+                $config?->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $contentComposition,
                 isset($this->routeEnhancers[$type]) ? $this->routeEnhancers[$type]::class : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',

@@ -103,7 +103,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());
     }
 
-    private function getRequestEvent(Request $request = null): RequestEvent
+    private function getRequestEvent(Request|null $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

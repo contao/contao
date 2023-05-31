@@ -69,7 +69,7 @@ class DefaultOperationsListener
     {
         $operations = [];
 
-        $isTreeMode = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE;
+        $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 

@@ -138,7 +138,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
             [
                 $this->getControllerName($reference, $attributes),
                 $attributes['renderer'] ?? 'forward',
-                array_merge(['ignore_errors' => false], $attributes['options'] ?? []),
+                ['ignore_errors' => false, ...$attributes['options'] ?? []],
             ]
         );
 
@@ -173,7 +173,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('contao.fragment.pre_handlers');
-        $definition->setArgument(0, array_merge($definition->getArgument(0), $handlers));
+        $definition->setArgument(0, [...$definition->getArgument(0), ...$handlers]);
     }
 
     protected function getFragmentType(Definition $definition, array $attributes): string

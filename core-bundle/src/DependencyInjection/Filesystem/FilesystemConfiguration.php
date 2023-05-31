@@ -81,7 +81,7 @@ class FilesystemConfiguration
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.
      */
-    public function mountAdapter(string $adapter, array $options, string $mountPath, string $name = null): self
+    public function mountAdapter(string $adapter, array $options, string $mountPath, string|null $name = null): self
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
@@ -122,7 +122,7 @@ class FilesystemConfiguration
      * If you do not set a name, the id for the adapter service will be derived
      * from the mount path.
      */
-    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
+    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string|null $name = null): self
     {
         $path = Path::isAbsolute($filesystemPath)
             ? Path::canonicalize($filesystemPath)

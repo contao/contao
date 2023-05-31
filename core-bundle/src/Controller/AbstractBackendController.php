@@ -25,7 +25,7 @@ abstract class AbstractBackendController extends AbstractController
     /**
      * Renders a Twig template with additional context for "@Contao/be_main".
      */
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    protected function render(string $view, array $parameters = [], Response|null $response = null): Response
     {
         $backendContext = (new class() extends BackendMain {
             public function __invoke(): array
@@ -48,6 +48,6 @@ abstract class AbstractBackendController extends AbstractController
             }
         })();
 
-        return parent::render($view, array_merge($backendContext, $parameters), $response);
+        return parent::render($view, [...$backendContext, ...$parameters], $response);
     }
 }

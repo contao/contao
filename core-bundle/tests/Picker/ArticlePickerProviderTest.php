@@ -156,7 +156,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
         );
     }
 
-    private function getPicker(bool $accessGranted = null, TranslatorInterface $translator = null): ArticlePickerProvider
+    private function getPicker(bool|null $accessGranted = null, TranslatorInterface|null $translator = null): ArticlePickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

@@ -404,7 +404,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    private function getListener(bool $isBackendUser = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
@@ -450,7 +450,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
+    private function getResponseEvent(\Exception $exception, Request|null $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;

@@ -221,7 +221,7 @@ class ContaoContextTest extends TestCase
         return $page->loadDetails();
     }
 
-    private function getContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
+    private function getContaoContext(string $field, RequestStack|null $requestStack = null): ContaoContext
     {
         $requestStack ??= new RequestStack();
 

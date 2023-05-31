@@ -25,7 +25,7 @@ class ManagerConfig
     private Filesystem $filesystem;
     private array|null $config = null;
 
-    public function __construct(string $projectDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem|null $filesystem = null)
     {
         if (false !== ($realpath = realpath($projectDir))) {
             $projectDir = (string) $realpath;

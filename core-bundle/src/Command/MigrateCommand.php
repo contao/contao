@@ -223,7 +223,7 @@ class MigrateCommand extends Command
         return false;
     }
 
-    private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
+    private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
     {
         while (true) {
             $first = true;
@@ -305,7 +305,7 @@ class MigrateCommand extends Command
         return true;
     }
 
-    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
+    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string|null $specifiedHash = null): bool
     {
         if ($warnings = [...$this->compileConfigurationWarnings(), ...$this->compileSchemaWarnings()]) {
             if ($asJson) {

@@ -39,7 +39,7 @@ class Countries
     /**
      * @return array<string,string> Translated country names indexed by their uppercase ISO 3166-1 alpha-2 code
      */
-    public function getCountries(string $displayLocale = null): array
+    public function getCountries(string|null $displayLocale = null): array
     {
         if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();

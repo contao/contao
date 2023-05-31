@@ -1356,7 +1356,7 @@ class DbafsTest extends TestCase
         return (new MountManager())->mount(new InMemoryFilesystemAdapter());
     }
 
-    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs
+    private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
 

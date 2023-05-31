@@ -46,7 +46,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_article';
     }
@@ -71,7 +71,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'article'];
     }

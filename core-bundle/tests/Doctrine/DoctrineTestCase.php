@@ -37,7 +37,7 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry(Connection $connection = null): Registry
+    protected function mockDoctrineRegistry(Connection|null $connection = null): Registry
     {
         $connection ??= $this->createMock(Connection::class);
 
@@ -92,7 +92,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * @param Connection&MockObject $connection
      */
-    protected function getDcaSchemaProvider(array $dca = [], Connection $connection = null): DcaSchemaProvider
+    protected function getDcaSchemaProvider(array $dca = [], Connection|null $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca),

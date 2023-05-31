@@ -291,7 +291,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addStaticUrlTo($script, ContaoContext $context = null): never
+    public static function addStaticUrlTo($script, ContaoContext|null $context = null): never
     {
         self::throwOnAccess();
     }
@@ -563,7 +563,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function setDebug(bool $debug = null): never
+    public function setDebug(bool|null $debug = null): never
     {
         self::throwOnAccess();
     }
@@ -603,7 +603,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function insert($name, array $data = null): never
+    public function insert($name, array|null $data = null): never
     {
         self::throwOnAccess();
     }

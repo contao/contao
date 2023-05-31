@@ -149,7 +149,7 @@ class DbafsManagerTest extends TestCase
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                static function (string $path): ?FilesystemItem {
+                static function (string $path): FilesystemItem|null {
                     $resources = [
                         'bar/baz' => false,
                         'bar.file' => true,
@@ -528,7 +528,7 @@ class DbafsManagerTest extends TestCase
         $dbafs
             ->method('getPathFromUuid')
             ->willReturnCallback(
-                static function (Uuid $uuidToCompare) use ($mapping): ?string {
+                static function (Uuid $uuidToCompare) use ($mapping): string|null {
                     foreach ($mapping as $path => $uuid) {
                         if (0 === $uuidToCompare->compare($uuid)) {
                             return $path;

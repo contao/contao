@@ -54,7 +54,7 @@ class ResizeImagesCommand extends Command
         ResizerInterface $resizer,
         private string $targetDir,
         private DeferredImageStorageInterface $storage,
-        Filesystem $filesystem = null,
+        Filesystem|null $filesystem = null,
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
         $this->filesystem = $filesystem ?? new Filesystem();
@@ -175,7 +175,7 @@ class ResizeImagesCommand extends Command
             return false;
         }
 
-        $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--help']));
+        $process = new Process([$phpPath, ...$_SERVER['argv'], '--help']);
 
         return 0 === $process->run();
     }
@@ -268,7 +268,7 @@ class ResizeImagesCommand extends Command
                         }
                     }
 
-                    $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--image='.$path]));
+                    $process = new Process([$phpPath, ...$_SERVER['argv'], '--image='.$path]);
                     $process->setTimeout(null);
                     $process->start();
 

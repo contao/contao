@@ -34,7 +34,7 @@ class AutoExpiringAttribute
         return $this->value;
     }
 
-    public function isExpired(\DateTimeInterface $now = null): bool
+    public function isExpired(\DateTimeInterface|null $now = null): bool
     {
         $now = $now ?? new \DateTime();
 

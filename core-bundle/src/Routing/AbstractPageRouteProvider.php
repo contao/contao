@@ -98,7 +98,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_unique($ids);
     }
 
-    protected function compareRoutes(Route $a, Route $b, array $languages = null): int
+    protected function compareRoutes(Route $a, Route $b, array|null $languages = null): int
     {
         if ('' !== $a->getHost() && '' === $b->getHost()) {
             return -1;

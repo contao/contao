@@ -75,7 +75,7 @@ class ChangeSet
                 $item = [...$item, self::ATTR_PATH => Path::join($pathPrefix, $newPath)];
             }
 
-            $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
+            $itemsToUpdate[$prefixedPath] = [...$itemsToUpdate[$prefixedPath] ?? [], ...$item];
         }
 
         foreach ($changeSet->itemsToDelete as $path => $type) {

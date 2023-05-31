@@ -182,7 +182,7 @@ class PageUrlListenerTest extends TestCase
                 $currentRecord['title'],
                 $currentRecord['id'],
                 $this->callback(
-                    function (callable $callback) use ($generated, $expectExists) {
+                    function (callable $callback) use ($expectExists, $generated) {
                         $this->assertSame($expectExists, $callback($generated));
 
                         return true;
@@ -1711,7 +1711,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return TranslatorInterface&MockObject
      */
-    private function mockTranslator(string $messageKey = null, array $arguments = []): TranslatorInterface
+    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
