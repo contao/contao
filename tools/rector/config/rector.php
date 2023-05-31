@@ -45,7 +45,11 @@ return static function (RectorConfig $rectorConfig): void {
             '*/src/Entity/*',
         ],
         ChangeSwitchToMatchRector::class,
-        FirstClassCallableRector::class,
+        FirstClassCallableRector::class => [
+            'core-bundle/tests/Contao/InsertTagsTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperNodeVisitorTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
+        ],
         NullToStrictStringFuncCallArgRector::class,
         ReadOnlyPropertyRector::class,
     ]);
