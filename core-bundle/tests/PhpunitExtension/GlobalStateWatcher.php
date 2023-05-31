@@ -151,6 +151,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\Cache\Adapter\\',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
+                'Symfony\Component\DependencyInjection\Container',
                 'Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag',
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
