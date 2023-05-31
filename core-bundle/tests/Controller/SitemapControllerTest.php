@@ -19,53 +19,49 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
 {
-    public function testNoSitemapIfNoRootPageFound(): void
+    public function testThrowsNotFoundHttpExceptionIfNoRootPageFound(): void
     {
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
-        $pageModelAdapter
-            ->expects($this->exactly(2))
-            ->method('findPublishedRootPages')
-            ->withConsecutive([['dns' => 'www.foobar.com']], [['dns' => '']])
-            ->willReturn(null)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->never())
             ->method('dispatch')
         ;
 
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
+
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->once())
+            ->method('findRootPagesForHost')
+            ->with($request->getHost())
+            ->willReturn([])
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($registry);
-        $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $this->expectException(NotFoundHttpException::class);
 
-        $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $controller = new SitemapController($registry, $pageFinder);
+        $controller->setContainer($container);
+        $controller($request);
     }
 
     public function testIgnoresRequestPort(): void
@@ -85,10 +81,13 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com:8000/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $pageFinder = $this->mockPageFinder($request);
+
+        $controller = new SitemapController($registry, $pageFinder);
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com:8000/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -112,10 +111,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -158,10 +158,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -210,10 +211,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -257,10 +259,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -302,6 +305,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
@@ -318,9 +322,9 @@ class SitemapControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -359,6 +363,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
@@ -375,9 +380,9 @@ class SitemapControllerTest extends TestCase
             ->willReturn(false, true)
         ;
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -422,6 +427,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
@@ -438,9 +444,9 @@ class SitemapControllerTest extends TestCase
             ->willReturn(true, true)
         ;
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -495,10 +501,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 45 => null]);
         $container = $this->getContainer($framework, [2]);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -538,10 +545,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -575,10 +583,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -620,10 +629,11 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -662,14 +672,15 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
+        $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('custom1', new RouteConfig(null, null, null, [], [], ['_format' => 'xml'], []));
         $registry->add('custom2', new RouteConfig());
 
-        $controller = new SitemapController($registry);
+        $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
-        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+        $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -696,9 +707,9 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
-     * @return ContaoFramework&MockObject
+     * @return PageFinder&MockObject
      */
-    private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
+    private function mockPageFinder(Request $request): PageFinder
     {
         /** @var PageModel $rootPage1 */
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
@@ -716,13 +727,23 @@ class SitemapControllerTest extends TestCase
         $rootPage2->language = 'de';
         $rootPage2->fallback = false;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
-        $pageModelAdapter
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
             ->expects($this->once())
-            ->method('findPublishedRootPages')
-            ->with(['dns' => 'www.foobar.com'])
+            ->method('findRootPagesForHost')
+            ->with($request->getHost())
             ->willReturn([$rootPage1, $rootPage2])
         ;
+
+        return $pageFinder;
+    }
+
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework
+    {
+        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
 
         $pageModelAdapter
             ->expects($this->exactly(\count($pages)))
@@ -745,38 +766,10 @@ class SitemapControllerTest extends TestCase
             ->willReturnOnConsecutiveCalls(...$articles)
         ;
 
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-
-        if (null === $hooks) {
-            $systemAdapter
-                ->expects($this->never())
-                ->method('importStatic')
-            ;
-        } else {
-            // Each hook is called twice (for each root page)
-            $systemAdapter
-                ->expects($this->exactly(\count($hooks) * 2))
-                ->method('importStatic')
-                ->withConsecutive(...array_map(
-                    static fn ($objectName) => [$objectName],
-                    [...array_keys($hooks), ...array_keys($hooks)]
-                ))
-                ->willReturnOnConsecutiveCalls(...array_values($hooks), ...array_values($hooks))
-            ;
-        }
-
-        $framework = $this->mockContaoFramework([
+        return $this->mockContaoFramework([
             PageModel::class => $pageModelAdapter,
             ArticleModel::class => $articleModelAdapter,
-            System::class => $systemAdapter,
         ]);
-
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        return $framework;
     }
 
     /**
