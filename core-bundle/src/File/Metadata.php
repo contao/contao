@@ -118,7 +118,7 @@ class Metadata
         return empty($this->values);
     }
 
-    public function getSchemaOrgData(string $type = null): array
+    public function getSchemaOrgData(string|null $type = null): array
     {
         // Lazy initialize
         if (null === $this->schemaOrgJsonLd) {

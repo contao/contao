@@ -220,7 +220,7 @@ class RouteProvider extends AbstractPageRouteProvider
      * 3. Root/Index pages must be sorted by accept language and fallback, so the best language matches first
      * 4. Pages with longer alias (folder page) must come first to match if applicable
      */
-    private function sortRoutes(array &$routes, array $languages = null): void
+    private function sortRoutes(array &$routes, array|null $languages = null): void
     {
         // Convert languages array so key is language and value is priority
         if (null !== $languages) {

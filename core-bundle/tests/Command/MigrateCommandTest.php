@@ -834,7 +834,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @return Connection&MockObject
      */
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection
     {
         $connection = $this->createMock(Connection::class);
         $connection

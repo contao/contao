@@ -814,7 +814,7 @@ class RouteProviderTest extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    private function mockFramework(Adapter $pageAdapter = null): ContaoFramework
+    private function mockFramework(Adapter|null $pageAdapter = null): ContaoFramework
     {
         return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
@@ -822,7 +822,7 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null, string $urlSuffix = '.html'): PageModel
+    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
@@ -873,7 +873,7 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    private function getRouteProvider(ContaoFramework $framework = null, PageRegistry $pageRegistry = null): RouteProvider
+    private function getRouteProvider(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null): RouteProvider
     {
         $candidates = $this->createMock(CandidatesInterface::class);
         $candidates

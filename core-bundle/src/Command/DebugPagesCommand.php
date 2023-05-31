@@ -50,7 +50,7 @@ class DebugPagesCommand extends Command
         parent::__construct();
     }
 
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface|null $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 

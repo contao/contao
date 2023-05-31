@@ -83,7 +83,7 @@ class InheritanceTest extends TestCase
         $this->getDemoEnvironment(['InvalidBundle2' => ['path' => $bundlePath]]);
     }
 
-    private function getDemoEnvironment(array $bundlesMetadata = null): Environment
+    private function getDemoEnvironment(array|null $bundlesMetadata = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 

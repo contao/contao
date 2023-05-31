@@ -83,7 +83,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         );
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
+    public function start(Request $request, AuthenticationException|null $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);

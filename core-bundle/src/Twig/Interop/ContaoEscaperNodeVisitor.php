@@ -92,7 +92,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     /**
      * @param-out string $type
      */
-    private function isEscaperFilterExpression(Node $node, string &$type = null): bool
+    private function isEscaperFilterExpression(Node $node, string|null &$type = null): bool
     {
         if (
             !$node instanceof FilterExpression

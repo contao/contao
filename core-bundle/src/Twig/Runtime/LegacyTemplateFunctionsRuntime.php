@@ -32,7 +32,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     /**
      * Makes the FrontendTemplate#sections() method available from within Twig templates.
      */
-    public function renderLayoutSections(array $context, string $key, string $template = null): string
+    public function renderLayoutSections(array $context, string $key, string|null $template = null): string
     {
         $this->framework->initialize();
 
@@ -50,7 +50,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     /**
      * Makes the FrontendTemplate#section() method available from within Twig templates.
      */
-    public function renderLayoutSection(array $context, string $key, string $template = null): string
+    public function renderLayoutSection(array $context, string $key, string|null $template = null): string
     {
         $this->framework->initialize();
 

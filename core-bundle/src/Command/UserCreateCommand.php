@@ -189,7 +189,7 @@ class UserCreateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string
+    private function ask(string $label, InputInterface $input, OutputInterface $output, callable|null $callback = null): string
     {
         $question = new Question($label);
         $question->setMaxAttempts(3);
@@ -251,7 +251,7 @@ class UserCreateCommand extends Command
         return $groups->fetchEach('name');
     }
 
-    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
+    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array|null $groups = null, bool $pwChange = false): void
     {
         $time = time();
         $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);

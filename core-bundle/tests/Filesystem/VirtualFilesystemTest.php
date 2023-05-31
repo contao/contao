@@ -1013,7 +1013,7 @@ class VirtualFilesystemTest extends TestCase
         return $mountManager;
     }
 
-    private function getVirtualFilesystem(MountManager $mountManager, array $sync = null): VirtualFilesystem
+    private function getVirtualFilesystem(MountManager $mountManager, array|null $sync = null): VirtualFilesystem
     {
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager

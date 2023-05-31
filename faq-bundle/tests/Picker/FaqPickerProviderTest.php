@@ -209,7 +209,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): FaqPickerProvider
+    private function getPicker(bool|null $accessGranted = null): FaqPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

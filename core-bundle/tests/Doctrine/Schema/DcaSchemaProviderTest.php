@@ -289,7 +289,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * @dataProvider provideIndexes
      */
-    public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
+    public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string|null $largePrefixes = null, string|null $version = null, string|null $filePerTable = null, string|null $fileFormat = null): void
     {
         $dca = [
             'tl_files' => [

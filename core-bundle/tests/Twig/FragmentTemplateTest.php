@@ -106,7 +106,7 @@ class FragmentTemplateTest extends TestCase
         }
     }
 
-    private function getFragmentTemplate(\Closure $callback = null): FragmentTemplate
+    private function getFragmentTemplate(\Closure|null $callback = null): FragmentTemplate
     {
         $callback ??= (static fn () => new Response());
 

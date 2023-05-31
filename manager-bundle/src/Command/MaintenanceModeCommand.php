@@ -30,7 +30,7 @@ class MaintenanceModeCommand extends Command
 {
     private Filesystem $filesystem;
 
-    public function __construct(private string $maintenanceFilePath, private Environment $twig, Filesystem $filesystem = null)
+    public function __construct(private string $maintenanceFilePath, private Environment $twig, Filesystem|null $filesystem = null)
     {
         $this->filesystem = $filesystem ?? new Filesystem();
 

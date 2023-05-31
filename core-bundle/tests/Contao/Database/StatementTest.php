@@ -63,7 +63,7 @@ class StatementTest extends TestCase
     /**
      * @dataProvider getQueriesWithParametersAndSets
      */
-    public function testReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
+    public function testReplacesParametersAndSets(string $query, string $expected, array|null $params = null, array|null $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);
         $doctrineResult

@@ -651,7 +651,7 @@ class FigureBuilder
             return null;
         }
 
-        $getUuid = static function (?FilesModel $filesModel): ?string {
+        $getUuid = static function (FilesModel|null $filesModel): ?string {
             if (null === $filesModel || null === $filesModel->uuid) {
                 return null;
             }

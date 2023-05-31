@@ -196,7 +196,7 @@ class DcaSchemaProvider
         $table->addColumn($columnName, $type, $options);
     }
 
-    private function setLengthAndPrecisionByType(string $type, string $dbType, ?int &$length, ?int &$scale, ?int &$precision, bool &$fixed): void
+    private function setLengthAndPrecisionByType(string $type, string $dbType, int|null &$length, int|null &$scale, int|null &$precision, bool &$fixed): void
     {
         switch ($type) {
             case 'char':

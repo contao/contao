@@ -775,7 +775,7 @@ class PictureFactoryTest extends TestCase
         yield [false, 20, 100, 22, 100];
     }
 
-    private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null): PictureFactory
+    private function getPictureFactory(PictureGeneratorInterface|null $pictureGenerator = null, ImageFactoryInterface|null $imageFactory = null, ContaoFramework|null $framework = null): PictureFactory
     {
         $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
         $imageFactory ??= $this->createMock(ImageFactoryInterface::class);

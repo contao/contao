@@ -339,7 +339,7 @@ class UserSessionListenerTest extends TestCase
         $listener->write($this->getResponseEvent($request));
     }
 
-    private function getListener(Connection $connection = null, Security $security = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
+    private function getListener(Connection|null $connection = null, Security|null $security = null, EventDispatcherInterface|null $eventDispatcher = null): UserSessionListener
     {
         $connection ??= $this->createMock(Connection::class);
         $security ??= $this->createMock(Security::class);
@@ -349,14 +349,14 @@ class UserSessionListenerTest extends TestCase
         return new UserSessionListener($connection, $security, $scopeMatcher, $eventDispatcher);
     }
 
-    private function getRequestEvent(Request $request = null): RequestEvent
+    private function getRequestEvent(Request|null $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
         return new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
     }
 
-    private function getResponseEvent(Request $request = null): ResponseEvent
+    private function getResponseEvent(Request|null $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
