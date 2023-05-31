@@ -224,7 +224,7 @@ window.AjaxRequest =
 	},
 
 	/**
-	 * Toggle subpalettes in edit mode
+	 * Toggle sub-palettes in edit mode
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
