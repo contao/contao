@@ -92,11 +92,9 @@ class RegisterHookListenersPassTest extends TestCase
 
         $this->assertSame(
             [
-                'generatePage' => [
-                    0 => [
-                        ['test.hook_listener', 'onGeneratePage'],
-                    ],
-                ],
+                'generatePage' => [[
+                    ['test.hook_listener', 'onGeneratePage'],
+                ]],
             ],
             $this->getHookListenersFromDefinition($container)[0]
         );
@@ -119,11 +117,9 @@ class RegisterHookListenersPassTest extends TestCase
 
         $this->assertSame(
             [
-                'generatePage' => [
-                    0 => [
-                        ['test.hook_listener', '__invoke'],
-                    ],
-                ],
+                'generatePage' => [[
+                    ['test.hook_listener', '__invoke'],
+                ]],
             ],
             $this->getHookListenersFromDefinition($container)[0]
         );
@@ -147,11 +143,9 @@ class RegisterHookListenersPassTest extends TestCase
 
         $this->assertSame(
             [
-                'initializeSystem' => [
-                    0 => [
-                        ['test.hook_listener', 'onInitializeSystem'],
-                    ],
-                ],
+                'initializeSystem' => [[
+                    ['test.hook_listener', 'onInitializeSystem'],
+                ]],
             ],
             $this->getHookListenersFromDefinition($container)[0]
         );
@@ -201,22 +195,16 @@ class RegisterHookListenersPassTest extends TestCase
 
         $this->assertSame(
             [
-                'initializeSystem' => [
-                    0 => [
-                        ['test.hook_listener', 'onInitializeSystemFirst'],
-                        ['test.hook_listener', 'onInitializeSystemSecond'],
-                    ],
-                ],
-                'generatePage' => [
-                    0 => [
-                        ['test.hook_listener', 'onGeneratePage'],
-                    ],
-                ],
-                'parseTemplate' => [
-                    0 => [
-                        ['test.hook_listener', 'onParseTemplate'],
-                    ],
-                ],
+                'initializeSystem' => [[
+                    ['test.hook_listener', 'onInitializeSystemFirst'],
+                    ['test.hook_listener', 'onInitializeSystemSecond'],
+                ]],
+                'generatePage' => [[
+                    ['test.hook_listener', 'onGeneratePage'],
+                ]],
+                'parseTemplate' => [[
+                    ['test.hook_listener', 'onParseTemplate'],
+                ]],
             ],
             $this->getHookListenersFromDefinition($container)[0]
         );

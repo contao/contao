@@ -360,8 +360,8 @@ class RouteProviderTest extends TestCase
 
         yield 'Sorts host first (2)' => [
             [
-                0 => $this->mockPage('fr', 'foo', true, 'example.com'),
-                1 => $this->mockPage('it', 'foo'),
+                $this->mockPage('fr', 'foo', true, 'example.com'),
+                $this->mockPage('it', 'foo'),
             ],
             ['en'],
         ];
@@ -392,8 +392,8 @@ class RouteProviderTest extends TestCase
 
         yield 'Sorts by language match (2)' => [
             [
-                0 => $this->mockPage('it', 'foo'),
-                1 => $this->mockPage('de', 'foo'),
+                $this->mockPage('it', 'foo'),
+                $this->mockPage('de', 'foo'),
             ],
             ['it'],
         ];
