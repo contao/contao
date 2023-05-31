@@ -51,7 +51,6 @@ class FaviconControllerTest extends TestCase
     public function testThrowsNotFoundHttpExceptionIfNoFaviconProvided(): void
     {
         $request = Request::create('https://www.example.org/favicon.ico');
-
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'favicon' => null]);
 
         $pageFinder = $this->createMock(PageFinder::class);

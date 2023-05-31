@@ -26,14 +26,13 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend'])]
+#[Route('/favicon.ico', defaults: ['_scope' => 'frontend'])]
 class FaviconController
 {
     public function __construct(private ContaoFramework $framework, private PageFinder $pageFinder, private string $projectDir, private EntityCacheTags $entityCacheTags)
     {
     }
 
-    #[Route('/favicon.ico')]
     public function __invoke(Request $request): Response
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());

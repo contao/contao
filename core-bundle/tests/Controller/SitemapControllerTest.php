@@ -23,7 +23,6 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -742,7 +741,7 @@ class SitemapControllerTest extends TestCase
     /**
      * @return ContaoFramework&MockObject
      */
-    private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
+    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
 
@@ -767,30 +766,9 @@ class SitemapControllerTest extends TestCase
             ->willReturnOnConsecutiveCalls(...$articles)
         ;
 
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-
-        if (null === $hooks) {
-            $systemAdapter
-                ->expects($this->never())
-                ->method('importStatic')
-            ;
-        } else {
-            // Each hook is called twice (for each root page)
-            $systemAdapter
-                ->expects($this->exactly(\count($hooks) * 2))
-                ->method('importStatic')
-                ->withConsecutive(...array_map(
-                    static fn ($objectName) => [$objectName],
-                    [...array_keys($hooks), ...array_keys($hooks)]
-                ))
-                ->willReturnOnConsecutiveCalls(...array_values($hooks), ...array_values($hooks))
-            ;
-        }
-
         return $this->mockContaoFramework([
             PageModel::class => $pageModelAdapter,
             ArticleModel::class => $articleModelAdapter,
-            System::class => $systemAdapter,
         ]);
     }
 

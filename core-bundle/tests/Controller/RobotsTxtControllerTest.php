@@ -50,7 +50,6 @@ class RobotsTxtControllerTest extends TestCase
     public function testRobotsTxt(): void
     {
         $request = Request::create('https://www.example.org/robots.txt');
-
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $pageFinder = $this->createMock(PageFinder::class);
@@ -76,7 +75,6 @@ class RobotsTxtControllerTest extends TestCase
     public function testRobotsTxtIgnoresRequestPort(): void
     {
         $request = Request::create('https://localhost:8000/robots.txt');
-
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $pageFinder = $this->createMock(PageFinder::class);

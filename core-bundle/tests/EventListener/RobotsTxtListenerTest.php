@@ -137,7 +137,6 @@ class RobotsTxtListenerTest extends TestCase
         ;
 
         $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
-
         $framework = $this->mockContaoFramework();
 
         $listener = new RobotsTxtListener($framework, $routePrefix);
