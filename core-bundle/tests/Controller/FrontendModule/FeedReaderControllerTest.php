@@ -293,7 +293,7 @@ class FeedReaderControllerTest extends TestCase
         return $feed;
     }
 
-    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface $logger = null, ContainerInterface $container = null): FeedReaderController
+    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null): FeedReaderController
     {
         $logger = $logger ?? $this->createMock(LoggerInterface::class);
 
@@ -304,7 +304,7 @@ class FeedReaderControllerTest extends TestCase
         return $controller;
     }
 
-    private function mockContainer(RequestStack $requestStack = null, callable $assertTwigContext = null): ContainerBuilder
+    private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader

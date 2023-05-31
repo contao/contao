@@ -28,7 +28,7 @@ class PageFinder
      * Finds the root page matching the request host and optionally an Accept-Language header.
      * If $acceptLanguage is not given, it will always return the fallback root page.
      */
-    public function findRootPageForHostAndLanguage(string $hostname, string $acceptLanguage = null): PageModel|null
+    public function findRootPageForHostAndLanguage(string $hostname, string|null $acceptLanguage = null): PageModel|null
     {
         $request = Request::create('http://'.$hostname);
         $request->headers->set('Accept-Language', $acceptLanguage ?? '');

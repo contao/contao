@@ -77,20 +77,17 @@ class RootPageDependentSelectListenerTest extends TestCase
 
     public function testDoesNotSaveUnserializableData(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class)
         );
 
-        $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
+        $this->assertSame('foobar', $listener->saveCallback('foobar'));
     }
 
     public function testSavesValuesRelatedToRootPage(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
         $connection = $this->mockGetRootPages();
 
         $listener = new RootPageDependentSelectListener(
@@ -105,7 +102,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 2 => 20,
                 3 => 30,
             ]),
-            $listener->saveCallback(serialize([10, 20, 30]), $dataContainer)
+            $listener->saveCallback(serialize([10, 20, 30]))
         );
     }
 

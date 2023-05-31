@@ -245,7 +245,7 @@ class FragmentHandlerTest extends TestCase
      * @param ServiceLocator<mixed>|null $renderers
      * @param ServiceLocator<mixed>|null $preHandlers
      */
-    private function getFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
+    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null): FragmentHandler
     {
         $registry ??= new FragmentRegistry();
         $renderers ??= new ServiceLocator([]);
@@ -262,7 +262,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator<mixed>&MockObject
      */
-    private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
+    private function mockServiceLocatorWithRenderer(string $name, array|null $with = null, Response|null $response = null): ServiceLocator
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer
@@ -276,7 +276,7 @@ class FragmentHandlerTest extends TestCase
         ;
 
         if (null !== $with) {
-            $method = \call_user_func_array([$method, 'with'], $with);
+            $method->with(...$with);
         }
 
         $method->willReturn($response ?? new Response());

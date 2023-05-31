@@ -84,7 +84,7 @@ class AdministratorEmailListenerTest extends TestCase
         $this->assertSame('<p class="tl_error">ERR.noAdminEmailUrl</p>', $listener());
     }
 
-    private function createAdministratorEmailListener(ContaoFramework $framework = null, TranslatorInterface $translator = null, RouterInterface $router = null, RequestStack $requestStack = null, Security $security = null): AdministratorEmailListener
+    private function createAdministratorEmailListener(ContaoFramework|null $framework = null, TranslatorInterface|null $translator = null, RouterInterface|null $router = null, RequestStack|null $requestStack = null, Security|null $security = null): AdministratorEmailListener
     {
         if (null === $framework) {
             $configAdapter = $this->mockAdapter(['get']);

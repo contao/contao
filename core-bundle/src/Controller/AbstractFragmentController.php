@@ -88,7 +88,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $this->view = $templateNameToView($templateName);
         }
 
-        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($isLegacyTemplate, $templateName, $templateNameToView): Response {
             if ($isLegacyTemplate) {
                 // Render using the legacy framework
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
@@ -159,7 +159,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           Attributes data is always added to the context of modern
      *           fragment templates.
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
@@ -231,7 +231,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * same page. Pass a prebuilt Response if you want to have full control -
      * no headers will be set then.
      */
-    protected function render(string|null $view = null, array $parameters = [], Response $response = null): Response
+    protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
@@ -244,7 +244,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return parent::render($view, $parameters, $response);
     }
 
-    protected function isBackendScope(Request $request = null): bool
+    protected function isBackendScope(Request|null $request = null): bool
     {
         $request ??= $this->container->get('request_stack')->getCurrentRequest();
 

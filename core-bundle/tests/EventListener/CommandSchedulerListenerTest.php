@@ -146,7 +146,7 @@ class CommandSchedulerListenerTest extends TestCase
         return $connection;
     }
 
-    private function getTerminateEvent(string $route = null): TerminateEvent
+    private function getTerminateEvent(string|null $route = null): TerminateEvent
     {
         $request = new Request();
 

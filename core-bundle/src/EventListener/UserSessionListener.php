@@ -61,7 +61,7 @@ class UserSessionListener
         }
 
         // Dynamically register the kernel.response listener (see #1293)
-        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'write']);
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, $this->write(...));
     }
 
     /**

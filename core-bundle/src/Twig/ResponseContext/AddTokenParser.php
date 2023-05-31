@@ -51,7 +51,7 @@ class AddTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         // Parse closing tag: {% endadd %}
-        $body = $this->parser->subparse([$this, 'decideAddEnd'], true);
+        $body = $this->parser->subparse($this->decideAddEnd(...), true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return new AddNode($this->extensionName, $body, $identifier, $location, $token->getLine());

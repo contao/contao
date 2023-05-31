@@ -69,21 +69,19 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
-        $this->options = array_merge(
-            [
-                'username_parameter' => 'username',
-                'password_parameter' => 'password',
-                'check_path' => '/login_check',
-                'post_only' => true,
-                'enable_csrf' => false,
-                'csrf_parameter' => '_csrf_token',
-                'csrf_token_id' => 'authenticate',
-            ],
-            $options
-        );
+        $this->options = [
+            'username_parameter' => 'username',
+            'password_parameter' => 'password',
+            'check_path' => '/login_check',
+            'post_only' => true,
+            'enable_csrf' => false,
+            'csrf_parameter' => '_csrf_token',
+            'csrf_token_id' => 'authenticate',
+            ...$options,
+        ];
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
+    public function start(Request $request, AuthenticationException|null $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
@@ -122,7 +120,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
-            new UserBadge($credentials['username'], [$this->userProvider, 'loadUserByIdentifier']),
+            new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
             [new RememberMeBadge()]
         );

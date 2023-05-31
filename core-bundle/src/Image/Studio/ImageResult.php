@@ -143,7 +143,7 @@ class ImageResult
         $picture = $this->getPicture();
         $candidates = [];
 
-        foreach (array_merge([$picture->getImg()], $picture->getSources()) as $source) {
+        foreach ([$picture->getImg(), ...$picture->getSources()] as $source) {
             $candidates[] = $source['src'] ?? null;
 
             foreach ($source['srcset'] ?? [] as $srcset) {

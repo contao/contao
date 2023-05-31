@@ -51,7 +51,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_faq';
     }
@@ -76,7 +76,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'faq'];
 

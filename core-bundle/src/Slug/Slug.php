@@ -31,7 +31,7 @@ class Slug
      *
      * @see SlugGeneratorInterface::generate()
      */
-    public function generate(string $text, int|iterable $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
+    public function generate(string $text, int|iterable $options = [], callable|null $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);

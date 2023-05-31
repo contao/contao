@@ -589,7 +589,7 @@ class MountManagerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getUri')
             ->willReturnCallback(
-                function (FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options) use ($fooAdapter): ?UriInterface {
+                function (FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options) use ($fooAdapter): UriInterface|null {
                     if ('bar/baz.jpg' !== $adapterPath) {
                         return null;
                     }

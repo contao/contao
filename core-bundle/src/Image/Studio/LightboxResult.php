@@ -34,7 +34,7 @@ class LightboxResult
         private string|null $url,
         PictureConfiguration|array|int|string|null $sizeConfiguration = null,
         private string|null $groupIdentifier = null,
-        ResizeOptions $resizeOptions = null,
+        ResizeOptions|null $resizeOptions = null,
     ) {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');
