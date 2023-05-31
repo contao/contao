@@ -67,10 +67,11 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
         if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
-        } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)) {
-            if (\in_array($strategy, ['html', 'html_attr'], true)) {
-                $this->escaperFilterNodes[] = [$node, $strategy];
-            }
+        } elseif (
+            null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)
+            && \in_array($strategy, ['html', 'html_attr'], true)
+        ) {
+            $this->escaperFilterNodes[] = [$node, $strategy];
         }
 
         return $node;
