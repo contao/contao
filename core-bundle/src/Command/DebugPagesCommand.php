@@ -87,8 +87,8 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config && $config->getPath() ? $config->getPath() : '*',
-                $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
+                $config?->getPath() ? $config->getPath() : '*',
+                $config?->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $contentComposition,
                 isset($this->routeEnhancers[$type]) ? $this->routeEnhancers[$type]::class : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
