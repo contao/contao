@@ -213,11 +213,11 @@ class ContaoExtensionTest extends TestCase
             new Source('<code>', 'foo.html.twig')
         );
 
-        $original = $node->__toString();
+        $original = (string) $node;
 
         // Traverse tree first time (no changes expected)
         $traverser->traverse($node);
-        $iteration1 = $node->__toString();
+        $iteration1 = (string) $node;
 
         // Add rule that allows the template and traverse tree a second time (change expected)
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
@@ -226,7 +226,7 @@ class ContaoExtensionTest extends TestCase
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
 
         $traverser->traverse($node);
-        $iteration2 = $node->__toString();
+        $iteration2 = (string) $node;
 
         $this->assertSame($original, $iteration1);
         $this->assertStringNotContainsString("'contao_html'", $iteration1);
