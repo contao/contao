@@ -956,7 +956,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+        $getFilesModel = function (array $metaData, string|null $uuid) use ($relativeFilePath) {
             $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',

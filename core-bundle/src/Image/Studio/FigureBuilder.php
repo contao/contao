@@ -621,7 +621,7 @@ class FigureBuilder
         return new Figure(
             $imageResult,
             \Closure::bind(
-                function (Figure $figure): ?Metadata {
+                function (): Metadata|null {
                     $event = new FileMetadataEvent($this->onDefineMetadata());
 
                     $this->locator->get('event_dispatcher')->dispatch($event);
@@ -635,7 +635,7 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                fn (Figure $figure): ?LightboxResult => $this->onDefineLightboxResult($figure),
+                fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
                 $settings
             ),
             $settings->options
@@ -651,7 +651,7 @@ class FigureBuilder
             return null;
         }
 
-        $getUuid = static function (FilesModel|null $filesModel): ?string {
+        $getUuid = static function (FilesModel|null $filesModel): string|null {
             if (null === $filesModel || null === $filesModel->uuid) {
                 return null;
             }
@@ -720,7 +720,7 @@ class FigureBuilder
             return null;
         }
 
-        $getMetadataUrl = static function () use ($result): ?string {
+        $getMetadataUrl = static function () use ($result): string|null {
             if (!$result->hasMetadata()) {
                 return null;
             }

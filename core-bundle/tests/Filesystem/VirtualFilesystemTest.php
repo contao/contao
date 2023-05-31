@@ -479,7 +479,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                static function (string $path) use (&$handlerInvocationCount): ?FilesystemItem {
+                static function (string $path) use (&$handlerInvocationCount): FilesystemItem|null {
                     $items = [
                         'file_b' => new FilesystemItem(
                             true,

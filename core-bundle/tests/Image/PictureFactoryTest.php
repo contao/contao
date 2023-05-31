@@ -110,7 +110,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
@@ -522,7 +522,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
@@ -597,7 +597,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
