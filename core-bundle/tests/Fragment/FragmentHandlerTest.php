@@ -272,7 +272,7 @@ class FragmentHandlerTest extends TestCase
         ;
 
         if (null !== $with) {
-            $method = \call_user_func_array([$method, 'with'], $with);
+            $method->with(...$with);
         }
 
         $method->willReturn($response ?? new Response());

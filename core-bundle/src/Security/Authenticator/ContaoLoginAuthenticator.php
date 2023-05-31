@@ -120,7 +120,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
-            new UserBadge($credentials['username'], [$this->userProvider, 'loadUserByIdentifier']),
+            new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
             [new RememberMeBadge()]
         );

@@ -127,7 +127,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $question = new Question('Enter a table for the callback');
         $question->setAutocompleterValues($tables);
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('table', $io->askQuestion($question));
     }
@@ -143,7 +143,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $question = new Question('Enter a target for the callback');
         $question->setAutocompleterValues(array_keys($targets));
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $target = $io->askQuestion($question);
 
@@ -158,7 +158,7 @@ class MakeDcaCallback extends AbstractMaker
                 $command->addArgument($chunk, InputArgument::OPTIONAL);
 
                 $question = new Question(sprintf('Please enter a value for "%s"', $chunk));
-                $question->setValidator([Validator::class, 'notBlank']);
+                $question->setValidator(Validator::notBlank(...));
 
                 $input->setArgument($chunk, $io->askQuestion($question));
             }
