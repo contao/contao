@@ -105,7 +105,7 @@ class PlayerController extends AbstractContentElementController
         $captions = [$model->playerCaption];
 
         $sources = array_map(
-            function (FilesystemItem $item) use ($range, &$captions): HtmlAttributes {
+            function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
                 $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())

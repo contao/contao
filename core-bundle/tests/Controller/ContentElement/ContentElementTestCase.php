@@ -244,7 +244,7 @@ class ContentElementTestCase extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static fn (string $id, array $parameters = [], string $domain = null, string $locale = null): string => sprintf(
+                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => sprintf(
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,

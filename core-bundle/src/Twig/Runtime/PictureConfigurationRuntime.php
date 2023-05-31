@@ -103,7 +103,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         }
     }
 
-    private function throwInvalidArgumentException(array $unmappedConfig, string $prefix = null): void
+    private function throwInvalidArgumentException(array $unmappedConfig, string|null $prefix = null): void
     {
         $keys = array_keys($unmappedConfig);
 

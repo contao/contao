@@ -104,7 +104,7 @@ class DebugContaoTwigCommand extends Command
         }
 
         // Recursively display tree nodes
-        $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use (&$displayNode, $io, $chains): void {
+        $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use ($io, $chains, &$displayNode): void {
             // Make sure leaf nodes (files) come first and everything else is
             // sorted ascending by its key (identifier part)
             uksort(

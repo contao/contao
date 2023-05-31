@@ -231,7 +231,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         foreach ($this->hookListeners as $hookName => $priorities) {
             if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
                 if (isset($priorities[0])) {
-                    $priorities[0] = array_merge($GLOBALS['TL_HOOKS'][$hookName], $priorities[0]);
+                    $priorities[0] = [...$GLOBALS['TL_HOOKS'][$hookName], ...$priorities[0]];
                 } else {
                     $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
                     krsort($priorities);

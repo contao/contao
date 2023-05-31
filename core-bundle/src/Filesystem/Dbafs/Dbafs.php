@@ -538,7 +538,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             return;
         }
 
-        $getParentUuid = static function (string $path) use (&$allUuidsByPath): ?string {
+        $getParentUuid = static function (string $path) use (&$allUuidsByPath): string|null {
             if ('.' === ($parentPath = \dirname($path))) {
                 return null;
             }

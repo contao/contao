@@ -60,7 +60,7 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    public function authenticateFrontendGuest(bool $showUnpublished, int $previewLinkId = null): bool
+    public function authenticateFrontendGuest(bool $showUnpublished, int|null $previewLinkId = null): bool
     {
         try {
             $session = $this->requestStack->getSession();

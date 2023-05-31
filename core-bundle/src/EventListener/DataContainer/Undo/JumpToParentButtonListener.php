@@ -101,7 +101,7 @@ class JumpToParentButtonListener
         foreach ($GLOBALS['BE_MOD'] as $group) {
             foreach ($group as $name => $config) {
                 if (\is_array($config['tables'] ?? null) && \in_array($table, $config['tables'], true)) {
-                    return array_merge($config, ['_module_name' => $name]);
+                    return [...$config, '_module_name' => $name];
                 }
             }
         }

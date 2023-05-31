@@ -524,7 +524,7 @@ class DefaultOperationsListenerTest extends TestCase
     /**
      * @dataProvider checkPermissionsProvider
      */
-    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array $newRecord = null): void
+    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array|null $newRecord = null): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 

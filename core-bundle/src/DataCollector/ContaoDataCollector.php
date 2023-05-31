@@ -35,14 +35,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, \Throwable|null $exception = null): void
     {
         $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
 
         $this->addSummaryData();
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+            $this->data = [...$this->data, ...$GLOBALS['TL_DEBUG']];
         }
     }
 

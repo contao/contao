@@ -34,7 +34,7 @@ class ImagesController
         private ImageFactoryInterface $imageFactory,
         private ResizerInterface $resizer,
         private string $targetDir,
-        Filesystem $filesystem = null,
+        Filesystem|null $filesystem = null,
     ) {
         $this->filesystem = $filesystem ?? new Filesystem();
     }

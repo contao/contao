@@ -28,7 +28,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $definition = $container->findDefinition('contao.intl.locales');
 
             $enabledLocales = $this->getEnabledLocales($container);
-            $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
+            $locales = array_values(array_unique([...$enabledLocales, ...\ResourceBundle::getLocales('')]));
 
             $definition->setArgument(2, $locales);
             $definition->setArgument(3, $enabledLocales);

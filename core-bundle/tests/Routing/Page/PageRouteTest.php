@@ -115,18 +115,16 @@ class PageRouteTest extends TestCase
     {
         return $this->mockClassWithProperties(
             PageModel::class,
-            array_merge(
-                [
-                    'id' => 17,
-                    'alias' => 'bar',
-                    'domain' => 'www.example.com',
-                    'rootLanguage' => 'xx',
-                    'rootUseSSL' => true,
-                    'urlPrefix' => 'foo',
-                    'urlSuffix' => '.baz',
-                ],
-                $properties
-            )
+            [
+                'id' => 17,
+                'alias' => 'bar',
+                'domain' => 'www.example.com',
+                'rootLanguage' => 'xx',
+                'rootUseSSL' => true,
+                'urlPrefix' => 'foo',
+                'urlSuffix' => '.baz',
+                ...$properties,
+            ]
         );
     }
 }

@@ -332,7 +332,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private static function create(string $projectDir, string $env = null): self
+    private static function create(string $projectDir, string|null $env = null): self
     {
         $env ??= $_SERVER['APP_ENV'] ?? 'prod';
 

@@ -45,10 +45,10 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return array_merge($this->parent->getDomains(), $domains);
+        return [...$this->parent->getDomains(), ...$domains];
     }
 
-    public function all(string $domain = null): array
+    public function all(string|null $domain = null): array
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));

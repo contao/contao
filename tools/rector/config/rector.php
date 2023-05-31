@@ -16,7 +16,6 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
@@ -44,8 +43,11 @@ return static function (RectorConfig $rectorConfig): void {
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
-        ChangeSwitchToMatchRector::class,
-        FirstClassCallableRector::class,
+        FirstClassCallableRector::class => [
+            'core-bundle/tests/Contao/InsertTagsTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperNodeVisitorTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
+        ],
         NullToStrictStringFuncCallArgRector::class,
         ReadOnlyPropertyRector::class,
     ]);
