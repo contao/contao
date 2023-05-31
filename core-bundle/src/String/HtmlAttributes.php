@@ -239,10 +239,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             $styles = implode(';', $styles);
         }
 
-        $mergedStyles = array_merge(
-            $this->parseStyles($this->attributes['style'] ?? ''),
-            $this->parseStyles($styles),
-        );
+        $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
 
         $this->attributes['style'] = $this->serializeStyles($mergedStyles);
 

@@ -40,10 +40,12 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize();
 
-        $collection = new RouteCollection();
-        $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
+        /** @var array<string, mixed> $routes */
+        $routes = [...$this->getNotFoundRoutes(), ...$this->getLocaleFallbackRoutes($request)];
 
         $this->sortRoutes($routes, $request->getLanguages());
+
+        $collection = new RouteCollection();
 
         foreach ($routes as $name => $route) {
             $collection->add($name, $route);

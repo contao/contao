@@ -48,7 +48,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $urls = array_merge($urls, $this->getPageAndArticleUrls((int) $rootPage->id));
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage->id)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;

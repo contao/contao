@@ -196,14 +196,12 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
-            array_merge(
-                $route->getDefaults(),
-                [
-                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
-                    'path' => '/'.$urlPrefix.'/',
-                    'permanent' => false,
-                ]
-            ),
+            [
+                ...$route->getDefaults(),
+                '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
+                'path' => '/'.$urlPrefix.'/',
+                'permanent' => false,
+            ],
             [],
             $route->getOptions(),
             $route->getHost(),

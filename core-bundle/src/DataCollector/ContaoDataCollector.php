@@ -42,7 +42,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         $this->addSummaryData();
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+            $this->data = [...$this->data, ...$GLOBALS['TL_DEBUG']];
         }
     }
 

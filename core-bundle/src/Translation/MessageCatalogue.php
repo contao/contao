@@ -45,7 +45,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return array_merge($this->parent->getDomains(), $domains);
+        return [...$this->parent->getDomains(), ...$domains];
     }
 
     public function all(string|null $domain = null): array

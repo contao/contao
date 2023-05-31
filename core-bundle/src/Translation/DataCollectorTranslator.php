@@ -75,7 +75,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     public function getCollectedMessages(): array
     {
         if (method_exists($this->translator, 'getCollectedMessages')) {
-            return array_merge($this->translator->getCollectedMessages(), $this->messages);
+            return [...$this->translator->getCollectedMessages(), ...$this->messages];
         }
 
         return $this->messages;

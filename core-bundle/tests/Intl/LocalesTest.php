@@ -307,7 +307,7 @@ class LocalesTest extends TestCase
 
         yield [
             ['+zzz_ZZ', '+zzz'],
-            array_merge(\ResourceBundle::getLocales(''), ['zzz', 'zzz_ZZ']),
+            [...\ResourceBundle::getLocales(''), 'zzz', 'zzz_ZZ'],
         ];
 
         yield [

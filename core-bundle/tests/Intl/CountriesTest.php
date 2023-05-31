@@ -158,7 +158,7 @@ class CountriesTest extends TestCase
 
         yield [
             ['+ZZ', '+ZY'],
-            array_merge(SymfonyCountries::getCountryCodes(), ['ZY', 'ZZ']),
+            [...SymfonyCountries::getCountryCodes(), 'ZY', 'ZZ'],
         ];
 
         yield [

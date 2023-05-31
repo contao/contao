@@ -175,7 +175,7 @@ class ResizeImagesCommand extends Command
             return false;
         }
 
-        $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--help']));
+        $process = new Process([$phpPath, ...$_SERVER['argv'], '--help']);
 
         return 0 === $process->run();
     }
@@ -268,7 +268,7 @@ class ResizeImagesCommand extends Command
                         }
                     }
 
-                    $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--image='.$path]));
+                    $process = new Process([$phpPath, ...$_SERVER['argv'], '--image='.$path]);
                     $process->setTimeout(null);
                     $process->start();
 

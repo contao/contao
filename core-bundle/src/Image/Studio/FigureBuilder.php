@@ -708,7 +708,7 @@ class FigureBuilder
             $linkAttributes['target'] = '_blank';
         }
 
-        return array_merge($linkAttributes, $this->additionalLinkAttributes);
+        return [...$linkAttributes, ...$this->additionalLinkAttributes];
     }
 
     /**

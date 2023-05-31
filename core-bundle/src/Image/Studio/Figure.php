@@ -118,7 +118,7 @@ final class Figure
             return $jsonLd;
         }
 
-        $jsonLd = array_merge($this->getMetadata()->getSchemaOrgData('ImageObject'), $jsonLd);
+        $jsonLd = [...$this->getMetadata()->getSchemaOrgData('ImageObject'), ...$jsonLd];
         ksort($jsonLd);
 
         return $jsonLd;
@@ -244,25 +244,23 @@ final class Figure
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
 
         // Primary image and metadata
-        $templateData = array_merge(
-            [
-                'picture' => [
-                    'img' => $image->getImg(),
-                    'sources' => $image->getSources(),
-                    'alt' => StringUtil::specialchars($metadata->getAlt()),
-                ],
-                'width' => $originalSize->getWidth(),
-                'height' => $originalSize->getHeight(),
-                'arrSize' => $fileInfoImageSize,
-                'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
-                'singleSRC' => $image->getFilePath(),
-                'src' => $image->getImageSrc(),
-                'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
-                'addBefore' => 'below' !== $floating,
-                'addImage' => true,
+        $templateData = [
+            'picture' => [
+                'img' => $image->getImg(),
+                'sources' => $image->getSources(),
+                'alt' => StringUtil::specialchars($metadata->getAlt()),
             ],
-            $includeFullMetadata ? $createLegacyMetadataMapping($metadata) : []
-        );
+            'width' => $originalSize->getWidth(),
+            'height' => $originalSize->getHeight(),
+            'arrSize' => $fileInfoImageSize,
+            'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
+            'singleSRC' => $image->getFilePath(),
+            'src' => $image->getImageSrc(),
+            'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
+            'addBefore' => 'below' !== $floating,
+            'addImage' => true,
+            ...$includeFullMetadata ? $createLegacyMetadataMapping($metadata) : [],
+        ];
 
         // Link attributes and title
         if ('' !== ($href = $this->getLinkHref())) {
@@ -316,7 +314,7 @@ final class Figure
         }
 
         // Add arbitrary template options
-        return array_merge($templateData, $this->getOptions());
+        return [...$templateData, ...$this->getOptions()];
     }
 
     /**

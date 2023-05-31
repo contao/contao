@@ -43,7 +43,7 @@ class PageCandidates extends AbstractCandidates
             /** @var Result $result */
             $result = $qb->executeQuery();
 
-            return array_unique(array_merge($candidates, $result->fetchFirstColumn()));
+            return array_unique([...$candidates, ...$result->fetchFirstColumn()]);
         }
 
         return $candidates;

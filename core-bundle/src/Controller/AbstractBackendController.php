@@ -48,6 +48,6 @@ abstract class AbstractBackendController extends AbstractController
             }
         })();
 
-        return parent::render($view, array_merge($backendContext, $parameters), $response);
+        return parent::render($view, [...$backendContext, ...$parameters], $response);
     }
 }

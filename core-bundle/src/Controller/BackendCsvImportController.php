@@ -49,7 +49,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            static fn (array $data, array $row): array => array_merge($data, $row),
+            static fn (array $data, array $row): array => [...$data, ...$row],
             $dc->table,
             'listitems',
             (int) $dc->id,
