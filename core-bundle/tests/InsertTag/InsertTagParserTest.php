@@ -76,7 +76,7 @@ class InsertTagParserTest extends TestCase
     /**
      * @group legacy
      */
-    public function testRender(): never
+    public function testRender(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
 
