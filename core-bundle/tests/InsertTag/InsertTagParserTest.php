@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class InsertTagParserTest extends TestCase
@@ -61,7 +62,7 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
 
         $this->assertSame('<br>', $parser->replace('{{br}}'));
-        // TODO: $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceChunked('{{br}}')));
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceChunked('{{br}}')));
     }
 
     public function testReplaceUnknown(): void
@@ -77,10 +78,6 @@ class InsertTagParserTest extends TestCase
      */
     public function testRender(): never
     {
-        // TODO:
-        $this->markTestSkipped();
-
-        /*
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
 
         $this->assertSame('<br>', $parser->render('br'));
@@ -90,7 +87,6 @@ class InsertTagParserTest extends TestCase
         $this->expectDeprecation('%sInvalid insert tag name%s');
 
         $parser->renderTag('br}}foo{{br');
-        */
     }
 
     public function testParseTag(): void
@@ -132,26 +128,17 @@ class InsertTagParserTest extends TestCase
     /**
      * @group legacy
      */
-    public function testRenderMixedCase(): never
+    public function testRenderMixedCase(): void
     {
-        // TODO:
-        $this->markTestSkipped();
-
-        /*
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
 
         $this->expectDeprecation('%sInsert tags with uppercase letters%s');
 
         $this->assertSame('<br>', $parser->render('bR'));
-        */
     }
 
-    public function testReplaceFragment(): never
+    public function testReplaceFragment(): void
     {
-        // TODO:
-        $this->markTestSkipped();
-
-        /*
         $handler = $this->createMock(FragmentHandler::class);
         $handler
             ->method('render')
@@ -167,7 +154,6 @@ class InsertTagParserTest extends TestCase
 
         $this->assertSame('<br>', $parser->replaceInline('{{fragment::{{br}}}}'));
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
-        */
     }
 
     /**

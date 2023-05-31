@@ -196,6 +196,11 @@ class InsertTagParser implements ResetInterface
 
         $input = $this->insertTags->encodeHtmlAttributes($input);
 
+        return $this->doParse($input);
+    }
+
+    private function doParse(string $input): ParsedSequence
+    {
         if (!preg_match_all('('.self::TAG_REGEX.')x', $input, $matches, PREG_OFFSET_CAPTURE)) {
             return new ParsedSequence([$input]);
         }
@@ -331,6 +336,11 @@ class InsertTagParser implements ResetInterface
             if ($wrapStart) {
                 $wrapContent[] = $item;
 
+                continue;
+            }
+
+            if ($item instanceof InsertTagResult) {
+                $return[] = $item;
                 continue;
             }
 
@@ -585,7 +595,16 @@ class InsertTagParser implements ResetInterface
             return $input;
         }
 
-        return $this->parse((string) $this->callLegacyClass($input->serialize(), $allowEsiTags));
+        $outputs = [];
+
+        foreach ($this->callLegacyClass($input->serialize(), $allowEsiTags) as [$type, $chunk]) {
+            $outputs[] = match ($type) {
+                ChunkedText::TYPE_TEXT => [...$this->doParse($chunk)],
+                ChunkedText::TYPE_RAW => [new InsertTagResult($chunk, OutputType::html)],
+            };
+        }
+
+        return new ParsedSequence(array_merge(...$outputs));
     }
 
     private function handleLegacyFlagsHook(InsertTagResult $result, InsertTagFlag $flag, InsertTag $tag): InsertTagResult

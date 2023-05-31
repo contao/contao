@@ -13,24 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @implements \IteratorAggregate<int,InsertTag|string>
+ * @implements \IteratorAggregate<int,InsertTag|InsertTagResult|string>
  */
 final class ParsedSequence implements \IteratorAggregate, \Countable
 {
     /**
-     * @var list<InsertTag|string>
+     * @var list<InsertTag|InsertTagResult|string>
      */
     private array $sequence;
 
     /**
-     * @param list<InsertTag|string> $sequence
+     * @param list<InsertTag|InsertTagResult|string> $sequence
      */
     public function __construct(array $sequence)
     {
         $this->sequence = array_values(array_filter($sequence, static fn ($item) => '' !== $item));
     }
 
-    public function get(int $index): InsertTag|string
+    public function get(int $index): InsertTag|InsertTagResult|string
     {
         return $this->sequence[$index] ?? throw new \InvalidArgumentException(sprintf('Index "%s" not exists', $index));
     }
@@ -52,7 +52,7 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return \ArrayIterator<int,InsertTag|string>
+     * @return \ArrayIterator<int,InsertTag|InsertTagResult|string>
      */
     public function getIterator(): \ArrayIterator
     {

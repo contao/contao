@@ -63,12 +63,10 @@ class InsertTagTest extends TestCase
             '&lt;br&gt; &lt;br&gt;',
         ];
 
-        /*TODO:
         yield 'raw insert tag, escaped outer text' => [
             '{{ text|insert_tag_raw }}',
             '&lt;br&gt; <br>',
         ];
-        */
 
         yield 'all raw with insert_tag' => [
             '{{ text|insert_tag|raw }}',
