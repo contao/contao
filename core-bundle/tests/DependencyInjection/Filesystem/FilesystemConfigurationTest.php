@@ -92,7 +92,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn($adapterDefinition)
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountAdapter('some-native-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
@@ -117,7 +117,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn(null)
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
@@ -181,7 +181,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn($this->createMock(Definition::class))
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
@@ -274,14 +274,6 @@ class FilesystemConfigurationTest extends TestCase
         $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
-    }
-
-    private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
-    {
-        $config = new FilesystemConfiguration($container);
-        $config->setAdapterDefinitionFactory($adapterDefinitionFactory);
-
-        return $config;
     }
 
     private function getContainerBuilder(array $parameters = []): ContainerBuilder

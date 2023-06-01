@@ -29,15 +29,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private AdapterDefinitionFactory|null $adapterDefinitionFactory = null;
-
-    public function __construct(private readonly ContainerBuilder $container)
-    {
-    }
-
-    public function setAdapterDefinitionFactory(AdapterDefinitionFactory $adapterDefinitionFactory): void
-    {
-        $this->adapterDefinitionFactory = $adapterDefinitionFactory;
+    public function __construct(
+        private readonly ContainerBuilder $container,
+        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
+    ) {
     }
 
     public function getContainer(): ContainerBuilder
@@ -89,9 +84,8 @@ class FilesystemConfiguration
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
-        $adapterDefinitionFactory = $this->adapterDefinitionFactory ?? new AdapterDefinitionFactory();
 
-        if (null !== ($adapterDefinition = $adapterDefinitionFactory->createDefinition($adapter, $options))) {
+        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)
