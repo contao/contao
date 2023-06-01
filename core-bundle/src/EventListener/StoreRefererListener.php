@@ -94,7 +94,7 @@ class StoreRefererListener
     /**
      * @return array<string,array<string,string>>
      */
-    private function prepareBackendReferer(string $refererId, array $referers = null): array
+    private function prepareBackendReferer(string $refererId, array|null $referers = null): array
     {
         if (!\is_array($referers)) {
             $referers = [];

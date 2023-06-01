@@ -63,8 +63,8 @@ final class ContaoExtension extends AbstractExtension
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
-        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
+        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*"
         // namespaces, as well as the existing bundle templates we're already

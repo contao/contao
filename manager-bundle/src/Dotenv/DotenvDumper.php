@@ -22,7 +22,7 @@ class DotenvDumper
     private array $setParameters = [];
     private array $unsetParameters = [];
 
-    public function __construct(private string $dotenvFile, Filesystem $filesystem = null)
+    public function __construct(private string $dotenvFile, Filesystem|null $filesystem = null)
     {
         $this->filesystem = $filesystem ?? new Filesystem();
 

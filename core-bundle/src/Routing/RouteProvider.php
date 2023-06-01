@@ -196,14 +196,12 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
             '/',
-            array_merge(
-                $route->getDefaults(),
-                [
-                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
-                    'path' => '/'.$urlPrefix.'/',
-                    'permanent' => false,
-                ]
-            ),
+            [
+                ...$route->getDefaults(),
+                '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction',
+                'path' => '/'.$urlPrefix.'/',
+                'permanent' => false,
+            ],
             [],
             $route->getOptions(),
             $route->getHost(),
@@ -220,7 +218,7 @@ class RouteProvider extends AbstractPageRouteProvider
      * 3. Root/Index pages must be sorted by accept language and fallback, so the best language matches first
      * 4. Pages with longer alias (folder page) must come first to match if applicable
      */
-    private function sortRoutes(array &$routes, array $languages = null): void
+    private function sortRoutes(array &$routes, array|null $languages = null): void
     {
         // Convert languages array so key is language and value is priority
         if (null !== $languages) {
@@ -229,7 +227,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
         uasort(
             $routes,
-            function (Route $a, Route $b) use ($languages, $routes) {
+            function (Route $a, Route $b) use ($routes, $languages) {
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 

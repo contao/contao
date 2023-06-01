@@ -63,7 +63,7 @@ class StatementTest extends TestCase
     /**
      * @dataProvider getQueriesWithParametersAndSets
      */
-    public function testReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
+    public function testReplacesParametersAndSets(string $query, string $expected, array|null $params = null, array|null $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
@@ -76,7 +76,7 @@ class StatementTest extends TestCase
             ->expects($this->once())
             ->method('executeQuery')
             ->willReturnCallback(
-                function (string $query, array $params) use ($doctrineResult, $expected) {
+                function (string $query, array $params) use ($expected, $doctrineResult) {
                     $params = array_map(
                         static function ($param) {
                             if (\is_bool($param)) {

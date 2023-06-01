@@ -943,7 +943,7 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'callback' => [AsCallback::class];
     }
 
-    private function getContainerBuilder(array $params = null): ContainerBuilder
+    private function getContainerBuilder(array|null $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([

@@ -140,7 +140,7 @@ class ContentCompositionListener
     }
 
     #[AsCallback(table: 'tl_article', target: 'list.sorting.paste_button')]
-    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
+    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array|null $clipboard = null): string
     {
         if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
@@ -149,7 +149,7 @@ class ContentCompositionListener
         return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
     }
 
-    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
@@ -172,7 +172,7 @@ class ContentCompositionListener
         );
     }
 
-    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pageModel = $pageAdapter->findByPk($row['pid']);

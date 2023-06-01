@@ -16,38 +16,31 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend'])]
+#[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry)
+    public function __construct(private PageRegistry $pageRegistry, private PageFinder $pageFinder)
     {
     }
 
-    #[Route('/sitemap.xml')]
     public function __invoke(Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        $pageModel = $this->getContaoAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->getHost()]);
-
-        if (null === $rootPages) {
-            // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
-            $rootPages = $pageModel->findPublishedRootPages(['dns' => '']);
-
-            if (null === $rootPages) {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
+        if (empty($rootPages)) {
+            throw new NotFoundHttpException();
         }
 
         $urls = [];
@@ -55,7 +48,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $urls = array_merge($urls, $this->getPageAndArticleUrls((int) $rootPage->id));
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage->id)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;

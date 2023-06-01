@@ -18,8 +18,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +47,7 @@ class PrettyErrorScreenListener
         private Security $security,
         private PageRegistry $pageRegistry,
         private HttpKernelInterface $httpKernel,
+        private PageFinder $pageFinder,
     ) {
     }
 
@@ -139,14 +140,7 @@ class PrettyErrorScreenListener
             $this->framework->initialize();
 
             $request = $event->getRequest();
-            $pageModel = $request->attributes->get('pageModel');
-
-            if (!$pageModel instanceof PageModel) {
-                return;
-            }
-
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
+            $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_'.$type);
 
             if (null === $errorPage) {
                 return;

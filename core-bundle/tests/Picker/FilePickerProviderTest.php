@@ -216,7 +216,7 @@ class FilePickerProviderTest extends TestCase
         );
     }
 
-    private function getPicker(bool $accessGranted = null): FilePickerProvider
+    private function getPicker(bool|null $accessGranted = null): FilePickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

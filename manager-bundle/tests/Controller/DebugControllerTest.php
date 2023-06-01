@@ -103,7 +103,7 @@ class DebugControllerTest extends ContaoTestCase
     /**
      * @return RequestStack&MockObject
      */
-    private function mockRequestStack(string $path = '', string $referer = null): RequestStack
+    private function mockRequestStack(string $path = '', string|null $referer = null): RequestStack
     {
         $request = Request::create($path);
 
@@ -124,7 +124,7 @@ class DebugControllerTest extends ContaoTestCase
     /**
      * @return JwtManager&MockObject
      */
-    private function mockJwtManager(bool $expectAddsCookie, bool $debug = null): JwtManager
+    private function mockJwtManager(bool $expectAddsCookie, bool|null $debug = null): JwtManager
     {
         $jwtManager = $this->createMock(JwtManager::class);
         $jwtManager

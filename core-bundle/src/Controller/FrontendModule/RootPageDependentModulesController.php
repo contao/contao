@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
         if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);

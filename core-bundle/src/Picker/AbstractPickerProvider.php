@@ -54,7 +54,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null): array;
+    abstract protected function getRouteParameters(PickerConfig|null $config = null): array;
 
     /**
      * Generates the URL for the picker.

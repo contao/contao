@@ -358,7 +358,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null): AuthenticationSuccessHandler
     {
         $framework ??= $this->mockContaoFramework();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);

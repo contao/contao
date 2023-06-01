@@ -34,7 +34,7 @@ class BackupManager
     ) {
     }
 
-    public function createNewBackup(\DateTime $dateTime = null): Backup
+    public function createNewBackup(\DateTime|null $dateTime = null): Backup
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));

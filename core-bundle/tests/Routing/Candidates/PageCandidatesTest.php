@@ -515,7 +515,7 @@ class PageCandidatesTest extends TestCase
      *
      * @return Connection&MockObject
      */
-    private function mockConnection(QueryBuilder $queryBuilder = null): Connection
+    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection
     {
         $queryBuilder ??= $this->createMock(QueryBuilder::class);
 

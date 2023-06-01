@@ -121,7 +121,7 @@ class ContaoUserProviderTest extends TestCase
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
-    private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
+    private function getProvider(ContaoFramework|null $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         $framework ??= $this->mockContaoFramework();
 

@@ -386,39 +386,26 @@ abstract class ContaoTestCase extends TestCase
      */
     private function loadDefaultConfiguration(): void
     {
-        switch (true) {
+        match (true) {
             // The core-bundle is in the vendor folder of the monorepo
-            case file_exists(__DIR__.'/../../../../core-bundle/contao/config/default.php'):
-                include __DIR__.'/../../../../core-bundle/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../core-bundle/contao/config/default.php',
 
             // The test-case is in the vendor-bin folder
-            case file_exists(__DIR__.'/../../../../../../core-bundle/contao/config/default.php'):
-                include __DIR__.'/../../../../../../core-bundle/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is in the vendor folder of the managed edition
-            case file_exists(__DIR__.'/../../../../../core-bundle/contao/config/default.php'):
-                include __DIR__.'/../../../../../core-bundle/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is the root package and the test-case folder is in vendor/contao
-            case file_exists(__DIR__.'/../../../../contao/config/default.php'):
-                include __DIR__.'/../../../../contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../contao/config/default.php') => include __DIR__.'/../../../../contao/config/default.php',
 
             // Another bundle is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../../core-bundle/contao/config/default.php'):
-                include __DIR__.'/../../core-bundle/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../core-bundle/contao/config/default.php') => include __DIR__.'/../../core-bundle/contao/config/default.php',
 
             // The test-case is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../vendor/contao/core-bundle/contao/config/default.php'):
-                include __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../vendor/contao/core-bundle/contao/config/default.php') => include __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php',
 
-            default:
-                throw new \RuntimeException('Cannot find the Contao configuration file');
-        }
+            default => throw new \RuntimeException('Cannot find the Contao configuration file'),
+        };
     }
 }

@@ -95,7 +95,7 @@ class OptInToken implements OptInTokenInterface
         return $this->model->confirmedOn > 0;
     }
 
-    public function send(string $subject = null, string $text = null): void
+    public function send(string|null $subject = null, string|null $text = null): void
     {
         if ($this->isConfirmed()) {
             throw new OptInTokenAlreadyConfirmedException();

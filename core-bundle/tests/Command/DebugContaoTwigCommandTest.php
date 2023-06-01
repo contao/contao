@@ -287,7 +287,7 @@ class DebugContaoTwigCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(TemplateHierarchyInterface $hierarchy = null, ContaoFilesystemLoaderWarmer $cacheWarmer = null): DebugContaoTwigCommand
+    private function getCommand(TemplateHierarchyInterface|null $hierarchy = null, ContaoFilesystemLoaderWarmer|null $cacheWarmer = null): DebugContaoTwigCommand
     {
         $inspector = $this->createMock(Inspector::class);
         $inspector

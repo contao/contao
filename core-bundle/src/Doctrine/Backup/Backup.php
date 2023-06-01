@@ -60,7 +60,7 @@ class Backup implements \Stringable
         return $this;
     }
 
-    public static function createNew(\DateTime $dateTime = null): self
+    public static function createNew(\DateTime|null $dateTime = null): self
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));

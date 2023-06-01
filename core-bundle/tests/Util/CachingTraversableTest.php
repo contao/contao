@@ -130,7 +130,7 @@ class CachingTraversableTest extends TestCase
      *
      * @return \Generator<TKey, TValue>
      */
-    private function generateItems(array $items, array &$generatorLog = null): \Generator
+    private function generateItems(array $items, array|null &$generatorLog = null): \Generator
     {
         $generatorLog = [];
 

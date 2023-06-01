@@ -78,7 +78,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->preserveMetadata = $preserveMetadata;
     }
 
-    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $options = null): PictureInterface
     {
         $attributes = [];
 
@@ -292,7 +292,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration item.
      */
-    private function createConfigItem(array $imageSize = null): PictureConfigurationItem
+    private function createConfigItem(array|null $imageSize = null): PictureConfigurationItem
     {
         $configItem = new PictureConfigurationItem();
         $resizeConfig = new ResizeConfiguration();

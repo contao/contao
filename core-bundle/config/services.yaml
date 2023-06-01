@@ -617,6 +617,7 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
+            - '@request_stack'
         tags:
             - contao.page_router_enhancer
 
@@ -674,6 +675,13 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.routing.page_registry'
+
+    contao.routing.page_finder:
+        class: Contao\CoreBundle\Routing\PageFinder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@router'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry

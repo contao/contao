@@ -148,5 +148,5 @@ interface VirtualFilesystemInterface
     /**
      * @throws UnableToResolveUuidException
      */
-    public function generatePublicUri(Uuid|string $location, OptionsInterface $options = null): UriInterface|null;
+    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null;
 }

@@ -614,7 +614,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
+    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null, bool|null $bypassCache = null, array|null $imagineOptions = null, array|null $validExtensions = null, string|null $uploadDir = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);

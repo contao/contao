@@ -49,7 +49,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            static fn (array $data, array $row): array => array_merge($data, $row),
+            static fn (array $data, array $row): array => [...$data, ...$row],
             $dc->table,
             'listitems',
             (int) $dc->id,
@@ -93,7 +93,7 @@ class BackendCsvImportController
         );
     }
 
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string|null $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
 

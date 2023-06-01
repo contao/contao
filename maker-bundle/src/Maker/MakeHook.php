@@ -66,7 +66,7 @@ class MakeHook extends AbstractMaker
 
         $question = new Question('Choose the hook to listen for');
         $question->setAutocompleterValues(array_keys($hooks));
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('hook', $io->askQuestion($question));
     }

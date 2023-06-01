@@ -56,7 +56,7 @@ class GetDotEnvCommand extends Command
 
         foreach ([$path, $path.'.local'] as $filePath) {
             if (file_exists($filePath)) {
-                $vars = array_merge($vars, $dotenv->parse(file_get_contents($filePath)));
+                $vars = [...$vars, ...$dotenv->parse(file_get_contents($filePath))];
             }
         }
 

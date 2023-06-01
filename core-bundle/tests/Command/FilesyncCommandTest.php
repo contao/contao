@@ -150,7 +150,7 @@ class FilesyncCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(DbafsManager $manager = null): FilesyncCommand
+    private function getCommand(DbafsManager|null $manager = null): FilesyncCommand
     {
         return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class));
     }
