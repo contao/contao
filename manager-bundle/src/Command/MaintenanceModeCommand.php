@@ -80,14 +80,16 @@ class MaintenanceModeCommand extends Command
         // Render the template and write it to maintenance.html
         $this->filesystem->dumpFile(
             $this->maintenanceFilePath,
-            $this->twig->render($templateName, array_merge(
+
+            $this->twig->render(
+                $templateName,
                 [
                     'statusCode' => 503,
                     'language' => 'en',
                     'template' => $templateName,
-                ],
-                json_decode($templateVars, true)
-            ))
+                    ...json_decode($templateVars, true),
+                ]
+            )
         );
     }
 

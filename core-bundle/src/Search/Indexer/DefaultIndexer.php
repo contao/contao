@@ -137,6 +137,6 @@ class DefaultIndexer implements IndexerInterface
         }
 
         // Merge all entries to one meta array (the latter overrides the former)
-        $meta = array_merge($meta, array_merge(...$jsonLds));
+        $meta = [...$meta, ...array_merge(...$jsonLds)];
     }
 }

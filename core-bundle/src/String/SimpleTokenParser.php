@@ -122,10 +122,10 @@ class SimpleTokenParser implements LoggerAwareInterface
             $this->logUnmatchedVariables(...$unmatchedVariables);
 
             // Define variables that weren't provided with the value 'null'
-            $data = array_merge(
-                array_combine($unmatchedVariables, array_fill(0, \count($unmatchedVariables), null)),
-                $data
-            );
+            $data = [
+                ...array_combine($unmatchedVariables, array_fill(0, \count($unmatchedVariables), null)),
+                ...$data,
+            ];
         }
 
         try {

@@ -688,10 +688,10 @@ class FigureBuilder
         // from the default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
-        $data = array_merge(
-            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-            $fileReferenceData
-        );
+        $data = [
+            ...array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            ...$fileReferenceData,
+        ];
 
         return (new Metadata($data))->with($overwriteMetadata);
     }

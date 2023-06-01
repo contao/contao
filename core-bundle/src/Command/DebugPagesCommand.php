@@ -72,7 +72,7 @@ class DebugPagesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $rows = [];
-        $types = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
+        $types = array_unique([...array_keys($GLOBALS['TL_PTY']), ...$this->pageRegistry->keys()]);
         natsort($types);
 
         foreach ($types as $type) {
