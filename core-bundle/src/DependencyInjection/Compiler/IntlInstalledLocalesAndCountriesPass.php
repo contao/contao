@@ -83,7 +83,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
                     continue;
                 }
 
-                if (($info['officialStatus'] ?? null) === 'official_regional') {
+                if ('official_regional' === ($info['officialStatus'] ?? null)) {
                     $allLocales[] = $language;
                 }
             }
@@ -91,8 +91,8 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
 
         foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
             if (
-                \Locale::getDisplayName($language, 'en') === $language
-                || !$regions = ($data['primary']['territories'] ?? null)
+                (!$regions = ($data['primary']['territories'] ?? null))
+                || \Locale::getDisplayName($language, 'en') === $language
             ) {
                 continue;
             }
