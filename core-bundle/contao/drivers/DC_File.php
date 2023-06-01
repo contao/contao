@@ -383,12 +383,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
-
-			// Handle entities
-			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
-			{
-				$varValue = StringUtil::deserialize($varValue);
-			}
 		}
 
 		// Trigger the save_callback
