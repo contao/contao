@@ -64,12 +64,12 @@ class BackendConfirm extends Backend
 		$objTemplate->href = StringUtil::ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . REQUEST_TOKEN);
 
 		$vars = array();
-		list(, $request) = explode('?', $url, 2);
+		list(, $request) = explode('?', $url, 2) + ["", ""];
 
 		// Extract the arguments
 		foreach (explode('&', $request) as $arg)
 		{
-			list($key, $value) = explode('=', $arg, 2);
+			list($key, $value) = explode('=', $arg, 2) + ["", ""];
 			$vars[$key] = $value;
 		}
 
