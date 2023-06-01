@@ -144,7 +144,6 @@ class PrettyErrorScreenListener
 
         try {
             $this->framework->initialize(true);
-            $this->framework->setLoginConstants();
 
             $request = $event->getRequest();
             $pageModel = $request->attributes->get('pageModel');
