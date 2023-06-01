@@ -17,14 +17,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class HighlighterRuntime implements RuntimeExtensionInterface
 {
-    private readonly Highlighter $highlighter;
-
     /**
      * @internal
      */
-    public function __construct(Highlighter|null $highlighter = null)
+    public function __construct(private readonly Highlighter $highlighter = new Highlighter())
     {
-        $this->highlighter = $highlighter ?? new Highlighter();
     }
 
     public function highlight(string $code, string|null $languageName = null): HighlightResult
