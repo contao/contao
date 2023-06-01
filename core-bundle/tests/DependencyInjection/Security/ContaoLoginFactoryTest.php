@@ -85,5 +85,8 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertFalse($arguments['index_5']);
 
         $this->assertTrue($container->getDefinition($twoFactorListenerId)->hasTag('kernel.event_subscriber'));
+
+        $this->assertTrue($container->hasDefinition('security.authorization_checker'));
+        $this->assertFalse($container->getDefinition('security.authorization_checker')->getArgument(3));
     }
 }
