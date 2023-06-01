@@ -40,12 +40,10 @@ class InputTest extends TestCase
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 
-        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
-            array_merge(
-                unserialize($GLOBALS['TL_CONFIG']['allowedAttributes'] ?? ''),
-                [['key' => 'use', 'value' => 'xlink:href']]
-            )
-        );
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize([
+            ...unserialize($GLOBALS['TL_CONFIG']['allowedAttributes'] ?? ''),
+            ['key' => 'use', 'value' => 'xlink:href'],
+        ]);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.charset', 'UTF-8');

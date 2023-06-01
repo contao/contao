@@ -34,7 +34,7 @@ class PageTypeOptionsListener
 
     public function __invoke(DataContainer $dc): array
     {
-        $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
+        $options = array_unique([...array_keys($GLOBALS['TL_PTY']), ...$this->pageRegistry->keys()]);
 
         if ('tl_user' === $dc->table || 'tl_user_group' === $dc->table) {
             return array_values($options);

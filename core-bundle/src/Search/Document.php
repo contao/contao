@@ -147,7 +147,7 @@ class Document
             foreach ($jsonLdItems as $jsonLdItem) {
                 if (\is_array($graphs = $jsonLdItem['@graph'] ?? null)) {
                     foreach ($graphs as $graph) {
-                        $this->jsonLds[] = array_merge(array_diff_key($jsonLdItem, ['@graph' => null]), $graph);
+                        $this->jsonLds[] = [...array_diff_key($jsonLdItem, ['@graph' => null]), ...$graph];
                     }
                 } else {
                     $this->jsonLds[] = $jsonLdItem;
