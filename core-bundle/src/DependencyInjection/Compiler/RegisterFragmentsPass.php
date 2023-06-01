@@ -38,7 +38,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     public function __construct(
         private readonly string|null $tag,
-        private string|null $globalsKey = null,
+        private readonly string|null $globalsKey = null,
         private readonly string|null $proxyClass = null,
         private readonly string|null $templateOptionsListener = null,
     ) {

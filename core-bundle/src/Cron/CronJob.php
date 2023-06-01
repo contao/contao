@@ -24,15 +24,17 @@ class CronJob
         private readonly string $interval,
         private readonly string|null $method = null,
     ) {
-        $this->name = $service::class;
+        $name = $service::class;
 
         if (!\is_callable($service)) {
             if (null === $this->method) {
                 throw new \InvalidArgumentException('Service must be a callable when no method name is defined');
             }
 
-            $this->name .= '::'.$method;
+            $name .= '::'.$method;
         }
+
+        $this->name = $name;
     }
 
     public function __invoke(string $scope): PromiseInterface|null

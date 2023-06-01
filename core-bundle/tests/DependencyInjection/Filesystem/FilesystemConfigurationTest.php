@@ -279,10 +279,7 @@ class FilesystemConfigurationTest extends TestCase
     private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
     {
         $config = new FilesystemConfiguration($container);
-
-        $class = new \ReflectionClass(FilesystemConfiguration::class);
-        $property = $class->getProperty('adapterDefinitionFactory');
-        $property->setValue($config, $adapterDefinitionFactory);
+        $config->setAdapterDefinitionFactory($adapterDefinitionFactory);
 
         return $config;
     }
