@@ -100,6 +100,11 @@ class PageRoute extends Route implements RouteObjectInterface
         return $path.$this->getUrlSuffix();
     }
 
+    public function getOriginalPath(): string
+    {
+        return parent::getPath();
+    }
+
     public function getUrlPrefix(): string
     {
         return $this->urlPrefix;

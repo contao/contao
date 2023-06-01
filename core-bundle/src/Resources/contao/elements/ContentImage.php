@@ -62,7 +62,7 @@ class ContentImage extends ContentElement
 			->createFigureBuilder()
 			->from($this->objFilesModel)
 			->setSize($this->size)
-			->setMetadata($this->objModel->getOverwriteMetadata())
+			->setOverwriteMetadata($this->objModel->getOverwriteMetadata())
 			->enableLightbox((bool) $this->fullsize)
 			->buildIfResourceExists();
 

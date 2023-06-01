@@ -407,7 +407,7 @@
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
-        <target>List (Список)</target>
+        <target>Список (List)</target>
       </trans-unit>
       <trans-unit id="CTE.list.1">
         <source>Generates an ordered or unordered list.</source>

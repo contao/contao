@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startTime.1">
         <source>Please enter the start time according to the global time format.</source>
-        <target>Bitte geben Sie die Startzeit gemäß des globalen Zeitformats ein.</target>
+        <target>Bitte geben Sie die Startzeit gemäß dem globalen Zeitformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.0">
         <source>End time</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.1">
         <source>Please enter the start date according to the global date format.</source>
-        <target>Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.</target>
+        <target>Bitte geben Sie das Startdatum gemäß dem globalen Datumsformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.0">
         <source>End date</source>

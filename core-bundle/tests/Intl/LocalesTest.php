@@ -128,6 +128,9 @@ class LocalesTest extends TestCase
         $this->assertNotEmpty($languages);
         $this->assertTrue(ArrayUtil::isAssoc($languages));
 
+        $this->assertArrayNotHasKey('en_POSIX', $languages);
+        $this->assertArrayNotHasKey('en_US_POSIX', $languages);
+
         foreach ($languages as $localeId => $label) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
             $this->assertNotEmpty($label);
@@ -275,7 +278,7 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3}|POSIX)(?=_|$)/', '', $localeId),
             $expected
         )));
 
@@ -373,6 +376,7 @@ class LocalesTest extends TestCase
             [
                 'de' => 'Germanisch',
                 'de_AT' => 'Österreichisch',
+                'de_POSIX' => 'German (POSIX)',
                 'en_AT' => 'Terminatorisch',
                 'de_Cyrl' => 'Unleserlich',
             ],
@@ -412,6 +416,7 @@ class LocalesTest extends TestCase
             [
                 'de' => 'Germanisch',
                 'de_AT' => 'Österreichisch',
+                'de_POSIX' => 'German (POSIX)',
                 'en_AT' => 'Terminatorisch',
                 'de_Cyrl' => 'Unleserlich',
                 'be' => 'Added backend language',
@@ -449,7 +454,7 @@ class LocalesTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
 
-        $this->assertSame(['de', 'de_AT', 'de_Cyrl', 'en_AT'], $this->getLocalesService()->getLocaleIds());
+        $this->assertSame(['de', 'de_AT', 'de_Cyrl', 'de_POSIX', 'en_AT'], $this->getLocalesService()->getLocaleIds());
     }
 
     /**
@@ -478,6 +483,7 @@ class LocalesTest extends TestCase
         $return = [
             'de' => 'Germanisch',
             'de_AT' => 'Österreichisch',
+            'de_POSIX' => 'German (POSIX)',
             'en_AT' => 'Terminatorisch',
             'de_Cyrl' => 'Unleserlich',
         ];

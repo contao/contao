@@ -124,14 +124,14 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode) {
+        if (null === $categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
         $item = $event->getFactory()
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
-            ->setUri('/'.$this->managerPath)
+            ->setUri($request->getUriForPath('/'.$this->managerPath))
             ->setLinkAttribute('class', 'navigation contao_manager')
             ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', false)

@@ -2555,7 +2555,7 @@
       </trans-unit>
       <trans-unit id="MSC.versionConflict2">
         <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
-        <target>Ihre Änderungen wurden nun als Version %s gespeichert und haben die Änderungen der Version %s potentiell überschrieben, daher sollten Sie die nachstehenden Versionen vergleichen:</target>
+        <target>Ihre Änderungen wurden nun als Version %s gespeichert und haben die Änderungen der Version %s potenziell überschrieben, daher sollten Sie die nachstehenden Versionen vergleichen:</target>
       </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
@@ -2839,7 +2839,7 @@
       </trans-unit>
       <trans-unit id="DP.use_mouse_wheel">
         <source>Use the mouse wheel to quickly change value</source>
-        <target>Ändern Sie die Werte mit Hilfe des Mausrads</target>
+        <target>Ändern Sie die Werte mithilfe des Mausrads</target>
       </trans-unit>
       <trans-unit id="DP.time_confirm_button">
         <source>OK</source>

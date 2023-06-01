@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news.date.1">
         <source>Please enter the date according to the global date format.</source>
-        <target>Bitte geben Sie das Datum gemäß des globalen Datumsformats ein.</target>
+        <target>Bitte geben Sie das Datum gemäß dem globalen Datumsformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_news.time.0">
         <source>Time</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Bitte geben Sie die Uhrzeit gemäß des globalen Zeitformats ein.</target>
+        <target>Bitte geben Sie die Uhrzeit gemäß dem globalen Zeitformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>

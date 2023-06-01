@@ -25,8 +25,6 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\HttpKernel\HttpCacheSubscriberPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
-use ProxyManager\Configuration;
-use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -283,10 +281,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
         $container->getParameterBag()->add($this->getKernelParameters());
-
-        if (class_exists(Configuration::class) && class_exists(RuntimeInstantiator::class)) {
-            $container->setProxyInstantiator(new RuntimeInstantiator());
-        }
 
         return $container;
     }
