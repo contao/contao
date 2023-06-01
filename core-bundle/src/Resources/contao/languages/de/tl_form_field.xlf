@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
-        <target>Dieser Text wird angezeigt solange das Feld noch nicht ausgefüllt wurde (benötigt HTML5).</target>
+        <target>Dieser Text wird angezeigt, solange das Feld noch nicht ausgefüllt wurde (benötigt HTML5).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>

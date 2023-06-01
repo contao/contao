@@ -371,7 +371,7 @@
       </trans-unit>
       <trans-unit id="FMD.articlelist.1">
         <source>Generates a list of articles of a column</source>
-        <target>Erzeugt ein Liste aller Artikel einer Spalte</target>
+        <target>Erzeugt eine Liste aller Artikel einer Spalte</target>
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>

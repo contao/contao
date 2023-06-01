@@ -427,7 +427,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -539,7 +539,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -610,7 +610,7 @@ abstract class Controller extends System
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -1605,7 +1605,7 @@ abstract class Controller extends System
 		}
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
-		$arrPages = array_intersect($arrPages, $this->Database->getChildRecords(0, $strTable, $blnSorting));
+		$arrPages = array_filter(array_map('intval', $arrPages));
 		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
@@ -1778,7 +1778,7 @@ abstract class Controller extends System
 			// Use source + metadata from files model (if not overwritten)
 			$figureBuilder
 				->fromFilesModel($filesModel)
-				->setMetadata($createMetadataOverwriteFromRowData(true));
+				->setOverwriteMetadata($createMetadataOverwriteFromRowData(true));
 
 			$includeFullMetadata = true;
 		}
@@ -1787,7 +1787,7 @@ abstract class Controller extends System
 			// Always ignore file metadata when building from path (BC)
 			$figureBuilder
 				->fromPath($rowData['singleSRC'], false)
-				->setMetadata($createMetadataOverwriteFromRowData(false));
+				->setOverwriteMetadata($createMetadataOverwriteFromRowData(false));
 
 			$includeFullMetadata = false;
 		}

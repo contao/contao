@@ -84,7 +84,7 @@ class Dbafs
 		}
 
 		$arrPaths    = array();
-		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 		$strPath     = $uploadPath;
 		$arrPids     = array($strPath => null);
 		$arrUpdate   = array($strResource);
@@ -445,7 +445,7 @@ class Dbafs
 			self::validateUtf8Path($strResource);
 
 			$strResource = Path::normalize($strResource);
-			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 			$strPath     = $uploadPath;
 
 			// Do not check files
