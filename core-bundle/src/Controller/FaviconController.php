@@ -29,8 +29,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/favicon.ico', defaults: ['_scope' => 'frontend'])]
 class FaviconController
 {
-    public function __construct(private ContaoFramework $framework, private PageFinder $pageFinder, private string $projectDir, private EntityCacheTags $entityCacheTags)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private PageFinder $pageFinder,
+        private string $projectDir,
+        private EntityCacheTags $entityCacheTags,
+    ) {
     }
 
     public function __invoke(Request $request): Response

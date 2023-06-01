@@ -37,7 +37,7 @@ class Countries
     }
 
     /**
-     * @return array<string,string> Translated country names indexed by their uppercase ISO 3166-1 alpha-2 code
+     * @return array<string, string> Translated country names indexed by their uppercase ISO 3166-1 alpha-2 code
      */
     public function getCountries(string|null $displayLocale = null): array
     {

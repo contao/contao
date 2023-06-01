@@ -31,8 +31,10 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private LoggerInterface $logger,
+    ) {
     }
 
     public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false

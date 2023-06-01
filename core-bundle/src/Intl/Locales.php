@@ -45,7 +45,7 @@ class Locales
     }
 
     /**
-     * @return array<string,string> Translated locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated locales indexed by their ICU locale IDs
      */
     public function getLocales(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
@@ -53,7 +53,7 @@ class Locales
     }
 
     /**
-     * @return array<string,string> Translated enabled locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated enabled locales indexed by their ICU locale IDs
      */
     public function getEnabledLocales(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
@@ -61,7 +61,7 @@ class Locales
     }
 
     /**
-     * @return array<string,string> Translated languages (without regions) indexed by their ICU locale IDs
+     * @return array<string, string> Translated languages (without regions) indexed by their ICU locale IDs
      */
     public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
@@ -113,7 +113,7 @@ class Locales
     }
 
     /**
-     * @return array<string,string> Translated locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated locales indexed by their ICU locale IDs
      */
     public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {

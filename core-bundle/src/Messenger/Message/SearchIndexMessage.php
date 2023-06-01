@@ -19,8 +19,10 @@ class SearchIndexMessage implements LowPriorityMessageInterface
     final public const ACTION_INDEX = 'index';
     final public const ACTION_DELETE = 'delete';
 
-    private function __construct(private Document $document, private string $action)
-    {
+    private function __construct(
+        private Document $document,
+        private string $action,
+    ) {
     }
 
     public function shouldDelete(): bool

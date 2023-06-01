@@ -20,8 +20,10 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class InsecureInstallationListener
 {
-    public function __construct(private string $secret, private string $webDir = '/public')
-    {
+    public function __construct(
+        private string $secret,
+        private string $webDir = '/public',
+    ) {
     }
 
     /**

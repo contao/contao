@@ -41,8 +41,12 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(private string $projectDir, string $webDir, #[\SensitiveParameter] private string|null $kernelSecret, \Closure|null $createProcessHandler = null)
-    {
+    public function __construct(
+        private string $projectDir,
+        string $webDir,
+        #[\SensitiveParameter] private string|null $kernelSecret,
+        \Closure|null $createProcessHandler = null,
+    ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');

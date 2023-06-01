@@ -28,8 +28,11 @@ class LocaleSubscriber implements EventSubscriberInterface
 {
     private array $availableLocales;
 
-    public function __construct(private LocaleAwareInterface $translator, private ScopeMatcher $scopeMatcher, Locales $locales)
-    {
+    public function __construct(
+        private LocaleAwareInterface $translator,
+        private ScopeMatcher $scopeMatcher,
+        Locales $locales,
+    ) {
         $this->availableLocales = $locales->getEnabledLocaleIds();
     }
 

@@ -17,8 +17,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SitemapEvent extends Event
 {
-    public function __construct(private \DOMDocument $document, private Request $request, private array $rootPageIds)
-    {
+    public function __construct(
+        private \DOMDocument $document,
+        private Request $request,
+        private array $rootPageIds,
+    ) {
     }
 
     public function getDocument(): \DOMDocument

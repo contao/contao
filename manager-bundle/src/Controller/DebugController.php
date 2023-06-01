@@ -23,8 +23,11 @@ class DebugController
     /**
      * @internal
      */
-    public function __construct(private Security $security, private RequestStack $requestStack, private JwtManager $jwtManager)
-    {
+    public function __construct(
+        private Security $security,
+        private RequestStack $requestStack,
+        private JwtManager $jwtManager,
+    ) {
     }
 
     public function enableAction(): RedirectResponse

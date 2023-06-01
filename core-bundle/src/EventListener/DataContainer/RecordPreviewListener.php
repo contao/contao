@@ -24,8 +24,10 @@ use Doctrine\DBAL\Connection;
  */
 class RecordPreviewListener
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+    ) {
     }
 
     #[AsHook('loadDataContainer')]

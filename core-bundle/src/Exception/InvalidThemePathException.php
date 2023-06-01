@@ -17,8 +17,10 @@ class InvalidThemePathException extends \InvalidArgumentException
     /**
      * @param array<string> $invalidCharacters
      */
-    public function __construct(private string $path, private array $invalidCharacters)
-    {
+    public function __construct(
+        private string $path,
+        private array $invalidCharacters,
+    ) {
         $this->invalidCharacters = array_unique($invalidCharacters);
 
         parent::__construct(

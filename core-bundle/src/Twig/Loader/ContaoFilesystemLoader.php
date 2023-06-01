@@ -49,12 +49,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private string|false|null $currentThemeSlug = null;
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private array $trackedTemplatesPaths = [];
 
     /**
-     * @var array<string,array<string,string>>|null
+     * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
 

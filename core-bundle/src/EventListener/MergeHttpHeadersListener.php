@@ -36,8 +36,10 @@ class MergeHttpHeadersListener implements ResetInterface
         'cache-control',
     ];
 
-    public function __construct(private ContaoFramework $framework, HeaderStorageInterface|null $headerStorage = null)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        HeaderStorageInterface|null $headerStorage = null,
+    ) {
         $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();
     }
 

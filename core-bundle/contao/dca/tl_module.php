@@ -719,7 +719,7 @@ class tl_module extends Backend
 	{
 		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null));
+			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null);
 		}
 
 		return $varValue;
@@ -736,7 +736,7 @@ class tl_module extends Backend
 	{
 		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null));
+			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
 		}
 
 		return $varValue;

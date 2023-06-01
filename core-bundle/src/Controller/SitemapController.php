@@ -31,8 +31,10 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 #[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry, private PageFinder $pageFinder)
-    {
+    public function __construct(
+        private PageRegistry $pageRegistry,
+        private PageFinder $pageFinder,
+    ) {
     }
 
     public function __invoke(Request $request): Response

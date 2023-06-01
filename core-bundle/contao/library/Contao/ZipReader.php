@@ -519,7 +519,7 @@ class ZipReader
 
 			// Split file path
 			$arrFile['file_basename'] = basename($arrFile['file_name']);
-			$arrFile['file_dirname'] = (($path = \dirname($arrFile['file_name'])) != '.' ? $path : '');
+			$arrFile['file_dirname'] = ($path = \dirname($arrFile['file_name'])) != '.' ? $path : '';
 
 			// Add UNIX time
 			$arrFile['last_mod_file_unix'] = $this->decToUnix((int) $arrFile['last_mod_file_time'], (int) $arrFile['last_mod_file_date']);
@@ -529,7 +529,7 @@ class ZipReader
 			$this->arrFiles[] = $arrFile;
 		}
 
-		$this->intLast = (\count($this->arrFiles) - 1);
+		$this->intLast = \count($this->arrFiles) - 1;
 
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);

@@ -33,8 +33,10 @@ class FigureBuilderStub extends FigureBuilder
     /**
      * @param array<string, ImageResult> $imageMap
      */
-    public function __construct(private readonly array $imageMap, private readonly array $uuidMap = [])
-    {
+    public function __construct(
+        private readonly array $imageMap,
+        private readonly array $uuidMap = [],
+    ) {
         // Do not call parent constructor
     }
 

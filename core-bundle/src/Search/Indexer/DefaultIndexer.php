@@ -22,8 +22,11 @@ class DefaultIndexer implements IndexerInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private bool $indexProtected = false,
+    ) {
     }
 
     public function index(Document $document): void

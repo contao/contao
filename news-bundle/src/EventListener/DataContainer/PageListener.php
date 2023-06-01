@@ -22,8 +22,10 @@ use Symfony\Component\Security\Core\Security;
 
 class PageListener
 {
-    public function __construct(private Connection $connection, private Security $security)
-    {
+    public function __construct(
+        private Connection $connection,
+        private Security $security,
+    ) {
     }
 
     #[AsCallback('tl_page', target: 'config.onload')]

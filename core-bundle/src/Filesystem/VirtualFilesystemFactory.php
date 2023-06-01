@@ -22,8 +22,10 @@ class VirtualFilesystemFactory
     /**
      * @internal
      */
-    public function __construct(private MountManager $mountManager, private DbafsManager $dbafsManager)
-    {
+    public function __construct(
+        private MountManager $mountManager,
+        private DbafsManager $dbafsManager,
+    ) {
     }
 
     public function __invoke(string $prefix = '', bool $readonly = false): VirtualFilesystem

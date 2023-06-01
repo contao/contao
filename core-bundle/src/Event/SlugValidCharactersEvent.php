@@ -21,7 +21,7 @@ class SlugValidCharactersEvent extends Event
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getOptions(): array
     {

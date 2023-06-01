@@ -35,7 +35,7 @@ class PreviewFactory
     private array $predefinedSizes = [];
 
     /**
-     * @param iterable<int,PreviewProviderInterface> $previewProviders
+     * @param iterable<int, PreviewProviderInterface> $previewProviders
      */
     public function __construct(
         private iterable $previewProviders,

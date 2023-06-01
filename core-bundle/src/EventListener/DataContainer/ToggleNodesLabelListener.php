@@ -20,8 +20,10 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 class ToggleNodesLabelListener
 {
-    public function __construct(private RequestStack $requestStack, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private RequestStack $requestStack,
+        private ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     public function __invoke(string $table): void

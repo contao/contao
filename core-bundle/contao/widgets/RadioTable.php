@@ -110,7 +110,7 @@ class RadioTable extends Widget
     <tr>';
 
 			// Add cells
-			for ($j=($i*$this->intCols); $j<(($i+1)*$this->intCols); $j++)
+			for ($j=$i*$this->intCols; $j<(($i+1)*$this->intCols); $j++)
 			{
 				$value = $this->arrOptions[$j]['value'];
 				$label = $this->arrOptions[$j]['label'];

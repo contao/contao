@@ -100,7 +100,7 @@ abstract class Model
 	protected $blnPreventSaving = false;
 
 	/**
-	 * @var array<string,array<string,string>>
+	 * @var array<string, array<string, string>>
 	 */
 	private static $arrColumnCastTypes = array();
 
@@ -395,7 +395,7 @@ abstract class Model
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDatabase(): array
 	{
@@ -417,7 +417,7 @@ abstract class Model
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDca(): array
 	{
