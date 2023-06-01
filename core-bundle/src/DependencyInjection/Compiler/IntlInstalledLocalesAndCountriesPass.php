@@ -75,8 +75,17 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
     private function getDefaultLocales(): array
     {
         $allLocales = [];
+        $resourceBundle = \ResourceBundle::create('supplementalData', 'ICUDATA', false);
 
-        foreach (\ResourceBundle::create('supplementalData', 'ICUDATA', false)['languageData'] ?? [] as $language => $data) {
+        foreach ($resourceBundle['territoryInfo'] ?? [] as $region => $data) {
+            foreach ($data as $language => $info) {
+                if (($info['officialStatus'] ?? null) === 'official_regional') {
+                    $allLocales[] = $language;
+                }
+            }
+        }
+
+        foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
             if (!$regions = ($data['primary']['territories'] ?? null)) {
                 continue;
             }
