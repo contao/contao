@@ -20,8 +20,10 @@ use Psr\Log\LoggerInterface;
 #[AsCronJob('daily')]
 class PurgeRegistrationsCron
 {
-    public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private LoggerInterface|null $logger,
+    ) {
     }
 
     public function __invoke(): void

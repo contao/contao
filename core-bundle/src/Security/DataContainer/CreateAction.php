@@ -16,8 +16,10 @@ class CreateAction extends AbstractAction
 {
     use NewTrait;
 
-    public function __construct(string $dataSource, private array|null $new = null)
-    {
+    public function __construct(
+        string $dataSource,
+        private array|null $new = null,
+    ) {
         parent::__construct($dataSource);
     }
 }

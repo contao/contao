@@ -41,7 +41,7 @@ class MountManager
     private array $mounts = [];
 
     /**
-     * @param iterable<int,PublicUriProviderInterface> $publicUriProviders
+     * @param iterable<int, PublicUriProviderInterface> $publicUriProviders
      */
     public function __construct(private iterable $publicUriProviders = [])
     {

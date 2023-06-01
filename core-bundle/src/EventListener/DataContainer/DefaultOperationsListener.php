@@ -28,8 +28,10 @@ use Symfony\Component\Security\Core\Security;
 #[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
-    public function __construct(private readonly Security $security, private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function __invoke(string $table): void

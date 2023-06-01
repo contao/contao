@@ -352,7 +352,7 @@ class Ajax extends Backend
 				}
 				elseif ($dc instanceof DC_File)
 				{
-					$val = (Input::post('state') == 1);
+					$val = Input::post('state') == 1;
 					Config::persist(Input::post('field'), $val);
 
 					if (Input::post('load'))

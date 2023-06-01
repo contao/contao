@@ -127,7 +127,7 @@ class CommentsModel extends Model
 
 		if (!isset($arrOptions['order']))
 		{
-			$arrOptions['order']  = ($blnDesc ? "$t.date DESC" : "$t.date");
+			$arrOptions['order']  = $blnDesc ? "$t.date DESC" : "$t.date";
 		}
 
 		return static::findBy($arrColumns, array($strSource, (int) $intParent), $arrOptions);

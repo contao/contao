@@ -22,8 +22,10 @@ class PageCandidates extends AbstractCandidates
 {
     private bool $initialized = false;
 
-    public function __construct(private Connection $connection, private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private Connection $connection,
+        private PageRegistry $pageRegistry,
+    ) {
         parent::__construct([], []);
     }
 

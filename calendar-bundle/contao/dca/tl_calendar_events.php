@@ -933,7 +933,7 @@ class tl_calendar_events extends Backend
 		// Adjust end time of "all day" events
 		elseif (($dc->activeRecord->endDate && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
 		{
-			$arrSet['endTime'] = (strtotime('+ 1 day', $arrSet['endTime']) - 1);
+			$arrSet['endTime'] = strtotime('+ 1 day', $arrSet['endTime']) - 1;
 		}
 
 		$arrSet['repeatEnd'] = 0;

@@ -19,8 +19,12 @@ use Symfony\Component\Routing\Route;
 
 class RouteParametersException extends InvalidParameterException
 {
-    public function __construct(private Route $route, private array $parameters, private int $referenceType, ExceptionInterface $previous)
-    {
+    public function __construct(
+        private Route $route,
+        private array $parameters,
+        private int $referenceType,
+        ExceptionInterface $previous,
+    ) {
         $message = $previous->getMessage();
 
         if ($route instanceof PageRoute) {

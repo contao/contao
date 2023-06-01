@@ -125,7 +125,7 @@ class StatementTest extends TestCase
 
         System::setContainer($container);
 
-        $statement = (new Statement($connection));
+        $statement = new Statement($connection);
         $statement->prepare($query);
 
         if ($set) {

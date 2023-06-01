@@ -470,7 +470,7 @@ abstract class Module extends Frontend
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 * @return array<array{page:PageModel, hasSubpages:bool}>|null
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{

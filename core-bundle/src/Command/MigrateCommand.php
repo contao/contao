@@ -462,7 +462,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileConfigurationErrors(): array
     {
@@ -608,7 +608,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileConfigurationWarnings(): array
     {
@@ -637,7 +637,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileSchemaWarnings(): array
     {
@@ -652,7 +652,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileTableWarnings(Table $table): array
     {

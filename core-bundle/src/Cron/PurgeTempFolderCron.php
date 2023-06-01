@@ -21,8 +21,11 @@ use Symfony\Component\Finder\Finder;
 #[AsCronJob('daily')]
 class PurgeTempFolderCron
 {
-    public function __construct(private Filesystem $filesystem, private string $projectDir, private LoggerInterface|null $logger)
-    {
+    public function __construct(
+        private Filesystem $filesystem,
+        private string $projectDir,
+        private LoggerInterface|null $logger,
+    ) {
     }
 
     public function __invoke(): void

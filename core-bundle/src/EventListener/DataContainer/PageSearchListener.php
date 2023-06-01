@@ -23,8 +23,10 @@ use Doctrine\DBAL\Connection;
  */
 class PageSearchListener
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+    ) {
     }
 
     #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]

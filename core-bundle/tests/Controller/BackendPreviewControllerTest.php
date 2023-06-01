@@ -76,7 +76,7 @@ class BackendPreviewControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertSame($response->getStatusCode(), Response::HTTP_FORBIDDEN);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
     public function testAuthenticatesWhenUserParameterGiven(): void

@@ -203,7 +203,7 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param array<array<string,string>> $data
+     * @param array<array<string, string>> $data
      *
      * @return array<Result|object>
      */

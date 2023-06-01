@@ -439,7 +439,7 @@ class Form extends Hybrid
 				if ($this->format == 'csv' || $this->format == 'csv_excel')
 				{
 					$keys[] = $k;
-					$values[] = (\is_array($v) ? implode(',', $v) : $v);
+					$values[] = \is_array($v) ? implode(',', $v) : $v;
 				}
 			}
 

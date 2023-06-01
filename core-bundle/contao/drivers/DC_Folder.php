@@ -667,7 +667,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$strFolder = Input::get('pid', true);
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -828,7 +828,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$strFolder = Input::get('pid', true);
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -1019,7 +1019,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -1933,7 +1933,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
@@ -2561,7 +2561,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$files = array();
 		$folders = array();
 		$intSpacing = 18;
-		$level = ($intMargin / $intSpacing + 1);
+		$level = $intMargin / $intSpacing + 1;
 
 		// Mount folder
 		if ($mount)
@@ -2656,7 +2656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				continue;
 			}
 
-			$blnIsOpen = (!empty($arrFound) || $session['filetree'][$md5] == 1);
+			$blnIsOpen = !empty($arrFound) || $session['filetree'][$md5] == 1;
 
 			// Always show selected nodes
 			if (!$blnIsOpen && !empty($this->arrPickerValue) && \count(preg_grep('/^' . preg_quote($this->urlEncode($currentFolder), '/') . '\//', $this->arrPickerValue)))

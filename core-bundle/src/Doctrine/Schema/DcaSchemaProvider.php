@@ -26,8 +26,10 @@ class DcaSchemaProvider
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework, private Registry $doctrine)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private Registry $doctrine,
+    ) {
     }
 
     /**

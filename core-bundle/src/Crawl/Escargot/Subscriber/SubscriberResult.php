@@ -22,8 +22,10 @@ class SubscriberResult
      */
     private array $info = [];
 
-    public function __construct(private bool $wasSuccessful, private string $summary)
-    {
+    public function __construct(
+        private bool $wasSuccessful,
+        private string $summary,
+    ) {
     }
 
     public function wasSuccessful(): bool

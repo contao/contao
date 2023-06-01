@@ -110,7 +110,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
      * ];
      * ```
      *
-     * @return list<array{0:string,1:string}>
+     * @return list<array{0:string, 1:string}>
      */
     abstract protected function getDatabaseColumns(): array;
 }

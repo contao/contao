@@ -29,14 +29,16 @@ class ValidCharacters
     /**
      * @internal
      */
-    public function __construct(private EventDispatcherInterface $eventDispatcher, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private EventDispatcherInterface $eventDispatcher,
+        private TranslatorInterface $translator,
+    ) {
     }
 
     /**
      * Returns the options for the valid characters setting suitable for widgets.
      *
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public function getOptions(): array
     {

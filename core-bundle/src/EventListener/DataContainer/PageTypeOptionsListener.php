@@ -25,8 +25,11 @@ use Symfony\Component\Security\Core\Security;
 #[AsCallback(table: 'tl_user_group', target: 'fields.alpty.options')]
 class PageTypeOptionsListener
 {
-    public function __construct(private PageRegistry $pageRegistry, private Security $security, private EventDispatcherInterface|null $eventDispatcher = null)
-    {
+    public function __construct(
+        private PageRegistry $pageRegistry,
+        private Security $security,
+        private EventDispatcherInterface|null $eventDispatcher = null,
+    ) {
     }
 
     public function __invoke(DataContainer $dc): array

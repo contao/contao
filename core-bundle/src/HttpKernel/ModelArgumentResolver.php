@@ -25,8 +25,10 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     public function supports(Request $request, ArgumentMetadata $argument): bool

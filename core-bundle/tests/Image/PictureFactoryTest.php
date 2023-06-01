@@ -407,7 +407,7 @@ class PictureFactoryTest extends TestCase
                 $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
-                        $this->assertSame($config->getSizeItems(), []);
+                        $this->assertSame([], $config->getSizeItems());
                         $this->assertSame(
                             ResizeConfiguration::MODE_CROP,
                             $config->getSize()->getResizeConfig()->getMode()

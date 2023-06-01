@@ -19,8 +19,10 @@ use Psr\Log\LoggerInterface;
 #[AsCronJob('daily')]
 class PurgeOptInTokensCron
 {
-    public function __construct(private OptIn $optIn, private LoggerInterface|null $logger)
-    {
+    public function __construct(
+        private OptIn $optIn,
+        private LoggerInterface|null $logger,
+    ) {
     }
 
     public function __invoke(): void

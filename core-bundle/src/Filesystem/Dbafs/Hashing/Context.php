@@ -23,8 +23,10 @@ final class Context
     /**
      * @internal
      */
-    public function __construct(private string|null $oldHash = null, private int|null $oldLastModified = null)
-    {
+    public function __construct(
+        private string|null $oldHash = null,
+        private int|null $oldLastModified = null,
+    ) {
         $this->newLastModified = $oldLastModified;
     }
 

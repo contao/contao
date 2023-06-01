@@ -51,8 +51,10 @@ class CrawlCommand extends Command
 {
     private Escargot|null $escargot = null;
 
-    public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)
-    {
+    public function __construct(
+        private Factory $escargotFactory,
+        private Filesystem $filesystem,
+    ) {
         parent::__construct();
     }
 

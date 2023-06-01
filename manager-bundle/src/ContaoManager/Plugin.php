@@ -237,7 +237,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Sets the PDO driver options if applicable (#2459).
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -276,7 +276,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a default ORM mapping for the App namespace if none is configured.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -348,7 +348,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Enables the SQL strict mode for PDO and MySQL drivers.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -383,7 +383,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Sets the "collate" and "collation" options to the same value (see #4798).
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function setDefaultCollation(array $extensionConfigs): array
     {
@@ -418,7 +418,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Changes the mail transport from "mail" to "sendmail".
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -453,7 +453,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultMailer(array $extensionConfigs): array
     {
@@ -511,7 +511,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a clickjacking configuration for "^/.*" if not already defined.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {

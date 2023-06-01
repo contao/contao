@@ -80,7 +80,7 @@ class DebugContaoTwigCommand extends Command
     }
 
     /**
-     * @param array<string,array<string, string>> $chains
+     * @param array<string, array<string, string>> $chains
      */
     private function listTree(array $chains, SymfonyStyle $io): void
     {
@@ -158,7 +158,7 @@ class DebugContaoTwigCommand extends Command
     }
 
     /**
-     * @param array<string,array<string, string>> $chains
+     * @param array<string, array<string, string>> $chains
      */
     private function listDetailed(array $chains, SymfonyStyle $io): void
     {

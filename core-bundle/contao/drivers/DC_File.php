@@ -200,7 +200,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
 						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;

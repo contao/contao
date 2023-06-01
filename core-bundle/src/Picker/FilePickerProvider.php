@@ -125,7 +125,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
@@ -152,7 +152,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,array|string|bool>
+     * @return array<string, array|string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

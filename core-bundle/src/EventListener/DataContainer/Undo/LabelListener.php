@@ -27,8 +27,10 @@ use Twig\Environment;
 #[AsCallback(table: 'tl_undo', target: 'list.label.label')]
 class LabelListener
 {
-    public function __construct(private ContaoFramework $framework, private Environment $twig)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private Environment $twig,
+    ) {
     }
 
     public function __invoke(array $row, string $label, DataContainer $dc): string

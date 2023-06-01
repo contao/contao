@@ -17,8 +17,10 @@ class MethodDefinition
     /**
      * @param array<string, (string|array|null)> $parameters
      */
-    public function __construct(private string|null $returnType, private array $parameters)
-    {
+    public function __construct(
+        private string|null $returnType,
+        private array $parameters,
+    ) {
     }
 
     public function getReturnType(): string|null

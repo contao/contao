@@ -19,8 +19,10 @@ final class RetentionPolicy implements RetentionPolicyInterface
      */
     private array $keepIntervals;
 
-    public function __construct(private int $keepMax, array $keepIntervals = [])
-    {
+    public function __construct(
+        private int $keepMax,
+        array $keepIntervals = [],
+    ) {
         $this->keepIntervals = self::validateAndSortIntervals($keepIntervals);
     }
 

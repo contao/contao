@@ -28,7 +28,7 @@ class Document
      * The key is the header name in lowercase letters and the value is again
      * an array of header values.
      *
-     * @param array<string,array> $headers
+     * @param array<string, array> $headers
      */
     public function __construct(
         private UriInterface $uri,

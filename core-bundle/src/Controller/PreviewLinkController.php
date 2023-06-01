@@ -27,8 +27,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(defaults: ['_scope' => 'frontend', '_allow_preview' => true])]
 class PreviewLinkController
 {
-    public function __construct(private FrontendPreviewAuthenticator $previewAuthenticator, private UriSigner $uriSigner, private Connection $connection)
-    {
+    public function __construct(
+        private FrontendPreviewAuthenticator $previewAuthenticator,
+        private UriSigner $uriSigner,
+        private Connection $connection,
+    ) {
     }
 
     #[Route('/_contao/preview/{id}', name: 'contao_preview_link', requirements: ['id' => '\d+'])]

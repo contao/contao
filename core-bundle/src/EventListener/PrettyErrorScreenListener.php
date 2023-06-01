@@ -201,7 +201,7 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {

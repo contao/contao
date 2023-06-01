@@ -182,7 +182,7 @@ class BackendCsvImportController
     }
 
     /**
-     * @return array<string,array<string,string>>
+     * @return array<string, array<string, string>>
      */
     private function getSeparators(bool $allowLinebreak = false): array
     {

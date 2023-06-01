@@ -23,8 +23,11 @@ class CombinedFileDumper implements DumperInterface
 {
     private string $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
-    public function __construct(private Filesystem $filesystem, private LoaderInterface $loader, private string $cacheDir)
-    {
+    public function __construct(
+        private Filesystem $filesystem,
+        private LoaderInterface $loader,
+        private string $cacheDir,
+    ) {
     }
 
     /**

@@ -21,8 +21,10 @@ class ControllerResolver implements ControllerResolverInterface
     /**
      * @internal
      */
-    public function __construct(private ControllerResolverInterface $resolver, private FragmentRegistry $registry)
-    {
+    public function __construct(
+        private ControllerResolverInterface $resolver,
+        private FragmentRegistry $registry,
+    ) {
     }
 
     public function getController(Request $request): callable|false

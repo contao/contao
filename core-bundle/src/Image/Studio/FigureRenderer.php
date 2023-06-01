@@ -25,8 +25,10 @@ class FigureRenderer
 {
     private PropertyAccessor $propertyAccessor;
 
-    public function __construct(private Studio $studio, private Environment $twig)
-    {
+    public function __construct(
+        private Studio $studio,
+        private Environment $twig,
+    ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 

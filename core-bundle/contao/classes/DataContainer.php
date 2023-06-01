@@ -295,7 +295,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
 	 */
 	private static $arrCurrentRecordCache = array();
 

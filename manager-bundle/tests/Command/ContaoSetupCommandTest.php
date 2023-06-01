@@ -132,7 +132,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
-        $commandTester = (new CommandTester($command));
+        $commandTester = new CommandTester($command);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/An error occurred while executing the ".+" command: <error>/');

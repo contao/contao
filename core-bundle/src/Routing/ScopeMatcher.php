@@ -21,8 +21,10 @@ class ScopeMatcher
     /**
      * @internal
      */
-    public function __construct(private RequestMatcherInterface $backendMatcher, private RequestMatcherInterface $frontendMatcher)
-    {
+    public function __construct(
+        private RequestMatcherInterface $backendMatcher,
+        private RequestMatcherInterface $frontendMatcher,
+    ) {
     }
 
     public function isContaoMainRequest(KernelEvent $event): bool

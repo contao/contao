@@ -23,8 +23,10 @@ class CommandCompiler
     /**
      * @internal
      */
-    public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly SchemaProvider $schemaProvider,
+    ) {
     }
 
     /**

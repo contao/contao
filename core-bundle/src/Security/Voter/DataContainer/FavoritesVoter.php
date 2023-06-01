@@ -29,8 +29,10 @@ use Symfony\Component\Security\Core\Security;
  */
 class FavoritesVoter implements VoterInterface, CacheableVoterInterface
 {
-    public function __construct(private Security $security, private Connection $connection)
-    {
+    public function __construct(
+        private Security $security,
+        private Connection $connection,
+    ) {
     }
 
     public function supportsAttribute(string $attribute): bool

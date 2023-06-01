@@ -52,7 +52,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     public function getSummary(): array
     {
@@ -122,7 +122,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getData(string $key): array
     {
