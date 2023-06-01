@@ -190,10 +190,13 @@ class DebugPluginsCommand extends Command
                 $config->getName(),
                 implode("\n", $config->getReplace()),
                 implode("\n", $config->getLoadAfter()),
-                $config->loadInProduction() && $config->loadInDevelopment()
-                    ? 'All'
-                    : ($config->loadInProduction() ? 'Production' : 'Development'),
+                match (true) {
+                    $config->loadInProduction() && $config->loadInDevelopment() => 'All',
+                    $config->loadInProduction() => 'Production',
+                    $config->loadInDevelopment() => 'Development',
+                },
             ];
+
             $rows[] = new TableSeparator();
         }
 
