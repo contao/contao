@@ -14,14 +14,14 @@ namespace Contao\CoreBundle\Session\Attribute;
 
 class AutoExpiringAttribute
 {
-    private int $tstamp;
+    private readonly int $tstamp;
 
     /**
      * @param int $ttl Time to live in seconds
      */
     public function __construct(
-        private int $ttl,
-        private mixed $value,
+        private readonly int $ttl,
+        private readonly mixed $value,
         \DateTimeInterface|null $createdAt = null,
     ) {
         $this->tstamp = ($createdAt ?? new \DateTime())->getTimestamp();

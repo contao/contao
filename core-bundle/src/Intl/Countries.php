@@ -21,17 +21,17 @@ class Countries
     /**
      * @var list<string>
      */
-    private array $countries;
+    private readonly array $countries;
 
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
      */
     public function __construct(
-        private TranslatorInterface $translator,
-        private RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,
-        private string $defaultLocale,
+        private readonly string $defaultLocale,
     ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
     }

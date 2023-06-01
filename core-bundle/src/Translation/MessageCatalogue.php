@@ -25,9 +25,9 @@ final class MessageCatalogue implements MessageCatalogueInterface
      * @internal Do not instantiate this class; use Translator::getCatalogue() instead
      */
     public function __construct(
-        private MessageCatalogueInterface $parent,
-        private ContaoFramework $framework,
-        private ResourceFinder $resourceFinder,
+        private readonly MessageCatalogueInterface $parent,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
     ) {
     }
 

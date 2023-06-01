@@ -22,7 +22,7 @@ class BackendFavoritesListener
 {
     public function __construct(
         private readonly Security $security,
-        private RequestStack $requestStack,
+        private readonly RequestStack $requestStack,
     ) {
     }
 

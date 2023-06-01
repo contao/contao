@@ -24,8 +24,8 @@ class BackendMenuBuilder
      * @internal
      */
     public function __construct(
-        private FactoryInterface $factory,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly FactoryInterface $factory,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

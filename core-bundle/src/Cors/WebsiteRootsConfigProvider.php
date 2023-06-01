@@ -22,7 +22,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     /**
      * @internal
      */
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

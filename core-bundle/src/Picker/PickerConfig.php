@@ -15,10 +15,10 @@ namespace Contao\CoreBundle\Picker;
 class PickerConfig implements \JsonSerializable
 {
     public function __construct(
-        private string $context,
+        private readonly string $context,
         private array $extras = [],
-        private int|string $value = '',
-        private string $current = '',
+        private readonly int|string $value = '',
+        private readonly string $current = '',
     ) {
     }
 

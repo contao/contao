@@ -21,8 +21,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 class ToggleNodesLabelListener
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 

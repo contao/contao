@@ -26,9 +26,9 @@ use UAParser\Parser;
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private TrustedDeviceTokenStorage $trustedTokenStorage,
-        private EntityManagerInterface $entityManager,
+        private readonly RequestStack $requestStack,
+        private readonly TrustedDeviceTokenStorage $trustedTokenStorage,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

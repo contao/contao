@@ -26,7 +26,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
+        private readonly Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }

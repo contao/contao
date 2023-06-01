@@ -38,11 +38,11 @@ class BackendCsvImportController
      * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private string $projectDir,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly string $projectDir,
     ) {
     }
 

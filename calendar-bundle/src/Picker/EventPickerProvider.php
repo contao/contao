@@ -35,7 +35,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface|null $translator,
-        private Security $security,
+        private readonly Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }

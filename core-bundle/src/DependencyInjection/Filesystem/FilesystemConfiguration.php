@@ -29,9 +29,9 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private AdapterDefinitionFactory $adapterDefinitionFactory;
+    private readonly AdapterDefinitionFactory $adapterDefinitionFactory;
 
-    public function __construct(private ContainerBuilder $container)
+    public function __construct(private readonly ContainerBuilder $container)
     {
         $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
     }

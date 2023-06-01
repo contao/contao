@@ -26,8 +26,8 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
      * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private ScopeMatcher $scopeMatcher,
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 

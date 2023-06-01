@@ -17,8 +17,8 @@ use Psr\Log\LoggerInterface;
 final class SystemLogger implements LoggerInterface
 {
     public function __construct(
-        private LoggerInterface $inner,
-        private string $action,
+        private readonly LoggerInterface $inner,
+        private readonly string $action,
     ) {
     }
 

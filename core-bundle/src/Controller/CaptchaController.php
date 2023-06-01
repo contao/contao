@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CaptchaController extends AbstractController
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

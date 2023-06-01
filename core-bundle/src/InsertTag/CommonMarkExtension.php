@@ -20,7 +20,7 @@ use League\CommonMark\Util\UrlEncoder;
 
 class CommonMarkExtension implements ExtensionInterface
 {
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 

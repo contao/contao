@@ -20,9 +20,9 @@ use Symfony\Component\Routing\Route;
 class RouteParametersException extends InvalidParameterException
 {
     public function __construct(
-        private Route $route,
-        private array $parameters,
-        private int $referenceType,
+        private readonly Route $route,
+        private readonly array $parameters,
+        private readonly int $referenceType,
         ExceptionInterface $previous,
     ) {
         $message = $previous->getMessage();

@@ -19,7 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 #[AsCronJob('daily')]
 class GenerateFeedsCron
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

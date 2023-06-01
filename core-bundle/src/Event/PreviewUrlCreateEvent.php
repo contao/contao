@@ -19,8 +19,8 @@ class PreviewUrlCreateEvent extends Event
     private string|null $query = null;
 
     public function __construct(
-        private string $key,
-        private int|string $id,
+        private readonly string $key,
+        private readonly int|string $id,
     ) {
     }
 

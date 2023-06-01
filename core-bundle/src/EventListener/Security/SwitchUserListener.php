@@ -23,8 +23,8 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 class SwitchUserListener
 {
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
-        private LoggerInterface $logger,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

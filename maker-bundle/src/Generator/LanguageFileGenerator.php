@@ -20,9 +20,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class LanguageFileGenerator implements GeneratorInterface
 {
     public function __construct(
-        private FileManager $fileManager,
-        private XliffMerger $xliffMerger,
-        private string $projectDir,
+        private readonly FileManager $fileManager,
+        private readonly XliffMerger $xliffMerger,
+        private readonly string $projectDir,
     ) {
     }
 

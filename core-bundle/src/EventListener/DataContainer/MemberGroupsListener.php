@@ -23,8 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MemberGroupsListener
 {
     public function __construct(
-        private Connection $connection,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

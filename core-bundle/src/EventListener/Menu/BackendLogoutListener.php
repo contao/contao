@@ -26,10 +26,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendLogoutListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private BaseLogoutUrlGenerator $urlGenerator,
-        private TranslatorInterface $translator,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly BaseLogoutUrlGenerator $urlGenerator,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

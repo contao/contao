@@ -32,9 +32,9 @@ class InstallCommand extends Command
     private string|null $webDir = null;
 
     public function __construct(
-        private string $projectDir,
-        private string $uploadPath,
-        private string $imageDir,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly string $imageDir,
     ) {
         parent::__construct();
     }

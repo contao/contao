@@ -34,7 +34,7 @@ class AutomatorCommand extends Command
 {
     private array $commands = [];
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
         parent::__construct();
     }

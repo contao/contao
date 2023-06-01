@@ -30,10 +30,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class FaviconController
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private PageFinder $pageFinder,
-        private string $projectDir,
-        private EntityCacheTags $entityCacheTags,
+        private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
+        private readonly string $projectDir,
+        private readonly EntityCacheTags $entityCacheTags,
     ) {
     }
 

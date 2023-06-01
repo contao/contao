@@ -20,8 +20,8 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 class PageTrailCacheTagsListener
 {
     public function __construct(
-        private ScopeMatcher $scopeMatcher,
-        private ResponseTagger|null $responseTagger = null,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly ResponseTagger|null $responseTagger = null,
     ) {
     }
 

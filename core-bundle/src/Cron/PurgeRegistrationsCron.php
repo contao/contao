@@ -21,8 +21,8 @@ use Psr\Log\LoggerInterface;
 class PurgeRegistrationsCron
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private LoggerInterface|null $logger,
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface|null $logger,
     ) {
     }
 

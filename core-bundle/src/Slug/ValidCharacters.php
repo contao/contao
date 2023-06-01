@@ -30,8 +30,8 @@ class ValidCharacters
      * @internal
      */
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
-        private TranslatorInterface $translator,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

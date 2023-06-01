@@ -35,11 +35,11 @@ use Symfony\Component\Yaml\Yaml;
 class MakeDcaCallback extends AbstractMaker
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private ClassGenerator $classGenerator,
-        private ResourceFinder $resourceFinder,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
+        private readonly ContaoFramework $framework,
+        private readonly ClassGenerator $classGenerator,
+        private readonly ResourceFinder $resourceFinder,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
     ) {
     }
 

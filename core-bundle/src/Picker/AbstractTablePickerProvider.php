@@ -27,11 +27,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private FactoryInterface $menuFactory,
-        private RouterInterface $router,
-        private TranslatorInterface $translator,
-        private Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
     ) {
     }
 

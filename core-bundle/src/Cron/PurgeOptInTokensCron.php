@@ -20,8 +20,8 @@ use Psr\Log\LoggerInterface;
 class PurgeOptInTokensCron
 {
     public function __construct(
-        private OptIn $optIn,
-        private LoggerInterface|null $logger,
+        private readonly OptIn $optIn,
+        private readonly LoggerInterface|null $logger,
     ) {
     }
 

@@ -26,9 +26,9 @@ class ContaoTableProcessor implements ProcessorInterface
      * @internal
      */
     public function __construct(
-        private RequestStack $requestStack,
-        private TokenStorageInterface $tokenStorage,
-        private ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 

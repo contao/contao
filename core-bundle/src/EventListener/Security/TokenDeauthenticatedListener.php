@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 
 class TokenDeauthenticatedListener
 {
-    public function __construct(private RememberMeRepository $rememberMeRepository)
+    public function __construct(private readonly RememberMeRepository $rememberMeRepository)
     {
     }
 

@@ -22,8 +22,8 @@ class ScopeMatcher
      * @internal
      */
     public function __construct(
-        private RequestMatcherInterface $backendMatcher,
-        private RequestMatcherInterface $frontendMatcher,
+        private readonly RequestMatcherInterface $backendMatcher,
+        private readonly RequestMatcherInterface $frontendMatcher,
     ) {
     }
 

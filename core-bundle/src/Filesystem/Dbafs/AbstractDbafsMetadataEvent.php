@@ -24,7 +24,7 @@ class AbstractDbafsMetadataEvent
      * @param array<string, mixed> $extraMetadata
      */
     public function __construct(
-        private string $table,
+        private readonly string $table,
         protected array $row,
         protected array $extraMetadata = [],
     ) {

@@ -23,9 +23,9 @@ class DefaultIndexer implements IndexerInterface
      * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private bool $indexProtected = false,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly bool $indexProtected = false,
     ) {
     }
 

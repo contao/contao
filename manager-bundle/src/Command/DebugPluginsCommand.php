@@ -43,7 +43,7 @@ class DebugPluginsCommand extends Command
 {
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private ContaoKernel $kernel)
+    public function __construct(private readonly ContaoKernel $kernel)
     {
         parent::__construct();
     }

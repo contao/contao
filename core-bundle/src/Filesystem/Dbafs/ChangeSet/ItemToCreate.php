@@ -18,9 +18,9 @@ class ItemToCreate
      * @internal
      */
     public function __construct(
-        private string $hash,
-        private string $path,
-        private bool $isFile,
+        private readonly string $hash,
+        private readonly string $path,
+        private readonly bool $isFile,
     ) {
     }
 

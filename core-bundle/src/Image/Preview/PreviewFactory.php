@@ -38,16 +38,16 @@ class PreviewFactory
      * @param iterable<int, PreviewProviderInterface> $previewProviders
      */
     public function __construct(
-        private iterable $previewProviders,
-        private ImageFactoryInterface $imageFactory,
-        private PictureFactoryInterface $pictureFactory,
-        private Studio $imageStudio,
-        private ContaoFramework $framework,
-        #[\SensitiveParameter] private string $secret,
-        private string $cacheDir,
-        private array $validImageExtensions,
-        private int $defaultSize,
-        private int $maxSize,
+        private readonly iterable $previewProviders,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly PictureFactoryInterface $pictureFactory,
+        private readonly Studio $imageStudio,
+        private readonly ContaoFramework $framework,
+        #[\SensitiveParameter] private readonly string $secret,
+        private readonly string $cacheDir,
+        private readonly array $validImageExtensions,
+        private readonly int $defaultSize,
+        private readonly int $maxSize,
     ) {
     }
 

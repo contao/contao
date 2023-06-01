@@ -28,11 +28,11 @@ use Twig\Environment;
 )]
 class MaintenanceModeCommand extends Command
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     public function __construct(
-        private string $maintenanceFilePath,
-        private Environment $twig,
+        private readonly string $maintenanceFilePath,
+        private readonly Environment $twig,
         Filesystem|null $filesystem = null,
     ) {
         $this->filesystem = $filesystem ?? new Filesystem();

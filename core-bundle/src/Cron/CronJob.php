@@ -16,13 +16,13 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 class CronJob
 {
-    private string $name;
+    private readonly string $name;
     private \DateTimeInterface $previousRun;
 
     public function __construct(
-        private object $service,
-        private string $interval,
-        private string|null $method = null,
+        private readonly object $service,
+        private readonly string $interval,
+        private readonly string|null $method = null,
     ) {
         $this->name = $service::class;
 

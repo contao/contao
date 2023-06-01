@@ -43,7 +43,7 @@ class MountManager
     /**
      * @param iterable<int, PublicUriProviderInterface> $publicUriProviders
      */
-    public function __construct(private iterable $publicUriProviders = [])
+    public function __construct(private readonly iterable $publicUriProviders = [])
     {
     }
 

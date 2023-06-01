@@ -23,8 +23,8 @@ use Symfony\Component\Security\Core\Security;
 class ImageSizeOptionsListener
 {
     public function __construct(
-        private Security $security,
-        private ImageSizes $imageSizes,
+        private readonly Security $security,
+        private readonly ImageSizes $imageSizes,
     ) {
     }
 

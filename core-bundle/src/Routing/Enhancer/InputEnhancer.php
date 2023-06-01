@@ -27,8 +27,8 @@ class InputEnhancer implements RouteEnhancerInterface
      * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
     ) {
     }
 

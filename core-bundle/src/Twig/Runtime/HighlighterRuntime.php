@@ -17,7 +17,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class HighlighterRuntime implements RuntimeExtensionInterface
 {
-    private Highlighter $highlighter;
+    private readonly Highlighter $highlighter;
 
     /**
      * @internal

@@ -38,12 +38,12 @@ class TokenChecker
      * @internal
      */
     public function __construct(
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
-        private TokenStorageInterface $tokenStorage,
-        private AuthenticationTrustResolverInterface $trustResolver,
-        private VoterInterface $roleVoter,
-        private Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthenticationTrustResolverInterface $trustResolver,
+        private readonly VoterInterface $roleVoter,
+        private readonly Connection $connection,
     ) {
     }
 

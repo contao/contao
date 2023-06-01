@@ -26,11 +26,11 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    private array $availableLocales;
+    private readonly array $availableLocales;
 
     public function __construct(
-        private LocaleAwareInterface $translator,
-        private ScopeMatcher $scopeMatcher,
+        private readonly LocaleAwareInterface $translator,
+        private readonly ScopeMatcher $scopeMatcher,
         Locales $locales,
     ) {
         $this->availableLocales = $locales->getEnabledLocaleIds();
