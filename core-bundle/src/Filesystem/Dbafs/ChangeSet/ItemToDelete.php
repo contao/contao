@@ -18,8 +18,8 @@ class ItemToDelete
      * @internal
      */
     public function __construct(
-        private string $path,
-        private bool $isFile,
+        private readonly string $path,
+        private readonly bool $isFile,
     ) {
     }
 

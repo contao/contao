@@ -25,9 +25,9 @@ use Twig\Environment;
 class PageRoutingListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private PageRegistry $pageRegistry,
-        private Environment $twig,
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+        private readonly Environment $twig,
     ) {
     }
 

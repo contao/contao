@@ -18,7 +18,7 @@ class ReadAction extends AbstractAction
 
     public function __construct(
         string $dataSource,
-        private array $current,
+        private readonly array $current,
     ) {
         parent::__construct($dataSource);
     }

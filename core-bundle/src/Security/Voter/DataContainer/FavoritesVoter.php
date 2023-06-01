@@ -30,8 +30,8 @@ use Symfony\Component\Security\Core\Security;
 class FavoritesVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(
-        private Security $security,
-        private Connection $connection,
+        private readonly Security $security,
+        private readonly Connection $connection,
     ) {
     }
 

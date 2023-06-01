@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class SetConfigCommand extends Command
 {
-    private ManagerConfig $managerConfig;
+    private readonly ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
     {

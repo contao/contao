@@ -32,8 +32,8 @@ class InsertTagsListener
     ];
 
     public function __construct(
-        private ContaoFramework $framework,
-        private LoggerInterface $logger,
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

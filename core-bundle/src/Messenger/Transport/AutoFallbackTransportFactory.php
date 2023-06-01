@@ -22,8 +22,8 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 class AutoFallbackTransportFactory implements TransportFactoryInterface
 {
     public function __construct(
-        private AutoFallbackNotifier $autoFallbackNotifier,
-        private ContainerInterface $messengerTransportLocator,
+        private readonly AutoFallbackNotifier $autoFallbackNotifier,
+        private readonly ContainerInterface $messengerTransportLocator,
     ) {
     }
 

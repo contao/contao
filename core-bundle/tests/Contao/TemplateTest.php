@@ -334,7 +334,7 @@ class TemplateTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $template = new class($buffer) extends FrontendTemplate {
-            public function __construct(private string|null $testBuffer)
+            public function __construct(private readonly string|null $testBuffer)
             {
                 parent::__construct();
             }

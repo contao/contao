@@ -31,7 +31,7 @@ use Twig\TokenParser\ExtendsTokenParser;
  */
 final class DynamicExtendsTokenParser extends AbstractTokenParser
 {
-    public function __construct(private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly TemplateHierarchyInterface $hierarchy)
     {
     }
 

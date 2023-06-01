@@ -22,9 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DisableAppConfiguredSettingsListener
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private ContaoFramework $framework,
-        private array $localConfig,
+        private readonly TranslatorInterface $translator,
+        private readonly ContaoFramework $framework,
+        private readonly array $localConfig,
     ) {
     }
 

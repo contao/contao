@@ -19,8 +19,8 @@ use Contao\OptInModel;
 class OptInToken implements OptInTokenInterface
 {
     public function __construct(
-        private OptInModel $model,
-        private ContaoFramework $framework,
+        private readonly OptInModel $model,
+        private readonly ContaoFramework $framework,
     ) {
     }
 

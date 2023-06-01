@@ -31,7 +31,7 @@ class OrderFieldMigration extends AbstractMigration
         ],
     ];
 
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

@@ -28,9 +28,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class BooleanFieldsMigration extends AbstractMigration
 {
     public function __construct(
-        private Connection $connection,
-        private ContaoFramework $framework,
-        private ResourceFinder $resourceFinder,
+        private readonly Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
     ) {
     }
 

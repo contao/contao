@@ -20,7 +20,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class SearchIndexMessageHandler
 {
-    public function __construct(private IndexerInterface|null $indexer = null)
+    public function __construct(private readonly IndexerInterface|null $indexer = null)
     {
     }
 

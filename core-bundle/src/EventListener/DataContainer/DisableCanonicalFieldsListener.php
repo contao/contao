@@ -25,8 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DisableCanonicalFieldsListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private TranslatorInterface $translator,
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

@@ -24,8 +24,8 @@ class RefererIdListener
     private string|null $token = null;
 
     public function __construct(
-        private TokenGeneratorInterface $tokenGenerator,
-        private ScopeMatcher $scopeMatcher,
+        private readonly TokenGeneratorInterface $tokenGenerator,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 

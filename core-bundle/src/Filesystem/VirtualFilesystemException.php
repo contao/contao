@@ -31,7 +31,7 @@ class VirtualFilesystemException extends \RuntimeException
     final public const ENCOUNTERED_INVALID_PATH = 11;
 
     private function __construct(
-        private string $path,
+        private readonly string $path,
         string $message,
         int $code,
         \Throwable|null $previous = null,

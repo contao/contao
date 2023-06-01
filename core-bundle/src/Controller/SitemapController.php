@@ -32,8 +32,8 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 class SitemapController extends AbstractController
 {
     public function __construct(
-        private PageRegistry $pageRegistry,
-        private PageFinder $pageFinder,
+        private readonly PageRegistry $pageRegistry,
+        private readonly PageFinder $pageFinder,
     ) {
     }
 

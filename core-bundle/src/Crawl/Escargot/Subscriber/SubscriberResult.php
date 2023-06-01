@@ -23,8 +23,8 @@ class SubscriberResult
     private array $info = [];
 
     public function __construct(
-        private bool $wasSuccessful,
-        private string $summary,
+        private readonly bool $wasSuccessful,
+        private readonly string $summary,
     ) {
     }
 

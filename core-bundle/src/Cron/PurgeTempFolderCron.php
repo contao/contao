@@ -22,9 +22,9 @@ use Symfony\Component\Finder\Finder;
 class PurgeTempFolderCron
 {
     public function __construct(
-        private Filesystem $filesystem,
-        private string $projectDir,
-        private LoggerInterface|null $logger,
+        private readonly Filesystem $filesystem,
+        private readonly string $projectDir,
+        private readonly LoggerInterface|null $logger,
     ) {
     }
 

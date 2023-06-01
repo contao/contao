@@ -24,8 +24,8 @@ use Doctrine\DBAL\Connection;
 class PageSearchListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
     ) {
     }
 

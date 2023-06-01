@@ -29,8 +29,8 @@ use webignition\RobotsTxt\File\Parser;
 class RobotsTxtController
 {
     public function __construct(
-        private PageFinder $pageFinder,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly PageFinder $pageFinder,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

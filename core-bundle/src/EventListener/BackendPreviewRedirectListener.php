@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class BackendPreviewRedirectListener
 {
-    public function __construct(private ScopeMatcher $scopeMatcher)
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
     }
 

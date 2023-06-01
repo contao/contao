@@ -29,11 +29,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private AdapterDefinitionFactory $adapterDefinitionFactory;
-
-    public function __construct(private ContainerBuilder $container)
-    {
-        $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
+    public function __construct(
+        private readonly ContainerBuilder $container,
+        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
+    ) {
     }
 
     public function getContainer(): ContainerBuilder

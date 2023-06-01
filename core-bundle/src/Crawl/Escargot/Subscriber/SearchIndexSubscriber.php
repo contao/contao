@@ -45,8 +45,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
     public function __construct(
-        private IndexerInterface $indexer,
-        private TranslatorInterface $translator,
+        private readonly IndexerInterface $indexer,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

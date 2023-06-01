@@ -41,16 +41,16 @@ use Twig\Error\Error as TwigError;
 class BackendPreviewSwitchController
 {
     public function __construct(
-        private FrontendPreviewAuthenticator $previewAuthenticator,
-        private TokenChecker $tokenChecker,
-        private Connection $connection,
-        private Security $security,
-        private TwigEnvironment $twig,
-        private RouterInterface $router,
-        private ContaoCsrfTokenManager $tokenManager,
-        private TranslatorInterface $translator,
-        private array $backendAttributes = [],
-        private string $backendBadgeTitle = '',
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly TokenChecker $tokenChecker,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly TwigEnvironment $twig,
+        private readonly RouterInterface $router,
+        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly TranslatorInterface $translator,
+        private readonly array $backendAttributes = [],
+        private readonly string $backendBadgeTitle = '',
     ) {
     }
 

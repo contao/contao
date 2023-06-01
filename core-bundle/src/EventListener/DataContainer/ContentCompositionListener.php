@@ -35,20 +35,20 @@ class ContentCompositionListener
     /**
      * @var Adapter<Image>
      */
-    private Adapter $image;
+    private readonly Adapter $image;
 
     /**
      * @var Adapter<Backend>
      */
-    private Adapter $backend;
+    private readonly Adapter $backend;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Security $security,
-        private PageRegistry $pageRegistry,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly PageRegistry $pageRegistry,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
     ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);

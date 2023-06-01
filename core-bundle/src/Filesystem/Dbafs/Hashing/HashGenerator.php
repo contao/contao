@@ -20,8 +20,8 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 class HashGenerator implements HashGeneratorInterface
 {
     public function __construct(
-        private string $hashAlgorithm,
-        private bool $useLastModified = true,
+        private readonly string $hashAlgorithm,
+        private readonly bool $useLastModified = true,
     ) {
         if (!\in_array($hashAlgorithm, $supportedHashAlgorithms = hash_algos(), true)) {
             throw new \InvalidArgumentException(sprintf('The "%s" hash algorithm is not available on this system. Try "%s" instead.', $hashAlgorithm, implode('" or "', $supportedHashAlgorithms)));

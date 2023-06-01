@@ -36,15 +36,15 @@ class ImageFactory implements ImageFactoryInterface
      * @internal
      */
     public function __construct(
-        private ResizerInterface $resizer,
-        private ImagineInterface $imagine,
-        private ImagineInterface $imagineSvg,
-        private Filesystem $filesystem,
-        private ContaoFramework $framework,
-        private bool $bypassCache,
-        private array $imagineOptions,
-        private array $validExtensions,
-        private string $uploadDir,
+        private readonly ResizerInterface $resizer,
+        private readonly ImagineInterface $imagine,
+        private readonly ImagineInterface $imagineSvg,
+        private readonly Filesystem $filesystem,
+        private readonly ContaoFramework $framework,
+        private readonly bool $bypassCache,
+        private readonly array $imagineOptions,
+        private readonly array $validExtensions,
+        private readonly string $uploadDir,
     ) {
     }
 

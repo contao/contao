@@ -23,8 +23,8 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 class DoctrineSchemaListener
 {
     public function __construct(
-        private DcaSchemaProvider $provider,
-        private ContainerInterface $messengerTransportLocator,
+        private readonly DcaSchemaProvider $provider,
+        private readonly ContainerInterface $messengerTransportLocator,
     ) {
     }
 

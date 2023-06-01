@@ -52,21 +52,21 @@ use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
-    private array $options;
+    private readonly array $options;
 
     public function __construct(
-        private UserProviderInterface $userProvider,
-        private AuthenticationSuccessHandlerInterface $successHandler,
-        private AuthenticationFailureHandlerInterface $failureHandler,
-        private ScopeMatcher $scopeMatcher,
-        private RouterInterface $router,
-        private UriSigner $uriSigner,
-        private ContaoFramework $framework,
-        private TokenStorageInterface $tokenStorage,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel,
-        private RequestStack $requestStack,
-        private TwoFactorAuthenticator $twoFactorAuthenticator,
+        private readonly UserProviderInterface $userProvider,
+        private readonly AuthenticationSuccessHandlerInterface $successHandler,
+        private readonly AuthenticationFailureHandlerInterface $failureHandler,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RouterInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly ContaoFramework $framework,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel,
+        private readonly RequestStack $requestStack,
+        private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
         $this->options = [

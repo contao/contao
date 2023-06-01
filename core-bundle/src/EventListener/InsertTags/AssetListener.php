@@ -19,7 +19,7 @@ use Symfony\Component\Asset\Packages;
  */
 class AssetListener
 {
-    public function __construct(private Packages $packages)
+    public function __construct(private readonly Packages $packages)
     {
     }
 

@@ -26,8 +26,8 @@ class PickerBuilder implements PickerBuilderInterface
      * @internal
      */
     public function __construct(
-        private FactoryInterface $menuFactory,
-        private RouterInterface $router,
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
     ) {
     }
 

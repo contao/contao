@@ -27,9 +27,9 @@ class MessengerCron
      * @param array<array{'options': array<string>, 'transports': array<string>, 'autoscale': array{'enabled': bool, 'desired_size': int, 'max': int, 'min': int}}> $workers
      */
     public function __construct(
-        private ContainerInterface $messengerTransportLocator,
-        private ProcessUtil $processUtil,
-        private array $workers,
+        private readonly ContainerInterface $messengerTransportLocator,
+        private readonly ProcessUtil $processUtil,
+        private readonly array $workers,
     ) {
     }
 

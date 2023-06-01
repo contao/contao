@@ -37,7 +37,7 @@ final class FragmentTemplate extends Template
      */
     public function __construct(
         private string $templateName,
-        private \Closure $onGetResponse,
+        private readonly \Closure $onGetResponse,
     ) {
         // Do not call parent constructor
     }

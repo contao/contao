@@ -21,8 +21,8 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 class AutoFallbackNotifier
 {
     public function __construct(
-        private CacheItemPoolInterface $cache,
-        private ContainerInterface $messengerTransportLocator,
+        private readonly CacheItemPoolInterface $cache,
+        private readonly ContainerInterface $messengerTransportLocator,
     ) {
     }
 

@@ -46,8 +46,8 @@ class DebugPagesCommand extends Command
     private array $contentComposition = [];
 
     public function __construct(
-        private ContaoFramework $framework,
-        private PageRegistry $pageRegistry,
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
     ) {
         parent::__construct();
     }

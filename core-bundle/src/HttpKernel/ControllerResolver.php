@@ -22,8 +22,8 @@ class ControllerResolver implements ControllerResolverInterface
      * @internal
      */
     public function __construct(
-        private ControllerResolverInterface $resolver,
-        private FragmentRegistry $registry,
+        private readonly ControllerResolverInterface $resolver,
+        private readonly FragmentRegistry $registry,
     ) {
     }
 

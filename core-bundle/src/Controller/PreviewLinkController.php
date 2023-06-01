@@ -28,9 +28,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PreviewLinkController
 {
     public function __construct(
-        private FrontendPreviewAuthenticator $previewAuthenticator,
-        private UriSigner $uriSigner,
-        private Connection $connection,
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly UriSigner $uriSigner,
+        private readonly Connection $connection,
     ) {
     }
 

@@ -32,12 +32,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendFavoritesListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private Connection $connection,
-        private TranslatorInterface $translator,
-        private ContaoCsrfTokenManager $tokenManager,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 

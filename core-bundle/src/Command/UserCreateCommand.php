@@ -37,12 +37,12 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 )]
 class UserCreateCommand extends Command
 {
-    private array $locales;
+    private readonly array $locales;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();

@@ -23,8 +23,8 @@ use Symfony\Component\Security\Core\Security;
 class PageListener
 {
     public function __construct(
-        private Connection $connection,
-        private Security $security,
+        private readonly Connection $connection,
+        private readonly Security $security,
     ) {
     }
 

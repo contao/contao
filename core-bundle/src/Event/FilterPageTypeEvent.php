@@ -18,7 +18,7 @@ class FilterPageTypeEvent
 {
     public function __construct(
         private array $options,
-        private DataContainer $dataContainer,
+        private readonly DataContainer $dataContainer,
     ) {
     }
 

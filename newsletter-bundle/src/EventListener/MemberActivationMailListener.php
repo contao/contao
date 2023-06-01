@@ -19,7 +19,7 @@ use Doctrine\DBAL\Types\Types;
 
 class MemberActivationMailListener
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

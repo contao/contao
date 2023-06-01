@@ -18,8 +18,8 @@ class MethodDefinition
      * @param array<string, (string|array|null)> $parameters
      */
     public function __construct(
-        private string|null $returnType,
-        private array $parameters,
+        private readonly string|null $returnType,
+        private readonly array $parameters,
     ) {
     }
 

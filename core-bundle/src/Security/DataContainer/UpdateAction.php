@@ -19,8 +19,8 @@ class UpdateAction extends AbstractAction
 
     public function __construct(
         string $dataSource,
-        private array $current,
-        private array|null $new = null,
+        private readonly array $current,
+        private readonly array|null $new = null,
     ) {
         parent::__construct($dataSource);
     }

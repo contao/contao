@@ -55,8 +55,8 @@ final class ContaoExtension extends AbstractExtension
     private array $contaoEscaperFilterRules = [];
 
     public function __construct(
-        private Environment $environment,
-        private TemplateHierarchyInterface $hierarchy,
+        private readonly Environment $environment,
+        private readonly TemplateHierarchyInterface $hierarchy,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
@@ -79,7 +79,7 @@ final class ContaoExtension extends AbstractExtension
         $this->environment->addGlobal(
             'request_token',
             new class($tokenManager) implements \Stringable {
-                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
                 {
                 }
 

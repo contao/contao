@@ -19,7 +19,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class InsertTagParser implements ResetInterface
 {
     public function __construct(
-        private ContaoFramework $framework,
+        private readonly ContaoFramework $framework,
         private InsertTags|null $insertTags = null,
     ) {
     }
