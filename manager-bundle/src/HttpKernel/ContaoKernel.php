@@ -27,6 +27,7 @@ use Contao\ManagerPlugin\PluginLoader;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\Filesystem\Path;
@@ -152,37 +153,39 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($parametersFile = $this->getConfigFile('parameters')) {
-            $loader->load($parametersFile);
-        }
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
+            if ($parametersFile = $this->getConfigFile('parameters', $container)) {
+                $loader->load($parametersFile);
+            }
 
-        $config = $this->getManagerConfig()->all();
-        $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
+            $config = $this->getManagerConfig()->all();
+            $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        /** @var array<ConfigPluginInterface> $plugins */
-        foreach ($plugins as $plugin) {
-            $plugin->registerContainerConfiguration($loader, $config);
-        }
+            /** @var array<ConfigPluginInterface> $plugins */
+            foreach ($plugins as $plugin) {
+                $plugin->registerContainerConfiguration($loader, $config);
+            }
 
-        // Reload the parameters.yml file
-        if ($parametersFile) {
-            $loader->load($parametersFile);
-        }
+            // Reload the parameters.yml file
+            if ($parametersFile) {
+                $loader->load($parametersFile);
+            }
 
-        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment())) {
-            $loader->load($configFile);
-        } elseif ($configFile = $this->getConfigFile('config')) {
-            $loader->load($configFile);
-        }
+            if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment(), $container)) {
+                $loader->load($configFile);
+            } elseif ($configFile = $this->getConfigFile('config', $container)) {
+                $loader->load($configFile);
+            }
 
-        // Automatically load the services.yml file if it exists
-        if ($servicesFile = $this->getConfigFile('services')) {
-            $loader->load($servicesFile);
-        }
+            // Automatically load the services.yml file if it exists
+            if ($servicesFile = $this->getConfigFile('services', $container)) {
+                $loader->load($servicesFile);
+            }
 
-        if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
-            $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
-        }
+            if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
+                $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
+            }
+        });
     }
 
     public function getHttpCache(): ContaoCache
@@ -302,13 +305,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private function getConfigFile(string $file): ?string
+    private function getConfigFile(string $file, ContainerBuilder $container): ?string
     {
         $projectDir = $this->getProjectDir();
+        $exists = [];
 
         foreach (['.yaml', '.yml', '.php', '.xml'] as $ext) {
-            if (file_exists($path = Path::join($projectDir, 'config', $file.$ext))) {
-                return $path;
+            if ($container->fileExists($path = Path::join($projectDir, 'config', $file.$ext))) {
+                $exists[] = $path;
             }
         }
 
@@ -316,14 +320,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         foreach (['.yaml', '.yml'] as $ext) {
             $path = Path::join($projectDir, 'app/config', $file.$ext);
 
-            if (file_exists($path)) {
+            if ($container->fileExists($path)) {
                 trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext));
 
-                return $path;
+                $exists[] = $path;
             }
         }
 
-        return null;
+        return $exists[0] ?? null;
     }
 
     private function addBundlesFromPlugins(array &$bundles): void
