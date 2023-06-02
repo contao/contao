@@ -15,15 +15,10 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Security;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class ContaoLoginFactoryTest extends TestCase
 {
@@ -104,7 +99,7 @@ class ContaoLoginFactoryTest extends TestCase
             '%security.access.always_authenticate_before_granting%',
         ]));
 
-        $this->assertFalse(array_key_exists(3, $container->getDefinition('security.authorization_checker')->getArguments()));
+        $this->assertFalse(\array_key_exists(3, $container->getDefinition('security.authorization_checker')->getArguments()));
 
         $factory = new ContaoLoginFactory();
         $factory->create(
