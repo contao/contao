@@ -154,7 +154,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(
-            function (ContainerBuilder $container) use ($loader) {
+            function (ContainerBuilder $container) use ($loader): void {
                 if ($parametersFile = $this->getConfigFile('parameters', $container)) {
                     $loader->load($parametersFile);
                 }
@@ -322,7 +322,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         foreach (['.yaml', '.yml'] as $ext) {
             $path = Path::join($projectDir, 'app/config', $file.$ext);
 
-            if ($container->fileExists($path)) {
+            // Only trigger deprecation if no file exists in the root config folder
+            if ($container->fileExists($path) && [] === $exists) {
                 trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext));
 
                 $exists[] = $path;
