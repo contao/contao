@@ -17,6 +17,8 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImageInterface;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
@@ -92,6 +94,21 @@ class PictureFactoryTest extends TestCase
 
                         return true;
                     }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertSame(
+                            [
+                                ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS,
+                                IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS,
+                            ],
+                            $options->getPreserveCopyrightMetadata(),
+                        );
+
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
+
+                        return true;
+                    }
                 )
             )
             ->willReturn($pictureMock)
@@ -130,6 +147,12 @@ class PictureFactoryTest extends TestCase
             'cssClass' => 'my-size',
             'lazyLoading' => true,
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
+            'preserveMetadata' => true,
+            'skipIfDimensionsMatch' => true,
+            'metadata' => serialize([
+                serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
+                serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
+            ]),
         ];
 
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
@@ -251,6 +274,10 @@ class PictureFactoryTest extends TestCase
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
+                'preserveMetadata' => [
+                    ExifFormat::NAME => [],
+                    IptcFormat::NAME => ['2#116', '2#080'],
+                ],
                 'items' => [
                     [
                         'width' => 50,
@@ -308,7 +335,17 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeOptions $options): bool {
+                    function (ResizeOptions $options) use ($predefinedSizes): bool {
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadata'][ExifFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadata'][IptcFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
+                        );
+
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
