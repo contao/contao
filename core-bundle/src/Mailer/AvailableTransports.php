@@ -22,7 +22,7 @@ class AvailableTransports
      */
     private array $transports = [];
 
-    public function __construct(private TranslatorInterface|null $translator = null)
+    public function __construct(private readonly TranslatorInterface|null $translator = null)
     {
     }
 

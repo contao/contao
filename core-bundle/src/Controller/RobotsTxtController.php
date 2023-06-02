@@ -28,8 +28,10 @@ use webignition\RobotsTxt\File\Parser;
 #[Route('/robots.txt', defaults: ['_scope' => 'frontend'])]
 class RobotsTxtController
 {
-    public function __construct(private PageFinder $pageFinder, private EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        private readonly PageFinder $pageFinder,
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     public function __invoke(Request $request): Response

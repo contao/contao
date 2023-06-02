@@ -40,7 +40,7 @@ return static function (ContainerConfigurator $configurator) use ($container): v
         // Trigger __destruct handler
         unset($config);
     } catch (Throwable) {
-        // Ignore failed autoloading
+        // Ignore failed auto-loading
     }
 
     $errors = [];

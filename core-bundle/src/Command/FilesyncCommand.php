@@ -29,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class FilesyncCommand extends Command
 {
-    public function __construct(private DbafsManager $dbafsManager)
+    public function __construct(private readonly DbafsManager $dbafsManager)
     {
         parent::__construct();
     }

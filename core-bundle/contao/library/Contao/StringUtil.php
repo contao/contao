@@ -115,7 +115,7 @@ class StringUtil
 				break;
 			}
 
-			$blnModified = ($buffer !== $arrChunks[$i]);
+			$blnModified = $buffer !== $arrChunks[$i];
 			$intCharCount += mb_strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)

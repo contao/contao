@@ -21,7 +21,7 @@ use Contao\PageModel;
 
 class SitemapListener
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

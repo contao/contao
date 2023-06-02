@@ -30,10 +30,10 @@ use Symfony\Component\Security\Core\Security;
 class UserSessionListener
 {
     public function __construct(
-        private Connection $connection,
-        private Security $security,
-        private ScopeMatcher $scopeMatcher,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

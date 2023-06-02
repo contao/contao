@@ -26,8 +26,10 @@ class InputEnhancer implements RouteEnhancerInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function enhance(array $defaults, Request $request): array

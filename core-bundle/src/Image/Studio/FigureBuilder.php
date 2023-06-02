@@ -43,7 +43,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class FigureBuilder
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private InvalidResourceException|null $lastException = null;
 
     /**
@@ -137,10 +137,10 @@ class FigureBuilder
      * @param array<string> $validExtensions
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private string $uploadPath,
-        private array $validExtensions,
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly array $validExtensions,
     ) {
         $this->filesystem = new Filesystem();
     }
@@ -688,10 +688,10 @@ class FigureBuilder
         // from the default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
-        $data = array_merge(
-            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-            $fileReferenceData
-        );
+        $data = [
+            ...array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            ...$fileReferenceData,
+        ];
 
         return (new Metadata($data))->with($overwriteMetadata);
     }

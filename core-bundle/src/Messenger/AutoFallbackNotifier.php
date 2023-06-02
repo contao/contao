@@ -20,8 +20,10 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 
 class AutoFallbackNotifier
 {
-    public function __construct(private CacheItemPoolInterface $cache, private ContainerInterface $messengerTransportLocator)
-    {
+    public function __construct(
+        private readonly CacheItemPoolInterface $cache,
+        private readonly ContainerInterface $messengerTransportLocator,
+    ) {
     }
 
     public function ping(string $transportName): void

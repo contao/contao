@@ -39,10 +39,10 @@ class Cron
      * @param \Closure():EntityManagerInterface $entityManager
      */
     public function __construct(
-        private \Closure $repository,
-        private \Closure $entityManager,
-        private CacheItemPoolInterface $cachePool,
-        private LoggerInterface|null $logger = null,
+        private readonly \Closure $repository,
+        private readonly \Closure $entityManager,
+        private readonly CacheItemPoolInterface $cachePool,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 

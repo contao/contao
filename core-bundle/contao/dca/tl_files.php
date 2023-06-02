@@ -822,7 +822,7 @@ class tl_files extends Backend
 		$objFile = new File($strDecoded);
 
 		/** @var DC_Folder $dc */
-		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
+		$dc = func_num_args() <= 12 ? null : func_get_arg(12);
 
 		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{

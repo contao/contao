@@ -22,7 +22,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
 {
     private RememberMeRepository|null $repository = null;
 
-    public function __construct(private \Closure $repositoryClosure)
+    public function __construct(private readonly \Closure $repositoryClosure)
     {
     }
 

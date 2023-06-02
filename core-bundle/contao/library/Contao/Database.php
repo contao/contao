@@ -335,7 +335,7 @@ class Database
 				$arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
 				$arrReturn[$objIndex->Key_name]['type'] = 'index';
 				$arrReturn[$objIndex->Key_name]['index_fields'][] = $strColumnName;
-				$arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
+				$arrReturn[$objIndex->Key_name]['index'] = ($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY';
 			}
 
 			$this->arrCache[$strTable] = $arrReturn;

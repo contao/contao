@@ -26,9 +26,9 @@ class RunTestsIsolatedCommand extends Command
     protected static $defaultName = 'contao:run-tests-isolated';
     protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
 
-    private string|false $phpPath;
+    private readonly string|false $phpPath;
 
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
 

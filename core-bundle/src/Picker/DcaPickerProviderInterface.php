@@ -27,7 +27,7 @@ interface DcaPickerProviderInterface extends PickerProviderInterface
     /**
      * Returns the attributes for the DataContainer.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getDcaAttributes(PickerConfig $config): array;
 

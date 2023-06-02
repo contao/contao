@@ -31,10 +31,10 @@ class FrontendPreviewAuthenticator
      * @internal
      */
     public function __construct(
-        private Security $security,
-        private RequestStack $requestStack,
-        private UserProviderInterface $userProvider,
-        private LoggerInterface|null $logger = null,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly UserProviderInterface $userProvider,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 

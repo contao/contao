@@ -29,11 +29,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendPreviewListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

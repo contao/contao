@@ -28,7 +28,7 @@ class CachingTraversable implements \IteratorAggregate
     /**
      * @var \IteratorIterator<TKey, TValue, \Traversable<TKey, TValue>>
      */
-    private \IteratorIterator $iterator;
+    private readonly \IteratorIterator $iterator;
 
     /**
      * @param \Traversable<TKey, TValue> $traversable

@@ -33,10 +33,10 @@ class LogoutListener
      * @internal
      */
     public function __construct(
-        private HttpUtils $httpUtils,
-        private ScopeMatcher $scopeMatcher,
-        private Security $security,
-        private LoggerInterface|null $logger,
+        private readonly HttpUtils $httpUtils,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly Security $security,
+        private readonly LoggerInterface|null $logger,
     ) {
     }
 

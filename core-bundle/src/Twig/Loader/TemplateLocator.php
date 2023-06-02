@@ -27,20 +27,20 @@ class TemplateLocator
 {
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private array|null $themeDirectories = null;
-    private string $globalTemplateDirectory;
+    private readonly string $globalTemplateDirectory;
 
     /**
      * @param array<string, string>                $bundles
      * @param array<string, array<string, string>> $bundlesMetadata
      */
     public function __construct(
-        private string $projectDir,
-        private array $bundles,
-        private array $bundlesMetadata,
-        private ThemeNamespace $themeNamespace,
-        private Connection $connection,
+        private readonly string $projectDir,
+        private readonly array $bundles,
+        private readonly array $bundlesMetadata,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly Connection $connection,
     ) {
         $this->filesystem = new Filesystem();
         $this->globalTemplateDirectory = Path::join($this->projectDir, 'templates');

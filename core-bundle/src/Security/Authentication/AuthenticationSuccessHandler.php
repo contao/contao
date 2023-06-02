@@ -41,10 +41,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private TrustedDeviceManagerInterface $trustedDeviceManager,
-        private FirewallMap $firewallMap,
-        private LoggerInterface|null $logger = null,
+        private readonly ContaoFramework $framework,
+        private readonly TrustedDeviceManagerInterface $trustedDeviceManager,
+        private readonly FirewallMap $firewallMap,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 

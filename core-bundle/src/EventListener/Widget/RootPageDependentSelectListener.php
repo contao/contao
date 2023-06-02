@@ -26,9 +26,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RootPageDependentSelectListener
 {
     public function __construct(
-        private Connection $connection,
-        private UrlGeneratorInterface $router,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly UrlGeneratorInterface $router,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

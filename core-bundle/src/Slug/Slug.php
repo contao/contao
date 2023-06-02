@@ -22,8 +22,10 @@ class Slug
     /**
      * @internal
      */
-    public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly SlugGeneratorInterface $slugGenerator,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**

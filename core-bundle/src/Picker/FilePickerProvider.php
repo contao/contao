@@ -35,8 +35,8 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
-        private string $uploadPath,
+        private readonly Security $security,
+        private readonly string $uploadPath,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -125,7 +125,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
@@ -152,7 +152,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,array|string|bool>
+     * @return array<string, array|string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

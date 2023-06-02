@@ -355,7 +355,7 @@ abstract class Controller extends System
 			}
 
 			$return = '';
-			$blnMultiMode = ($objArticles->count() > 1);
+			$blnMultiMode = $objArticles->count() > 1;
 
 			while ($objArticles->next())
 			{

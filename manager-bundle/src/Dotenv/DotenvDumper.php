@@ -17,15 +17,14 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DotenvDumper
 {
-    private Filesystem $filesystem;
-    private array $parameters;
+    private readonly array $parameters;
     private array $setParameters = [];
     private array $unsetParameters = [];
 
-    public function __construct(private string $dotenvFile, Filesystem|null $filesystem = null)
-    {
-        $this->filesystem = $filesystem ?? new Filesystem();
-
+    public function __construct(
+        private readonly string $dotenvFile,
+        private readonly Filesystem $filesystem = new Filesystem(),
+    ) {
         if (!file_exists($dotenvFile)) {
             return;
         }

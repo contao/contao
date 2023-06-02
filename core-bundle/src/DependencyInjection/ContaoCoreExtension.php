@@ -319,10 +319,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
             if (isset($config['image']['sizes']['_defaults'])) {
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
-                $value = array_merge(
-                    $config['image']['sizes']['_defaults'],
-                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
-                );
+                $value = [
+                    ...$config['image']['sizes']['_defaults'],
+                    ...array_filter($value, static fn ($v) => !\is_array($v) || !empty($v)),
+                ];
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);

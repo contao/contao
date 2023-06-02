@@ -23,8 +23,10 @@ use Symfony\Component\Security\Core\Security;
  */
 class StoreRefererListener
 {
-    public function __construct(private Security $security, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     /**
@@ -92,7 +94,7 @@ class StoreRefererListener
     }
 
     /**
-     * @return array<string,array<string,string>>
+     * @return array<string, array<string, string>>
      */
     private function prepareBackendReferer(string $refererId, array|null $referers = null): array
     {

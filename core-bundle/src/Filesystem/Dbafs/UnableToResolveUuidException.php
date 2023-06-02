@@ -19,8 +19,10 @@ use Symfony\Component\Uid\Uuid;
  */
 class UnableToResolveUuidException extends \RuntimeException
 {
-    public function __construct(private Uuid $uuid, string $message = '')
-    {
+    public function __construct(
+        private readonly Uuid $uuid,
+        string $message = '',
+    ) {
         parent::__construct(rtrim(sprintf('Unable to resolve UUID "%s" to a path. %s', $uuid->toRfc4122(), $message)));
     }
 

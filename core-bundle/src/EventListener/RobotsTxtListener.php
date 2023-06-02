@@ -24,8 +24,10 @@ use webignition\RobotsTxt\Record\Record;
  */
 class RobotsTxtListener
 {
-    public function __construct(private ContaoFramework $contaoFramework, private string $routePrefix = '/contao')
-    {
+    public function __construct(
+        private readonly ContaoFramework $contaoFramework,
+        private readonly string $routePrefix = '/contao',
+    ) {
     }
 
     public function __invoke(RobotsTxtEvent $event): void

@@ -49,11 +49,11 @@ class PictureFactory implements PictureFactoryInterface
      * @internal
      */
     public function __construct(
-        private PictureGeneratorInterface $pictureGenerator,
-        private ImageFactoryInterface $imageFactory,
-        private ContaoFramework $framework,
-        private bool $bypassCache,
-        private array $imagineOptions,
+        private readonly PictureGeneratorInterface $pictureGenerator,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly ContaoFramework $framework,
+        private readonly bool $bypassCache,
+        private readonly array $imagineOptions,
     ) {
         $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
