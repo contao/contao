@@ -218,6 +218,8 @@ class ContaoKernelTest extends ContaoTestCase
             )
         ;
 
+        $this->expectDeprecation('file in the "app/config" folder has been deprecated');
+
         $kernel = $this->getKernel($projectDir, $env);
         $kernel->registerContainerConfiguration($loader);
 
