@@ -32,11 +32,11 @@ class PageFinder
      */
     public function findRootPageForHostAndLanguage(string $hostname, string|null $acceptLanguage = null): PageModel|null
     {
-        if ('' === $hostname) {
-            return null;
+        if ($hostname) {
+            $hostname = "http://$hostname";
         }
 
-        $request = Request::create('http://'.$hostname);
+        $request = Request::create($hostname);
         $request->headers->set('Accept-Language', $acceptLanguage ?? '');
 
         return $this->matchRootPageForRequest($request);
@@ -64,10 +64,6 @@ class PageFinder
      */
     public function findRootPagesForHost(string $hostname): array
     {
-        if ('' === $hostname) {
-            return [];
-        }
-
         $pageModel = $this->findRootPageForHostAndLanguage($hostname);
 
         if (null === $pageModel) {

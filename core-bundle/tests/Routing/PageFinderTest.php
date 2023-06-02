@@ -106,7 +106,7 @@ class PageFinderTest extends TestCase
     public function testFindRootPageForRequestCreatesNewRequest(): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
-        $request = Request::create('https://www.example.org');
+        $request = new Request();
 
         $framework = $this->mockContaoFramework();
         $framework
@@ -160,25 +160,6 @@ class PageFinderTest extends TestCase
         $result = $pageFinder->findRootPageForRequest($request);
 
         $this->assertSame($rootPage, $result);
-    }
-
-    public function testReturnsNullIfTheRequestHostnameIsEmpty(): void
-    {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('initialize')
-        ;
-
-        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
-        $requestMatcher
-            ->expects($this->never())
-            ->method('matchRequest')
-        ;
-
-        $pageFinder = new PageFinder($framework, $requestMatcher);
-
-        $this->assertNull($pageFinder->findRootPageForRequest(new Request()));
     }
 
     /**
