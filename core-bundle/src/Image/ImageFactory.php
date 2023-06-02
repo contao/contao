@@ -31,7 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
-    private array $preserveMetadata = [];
+    private array $preserveMetadata;
 
     /**
      * @internal
@@ -189,6 +189,7 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $config = new ResizeConfiguration();
+
         $options = new ResizeOptions();
         $options->setPreserveCopyrightMetadata($this->preserveMetadata);
 
@@ -222,9 +223,11 @@ class ImageFactory implements ImageFactoryInterface
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
-                $options->setPreserveCopyrightMetadata(
-                    array_merge($options->getPreserveCopyrightMetadata(), $this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [])
-                );
+
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
+                ]);
 
                 return [$config, null, $options];
             }

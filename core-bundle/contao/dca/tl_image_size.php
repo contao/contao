@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{expert_legend:hide},formats,preserveMetadata,cssClass,skipIfDimensionsMatch'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
 	),
 
 	// Subpalettes
@@ -447,6 +447,8 @@ class tl_image_size extends Backend
 	 */
 	public function getMetadata(DataContainer $dc=null)
 	{
+		$options = array();
+
 		foreach ((new ResizeOptions())->getPreserveCopyrightMetadata() as $key => $value)
 		{
 			$options[serialize(array($key => $value))] = strtoupper($key) . ' (' . implode(', ', iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($value)))) . ')';

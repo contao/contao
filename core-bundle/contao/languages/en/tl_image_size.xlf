@@ -63,13 +63,13 @@
         <source>Preserve copyright metadata</source>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
-        <source>Preserve some image metadata fields related to copyright information (EXIF, IPTC, XMP)</source>
+        <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.0">
-        <source>Image metadata fields to keep</source>
+        <source>Metadata fields</source>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.1">
-        <source>Here you can select which metadata fields shall be kept. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
+        <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -97,6 +97,9 @@
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

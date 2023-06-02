@@ -43,7 +43,7 @@ class PictureFactory implements PictureFactoryInterface
     private array $imageSizeItemsCache = [];
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
-    private array $preserveMetadata = [];
+    private array $preserveMetadata;
 
     /**
      * @internal
@@ -106,6 +106,7 @@ class PictureFactory implements PictureFactoryInterface
 
         if ($size instanceof PictureConfiguration) {
             $config = $size;
+
             $configOptions = new ResizeOptions();
             $configOptions->setPreserveCopyrightMetadata($this->preserveMetadata);
         } else {
@@ -233,9 +234,11 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setSize($this->createConfigItem($imageSizes));
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
-                $options->setPreserveCopyrightMetadata(
-                    array_merge($options->getPreserveCopyrightMetadata(), $imageSizes['preserveMetadata'] ?? [])
-                );
+
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$imageSizes['preserveMetadata'] ?? [],
+                ]);
 
                 if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
