@@ -14,7 +14,6 @@ namespace Contao;
  * Class FormRange
  *
  * @property string  $value
- * @property string  $type
  * @property boolean $mandatory
  * @property integer $min
  * @property integer $max
