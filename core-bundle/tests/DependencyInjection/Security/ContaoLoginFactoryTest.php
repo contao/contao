@@ -15,8 +15,15 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Security;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class ContaoLoginFactoryTest extends TestCase
 {
@@ -85,8 +92,30 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertFalse($arguments['index_5']);
 
         $this->assertTrue($container->getDefinition($twoFactorListenerId)->hasTag('kernel.event_subscriber'));
+    }
 
-        $this->assertTrue($container->hasDefinition('security.authorization_checker'));
+    public function testConfiguresTheAuthorizationChecker(): void
+    {
+        $container = new ContainerBuilder();
+
+        $container->setDefinition('security.authorization_checker', new Definition(AuthorizationChecker::class, [
+            '@security.token_storage',
+            '@security.access.decision_manager',
+            '%security.access.always_authenticate_before_granting%',
+        ]));
+
+        $this->assertFalse(array_key_exists(3, $container->getDefinition('security.authorization_checker')->getArguments()));
+
+        $factory = new ContaoLoginFactory();
+        $factory->create(
+            $container,
+            'contao_frontend',
+            ['remember_me' => true],
+            'contao.security.frontend_user_provider',
+            null
+        );
+
         $this->assertFalse($container->getDefinition('security.authorization_checker')->getArgument(3));
     }
+
 }
