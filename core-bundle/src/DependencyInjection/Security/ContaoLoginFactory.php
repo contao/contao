@@ -33,6 +33,12 @@ class ContaoLoginFactory extends AbstractFactory
 
         $this->createTwoFactorPreparationListener($container, $id);
 
+        // Configure authorization checker to not throw exception if no firewall is active (e.g. on the command line)
+        if ($container->hasDefinition('security.authorization_checker')) {
+            $authorizationChecker = $container->getDefinition('security.authorization_checker');
+            $authorizationChecker->setArgument(3, false);
+        }
+
         return $ids;
     }
 
