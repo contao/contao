@@ -332,6 +332,13 @@ services:
         class: Contao\ImagineSvg\Imagine
         public: true
 
+    contao.image.metadata:
+        class: Contao\Image\Metadata\MetadataReaderWriter
+        public: true
+        arguments:
+            - !tagged_iterator contao.image.metadata_format
+            - !tagged_iterator contao.image.metadata_container
+
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         public: true
@@ -369,9 +376,11 @@ services:
         public: true
         arguments:
             - '%contao.image.target_dir%'
+            - '%kernel.secret%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
             - '@contao.image.deferred_image_storage'
+            - '@contao.image.metadata'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator

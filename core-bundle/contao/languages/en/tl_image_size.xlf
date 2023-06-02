@@ -59,6 +59,18 @@
       <trans-unit id="tl_image_size.formatsNotSupported">
         <source>The following formats are not supported on your server: %s</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata.0">
+        <source>Metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata.1">
+        <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
       </trans-unit>
@@ -85,6 +97,9 @@
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

@@ -31,6 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
+    private array $preserveMetadata;
 
     /**
      * @internal
@@ -46,6 +47,7 @@ class ImageFactory implements ImageFactoryInterface
         private readonly array $validExtensions,
         private readonly string $uploadDir,
     ) {
+        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -54,6 +56,11 @@ class ImageFactory implements ImageFactoryInterface
     public function setPredefinedSizes(array $predefinedSizes): void
     {
         $this->predefinedSizes = $predefinedSizes;
+    }
+
+    public function setPreserveMetadata(array $preserveMetadata): void
+    {
+        $this->preserveMetadata = $preserveMetadata;
     }
 
     public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
@@ -182,7 +189,9 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $config = new ResizeConfiguration();
+
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
 
         if (isset($size[2])) {
             // Database record
@@ -192,6 +201,19 @@ class ImageFactory implements ImageFactoryInterface
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
+
+                    if (!$imageSize->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true)) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $preserveMetadata,
+                                ),
+                            ),
+                        );
+                    }
                 }
 
                 return [$config, null, $options];
@@ -201,6 +223,11 @@ class ImageFactory implements ImageFactoryInterface
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
+
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
+                ]);
 
                 return [$config, null, $options];
             }

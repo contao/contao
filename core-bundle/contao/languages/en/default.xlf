@@ -1472,6 +1472,9 @@
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
       </trans-unit>

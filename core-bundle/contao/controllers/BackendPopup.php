@@ -135,6 +135,16 @@ class BackendPopup extends Backend
 				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
+
+				try
+				{
+					$readerWriter = System::getContainer()->get('contao.image.metadata');
+					$objTemplate->metadata = $readerWriter->toReadable($readerWriter->parse($projectDir . '/' . $this->strFile));
+				}
+				catch (\Throwable)
+				{
+					// Ignore
+				}
 			}
 			else
 			{

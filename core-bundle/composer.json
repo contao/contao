@@ -59,7 +59,7 @@
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^5.0 || ^6.0",
         "contao-components/tristen-tablesort": "^5.3",
-        "contao/image": "^1.0",
+        "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0",
         "doctrine/collections": "^1.5",
         "doctrine/dbal": "^3.3",
