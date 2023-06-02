@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'preserveMetadata'            => 'metadata'

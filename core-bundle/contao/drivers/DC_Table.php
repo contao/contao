@@ -3505,7 +3505,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($sValues as $k=>$v)
 				{
-					// Unset selectors that just trigger subpalettes (see #3738)
+					// Unset selectors that just trigger sub-palettes (see #3738)
 					if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$v]))
 					{
 						unset($sValues[$k]);
@@ -3529,7 +3529,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);

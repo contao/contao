@@ -75,7 +75,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected $initialId;
 
 	/**
-	 * Current filemounts
+	 * Current file mounts
 	 * @var array
 	 */
 	protected $arrFilemounts = array();
@@ -242,7 +242,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? throw new \InvalidArgumentException(sprintf('Missing config.editableFileTypes setting for DC_Folder "%s"', $this->strTable))));
 		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? throw new \InvalidArgumentException(sprintf('Missing config.uploadPath setting for DC_Folder "%s"', $this->strTable));
 
-		// Get all filemounts (root folders)
+		// Get all file mounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
 		{
 			$this->arrFilemounts = $this->eliminateNestedPaths($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']);
@@ -2666,7 +2666,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 18 : 0)) . 'px">';
 
-			// Add a toggle button if there are childs
+			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';

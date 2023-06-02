@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 		'default'                     => '{title_legend},name;{redirect_legend:hide},redirect;{account_legend},disable,start,stop',
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'redirect'                    => 'jumpTo',

@@ -312,7 +312,7 @@ class tl_files extends Backend
 		$canDeleteOne = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE);
 		$canDeleteRecursive = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY);
 
-		// Set the filemounts
+		// Set the file mounts
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $this->User->filemounts;
 
 		// Disable the upload button if uploads are not allowed

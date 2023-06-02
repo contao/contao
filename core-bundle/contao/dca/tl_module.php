@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'defineRoot'                  => 'rootPage',

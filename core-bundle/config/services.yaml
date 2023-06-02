@@ -103,6 +103,7 @@ services:
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.util.process_util'
+            - ~
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron

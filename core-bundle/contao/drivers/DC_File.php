@@ -521,7 +521,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);

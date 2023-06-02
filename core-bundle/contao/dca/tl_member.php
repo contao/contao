@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'default'                     => '{personal_legend},firstname,lastname,language,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,email,website,fax;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'login'                       => 'username,password',

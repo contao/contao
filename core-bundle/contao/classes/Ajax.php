@@ -313,7 +313,7 @@ class Ajax extends Backend
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
-			// Toggle subpalettes
+			// Toggle sub-palettes
 			case 'toggleSubpalette':
 				$this->import(BackendUser::class, 'User');
 
