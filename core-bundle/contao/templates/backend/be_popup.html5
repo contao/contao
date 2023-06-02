@@ -94,13 +94,12 @@
           <table class="tl_show zebra-table zebra-table--no-border">
             <caption><?= $this->trans('MSC.imageMetadata', ['%s' => Contao\StringUtil::specialchars(strtoupper('iptc' === $format ? 'IPTC IIM' : $format))]) ?></caption>
             <?php foreach ($table as $label => $values): ?>
-              <?php if ('' === trim(implode('', $values))) {
-                continue;
-              } ?>
-              <tr>
-                <td><span class="tl_label"><?= Contao\StringUtil::specialchars($label) ?></span></td>
-                <td><?= Contao\StringUtil::specialchars(implode(', ', $values)) ?></td>
-              </tr>
+              <?php if (array_filter($values, \strlen(...))): ?>
+                <tr>
+                  <td><span class="tl_label"><?= Contao\StringUtil::specialchars($label) ?></span></td>
+                  <td><?= Contao\StringUtil::specialchars(implode(', ', $values)) ?></td>
+                </tr>
+              <?php endif; ?>
             <?php endforeach; ?>
           </table>
         <?php endforeach; ?>

@@ -1473,7 +1473,7 @@
         <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.imageMetadata">
-        <source>%s Metadata</source>
+        <source>%s metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
