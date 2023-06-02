@@ -153,39 +153,41 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) use ($loader) {
-            if ($parametersFile = $this->getConfigFile('parameters', $container)) {
-                $loader->load($parametersFile);
-            }
+        $loader->load(
+            function (ContainerBuilder $container) use ($loader) {
+                if ($parametersFile = $this->getConfigFile('parameters', $container)) {
+                    $loader->load($parametersFile);
+                }
 
-            $config = $this->getManagerConfig()->all();
-            $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
+                $config = $this->getManagerConfig()->all();
+                $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-            /** @var array<ConfigPluginInterface> $plugins */
-            foreach ($plugins as $plugin) {
-                $plugin->registerContainerConfiguration($loader, $config);
-            }
+                /** @var array<ConfigPluginInterface> $plugins */
+                foreach ($plugins as $plugin) {
+                    $plugin->registerContainerConfiguration($loader, $config);
+                }
 
-            // Reload the parameters.yml file
-            if ($parametersFile) {
-                $loader->load($parametersFile);
-            }
+                // Reload the parameters.yml file
+                if ($parametersFile) {
+                    $loader->load($parametersFile);
+                }
 
-            if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment(), $container)) {
-                $loader->load($configFile);
-            } elseif ($configFile = $this->getConfigFile('config', $container)) {
-                $loader->load($configFile);
-            }
+                if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment(), $container)) {
+                    $loader->load($configFile);
+                } elseif ($configFile = $this->getConfigFile('config', $container)) {
+                    $loader->load($configFile);
+                }
 
-            // Automatically load the services.yml file if it exists
-            if ($servicesFile = $this->getConfigFile('services', $container)) {
-                $loader->load($servicesFile);
-            }
+                // Automatically load the services.yml file if it exists
+                if ($servicesFile = $this->getConfigFile('services', $container)) {
+                    $loader->load($servicesFile);
+                }
 
-            if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
-                $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
+                if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
+                    $loader->load(__DIR__.'/../Resources/skeleton/config/services.php');
+                }
             }
-        });
+        );
     }
 
     public function getHttpCache(): ContaoCache
