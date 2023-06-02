@@ -169,9 +169,9 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame('my-size', $picture->getImg()['class']);
-        $this->assertSame('lazy', $picture->getImg()['loading']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame('my-size', $picture->getRawImg()['class']);
+        $this->assertSame('lazy', $picture->getRawImg()['loading']);
     }
 
     public function testCorrectlyHandlesEmptyImageFormats(): void
@@ -323,9 +323,9 @@ class PictureFactoryTest extends TestCase
 
         $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getImg()['class']);
-        $this->assertSame('lazy', $picture->getImg()['loading']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getRawImg()['class']);
+        $this->assertSame('lazy', $picture->getRawImg()['loading']);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
@@ -387,7 +387,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
     /**
@@ -458,8 +458,8 @@ class PictureFactoryTest extends TestCase
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
         $pictureFromSerializedConfig = $pictureFactory->create($path, serialize([100, 200, 'left_top']));
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame($imageMock, $pictureFromSerializedConfig->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame($imageMock, $pictureFromSerializedConfig->getRawImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithoutAModel(): void
@@ -535,13 +535,13 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithEmptyConfig(): void
@@ -610,13 +610,13 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, ['', '', '']);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [0, 0, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
     /**
@@ -748,7 +748,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($expected, $picture->getImg()['hasSingleAspectRatio']);
+        $this->assertSame($expected, $picture->getRawImg()['hasSingleAspectRatio']);
     }
 
     public function getAspectRatios(): \Generator

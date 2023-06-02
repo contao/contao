@@ -42,7 +42,7 @@ class PictureConfigurationRuntimeTest extends TestCase
             'width' => '200',
             'height' => '100',
             'zoom' => '75',
-            'resizeMode' => 'proportional',
+            'resizeMode' => 'box',
             'formats' => ['jpg' => ['jpg', 'webp']],
         ]);
 
@@ -51,7 +51,7 @@ class PictureConfigurationRuntimeTest extends TestCase
         $this->assertSame(200, $configuration->getSize()->getResizeConfig()->getWidth());
         $this->assertSame(100, $configuration->getSize()->getResizeConfig()->getHeight());
         $this->assertSame(75, $configuration->getSize()->getResizeConfig()->getZoomLevel());
-        $this->assertSame('proportional', $configuration->getSize()->getResizeConfig()->getMode());
+        $this->assertSame('box', $configuration->getSize()->getResizeConfig()->getMode());
         $this->assertSame(['jpg' => ['jpg', 'webp'], '.default' => ['.default']], $configuration->getFormats());
         $this->assertSame([], $configuration->getSizeItems());
     }
@@ -70,7 +70,7 @@ class PictureConfigurationRuntimeTest extends TestCase
                     'width' => '200',
                     'height' => '100',
                     'zoom' => '75',
-                    'resizeMode' => 'proportional',
+                    'resizeMode' => 'box',
                     'media' => '(max-width: 640px)',
                 ],
             ],
@@ -93,7 +93,7 @@ class PictureConfigurationRuntimeTest extends TestCase
         $this->assertSame(200, $item2->getResizeConfig()->getWidth());
         $this->assertSame(100, $item2->getResizeConfig()->getHeight());
         $this->assertSame(75, $item2->getResizeConfig()->getZoomLevel());
-        $this->assertSame('proportional', $item2->getResizeConfig()->getMode());
+        $this->assertSame('box', $item2->getResizeConfig()->getMode());
         $this->assertSame('(max-width: 640px)', $item2->getMedia());
     }
 

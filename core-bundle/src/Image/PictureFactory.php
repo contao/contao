@@ -311,13 +311,13 @@ class PictureFactory implements PictureFactoryInterface
             return $picture;
         }
 
-        $img = $picture->getImg();
+        $img = $picture->getRawImg();
 
         foreach ($attributes as $attribute => $value) {
             $img[$attribute] = $value;
         }
 
-        return new Picture($img, $picture->getSources());
+        return new Picture($img, $picture->getRawSources());
     }
 
     /**
@@ -326,17 +326,17 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if (0 === \count($picture->getSources())) {
+        if (0 === \count($picture->getRawSources())) {
             return true;
         }
 
-        $img = $picture->getImg();
+        $img = $picture->getRawImg();
 
         if (empty($img['width']) || empty($img['height'])) {
             return false;
         }
 
-        foreach ($picture->getSources() as $source) {
+        foreach ($picture->getRawSources() as $source) {
             if (empty($source['width']) || empty($source['height'])) {
                 return false;
             }
