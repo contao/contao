@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * Class FormTextField
  *
  * @property string  $value
- * @property string  $type
  * @property integer $maxlength
  * @property boolean $mandatory
  * @property integer $min
