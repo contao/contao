@@ -291,7 +291,9 @@ services:
             - '@contao.framework'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
-            - { name: kernel.event_listener, priority: 7 }
+            - { name: kernel.event_listener, event: kernel.request, priority: 7 }
+            # The priority must be higher than the one of the PrettyErrorScreenListener (defaults to -96)
+            - { name: kernel.event_listener, event: kernel.exception, priority: 96 }
 
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
