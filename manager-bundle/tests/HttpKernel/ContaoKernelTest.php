@@ -199,7 +199,7 @@ class ContaoKernelTest extends ContaoTestCase
         $container
             ->expects($this->atLeast(19))
             ->method('fileExists')
-            ->willReturnCallback(fn (string $path) => \in_array(basename($path), $expectedResult, true))
+            ->willReturnCallback(static fn (string $path) => \in_array(basename($path), $expectedResult, true))
         ;
 
         $loader = $this->createMock(LoaderInterface::class);
