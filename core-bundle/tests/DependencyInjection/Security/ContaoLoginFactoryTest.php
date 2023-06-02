@@ -112,5 +112,4 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertFalse($container->getDefinition('security.authorization_checker')->getArgument(3));
     }
-
 }
