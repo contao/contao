@@ -597,14 +597,10 @@ services:
             - '%contao.resources_paths%'
 
     contao.routing.backend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - [matchAttribute, [_scope, backend]]
+        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
     contao.routing.frontend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - [matchAttribute, [_scope, frontend]]
+        class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
