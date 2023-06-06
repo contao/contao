@@ -319,7 +319,7 @@ class FigureBuilderTest extends TestCase
     }
 
     public function testFromUrlNotRelativeToWebDir(): void
-    {       
+    {
         $this->expectException(InvalidResourceException::class);
         $this->expectExceptionMessageMatches('/No resource could be located at path/');
 
