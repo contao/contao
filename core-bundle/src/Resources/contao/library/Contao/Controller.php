@@ -1779,7 +1779,7 @@ abstract class Controller extends System
 			// Use source + metadata from files model (if not overwritten)
 			$figureBuilder
 				->fromFilesModel($filesModel)
-				->setMetadata($createMetadataOverwriteFromRowData(true));
+				->setOverwriteMetadata($createMetadataOverwriteFromRowData(true));
 
 			$includeFullMetadata = true;
 		}
@@ -1788,7 +1788,7 @@ abstract class Controller extends System
 			// Always ignore file metadata when building from path (BC)
 			$figureBuilder
 				->fromPath($rowData['singleSRC'], false)
-				->setMetadata($createMetadataOverwriteFromRowData(false));
+				->setOverwriteMetadata($createMetadataOverwriteFromRowData(false));
 
 			$includeFullMetadata = false;
 		}

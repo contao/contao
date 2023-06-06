@@ -86,6 +86,11 @@ class FigureBuilder
     private ?Metadata $metadata = null;
 
     /**
+     * User defined metadata. This will be added to the default if set.
+     */
+    private ?Metadata $overwriteMetadata = null;
+
+    /**
      * Determines if a metadata should never be present in the output.
      */
     private ?bool $disableMetadata = null;
@@ -361,6 +366,18 @@ class FigureBuilder
     public function setMetadata(?Metadata $metadata): self
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Sets custom overwrite metadata.
+     *
+     * The metadata will be merged with the default metadata from the FilesModel.
+     */
+    public function setOverwriteMetadata(?Metadata $metadata): self
+    {
+        $this->overwriteMetadata = $metadata;
 
         return $this;
     }
@@ -642,9 +659,13 @@ class FigureBuilder
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
+        $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
         if (null !== $metadata) {
-            return $metadata->with($fileReferenceData);
+            return $metadata
+                ->with($fileReferenceData)
+                ->with($overwriteMetadata)
+            ;
         }
 
         // If no metadata can be obtained from the model, we create a container
@@ -656,7 +677,7 @@ class FigureBuilder
             $fileReferenceData
         );
 
-        return new Metadata($data);
+        return (new Metadata($data))->with($overwriteMetadata);
     }
 
     /**
