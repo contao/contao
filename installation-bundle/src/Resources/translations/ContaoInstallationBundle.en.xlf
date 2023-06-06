@@ -23,9 +23,6 @@
       <trans-unit id="7" resname="file_permissions_warning">
         <source>&lt;strong&gt;Do not attempt to fix this yourself by making files and folders writable for everyone!&lt;/strong&gt;</source>
       </trans-unit>
-      <trans-unit id="8" resname="accept_license">
-        <source>Accept license</source>
-      </trans-unit>
       <trans-unit id="9" resname="set_password">
         <source>Install tool password</source>
       </trans-unit>

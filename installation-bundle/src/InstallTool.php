@@ -64,7 +64,7 @@ class InstallTool
 
     public function shouldAcceptLicense(): bool
     {
-        return !Config::get('licenseAccepted');
+        return false;
     }
 
     public function increaseLoginCount(): void

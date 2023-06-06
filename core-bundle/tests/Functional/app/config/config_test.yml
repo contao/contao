@@ -45,7 +45,6 @@ doctrine:
 contao:
     legacy_routing: false
     localconfig:
-        licenseAccepted: true
         disableCron: true
     search:
         default_indexer:
