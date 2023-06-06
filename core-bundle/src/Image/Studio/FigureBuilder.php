@@ -41,6 +41,7 @@ class FigureBuilder
     private ContainerInterface $locator;
     private string $projectDir;
     private string $uploadPath;
+    private string $webDir;
     private Filesystem $filesystem;
     private ?InvalidResourceException $lastException = null;
 
@@ -143,11 +144,12 @@ class FigureBuilder
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
+    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, string $webDir, array $validExtensions)
     {
         $this->locator = $locator;
         $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
+        $this->webDir = $webDir;
         $this->validExtensions = $validExtensions;
 
         $this->filesystem = new Filesystem();
@@ -281,7 +283,14 @@ class FigureBuilder
             return $this;
         }
 
-        return $this->fromPath(urldecode(ltrim($path, '/')));
+        $path = urldecode(ltrim($path, '/'));
+
+        // Prepend the web_dir, except for files/ and assets/
+        if (!str_starts_with($path, $this->uploadPath.'/') && !str_starts_with($path, 'assets/')) {
+            $path = Path::join($this->webDir, $path);
+        }
+
+        return $this->fromPath($path);
     }
 
     /**
