@@ -16,24 +16,16 @@ namespace Contao;
 class ContentArticle extends ContentElement
 {
 	/**
-	 * Parse the template
-	 *
-	 * @return string
+	 * Template
+	 * @var string
 	 */
-	public function generate()
-	{
-		if ($this->isHidden())
-		{
-			return '';
-		}
-
-		return $this->getArticle($this->articleAlias, false, true, $this->strColumn);
-	}
+	protected $strTemplate = 'ce_article';
 
 	/**
 	 * Generate the content element
 	 */
 	protected function compile()
 	{
+		$this->Template->article = $this->getArticle($this->articleAlias, false, true, $this->strColumn);
 	}
 }
