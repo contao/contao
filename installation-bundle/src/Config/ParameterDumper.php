@@ -62,13 +62,6 @@ class ParameterDumper
      */
     public function dump(): void
     {
-        if (
-            empty($this->parameters['parameters']['secret']) ||
-            'ThisTokenIsNotSoSecretChangeIt' === $this->parameters['parameters']['secret']
-        ) {
-            $this->parameters['parameters']['secret'] = bin2hex(random_bytes(32));
-        }
-
         if (isset($this->parameters['parameters']['database_port'])) {
             $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
         }
