@@ -325,7 +325,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             // Only trigger deprecation if no file exists in the root config folder
             if ($container->fileExists($path) && [] === $exists) {
                 trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext));
-
                 $exists[] = $path;
             }
         }

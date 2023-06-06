@@ -206,7 +206,7 @@ class ContaoKernelTest extends ContaoTestCase
         $loader
             ->method('load')
             ->willReturnCallback(
-                static function ($resource) use (&$files, $container, $env) {
+                static function ($resource) use ($container, $env, &$files) {
                     if ($resource instanceof \Closure) {
                         return $resource($container, $env);
                     }
