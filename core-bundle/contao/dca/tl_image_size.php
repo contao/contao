@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,imageQuality,skipIfDimensionsMatch,cssClass'
 	),
 
 	// Sub-palettes
@@ -130,6 +130,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
+		),
+		'imageQuality' => array
+		(
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NULL"
 		),
 		'cssClass' => array
 		(

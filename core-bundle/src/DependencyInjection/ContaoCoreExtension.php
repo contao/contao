@@ -326,6 +326,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
+
+            // Do not camelize imagine options keys
+            if ($value['imagine_options'] ?? false) {
+                $imageSizes['_'.$name]['imagineOptions'] = $value['imagine_options'];
+            }
         }
 
         $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
