@@ -65,7 +65,7 @@ class DataContainerOperation implements \ArrayAccess
 
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->operation[$offset];
+        return $this->operation[$offset] ?? null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
