@@ -81,7 +81,7 @@
         <source>Image quality</source>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
-        <source>Image compression quality between 0 (lowest quality) and 100 (lossless).</source>
+        <source>Optional image compression quality between 0 (lowest quality) and 100 (lossless). If left empty, the system-wide configuration applies.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
