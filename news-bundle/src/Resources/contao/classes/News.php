@@ -581,7 +581,7 @@ class News extends Frontend
 
 			if (null === $objPage)
 			{
-				return $objPage;
+				return null;
 			}
 
 			$objLayout = $objPage->getRelated('layout');
