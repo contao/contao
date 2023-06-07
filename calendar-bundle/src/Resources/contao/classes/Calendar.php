@@ -647,9 +647,9 @@ class Calendar extends Frontend
 				return $objPage;
 			}
 
-			$objLayout = LayoutModel::findByPk($objPage->layout);
+			$objLayout = $objPage->getRelated('layout');
 
-			if (null === $objLayout)
+			if (!$objLayout instanceof LayoutModel)
 			{
 				return $objPage;
 			}
