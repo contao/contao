@@ -228,8 +228,11 @@ class FigureBuilder
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
         // Only check for a FilesModel if the resource is inside the upload path
-        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
+        $isDbafsPathPublic = Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path);
+        $isDbafsPath = $isDbafsPathPublic || Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path);
+
+        if ($autoDetectDbafsPaths && $isDbafsPath) {
+            $filesModel = $this->getFilesModelAdapter()->findByPath($isDbafsPathPublic ? Path::makeRelative($path, $this->webDir) : $path);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -283,14 +286,8 @@ class FigureBuilder
             return $this;
         }
 
-        $path = urldecode(ltrim($path, '/'));
-
-        // Prepend the web_dir, except for files/ and assets/
-        if (!str_starts_with($path, $this->uploadPath.'/') && !str_starts_with($path, 'assets/')) {
-            $path = Path::join($this->webDir, $path);
-        }
-
-        return $this->fromPath($path);
+        // Prepend the web_dir (see #6123)
+        return $this->fromPath(Path::join($this->webDir, urldecode($path)));
     }
 
     /**
