@@ -1377,9 +1377,14 @@ class PageModel extends Model
 			throw $e;
 		}
 
-		// Make the URL relative to the base path
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
+		if (0 === strncmp($strUrl, '//', 2))
 		{
+			// Prepend the protocol (see #6081)
+			$strUrl = ($this->rootUseSSL ? 'https:' : 'http:') . $strUrl;
+		}
+		elseif (0 === strncmp($strUrl, '/', 1))
+		{
+			// Make the URL relative to the base path
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
