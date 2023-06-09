@@ -59,7 +59,7 @@
         "doctrine/orm": "^2.10",
         "doctrine/persistence": "^2.0",
         "dragonmantank/cron-expression": "^2.3",
-        "friendsofsymfony/http-cache": "^2.6",
+        "friendsofsymfony/http-cache": "^2.15.1",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "imagine/imagine": "^1.0",
         "knplabs/knp-menu": "^3.1",
