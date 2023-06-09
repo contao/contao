@@ -37,6 +37,7 @@ use Doctrine\DBAL\Types\Types;
  *     }
  *
  * @property string        $id                 The field ID
+ * @property string        $type               the field type
  * @property string        $name               the field name
  * @property string        $label              The field label
  * @property mixed         $value              The field value
