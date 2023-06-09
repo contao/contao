@@ -45,10 +45,10 @@ class ChangeSet
      * @internal
      */
     public function __construct(
-        private array $itemsToCreate,
-        private array $itemsToUpdate,
-        private array $itemsToDelete,
-        private array $lastModifiedUpdates = [],
+        private readonly array $itemsToCreate,
+        private readonly array $itemsToUpdate,
+        private readonly array $itemsToDelete,
+        private readonly array $lastModifiedUpdates = [],
     ) {
     }
 
@@ -75,7 +75,7 @@ class ChangeSet
                 $item = [...$item, self::ATTR_PATH => Path::join($pathPrefix, $newPath)];
             }
 
-            $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
+            $itemsToUpdate[$prefixedPath] = [...$itemsToUpdate[$prefixedPath] ?? [], ...$item];
         }
 
         foreach ($changeSet->itemsToDelete as $path => $type) {

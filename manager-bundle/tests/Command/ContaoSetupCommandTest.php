@@ -64,13 +64,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'skeleton:install', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
+            [$phpPath, ...$phpFlags, $consolePath, 'skeleton:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:symlinks', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
@@ -132,7 +132,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
-        $commandTester = (new CommandTester($command));
+        $commandTester = new CommandTester($command);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/An error occurred while executing the ".+" command: <error>/');
@@ -253,11 +253,11 @@ class ContaoSetupCommandTest extends ContaoTestCase
     /**
      * @return (\Closure(array<string>):Process)
      */
-    private function getCreateProcessHandler(array $processes, array $validateCommandArguments = null, &$invocationCount = null): callable
+    private function getCreateProcessHandler(array $processes, array|null $validateCommandArguments = null, &$invocationCount = null): callable
     {
         $invocationCount ??= 0;
 
-        return static function (array $command) use (&$invocationCount, $validateCommandArguments, $processes): Process {
+        return static function (array $command) use ($validateCommandArguments, &$invocationCount, $processes): Process {
             if (null !== $validateCommandArguments) {
                 self::assertEquals($validateCommandArguments[$invocationCount], $command);
             }

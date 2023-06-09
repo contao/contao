@@ -26,12 +26,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CoreResponseContextFactory
 {
     public function __construct(
-        private ResponseContextAccessor $responseContextAccessor,
-        private EventDispatcherInterface $eventDispatcher,
-        private TokenChecker $tokenChecker,
-        private HtmlDecoder $htmlDecoder,
-        private RequestStack $requestStack,
-        private InsertTagParser $insertTagParser,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly HtmlDecoder $htmlDecoder,
+        private readonly RequestStack $requestStack,
+        private readonly InsertTagParser $insertTagParser,
     ) {
     }
 

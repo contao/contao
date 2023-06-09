@@ -26,9 +26,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RootPageDependentSelectListener
 {
     public function __construct(
-        private Connection $connection,
-        private UrlGeneratorInterface $router,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly UrlGeneratorInterface $router,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -64,7 +64,7 @@ class RootPageDependentSelectListener
     }
 
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
-    public function saveCallback(mixed $value, DataContainer $dataContainer): string
+    public function saveCallback(mixed $value): string
     {
         $values = StringUtil::deserialize($value);
 

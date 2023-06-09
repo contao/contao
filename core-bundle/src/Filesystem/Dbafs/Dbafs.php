@@ -71,11 +71,11 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @internal Use the "contao.filesystem.dbafs_factory" service to create new instances.
      */
     public function __construct(
-        private HashGeneratorInterface $hashGenerator,
-        private Connection $connection,
-        private EventDispatcherInterface $eventDispatcher,
-        private VirtualFilesystemInterface $filesystem,
-        private string $table,
+        private readonly HashGeneratorInterface $hashGenerator,
+        private readonly Connection $connection,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly VirtualFilesystemInterface $filesystem,
+        private readonly string $table,
     ) {
     }
 
@@ -538,7 +538,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             return;
         }
 
-        $getParentUuid = static function (string $path) use (&$allUuidsByPath): ?string {
+        $getParentUuid = static function (string $path) use (&$allUuidsByPath): string|null {
             if ('.' === ($parentPath = \dirname($path))) {
                 return null;
             }

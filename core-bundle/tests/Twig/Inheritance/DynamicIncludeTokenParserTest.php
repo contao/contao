@@ -62,7 +62,7 @@ class DynamicIncludeTokenParserTest extends TestCase
 
         $source = new Source($code, 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedTree = (new Parser($environment))->parse($tokenStream)->__toString();
+        $serializedTree = (string) (new Parser($environment))->parse($tokenStream);
 
         foreach ($expectedStrings as $expectedString) {
             $this->assertStringContainsString($expectedString, $serializedTree);

@@ -22,11 +22,14 @@ use Symfony\Component\Mime\RawMessage;
 
 final class ContaoMailer implements MailerInterface
 {
-    public function __construct(private MailerInterface $mailer, private AvailableTransports $transports, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly MailerInterface $mailer,
+        private readonly AvailableTransports $transports,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, Envelope|null $envelope = null): void
     {
         if ($message instanceof Message) {
             $this->setTransport($message);

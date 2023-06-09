@@ -43,7 +43,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class FigureBuilder
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private InvalidResourceException|null $lastException = null;
 
     /**
@@ -137,10 +137,10 @@ class FigureBuilder
      * @param array<string> $validExtensions
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private string $uploadPath,
-        private array $validExtensions,
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly array $validExtensions,
     ) {
         $this->filesystem = new Filesystem();
     }
@@ -621,7 +621,7 @@ class FigureBuilder
         return new Figure(
             $imageResult,
             \Closure::bind(
-                function (Figure $figure): ?Metadata {
+                function (): Metadata|null {
                     $event = new FileMetadataEvent($this->onDefineMetadata());
 
                     $this->locator->get('event_dispatcher')->dispatch($event);
@@ -635,7 +635,7 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                fn (Figure $figure): ?LightboxResult => $this->onDefineLightboxResult($figure),
+                fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
                 $settings
             ),
             $settings->options
@@ -651,7 +651,7 @@ class FigureBuilder
             return null;
         }
 
-        $getUuid = static function (?FilesModel $filesModel): ?string {
+        $getUuid = static function (FilesModel|null $filesModel): string|null {
             if (null === $filesModel || null === $filesModel->uuid) {
                 return null;
             }
@@ -688,10 +688,10 @@ class FigureBuilder
         // from the default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
-        $data = array_merge(
-            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-            $fileReferenceData
-        );
+        $data = [
+            ...array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            ...$fileReferenceData,
+        ];
 
         return (new Metadata($data))->with($overwriteMetadata);
     }
@@ -708,7 +708,7 @@ class FigureBuilder
             $linkAttributes['target'] = '_blank';
         }
 
-        return array_merge($linkAttributes, $this->additionalLinkAttributes);
+        return [...$linkAttributes, ...$this->additionalLinkAttributes];
     }
 
     /**
@@ -720,7 +720,7 @@ class FigureBuilder
             return null;
         }
 
-        $getMetadataUrl = static function () use ($result): ?string {
+        $getMetadataUrl = static function () use ($result): string|null {
             if (!$result->hasMetadata()) {
                 return null;
             }

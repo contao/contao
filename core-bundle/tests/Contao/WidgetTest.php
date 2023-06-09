@@ -49,7 +49,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testReadsThePostData(string $key, string $input, array|string $value, string $expected = null): void
+    public function testReadsThePostData(string $key, string $input, array|string $value, string|null $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();

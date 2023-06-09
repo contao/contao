@@ -259,7 +259,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     /**
      * @return RequestStack&MockObject
      */
-    private function mockRequestStackWithSession(Session $session = null): RequestStack
+    private function mockRequestStackWithSession(Session|null $session = null): RequestStack
     {
         $requestStack = $this->mockRequestStack('backend');
 
@@ -283,7 +283,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     /**
      * @return RequestStack&MockObject
      */
-    private function mockRequestStack(string $scope = null): RequestStack
+    private function mockRequestStack(string|null $scope = null): RequestStack
     {
         $attributes = [];
 

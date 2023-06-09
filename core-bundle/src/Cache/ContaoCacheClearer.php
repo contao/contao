@@ -21,7 +21,7 @@ class ContaoCacheClearer implements CacheClearerInterface
     /**
      * @internal
      */
-    public function __construct(private Filesystem $filesystem)
+    public function __construct(private readonly Filesystem $filesystem)
     {
     }
 

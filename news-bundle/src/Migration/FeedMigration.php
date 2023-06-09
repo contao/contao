@@ -19,8 +19,10 @@ use Psr\Log\LoggerInterface;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(private readonly Connection $connection, private readonly LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function shouldRun(): bool

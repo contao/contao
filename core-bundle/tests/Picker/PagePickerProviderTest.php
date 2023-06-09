@@ -178,7 +178,7 @@ class PagePickerProviderTest extends ContaoTestCase
         );
     }
 
-    private function getPicker(bool $accessGranted = null): PagePickerProvider
+    private function getPicker(bool|null $accessGranted = null): PagePickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

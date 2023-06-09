@@ -75,7 +75,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected $initialId;
 
 	/**
-	 * Current filemounts
+	 * Current file mounts
 	 * @var array
 	 */
 	protected $arrFilemounts = array();
@@ -242,7 +242,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? throw new \InvalidArgumentException(sprintf('Missing config.editableFileTypes setting for DC_Folder "%s"', $this->strTable))));
 		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? throw new \InvalidArgumentException(sprintf('Missing config.uploadPath setting for DC_Folder "%s"', $this->strTable));
 
-		// Get all filemounts (root folders)
+		// Get all file mounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
 		{
 			$this->arrFilemounts = $this->eliminateNestedPaths($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']);
@@ -667,7 +667,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$strFolder = Input::get('pid', true);
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -828,7 +828,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$strFolder = Input::get('pid', true);
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -1019,7 +1019,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		$blnDoNotRedirect = ($source !== null);
+		$blnDoNotRedirect = $source !== null;
 
 		if ($source === null)
 		{
@@ -1933,7 +1933,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
@@ -2561,7 +2561,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$files = array();
 		$folders = array();
 		$intSpacing = 18;
-		$level = ($intMargin / $intSpacing + 1);
+		$level = $intMargin / $intSpacing + 1;
 
 		// Mount folder
 		if ($mount)
@@ -2656,7 +2656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				continue;
 			}
 
-			$blnIsOpen = (!empty($arrFound) || $session['filetree'][$md5] == 1);
+			$blnIsOpen = !empty($arrFound) || $session['filetree'][$md5] == 1;
 
 			// Always show selected nodes
 			if (!$blnIsOpen && !empty($this->arrPickerValue) && \count(preg_grep('/^' . preg_quote($this->urlEncode($currentFolder), '/') . '\//', $this->arrPickerValue)))
@@ -2666,7 +2666,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 18 : 0)) . 'px">';
 
-			// Add a toggle button if there are childs
+			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';

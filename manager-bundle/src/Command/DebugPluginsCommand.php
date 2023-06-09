@@ -43,7 +43,7 @@ class DebugPluginsCommand extends Command
 {
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private ContaoKernel $kernel)
+    public function __construct(private readonly ContaoKernel $kernel)
     {
         parent::__construct();
     }
@@ -190,10 +190,13 @@ class DebugPluginsCommand extends Command
                 $config->getName(),
                 implode("\n", $config->getReplace()),
                 implode("\n", $config->getLoadAfter()),
-                $config->loadInProduction() && $config->loadInDevelopment()
-                    ? 'All'
-                    : ($config->loadInProduction() ? 'Production' : 'Development'),
+                match (true) {
+                    $config->loadInProduction() && $config->loadInDevelopment() => 'All',
+                    $config->loadInProduction() => 'Production',
+                    $config->loadInDevelopment() => 'Development',
+                },
             ];
+
             $rows[] = new TableSeparator();
         }
 

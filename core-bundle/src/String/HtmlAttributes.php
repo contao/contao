@@ -221,7 +221,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string,string> $styles
+     * @param string|array<string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -239,10 +239,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             $styles = implode(';', $styles);
         }
 
-        $mergedStyles = array_merge(
-            $this->parseStyles($this->attributes['style'] ?? ''),
-            $this->parseStyles($styles),
-        );
+        $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
 
         $this->attributes['style'] = $this->serializeStyles($mergedStyles);
 
@@ -261,7 +258,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|list<string>|array<string,string> $styles
+     * @param string|list<string>|array<string, string> $styles
      */
     public function removeStyle(array|string $styles, mixed $condition = true): self
     {
@@ -363,7 +360,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function test(mixed $condition): bool
     {
         if ($condition instanceof \Stringable) {
-            $condition = $condition->__toString();
+            $condition = (string) $condition;
         }
 
         return (bool) $condition;

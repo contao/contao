@@ -51,8 +51,10 @@ class CrawlCommand extends Command
 {
     private Escargot|null $escargot = null;
 
-    public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)
-    {
+    public function __construct(
+        private readonly Factory $escargotFactory,
+        private readonly Filesystem $filesystem,
+    ) {
         parent::__construct();
     }
 
@@ -212,7 +214,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            public function __construct(private ProgressBar|null $progressBar)
+            public function __construct(private readonly ProgressBar|null $progressBar)
             {
             }
 

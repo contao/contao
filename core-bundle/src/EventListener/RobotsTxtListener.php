@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageModel;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;
@@ -25,8 +24,10 @@ use webignition\RobotsTxt\Record\Record;
  */
 class RobotsTxtListener
 {
-    public function __construct(private ContaoFramework $contaoFramework, private string $routePrefix = '/contao')
-    {
+    public function __construct(
+        private readonly ContaoFramework $contaoFramework,
+        private readonly string $routePrefix = '/contao',
+    ) {
     }
 
     public function __invoke(RobotsTxtEvent $event): void
@@ -57,14 +58,7 @@ class RobotsTxtListener
             $directiveList->add(new Directive('Disallow', '/_contao/'));
         }
 
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
-
-        // Only fetch the fallback page because there can only be one sitemap per host
-        $rootPage = $pageModel->findPublishedFallbackByHostname($event->getRootPage()->dns);
-
-        if (null === $rootPage) {
-            return;
-        }
+        $rootPage = $event->getRootPage();
 
         $sitemap = sprintf(
             '%s%s/sitemap.xml',

@@ -31,18 +31,18 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    public function __construct(private TokenChecker $tokenChecker)
+    public function __construct(private readonly TokenChecker $tokenChecker)
     {
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, \Throwable|null $exception = null): void
     {
         $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
 
         $this->addSummaryData();
 
         if (isset($GLOBALS['TL_DEBUG'])) {
-            $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
+            $this->data = [...$this->data, ...$GLOBALS['TL_DEBUG']];
         }
     }
 
@@ -52,7 +52,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     public function getSummary(): array
     {
@@ -122,7 +122,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getData(string $key): array
     {

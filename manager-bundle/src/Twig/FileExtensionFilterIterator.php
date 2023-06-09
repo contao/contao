@@ -16,7 +16,7 @@ use Symfony\Component\Filesystem\Path;
 
 class FileExtensionFilterIterator implements \IteratorAggregate
 {
-    private \Traversable $iterator;
+    private readonly \Traversable $iterator;
 
     /**
      * @internal

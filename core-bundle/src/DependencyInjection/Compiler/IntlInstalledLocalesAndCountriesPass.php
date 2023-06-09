@@ -28,7 +28,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $definition = $container->findDefinition('contao.intl.locales');
 
             $enabledLocales = $this->getEnabledLocales($container);
-            $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
+            $locales = array_values(array_unique([...$enabledLocales, ...$this->getDefaultLocales()]));
 
             $definition->setArgument(2, $locales);
             $definition->setArgument(3, $enabledLocales);
@@ -70,5 +70,51 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    private function getDefaultLocales(): array
+    {
+        $allLocales = [];
+        $resourceBundle = \ResourceBundle::create('supplementalData', 'ICUDATA', false);
+
+        foreach ($resourceBundle['territoryInfo'] ?? [] as $data) {
+            foreach ($data as $language => $info) {
+                if (\Locale::getDisplayName($language, 'en') === $language) {
+                    continue;
+                }
+
+                if ('official_regional' === ($info['officialStatus'] ?? null)) {
+                    $allLocales[] = $language;
+                }
+            }
+        }
+
+        foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
+            if (
+                (!$regions = ($data['primary']['territories'] ?? null))
+                || \Locale::getDisplayName($language, 'en') === $language
+            ) {
+                continue;
+            }
+
+            $scripts = $data['primary']['scripts'] ?? [];
+            $locales = [$language];
+
+            if (!\is_string($scripts) && \count($scripts) > 1) {
+                foreach ($scripts as $script) {
+                    $locales[] = "{$language}_$script";
+                }
+            }
+
+            foreach ($locales as $locale) {
+                $allLocales[] = $locale;
+
+                foreach (\is_string($regions) ? [$regions] : $regions as $region) {
+                    $allLocales[] = "{$locale}_$region";
+                }
+            }
+        }
+
+        return $allLocales ?: \ResourceBundle::getLocales('');
     }
 }

@@ -27,11 +27,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private FactoryInterface $menuFactory,
-        private RouterInterface $router,
-        private TranslatorInterface $translator,
-        private Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -128,7 +128,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return str_starts_with($config->getCurrent(), $this->getName().'.');
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         if (null === $config) {
             return '';
@@ -181,7 +181,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, int $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, string|null $table = null, int|null $pid = null): string
     {
         $params = [
             'do' => $module,

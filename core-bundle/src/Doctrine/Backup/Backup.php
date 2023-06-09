@@ -17,8 +17,8 @@ class Backup implements \Stringable
     final public const DATETIME_FORMAT = 'YmdHis';
     final public const VALID_BACKUP_NAME_REGEX = '@^[^/]*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
-    private string $filename;
-    private \DateTimeInterface $createdAt;
+    private readonly string $filename;
+    private readonly \DateTimeInterface $createdAt;
     private int $size = 0;
 
     /**
@@ -60,7 +60,7 @@ class Backup implements \Stringable
         return $this;
     }
 
-    public static function createNew(\DateTime $dateTime = null): self
+    public static function createNew(\DateTime|null $dateTime = null): self
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));

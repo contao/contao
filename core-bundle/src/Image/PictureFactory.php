@@ -43,17 +43,19 @@ class PictureFactory implements PictureFactoryInterface
     private array $imageSizeItemsCache = [];
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
+    private array $preserveMetadata;
 
     /**
      * @internal
      */
     public function __construct(
-        private PictureGeneratorInterface $pictureGenerator,
-        private ImageFactoryInterface $imageFactory,
-        private ContaoFramework $framework,
-        private bool $bypassCache,
-        private array $imagineOptions,
+        private readonly PictureGeneratorInterface $pictureGenerator,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly ContaoFramework $framework,
+        private readonly bool $bypassCache,
+        private readonly array $imagineOptions,
     ) {
+        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     public function setDefaultDensities(string $densities): static
@@ -71,7 +73,12 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface
+    public function setPreserveMetadata(array $preserveMetadata): void
+    {
+        $this->preserveMetadata = $preserveMetadata;
+    }
+
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $options = null): PictureInterface
     {
         $attributes = [];
 
@@ -99,12 +106,15 @@ class PictureFactory implements PictureFactoryInterface
 
         if ($size instanceof PictureConfiguration) {
             $config = $size;
+
+            $configOptions = new ResizeOptions();
+            $configOptions->setPreserveCopyrightMetadata($this->preserveMetadata);
         } else {
             [$config, $attributes, $configOptions] = $this->createConfig($size);
         }
 
         // Always prefer options passed to this function
-        $options ??= $configOptions ?? new ResizeOptions();
+        $options ??= $configOptions;
 
         if (!$options->getImagineOptions()) {
             $options->setImagineOptions($this->imagineOptions);
@@ -131,6 +141,8 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
+
         $config = new PictureConfiguration();
         $attributes = [];
 
@@ -144,6 +156,19 @@ class PictureFactory implements PictureFactoryInterface
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
+
+                    if (!$imageSizes->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSizes->metadata, true)) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $preserveMetadata,
+                                ),
+                            ),
+                        );
+                    }
 
                     $formats = [];
 
@@ -210,6 +235,11 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
 
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$imageSizes['preserveMetadata'] ?? [],
+                ]);
+
                 if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
                 }
@@ -265,7 +295,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration item.
      */
-    private function createConfigItem(array $imageSize = null): PictureConfigurationItem
+    private function createConfigItem(array|null $imageSize = null): PictureConfigurationItem
     {
         $configItem = new PictureConfigurationItem();
         $resizeConfig = new ResizeConfiguration();
@@ -311,13 +341,13 @@ class PictureFactory implements PictureFactoryInterface
             return $picture;
         }
 
-        $img = $picture->getImg();
+        $img = $picture->getRawImg();
 
         foreach ($attributes as $attribute => $value) {
             $img[$attribute] = $value;
         }
 
-        return new Picture($img, $picture->getSources());
+        return new Picture($img, $picture->getRawSources());
     }
 
     /**
@@ -326,17 +356,17 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if (0 === \count($picture->getSources())) {
+        if (0 === \count($picture->getRawSources())) {
             return true;
         }
 
-        $img = $picture->getImg();
+        $img = $picture->getRawImg();
 
         if (empty($img['width']) || empty($img['height'])) {
             return false;
         }
 
-        foreach ($picture->getSources() as $source) {
+        foreach ($picture->getRawSources() as $source) {
             if (empty($source['width']) || empty($source['height'])) {
                 return false;
             }

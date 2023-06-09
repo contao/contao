@@ -27,6 +27,8 @@ use Contao\Model\Collection;
  * @property string       $resizeMode
  * @property integer|null $zoom
  * @property string       $formats
+ * @property boolean      $preserveMetadata
+ * @property string       $metadata
  * @property boolean      $skipIfDimensionsMatch
  * @property boolean      $lazyLoading
  *

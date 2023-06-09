@@ -173,7 +173,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * @dataProvider noContaoUserProvider
      */
-    public function testDoesNotStoreTheRefererIfThereIsNoContaoUser(UserInterface $user = null): void
+    public function testDoesNotStoreTheRefererIfThereIsNoContaoUser(UserInterface|null $user = null): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -259,7 +259,7 @@ class StoreRefererListenerTest extends TestCase
         $listener($this->getResponseEvent($request));
     }
 
-    private function getListener(UserInterface $user = null, bool $expectsSecurityCall = false): StoreRefererListener
+    private function getListener(UserInterface|null $user = null, bool $expectsSecurityCall = false): StoreRefererListener
     {
         $security = $this->createMock(Security::class);
         $security
@@ -271,7 +271,7 @@ class StoreRefererListenerTest extends TestCase
         return new StoreRefererListener($security, $this->mockScopeMatcher());
     }
 
-    private function getResponseEvent(Request $request = null): ResponseEvent
+    private function getResponseEvent(Request|null $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

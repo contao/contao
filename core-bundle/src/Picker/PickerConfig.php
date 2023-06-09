@@ -14,8 +14,12 @@ namespace Contao\CoreBundle\Picker;
 
 class PickerConfig implements \JsonSerializable
 {
-    public function __construct(private string $context, private array $extras = [], private int|string $value = '', private string $current = '')
-    {
+    public function __construct(
+        private readonly string $context,
+        private array $extras = [],
+        private readonly int|string $value = '',
+        private readonly string $current = '',
+    ) {
     }
 
     public function getContext(): string
@@ -24,7 +28,7 @@ class PickerConfig implements \JsonSerializable
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getExtras(): array
     {

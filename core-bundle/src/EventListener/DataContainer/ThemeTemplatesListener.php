@@ -22,9 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ThemeTemplatesListener
 {
     public function __construct(
-        private ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer,
-        private ThemeNamespace $themeNamespace,
-        private TranslatorInterface $translator,
+        private readonly ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

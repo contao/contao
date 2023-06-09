@@ -76,7 +76,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -105,7 +105,7 @@ class PlayerController extends AbstractContentElementController
         $captions = [$model->playerCaption];
 
         $sources = array_map(
-            function (FilesystemItem $item) use ($range, &$captions): HtmlAttributes {
+            function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
                 $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
@@ -131,7 +131,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */

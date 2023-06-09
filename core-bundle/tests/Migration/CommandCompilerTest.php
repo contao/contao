@@ -488,7 +488,7 @@ class CommandCompilerTest extends TestCase
         $this->assertEmpty($commands);
     }
 
-    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
+    private function getInstaller(Schema|null $fromSchema = null, Schema|null $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
     {
         $platform = new MySQLPlatform();
         $comparator = (new MySQLSchemaManager($this->createMock(Connection::class), $platform))->createComparator();

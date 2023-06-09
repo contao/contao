@@ -25,8 +25,10 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'links')]
 class HyperlinkController extends AbstractContentElementController
 {
-    public function __construct(private readonly Studio $studio, private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly Studio $studio,
+        private readonly InsertTagParser $insertTagParser,
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response

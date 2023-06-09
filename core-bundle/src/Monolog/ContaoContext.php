@@ -26,7 +26,7 @@ class ContaoContext implements \Stringable
     final public const REPOSITORY = 'REPOSITORY';
 
     public function __construct(
-        private string $func,
+        private readonly string $func,
         private string|null $action = null,
         private string|null $username = null,
         private string|null $ip = null,

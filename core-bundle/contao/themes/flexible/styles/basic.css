@@ -171,6 +171,10 @@ button {
 	cursor: pointer;
 }
 
+button[disabled] {
+	cursor: default;
+}
+
 nav ul, nav li {
 	margin: 0;
 	padding: 0;
@@ -843,12 +847,16 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
-.wizard .tl_text, .wizard .tl_select {
+.wizard .tl_text, .wizard .tl_select, .wizard .tl_image_size {
 	width: calc(100% - 24px);
 }
 
 .wizard .tl_text_2 {
 	width: 45%;
+}
+
+.wizard .tl_image_size {
+	display: inline-block;
 }
 
 .wizard img {

@@ -295,7 +295,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
 	 */
 	private static $arrCurrentRecordCache = array();
 
@@ -1371,7 +1371,7 @@ abstract class DataContainer extends Backend
 						break;
 
 					case 'filter':
-						// Multiple filter subpanels can be defined to split the fields across panels
+						// Multiple filter sub-panels can be defined to split the fields across panels
 						$panel = $this->filterMenu(++$intFilterPanel);
 						break;
 

@@ -39,7 +39,7 @@ final class Figure
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
     public function __construct(
-        private ImageResult $image,
+        private readonly ImageResult $image,
         private \Closure|Metadata|null $metadata = null,
         private \Closure|array|null $linkAttributes = null,
         private \Closure|LightboxResult|null $lightbox = null,
@@ -118,7 +118,7 @@ final class Figure
             return $jsonLd;
         }
 
-        $jsonLd = array_merge($this->getMetadata()->getSchemaOrgData('ImageObject'), $jsonLd);
+        $jsonLd = [...$this->getMetadata()->getSchemaOrgData('ImageObject'), ...$jsonLd];
         ksort($jsonLd);
 
         return $jsonLd;
@@ -204,7 +204,7 @@ final class Figure
      * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
      * @param bool              $includeFullMetadata Make all metadata available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData(array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): array
+    public function getLegacyTemplateData(array|string|null $margin = null, string|null $floating = null, bool $includeFullMetadata = true): array
     {
         // Create a key-value list of the metadata and apply some renaming and
         // formatting transformations to fit the legacy templates.
@@ -244,25 +244,23 @@ final class Figure
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
 
         // Primary image and metadata
-        $templateData = array_merge(
-            [
-                'picture' => [
-                    'img' => $image->getImg(),
-                    'sources' => $image->getSources(),
-                    'alt' => StringUtil::specialchars($metadata->getAlt()),
-                ],
-                'width' => $originalSize->getWidth(),
-                'height' => $originalSize->getHeight(),
-                'arrSize' => $fileInfoImageSize,
-                'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
-                'singleSRC' => $image->getFilePath(),
-                'src' => $image->getImageSrc(),
-                'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
-                'addBefore' => 'below' !== $floating,
-                'addImage' => true,
+        $templateData = [
+            'picture' => [
+                'img' => $image->getImg(),
+                'sources' => $image->getSources(),
+                'alt' => StringUtil::specialchars($metadata->getAlt()),
             ],
-            $includeFullMetadata ? $createLegacyMetadataMapping($metadata) : []
-        );
+            'width' => $originalSize->getWidth(),
+            'height' => $originalSize->getHeight(),
+            'arrSize' => $fileInfoImageSize,
+            'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
+            'singleSRC' => $image->getFilePath(),
+            'src' => $image->getImageSrc(),
+            'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
+            'addBefore' => 'below' !== $floating,
+            'addImage' => true,
+            ...$includeFullMetadata ? $createLegacyMetadataMapping($metadata) : [],
+        ];
 
         // Link attributes and title
         if ('' !== ($href = $this->getLinkHref())) {
@@ -316,7 +314,7 @@ final class Figure
         }
 
         // Add arbitrary template options
-        return array_merge($templateData, $this->getOptions());
+        return [...$templateData, ...$this->getOptions()];
     }
 
     /**
@@ -333,7 +331,7 @@ final class Figure
      * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
      * @param bool              $includeFullMetadata Make all metadata entries directly available in the template
      */
-    public function applyLegacyTemplateData(object $template, array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): void
+    public function applyLegacyTemplateData(object $template, array|string|null $margin = null, string|null $floating = null, bool $includeFullMetadata = true): void
     {
         $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetadata);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);

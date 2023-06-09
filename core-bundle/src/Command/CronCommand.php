@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class CronCommand extends Command
 {
-    public function __construct(private Cron $cron)
+    public function __construct(private readonly Cron $cron)
     {
         parent::__construct();
     }

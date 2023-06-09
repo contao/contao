@@ -1108,13 +1108,13 @@ abstract class Backend extends Controller
 		$return = '';
 		$processed = array();
 
-		// Set custom filemount
+		// Set custom file mount
 		if ($filemount)
 		{
 			$this->User->filemounts = array($filemount);
 		}
 
-		// Limit nodes to the filemounts of the user
+		// Limit nodes to the file mounts of the user
 		foreach ($this->eliminateNestedPaths($this->User->filemounts) as $path)
 		{
 			if (\in_array($path, $processed))

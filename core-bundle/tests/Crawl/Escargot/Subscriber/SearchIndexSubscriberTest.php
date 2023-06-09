@@ -255,7 +255,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         if (null === $indexerException) {
             $indexer
-                ->expects($expectedStats === ['ok' => 0, 'warning' => 0, 'error' => 0] ? $this->never() : $this->once())
+                ->expects(['ok' => 0, 'warning' => 0, 'error' => 0] === $expectedStats ? $this->never() : $this->once())
                 ->method('index')
             ;
         } else {
