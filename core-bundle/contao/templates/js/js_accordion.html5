@@ -8,49 +8,42 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
 <script src="<?= $this->asset('js/handorgel.min.js', 'contao-components/handorgel') ?>"></script>
 <script>
   (function () {
-    const addNextAccordions = (el, accordion) => {
-      if (el && el.classList.contains('ce_accordion')) {
-        const toggler = el.querySelector('.toggler');
-        const element = el.querySelector('.accordion');
+    const initAccordion = function (selector) {
+      const headerElements = document.querySelectorAll(selector);
+      const contentElements = [];
 
-        if (!toggler || !element) {
-          return;
-        }
+      if (!headerElements) {
+        return;
+      }
 
+      headerElements.forEach((toggler) => {
         const button = document.createElement('button');
         button.type = 'button';
         button.append(...toggler.childNodes);
         toggler.appendChild(button);
 
-        addNextAccordions(el.nextElementSibling, accordion);
+        toggler.parentNode.classList.add('handorgel');
+        contentElements.push(toggler.nextElementSibling);
+      });
 
-        accordion.insertBefore(element, accordion.firstChild);
-        accordion.insertBefore(toggler, accordion.firstChild);
+      new handorgel(document.body, {
+        headerElements,
+        contentElements,
+        multiSelectable: false,
+        headerOpenClass: 'open',
+        contentOpenClass: 'open',
+        headerOpenedClass: 'active',
+        contentOpenedClass: 'active',
+        headerFocusClass: 'focus',
+        contentFocusClass: 'focus',
+        headerDisabledClass: 'disabled',
+        contentDisabledClass: 'disabled',
+      });
+    }
 
-        el.remove();
-      }
-    };
+    // change this selector accordion to your template, or duplicate
+    // the line if you use multiple accordion element classes.
+    initAccordion('.ce_accordion > .toggler');
 
-    document.querySelectorAll('.ce_accordion').forEach((el) => {
-      if (el.querySelector('.accordion')) {
-        const accordion = document.createElement('div');
-        accordion.className = 'ce_accordion handorgel';
-        el.parentNode.insertBefore(accordion, el);
-
-        addNextAccordions(el, accordion);
-
-        new handorgel(accordion, {
-          multiSelectable: false,
-          headerOpenClass: 'open',
-          contentOpenClass: 'open',
-          headerOpenedClass: 'active',
-          contentOpenedClass: 'active',
-          headerFocusClass: 'focus',
-          contentFocusClass: 'focus',
-          headerDisabledClass: 'disabled',
-          contentDisabledClass: 'disabled',
-        });
-      }
-    });
   })();
 </script>
