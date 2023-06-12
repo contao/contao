@@ -762,6 +762,8 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
