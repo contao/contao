@@ -790,6 +790,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 // Dynamically add the permission check
 if (Input::get('do') == 'article')
 {
+	System::loadLanguageFile('tl_article');
+
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 
