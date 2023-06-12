@@ -380,7 +380,7 @@ class PageModelTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_PATH)
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_PATH)
             ->willReturn('/page')
         ;
 
@@ -407,7 +407,7 @@ class PageModelTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://foobar.com/page')
         ;
 
@@ -431,7 +431,7 @@ class PageModelTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://example.com/page')
         ;
 
