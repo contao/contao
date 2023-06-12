@@ -170,6 +170,28 @@ class PictureFactory implements PictureFactoryInterface
                         );
                     }
 
+                    if ($quality = max(0, min(100, (int) $imageSizes->imageQuality))) {
+                        $options->setImagineOptions([
+                            ...$this->imagineOptions,
+                            'quality' => $quality,
+                            'jpeg_quality' => $quality,
+                            'webp_quality' => $quality,
+                            'avif_quality' => $quality,
+                            'heic_quality' => $quality,
+                            'jxl_quality' => $quality,
+                        ]);
+
+                        if (100 === $quality) {
+                            $options->setImagineOptions([
+                                ...$options->getImagineOptions(),
+                                'webp_lossless' => true,
+                                'avif_lossless' => true,
+                                'heic_lossless' => true,
+                                'jxl_lossless' => true,
+                            ]);
+                        }
+                    }
+
                     $formats = [];
 
                     if ('' !== $imageSizes->formats) {
@@ -239,6 +261,13 @@ class PictureFactory implements PictureFactoryInterface
                     ...$options->getPreserveCopyrightMetadata(),
                     ...$imageSizes['preserveMetadata'] ?? [],
                 ]);
+
+                if (!empty($imageSizes['imagineOptions'])) {
+                    $options->setImagineOptions([
+                        ...$this->imagineOptions,
+                        ...$imageSizes['imagineOptions'],
+                    ]);
+                }
 
                 if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
