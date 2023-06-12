@@ -100,7 +100,13 @@ class CoreResponseContextFactory
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
-                $url = $request->getSchemeAndHttpHost().$request->getBasePath().'/'.$url;
+                if (0 === strncmp($url, '//', 2)) {
+                    $url = $request->getScheme().':'.$url;
+                } elseif (0 === strncmp($url, '/', 1)) {
+                    $url = $request->getSchemeAndHttpHost().$url;
+                } else {
+                    $url = $request->getSchemeAndHttpHost().$request->getBasePath().'/'.$url;
+                }
             }
 
             $htmlHeadBag->setCanonicalUri($url);
