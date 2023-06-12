@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -28,7 +29,11 @@ use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouterInterface;
 
 class PageModelTest extends TestCase
 {
@@ -340,10 +345,6 @@ class PageModelTest extends TestCase
 
         $numberOfParents = \count($parents);
 
-        // The last page has to be a root page for this test method to prevent
-        // running into the check of TL_MODE in PageModel::loadDetails()
-        $parents[$numberOfParents - 1][0]['type'] = 'root';
-
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('execute')
@@ -356,7 +357,7 @@ class PageModelTest extends TestCase
 
         $database = $this->createMock(Database::class);
         $database
-            ->expects($this->exactly($numberOfParents + 1))
+            ->expects($this->exactly($numberOfParents))
             ->method('prepare')
             ->willReturn($statement)
         ;
@@ -365,6 +366,78 @@ class PageModelTest extends TestCase
         $page->loadDetails();
 
         $this->assertSame($expectedLayout, $page->layout);
+    }
+
+    public function testUsesAbsolutePathReferenceForFrontendUrl(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'example.com';
+
+        $context = RequestContext::fromUri('https://example.com');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_PATH)
+            ->willReturn('/page')
+        ;
+
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('page', $page->getFrontendUrl());
+    }
+
+    public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'foobar.com';
+
+        $context = RequestContext::fromUri('https://example.com');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://foobar.com/page')
+        ;
+
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
+    }
+
+    public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME,  array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null), UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/page')
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('https://example.com/page', $page->getAbsoluteUrl());
     }
 
     public function layoutInheritanceParentPagesProvider(): \Generator

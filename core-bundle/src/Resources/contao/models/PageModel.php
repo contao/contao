@@ -1220,6 +1220,9 @@ class PageModel extends Model
 			$this->folderUrl = $folderUrl;
 		}
 
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
 		// Set the root ID and title
 		if ($objParentPage !== null && $objParentPage->type == 'root')
 		{
@@ -1268,17 +1271,17 @@ class PageModel extends Model
 				}
 			}
 
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			if ($container->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
-				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+				$this->urlPrefix = $container->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
+				$this->urlSuffix = $container->getParameter('contao.url_suffix');
 			}
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$container->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}
