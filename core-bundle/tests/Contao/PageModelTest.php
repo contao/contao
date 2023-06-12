@@ -21,6 +21,7 @@ use Contao\Database\Result;
 use Contao\Database\Statement;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
+use Contao\Environment;
 use Contao\Input;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -67,7 +68,7 @@ class PageModelTest extends TestCase
 
         PageModel::reset();
 
-        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class, Environment::class]);
 
         parent::tearDown();
     }
