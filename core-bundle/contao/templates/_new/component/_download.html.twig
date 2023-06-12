@@ -38,11 +38,11 @@
     {% set text = download.text|default(title) %}
 
     {% block download_link %}
-        {% set dowload_link_attributes = attrs(dowload.link_attributes|default)
+        {% set download_link_attributes = attrs(download.link_attributes|default)
             .set('href', download.href)
             .set('title','MSC.download'|trans([title]))
             .setIfExists('type', download.file.mimeType('')) %}
-        <a{% block download_link_attributes %}{{ dowload_link_attributes }}{% endblock %}>
+        <a{% block download_link_attributes %}{{ download_link_attributes }}{% endblock %}>
             {%- block download_link_inner %}{{ text }}{% endblock -%}
         </a>
     {% endblock %}

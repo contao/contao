@@ -76,7 +76,7 @@ class RunTestsIsolatedCommand extends Command
         $phpunit = $this->projectDir.'/vendor/bin/phpunit';
         $listOutput = new BufferedOutput();
 
-        $this->executeCommand(array_merge($php, [$phpunit, '--list-tests']), $listOutput);
+        $this->executeCommand([...$php, $phpunit, '--list-tests'], $listOutput);
 
         $tests = [[], [], []];
 
@@ -117,7 +117,7 @@ class RunTestsIsolatedCommand extends Command
             $buffer = new BufferedOutput();
 
             try {
-                $this->executeCommand(array_merge($php, [$phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter], $commandFlags), $buffer);
+                $this->executeCommand([...$php, $phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter, ...$commandFlags], $buffer);
 
                 // Clear previously written line
                 $output->write("\e[1A\e[K");
