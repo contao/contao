@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'submit'                      => '{type_legend},type,slabel;{image_legend:hide},imageSubmit;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'multiple'                    => 'mSize',

@@ -26,8 +26,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PageUrlGenerator extends SymfonyUrlGenerator
 {
-    public function __construct(private RouteProviderInterface $provider, private PageRegistry $pageRegistry, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private readonly RouteProviderInterface $provider,
+        private readonly PageRegistry $pageRegistry,
+        LoggerInterface|null $logger = null,
+    ) {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
     }
 
@@ -72,7 +75,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         if (
             $route instanceof PageRoute
             && 0 === \count(array_intersect_key(
-                array_filter(array_merge($route->getDefaults(), $parameters)),
+                array_filter([...$route->getDefaults(), ...$parameters]),
                 array_flip($compiledRoute->getVariables())
             ))
         ) {

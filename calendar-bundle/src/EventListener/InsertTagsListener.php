@@ -31,7 +31,7 @@ class InsertTagsListener
         'event_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -45,7 +45,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceEventInsertTag($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
+            return $this->replaceEventInsertTag($key, $elements[1], [...$flags, ...\array_slice($elements, 2)]);
         }
 
         return false;

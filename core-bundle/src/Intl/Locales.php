@@ -21,49 +21,49 @@ class Locales
     /**
      * @var array<string>
      */
-    private array $locales;
+    private readonly array $locales;
 
     /**
      * @var array<string>
      */
-    private array $enabledLocales;
+    private readonly array $enabledLocales;
 
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
      */
     public function __construct(
-        private TranslatorInterface $translator,
-        private RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly RequestStack $requestStack,
         array $defaultLocales,
         array $defaultEnabledLocales,
         array $configLocales,
         array $configEnabledLocales,
-        private string $defaultLocale,
+        private readonly string $defaultLocale,
     ) {
         $this->locales = $this->filterLocales($defaultLocales, $configLocales);
         $this->enabledLocales = $this->filterLocales($defaultEnabledLocales, $configEnabledLocales, $defaultLocale);
     }
 
     /**
-     * @return array<string,string> Translated locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated locales indexed by their ICU locale IDs
      */
-    public function getLocales(string $displayLocale = null, bool $addNativeSuffix = false): array
+    public function getLocales(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
         return $this->getDisplayNames($this->locales, $displayLocale, $addNativeSuffix);
     }
 
     /**
-     * @return array<string,string> Translated enabled locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated enabled locales indexed by their ICU locale IDs
      */
-    public function getEnabledLocales(string $displayLocale = null, bool $addNativeSuffix = false): array
+    public function getEnabledLocales(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
         return $this->getDisplayNames($this->enabledLocales, $displayLocale, $addNativeSuffix);
     }
 
     /**
-     * @return array<string,string> Translated languages (without regions) indexed by their ICU locale IDs
+     * @return array<string, string> Translated languages (without regions) indexed by their ICU locale IDs
      */
-    public function getLanguages(string $displayLocale = null, bool $addNativeSuffix = false): array
+    public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
         if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
@@ -113,9 +113,9 @@ class Locales
     }
 
     /**
-     * @return array<string,string> Translated locales indexed by their ICU locale IDs
+     * @return array<string, string> Translated locales indexed by their ICU locale IDs
      */
-    public function getDisplayNames(array $localeIds, string $displayLocale = null, bool $addNativeSuffix = false): array
+    public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
         if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
@@ -151,7 +151,7 @@ class Locales
     /**
      * Add, remove or replace locales as configured in the container configuration.
      */
-    private function filterLocales(array $locales, array $filter, string $default = null): array
+    private function filterLocales(array $locales, array $filter, string|null $default = null): array
     {
         $newList = array_filter($filter, static fn ($locale) => !\in_array($locale[0], ['-', '+'], true));
 

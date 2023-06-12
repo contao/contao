@@ -35,7 +35,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     /**
      * @dataProvider enableProvider
      */
-    public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string $customTemplateName = null, string $customTemplateVars = null): void
+    public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
         $twig = $this->mockEnvironment();
         $twig

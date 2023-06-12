@@ -43,7 +43,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class FigureBuilder
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private InvalidResourceException|null $lastException = null;
 
     /**
@@ -79,6 +79,11 @@ class FigureBuilder
      * User defined metadata. This will overwrite the default if set.
      */
     private Metadata|null $metadata = null;
+
+    /**
+     * User defined metadata. This will be added to the default if set.
+     */
+    private Metadata|null $overwriteMetadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
@@ -132,10 +137,10 @@ class FigureBuilder
      * @param array<string> $validExtensions
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private string $uploadPath,
-        private array $validExtensions,
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly array $validExtensions,
     ) {
         $this->filesystem = new Filesystem();
     }
@@ -378,6 +383,18 @@ class FigureBuilder
     }
 
     /**
+     * Sets custom overwrite metadata.
+     *
+     * The metadata will be merged with the default metadata from the FilesModel.
+     */
+    public function setOverwriteMetadata(Metadata|null $metadata): self
+    {
+        $this->overwriteMetadata = $metadata;
+
+        return $this;
+    }
+
+    /**
      * Disables creating/using metadata in the output even if it is present.
      */
     public function disableMetadata(bool $disable = true): self
@@ -604,7 +621,7 @@ class FigureBuilder
         return new Figure(
             $imageResult,
             \Closure::bind(
-                function (Figure $figure): ?Metadata {
+                function (): Metadata|null {
                     $event = new FileMetadataEvent($this->onDefineMetadata());
 
                     $this->locator->get('event_dispatcher')->dispatch($event);
@@ -618,7 +635,7 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                fn (Figure $figure): ?LightboxResult => $this->onDefineLightboxResult($figure),
+                fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
                 $settings
             ),
             $settings->options
@@ -634,7 +651,7 @@ class FigureBuilder
             return null;
         }
 
-        $getUuid = static function (?FilesModel $filesModel): ?string {
+        $getUuid = static function (FilesModel|null $filesModel): string|null {
             if (null === $filesModel || null === $filesModel->uuid) {
                 return null;
             }
@@ -658,21 +675,25 @@ class FigureBuilder
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
+        $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
         if (null !== $metadata) {
-            return $metadata->with($fileReferenceData);
+            return $metadata
+                ->with($fileReferenceData)
+                ->with($overwriteMetadata)
+            ;
         }
 
         // If no metadata can be obtained from the model, we create a container
         // from the default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
-        $data = array_merge(
-            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
-            $fileReferenceData
-        );
+        $data = [
+            ...array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            ...$fileReferenceData,
+        ];
 
-        return new Metadata($data);
+        return (new Metadata($data))->with($overwriteMetadata);
     }
 
     /**
@@ -687,7 +708,7 @@ class FigureBuilder
             $linkAttributes['target'] = '_blank';
         }
 
-        return array_merge($linkAttributes, $this->additionalLinkAttributes);
+        return [...$linkAttributes, ...$this->additionalLinkAttributes];
     }
 
     /**
@@ -699,7 +720,7 @@ class FigureBuilder
             return null;
         }
 
-        $getMetadataUrl = static function () use ($result): ?string {
+        $getMetadataUrl = static function () use ($result): string|null {
             if (!$result->hasMetadata()) {
                 return null;
             }
@@ -707,10 +728,7 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
-        /**
-         * @param ImageInterface|string $target Image object, URL or absolute file path
-         */
-        $getResourceOrUrl = function ($target): array {
+        $getResourceOrUrl = function (ImageInterface|string $target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
             }

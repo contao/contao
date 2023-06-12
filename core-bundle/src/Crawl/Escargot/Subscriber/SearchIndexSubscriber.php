@@ -44,8 +44,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(private IndexerInterface $indexer, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly IndexerInterface $indexer,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function getName(): string
@@ -214,7 +216,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         }
     }
 
-    public function getResult(SubscriberResult $previousResult = null): SubscriberResult
+    public function getResult(SubscriberResult|null $previousResult = null): SubscriberResult
     {
         $stats = $this->stats;
 

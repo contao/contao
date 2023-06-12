@@ -47,7 +47,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
     }
 
     /**
-     * @return array<class-string,array<string>>
+     * @return array<class-string, array<string>>
      */
     abstract protected function deprecationProvider(): array;
 

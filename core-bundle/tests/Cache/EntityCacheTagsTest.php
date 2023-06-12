@@ -243,7 +243,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $entityCacheTags->invalidateTagsFor([$post, $page, 'foo']);
     }
 
-    private function getEntityCacheTags(ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null): EntityCacheTags
+    private function getEntityCacheTags(ResponseTagger|null $responseTagger = null, CacheInvalidator|null $cacheInvalidator = null): EntityCacheTags
     {
         return new EntityCacheTags(
             $this->getTestEntityManager(),

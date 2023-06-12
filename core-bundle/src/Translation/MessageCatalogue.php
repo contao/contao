@@ -24,8 +24,11 @@ final class MessageCatalogue implements MessageCatalogueInterface
     /**
      * @internal Do not instantiate this class; use Translator::getCatalogue() instead
      */
-    public function __construct(private MessageCatalogueInterface $parent, private ContaoFramework $framework, private ResourceFinder $resourceFinder)
-    {
+    public function __construct(
+        private readonly MessageCatalogueInterface $parent,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
+    ) {
     }
 
     public function getLocale(): string
@@ -45,10 +48,10 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return array_merge($this->parent->getDomains(), $domains);
+        return [...$this->parent->getDomains(), ...$domains];
     }
 
-    public function all(string $domain = null): array
+    public function all(string|null $domain = null): array
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));

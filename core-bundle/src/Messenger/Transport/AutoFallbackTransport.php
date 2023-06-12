@@ -19,8 +19,12 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class AutoFallbackTransport implements TransportInterface, MessageCountAwareInterface
 {
-    public function __construct(private AutoFallbackNotifier $autoFallbackNotifier, private string $selfTransportName, private TransportInterface $target, private TransportInterface $fallback)
-    {
+    public function __construct(
+        private readonly AutoFallbackNotifier $autoFallbackNotifier,
+        private readonly string $selfTransportName,
+        private readonly TransportInterface $target,
+        private readonly TransportInterface $fallback,
+    ) {
     }
 
     public function get(): iterable

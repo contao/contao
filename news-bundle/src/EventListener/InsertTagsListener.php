@@ -31,8 +31,10 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
@@ -47,7 +49,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
+            return $this->replaceNewsInsertTags($key, $elements[1], [...$flags, ...\array_slice($elements, 2)]);
         }
 
         return false;

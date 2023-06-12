@@ -17,4 +17,4 @@ Contao is licensed under the terms of the LGPLv3.
 Visit the [support page][2] to learn about the available support options.
 
 [1]: https://contao.org
-[2]: https://contao.org/en/support.html
+[2]: https://to.contao.org/support

@@ -28,7 +28,7 @@ class PublishedFilter implements RouteFilterInterface
     /**
      * @internal
      */
-    public function __construct(private TokenChecker $tokenChecker)
+    public function __construct(private readonly TokenChecker $tokenChecker)
     {
     }
 

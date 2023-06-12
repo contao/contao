@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Contao\\Tools\\ServiceIdLinter\\": "src/"
+            "Contao\\Tools\\ServiceLinter\\": "src/"
         }
     }
 }

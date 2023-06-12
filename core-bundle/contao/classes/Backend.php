@@ -707,7 +707,7 @@ abstract class Backend extends Controller
 
 		if ($row['requireItem'])
 		{
-			return Image::getHtml($image, '', $imageAttribute) . $label;
+			return Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
 		}
 
 		// Return the image
@@ -898,7 +898,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg') . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -1108,13 +1108,13 @@ abstract class Backend extends Controller
 		$return = '';
 		$processed = array();
 
-		// Set custom filemount
+		// Set custom file mount
 		if ($filemount)
 		{
 			$this->User->filemounts = array($filemount);
 		}
 
-		// Limit nodes to the filemounts of the user
+		// Limit nodes to the file mounts of the user
 		foreach ($this->eliminateNestedPaths($this->User->filemounts) as $path)
 		{
 			if (\in_array($path, $processed))

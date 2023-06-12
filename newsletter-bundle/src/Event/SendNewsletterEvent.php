@@ -21,8 +21,11 @@ class SendNewsletterEvent extends Event
     private array $recipientData = [];
     private array $newsletterData = [];
 
-    public function __construct(private string $recipientAddress, private string $text, private string $html = '')
-    {
+    public function __construct(
+        private string $recipientAddress,
+        private string $text,
+        private string $html = '',
+    ) {
     }
 
     public function getRecipientAddress(): string

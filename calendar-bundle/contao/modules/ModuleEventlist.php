@@ -132,7 +132,7 @@ class ModuleEventlist extends Events
 			$blnClearInput = true;
 		}
 
-		$blnDynamicFormat = (!$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year')));
+		$blnDynamicFormat = !$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year'));
 
 		// Create the date object
 		try
@@ -381,7 +381,7 @@ class ModuleEventlist extends Events
 				$figure = $figureBuilder
 					->from($event['singleSRC'])
 					->setSize($imgSize)
-					->setMetadata($eventModel->getOverwriteMetadata())
+					->setOverwriteMetadata($eventModel->getOverwriteMetadata())
 					->enableLightbox($eventModel->fullsize)
 					->buildIfResourceExists();
 

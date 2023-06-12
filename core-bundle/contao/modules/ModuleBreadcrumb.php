@@ -93,7 +93,7 @@ class ModuleBreadcrumb extends Module
 			array_pop($pages);
 		}
 
-		for ($i=(\count($pages)-1); $i>0; $i--)
+		for ($i=\count($pages)-1; $i>0; $i--)
 		{
 			// Skip pages that require an item (see #3450) and hidden or unpublished pages
 			if ($pages[$i]->requireItem || ($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))

@@ -958,7 +958,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
+			$this->set['tstamp'] = $blnDoNotRedirect ? time() : 0;
 
 			// Mark the new record with "copy of" (see #586)
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy']))
@@ -971,13 +971,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (!empty($value['value']))
 					{
-						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
+						$value['value'] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
 						$this->set[$strKey] = serialize($value);
 					}
 				}
 				elseif (!empty($this->set[$strKey]))
 				{
-					$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+					$this->set[$strKey] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 				}
 			}
 
@@ -1324,7 +1324,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Else new sorting = (current sorting / 2)
 						else
 						{
-							$newSorting = ($curSorting / 2);
+							$newSorting = $curSorting / 2;
 						}
 					}
 
@@ -1374,7 +1374,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 										if ($objNewSorting->sorting == $curSorting)
 										{
-											$newSorting = ($count++ * 128);
+											$newSorting = $count++ * 128;
 										}
 									}
 								}
@@ -1382,14 +1382,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								// Else new sorting = (current sorting + next sorting) / 2
 								else
 								{
-									$newSorting = (($curSorting + $nxtSorting) / 2);
+									$newSorting = ($curSorting + $nxtSorting) / 2;
 								}
 							}
 
 							// Else new sorting = (current sorting + 128)
 							else
 							{
-								$newSorting = ($curSorting + 128);
+								$newSorting = $curSorting + 128;
 							}
 						}
 					}
@@ -1489,7 +1489,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 								if ($objNewSorting->sorting == $curSorting)
 								{
-									$newSorting = ($count++ * 128);
+									$newSorting = $count++ * 128;
 								}
 							}
 						}
@@ -1497,14 +1497,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Else new sorting = (current sorting + next sorting) / 2
 						else
 						{
-							$newSorting = (($curSorting + $nxtSorting) / 2);
+							$newSorting = ($curSorting + $nxtSorting) / 2;
 						}
 					}
 
 					// Else new sorting = (current sorting + 128)
 					else
 					{
-						$newSorting = ($curSorting + 128);
+						$newSorting = $curSorting + 128;
 					}
 
 					// Set new sorting
@@ -1516,7 +1516,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// ID is not set or not found (insert at the end)
 			$objNextSorting = $this->Database->execute("SELECT MAX(sorting) AS sorting FROM " . $this->strTable);
-			$this->set['sorting'] = ((int) $objNextSorting->sorting + 128);
+			$this->set['sorting'] = (int) $objNextSorting->sorting + 128;
 		}
 	}
 
@@ -2740,7 +2740,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
@@ -2908,7 +2908,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						try
 						{
-							$currentRecord = $this->getCurrentRecord();
+							$currentRecord = $this->getCurrentRecord($id);
 
 							if ($currentRecord === null)
 							{
@@ -3119,7 +3119,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
@@ -3505,7 +3505,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($sValues as $k=>$v)
 				{
-					// Unset selectors that just trigger subpalettes (see #3738)
+					// Unset selectors that just trigger sub-palettes (see #3738)
 					if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$v]))
 					{
 						unset($sValues[$k]);
@@ -3529,7 +3529,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
@@ -4065,7 +4065,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$blnProtected = $objParent->protected ? true : false;
 		}
 
-		$margin = ($level * 18);
+		$margin = $level * 18;
 		$hasSorting = $this->Database->fieldExists('sorting', $table);
 		$arrIds = array();
 
@@ -4210,7 +4210,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the page is protected
 		if ($table == 'tl_page')
 		{
-			$blnProtected = (($currentRecord['protected'] ?? null) || $protectedPage);
+			$blnProtected = ($currentRecord['protected'] ?? null) || $protectedPage;
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
@@ -4229,7 +4229,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 18 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
-		$level = ($intMargin / $intSpacing + 1);
+		$level = $intMargin / $intSpacing + 1;
 		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] == 1;
 
 		// Always show selected nodes
@@ -5766,7 +5766,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				for ($i=0; $i<$options_total; $i++)
 				{
 					$this_limit = ($i*Config::get('resultsPerPage')) . ',' . Config::get('resultsPerPage');
-					$upper_limit = ($i*Config::get('resultsPerPage')+Config::get('resultsPerPage'));
+					$upper_limit = $i*Config::get('resultsPerPage')+Config::get('resultsPerPage');
 
 					if ($upper_limit > $this->total)
 					{
@@ -6069,7 +6069,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						else
 						{
 							$options[$v] = date('Y-m', $v);
-							$intMonth = (date('m', $v) - 1);
+							$intMonth = date('m', $v) - 1;
 
 							if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth]))
 							{
@@ -6539,6 +6539,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $this->Database->getParentRecords($id, $table, true)));
 			}
+		}
+
+		// $this->root might not have a correct order here, so let‘s make sure it‘s ordered by sorting, but only in
+		// case there are no visible root trails (aka the array contains only top-level IDs)
+		if ($this->root && empty($this->visibleRootTrails) && $this->Database->fieldExists('sorting', $table))
+		{
+			$this->root = $this->Database->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
 		}
 
 		// Fetch all children of the root

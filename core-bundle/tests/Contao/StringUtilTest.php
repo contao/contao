@@ -264,7 +264,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider getRevertInputEncoding
      */
-    public function testRevertInputEncoding(string $source, string $expected = null): void
+    public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request(['value' => $source]));
@@ -291,7 +291,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
 
@@ -383,7 +383,7 @@ class StringUtilTest extends TestCase
 
         yield 'Stringable argument' => [
             new class('foobar') implements \Stringable {
-                public function __construct(private string $value)
+                public function __construct(private readonly string $value)
                 {
                 }
 

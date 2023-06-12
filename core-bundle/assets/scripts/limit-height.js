@@ -22,14 +22,17 @@ window.addEventListener('DOMContentLoaded', function() {
 
         const button = document.createElement('button');
         button.setAttribute('type', 'button');
+        button.title = Contao.lang.expand;
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
 
         button.addEventListener('click', function() {
             if (div.style.height == 'auto') {
                 div.style.height = hgt+'px';
+                button.title = Contao.lang.expand;
             } else {
                 div.style.height = 'auto';
+                button.title = Contao.lang.collapse;
             }
         });
 

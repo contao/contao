@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 )]
 class GetDotEnvCommand extends Command
 {
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {
@@ -56,7 +56,7 @@ class GetDotEnvCommand extends Command
 
         foreach ([$path, $path.'.local'] as $filePath) {
             if (file_exists($filePath)) {
-                $vars = array_merge($vars, $dotenv->parse(file_get_contents($filePath)));
+                $vars = [...$vars, ...$dotenv->parse(file_get_contents($filePath))];
             }
         }
 

@@ -26,11 +26,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class AdministratorEmailListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private TranslatorInterface $translator,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private Security $security,
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly Security $security,
     ) {
     }
 

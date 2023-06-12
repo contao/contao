@@ -155,6 +155,8 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
+
 		if ($this->isAdmin)
 		{
 			return true;
@@ -260,7 +262,7 @@ class BackendUser extends User
 
 		foreach ($this->groups as $id)
 		{
-			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')")
+			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
 									   ->limit(1)
 									   ->execute($id);
 

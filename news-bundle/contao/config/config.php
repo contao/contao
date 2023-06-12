@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\ListWizard;
+use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\ModuleNewsArchive;
 use Contao\ModuleNewsList;
 use Contao\ModuleNewsMenu;
@@ -16,15 +16,14 @@ use Contao\ModuleNewsReader;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\System;
-use Contao\TableWizard;
 use Symfony\Component\HttpFoundation\Request;
 
 // Back end modules
 $GLOBALS['BE_MOD']['content']['news'] = array
 (
 	'tables'      => array('tl_news_archive', 'tl_news', 'tl_content'),
-	'table'       => array(TableWizard::class, 'importTable'),
-	'list'        => array(ListWizard::class, 'importList')
+	'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
+	'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
 );
 
 // Front end modules

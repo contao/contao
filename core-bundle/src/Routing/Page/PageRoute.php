@@ -22,7 +22,7 @@ class PageRoute extends Route implements RouteObjectInterface
 {
     final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
 
-    private PageModel $pageModel;
+    private readonly PageModel $pageModel;
     private string|null $urlPrefix;
     private string|null $urlSuffix;
 
@@ -38,17 +38,15 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         $pageModel->loadDetails();
 
-        $defaults = array_merge(
-            [
-                '_token_check' => true,
-                '_controller' => 'Contao\FrontendIndex::renderPage',
-                '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
-                '_format' => 'html',
-                '_canonical_route' => 'tl_page.'.$pageModel->id,
-            ],
-            $defaults
-        );
+        $defaults = [
+            '_token_check' => true,
+            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+            '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
+            '_format' => 'html',
+            '_canonical_route' => 'tl_page.'.$pageModel->id,
+            ...$defaults,
+        ];
 
         // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;

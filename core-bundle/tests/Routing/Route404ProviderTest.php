@@ -303,17 +303,15 @@ class Route404ProviderTest extends TestCase
         foreach ($pagesData as $row) {
             $pages[] = $this->mockClassWithProperties(
                 PageModel::class,
-                array_merge(
-                    [
-                        'domain' => '',
-                        'rootId' => 1,
-                        'rootUseSSL' => false,
-                        'rootLanguage' => 'de',
-                        'rootIsFallback' => true,
-                        'rootSorting' => 0,
-                    ],
-                    $row
-                )
+                [
+                    'domain' => '',
+                    'rootId' => 1,
+                    'rootUseSSL' => false,
+                    'rootLanguage' => 'de',
+                    'rootIsFallback' => true,
+                    'rootSorting' => 0,
+                    ...$row,
+                ]
             );
         }
 

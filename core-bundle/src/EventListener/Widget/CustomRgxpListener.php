@@ -21,7 +21,7 @@ class CustomRgxpListener
 {
     final public const RGXP_NAME = 'custom';
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

@@ -295,7 +295,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
 	 */
 	private static $arrCurrentRecordCache = array();
 
@@ -696,6 +696,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
+			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
 
 			$updateMode = $objTemplate->parse();
 
@@ -1379,7 +1380,7 @@ abstract class DataContainer extends Backend
 						break;
 
 					case 'filter':
-						// Multiple filter subpanels can be defined to split the fields across panels
+						// Multiple filter sub-panels can be defined to split the fields across panels
 						$panel = $this->filterMenu(++$intFilterPanel);
 						break;
 
@@ -1689,7 +1690,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
@@ -1741,6 +1742,17 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function markAsCopy(string $label, string $value): string
+	{
+		// Do not mark as copy more than once (see #6058)
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		{
+			return $value;
+		}
+
+		return sprintf($label, $value);
 	}
 
 	/**

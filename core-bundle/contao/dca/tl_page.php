@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'error_503'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'autoforward'                 => 'jumpTo',
@@ -888,7 +888,7 @@ class tl_page extends Backend
 
 			$pagemounts = array_unique($pagemounts);
 
-			// Do not allow pasting after pages on the root level (pagemounts)
+			// Do not allow pasting after pages on the root level (page mounts)
 			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');

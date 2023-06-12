@@ -39,7 +39,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
          * expressions to be returned. A template counts as "affected" if it
          * matches any of the rules.
          */
-        private \Closure $rules,
+        private readonly \Closure $rules,
     ) {
     }
 
@@ -67,10 +67,11 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
         if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
-        } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)) {
-            if (\in_array($strategy, ['html', 'html_attr'], true)) {
-                $this->escaperFilterNodes[] = [$node, $strategy];
-            }
+        } elseif (
+            null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)
+            && \in_array($strategy, ['html', 'html_attr'], true)
+        ) {
+            $this->escaperFilterNodes[] = [$node, $strategy];
         }
 
         return $node;
@@ -92,7 +93,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     /**
      * @param-out string $type
      */
-    private function isEscaperFilterExpression(Node $node, string &$type = null): bool
+    private function isEscaperFilterExpression(Node $node, string|null &$type = null): bool
     {
         if (
             !$node instanceof FilterExpression

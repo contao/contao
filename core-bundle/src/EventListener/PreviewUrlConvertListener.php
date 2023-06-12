@@ -31,10 +31,10 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 class PreviewUrlConvertListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private PageRegistry $pageRegistry,
-        private UriSigner $signer,
-        private string $fragmentPath = '/_fragment',
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+        private readonly UriSigner $signer,
+        private readonly string $fragmentPath = '/_fragment',
     ) {
     }
 

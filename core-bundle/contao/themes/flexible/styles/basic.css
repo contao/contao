@@ -12,7 +12,7 @@
 	--blue: #006494;
 	--orange: #f90;
 	--contao: #f47c00;
-	--border: #e6e6e8;
+	--border: #eaeaec;
 	--nav: #d3d6da;
 	--nav-hover: #eaedf1;
 	--nav-bg: #0f1c26;
@@ -80,7 +80,7 @@ html[data-color-scheme="dark"] {
 	--blue: #0073a8;
 	--orange: #d68c23;
 	--contao: #f47c00;
-	--border: #3a3c40;
+	--border: #303236;
 	--nav-bg: #1b1d21;
 	--nav-hover-bg: #1b325f;
 	--nav-current: #272a30;
@@ -169,6 +169,10 @@ input, select, label, img, a.tl_submit, .tl_select {
 
 button {
 	cursor: pointer;
+}
+
+button[disabled] {
+	cursor: default;
 }
 
 nav ul, nav li {
@@ -473,6 +477,10 @@ fieldset.tl_checkbox_container .check-all {
 	color: var(--gray);
 }
 
+fieldset.tl_checkbox_container button {
+	vertical-align: middle;
+}
+
 fieldset.checkbox_container, fieldset.radio_container {
 	border: 0;
 	margin: 0;
@@ -718,10 +726,6 @@ select[multiple] {
 	margin: 0 1px 0 0;
 }
 
-.win .tl_radio {
-	margin: 1px 1px 3px 0; /* see #4599 */
-}
-
 .tl_tree_radio {
 	margin: 1px 1px 1px 0;
 }
@@ -843,12 +847,16 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
-.wizard .tl_text, .wizard .tl_select {
+.wizard .tl_text, .wizard .tl_select, .wizard .tl_image_size {
 	width: calc(100% - 24px);
 }
 
 .wizard .tl_text_2 {
 	width: 45%;
+}
+
+.wizard .tl_image_size {
+	display: inline-block;
 }
 
 .wizard img {

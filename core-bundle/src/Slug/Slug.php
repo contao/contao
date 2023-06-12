@@ -22,8 +22,10 @@ class Slug
     /**
      * @internal
      */
-    public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly SlugGeneratorInterface $slugGenerator,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**
@@ -31,7 +33,7 @@ class Slug
      *
      * @see SlugGeneratorInterface::generate()
      */
-    public function generate(string $text, int|iterable $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
+    public function generate(string $text, int|iterable $options = [], callable|null $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);

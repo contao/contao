@@ -23,8 +23,10 @@ class CommandCompiler
     /**
      * @internal
      */
-    public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly SchemaProvider $schemaProvider,
+    ) {
     }
 
     /**
@@ -137,16 +139,14 @@ class CommandCompiler
 
                 $deleteIndexes = true;
                 $commands[] = $command;
-            } elseif ($innodb && $dynamic) {
-                if (false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
-                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+            } elseif ($innodb && $dynamic && false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
+                $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
-                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
-                        $command .= ' KEY_BLOCK_SIZE = 0';
-                    }
-
-                    $commands[] = $command;
+                if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
+                    $command .= ' KEY_BLOCK_SIZE = 0';
                 }
+
+                $commands[] = $command;
             }
 
             $collate = '';

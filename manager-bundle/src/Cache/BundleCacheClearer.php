@@ -18,12 +18,12 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 
 class BundleCacheClearer implements CacheClearerInterface
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     /**
      * @internal
      */
-    public function __construct(Filesystem $filesystem = null)
+    public function __construct(Filesystem|null $filesystem = null)
     {
         $this->filesystem = $filesystem ?: new Filesystem();
     }

@@ -34,7 +34,7 @@ class TextController extends AbstractContentElementController
             ->createFigureBuilder()
             ->fromUuid($model->singleSRC ?: '')
             ->setSize($model->size)
-            ->setMetadata($model->getOverwriteMetadata())
+            ->setOverwriteMetadata($model->getOverwriteMetadata())
             ->enableLightbox($model->fullsize)
             ->buildIfResourceExists()
         ;

@@ -475,7 +475,7 @@ class TwoFactorFrontendListenerTest extends TestCase
      *
      * @return T&MockObject
      */
-    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null)
+    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser|null $user = null): MockObject
     {
         $token = $this->createMock($class);
         $user ??= $this->createMock(FrontendUser::class);
@@ -497,7 +497,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $token;
     }
 
-    private function getRequest(bool $withPageModel = false, PageModel $pageModel = null): Request
+    private function getRequest(bool $withPageModel = false, PageModel|null $pageModel = null): Request
     {
         $request = new Request();
         $request->attributes->set('pageModel', null);
@@ -516,7 +516,7 @@ class TwoFactorFrontendListenerTest extends TestCase
     /**
      * @return TokenStorageInterface&MockObject
      */
-    private function mockTokenStorageWithToken(TokenInterface $token = null): TokenStorageInterface
+    private function mockTokenStorageWithToken(TokenInterface|null $token = null): TokenStorageInterface
     {
         $tokenStorage = $this->createMock(TokenStorage::class);
         $tokenStorage
@@ -544,7 +544,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $scopeMatcher;
     }
 
-    private function getRequestEvent(Request $request = null, Response $response = null): RequestEvent
+    private function getRequestEvent(Request|null $request = null, Response|null $response = null): RequestEvent
     {
         $kernel = $this->createMock(Kernel::class);
         $event = new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);

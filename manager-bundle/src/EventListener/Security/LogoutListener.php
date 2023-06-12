@@ -21,7 +21,7 @@ class LogoutListener
     /**
      * @internal
      */
-    public function __construct(private JwtManager|null $jwtManager = null)
+    public function __construct(private readonly JwtManager|null $jwtManager = null)
     {
     }
 

@@ -110,7 +110,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'default'                     => '{title_legend},title,headline,jumpTo;{comments_legend:hide},allowComments'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'allowComments'               => 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha'

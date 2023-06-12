@@ -713,7 +713,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
@@ -751,6 +751,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigureBuilder($studio, $framework)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
+            ->setOverwriteMetadata($overwriteMetadata)
             ->build()
         ;
 
@@ -850,6 +851,20 @@ class FigureBuilderTest extends TestCase
                 Metadata::VALUE_CAPTION => '',
             ],
         ];
+
+        yield 'overwrite metadata keeping the other values as they are' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 'tt',
+                Metadata::VALUE_ALT => 'a',
+                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_TITLE => 'tt']),
+        ];
     }
 
     public function testAutoFetchMetadataFromFilesModelFailsIfNoPage(): void
@@ -941,7 +956,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+        $getFilesModel = function (array $metaData, string|null $uuid) use ($relativeFilePath) {
             $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
@@ -1384,7 +1399,7 @@ class FigureBuilderTest extends TestCase
         $this->assertSame([Metadata::VALUE_TITLE => 'bar'], $figure->getMetadata()->all());
     }
 
-    private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null): Figure
+    private function getFigure(\Closure|null $configureBuilderCallback = null, Studio|null $studio = null): Figure
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
@@ -1401,7 +1416,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return Studio&MockObject
      */
-    private function mockStudioForImage(string $expectedFilePath, string $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1419,7 +1434,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 
@@ -1434,7 +1449,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, EventDispatcher $eventDispatcher = null): FigureBuilder
+    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null): FigureBuilder
     {
         [, , $projectDir, $uploadPath] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();

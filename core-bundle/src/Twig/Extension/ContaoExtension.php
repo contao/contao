@@ -28,6 +28,7 @@ use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -54,16 +55,16 @@ final class ContaoExtension extends AbstractExtension
     private array $contaoEscaperFilterRules = [];
 
     public function __construct(
-        private Environment $environment,
-        private TemplateHierarchyInterface $hierarchy,
+        private readonly Environment $environment,
+        private readonly TemplateHierarchyInterface $hierarchy,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
-        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
+        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*"
         // namespaces, as well as the existing bundle templates we're already
@@ -78,7 +79,7 @@ final class ContaoExtension extends AbstractExtension
         $this->environment->addGlobal(
             'request_token',
             new class($tokenManager) implements \Stringable {
-                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
                 {
                 }
 
@@ -191,6 +192,16 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
+            ),
+            new TwigFunction(
+                'frontend_module',
+                [FragmentRuntime::class, 'renderModule'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'content_element',
+                [FragmentRuntime::class, 'renderContent'],
+                ['is_safe' => ['html']]
             ),
         ];
     }

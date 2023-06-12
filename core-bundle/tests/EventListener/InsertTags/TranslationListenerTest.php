@@ -21,7 +21,7 @@ class TranslationListenerTest extends TestCase
     /**
      * @dataProvider insertTagsProvider
      */
-    public function testReplacesInsertTagsWithTranslation(string $id, string $result, string $domain = null, array $parameters = []): void
+    public function testReplacesInsertTagsWithTranslation(string $id, string $result, string|null $domain = null, array $parameters = []): void
     {
         $translator = $this->createMock(Translator::class);
         $translator

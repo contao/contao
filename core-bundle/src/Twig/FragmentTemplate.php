@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class FragmentTemplate extends Template
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private array $context = [];
 
@@ -35,8 +35,10 @@ final class FragmentTemplate extends Template
      *
      * @internal
      */
-    public function __construct(private string $templateName, private \Closure $onGetResponse)
-    {
+    public function __construct(
+        private string $templateName,
+        private readonly \Closure $onGetResponse,
+    ) {
         // Do not call parent constructor
     }
 
@@ -77,10 +79,7 @@ final class FragmentTemplate extends Template
         $this->context[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
     }
@@ -294,7 +293,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addStaticUrlTo($script, ContaoContext $context = null): never
+    public static function addStaticUrlTo($script, ContaoContext|null $context = null): never
     {
         self::throwOnAccess();
     }
@@ -566,7 +565,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function setDebug(bool $debug = null): never
+    public function setDebug(bool|null $debug = null): never
     {
         self::throwOnAccess();
     }
@@ -606,7 +605,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function insert($name, array $data = null): never
+    public function insert($name, array|null $data = null): never
     {
         self::throwOnAccess();
     }

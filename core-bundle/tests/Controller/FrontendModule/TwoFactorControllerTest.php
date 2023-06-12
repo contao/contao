@@ -392,7 +392,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @return Authenticator&MockObject
      */
-    private function mockAuthenticator(FrontendUser $user = null, bool $return = null): Authenticator
+    private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator
     {
         $authenticator = $this->createMock(Authenticator::class);
 
@@ -411,7 +411,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @return AuthenticationUtils&MockObject
      */
-    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null): AuthenticationUtils
+    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
 
@@ -429,7 +429,7 @@ class TwoFactorControllerTest extends TestCase
     /**
      * @return Security&MockObject
      */
-    private function mockSecurityHelper(UserInterface $user = null, bool $isFullyAuthenticated = false): Security
+    private function mockSecurityHelper(UserInterface|null $user = null, bool $isFullyAuthenticated = false): Security
     {
         $security = $this->createMock(Security::class);
         $security

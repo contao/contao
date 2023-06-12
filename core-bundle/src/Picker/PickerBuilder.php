@@ -25,8 +25,10 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * @internal
      */
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router)
-    {
+    public function __construct(
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+    ) {
     }
 
     /**
@@ -68,7 +70,7 @@ class PickerBuilder implements PickerBuilderInterface
         return $this->create($config);
     }
 
-    public function supportsContext(string $context, array $allowed = null): bool
+    public function supportsContext(string $context, array|null $allowed = null): bool
     {
         $providers = $this->providers;
 

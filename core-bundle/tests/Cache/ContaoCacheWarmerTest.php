@@ -140,7 +140,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
-    private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         $connection ??= $this->createMock(Connection::class);
         $framework ??= $this->mockContaoFramework();
