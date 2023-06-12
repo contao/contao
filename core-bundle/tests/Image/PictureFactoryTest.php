@@ -106,7 +106,6 @@ class PictureFactoryTest extends TestCase
                         );
 
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
-
                         $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
                         $this->assertSame(77, $options->getImagineOptions()['jxl_quality']);
 
@@ -355,7 +354,6 @@ class PictureFactoryTest extends TestCase
                         );
 
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
-
                         $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
                         $this->assertSame(66, $options->getImagineOptions()['jxl_quality']);
 

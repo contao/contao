@@ -223,15 +223,18 @@ class ImageFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 77,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                            'quality' => 77,
-                            'webp_quality' => 77,
-                            'avif_quality' => 77,
-                            'heic_quality' => 77,
-                            'jxl_quality' => 77,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 77,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'quality' => 77,
+                                'webp_quality' => 77,
+                                'avif_quality' => 77,
+                                'heic_quality' => 77,
+                                'jxl_quality' => 77,
+                            ],
+                            $options->getImagineOptions()
+                        );
 
                         $this->assertSame(
                             [
