@@ -117,7 +117,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year ORDER BY year DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year ORDER BY year DESC");
 
 		while ($objDates->next())
 		{
@@ -139,7 +139,7 @@ class ModuleNewsMenu extends ModuleNews
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strUrl . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
-			$arrItems[$intYear]['isActive'] = (Input::get('year') == $intDate);
+			$arrItems[$intYear]['isActive'] = Input::get('year') == $intDate;
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
@@ -160,7 +160,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
 
 		while ($objDates->next())
 		{
@@ -191,7 +191,7 @@ class ModuleNewsMenu extends ModuleNews
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
-				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
+				$arrItems[$intYear][$intMonth]['isActive'] = Input::get('month') == $intDate;
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}
 		}
@@ -214,7 +214,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY day ORDER BY day DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY day ORDER BY day DESC");
 
 		while ($objDates->next())
 		{

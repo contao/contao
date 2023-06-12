@@ -45,12 +45,14 @@ class DebugPagesCommand extends Command
      */
     private array $contentComposition = [];
 
-    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+    ) {
         parent::__construct();
     }
 
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface|null $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 
@@ -70,7 +72,7 @@ class DebugPagesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $rows = [];
-        $types = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
+        $types = array_unique([...array_keys($GLOBALS['TL_PTY']), ...$this->pageRegistry->keys()]);
         natsort($types);
 
         foreach ($types as $type) {
@@ -87,8 +89,8 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config && $config->getPath() ? $config->getPath() : '*',
-                $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
+                $config?->getPath() ? $config->getPath() : '*',
+                $config?->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $contentComposition,
                 isset($this->routeEnhancers[$type]) ? $this->routeEnhancers[$type]::class : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',

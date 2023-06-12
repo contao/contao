@@ -138,6 +138,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
+        $this->setPreserveMetadata($config, $container);
         $this->setImagineService($config, $container);
         $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
@@ -318,10 +319,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
             if (isset($config['image']['sizes']['_defaults'])) {
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
-                $value = array_merge(
-                    $config['image']['sizes']['_defaults'],
-                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
-                );
+                $value = [
+                    ...$config['image']['sizes']['_defaults'],
+                    ...array_filter($value, static fn ($v) => !\is_array($v) || !empty($v)),
+                ];
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
@@ -332,6 +333,21 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
+            }
+        }
+    }
+
+    private function setPreserveMetadata(array $config, ContainerBuilder $container): void
+    {
+        if (!isset($config['image']['preserve_metadata'])) {
+            return;
+        }
+
+        $services = ['contao.image.factory', 'contao.image.picture_factory'];
+
+        foreach ($services as $service) {
+            if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPreserveMetadata')) {
+                $container->getDefinition($service)->addMethodCall('setPreserveMetadata', [$config['image']['preserve_metadata']]);
             }
         }
     }

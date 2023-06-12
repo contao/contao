@@ -16,8 +16,10 @@ use Psr\Log\LoggerInterface;
 
 final class SystemLogger implements LoggerInterface
 {
-    public function __construct(private LoggerInterface $inner, private string $action)
-    {
+    public function __construct(
+        private readonly LoggerInterface $inner,
+        private readonly string $action,
+    ) {
     }
 
     public function emergency($message, array $context = []): void

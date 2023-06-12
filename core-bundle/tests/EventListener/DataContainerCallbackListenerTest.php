@@ -40,11 +40,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'onLoadCallback'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['Test\CallbackListener', 'onLoadCallback'],
+                    ]],
                 ],
             ]
         );
@@ -74,16 +72,12 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'loadConfigCallback'],
-                        ],
-                    ],
-                    'fields.title.load_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'loadFieldCallback'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['Test\CallbackListener', 'loadConfigCallback'],
+                    ]],
+                    'fields.title.load_callback' => [[
+                        ['Test\CallbackListener', 'loadFieldCallback'],
+                    ]],
                 ],
             ]
         );
@@ -120,11 +114,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.child_record_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'onLoadCallback'],
-                        ],
-                    ],
+                    'list.sorting.child_record_callback' => [[
+                        ['Test\CallbackListener', 'onLoadCallback'],
+                    ]],
                 ],
             ]
         );
@@ -154,11 +146,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.panel_callback.foobar' => [
-                        0 => [
-                            ['Test\CallbackListener', 'onFoobarCallback'],
-                        ],
-                    ],
+                    'list.sorting.panel_callback.foobar' => [[
+                        ['Test\CallbackListener', 'onFoobarCallback'],
+                    ]],
                 ],
             ]
         );
@@ -289,11 +279,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'newCallback'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['Test\CallbackListener', 'newCallback'],
+                    ]],
                 ],
             ]
         );
@@ -368,11 +356,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.child_record_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'newCallback'],
-                        ],
-                    ],
+                    'list.sorting.child_record_callback' => [[
+                        ['Test\CallbackListener', 'newCallback'],
+                    ]],
                 ],
             ]
         );
@@ -438,11 +424,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_content' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'onLoadCallback'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['Test\CallbackListener', 'onLoadCallback'],
+                    ]],
                 ],
             ]
         );
@@ -459,11 +443,9 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['Test\CallbackListener', 'onLoadCallback'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['Test\CallbackListener', 'onLoadCallback'],
+                    ]],
                 ],
             ]
         );

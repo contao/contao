@@ -25,8 +25,11 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        protected ContaoFramework $framework,
+        protected CandidatesInterface $candidates,
+        protected PageRegistry $pageRegistry,
+    ) {
     }
 
     /**
@@ -98,7 +101,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_unique($ids);
     }
 
-    protected function compareRoutes(Route $a, Route $b, array $languages = null): int
+    protected function compareRoutes(Route $a, Route $b, array|null $languages = null): int
     {
         if ('' !== $a->getHost() && '' === $b->getHost()) {
             return -1;

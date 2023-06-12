@@ -55,16 +55,16 @@ final class ContaoExtension extends AbstractExtension
     private array $contaoEscaperFilterRules = [];
 
     public function __construct(
-        private Environment $environment,
-        private TemplateHierarchyInterface $hierarchy,
+        private readonly Environment $environment,
+        private readonly TemplateHierarchyInterface $hierarchy,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
-        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
+        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*"
         // namespaces, as well as the existing bundle templates we're already
@@ -79,7 +79,7 @@ final class ContaoExtension extends AbstractExtension
         $this->environment->addGlobal(
             'request_token',
             new class($tokenManager) implements \Stringable {
-                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
                 {
                 }
 

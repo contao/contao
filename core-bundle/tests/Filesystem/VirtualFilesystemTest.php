@@ -479,7 +479,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                static function (string $path) use (&$handlerInvocationCount): ?FilesystemItem {
+                static function (string $path) use (&$handlerInvocationCount): FilesystemItem|null {
                     $items = [
                         'file_b' => new FilesystemItem(
                             true,
@@ -595,9 +595,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
-
-        /** @var array<FilesystemItem> $listedContents */
-        $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
+        $listedContents = $filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)->toArray();
 
         $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
@@ -678,9 +676,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
-
-        /** @var array<FilesystemItem> $listedContents */
-        $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
+        $listedContents = $filesystem->listContents('foo/bar', $deep)->toArray();
 
         $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
@@ -1013,7 +1009,7 @@ class VirtualFilesystemTest extends TestCase
         return $mountManager;
     }
 
-    private function getVirtualFilesystem(MountManager $mountManager, array $sync = null): VirtualFilesystem
+    private function getVirtualFilesystem(MountManager $mountManager, array|null $sync = null): VirtualFilesystem
     {
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager

@@ -113,7 +113,7 @@ class CrawlCommandTest extends TestCase
             ->expects($this->once())
             ->method('create')
             ->willReturnCallback(
-                function () use ($client, $queue, &$jobId) {
+                function () use ($queue, $client, &$jobId) {
                     $escargot = Escargot::create($this->getBaseUriCollection(), $queue)->withHttpClient($client);
                     $jobId = $escargot->getJobId();
 
@@ -174,7 +174,7 @@ class CrawlCommandTest extends TestCase
     /**
      * @return Factory&MockObject
      */
-    private function mockEscargotFactory(BaseUriCollection $baseUriCollection = null): Factory
+    private function mockEscargotFactory(BaseUriCollection|null $baseUriCollection = null): Factory
     {
         $baseUriCollection ??= $this->getBaseUriCollection();
 
@@ -191,7 +191,7 @@ class CrawlCommandTest extends TestCase
     /**
      * @return Factory&MockObject
      */
-    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection $baseUriCollection = null): Factory
+    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection|null $baseUriCollection = null): Factory
     {
         $escargotFactory = $this->mockEscargotFactory($baseUriCollection);
         $escargotFactory

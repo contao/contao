@@ -22,7 +22,7 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private ResponseContextAccessor $responseContextAccessor)
+    public function __construct(private readonly ResponseContextAccessor $responseContextAccessor)
     {
     }
 

@@ -663,7 +663,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         }
     }
 
-    private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
+    private function getContaoFilesystemLoader(AdapterInterface|null $cacheAdapter = null, TemplateLocator|null $templateLocator = null): ContaoFilesystemLoader
     {
         return new ContaoFilesystemLoader(
             $cacheAdapter ?? new NullAdapter(),

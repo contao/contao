@@ -139,7 +139,7 @@ class ModuleRssReader extends Module
 			}
 
 			// Set limit and offset
-			$offset = (($page - 1) * $this->perPage);
+			$offset = ($page - 1) * $this->perPage;
 			$limit = $this->perPage + $offset;
 
 			$objPagination = new Pagination(\count($arrItems), $this->perPage, Config::get('maxPaginationLinks'), $id);

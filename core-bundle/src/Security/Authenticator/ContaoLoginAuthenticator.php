@@ -52,38 +52,36 @@ use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
-    private array $options;
+    private readonly array $options;
 
     public function __construct(
-        private UserProviderInterface $userProvider,
-        private AuthenticationSuccessHandlerInterface $successHandler,
-        private AuthenticationFailureHandlerInterface $failureHandler,
-        private ScopeMatcher $scopeMatcher,
-        private RouterInterface $router,
-        private UriSigner $uriSigner,
-        private ContaoFramework $framework,
-        private TokenStorageInterface $tokenStorage,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel,
-        private RequestStack $requestStack,
-        private TwoFactorAuthenticator $twoFactorAuthenticator,
+        private readonly UserProviderInterface $userProvider,
+        private readonly AuthenticationSuccessHandlerInterface $successHandler,
+        private readonly AuthenticationFailureHandlerInterface $failureHandler,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RouterInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly ContaoFramework $framework,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel,
+        private readonly RequestStack $requestStack,
+        private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
-        $this->options = array_merge(
-            [
-                'username_parameter' => 'username',
-                'password_parameter' => 'password',
-                'check_path' => '/login_check',
-                'post_only' => true,
-                'enable_csrf' => false,
-                'csrf_parameter' => '_csrf_token',
-                'csrf_token_id' => 'authenticate',
-            ],
-            $options
-        );
+        $this->options = [
+            'username_parameter' => 'username',
+            'password_parameter' => 'password',
+            'check_path' => '/login_check',
+            'post_only' => true,
+            'enable_csrf' => false,
+            'csrf_parameter' => '_csrf_token',
+            'csrf_token_id' => 'authenticate',
+            ...$options,
+        ];
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
+    public function start(Request $request, AuthenticationException|null $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
@@ -122,7 +120,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
-            new UserBadge($credentials['username'], [$this->userProvider, 'loadUserByIdentifier']),
+            new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
             [new RememberMeBadge()]
         );

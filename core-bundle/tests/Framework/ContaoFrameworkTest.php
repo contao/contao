@@ -400,7 +400,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    private function getFramework(Request $request = null): ContaoFramework
+    private function getFramework(Request|null $request = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 

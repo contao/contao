@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class VersionCommand extends Command
 {
-    public function __construct(private Application $application)
+    public function __construct(private readonly Application $application)
     {
         parent::__construct();
     }

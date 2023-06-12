@@ -177,17 +177,15 @@ class MigrateCommandTest extends TestCase
                 $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'name' => 'valid_backup_filename__20211101141254.sql'];
             }
 
-            $expected = array_merge(
-                $expected,
-                [
-                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
-                    ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
-                    ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-            );
+            $expected = [
+                ...$expected,
+                ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
+                ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
+                ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+            ];
 
             $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
         } else {
@@ -834,7 +832,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @return Connection&MockObject
      */
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection
     {
         $connection = $this->createMock(Connection::class);
         $connection

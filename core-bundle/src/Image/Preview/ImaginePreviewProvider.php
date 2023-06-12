@@ -27,7 +27,7 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    public function __construct(private ImagineInterface $imagine)
+    public function __construct(private readonly ImagineInterface $imagine)
     {
     }
 

@@ -22,7 +22,7 @@ class Provider implements TwoFactorProviderInterface
     /**
      * @internal
      */
-    public function __construct(private Authenticator $authenticator)
+    public function __construct(private readonly Authenticator $authenticator)
     {
     }
 

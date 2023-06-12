@@ -23,8 +23,11 @@ class AbstractDbafsMetadataEvent
      * @param array<string, mixed> $row
      * @param array<string, mixed> $extraMetadata
      */
-    public function __construct(private string $table, protected array $row, protected array $extraMetadata = [])
-    {
+    public function __construct(
+        private readonly string $table,
+        protected array $row,
+        protected array $extraMetadata = [],
+    ) {
         foreach (['path', 'uuid'] as $mandatoryKey) {
             if (null === ($value = $row[$mandatoryKey] ?? null)) {
                 throw new \InvalidArgumentException(sprintf('Row must contain key "%s".', $mandatoryKey));

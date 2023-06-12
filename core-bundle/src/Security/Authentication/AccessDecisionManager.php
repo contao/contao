@@ -25,10 +25,10 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      * @internal
      */
     public function __construct(
-        private AccessDecisionManagerInterface $inner,
-        private AccessDecisionManagerInterface $contaoAccessDecisionManager,
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
+        private readonly AccessDecisionManagerInterface $inner,
+        private readonly AccessDecisionManagerInterface $contaoAccessDecisionManager,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
     ) {
     }
 

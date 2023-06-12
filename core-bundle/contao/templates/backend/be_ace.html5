@@ -35,6 +35,10 @@ window.ace && window.addEvent('domready', function() {
   editor.getSession().setUseWrapMode(true);
   editor.setAutoScrollEditorIntoView(true);
 
+  <?php if ($this->readonly): ?>
+    editor.setReadOnly(true);
+  <?php endif; ?>
+
   // Auto-detect the indentation
   ws.detectIndentation(editor.getSession());
 

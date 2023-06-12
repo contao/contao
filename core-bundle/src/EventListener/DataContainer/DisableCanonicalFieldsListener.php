@@ -24,8 +24,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCallback(table: 'tl_page', target: 'fields.canonicalKeepParams.load')]
 class DisableCanonicalFieldsListener
 {
-    public function __construct(private ContaoFramework $framework, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function __invoke(string $value, DataContainer $dc): string

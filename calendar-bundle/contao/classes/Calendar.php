@@ -530,7 +530,23 @@ class Calendar extends Frontend
 	{
 		if (!\array_key_exists($intPageId, self::$arrPageCache))
 		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+			$objPage = self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+
+			if (null === $objPage)
+			{
+				return null;
+			}
+
+			$objLayout = $objPage->getRelated('layout');
+
+			if (!$objLayout instanceof LayoutModel)
+			{
+				return $objPage;
+			}
+
+			/** @var ThemeModel $objTheme */
+			$objTheme = $objLayout->getRelated('pid');
+			$objPage->templateGroup = $objTheme->templates ?? null;
 		}
 
 		return self::$arrPageCache[$intPageId];

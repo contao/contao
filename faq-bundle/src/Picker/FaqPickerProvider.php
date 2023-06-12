@@ -31,8 +31,12 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     /**
      * @internal
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        TranslatorInterface|null $translator,
+        private readonly Security $security,
+    ) {
         parent::__construct($menuFactory, $router, $translator);
     }
 
@@ -51,7 +55,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_faq';
     }
@@ -76,7 +80,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'faq'];
 

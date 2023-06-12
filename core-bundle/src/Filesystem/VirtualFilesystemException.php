@@ -30,8 +30,12 @@ class VirtualFilesystemException extends \RuntimeException
     final public const UNABLE_TO_RETRIEVE_METADATA = 10;
     final public const ENCOUNTERED_INVALID_PATH = 11;
 
-    private function __construct(private string $path, string $message, int $code, \Throwable|null $previous = null)
-    {
+    private function __construct(
+        private readonly string $path,
+        string $message,
+        int $code,
+        \Throwable|null $previous = null,
+    ) {
         parent::__construct($message, $code, $previous);
     }
 
@@ -40,7 +44,7 @@ class VirtualFilesystemException extends \RuntimeException
         return $this->path;
     }
 
-    public static function unableToCheckIfFileExists(string $path, \Throwable $previous = null): self
+    public static function unableToCheckIfFileExists(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -50,7 +54,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToCheckIfDirectoryExists(string $path, \Throwable $previous = null): self
+    public static function unableToCheckIfDirectoryExists(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -60,7 +64,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToRead(string $path, \Throwable $previous = null): self
+    public static function unableToRead(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -70,7 +74,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToWrite(string $path, \Throwable $previous = null): self
+    public static function unableToWrite(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -80,7 +84,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToDelete(string $path, \Throwable $previous = null): self
+    public static function unableToDelete(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -90,7 +94,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToDeleteDirectory(string $path, \Throwable $previous = null): self
+    public static function unableToDeleteDirectory(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -100,7 +104,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToCreateDirectory(string $path, \Throwable $previous = null): self
+    public static function unableToCreateDirectory(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -110,7 +114,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToCopy(string $pathFrom, string $pathTo, \Throwable $previous = null): self
+    public static function unableToCopy(string $pathFrom, string $pathTo, \Throwable|null $previous = null): self
     {
         return new self(
             $pathFrom,
@@ -120,7 +124,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToMove(string $pathFrom, string $pathTo, \Throwable $previous = null): self
+    public static function unableToMove(string $pathFrom, string $pathTo, \Throwable|null $previous = null): self
     {
         return new self(
             $pathFrom,
@@ -130,7 +134,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToListContents(string $path, \Throwable $previous = null): self
+    public static function unableToListContents(string $path, \Throwable|null $previous = null): self
     {
         return new self(
             $path,
@@ -140,7 +144,7 @@ class VirtualFilesystemException extends \RuntimeException
         );
     }
 
-    public static function unableToRetrieveMetadata(string $path, \Throwable $previous = null, string $reason = ''): self
+    public static function unableToRetrieveMetadata(string $path, \Throwable|null $previous = null, string $reason = ''): self
     {
         return new self(
             $path,

@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -24,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
     }
 
@@ -313,6 +316,15 @@ class Configuration implements ConfigurationInterface
                                     ->scalarPrototype()->end()
                                 ->end()
                             ->end()
+                            ->arrayNode('preserve_metadata')
+                                ->info('Which metadata keys to preserve when resizing images.')
+                                ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                                ->useAttributeAsKey('format')
+                                ->arrayPrototype()
+                                    ->beforeNormalization()->castToArray()->end()
+                                    ->scalarPrototype()->end()
+                                ->end()
+                            ->end()
                             ->arrayNode('items')
                                 ->arrayPrototype()
                                     ->children()
@@ -415,6 +427,16 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(static fn (array $v) => $v['default_size'] > $v['max_size'])
                         ->thenInvalid('The default_size must not be greater than the max_size: %s')
+                    ->end()
+                ->end()
+                ->arrayNode('preserve_metadata')
+                    ->info('Which metadata keys to preserve when resizing images.')
+                    ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                    ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
+                    ->useAttributeAsKey('format')
+                    ->arrayPrototype()
+                        ->beforeNormalization()->castToArray()->end()
+                        ->scalarPrototype()->end()
                     ->end()
                 ->end()
             ->end()

@@ -1083,7 +1083,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function expectRequest(bool $hasSession, array $newRecords = null): void
+    private function expectRequest(bool $hasSession, array|null $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
         $request

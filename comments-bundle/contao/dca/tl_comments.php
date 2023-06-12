@@ -123,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'default'                     => '{author_legend},name,member,email,website;{comment_legend},comment;{reply_legend},addReply;{publish_legend},published'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addReply'                    => 'author,reply'

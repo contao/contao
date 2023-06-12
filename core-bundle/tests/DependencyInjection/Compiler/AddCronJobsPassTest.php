@@ -236,7 +236,7 @@ class AddCronJobsPassTest extends TestCase
     }
 
     /**
-     * @return array<int,array<int,Reference|string>>
+     * @return array<int, array<int, Reference|string>>
      */
     private function getCronsFromDefinition(ContainerBuilder $container): array
     {

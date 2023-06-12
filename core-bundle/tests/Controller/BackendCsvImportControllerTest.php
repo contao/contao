@@ -356,7 +356,7 @@ class BackendCsvImportControllerTest extends TestCase
         return $framework;
     }
 
-    private function getController(Request $request = null): BackendCsvImportController
+    private function getController(Request|null $request = null): BackendCsvImportController
     {
         $requestStack = new RequestStack();
         $requestStack->push($request ?: new Request());

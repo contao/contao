@@ -30,9 +30,9 @@ class ImageSizes implements ResetInterface
      * @internal
      */
     public function __construct(
-        private Connection $connection,
-        private EventDispatcherInterface $eventDispatcher,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

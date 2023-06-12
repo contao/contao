@@ -29,8 +29,8 @@ class FilesystemItem implements \Stringable
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
     public function __construct(
-        private bool $isFile,
-        private string $path,
+        private readonly bool $isFile,
+        private readonly string $path,
         private \Closure|int|null $lastModified = null,
         private \Closure|int|null $fileSize = null,
         private \Closure|string|null $mimeType = null,
@@ -81,8 +81,8 @@ class FilesystemItem implements \Stringable
 
     /**
      * @param int|(\Closure(self):int|null)|null $lastModified
-     * @param int|\Closure(self):int|null       $fileSize
-     * @param string|\Closure(self):string|null $mimeType
+     * @param int|\Closure(self):int|null        $fileSize
+     * @param string|\Closure(self):string|null  $mimeType
      */
     public function withMetadataIfNotDefined(\Closure|int|null $lastModified, \Closure|int|null $fileSize, \Closure|string|null $mimeType): self
     {
@@ -143,7 +143,7 @@ class FilesystemItem implements \Stringable
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(string $default = null): string
+    public function getMimeType(string|null $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
         $exception = null;

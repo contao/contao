@@ -64,13 +64,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'skeleton:install', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
+            [$phpPath, ...$phpFlags, $consolePath, 'skeleton:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:symlinks', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
@@ -132,7 +132,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
-        $commandTester = (new CommandTester($command));
+        $commandTester = new CommandTester($command);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/An error occurred while executing the ".+" command: <error>/');
@@ -207,6 +207,41 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $filesystem->remove([$dotEnvFile, $dotEnvLocalFile]);
     }
 
+    public function testKeepsSymlinkedDotEnv(): void
+    {
+        $projectDir = $this->getTempDir();
+
+        $dotEnvFile = Path::join($projectDir, '.env');
+        $dotEnvLocalFile = Path::join($projectDir, '.env.local');
+        $dotEnvLocalTargetFile = Path::join($projectDir, '.env.local.target');
+
+        $filesystem = new Filesystem();
+        $filesystem->touch($dotEnvLocalTargetFile);
+        $filesystem->symlink($dotEnvLocalTargetFile, $dotEnvLocalFile);
+
+        $command = new ContaoSetupCommand(
+            $projectDir,
+            Path::join($projectDir, 'public'),
+            '',
+            $this->getCreateProcessHandler($this->getProcessMocks())
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertFileExists($dotEnvFile);
+        $this->assertFileExists($dotEnvLocalFile);
+        $this->assertFileExists($dotEnvLocalTargetFile);
+        $this->assertTrue(is_link($dotEnvLocalFile));
+
+        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalTargetFile));
+
+        $this->assertArrayHasKey('APP_SECRET', $vars);
+        $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
+
+        $filesystem->remove([$dotEnvFile, $dotEnvLocalFile, $dotEnvLocalTargetFile]);
+    }
+
     public function provideKernelSecretValues(): \Generator
     {
         yield 'no secret set, no .env file' => ['', false];
@@ -218,11 +253,11 @@ class ContaoSetupCommandTest extends ContaoTestCase
     /**
      * @return (\Closure(array<string>):Process)
      */
-    private function getCreateProcessHandler(array $processes, array $validateCommandArguments = null, &$invocationCount = null): callable
+    private function getCreateProcessHandler(array $processes, array|null $validateCommandArguments = null, &$invocationCount = null): callable
     {
         $invocationCount ??= 0;
 
-        return static function (array $command) use (&$invocationCount, $validateCommandArguments, $processes): Process {
+        return static function (array $command) use ($validateCommandArguments, &$invocationCount, $processes): Process {
             if (null !== $validateCommandArguments) {
                 self::assertEquals($validateCommandArguments[$invocationCount], $command);
             }

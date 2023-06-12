@@ -26,7 +26,7 @@ class Authenticator
     /**
      * Validates the code which was entered by the user.
      */
-    public function validateCode(User $user, string $code, int $timestamp = null): bool
+    public function validateCode(User $user, string $code, int|null $timestamp = null): bool
     {
         $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user));
 

@@ -161,11 +161,9 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onLoadPage'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['test.callback_listener', 'onLoadPage'],
+                    ]],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]
@@ -288,11 +286,9 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_content' => [
-                    'list.sorting.panel_callback.foobar' => [
-                        0 => [
-                            ['test.callback_listener', 'onFoobarCallback'],
-                        ],
-                    ],
+                    'list.sorting.panel_callback.foobar' => [[
+                        ['test.callback_listener', 'onFoobarCallback'],
+                    ]],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]
@@ -354,31 +350,23 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'loadFirst'],
-                            ['test.callback_listener', 'loadSecond'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['test.callback_listener', 'loadFirst'],
+                        ['test.callback_listener', 'loadSecond'],
+                    ]],
                 ],
                 'tl_article' => [
-                    'fields.title.load_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onLoadCallback'],
-                        ],
-                    ],
-                    'fields.title.save_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onSaveCallback'],
-                        ],
-                    ],
+                    'fields.title.load_callback' => [[
+                        ['test.callback_listener', 'onLoadCallback'],
+                    ]],
+                    'fields.title.save_callback' => [[
+                        ['test.callback_listener', 'onSaveCallback'],
+                    ]],
                 ],
                 'tl_content' => [
-                    'list.sorting.child_record_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onChildRecordCallback'],
-                        ],
-                    ],
+                    'list.sorting.child_record_callback' => [[
+                        ['test.callback_listener', 'onChildRecordCallback'],
+                    ]],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]

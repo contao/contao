@@ -21,7 +21,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
-    private PropertyAccessor $propertyAccessor;
+    private readonly PropertyAccessor $propertyAccessor;
 
     public function __construct()
     {
@@ -103,7 +103,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         }
     }
 
-    private function throwInvalidArgumentException(array $unmappedConfig, string $prefix = null): void
+    private function throwInvalidArgumentException(array $unmappedConfig, string|null $prefix = null): void
     {
         $keys = array_keys($unmappedConfig);
 

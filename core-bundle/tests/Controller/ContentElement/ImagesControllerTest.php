@@ -33,15 +33,13 @@ class ImagesControllerTest extends ContentElementTestCase
                 'fullsize' => true,
                 'perPage' => '4',
                 'perRow' => '2',
-                'overwriteMeta' => true,
-                'alt' => 'alt text',
             ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-image">
                 <figure>
-                    <img src="files/image1.jpg" alt="alt text">
+                    <img src="files/image1.jpg" alt>
                 </figure>
             </div>
             HTML;

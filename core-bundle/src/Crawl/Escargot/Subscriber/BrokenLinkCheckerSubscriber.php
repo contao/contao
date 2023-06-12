@@ -38,7 +38,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     private array $stats = ['ok' => 0, 'error' => 0];
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
@@ -113,7 +113,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         // noop
     }
 
-    public function getResult(SubscriberResult $previousResult = null): SubscriberResult
+    public function getResult(SubscriberResult|null $previousResult = null): SubscriberResult
     {
         $stats = $this->stats;
 
