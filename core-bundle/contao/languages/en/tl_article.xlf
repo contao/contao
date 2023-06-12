@@ -158,7 +158,7 @@
       <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
