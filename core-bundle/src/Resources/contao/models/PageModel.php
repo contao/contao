@@ -1360,10 +1360,11 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
+		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), $referenceType);
 		}
 		catch (RouteNotFoundException $e)
 		{
