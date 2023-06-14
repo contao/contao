@@ -6027,9 +6027,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
-  <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
-  <option value="tl_' . $field . '">---</option>';
+<div class="tl_filter_group">
+  <label for="' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</label>
+  <select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
+    <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
 			{
@@ -6260,7 +6261,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// End select menu
 			$fields .= '
-</select> ';
+  </select>
+</div> ';
 
 			// Force a line-break after six elements (see #3777)
 			if ((($cnt + 1) % 6) == 0)

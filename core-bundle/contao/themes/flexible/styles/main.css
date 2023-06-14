@@ -681,6 +681,21 @@ h2.sub_headline {
 	margin-left: 3px;
 }
 
+.tl_filter_group {
+	display: inline-block;
+	margin-left: 8px;
+	letter-spacing: -.31em;
+}
+
+.tl_filter_group * {
+	letter-spacing: normal;
+}
+
+.tl_filter .tl_filter_group .tl_select {
+	width: 100px;
+	max-width: none;
+}
+
 .tl_submit_panel + .tl_filter {
 	width: 86%;
 }
@@ -2995,6 +3010,19 @@ fieldset.collapsed > legend {
 	.tl_filter .tl_select {
 		display: block;
 		max-width: 100%;
+	}
+
+	.tl_filter .tl_filter_group {
+		display: flex;
+		align-items: center;
+	}
+
+	.tl_filter .tl_filter_group label {
+		min-width: 50%;
+	}
+
+	.tl_filter .tl_filter_group .tl_select {
+		width: 50%;
 	}
 
 	.tl_search {
