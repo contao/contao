@@ -230,7 +230,7 @@ class FigureBuilder
         // Only check for a FilesModel if the resource is inside the upload path
         $getDbafsPath = function (string $path): ?string {
             if (Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path)) {
-               return Path::makeRelative($path, $this->webDir);
+                return Path::makeRelative($path, $this->webDir);
             }
 
             if (Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
