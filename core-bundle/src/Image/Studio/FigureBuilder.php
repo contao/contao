@@ -228,11 +228,20 @@ class FigureBuilder
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
         // Only check for a FilesModel if the resource is inside the upload path
-        $isDbafsPathPublic = Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path);
-        $isDbafsPath = $isDbafsPathPublic || Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path);
+        $getDbafsPath = static function(): ?string {
+            if($Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path)) {
+                return Path::makeRelative($path, $this->webDir);
+            }
+    
+            if(Path::isBasePath(Path::join($this->projectDir, $this->uploadPath)) {
+                return $path;
+            }
+               
+            return null;
+        }
 
-        if ($autoDetectDbafsPaths && $isDbafsPath) {
-            $filesModel = $this->getFilesModelAdapter()->findByPath($isDbafsPathPublic ? Path::makeRelative($path, $this->webDir) : $path);
+        if ($autoDetectDbafsPaths && null !== ($dbafsPath = $getDbafsPath())) {
+            $filesModel = $this->getFilesModelAdapter()->findByPath($dbafsPath);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
