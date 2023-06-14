@@ -80,6 +80,13 @@ class VideoController extends AbstractContentElementController
     {
         $options = [];
 
+        parse_str(explode('?', $model->vimeo)[1] ?? '', $videoIdParams);
+
+        // Privacy hash must be the first parameter
+        if ($privacyHash = $videoIdParams['h'] ?? null) {
+            $options['h'] = $privacyHash;
+        }
+
         foreach (StringUtil::deserialize($model->vimeoOptions, true) as $option) {
             [$option, $value] = match ($option) {
                 'vimeo_portrait', 'vimeo_title', 'vimeo_byline' => [substr($option, 6), '0'],
@@ -102,11 +109,11 @@ class VideoController extends AbstractContentElementController
 
         return [
             'provider' => 'vimeo',
-            'video_id' => $videoId = $model->vimeo,
+            'video_id' => $videoId = explode('?', $model->vimeo)[0],
             'options' => $options,
-            'base_url' => $baseUrl = "https://player.vimeo.com/video/$videoId",
+            'base_url' => $baseUrl = "https://player.vimeo.com/video/$model->vimeo",
             'query' => $query,
-            'url' => empty($query) ? $baseUrl : "$baseUrl?$query",
+            'url' => "https://player.vimeo.com/video/$videoId".($query ? "?$query" : ''),
         ];
     }
 
