@@ -185,6 +185,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
@@ -206,6 +207,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
