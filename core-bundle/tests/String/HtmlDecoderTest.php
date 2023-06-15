@@ -40,6 +40,7 @@ class HtmlDecoderTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         System::setContainer($container);
     }
