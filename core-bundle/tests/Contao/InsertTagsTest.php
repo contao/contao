@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
 use Contao\CoreBundle\InsertTag\Flag\StringUtilFlag;
@@ -45,7 +46,7 @@ class InsertTagsTest extends TestCase
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
-        $container->get('contao.framework')->setContainer($container);
+        $container->set('contao.framework', $this->createMock(ContaoFramework::class));
 
         System::setContainer($container);
     }

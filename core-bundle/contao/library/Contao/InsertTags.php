@@ -16,7 +16,6 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -1388,39 +1387,5 @@ class InsertTags extends Controller
 		$attributesResult .= substr($attributes, $offset);
 
 		return $attributesResult;
-	}
-
-	/**
-	 * Check if the language matches
-	 *
-	 * @param string $language
-	 *
-	 * @return boolean
-	 */
-	private function languageMatches($language)
-	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if (null === $request)
-		{
-			return false;
-		}
-
-		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
-
-		foreach (StringUtil::trimsplit(',', $language) as $lang)
-		{
-			if ($pageLanguage === LocaleUtil::formatAsLocale($lang))
-			{
-				return true;
-			}
-
-			if (substr($lang, -1) === '*' && 0 === strncmp($pageLanguage, $lang, \strlen($lang) - 1))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }
