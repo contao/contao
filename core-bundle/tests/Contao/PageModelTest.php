@@ -369,78 +369,6 @@ class PageModelTest extends TestCase
         $this->assertSame($expectedLayout, $page->layout);
     }
 
-    public function testUsesAbsolutePathReferenceForFrontendUrl(): void
-    {
-        $page = new PageModel();
-        $page->pid = 42;
-        $page->domain = 'example.com';
-
-        $context = RequestContext::fromUri('https://example.com');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_PATH)
-            ->willReturn('/page')
-        ;
-
-        $router
-            ->expects($this->once())
-            ->method('getContext')
-            ->willReturn($context)
-        ;
-
-        System::getContainer()->set('router', $router);
-
-        $this->assertSame('page', $page->getFrontendUrl());
-    }
-
-    public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
-    {
-        $page = new PageModel();
-        $page->pid = 42;
-        $page->domain = 'foobar.com';
-
-        $context = RequestContext::fromUri('https://example.com');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://foobar.com/page')
-        ;
-
-        $router
-            ->expects($this->once())
-            ->method('getContext')
-            ->willReturn($context)
-        ;
-
-        System::getContainer()->set('router', $router);
-
-        $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
-    }
-
-    public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
-    {
-        $page = new PageModel();
-        $page->pid = 42;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://example.com/page')
-        ;
-
-        System::getContainer()->set('router', $router);
-
-        $this->assertSame('https://example.com/page', $page->getAbsoluteUrl());
-    }
-
     public function layoutInheritanceParentPagesProvider(): \Generator
     {
         yield 'no parent with an inheritable layout' => [
@@ -548,6 +476,78 @@ class PageModelTest extends TestCase
             ],
             '',
         ];
+    }
+
+    public function testUsesAbsolutePathReferenceForFrontendUrl(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'example.com';
+
+        $context = RequestContext::fromUri('https://example.com');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_PATH)
+            ->willReturn('/page')
+        ;
+
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('page', $page->getFrontendUrl());
+    }
+
+    public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'foobar.com';
+
+        $context = RequestContext::fromUri('https://example.com');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://foobar.com/page')
+        ;
+
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
+    }
+
+    public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/page')
+        ;
+
+        System::getContainer()->set('router', $router);
+
+        $this->assertSame('https://example.com/page', $page->getAbsoluteUrl());
     }
 
     private function mockDatabase(Database $database): void
