@@ -17,6 +17,7 @@ use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\StringUtil;
+use Symfony\Component\String\UnicodeString;
 
 class StringUtilFlag
 {
@@ -81,6 +82,50 @@ class StringUtilFlag
     {
         return new InsertTagResult(
             StringUtil::encodeEmail($result->getValue()),
+            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
+            $result->getExpiresAt(),
+            $result->getCacheTags(),
+        );
+    }
+
+    #[AsInsertTagFlag('utf8_strtolower')]
+    public function utf8Strtolower(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return new InsertTagResult(
+            mb_strtolower($result->getValue()),
+            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
+            $result->getExpiresAt(),
+            $result->getCacheTags(),
+        );
+    }
+
+    #[AsInsertTagFlag('utf8_strtoupper')]
+    public function utf8Strtoupper(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return new InsertTagResult(
+            mb_strtoupper($result->getValue()),
+            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
+            $result->getExpiresAt(),
+            $result->getCacheTags(),
+        );
+    }
+
+    #[AsInsertTagFlag('utf8_romanize')]
+    public function utf8Romanize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return new InsertTagResult(
+            (new UnicodeString($result->getValue()))->ascii()->toString(),
+            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
+            $result->getExpiresAt(),
+            $result->getCacheTags(),
+        );
+    }
+
+    #[AsInsertTagFlag('nl2br')]
+    public function nl2Br(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return new InsertTagResult(
+            preg_replace('/\r?\n/', '<br>', $result->getValue()),
             OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
             $result->getExpiresAt(),
             $result->getCacheTags(),

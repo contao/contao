@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
+use Contao\CoreBundle\InsertTag\Flag\StringUtilFlag;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
@@ -41,8 +43,9 @@ class InsertTagsTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('contao.insert_tag.parser', $this->createMock(InsertTagParser::class));
+        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
+        $container->get('contao.framework')->setContainer($container);
 
         System::setContainer($container);
     }
@@ -104,9 +107,25 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-
-        System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
+        $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
+        $insertTagParser->addFlagCallback('standardize', new StringUtilFlag(), 'standardize');
+        $insertTagParser->addFlagCallback('ampersand', new StringUtilFlag(), 'ampersand');
+        $insertTagParser->addFlagCallback('specialchars', new StringUtilFlag(), 'specialchars');
+        $insertTagParser->addFlagCallback('utf8_strtolower', new StringUtilFlag(), 'utf8Strtolower');
+        $insertTagParser->addFlagCallback('utf8_strtoupper', new StringUtilFlag(), 'utf8Strtoupper');
+        $insertTagParser->addFlagCallback('utf8_romanize', new StringUtilFlag(), 'utf8Romanize');
+        $insertTagParser->addFlagCallback('nl2br', new StringUtilFlag(), 'nl2Br');
+        $insertTagParser->addFlagCallback('addslashes', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('strtolower', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('strtoupper', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('ucfirst', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('lcfirst', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('ucwords', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('trim', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('rtrim', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('ltrim', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('urlencode', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('rawurlencode', new PhpFunctionFlag(), '__invoke');
 
         $output = $insertTagParser->replaceInline($source);
 
@@ -485,6 +504,8 @@ class InsertTagsTest extends TestCase
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
+        $insertTagParser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
+        $insertTagParser->addFlagCallback('urlattr', new StringUtilFlag(), 'urlattr');
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);

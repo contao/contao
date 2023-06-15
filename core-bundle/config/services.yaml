@@ -418,6 +418,12 @@ services:
             - '@fragment.handler'
             - '@request_stack'
 
+    contao.insert_tag.flag.format:
+        class: Contao\CoreBundle\InsertTag\Flag\FormatFlag
+
+    contao.insert_tag.flag.php_function:
+        class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
+
     contao.insert_tag.flag.string_util:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
 

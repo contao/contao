@@ -21,7 +21,6 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\String\UnicodeString;
 
 /**
  * A static class to replace insert tags
@@ -1121,63 +1120,6 @@ class InsertTags extends Controller
 				{
 					switch ($flag)
 					{
-						case 'addslashes':
-						case 'strtolower':
-						case 'strtoupper':
-						case 'ucfirst':
-						case 'lcfirst':
-						case 'ucwords':
-						case 'trim':
-						case 'rtrim':
-						case 'ltrim':
-						case 'urlencode':
-						case 'rawurlencode':
-							$arrCache[$strTag] = $flag($arrCache[$strTag]);
-							break;
-
-						case 'utf8_strtolower':
-							$arrCache[$strTag] = mb_strtolower($arrCache[$strTag]);
-							break;
-
-						case 'utf8_strtoupper':
-							$arrCache[$strTag] = mb_strtoupper($arrCache[$strTag]);
-							break;
-
-						case 'utf8_romanize':
-							$arrCache[$strTag] = (new UnicodeString($arrCache[$strTag]))->ascii()->toString();
-							break;
-
-						case 'attr':
-							$arrCache[$strTag] = StringUtil::specialcharsAttribute($arrCache[$strTag]);
-							break;
-
-						case 'urlattr':
-							$arrCache[$strTag] = StringUtil::specialcharsUrl($arrCache[$strTag]);
-							break;
-
-						case 'nl2br':
-							$arrCache[$strTag] = preg_replace('/\r?\n/', '<br>', $arrCache[$strTag]);
-							break;
-
-						case 'standardize':
-						case 'ampersand':
-						case 'specialchars':
-						case 'encodeEmail':
-							$arrCache[$strTag] = StringUtil::$flag($arrCache[$strTag]);
-							break;
-
-						case 'number_format':
-							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag], 0);
-							break;
-
-						case 'currency_format':
-							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag]);
-							break;
-
-						case 'readable_size':
-							$arrCache[$strTag] = System::getReadableSize($arrCache[$strTag]);
-							break;
-
 						case 'flatten':
 							if (!\is_array($arrCache[$strTag]))
 							{
