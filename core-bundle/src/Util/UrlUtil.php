@@ -24,11 +24,12 @@ class UrlUtil
         }
 
         $relative = new Uri($relativeUrl);
-        $base = new Uri($baseUrl);
 
         if ('' !== $relative->getScheme()) {
             return $relativeUrl;
         }
+
+        $base = new Uri($baseUrl);
 
         if ('' !== $relative->getAuthority()) {
             return (string) $relative->withScheme($base->getScheme());
