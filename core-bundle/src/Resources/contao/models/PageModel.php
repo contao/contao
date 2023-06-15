@@ -1220,6 +1220,9 @@ class PageModel extends Model
 			$this->folderUrl = $folderUrl;
 		}
 
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
 		// Set the root ID and title
 		if ($objParentPage !== null && $objParentPage->type == 'root')
 		{
@@ -1268,17 +1271,17 @@ class PageModel extends Model
 				}
 			}
 
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			if ($container->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
-				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+				$this->urlPrefix = $container->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
+				$this->urlSuffix = $container->getParameter('contao.url_suffix');
 			}
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$container->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}
@@ -1360,10 +1363,11 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
+		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams), $referenceType);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1378,7 +1382,7 @@ class PageModel extends Model
 		}
 
 		// Make the URL relative to the base path
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
