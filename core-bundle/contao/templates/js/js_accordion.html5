@@ -21,7 +21,6 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
         button.type = 'button';
         button.append(...toggler.childNodes);
         toggler.appendChild(button);
-
         toggler.parentNode.classList.add('handorgel');
         contentElements.push(toggler.nextElementSibling);
       });
@@ -41,9 +40,8 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
       });
     }
 
-    // change this selector accordion to your template, or duplicate
+    // Change this selector accordion to your template, or duplicate
     // the line if you use multiple accordion element classes.
     initAccordion('.ce_accordion > .toggler');
-
   })();
 </script>
