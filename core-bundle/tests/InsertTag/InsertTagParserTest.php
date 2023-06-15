@@ -119,10 +119,24 @@ class InsertTagParserTest extends TestCase
 
     public function testParse(): void
     {
-        // $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        // $sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b?foo=bar&baz[]={{value|valflag}}&baz[]=1.23|flag1|flag2}}bar{{baz}}');
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b::foo=bar::baz[]={{value|valflag}}::baz[]=1.23|flag1|flag2}}bar{{baz}}');
 
-        // var_dump($sequence);
+        $this->assertSame('foo', $sequence->get(0));
+        $this->assertSame('insert_tag', $sequence->get(1)->getName());
+        $this->assertSame('a{{first}}b', $sequence->get(1)->getParameters()->get(0)->serialize());
+        $this->assertSame('first', $sequence->get(1)->getParameters()->get(0)->get(1)->getName());
+        $this->assertSame('a{{second}}b', $sequence->get(1)->getParameters()->get(1)->serialize());
+        $this->assertSame('second', $sequence->get(1)->getParameters()->get(1)->get(1)->getName());
+        $this->assertSame('bar', $sequence->get(1)->getParameters()->get('foo')->get(0));
+        $this->assertSame('{{value|valflag}}', $sequence->get(1)->getParameters()->get('baz[]')->serialize());
+        $this->assertSame('value', $sequence->get(1)->getParameters()->get('baz[]')->get(0)->getName());
+        $this->assertSame('valflag', $sequence->get(1)->getParameters()->get('baz[]')->get(0)->getFlags()[0]->getName());
+        $this->assertSame('1.23', $sequence->get(1)->getParameters()->all('baz[]')[1]->serialize());
+        $this->assertSame('flag1', $sequence->get(1)->getFlags()[0]->getName());
+        $this->assertSame('flag2', $sequence->get(1)->getFlags()[1]->getName());
+        $this->assertSame('bar', $sequence->get(2));
+        $this->assertSame('baz', $sequence->get(3)->getName());
     }
 
     /**
