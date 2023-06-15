@@ -19,8 +19,11 @@ class FragmentConfig
     /**
      * @see FragmentHandler::render()
      */
-    public function __construct(private string $controller, private string $renderer = 'forward', private array $options = [])
-    {
+    public function __construct(
+        private string $controller,
+        private string $renderer = 'forward',
+        private array $options = [],
+    ) {
     }
 
     public function getController(): string
@@ -48,7 +51,7 @@ class FragmentConfig
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getOptions(): array
     {

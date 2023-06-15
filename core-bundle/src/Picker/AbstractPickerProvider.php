@@ -19,8 +19,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function getUrl(PickerConfig $config): string|null
@@ -52,7 +55,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the back end picker.
      *
-     * @return array<string,string|int>
+     * @return array<string, string|int>
      */
     abstract protected function getRouteParameters(PickerConfig|null $config = null): array;
 

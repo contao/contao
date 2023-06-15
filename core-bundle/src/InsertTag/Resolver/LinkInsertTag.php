@@ -26,8 +26,10 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 class LinkInsertTag
 {
-    public function __construct(private ContaoFramework $framework, private TokenChecker $tokenChecker)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly TokenChecker $tokenChecker,
+    ) {
     }
 
     #[AsInsertTag('link')]

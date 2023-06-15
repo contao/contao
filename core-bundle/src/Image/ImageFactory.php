@@ -31,21 +31,23 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
+    private array $preserveMetadata;
 
     /**
      * @internal
      */
     public function __construct(
-        private ResizerInterface $resizer,
-        private ImagineInterface $imagine,
-        private ImagineInterface $imagineSvg,
-        private Filesystem $filesystem,
-        private ContaoFramework $framework,
-        private bool $bypassCache,
-        private array $imagineOptions,
-        private array $validExtensions,
-        private string $uploadDir,
+        private readonly ResizerInterface $resizer,
+        private readonly ImagineInterface $imagine,
+        private readonly ImagineInterface $imagineSvg,
+        private readonly Filesystem $filesystem,
+        private readonly ContaoFramework $framework,
+        private readonly bool $bypassCache,
+        private readonly array $imagineOptions,
+        private readonly array $validExtensions,
+        private readonly string $uploadDir,
     ) {
+        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -54,6 +56,11 @@ class ImageFactory implements ImageFactoryInterface
     public function setPredefinedSizes(array $predefinedSizes): void
     {
         $this->predefinedSizes = $predefinedSizes;
+    }
+
+    public function setPreserveMetadata(array $preserveMetadata): void
+    {
+        $this->preserveMetadata = $preserveMetadata;
     }
 
     public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
@@ -182,7 +189,9 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $config = new ResizeConfiguration();
+
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
 
         if (isset($size[2])) {
             // Database record
@@ -192,6 +201,41 @@ class ImageFactory implements ImageFactoryInterface
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
+
+                    if (!$imageSize->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true)) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $preserveMetadata,
+                                ),
+                            ),
+                        );
+                    }
+
+                    if ($quality = max(0, min(100, (int) $imageSize->imageQuality))) {
+                        $options->setImagineOptions([
+                            ...$this->imagineOptions,
+                            'quality' => $quality,
+                            'jpeg_quality' => $quality,
+                            'webp_quality' => $quality,
+                            'avif_quality' => $quality,
+                            'heic_quality' => $quality,
+                            'jxl_quality' => $quality,
+                        ]);
+
+                        if (100 === $quality) {
+                            $options->setImagineOptions([
+                                ...$options->getImagineOptions(),
+                                'webp_lossless' => true,
+                                'avif_lossless' => true,
+                                'heic_lossless' => true,
+                                'jxl_lossless' => true,
+                            ]);
+                        }
+                    }
                 }
 
                 return [$config, null, $options];
@@ -201,6 +245,18 @@ class ImageFactory implements ImageFactoryInterface
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
+
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
+                ]);
+
+                if (!empty($this->predefinedSizes[$size[2]]['imagineOptions'])) {
+                    $options->setImagineOptions([
+                        ...$this->imagineOptions,
+                        ...$this->predefinedSizes[$size[2]]['imagineOptions'],
+                    ]);
+                }
 
                 return [$config, null, $options];
             }

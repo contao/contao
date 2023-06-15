@@ -298,7 +298,7 @@ class PreviewFactoryTest extends TestCase
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreviewPicture($sourcePath);
 
-        $this->assertFileExists($preview->getImg()['src']->getPath());
+        $this->assertFileExists($preview->getRawImg()['src']->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
 
@@ -317,7 +317,7 @@ class PreviewFactoryTest extends TestCase
         $previews = $factory->createPreviewPictures($sourcePath);
 
         foreach ($previews as $preview) {
-            $this->assertFileExists($preview->getImg()['src']->getPath());
+            $this->assertFileExists($preview->getRawImg()['src']->getPath());
         }
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');

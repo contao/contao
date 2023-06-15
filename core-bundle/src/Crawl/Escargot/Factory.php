@@ -43,10 +43,10 @@ class Factory
      * @param array<string> $additionalUris
      */
     public function __construct(
-        private Connection $connection,
-        private ContaoFramework $framework,
-        private array $additionalUris = [],
-        private array $defaultHttpClientOptions = [],
+        private readonly Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly array $additionalUris = [],
+        private readonly array $defaultHttpClientOptions = [],
     ) {
     }
 

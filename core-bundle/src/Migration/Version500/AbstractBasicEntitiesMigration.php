@@ -25,7 +25,7 @@ use Doctrine\DBAL\Connection;
  */
 abstract class AbstractBasicEntitiesMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -110,7 +110,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
      * ];
      * ```
      *
-     * @return list<array{0:string,1:string}>
+     * @return list<array{0:string, 1:string}>
      */
     abstract protected function getDatabaseColumns(): array;
 }

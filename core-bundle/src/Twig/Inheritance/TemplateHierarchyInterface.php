@@ -34,7 +34,7 @@ interface TemplateHierarchyInterface
      *     ],
      *   ]
      *
-     * @return array<string,array<string, string>>
+     * @return array<string, array<string, string>>
      */
     public function getInheritanceChains(string|null $themeSlug = null): array;
 

@@ -25,8 +25,11 @@ class BackendRebuildCacheMessageListener
 {
     final public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
 
-    public function __construct(private ScopeMatcher $scopeMatcher, private CacheItemPoolInterface $cache, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly CacheItemPoolInterface $cache,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void

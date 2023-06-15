@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'rows_2rwh'                   => 'headerHeight',

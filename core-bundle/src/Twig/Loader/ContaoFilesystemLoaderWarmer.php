@@ -25,11 +25,11 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
     public function __construct(
-        private ContaoFilesystemLoader $loader,
-        private TemplateLocator $templateLocator,
-        private string $projectDir,
-        private string $cacheDir,
-        private string $environment,
+        private readonly ContaoFilesystemLoader $loader,
+        private readonly TemplateLocator $templateLocator,
+        private readonly string $projectDir,
+        private readonly string $cacheDir,
+        private readonly string $environment,
         private Filesystem|null $filesystem = null,
     ) {
     }

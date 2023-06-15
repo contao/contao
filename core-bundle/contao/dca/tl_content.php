@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'module'                      => '{type_legend},type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
@@ -790,6 +790,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 // Dynamically add the permission check
 if (Input::get('do') == 'article')
 {
+	System::loadLanguageFile('tl_article');
+
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 
@@ -1649,6 +1651,8 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

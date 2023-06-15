@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ParseJwtCookieCommand extends Command
 {
-    private JwtManager $jwtManager;
+    private readonly JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager|null $jwtManager = null)
     {

@@ -76,7 +76,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -131,7 +131,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */

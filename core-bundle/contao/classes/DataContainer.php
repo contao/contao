@@ -295,7 +295,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
 	 */
 	private static $arrCurrentRecordCache = array();
 
@@ -994,7 +994,16 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+					if (isset($config['titleDisabled']))
+					{
+						$titleDisabled = $config['titleDisabled'];
+					}
+					else
+					{
+						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
+					}
+
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1220,7 +1229,9 @@ abstract class DataContainer extends Backend
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+				$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $title;
+
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{
@@ -1371,7 +1382,7 @@ abstract class DataContainer extends Backend
 						break;
 
 					case 'filter':
-						// Multiple filter subpanels can be defined to split the fields across panels
+						// Multiple filter sub-panels can be defined to split the fields across panels
 						$panel = $this->filterMenu(++$intFilterPanel);
 						break;
 

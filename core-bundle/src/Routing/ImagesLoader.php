@@ -20,7 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class ImagesLoader extends Loader
 {
-    private string $pathPrefix;
+    private readonly string $pathPrefix;
 
     /**
      * @internal

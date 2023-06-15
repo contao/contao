@@ -34,8 +34,10 @@ class Metadata
      * @param array<string, mixed>      $values          Key-value pairs of metadata
      * @param array<string, array>|null $schemaOrgJsonLd JSON-LD data where the key matches the schema.org type
      */
-    public function __construct(private array $values, private array|null $schemaOrgJsonLd = null)
-    {
+    public function __construct(
+        private readonly array $values,
+        private array|null $schemaOrgJsonLd = null,
+    ) {
     }
 
     /**

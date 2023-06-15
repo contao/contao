@@ -385,7 +385,7 @@ class StringUtilTest extends TestCase
 
         yield 'Stringable argument' => [
             new class('foobar') implements \Stringable {
-                public function __construct(private string $value)
+                public function __construct(private readonly string $value)
                 {
                 }
 

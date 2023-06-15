@@ -40,7 +40,7 @@ class DumperTest extends ContaoTestCase
 
         $dumper = new Dumper();
         $connection = $this->mockConnection($tables, $views, $queries);
-        $config = (new CreateConfig($backup));
+        $config = new CreateConfig($backup);
 
         $this->assertSame($expectedDump, iterator_to_array($dumper->dump($connection, $config), false));
     }

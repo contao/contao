@@ -384,7 +384,7 @@ class BackendMenuListenerTest extends TestCase
     }
 
     /**
-     * @return array<string,array<string,array<string,array<string,bool|string>>|string>>
+     * @return array<string, array<string, array<string, array<string, bool|string>>|string>>
      */
     private function getNavigation(): array
     {

@@ -717,7 +717,7 @@ class Versions extends Controller
 				$objDeleted = $objDatabase->prepare("SELECT COUNT(*) AS count FROM " . $v['fromTable'] . " WHERE id=?")
 										  ->execute($v['pid']);
 
-				$arrVersions[$k]['deleted'] = ($objDeleted->count < 1);
+				$arrVersions[$k]['deleted'] = $objDeleted->count < 1;
 			}
 			catch (\Exception $e)
 			{

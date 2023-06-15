@@ -17,8 +17,12 @@ class InsertTagResult
     /**
      * @param list<string> $cacheTags
      */
-    public function __construct(private \Stringable|string $value, private OutputType $outputType = OutputType::text, private \DateTimeImmutable|null $expiresAt = null, private array $cacheTags = [])
-    {
+    public function __construct(
+        private readonly \Stringable|string $value,
+        private readonly OutputType $outputType = OutputType::text,
+        private readonly \DateTimeImmutable|null $expiresAt = null,
+        private readonly array $cacheTags = [],
+    ) {
     }
 
     public function getValue(): string

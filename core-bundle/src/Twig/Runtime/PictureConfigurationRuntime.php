@@ -21,7 +21,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
-    private PropertyAccessor $propertyAccessor;
+    private readonly PropertyAccessor $propertyAccessor;
 
     public function __construct()
     {

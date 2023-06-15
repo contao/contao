@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'sendViaEmail'                => 'mailerTransport,recipient,subject,format,skipEmpty',

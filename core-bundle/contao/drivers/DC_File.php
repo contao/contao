@@ -200,7 +200,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
 						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
@@ -383,12 +383,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
-
-			// Handle entities
-			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
-			{
-				$varValue = StringUtil::deserialize($varValue);
-			}
 		}
 
 		// Trigger the save_callback
@@ -527,7 +521,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);

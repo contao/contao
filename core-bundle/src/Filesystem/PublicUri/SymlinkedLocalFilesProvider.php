@@ -20,9 +20,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 {
     public function __construct(
-        private FilesystemAdapter $localFilesAdapter,
-        private string $uploadDir,
-        private RequestStack $requestStack,
+        private readonly FilesystemAdapter $localFilesAdapter,
+        private readonly string $uploadDir,
+        private readonly RequestStack $requestStack,
     ) {
     }
 

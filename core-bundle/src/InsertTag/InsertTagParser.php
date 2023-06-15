@@ -57,25 +57,25 @@ class InsertTagParser implements ResetInterface
         )*';
 
     /**
-     * @var array<string,InsertTagSubscription>
+     * @var array<string, InsertTagSubscription>
      */
     private array $subscriptions = [];
 
     /**
-     * @var array<string,InsertTagSubscription>
+     * @var array<string, InsertTagSubscription>
      */
     private array $blockSubscriptions = [];
 
     /**
-     * @var array<string,\Closure(InsertTagFlag,InsertTagResult):InsertTagResult>
+     * @var array<string, \Closure(InsertTagFlag, InsertTagResult):InsertTagResult>
      */
     private array $flagCallbacks = [];
 
     public function __construct(
-        private ContaoFramework $framework,
-        private LoggerInterface $logger,
-        private FragmentHandler $fragmentHandler,
-        private RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface $logger,
+        private readonly FragmentHandler $fragmentHandler,
+        private readonly RequestStack $requestStack,
         private InsertTags|null $insertTags = null,
     ) {
     }

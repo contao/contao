@@ -40,11 +40,11 @@ class SymlinksCommand extends Command
     private int $statusCode = Command::SUCCESS;
 
     public function __construct(
-        private string $projectDir,
-        private string $uploadPath,
-        private string $logsDir,
-        private ResourceFinderInterface $resourceFinder,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly string $logsDir,
+        private readonly ResourceFinderInterface $resourceFinder,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
         parent::__construct();
     }

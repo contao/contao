@@ -110,7 +110,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addFile'                     => 'files'

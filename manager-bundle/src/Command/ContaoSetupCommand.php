@@ -29,20 +29,24 @@ use Symfony\Component\Process\Process;
 )]
 class ContaoSetupCommand extends Command
 {
-    private string $webDir;
-    private string $consolePath;
-    private string|false $phpPath;
+    private readonly string $webDir;
+    private readonly string $consolePath;
+    private readonly string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private \Closure $createProcessHandler;
+    private readonly \Closure $createProcessHandler;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(private string $projectDir, string $webDir, #[\SensitiveParameter] private string|null $kernelSecret, \Closure|null $createProcessHandler = null)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        string $webDir,
+        #[\SensitiveParameter] private readonly string|null $kernelSecret,
+        \Closure|null $createProcessHandler = null,
+    ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');

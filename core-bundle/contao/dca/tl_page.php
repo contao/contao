@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'error_503'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'autoforward'                 => 'jumpTo',
@@ -888,7 +888,7 @@ class tl_page extends Backend
 
 			$pagemounts = array_unique($pagemounts);
 
-			// Do not allow pasting after pages on the root level (pagemounts)
+			// Do not allow pasting after pages on the root level (page mounts)
 			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
@@ -1544,7 +1544,9 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

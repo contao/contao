@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addTime'                     => 'startTime,endTime',
@@ -933,7 +933,7 @@ class tl_calendar_events extends Backend
 		// Adjust end time of "all day" events
 		elseif (($dc->activeRecord->endDate && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
 		{
-			$arrSet['endTime'] = (strtotime('+ 1 day', $arrSet['endTime']) - 1);
+			$arrSet['endTime'] = strtotime('+ 1 day', $arrSet['endTime']) - 1;
 		}
 
 		$arrSet['repeatEnd'] = 0;

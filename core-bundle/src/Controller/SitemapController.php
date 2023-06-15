@@ -21,7 +21,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -31,8 +30,10 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 #[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry, private PageFinder $pageFinder)
-    {
+    public function __construct(
+        private readonly PageRegistry $pageRegistry,
+        private readonly PageFinder $pageFinder,
+    ) {
     }
 
     public function __invoke(Request $request): Response
@@ -40,7 +41,7 @@ class SitemapController extends AbstractController
         $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
         if (empty($rootPages)) {
-            throw new NotFoundHttpException();
+            throw $this->createNotFoundException();
         }
 
         $urls = [];

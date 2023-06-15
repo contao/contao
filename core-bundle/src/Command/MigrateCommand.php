@@ -41,12 +41,12 @@ class MigrateCommand extends Command
     private SymfonyStyle|null $io = null;
 
     public function __construct(
-        private CommandCompiler $commandCompiler,
-        private Connection $connection,
-        private MigrationCollection $migrations,
-        private BackupManager $backupManager,
-        private SchemaProvider $schemaProvider,
-        private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
+        private readonly CommandCompiler $commandCompiler,
+        private readonly Connection $connection,
+        private readonly MigrationCollection $migrations,
+        private readonly BackupManager $backupManager,
+        private readonly SchemaProvider $schemaProvider,
+        private readonly MysqlInnodbRowSizeCalculator $rowSizeCalculator,
     ) {
         parent::__construct();
     }
@@ -462,7 +462,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileConfigurationErrors(): array
     {
@@ -608,7 +608,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileConfigurationWarnings(): array
     {
@@ -637,7 +637,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileSchemaWarnings(): array
     {
@@ -652,7 +652,7 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function compileTableWarnings(Table $table): array
     {

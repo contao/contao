@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 
 class BundleCacheClearer implements CacheClearerInterface
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     /**
      * @internal

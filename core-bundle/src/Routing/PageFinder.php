@@ -20,8 +20,10 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class PageFinder
 {
-    public function __construct(private ContaoFramework $framework, private RequestMatcherInterface $requestMatcher)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestMatcherInterface $requestMatcher,
+    ) {
     }
 
     /**
@@ -30,7 +32,11 @@ class PageFinder
      */
     public function findRootPageForHostAndLanguage(string $hostname, string|null $acceptLanguage = null): PageModel|null
     {
-        $request = Request::create('http://'.$hostname);
+        if ($hostname) {
+            $hostname = "http://$hostname";
+        }
+
+        $request = Request::create($hostname);
         $request->headers->set('Accept-Language', $acceptLanguage ?? '');
 
         return $this->matchRootPageForRequest($request);

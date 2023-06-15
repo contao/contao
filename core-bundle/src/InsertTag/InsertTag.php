@@ -17,8 +17,11 @@ abstract class InsertTag
     /**
      * @param list<InsertTagFlag> $flags
      */
-    public function __construct(private string $name, private InsertTagParameters $parameters, private array $flags)
-    {
+    public function __construct(
+        private readonly string $name,
+        private readonly InsertTagParameters $parameters,
+        private readonly array $flags,
+    ) {
     }
 
     public function getName(): string

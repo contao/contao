@@ -146,6 +146,13 @@ class BackendTemplate extends Template
 
 			if (!empty($css) && \is_array($css))
 			{
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($css as $k => $v)
+				{
+					$css[$k] = $packages->getUrl($v);
+				}
+
 				if (!\is_array($GLOBALS['TL_CSS']))
 				{
 					$GLOBALS['TL_CSS'] = array();
@@ -161,6 +168,13 @@ class BackendTemplate extends Template
 
 			if (!empty($js) && \is_array($js))
 			{
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($js as $k => $v)
+				{
+					$js[$k] = $packages->getUrl($v);
+				}
+
 				if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
 				{
 					$GLOBALS['TL_JAVASCRIPT'] = array();

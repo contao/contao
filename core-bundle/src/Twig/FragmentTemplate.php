@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class FragmentTemplate extends Template
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private array $context = [];
 
@@ -35,8 +35,10 @@ final class FragmentTemplate extends Template
      *
      * @internal
      */
-    public function __construct(private string $templateName, private \Closure $onGetResponse)
-    {
+    public function __construct(
+        private string $templateName,
+        private readonly \Closure $onGetResponse,
+    ) {
         // Do not call parent constructor
     }
 

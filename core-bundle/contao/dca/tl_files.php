@@ -312,7 +312,7 @@ class tl_files extends Backend
 		$canDeleteOne = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE);
 		$canDeleteRecursive = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY);
 
-		// Set the filemounts
+		// Set the file mounts
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $this->User->filemounts;
 
 		// Disable the upload button if uploads are not allowed
@@ -822,7 +822,7 @@ class tl_files extends Backend
 		$objFile = new File($strDecoded);
 
 		/** @var DC_Folder $dc */
-		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
+		$dc = func_num_args() <= 12 ? null : func_get_arg(12);
 
 		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{

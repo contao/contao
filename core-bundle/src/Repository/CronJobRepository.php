@@ -26,7 +26,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  */
 class CronJobRepository extends ServiceEntityRepository
 {
-    private Connection $connection;
+    private readonly Connection $connection;
 
     public function __construct(ManagerRegistry $registry)
     {

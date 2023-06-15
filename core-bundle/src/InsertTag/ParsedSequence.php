@@ -20,7 +20,7 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
     /**
      * @var list<InsertTag|InsertTagResult|string>
      */
-    private array $sequence;
+    private readonly array $sequence;
 
     /**
      * @param list<InsertTag|InsertTagResult|string> $sequence
@@ -52,7 +52,7 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return \ArrayIterator<int,InsertTag|InsertTagResult|string>
+     * @return \ArrayIterator<int, InsertTag|InsertTagResult|string>
      */
     public function getIterator(): \ArrayIterator
     {

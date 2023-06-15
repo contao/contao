@@ -21,7 +21,7 @@ use Doctrine\DBAL\Schema\Table;
  */
 class MysqlInnodbRowSizeCalculator
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -221,7 +221,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getMysqlColumnDefinitions(int $sizeInBits): array
     {
@@ -253,7 +253,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getInnodbColumnDefinitions(int $sizeInBits): array
     {

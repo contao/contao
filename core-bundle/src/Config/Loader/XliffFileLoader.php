@@ -20,8 +20,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class XliffFileLoader extends Loader
 {
-    public function __construct(private string $projectDir, private bool $addToGlobals = false)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly bool $addToGlobals = false,
+    ) {
         parent::__construct();
     }
 

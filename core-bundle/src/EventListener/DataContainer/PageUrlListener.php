@@ -37,13 +37,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageUrlListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Slug $slug,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private PageRegistry $pageRegistry,
-        private UrlGeneratorInterface $urlGenerator,
-        private FinalMatcherInterface $routeMatcher,
+        private readonly ContaoFramework $framework,
+        private readonly Slug $slug,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly PageRegistry $pageRegistry,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly FinalMatcherInterface $routeMatcher,
     ) {
     }
 

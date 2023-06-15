@@ -28,7 +28,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class UserListCommand extends Command
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
         parent::__construct();
     }

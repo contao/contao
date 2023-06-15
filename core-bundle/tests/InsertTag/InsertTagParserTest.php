@@ -178,7 +178,7 @@ class InsertTagParserTest extends TestCase
         $GLOBALS['TL_HOOKS']['replaceInsertTags'] = [
             [
                 new class($hook) {
-                    public function __construct(private \Closure $hook)
+                    public function __construct(private readonly \Closure $hook)
                     {
                     }
 
@@ -267,7 +267,7 @@ class InsertTagParserTest extends TestCase
         $GLOBALS['TL_HOOKS']['insertTagFlags'] = [
             [
                 new class($hook) {
-                    public function __construct(private \Closure $hook)
+                    public function __construct(private readonly \Closure $hook)
                     {
                     }
 

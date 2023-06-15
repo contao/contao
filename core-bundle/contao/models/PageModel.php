@@ -992,7 +992,7 @@ class PageModel extends Model
 			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published
-			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
+			$this->rootIsPublic = $objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time);
 			$this->rootIsFallback = $objParentPage->fallback;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
@@ -1043,7 +1043,7 @@ class PageModel extends Model
 			$this->datimFormat = Config::get('datimFormat');
 		}
 
-		$this->isPublic = ($this->published && (!$this->start || $this->start <= $time) && (!$this->stop || $this->stop > $time));
+		$this->isPublic = $this->published && (!$this->start || $this->start <= $time) && (!$this->stop || $this->stop > $time);
 
 		// HOOK: add custom logic
 		if (!empty($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))

@@ -39,7 +39,7 @@ final class Figure
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
     public function __construct(
-        private ImageResult $image,
+        private readonly ImageResult $image,
         private \Closure|Metadata|null $metadata = null,
         private \Closure|array|null $linkAttributes = null,
         private \Closure|LightboxResult|null $lightbox = null,

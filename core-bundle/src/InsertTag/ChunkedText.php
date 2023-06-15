@@ -25,7 +25,7 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
      *
      * @internal
      */
-    public function __construct(private array $chunks)
+    public function __construct(private readonly array $chunks)
     {
     }
 

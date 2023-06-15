@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class IfLanguageInsertTag
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 

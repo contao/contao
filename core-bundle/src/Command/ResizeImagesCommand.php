@@ -42,22 +42,20 @@ use Symfony\Component\Process\Process;
 )]
 class ResizeImagesCommand extends Command
 {
-    private DeferredResizerInterface|null $resizer;
-    private Filesystem $filesystem;
-    private int $terminalWidth;
+    private readonly DeferredResizerInterface|null $resizer;
+    private readonly int $terminalWidth;
     private SymfonyStyle|null $io = null;
     private ConsoleSectionOutput|null $tableOutput = null;
     private Table|null $table = null;
 
     public function __construct(
-        private ImageFactoryInterface $imageFactory,
+        private readonly ImageFactoryInterface $imageFactory,
         ResizerInterface $resizer,
-        private string $targetDir,
-        private DeferredImageStorageInterface $storage,
-        Filesystem|null $filesystem = null,
+        private readonly string $targetDir,
+        private readonly DeferredImageStorageInterface $storage,
+        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
-        $this->filesystem = $filesystem ?? new Filesystem();
         $this->terminalWidth = (new Terminal())->getWidth();
 
         parent::__construct();

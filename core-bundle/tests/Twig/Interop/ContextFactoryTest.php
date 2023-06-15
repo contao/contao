@@ -172,7 +172,7 @@ class ContextFactoryTest extends TestCase
         ;
 
         $content = '{{ lazy }}';
-        $environment = (new Environment(new ArrayLoader(['test.html.twig' => $content])));
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $content]));
         $context = (new ContextFactory())->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);

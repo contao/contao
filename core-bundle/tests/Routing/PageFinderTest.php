@@ -31,7 +31,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(null));
-        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertNull($result);
     }
@@ -51,7 +51,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $requestMatcher);
-        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertNull($result);
     }
@@ -67,7 +67,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel));
-        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertSame($pageModel, $result);
     }
@@ -98,7 +98,7 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($regularPage));
-        $result = $pageFinder->findRootPageForHostAndLanguage('https://www.example.org');
+        $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertSame($rootPage, $result);
     }
@@ -162,10 +162,26 @@ class PageFinderTest extends TestCase
         $this->assertSame($rootPage, $result);
     }
 
+    public function testDoesNotPrependTheProtocolIfTheHostnameIsEmpty(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
+
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel, 'http://localhost'));
+        $result = $pageFinder->findRootPageForHostAndLanguage('');
+
+        $this->assertSame($pageModel, $result);
+    }
+
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(PageModel|false|null $pageModel): RequestMatcherInterface
+    private function mockRequestMatcher(PageModel|false|null $pageModel, string|null $requestUri = null): RequestMatcherInterface
     {
         $requestMatcher = $this->createMock(RequestMatcherInterface::class);
 
@@ -178,6 +194,13 @@ class PageFinderTest extends TestCase
             $requestMatcher
                 ->expects($this->once())
                 ->method('matchRequest')
+                ->with($this->callback(
+                    function (Request $request) use ($requestUri) {
+                        $this->assertSame($requestUri ?? 'http://www.example.org', $request->getSchemeAndHttpHost());
+
+                        return true;
+                    }
+                ))
                 ->willReturn($pageModel ? ['pageModel' => $pageModel] : [])
             ;
         }

@@ -44,9 +44,9 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private array $hookListeners = [];
 
     public function __construct(
-        private RequestStack $requestStack,
-        private string $projectDir,
-        private int $errorLevel,
+        private readonly RequestStack $requestStack,
+        private readonly string $projectDir,
+        private readonly int $errorLevel,
     ) {
     }
 
