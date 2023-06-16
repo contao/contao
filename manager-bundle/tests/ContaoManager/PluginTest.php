@@ -1181,7 +1181,6 @@ class PluginTest extends ContaoTestCase
                             $defaultEntityManager => [
                                 'mappings' => [
                                     'App' => [
-                                        'type' => 'annotation',
                                         'dir' => '%kernel.project_dir%/src/Entity',
                                         'is_bundle' => false,
                                         'prefix' => 'App\Entity',
