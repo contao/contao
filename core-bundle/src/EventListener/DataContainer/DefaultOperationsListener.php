@@ -237,7 +237,7 @@ class DefaultOperationsListener
         unset($operation['route'], $operation['href']);
 
         if (isset($operation['icon'])) {
-            $operation['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $operation['icon']);
+            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
         }
     }
 }

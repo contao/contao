@@ -43,13 +43,13 @@ class JumpToParentButtonListener
         $image = $this->framework->getAdapter(Image::class);
 
         if (!$parent || !$this->checkIfParentExists($parent)) {
-            return $image->getHtml('parent_.svg', $label).' ';
+            return $image->getHtml('parent--disabled.svg', $label).' ';
         }
 
         $parentLinkParameters = $this->getParentLinkParameters($parent, $table);
 
         if (!$parentLinkParameters) {
-            return $image->getHtml('parent_.svg', $label).' ';
+            return $image->getHtml('parent--disabled.svg', $label).' ';
         }
 
         $newTitle = sprintf(

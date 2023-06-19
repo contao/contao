@@ -16,6 +16,40 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
+	private static array $deprecated = array
+	(
+		'admin_',
+		'admin_two_factor_',
+		'article_',
+		'children_',
+		'copy_',
+		'copychilds_',
+		'cut_',
+		'delete_',
+		'diffTemplate_',
+		'diff_',
+		'edit_',
+		'editor_',
+		'featured_',
+		'group_',
+		'header_',
+		'layout_',
+		'member_',
+		'member_two_factor_',
+		'mgroup_',
+		'modules_',
+		'parent_',
+		'pasteafter_',
+		'pasteinto_',
+		'share_',
+		'sizes_',
+		'su_',
+		'theme_export_',
+		'user_',
+		'user_two_factor_',
+		'visible_',
+	);
+
 	/**
 	 * Get the relative path to an image
 	 *
@@ -59,6 +93,11 @@ class Image
 
 		$theme = Backend::getTheme();
 		$filename = pathinfo($src, PATHINFO_FILENAME);
+
+		if (\in_array($filename, self::$deprecated))
+		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
+		}
 
 		// Prefer SVG icons
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))

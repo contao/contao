@@ -1474,7 +1474,7 @@ class tl_content extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1494,14 +1494,14 @@ class tl_content extends Backend
 		// Disable the button if the element type is not allowed
 		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
 									 ->limit(1)
 									 ->execute($row['id']);
 
-		return $objElement->numRows ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+		return $objElement->numRows ? Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -1641,7 +1641,7 @@ class tl_content extends Backend
 		// Disable the button if the element type is not allowed
 		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;id=' . $row['id'];

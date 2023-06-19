@@ -275,7 +275,7 @@ class ImageSize extends Widget
 			'href' => System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_image_size_item', 'popup'=>'1', 'nb'=>'1')),
 			'title' => $GLOBALS['TL_LANG']['MSC']['editImageSize'],
 			'icon' => Image::getUrl('edit.svg'),
-			'iconDisabled' => Image::getUrl('edit_.svg'),
+			'iconDisabled' => Image::getUrl('edit--disabled.svg'),
 		);
 
 		return ' data-controller="contao--image-size" data-contao--image-size-config-value="' . StringUtil::specialchars(json_encode($config)) . '"';
