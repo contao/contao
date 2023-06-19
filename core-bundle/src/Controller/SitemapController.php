@@ -32,10 +32,12 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 class SitemapController extends AbstractController
 {
     private PageRegistry $pageRegistry;
+    private string $encoding;
 
-    public function __construct(PageRegistry $pageRegistry)
+    public function __construct(PageRegistry $pageRegistry, string $encoding = 'UTF-8')
     {
         $this->pageRegistry = $pageRegistry;
+        $this->encoding = $encoding;
     }
 
     /**
@@ -76,7 +78,7 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $url = htmlspecialchars($url, ENT_XML1, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', false);
+            $url = htmlspecialchars($url, ENT_XML1, $this->encoding, false);
             $loc = $sitemap->createElement('loc', $url);
             $urlEl = $sitemap->createElement('url');
             $urlEl->appendChild($loc);
