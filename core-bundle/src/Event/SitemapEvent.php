@@ -40,6 +40,7 @@ class SitemapEvent extends Event
 
         $loc = $sitemap->createElement('loc', $url);
         $urlEl = $sitemap->createElement('url');
+        $urlEl->removeAttribute('xmlns'); // PHP 8.3 fix
         $urlEl->appendChild($loc);
         $urlSet->appendChild($urlEl);
 
