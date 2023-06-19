@@ -35,6 +35,25 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
 {
+    public function testXmlnsPhp83(): void
+    {
+        $sitemap = new \DOMDocument('1.0', 'UTF-8');
+        $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $sitemap->appendChild($urlSet);
+        for ($i = 0; $i < 2; $i++) {
+            $loc = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'loc', 'https://example.com/');
+            $urlEl = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'url');
+            $urlEl->appendChild($loc);
+            $urlSet->appendChild($urlEl);
+        }
+
+        $this->assertSame(
+            '<?xml version="1.0" encoding="UTF-8"?>'."\n"
+            .'<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/</loc></url><url><loc>https://example.com/</loc></url></urlset>'."\n",
+            (string) $sitemap->saveXML(),
+        );
+    }
+
     public function testThrowsNotFoundHttpExceptionIfNoRootPageFound(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
