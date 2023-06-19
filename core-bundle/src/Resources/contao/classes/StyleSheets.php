@@ -477,7 +477,7 @@ class StyleSheets extends Backend
 		// Background
 		if ($row['background'])
 		{
-			$bgColor = StringUtil::deserialize($row['bgcolor'], true);
+			$bgColor = StringUtil::deserialize($row['bgcolor'], true) + array('', '');
 
 			// Try to shorten the definition
 			if ($bgColor[0] != '' && $row['bgimage'] != '' && $row['bgposition'] != '' && $row['bgrepeat'] != '')
