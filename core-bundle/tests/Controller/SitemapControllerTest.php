@@ -56,7 +56,8 @@ class SitemapControllerTest extends TestCase
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->loadXML('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/</loc></url></urlset>');
-        $sitemap->documentElement->appendChild($sitemap->createElement('url'));
+        //$sitemap->documentElement->appendChild($sitemap->createElement('url'));
+        $sitemap->documentElement->appendChild($sitemap->createElementNS($sitemap->lookupNamespaceURI(null), 'url'));
 
         $this->assertSame(
             '<?xml version="1.0"?>'."\n"
