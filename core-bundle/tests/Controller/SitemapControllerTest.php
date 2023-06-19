@@ -52,6 +52,19 @@ class SitemapControllerTest extends TestCase
         );
     }
 
+    public function testXmlnsPhp83Simple(): void
+    {
+        $sitemap = new \DOMDocument('1.0', 'UTF-8');
+        $sitemap->loadXML('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/</loc></url></urlset>');
+        $sitemap->documentElement->appendChild($sitemap->createElement('url'));
+
+        $this->assertSame(
+            '<?xml version="1.0"?>'."\n"
+            .'<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/</loc></url><url/></urlset>'."\n",
+            (string) $sitemap->saveXML(),
+        );
+    }
+
     public function testThrowsNotFoundHttpExceptionIfNoRootPageFound(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
