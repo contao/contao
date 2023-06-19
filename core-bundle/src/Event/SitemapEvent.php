@@ -38,8 +38,8 @@ class SitemapEvent extends Event
             return $this;
         }
 
-        $loc = $sitemap->createElement('loc', $url);
-        $urlEl = $sitemap->createElement('url');
+        $loc = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'loc', $url);
+        $urlEl = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'url');
         $urlEl->appendChild($loc);
         $urlSet->appendChild($urlEl);
 
