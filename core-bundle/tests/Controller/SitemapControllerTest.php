@@ -41,7 +41,7 @@ class SitemapControllerTest extends TestCase
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
         $sitemap->appendChild($urlSet);
         $loc = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'loc', 'https://example.com/');
-        $urlEl = $sitemap->createElement('url');
+        $urlEl = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'url');
         $urlEl->appendChild($loc);
         $urlSet->appendChild($urlEl);
 
