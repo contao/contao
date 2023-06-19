@@ -2669,9 +2669,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
-				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
+				$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_' . $md5 . '\', \'' . $currentFolder . '\', ' . $level . ')">' . Image::getHtml($img) . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" class="' . $class . '" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_' . $md5 . '\', \'' . $currentFolder . '\', ' . $level . ')">' . Image::getHtml('chevron-right.svg') . '</a>';
 			}
 
 			$protected = $blnProtected;
