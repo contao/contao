@@ -39,11 +39,11 @@ class SitemapControllerTest extends TestCase
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $sitemap->appendChild($urlSet);
         $loc = $sitemap->createElement('loc', 'https://example.com/');
         $urlEl = $sitemap->createElement('url');
         $urlEl->appendChild($loc);
         $urlSet->appendChild($urlEl);
-        $sitemap->appendChild($urlSet);
 
         $this->assertSame(
             '<?xml version="1.0" encoding="UTF-8"?>'."\n"
