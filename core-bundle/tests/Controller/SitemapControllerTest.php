@@ -37,20 +37,20 @@ class SitemapControllerTest extends TestCase
 {
     public function testXmlnsPhp83(): void
     {
-        $sitemap = new \DOMDocument('1.0', 'UTF-8');
-        $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
-        $sitemap->appendChild($urlSet);
-        for ($i = 0; $i < 2; $i++) {
-            $loc = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'loc', 'https://example.com/');
-            $urlEl = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'url');
-            $urlEl->appendChild($loc);
-            $urlSet->appendChild($urlEl);
-        }
+        $dom = new \DOMDocument();
+        $root = $dom->createElementNS('foo', 'root');
+        $dom->appendChild($root);
+        $a1 = $dom->createElementNS('foo', 'a');
+        $a1->appendChild($dom->createElementNS('foo', 'b'));
+        $root->appendChild($a1);
+        $a2 = $dom->createElementNS('foo', 'a');
+        $a2->appendChild($dom->createElementNS('foo', 'b'));
+        $root->appendChild($a2);
 
         $this->assertSame(
-            '<?xml version="1.0" encoding="UTF-8"?>'."\n"
-            .'<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/</loc></url><url><loc>https://example.com/</loc></url></urlset>'."\n",
-            (string) $sitemap->saveXML(),
+            '<?xml version="1.0"?>'."\n"
+            .'<root xmlns="foo"><a><b/></a><a><b/></a></root>'."\n",
+            (string) $dom->saveXML(),
         );
     }
 
