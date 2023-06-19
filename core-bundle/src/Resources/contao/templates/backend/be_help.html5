@@ -40,12 +40,12 @@
           <?php foreach ($this->rows as $row): ?>
             <tr>
               <?php if ('colspan' == $row[0]): ?>
-                <td colspan="2"><?= $row[1] ?></td>
+                <td colspan="2"><?= $row[1] ?? '' ?></td>
               <?php elseif ('headspan' == $row[0]): ?>
-                <td colspan="2" class="headline"><?= $row[1] ?></td>
+                <td colspan="2" class="headline"><?= $row[1] ?? '' ?></td>
               <?php else: ?>
                 <td class="tl_label"><?= $row[0] ?></td>
-                <td><?= $row[1] ?></td>
+                <td><?= $row[1] ?? '' ?></td>
               <?php endif; ?>
             </tr>
           <?php endforeach; ?>
