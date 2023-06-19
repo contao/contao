@@ -214,6 +214,28 @@ class ImageFactory implements ImageFactoryInterface
                             ),
                         );
                     }
+
+                    if ($quality = max(0, min(100, (int) $imageSize->imageQuality))) {
+                        $options->setImagineOptions([
+                            ...$this->imagineOptions,
+                            'quality' => $quality,
+                            'jpeg_quality' => $quality,
+                            'webp_quality' => $quality,
+                            'avif_quality' => $quality,
+                            'heic_quality' => $quality,
+                            'jxl_quality' => $quality,
+                        ]);
+
+                        if (100 === $quality) {
+                            $options->setImagineOptions([
+                                ...$options->getImagineOptions(),
+                                'webp_lossless' => true,
+                                'avif_lossless' => true,
+                                'heic_lossless' => true,
+                                'jxl_lossless' => true,
+                            ]);
+                        }
+                    }
                 }
 
                 return [$config, null, $options];
@@ -228,6 +250,13 @@ class ImageFactory implements ImageFactoryInterface
                     ...$options->getPreserveCopyrightMetadata(),
                     ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
                 ]);
+
+                if (!empty($this->predefinedSizes[$size[2]]['imagineOptions'])) {
+                    $options->setImagineOptions([
+                        ...$this->imagineOptions,
+                        ...$this->predefinedSizes[$size[2]]['imagineOptions'],
+                    ]);
+                }
 
                 return [$config, null, $options];
             }

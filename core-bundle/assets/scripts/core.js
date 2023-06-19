@@ -396,6 +396,12 @@ window.AjaxRequest =
 			image.set('data-state', !published ? 1 : 0);
 		});
 
+		if (!published && $(el).get('data-title')) {
+			el.title = $(el).get('data-title');
+		} else if (published && $(el).get('data-title-disabled')) {
+			el.title = $(el).get('data-title-disabled');
+		}
+
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
 		// Return false to stop the click event on link

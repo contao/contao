@@ -106,6 +106,8 @@ class PictureFactoryTest extends TestCase
                         );
 
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
+                        $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
+                        $this->assertSame(77, $options->getImagineOptions()['jxl_quality']);
 
                         return true;
                     }
@@ -149,6 +151,7 @@ class PictureFactoryTest extends TestCase
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
             'preserveMetadata' => true,
             'skipIfDimensionsMatch' => true,
+            'imageQuality' => 77,
             'metadata' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
@@ -271,6 +274,10 @@ class PictureFactoryTest extends TestCase
                 'cssClass' => 'foobar-class',
                 'lazyLoading' => true,
                 'skipIfDimensionsMatch' => true,
+                'imagineOptions' => [
+                    'jpeg_quality' => 77,
+                    'jxl_quality' => 66,
+                ],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -347,6 +354,8 @@ class PictureFactoryTest extends TestCase
                         );
 
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
+                        $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
+                        $this->assertSame(66, $options->getImagineOptions()['jxl_quality']);
 
                         return true;
                     }

@@ -223,10 +223,18 @@ class ImageFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 80,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 77,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'quality' => 77,
+                                'webp_quality' => 77,
+                                'avif_quality' => 77,
+                                'heic_quality' => 77,
+                                'jxl_quality' => 77,
+                            ],
+                            $options->getImagineOptions()
+                        );
 
                         $this->assertSame(
                             [
@@ -251,6 +259,7 @@ class ImageFactoryTest extends TestCase
             'resizeMode' => ResizeConfiguration::MODE_BOX,
             'zoom' => 50,
             'preserveMetadata' => true,
+            'imageQuality' => 77,
             'metadata' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
@@ -323,6 +332,10 @@ class ImageFactoryTest extends TestCase
                 'height' => 200,
                 'resizeMode' => ResizeConfiguration::MODE_BOX,
                 'zoom' => 50,
+                'imagineOptions' => [
+                    'jpeg_quality' => 77,
+                    'jxl_quality' => 66,
+                ],
                 'preserveMetadata' => [
                     ExifFormat::NAME => [],
                     IptcFormat::NAME => ['2#116', '2#080'],
@@ -358,8 +371,9 @@ class ImageFactoryTest extends TestCase
                     function (ResizeOptions $options) use ($predefinedSizes): bool {
                         $this->assertSame(
                             [
-                                'jpeg_quality' => 80,
+                                'jpeg_quality' => 77,
                                 'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'jxl_quality' => 66,
                             ],
                             $options->getImagineOptions()
                         );

@@ -80,8 +80,14 @@
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.toggle">
-        <source>Activate/deactivate user group ID %s</source>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
       </trans-unit>
     </body>
   </file>

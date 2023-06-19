@@ -77,6 +77,12 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
       </trans-unit>

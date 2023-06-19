@@ -671,8 +671,14 @@
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
