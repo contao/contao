@@ -35,25 +35,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
 {
-    public function testXmlnsPhp83(): void
-    {
-        $dom = new \DOMDocument();
-        $root = $dom->createElementNS('foo', 'root');
-        $dom->appendChild($root);
-        $a1 = $dom->createElementNS('foo', 'a');
-        $a1->appendChild($dom->createElementNS('foo', 'b'));
-        $root->appendChild($a1);
-        $a2 = $dom->createElementNS('foo', 'a');
-        $a2->appendChild($dom->createElementNS('foo', 'b'));
-        $root->appendChild($a2);
-
-        $this->assertSame(
-            '<?xml version="1.0"?>'."\n"
-            .'<root xmlns="foo"><a><b/></a><a><b/></a></root>'."\n",
-            (string) $dom->saveXML(),
-        );
-    }
-
     public function testThrowsNotFoundHttpExceptionIfNoRootPageFound(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
