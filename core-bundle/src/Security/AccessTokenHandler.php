@@ -69,7 +69,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         try {
             /** @var UnencryptedToken $token */
             $token = $parser->parse($data);
-        } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound) {
+        } catch (CannotDecodeContent|InvalidTokenStructure|UnsupportedHeaderFound) {
             return null;
         }
 
