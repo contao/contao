@@ -18,6 +18,15 @@ class Image
 {
 	private static array $deprecated = array
 	(
+		'folPlus',
+		'folMinus',
+		'header',
+		'header_',
+		'settings',
+	);
+
+	private static array $disabled = array
+	(
 		'admin_',
 		'admin_two_factor_',
 		'article_',
@@ -32,7 +41,6 @@ class Image
 		'editor_',
 		'featured_',
 		'group_',
-		'header_',
 		'layout_',
 		'member_',
 		'member_two_factor_',
@@ -95,6 +103,10 @@ class Image
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
 		if (\in_array($filename, self::$deprecated))
+		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6.');
+		}
+		elseif (\in_array($filename, self::$disabled))
 		{
 			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
