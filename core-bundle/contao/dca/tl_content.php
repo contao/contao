@@ -572,7 +572,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'extractVimeoId')
 			),
-			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'posterSRC' => array
 		(
@@ -1606,9 +1606,17 @@ class tl_content extends Backend
 		{
 			$matches = array();
 
-			if (preg_match('%vimeo\.com/(?:channels/(?:\w+/)?|groups/(?:[^/]+)/videos/|album/(?:\d+)/video/)?(\d+)(?:$|/|\?)%i', $varValue, $matches))
+			if (preg_match('%vimeo\.com/(?:channels/(?:\w+/)?|groups/(?:[^/]+)/videos/|album/(?:\d+)/video/|video/)?(\d+)(?:$|/|\?)%i', $varValue, $matches))
 			{
-				$varValue = $matches[1];
+				// Unlisted video privacy hash
+				if (preg_match('%[?&]h=([0-9a-z]+)%i', $varValue, $matchesHash))
+				{
+					$varValue = $matches[1] . '?h=' . $matchesHash[1];
+				}
+				else
+				{
+					$varValue = $matches[1];
+				}
 			}
 		}
 
