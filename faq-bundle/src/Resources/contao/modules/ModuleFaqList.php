@@ -105,7 +105,7 @@ class ModuleFaqList extends Module
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
 			$arrFaq[$objFaq->pid] = [
 				...$objPid->row(),
-				['items' => $arrFaq[$objFaq->pid]['items']]
+				'items' => $arrFaq[$objFaq->pid]['items']
 			];
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
