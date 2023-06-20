@@ -2697,7 +2697,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder))))
 				{
-					$return .= Image::getHtml('pasteinto_.svg');
+					$return .= Image::getHtml('pasteinto--disabled.svg');
 				}
 				else
 				{
