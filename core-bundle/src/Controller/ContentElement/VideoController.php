@@ -111,7 +111,7 @@ class VideoController extends AbstractContentElementController
             'provider' => 'vimeo',
             'video_id' => $videoId = explode('?', $model->vimeo)[0],
             'options' => $options,
-            'base_url' => $baseUrl = "https://player.vimeo.com/video/$model->vimeo",
+            'base_url' => "https://player.vimeo.com/video/$model->vimeo",
             'query' => $query,
             'url' => "https://player.vimeo.com/video/$videoId".($query ? "?$query" : ''),
         ];
