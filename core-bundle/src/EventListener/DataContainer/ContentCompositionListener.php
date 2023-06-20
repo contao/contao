@@ -66,7 +66,7 @@ class ContentCompositionListener
         $pageModel->setRow($row);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return null !== $icon ? $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ' : '';
+            return null !== $icon ? $this->image->getHtml(str_replace('.svg', '--disabled.svg', $icon)).' ' : '';
         }
 
         return sprintf(
@@ -161,7 +161,7 @@ class ContentCompositionListener
         }
 
         if ($cr || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
-            return $this->image->getHtml('pasteinto_.svg').' ';
+            return $this->image->getHtml('pasteinto--disabled.svg').' ';
         }
 
         return sprintf(
@@ -192,7 +192,7 @@ class ContentCompositionListener
             || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
             || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
         ) {
-            return $this->image->getHtml('pasteafter_.svg').' ';
+            return $this->image->getHtml('pasteafter--disabled.svg').' ';
         }
 
         return sprintf(

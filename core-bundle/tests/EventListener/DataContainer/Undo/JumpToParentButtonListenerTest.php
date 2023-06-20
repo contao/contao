@@ -154,8 +154,8 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $this->connection
@@ -179,7 +179,7 @@ class JumpToParentButtonListenerTest extends TestCase
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
-            '<img src="parent_.svg"> ',
+            '<img src="parent--disabled.svg"> ',
             $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
         );
     }
@@ -189,8 +189,8 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $this->connection
@@ -224,7 +224,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
-        $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', '', '', 'parent.svg'));
+        $this->assertSame('<img src="parent--disabled.svg"> ', $listener($row, '', '', '', 'parent.svg'));
     }
 
     public function testRendersDisabledJumpToParentButton(): void
@@ -232,15 +232,15 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $row = $this->setupForDataSetWithoutParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
-            '<img src="parent_.svg"> ',
+            '<img src="parent--disabled.svg"> ',
             $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
         );
     }
