@@ -998,7 +998,7 @@ window.Backend =
 				clone = cloneBase.clone(true)
 					.inject(ul)
 					.addClass('tl_left_dragging'),
-				currentHover, currentHoverTime;
+				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
 				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
@@ -1022,9 +1022,7 @@ window.Backend =
 					if (droppable.hasClass('tl_folder') && currentHover !== droppable) {
 						currentHover = droppable;
 						currentHoverTime = new Date().getTime();
-
-						var expandLink = droppable.getElement('img[src$="/icons/chevron-right.svg"]');
-						expandLink = expandLink && expandLink.getParent('a');
+						expandLink = droppable.getElement('a.foldable');
 
 						if (expandLink && !expandLink.hasClass('foldable--open')) {
 							// Expand the folder after one second hover time
@@ -1922,7 +1920,7 @@ window.Backend =
 				'class': 'dropzone dropzone-filetree',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
-			currentHover, currentHoverTime;
+			currentHover, currentHoverTime, expandLink;
 
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
@@ -1962,9 +1960,7 @@ window.Backend =
 				if (currentHover !== folder) {
 					currentHover = folder;
 					currentHoverTime = new Date().getTime();
-
-					var expandLink = folder.getElement('img[src$="/icons/chevron-right.svg"]');
-					expandLink = expandLink && expandLink.getParent('a');
+					expandLink = folder.getElement('a.foldable');
 
 					if (expandLink && !expandLink.hasClass('foldable--open')) {
 						// Expand the folder after one second hover time
