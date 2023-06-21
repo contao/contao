@@ -6464,18 +6464,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		if (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
+		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.group_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+			$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] = array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']);
+		}
+
 		// Call the group callback ($group, $sortingMode, $firstOrderBy, $row, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
 		{
-			$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0];
-			$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1];
+			if (\count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']) === 2 && \is_string($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0]) && \is_string($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1]))
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.group_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+				$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] = array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']);
+			}
 
-			$this->import($strClass);
-			$group = $this->$strClass->$strMethod($group, $mode, $field, $row, $this);
-		}
-		elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
-		{
-			$group = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']($group, $mode, $field, $row, $this);
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$group = System::importStatic($callback[0])->{$callback[1]}($group, $mode, $field, $row, $this);
+				}
+				else
+				{
+					$group = $callback($group, $mode, $field, $row, $this);
+				}
+			}
 		}
 
 		return $group;

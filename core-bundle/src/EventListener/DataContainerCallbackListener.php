@@ -25,7 +25,6 @@ class DataContainerCallbackListener
         'child_record_callback',
         'input_field_callback',
         'options_callback',
-        'group_callback',
         'url_callback',
         'title_tag_callback',
     ];
