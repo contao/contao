@@ -4614,18 +4614,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
+			if (\is_callable($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.sorting.header_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+				$GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] = array($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback']);
+			}
+
 			// Trigger the header_callback (see #3417)
 			if (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
 			{
-				$strClass = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][1];
+				if (\count($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback']) === 2 && \is_string($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][0]) && \is_string($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][1]))
+				{
+					trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.sorting.header_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+					$GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] = array($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback']);
+				}
 
-				$this->import($strClass);
-				$add = $this->$strClass->$strMethod($add, $this);
-			}
-			elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
-			{
-				$add = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback']($add, $this);
+				foreach ($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] as $callback)
+				{
+					if (\is_array($callback))
+					{
+						$add = System::importStatic($callback[0])->{$callback[1]}($add, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$add = $callback($add, $this);
+					}
+				}
 			}
 
 			// Output the header data
@@ -6464,18 +6478,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		if (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
+		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.group_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+			$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] = array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']);
+		}
+
 		// Call the group callback ($group, $sortingMode, $firstOrderBy, $row, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
 		{
-			$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0];
-			$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1];
+			if (\count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']) === 2 && \is_string($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0]) && \is_string($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1]))
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.group_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+				$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] = array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']);
+			}
 
-			$this->import($strClass);
-			$group = $this->$strClass->$strMethod($group, $mode, $field, $row, $this);
-		}
-		elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
-		{
-			$group = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']($group, $mode, $field, $row, $this);
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$group = System::importStatic($callback[0])->{$callback[1]}($group, $mode, $field, $row, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$group = $callback($group, $mode, $field, $row, $this);
+				}
+			}
 		}
 
 		return $group;
