@@ -900,17 +900,16 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-
-				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
+				$callback = System::importStatic($v['button_callback'][0]);
+				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
 
 				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
-					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
+					$callback->{$v['button_callback'][1]}($config);
 				}
 				else
 				{
-					$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 					continue;
 				}
 			}
