@@ -598,8 +598,7 @@ abstract class Widget extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this);
 			}
 		}
 
@@ -1044,11 +1043,7 @@ abstract class Widget extends Controller
 					{
 						foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
 						{
-							$this->import($callback[0]);
-							$break = $this->{$callback[0]}->{$callback[1]}($this->rgxp, $varInput, $this);
-
-							// Stop the loop if a callback returned true
-							if ($break === true)
+							if (System::importStatic($callback[0])->{$callback[1]}($this->rgxp, $varInput, $this) === true)
 							{
 								break;
 							}

@@ -222,8 +222,7 @@ abstract class ModuleNews extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseArticles'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objTemplate, $objArticle->row(), $this);
+				System::importStatic($callback[0])->{$callback[1]}($objTemplate, $objArticle->row(), $this);
 			}
 		}
 
