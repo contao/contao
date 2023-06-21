@@ -2,6 +2,36 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.25] (2023-06-21)
+
+**Fixed issues:**
+
+- [#6151] Fix a PHP8 issue in the `be_help` template ([aschempp])
+- [#6161] Accumulate several PHP8 fixes ([leofeyer])
+- [#6160] Ensure `multiSRC` is not mandatory when `useHomeDir` is selected ([cliffparnitzky])
+- [#6073] Check string length for short hex color ([zonky2])
+- [#6130] Use `setMetadata()` in the `addImageToTemplate()` method ([leofeyer])
+- [#6145] Add `authorModel` to the news templates ([fritzmg])
+- [#6144] Support vimeo unlisted video privacy hash ([ausi])
+- [#6152] Fix undefined array key 0 in stylesheet ([ausi])
+- [#6123] Prepend the web dir in `FigureBuilder::fromUrl()` ([fritzmg])
+- [#6141] Remove entity mapping type for app bundle ([aschempp])
+- [#6140] Always define a reference type in `PageModel::getFrontendUrl()` ([fritzmg])
+- [#6139] Support relative URLs as canonical URLs ([ausi])
+- [#6142] Fix force language in `PageModel::getFrontendUrl()` ([fritzmg])
+- [#6138] Fix book navigation in PHP 8 ([fritzmg])
+- [#6132] Require version `^2.15.1` of `friendsofsymfony/http-cache` ([leofeyer])
+- [#5871] Set `templateGroup` for faux requests ([fritzmg])
+- [#6109] Correctly track whether config files exist ([aschempp])
+- [#6121] Do not generate a secret in the install tool anymore ([leofeyer])
+- [#6089] Add the missing annotation for the widget type field ([aschempp])
+- [#6113] Add recipient and channel ID to subject for List-Unsubscribe ([de-es])
+- [#5968] Fix security and CSRF issues on the command line ([aschempp])
+- [#6035] Make sure login constants are set when rendering error page ([aschempp])
+- [#5694] Parse back end URLs with Symfony assets ([aschempp])
+- [#6087] Make named parameter matching in routing non-possessive ([fritzmg])
+- [#6084] Compare start and stop dates as numbers instead of strings ([aschempp])
+
 ## [4.13.24] (2023-05-25)
 
 **Fixed issues:**
@@ -707,6 +737,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.25]: https://github.com/contao/contao/releases/tag/4.13.25
 [4.13.24]: https://github.com/contao/contao/releases/tag/4.13.24
 [4.13.23]: https://github.com/contao/contao/releases/tag/4.13.23
 [4.13.22]: https://github.com/contao/contao/releases/tag/4.13.22
@@ -1225,6 +1256,7 @@ This project adheres to [Semantic Versioning].
 [#5669]: https://github.com/contao/contao/pull/5669
 [#5674]: https://github.com/contao/contao/pull/5674
 [#5692]: https://github.com/contao/contao/pull/5692
+[#5694]: https://github.com/contao/contao/pull/5694
 [#5696]: https://github.com/contao/contao/pull/5696
 [#5708]: https://github.com/contao/contao/pull/5708
 [#5709]: https://github.com/contao/contao/pull/5709
@@ -1264,6 +1296,7 @@ This project adheres to [Semantic Versioning].
 [#5863]: https://github.com/contao/contao/pull/5863
 [#5864]: https://github.com/contao/contao/pull/5864
 [#5868]: https://github.com/contao/contao/pull/5868
+[#5871]: https://github.com/contao/contao/pull/5871
 [#5873]: https://github.com/contao/contao/pull/5873
 [#5876]: https://github.com/contao/contao/pull/5876
 [#5879]: https://github.com/contao/contao/pull/5879
@@ -1289,6 +1322,7 @@ This project adheres to [Semantic Versioning].
 [#5959]: https://github.com/contao/contao/pull/5959
 [#5962]: https://github.com/contao/contao/pull/5962
 [#5966]: https://github.com/contao/contao/pull/5966
+[#5968]: https://github.com/contao/contao/pull/5968
 [#5971]: https://github.com/contao/contao/pull/5971
 [#5979]: https://github.com/contao/contao/pull/5979
 [#5984]: https://github.com/contao/contao/pull/5984
@@ -1301,6 +1335,7 @@ This project adheres to [Semantic Versioning].
 [#6006]: https://github.com/contao/contao/pull/6006
 [#6014]: https://github.com/contao/contao/pull/6014
 [#6015]: https://github.com/contao/contao/pull/6015
+[#6035]: https://github.com/contao/contao/pull/6035
 [#6038]: https://github.com/contao/contao/pull/6038
 [#6040]: https://github.com/contao/contao/pull/6040
 [#6041]: https://github.com/contao/contao/pull/6041
@@ -1310,6 +1345,27 @@ This project adheres to [Semantic Versioning].
 [#6064]: https://github.com/contao/contao/pull/6064
 [#6066]: https://github.com/contao/contao/pull/6066
 [#6071]: https://github.com/contao/contao/pull/6071
+[#6073]: https://github.com/contao/contao/pull/6073
 [#6075]: https://github.com/contao/contao/pull/6075
 [#6077]: https://github.com/contao/contao/pull/6077
 [#6080]: https://github.com/contao/contao/pull/6080
+[#6084]: https://github.com/contao/contao/pull/6084
+[#6087]: https://github.com/contao/contao/pull/6087
+[#6089]: https://github.com/contao/contao/pull/6089
+[#6109]: https://github.com/contao/contao/pull/6109
+[#6113]: https://github.com/contao/contao/pull/6113
+[#6121]: https://github.com/contao/contao/pull/6121
+[#6123]: https://github.com/contao/contao/pull/6123
+[#6130]: https://github.com/contao/contao/pull/6130
+[#6132]: https://github.com/contao/contao/pull/6132
+[#6138]: https://github.com/contao/contao/pull/6138
+[#6139]: https://github.com/contao/contao/pull/6139
+[#6140]: https://github.com/contao/contao/pull/6140
+[#6141]: https://github.com/contao/contao/pull/6141
+[#6142]: https://github.com/contao/contao/pull/6142
+[#6144]: https://github.com/contao/contao/pull/6144
+[#6145]: https://github.com/contao/contao/pull/6145
+[#6151]: https://github.com/contao/contao/pull/6151
+[#6152]: https://github.com/contao/contao/pull/6152
+[#6160]: https://github.com/contao/contao/pull/6160
+[#6161]: https://github.com/contao/contao/pull/6161
