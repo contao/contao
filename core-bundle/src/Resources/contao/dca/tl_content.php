@@ -1413,7 +1413,7 @@ class tl_content extends Backend
 			while ($objAlias->next())
 			{
 				$key = $objAlias->parent . ' (ID ' . $objAlias->pid . ')';
-				$arrAlias[$key][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
+				$arrAlias[$key][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
 			}
 		}
 
@@ -1736,7 +1736,7 @@ class tl_content extends Backend
 			while ($objArticle->next())
 			{
 				$key = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
-				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
+				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?? $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
 			}
 		}
 
