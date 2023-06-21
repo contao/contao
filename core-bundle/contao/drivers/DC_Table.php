@@ -4635,7 +4635,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$add = System::importStatic($callback[0])->{$callback[1]}($add, $this);
 					}
-					else
+					elseif (\is_callable($callback))
 					{
 						$add = $callback($add, $this);
 					}
@@ -6499,7 +6499,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$group = System::importStatic($callback[0])->{$callback[1]}($group, $mode, $field, $row, $this);
 				}
-				else
+				elseif (\is_callable($callback))
 				{
 					$group = $callback($group, $mode, $field, $row, $this);
 				}

@@ -1719,7 +1719,7 @@ abstract class DataContainer extends Backend
 					{
 						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 					}
-					else
+					elseif (\is_callable($callback))
 					{
 						$label = $callback($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 					}
@@ -1730,7 +1730,7 @@ abstract class DataContainer extends Backend
 					{
 						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this);
 					}
-					else
+					elseif (\is_callable($callback))
 					{
 						$label = $callback($row, $label, $this);
 					}
@@ -1741,7 +1741,7 @@ abstract class DataContainer extends Backend
 					{
 						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this, $args);
 					}
-					else
+					elseif (\is_callable($callback))
 					{
 						$label = $callback($row, $label, $this, $args);
 					}
