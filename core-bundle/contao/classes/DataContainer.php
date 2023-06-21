@@ -1687,40 +1687,55 @@ abstract class DataContainer extends Backend
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
-		// Execute label_callback
-		if (\is_array($labelConfig['label_callback'] ?? null) || \is_callable($labelConfig['label_callback'] ?? null))
+		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
-			if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.label_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+			$labelConfig['label_callback'] = array($labelConfig['label_callback']);
+		}
+
+		// Execute label_callback
+		if (\is_array($labelConfig['label_callback'] ?? null))
+		{
+			if (\count($labelConfig['label_callback']) === 2 && \is_string($labelConfig['label_callback'][0]) && \is_string($labelConfig['label_callback'][1]))
 			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
-				else
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using a single callback for "list.label.label_callback" instead of an array of callbacks has been deprecated and will no longer work in Contao 6.');
+				$labelConfig['label_callback'] = array($labelConfig['label_callback']);
 			}
-			elseif ($mode === self::MODE_PARENT)
+
+			foreach ($labelConfig['label_callback'] as $callback)
 			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
+				if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
+					if (\is_array($callback))
+					{
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
+					}
+					elseif (\is_callable($callback))
+					{
+						$label = $callback($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
+					}
+				}
+				elseif ($mode === self::MODE_PARENT)
+				{
+					if (\is_array($callback))
+					{
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$label = $callback($row, $label, $this);
+					}
 				}
 				else
 				{
-					$label = $labelConfig['label_callback']($row, $label, $this);
-				}
-			}
-			else
-			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
-				}
-				else
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this, $args);
+					if (\is_array($callback))
+					{
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $this, $args);
+					}
+					elseif (\is_callable($callback))
+					{
+						$label = $callback($row, $label, $this, $args);
+					}
 				}
 			}
 		}
