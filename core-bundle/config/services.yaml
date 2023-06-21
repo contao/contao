@@ -410,6 +410,7 @@ services:
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
+            - '%contao.web_dir%'
             - '%contao.image.valid_extensions%'
 
     contao.image.studio.figure_renderer:
@@ -776,6 +777,8 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
