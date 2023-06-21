@@ -160,7 +160,7 @@ class ControllerTest extends TestCase
 
         $figureBuilder
             ->expects($this->once())
-            ->method('setOverwriteMetadata')
+            ->method('setMetadata')
             ->with($expectedMetadata)
             ->willReturn($figureBuilder)
         ;
