@@ -24,8 +24,8 @@
  * Henry ([Mynyx](https://github.com/Mynyx))
  * Sergey Dyagovchenko ([DyaGa](https://github.com/DyaGa))
  * Arne Stappen ([agoat](https://github.com/agoat))
- * Dennis Bohn ([bohnmedia](https://github.com/bohnmedia))
  * Cliff Parnitzky ([cliffparnitzky](https://github.com/cliffparnitzky))
+ * Dennis Bohn ([bohnmedia](https://github.com/bohnmedia))
  * Nicky Hoff ([frontendschlampe](https://github.com/frontendschlampe))
  * Daniel Jahnsmüller ([Tastaturberuf](https://github.com/Tastaturberuf))
  * Michael Roitzsch ([mroi](https://github.com/mroi))
@@ -35,9 +35,10 @@
  * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * gmpf ([gmpf](https://github.com/gmpf))
  * Markus Nestmann
+ * de-es ([de-es](https://github.com/de-es))
  * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
- * de-es ([de-es](https://github.com/de-es))
+ * zonky2 ([zonky2](https://github.com/zonky2))
  * Andreas Burg ([Aybee](https://github.com/Aybee))
  * Benjamin Hummel
  * Blair Winans ([blairwinans](https://github.com/blairwinans))
@@ -59,7 +60,6 @@
  * Takahiro Kambe ([taca](https://github.com/taca))
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * kroka ([kroka](https://github.com/kroka))
- * zonky2 ([zonky2](https://github.com/zonky2))
  * Alex ([Alex](https://github.com/Alex))
  * Arndt H. Ziegler
  * Christian Romeni ([christianromeni](https://github.com/christianromeni))
@@ -68,6 +68,7 @@
  * Joe Ray Gregory ([may17](https://github.com/may17))
  * Leopold Seckendorff ([poddus](https://github.com/poddus))
  * Patrick Landolt ([scuben](https://github.com/scuben))
+ * Sebastian Zoglowek
  * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
  * Benny Born ([bennyborn](https://github.com/bennyborn))
  * Mathias Arzberger ([MDevster](https://github.com/MDevster))
@@ -93,7 +94,6 @@
  * Marko Cupic
  * Niels ([Niels](https://github.com/Niels))
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
- * Sebastian Zoglowek
  * Stefan Schleich ([stefanschleich](https://github.com/stefanschleich))
  * Stephan Gehle ([SGehle](https://github.com/SGehle))
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))

@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.8] (2023-06-21)
+
+**Fixed issues:**
+
+- [#6136] Log the bad credentials exception in the security channel ([bytehead])
+- [#6147] Support vimeo unlisted video privacy hash ([ausi])
+- [#6083] Skip insert tags when converting relative URLs ([leofeyer])
+- [#6093] Fix a typo in the `_download` component ([fritzmg])
+- [#6112] Allow saving serialized strings in DC_File again ([zoglo])
+
 ## [5.1.7] (2023-05-25)
 
 **Fixed issues:**
@@ -151,6 +161,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.8]: https://github.com/contao/contao/releases/tag/5.1.8
 [5.1.7]: https://github.com/contao/contao/releases/tag/5.1.7
 [5.1.6]: https://github.com/contao/contao/releases/tag/5.1.6
 [5.1.5]: https://github.com/contao/contao/releases/tag/5.1.5
@@ -175,6 +186,7 @@ This project adheres to [Semantic Versioning].
 [rabauss]: https://github.com/rabauss
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Toflar]: https://github.com/Toflar
+[zoglo]: https://github.com/zoglo
 [#3694]: https://github.com/contao/contao/pull/3694
 [#4847]: https://github.com/contao/contao/pull/4847
 [#4898]: https://github.com/contao/contao/pull/4898
@@ -268,3 +280,8 @@ This project adheres to [Semantic Versioning].
 [#6046]: https://github.com/contao/contao/pull/6046
 [#6047]: https://github.com/contao/contao/pull/6047
 [#6076]: https://github.com/contao/contao/pull/6076
+[#6083]: https://github.com/contao/contao/pull/6083
+[#6093]: https://github.com/contao/contao/pull/6093
+[#6112]: https://github.com/contao/contao/pull/6112
+[#6136]: https://github.com/contao/contao/pull/6136
+[#6147]: https://github.com/contao/contao/pull/6147
