@@ -400,6 +400,7 @@ services:
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
+            - '%contao.web_dir%'
             - '%contao.image.valid_extensions%'
 
     contao.image.studio.figure_renderer:

@@ -26,13 +26,14 @@ class Studio
         private ContainerInterface $locator,
         private string $projectDir,
         private string $uploadPath,
+        private string $webDir,
         private array $validExtensions,
     ) {
     }
 
     public function createFigureBuilder(): FigureBuilder
     {
-        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
+        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->webDir, $this->validExtensions);
     }
 
     public function createImage(ImageInterface|string $filePathOrImage, PictureConfiguration|array|int|string|null $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
