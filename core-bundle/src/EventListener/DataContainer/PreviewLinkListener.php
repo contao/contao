@@ -171,7 +171,7 @@ class PreviewLinkListener
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
-            return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
+            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
         return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);

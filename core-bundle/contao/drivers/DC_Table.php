@@ -3255,7 +3255,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Make sure unique fields are unique
 		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
 		{
-			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
+			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
 		}
 
 		// Save the value if there was no error
@@ -3928,7 +3928,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
 			{
-				$_buttons = Image::getHtml('pasteinto_.svg') . ' ';
+				$_buttons = Image::getHtml('pasteinto--disabled.svg') . ' ';
 			}
 			else
 			{
@@ -4308,7 +4308,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Disable buttons of the page and all its children on cut to avoid circular references
 					if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))))
 					{
-						$_buttons .= Image::getHtml('pasteafter_.svg') . ' ' . Image::getHtml('pasteinto_.svg') . ' ';
+						$_buttons .= Image::getHtml('pasteafter--disabled.svg') . ' ' . Image::getHtml('pasteinto--disabled.svg') . ' ';
 					}
 					else
 					{
@@ -4316,7 +4316,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
+							$_buttons .= Image::getHtml('pasteafter--disabled.svg') . ' ';
 						}
 						else
 						{
@@ -4325,7 +4325,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $id))))
 						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
+							$_buttons .= Image::getHtml('pasteinto--disabled.svg') . ' ';
 						}
 						else
 						{
@@ -4342,7 +4342,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
+							$_buttons .= Image::getHtml('pasteafter--disabled.svg') . ' ';
 						}
 						else
 						{
@@ -4355,7 +4355,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>$id))))
 						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
+							$_buttons .= Image::getHtml('pasteinto--disabled.svg') . ' ';
 						}
 						else
 						{
@@ -4819,7 +4819,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Prevent circular references
 						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
 						{
-							$return .= ' ' . Image::getHtml('pasteafter_.svg');
+							$return .= ' ' . Image::getHtml('pasteafter--disabled.svg');
 						}
 
 						// Copy/move multiple

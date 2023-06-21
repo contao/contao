@@ -143,6 +143,7 @@ abstract class ModuleNews extends Module
 		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+			$objTemplate->authorModel = $objAuthor;
 		}
 
 		if (!$objArticle->noComments && $objArticle->source == 'default' && isset(System::getContainer()->getParameter('kernel.bundles')['ContaoCommentsBundle']))

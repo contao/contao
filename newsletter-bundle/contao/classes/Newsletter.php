@@ -99,10 +99,7 @@ class Newsletter extends Backend
 		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
 
 		// Convert relative URLs
-		if ($objNewsletter->externalImages)
-		{
-			$html = $this->convertRelativeUrls($html);
-		}
+		$html = $this->convertRelativeUrls($html);
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();

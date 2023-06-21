@@ -140,6 +140,7 @@ class FigureBuilder
         private readonly ContainerInterface $locator,
         private readonly string $projectDir,
         private readonly string $uploadPath,
+        private readonly string $webDir,
         private readonly array $validExtensions,
     ) {
         $this->filesystem = new Filesystem();
@@ -218,8 +219,20 @@ class FigureBuilder
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
         // Only check for a FilesModel if the resource is inside the upload path
-        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
+        $getDbafsPath = function (string $path): string|null {
+            if (Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path)) {
+                return Path::makeRelative($path, $this->webDir);
+            }
+
+            if (Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
+                return $path;
+            }
+
+            return null;
+        };
+
+        if ($autoDetectDbafsPaths && null !== ($dbafsPath = $getDbafsPath($path))) {
+            $filesModel = $this->getFilesModelAdapter()->findByPath($dbafsPath);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -273,7 +286,8 @@ class FigureBuilder
             return $this;
         }
 
-        return $this->fromPath(urldecode(ltrim($path, '/')));
+        // Prepend the web_dir (see #6123)
+        return $this->fromPath(Path::join($this->webDir, urldecode($path)));
     }
 
     /**
