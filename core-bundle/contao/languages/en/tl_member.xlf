@@ -200,8 +200,14 @@
       <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member.toggle">
-        <source>Activate/deactivate member ID %s</source>
+      <trans-unit id="tl_member.toggle.0">
+        <source>Activate/deactivate member</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.1">
+        <source>Deactivate member ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.2">
+        <source>Activate member ID %s</source>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

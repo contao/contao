@@ -158,17 +158,18 @@ class tl_member_group extends Backend
 	{
 		$image = 'mgroup';
 		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
+		$icon = $image;
 
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_'),
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled'),
 			$label
 		);
 	}

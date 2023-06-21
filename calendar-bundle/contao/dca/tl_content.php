@@ -19,6 +19,8 @@ use Contao\System;
 // Dynamically add the permission check and other callbacks
 if (Input::get('do') == 'calendar')
 {
+	System::loadLanguageFile('tl_calendar_events');
+
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_calendar', 'checkPermission'));
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_calendar', 'generateFeed');
 }

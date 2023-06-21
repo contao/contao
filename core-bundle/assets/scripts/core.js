@@ -58,18 +58,16 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
-				});
+				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
+				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
-				});
+				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
+				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
 
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
@@ -126,9 +124,8 @@ window.AjaxRequest =
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
-				});
+				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
+				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
@@ -161,18 +158,16 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
-				});
+				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
+				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
-				});
+				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
+				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
 
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
@@ -209,9 +204,8 @@ window.AjaxRequest =
 
 				$(el).setAttribute('title', Contao.lang.collapse);
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
-				});
+				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
+				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				AjaxRequest.hideBox();
 
@@ -402,6 +396,12 @@ window.AjaxRequest =
 			image.set('data-state', !published ? 1 : 0);
 		});
 
+		if (!published && $(el).get('data-title')) {
+			el.title = $(el).get('data-title');
+		} else if (published && $(el).get('data-title-disabled')) {
+			el.title = $(el).get('data-title-disabled');
+		}
+
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
 		// Return false to stop the click event on link
@@ -426,17 +426,15 @@ window.AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folMinus.svg';
-				});
+				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
+				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 
-				images.forEach(function(image) {
-					image.src = image.src.slice(0, image.src.lastIndexOf('/') + 1) + 'folPlus.svg';
-				});
+				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
+				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
 
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}

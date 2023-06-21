@@ -116,8 +116,14 @@
       <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

@@ -1252,7 +1252,7 @@ class tl_page extends Backend
 	{
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1277,7 +1277,7 @@ class tl_page extends Backend
 
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1303,7 +1303,7 @@ class tl_page extends Backend
 		$security = System::getContainer()->get('security.helper');
 		$objSubpages = PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1322,7 +1322,7 @@ class tl_page extends Backend
 	{
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1407,10 +1407,10 @@ class tl_page extends Backend
 
 		if ($row['id'] > 0)
 		{
-			$return = $disablePA ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+			$return = $disablePA ? Image::getHtml('pasteafter--disabled.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 		}
 
-		return $return . ($disablePI ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
+		return $return . ($disablePI ? Image::getHtml('pasteinto--disabled.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
 	}
 
 	/**
@@ -1430,7 +1430,7 @@ class tl_page extends Backend
 		$root = func_get_arg(7);
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1547,7 +1547,9 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

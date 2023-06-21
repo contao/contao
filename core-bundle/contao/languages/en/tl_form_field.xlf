@@ -338,8 +338,14 @@
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.toggle">
-        <source>Hide/unhide form field ID %s</source>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

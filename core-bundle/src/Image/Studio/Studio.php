@@ -26,13 +26,14 @@ class Studio
         private readonly ContainerInterface $locator,
         private readonly string $projectDir,
         private readonly string $uploadPath,
+        private readonly string $webDir,
         private readonly array $validExtensions,
     ) {
     }
 
     public function createFigureBuilder(): FigureBuilder
     {
-        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
+        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->webDir, $this->validExtensions);
     }
 
     public function createImage(ImageInterface|string $filePathOrImage, PictureConfiguration|array|int|string|null $sizeConfiguration, ResizeOptions|null $resizeOptions = null): ImageResult

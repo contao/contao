@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Sub-palettes
@@ -130,6 +130,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
+		),
+		'imageQuality' => array
+		(
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NULL"
 		),
 		'cssClass' => array
 		(
@@ -201,7 +207,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
@@ -373,7 +378,7 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
