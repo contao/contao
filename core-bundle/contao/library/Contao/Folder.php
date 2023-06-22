@@ -87,7 +87,6 @@ class Folder extends System
 			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
 		}
 
-		$this->import(Files::class, 'Files');
 		$this->strFolder = $strFolder;
 
 		// Create the folder if it does not exist
@@ -95,12 +94,13 @@ class Folder extends System
 		{
 			$strPath = '';
 			$arrChunks = explode('/', $this->strFolder);
+			$files = Files::getInstance();
 
 			// Create the folder
 			foreach ($arrChunks as $strChunk)
 			{
 				$strPath .= ($strPath ? '/' : '') . $strChunk;
-				$this->Files->mkdir($strPath);
+				$files->mkdir($strPath);
 			}
 
 			// Update the database
@@ -176,7 +176,7 @@ class Folder extends System
 	 */
 	public function purge()
 	{
-		$this->Files->rrdir($this->strFolder, true);
+		Files::getInstance()->rrdir($this->strFolder, true);
 
 		// Update the database
 		if (Dbafs::shouldBeSynchronized($this->strFolder))
@@ -200,7 +200,7 @@ class Folder extends System
 	 */
 	public function delete()
 	{
-		$this->Files->rrdir($this->strFolder);
+		Files::getInstance()->rrdir($this->strFolder);
 
 		// Update the database
 		if (Dbafs::shouldBeSynchronized($this->strFolder))
@@ -218,7 +218,7 @@ class Folder extends System
 	 */
 	public function chmod($intChmod)
 	{
-		return $this->Files->chmod($this->strFolder, $intChmod);
+		return Files::getInstance()->chmod($this->strFolder, $intChmod);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Folder extends System
 			new self($strParent);
 		}
 
-		$return = $this->Files->rename($this->strFolder, $strNewName);
+		$return = Files::getInstance()->rename($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
@@ -284,7 +284,7 @@ class Folder extends System
 			new self($strParent);
 		}
 
-		$this->Files->rcopy($this->strFolder, $strNewName);
+		Files::getInstance()->rcopy($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);

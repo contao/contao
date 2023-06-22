@@ -234,8 +234,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Store the file if the upload folder exists
 				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
 				{
-					$this->import(Files::class, 'Files');
-
 					// Do not overwrite existing files
 					if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
 					{
@@ -258,9 +256,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 						$file['name'] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $file['name']);
 					}
 
+					$files = Files::getInstance();
+
 					// Move the file to its destination
-					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+					$files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
+					$files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
