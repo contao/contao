@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
@@ -633,7 +634,7 @@ class tl_module extends Backend
 		}
 
 		$arrForms = array();
-		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
@@ -657,7 +658,7 @@ class tl_module extends Backend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 
 		// Check for custom layout sections
-		$objLayout = $this->Database->query("SELECT sections FROM tl_layout WHERE sections!=''");
+		$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
 
 		while ($objLayout->next())
 		{

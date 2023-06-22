@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
@@ -474,9 +475,10 @@ class tl_member extends Backend
 			return $strPassword;
 		}
 
-		$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
-								  ->limit(1)
-								  ->execute($user->id);
+		$objUser = Database::getInstance()
+			->prepare("SELECT * FROM tl_member WHERE id=?")
+			->limit(1)
+			->execute($user->id);
 
 		// HOOK: set new password callback
 		if ($objUser->numRows && isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
@@ -519,7 +521,8 @@ class tl_member extends Backend
 			$time = time();
 		}
 
-		$this->Database->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
-					   ->execute($time, $dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
+			->execute($time, $dc->id);
 	}
 }

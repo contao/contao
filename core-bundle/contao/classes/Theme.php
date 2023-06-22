@@ -93,15 +93,17 @@ class Theme extends Backend
 				$this->reload();
 			}
 
+			$db = Database::getInstance();
+
 			// Store the field names of the theme tables
 			$arrDbFields = array
 			(
-				'tl_files'           => $this->Database->getFieldNames('tl_files'),
-				'tl_theme'           => $this->Database->getFieldNames('tl_theme'),
-				'tl_module'          => $this->Database->getFieldNames('tl_module'),
-				'tl_layout'          => $this->Database->getFieldNames('tl_layout'),
-				'tl_image_size'      => $this->Database->getFieldNames('tl_image_size'),
-				'tl_image_size_item' => $this->Database->getFieldNames('tl_image_size_item')
+				'tl_files'           => $db->getFieldNames('tl_files'),
+				'tl_theme'           => $db->getFieldNames('tl_theme'),
+				'tl_module'          => $db->getFieldNames('tl_module'),
+				'tl_layout'          => $db->getFieldNames('tl_layout'),
+				'tl_image_size'      => $db->getFieldNames('tl_image_size'),
+				'tl_image_size_item' => $db->getFieldNames('tl_image_size_item')
 			);
 
 			// Proceed
@@ -350,6 +352,7 @@ class Theme extends Backend
 	 */
 	protected function extractThemeFiles($arrFiles, $arrDbFields)
 	{
+		$db = Database::getInstance();
 		$exampleWebsites = array();
 
 		foreach ($arrFiles as $strZipFile)
@@ -463,15 +466,15 @@ class Theme extends Backend
 				$this->loadDataContainer($table);
 			}
 
-			$this->Database->lockTables($arrLocks);
+			$db->lockTables($arrLocks);
 
 			// Get the current auto_increment values
-			$tl_files = $this->Database->getNextId('tl_files');
-			$tl_theme = $this->Database->getNextId('tl_theme');
-			$tl_module = $this->Database->getNextId('tl_module');
-			$tl_layout = $this->Database->getNextId('tl_layout');
-			$tl_image_size = $this->Database->getNextId('tl_image_size');
-			$tl_image_size_item = $this->Database->getNextId('tl_image_size_item');
+			$tl_files = $db->getNextId('tl_files');
+			$tl_theme = $db->getNextId('tl_theme');
+			$tl_module = $db->getNextId('tl_module');
+			$tl_layout = $db->getNextId('tl_layout');
+			$tl_image_size = $db->getNextId('tl_image_size');
+			$tl_image_size_item = $db->getNextId('tl_image_size_item');
 
 			// Build the mapper data (see #8326)
 			for ($i=0; $i<$tables->length; $i++)
@@ -580,8 +583,9 @@ class Theme extends Backend
 						// Adjust duplicate theme names
 						elseif ($table == 'tl_theme' && $name == 'name')
 						{
-							$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM " . $table . " WHERE name=?")
-													   ->execute($value);
+							$objCount = $db
+								->prepare("SELECT COUNT(*) AS count FROM " . $table . " WHERE name=?")
+								->execute($value);
 
 							if ($objCount->count > 0)
 							{
@@ -620,9 +624,10 @@ class Theme extends Backend
 							else
 							{
 								// Do not use the FilesModel here – tables are locked!
-								$objFile = $this->Database->prepare("SELECT uuid FROM tl_files WHERE path=?")
-														  ->limit(1)
-														  ->execute($this->customizeUploadPath($value));
+								$objFile = $db
+									->prepare("SELECT uuid FROM tl_files WHERE path=?")
+									->limit(1)
+									->execute($this->customizeUploadPath($value));
 
 								$value = $objFile->uuid;
 							}
@@ -638,9 +643,10 @@ class Theme extends Backend
 								foreach ($tmp as $kk=>$vv)
 								{
 									// Do not use the FilesModel here – tables are locked!
-									$objFile = $this->Database->prepare("SELECT uuid FROM tl_files WHERE path=?")
-															  ->limit(1)
-															  ->execute($this->customizeUploadPath($vv));
+									$objFile = $db
+										->prepare("SELECT uuid FROM tl_files WHERE path=?")
+										->limit(1)
+										->execute($this->customizeUploadPath($vv));
 
 									$tmp[$kk] = $objFile->uuid;
 								}
@@ -683,17 +689,17 @@ class Theme extends Backend
 					// Update tl_files (entries have been created by the Dbafs class)
 					if ($table == 'tl_files')
 					{
-						$this->Database->prepare("UPDATE $table %s WHERE path=?")->set($set)->execute($set['path']);
+						$db->prepare("UPDATE $table %s WHERE path=?")->set($set)->execute($set['path']);
 					}
 					else
 					{
-						$this->Database->prepare("INSERT INTO $table %s")->set($set)->execute();
+						$db->prepare("INSERT INTO $table %s")->set($set)->execute();
 					}
 				}
 			}
 
 			// Unlock the tables
-			$this->Database->unlockTables();
+			$db->unlockTables();
 
 			// Notify the user
 			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
@@ -774,9 +780,10 @@ class Theme extends Backend
 	public function exportTheme(DataContainer $dc)
 	{
 		// Get the theme metadata
-		$objTheme = $this->Database->prepare("SELECT * FROM tl_theme WHERE id=?")
-								   ->limit(1)
-								   ->execute($dc->id);
+		$objTheme = Database::getInstance()
+			->prepare("SELECT * FROM tl_theme WHERE id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		if ($objTheme->numRows < 1)
 		{
@@ -872,8 +879,9 @@ class Theme extends Backend
 		$this->loadDataContainer('tl_module');
 
 		// Get all modules
-		$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE pid=? ORDER BY name")
-									->execute($objTheme->id);
+		$objModule = Database::getInstance()
+			->prepare("SELECT * FROM tl_module WHERE pid=? ORDER BY name")
+			->execute($objTheme->id);
 
 		// Add the rows
 		while ($objModule->next())
@@ -900,8 +908,9 @@ class Theme extends Backend
 		$this->loadDataContainer('tl_layout');
 
 		// Get all layouts
-		$objLayout = $this->Database->prepare("SELECT * FROM tl_layout WHERE pid=? ORDER BY name")
-									->execute($objTheme->id);
+		$objLayout = Database::getInstance()
+			->prepare("SELECT * FROM tl_layout WHERE pid=? ORDER BY name")
+			->execute($objTheme->id);
 
 		// Add the rows
 		while ($objLayout->next())
@@ -928,9 +937,12 @@ class Theme extends Backend
 		$imageSizeItemTable->setAttribute('name', 'tl_image_size_item');
 		$imageSizeItemTable = $tables->appendChild($imageSizeItemTable);
 
+		$db = Database::getInstance();
+
 		// Get all sizes
-		$objSizes = $this->Database->prepare("SELECT * FROM tl_image_size WHERE pid=?")
-								   ->execute($objTheme->id);
+		$objSizes = $db
+			->prepare("SELECT * FROM tl_image_size WHERE pid=?")
+			->execute($objTheme->id);
 
 		// Add the rows
 		while ($objSizes->next())
@@ -938,8 +950,9 @@ class Theme extends Backend
 			$this->addDataRow($xml, $imageSizeTable, $objSizes->row());
 
 			// Get all size items
-			$objSizeItems = $this->Database->prepare("SELECT * FROM tl_image_size_item WHERE pid=?")
-										   ->execute($objSizes->id);
+			$objSizeItems = $db
+				->prepare("SELECT * FROM tl_image_size_item WHERE pid=?")
+				->execute($objSizes->id);
 
 			// Add the rows
 			while ($objSizeItems->next())

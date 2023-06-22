@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -465,6 +466,8 @@ class tl_user extends Backend
 		// Unset the "admin" checkbox for regular users
 		unset($GLOBALS['TL_DCA']['tl_user']['fields']['admin']);
 
+		$db = Database::getInstance();
+
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -485,9 +488,10 @@ class tl_user extends Backend
 			case 'edit':
 			case 'copy':
 			default:
-				$objUser = $this->Database->prepare("SELECT `admin` FROM tl_user WHERE id=?")
-										  ->limit(1)
-										  ->execute(Input::get('id'));
+				$objUser = $db
+					->prepare("SELECT `admin` FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute(Input::get('id'));
 
 				if ($objUser->admin && Input::get('act'))
 				{
@@ -500,7 +504,7 @@ class tl_user extends Backend
 			case 'overrideAll':
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
-				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
+				$objUser = $db->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
 				$objSession->replace($session);
 				break;
@@ -552,7 +556,7 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
+		$objResult = Database::getInstance()->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning)
 		{
@@ -893,8 +897,9 @@ class tl_user extends Backend
 			$time = time();
 		}
 
-		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
-					   ->execute($time, $dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
+			->execute($time, $dc->id);
 	}
 
 	/**

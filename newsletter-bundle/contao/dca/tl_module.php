@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\System;
@@ -151,7 +152,7 @@ class tl_module_newsletter extends Backend
 		$strQuery .= " ORDER BY title";
 
 		$arrChannels = array();
-		$objChannels = $this->Database->execute($strQuery);
+		$objChannels = Database::getInstance()->execute($strQuery);
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objChannels->next())

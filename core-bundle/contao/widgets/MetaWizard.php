@@ -139,10 +139,8 @@ class MetaWizard extends Widget
 		$count = 0;
 		$return = '';
 
-		$this->import(Database::class, 'Database');
-
 		// Only show the root page languages (see #7112, #7667)
-		$objRootLangs = $this->Database->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
+		$objRootLangs = Database::getInstance()->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
 		$existing = $objRootLangs->fetchEach('language');
 
 		foreach ($existing as $lang)

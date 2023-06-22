@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Idna;
@@ -743,6 +744,8 @@ class tl_page extends Backend
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['rootPaste'] = false;
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
@@ -753,9 +756,10 @@ class tl_page extends Backend
 
 			foreach ($session['CURRENT']['IDS'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -786,9 +790,10 @@ class tl_page extends Backend
 
 			foreach ($session['CLIPBOARD']['tl_page']['id'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -810,9 +815,10 @@ class tl_page extends Backend
 		// Check permissions to save and create new
 		if (Input::get('act') == 'edit')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = $db
+				->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->numRows && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
@@ -850,9 +856,10 @@ class tl_page extends Backend
 					// Check the parent's parent page in "paste after" mode
 					else
 					{
-						$objPage = $this->Database->prepare("SELECT pid FROM tl_page WHERE id=?")
-												  ->limit(1)
-												  ->execute(Input::get('pid'));
+						$objPage = $db
+							->prepare("SELECT pid FROM tl_page WHERE id=?")
+							->limit(1)
+							->execute(Input::get('pid'));
 
 						$ids[] = $objPage->pid;
 					}
@@ -874,7 +881,7 @@ class tl_page extends Backend
 					$pagemounts[] = array($root);
 				}
 
-				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+				$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 			}
 
 			if (!empty($pagemounts))
@@ -964,9 +971,10 @@ class tl_page extends Backend
 		}
 		elseif (Input::get('mode') == 1)
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('pid'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('pid'));
 
 			if ($objPage->pid == 0)
 			{
@@ -1045,9 +1053,10 @@ class tl_page extends Backend
 	 */
 	public function makeRedirectPageMandatory(DataContainer $dc)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-								  ->limit(1)
-								  ->execute($dc->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		if ($objPage->numRows && $objPage->type == 'logout')
 		{
@@ -1181,8 +1190,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
-								  ->execute($dc->activeRecord->dns, $dc->activeRecord->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
+			->execute($dc->activeRecord->dns, $dc->activeRecord->id);
 
 		if ($objPage->numRows)
 		{
@@ -1344,9 +1354,10 @@ class tl_page extends Backend
 		// Prevent adding non-root pages on top-level
 		if (empty($row['pid']) && Input::get('mode') != 'create')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->type != 'root')
 			{
@@ -1487,8 +1498,9 @@ class tl_page extends Backend
 				$objVersions->initialize();
 
 				// Store the new alias
-				$this->Database->prepare("UPDATE tl_page SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
+				Database::getInstance()
+					->prepare("UPDATE tl_page SET alias=? WHERE id=?")
+					->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();

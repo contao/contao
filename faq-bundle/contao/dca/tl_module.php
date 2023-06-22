@@ -9,6 +9,7 @@
  */
 
 use Contao\Backend;
+use Contao\Database;
 use Contao\System;
 
 // Add palettes to tl_module
@@ -57,7 +58,7 @@ class tl_module_faq extends Backend
 	public function getReaderModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='faqreader' ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='faqreader' ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{

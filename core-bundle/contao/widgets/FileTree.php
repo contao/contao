@@ -42,17 +42,6 @@ class FileTree extends Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-	/**
-	 * Load the database object
-	 *
-	 * @param array $arrAttributes
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		$this->import(Database::class, 'Database');
-		parent::__construct($arrAttributes);
-	}
-
 	public function __set($strKey, $varValue)
 	{
 		if ($strKey === 'extensions' && \is_array($varValue))

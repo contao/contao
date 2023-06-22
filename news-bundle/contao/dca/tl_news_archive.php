@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\News;
@@ -269,9 +270,10 @@ class tl_news_archive extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_news_archive']) && in_array($insertId, $arrNew['tl_news_archive']))
@@ -279,7 +281,7 @@ class tl_news_archive extends Backend
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -290,8 +292,7 @@ class tl_news_archive extends Backend
 						$arrNews = StringUtil::deserialize($objGroup->news, true);
 						$arrNews[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
-									   ->execute(serialize($arrNews), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET news=? WHERE id=?")->execute(serialize($arrNews), $objGroup->id);
 					}
 				}
 			}
@@ -299,9 +300,10 @@ class tl_news_archive extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT news, newp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrNewp = StringUtil::deserialize($objUser->newp);
 
@@ -310,8 +312,7 @@ class tl_news_archive extends Backend
 					$arrNews = StringUtil::deserialize($objUser->news, true);
 					$arrNews[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
-								   ->execute(serialize($arrNews), $user->id);
+					$db->prepare("UPDATE tl_user SET news=? WHERE id=?")->execute(serialize($arrNews), $user->id);
 				}
 			}
 

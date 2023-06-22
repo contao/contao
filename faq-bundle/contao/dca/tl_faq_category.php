@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
@@ -349,9 +350,10 @@ class tl_faq_category extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_faq_category']) && in_array($insertId, $arrNew['tl_faq_category']))
@@ -359,7 +361,7 @@ class tl_faq_category extends Backend
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -370,8 +372,7 @@ class tl_faq_category extends Backend
 						$arrFaqs = StringUtil::deserialize($objGroup->faqs, true);
 						$arrFaqs[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")
-									   ->execute(serialize($arrFaqs), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")->execute(serialize($arrFaqs), $objGroup->id);
 					}
 				}
 			}
@@ -379,9 +380,10 @@ class tl_faq_category extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT faqs, faqp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT faqs, faqp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
@@ -390,8 +392,7 @@ class tl_faq_category extends Backend
 					$arrFaqs = StringUtil::deserialize($objUser->faqs, true);
 					$arrFaqs[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET faqs=? WHERE id=?")
-								   ->execute(serialize($arrFaqs), $user->id);
+					$db->prepare("UPDATE tl_user SET faqs=? WHERE id=?")->execute(serialize($arrFaqs), $user->id);
 				}
 			}
 

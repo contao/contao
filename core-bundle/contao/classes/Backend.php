@@ -337,9 +337,10 @@ abstract class Backend extends Controller
 			// Add the name of the parent element
 			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
-				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
-										 ->limit(1)
-										 ->execute(Input::get('id'));
+				$objRow = Database::getInstance()
+					->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
+					->limit(1)
+					->execute(Input::get('id'));
 
 				if ($objRow->title)
 				{
@@ -417,13 +418,15 @@ abstract class Backend extends Controller
 					$this->loadDataContainer($ptable);
 				}
 
+				$db = Database::getInstance();
 				$request = $container->get('request_stack')->getCurrentRequest();
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null, DC_Table::class, true))
 				{
-					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($pid);
+					$objRow = $db
+						->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
+						->limit(1)
+						->execute($pid);
 
 					// Add only parent tables to the trail
 					if ($table != $ptable)
@@ -968,7 +971,7 @@ abstract class Backend extends Controller
 	 */
 	public function addCustomLayoutSectionReferences()
 	{
-		$objLayout = $this->Database->getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
+		$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
 
 		while ($objLayout->next())
 		{
@@ -1052,8 +1055,9 @@ abstract class Backend extends Controller
 	 */
 	protected function doCreatePageList($intId=0, $level=-1)
 	{
-		$objPages = $this->Database->prepare("SELECT id, title, type, dns FROM tl_page WHERE pid=? ORDER BY sorting")
-								   ->execute($intId);
+		$objPages = Database::getInstance()
+			->prepare("SELECT id, title, type, dns FROM tl_page WHERE pid=? ORDER BY sorting")
+			->execute($intId);
 
 		if ($objPages->numRows < 1)
 		{

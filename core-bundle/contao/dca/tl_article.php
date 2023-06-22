@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -337,6 +338,8 @@ class tl_article extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
@@ -347,9 +350,10 @@ class tl_article extends Backend
 
 			foreach ($session['CURRENT']['IDS'] as $id)
 			{
-				$objArticle = $this->Database->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-											 ->limit(1)
-											 ->execute($id);
+				$objArticle = $db
+					->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+					->limit(1)
+					->execute($id);
 
 				if ($objArticle->numRows < 1)
 				{
@@ -379,9 +383,10 @@ class tl_article extends Backend
 
 			foreach ($session['CLIPBOARD']['tl_article']['id'] as $id)
 			{
-				$objArticle = $this->Database->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-											 ->limit(1)
-											 ->execute($id);
+				$objArticle = $db
+					->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+					->limit(1)
+					->execute($id);
 
 				if ($objArticle->numRows < 1)
 				{
@@ -406,9 +411,10 @@ class tl_article extends Backend
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
 			// Set ID of the article's page
-			$objPage = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = $db
+				->prepare("SELECT pid FROM tl_article WHERE id=?")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			$ids = $objPage->numRows ? array($objPage->pid) : array();
 
@@ -431,9 +437,10 @@ class tl_article extends Backend
 					// Insert into a page
 					if (Input::get('mode') == 2)
 					{
-						$objParent = $this->Database->prepare("SELECT id, type FROM tl_page WHERE id=?")
-													->limit(1)
-													->execute(Input::get('pid'));
+						$objParent = $db
+							->prepare("SELECT id, type FROM tl_page WHERE id=?")
+							->limit(1)
+							->execute(Input::get('pid'));
 
 						$ids[] = Input::get('pid');
 					}
@@ -441,9 +448,10 @@ class tl_article extends Backend
 					// Insert after an article
 					else
 					{
-						$objParent = $this->Database->prepare("SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
-													->limit(1)
-													->execute(Input::get('pid'));
+						$objParent = $db
+							->prepare("SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
+							->limit(1)
+							->execute(Input::get('pid'));
 
 						$ids[] = $objParent->id;
 					}
@@ -466,7 +474,7 @@ class tl_article extends Backend
 			foreach ($user->pagemounts as $root)
 			{
 				$pagemounts[] = array($root);
-				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+				$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 			}
 
 			if (!empty($pagemounts))
@@ -551,13 +559,13 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
+		$aliasExists = static function (string $alias) use ($dc): bool {
 			if (in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
 			{
 				return true;
 			}
 
-			return $this->Database->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+			return Database::getInstance()->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
 		// Generate an alias if there is none
@@ -624,7 +632,7 @@ class tl_article extends Backend
 		else
 		{
 			$arrSections = array('header', 'left', 'right', 'main', 'footer');
-			$objLayout = $this->Database->query("SELECT sections FROM tl_layout WHERE sections!=''");
+			$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
 
 			while ($objLayout->next())
 			{
@@ -776,6 +784,8 @@ class tl_article extends Backend
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
+			$db = Database::getInstance();
+
 			foreach ($ids as $id)
 			{
 				$objArticle = ArticleModel::findByPk($id);
@@ -798,8 +808,7 @@ class tl_article extends Backend
 				$objVersions->initialize();
 
 				// Store the new alias
-				$this->Database->prepare("UPDATE tl_article SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
+				$db->prepare("UPDATE tl_article SET alias=? WHERE id=?")->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();

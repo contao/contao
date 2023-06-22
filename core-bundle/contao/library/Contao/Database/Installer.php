@@ -213,8 +213,8 @@ class Installer extends Controller
 	 */
 	public function getFromDb()
 	{
-		$this->import(Database::class, 'Database');
-		$tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
+		$db = Database::getInstance();
+		$tables = preg_grep('/^tl_/', $db->listTables(null, true));
 
 		if (empty($tables))
 		{
@@ -226,7 +226,7 @@ class Installer extends Controller
 
 		foreach ($tables as $table)
 		{
-			$fields = $this->Database->listFields($table, true);
+			$fields = $db->listFields($table, true);
 
 			foreach ($fields as $field)
 			{

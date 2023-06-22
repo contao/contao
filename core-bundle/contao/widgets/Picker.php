@@ -28,17 +28,6 @@ class Picker extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
-	 * Load the database object
-	 *
-	 * @param array $arrAttributes
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		$this->import(Database::class, 'Database');
-		parent::__construct($arrAttributes);
-	}
-
-	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -207,7 +196,7 @@ class Picker extends Widget
 		if (!empty($this->varValue))
 		{
 			$strIdList = implode(',', array_map('intval', (array) $this->varValue));
-			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
+			$objRows = Database::getInstance()->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
 
 			if ($objRows->numRows)
 			{

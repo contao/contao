@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -321,9 +322,10 @@ class tl_newsletter_channel extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_newsletter_channel']) && in_array($insertId, $arrNew['tl_newsletter_channel']))
@@ -331,7 +333,7 @@ class tl_newsletter_channel extends Backend
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -342,8 +344,7 @@ class tl_newsletter_channel extends Backend
 						$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
 						$arrNewsletters[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")
-									   ->execute(serialize($arrNewsletters), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $objGroup->id);
 					}
 				}
 			}
@@ -351,9 +352,10 @@ class tl_newsletter_channel extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
 
@@ -362,8 +364,7 @@ class tl_newsletter_channel extends Backend
 					$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
 					$arrNewsletters[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")
-								   ->execute(serialize($arrNewsletters), $user->id);
+					$db->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $user->id);
 				}
 			}
 

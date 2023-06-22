@@ -352,9 +352,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Limit the results by modifying $this->arrFilemounts
 		if ((string) $for !== '')
 		{
+			$db = Database::getInstance();
+
 			try
 			{
-				$this->Database->prepare("SELECT '' REGEXP ?")->execute($for);
+				$db->prepare("SELECT '' REGEXP ?")->execute($for);
 			}
 			catch (DriverException $exception)
 			{
@@ -364,8 +366,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-									  ->execute($for);
+			$objRoot = $db
+				->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+				->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -1584,8 +1587,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Set the current timestamp before creating a new version
 			if ($this->blnIsDbAssisted && $objModel !== null)
 			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $objModel->id);
+				Database::getInstance()
+					->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+					->execute(time(), $objModel->id);
 			}
 
 			// Save the current version
@@ -1800,8 +1804,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					// Set the current timestamp before adding a new version
 					if ($this->blnIsDbAssisted && $objModel !== null)
 					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $objModel->id);
+						Database::getInstance()
+							->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+							->execute(time(), $objModel->id);
 					}
 
 					// Create a new version
@@ -2381,8 +2386,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
+			$db = Database::getInstance();
+
 			// Make sure unique fields are unique
-			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
 			}
@@ -2393,7 +2400,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
+					$db->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
 				}
 
 				// Set the correct empty value (see #6284, #6373)
@@ -2835,7 +2842,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			try
 			{
-				$this->Database->prepare("SELECT '' REGEXP ?")->execute($searchValue);
+				Database::getInstance()->prepare("SELECT '' REGEXP ?")->execute($searchValue);
 			}
 			catch (DriverException $exception)
 			{

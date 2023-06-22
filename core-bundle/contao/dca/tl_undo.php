@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Input;
@@ -143,8 +144,9 @@ class tl_undo extends Backend
 		}
 
 		// Show only own undo steps
-		$objSteps = $this->Database->prepare("SELECT id FROM tl_undo WHERE pid=?")
-								   ->execute($user->id);
+		$objSteps = Database::getInstance()
+			->prepare("SELECT id FROM tl_undo WHERE pid=?")
+			->execute($user->id);
 
 		// Restrict the list
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);

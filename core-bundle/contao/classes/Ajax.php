@@ -202,11 +202,13 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
+					$db = Database::getInstance();
+
 					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
-					elseif ($intId && $this->Database->tableExists($dc->table))
+					elseif ($intId && $db->tableExists($dc->table))
 					{
 						$idField = 'id';
 
@@ -216,8 +218,9 @@ class Ajax extends Backend
 							$idField = 'path';
 						}
 
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
-												 ->execute($intId);
+						$objRow = $db
+							->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
+							->execute($intId);
 
 						// The record does not exist
 						if ($objRow->numRows < 1)

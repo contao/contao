@@ -544,10 +544,11 @@ class Form extends Hybrid
 		// Store the values in the database
 		if ($this->storeValues && $this->targetTable)
 		{
+			$db = Database::getInstance();
 			$arrSet = array();
 
 			// Add the timestamp
-			if ($this->Database->fieldExists('tstamp', $this->targetTable))
+			if ($db->fieldExists('tstamp', $this->targetTable))
 			{
 				$arrSet['tstamp'] = time();
 			}
@@ -602,7 +603,7 @@ class Form extends Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
-			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
+			$db->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
 		// HOOK: process form data callback

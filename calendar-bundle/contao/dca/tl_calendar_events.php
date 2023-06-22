@@ -16,6 +16,7 @@ use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -531,6 +532,7 @@ class tl_calendar_events extends Backend
 			$root = $user->calendars;
 		}
 
+		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -564,9 +566,10 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+				$objCalendar = $db
+					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objCalendar->numRows < 1)
 				{
@@ -589,9 +592,7 @@ class tl_calendar_events extends Backend
 					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 
-				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
-											  ->execute($id);
-
+				$objCalendar = $db->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -625,8 +626,12 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate the alias if there is none
@@ -803,6 +808,7 @@ class tl_calendar_events extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
+		$db = Database::getInstance();
 		$user = BackendUser::getInstance();
 
 		if (!$user->isAdmin)
@@ -810,7 +816,7 @@ class tl_calendar_events extends Backend
 			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
+				$arrPids[] = $db->getChildRecords($id, 'tl_page');
 			}
 
 			if (!empty($arrPids))
@@ -822,11 +828,11 @@ class tl_calendar_events extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 		else
 		{
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
 		}
 
 		if ($objAlias->numRows)
@@ -956,7 +962,7 @@ class tl_calendar_events extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
 
 	/**

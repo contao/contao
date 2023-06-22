@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\News;
@@ -83,8 +84,9 @@ class tl_content_news extends Backend
 					$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
-										 ->execute($dc->currentPid);
+				$objCes = Database::getInstance()
+					->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
+					->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -119,15 +121,17 @@ class tl_content_news extends Backend
 	{
 		if ($blnIsPid)
 		{
-			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_news n, tl_news_archive a WHERE n.id=? AND n.pid=a.id")
-										 ->limit(1)
-										 ->execute($id);
+			$objArchive = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_news n, tl_news_archive a WHERE n.id=? AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 		else
 		{
-			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_news n, tl_news_archive a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
-										 ->limit(1)
-										 ->execute($id);
+			$objArchive = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_news n, tl_news_archive a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 
 		// Invalid ID

@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -285,10 +286,12 @@ class tl_image_size extends Backend
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -299,8 +302,9 @@ class tl_image_size extends Backend
 						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-									   ->execute(serialize($arrImageSizes), $objGroup->id);
+						$db
+							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
+							->execute(serialize($arrImageSizes), $objGroup->id);
 					}
 				}
 			}
@@ -308,9 +312,10 @@ class tl_image_size extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrThemes = StringUtil::deserialize($objUser->themes);
 
@@ -319,8 +324,9 @@ class tl_image_size extends Backend
 					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-								   ->execute(serialize($arrImageSizes), $user->id);
+					$db
+						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
+						->execute(serialize($arrImageSizes), $user->id);
 				}
 			}
 

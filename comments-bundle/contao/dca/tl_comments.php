@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -260,6 +261,8 @@ class tl_comments extends Backend
 	 */
 	public function checkPermission()
 	{
+		$db = Database::getInstance();
+
 		switch (Input::get('act'))
 		{
 			case 'select':
@@ -270,9 +273,10 @@ class tl_comments extends Backend
 			case 'edit':
 			case 'delete':
 			case 'toggle':
-				$objComment = $this->Database->prepare("SELECT id, parent, source FROM tl_comments WHERE id=?")
-											 ->limit(1)
-											 ->execute(Input::get('id'));
+				$objComment = $db
+					->prepare("SELECT id, parent, source FROM tl_comments WHERE id=?")
+					->limit(1)
+					->execute(Input::get('id'));
 
 				if ($objComment->numRows < 1)
 				{
@@ -296,7 +300,7 @@ class tl_comments extends Backend
 					break;
 				}
 
-				$objComment = $this->Database->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
+				$objComment = $db->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
 
 				while ($objComment->next())
 				{
@@ -350,7 +354,7 @@ class tl_comments extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
 	}
 
 	/**
@@ -381,13 +385,15 @@ class tl_comments extends Backend
 		// Order deny,allow
 		$cache[$strKey] = false;
 		$security = System::getContainer()->get('security.helper');
+		$db = Database::getInstance();
 
 		switch ($strSource)
 		{
 			case 'tl_content':
-				$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?))")
-										  ->limit(1)
-										  ->execute($intParent);
+				$objPage = $db
+					->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?))")
+					->limit(1)
+					->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
@@ -397,9 +403,10 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_page':
-				$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($intParent);
+				$objPage = $db
+					->prepare("SELECT * FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
@@ -409,9 +416,10 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_news':
-				$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-											 ->limit(1)
-											 ->execute($intParent);
+				$objArchive = $db
+					->prepare("SELECT pid FROM tl_news WHERE id=?")
+					->limit(1)
+					->execute($intParent);
 
 				// Do not check the access to the news module (see #5174)
 				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
@@ -421,9 +429,10 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_calendar_events':
-				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-											  ->limit(1)
-											  ->execute($intParent);
+				$objCalendar = $db
+					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
+					->limit(1)
+					->execute($intParent);
 
 				// Do not check the access to the calendar module (see #5174)
 				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
@@ -484,12 +493,14 @@ class tl_comments extends Backend
 	{
 		$router = System::getContainer()->get('router');
 		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
+		$db = Database::getInstance();
 
 		switch ($arrRow['source'])
 		{
 			case 'tl_content':
-				$objParent = $this->Database->prepare("SELECT id, title FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?)")
-											->execute($arrRow['parent']);
+				$objParent = $db
+					->prepare("SELECT id, title FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?)")
+					->execute($arrRow['parent']);
 
 				if ($objParent->numRows)
 				{
@@ -498,8 +509,9 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_page':
-				$objParent = $this->Database->prepare("SELECT id, title FROM tl_page WHERE id=?")
-											->execute($arrRow['parent']);
+				$objParent = $db
+					->prepare("SELECT id, title FROM tl_page WHERE id=?")
+					->execute($arrRow['parent']);
 
 				if ($objParent->numRows)
 				{
@@ -508,8 +520,9 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_news':
-				$objParent = $this->Database->prepare("SELECT id, headline FROM tl_news WHERE id=?")
-											->execute($arrRow['parent']);
+				$objParent = $db
+					->prepare("SELECT id, headline FROM tl_news WHERE id=?")
+					->execute($arrRow['parent']);
 
 				if ($objParent->numRows)
 				{
@@ -518,8 +531,9 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_faq':
-				$objParent = $this->Database->prepare("SELECT id, question FROM tl_faq WHERE id=?")
-											->execute($arrRow['parent']);
+				$objParent = $db
+					->prepare("SELECT id, question FROM tl_faq WHERE id=?")
+					->execute($arrRow['parent']);
 
 				if ($objParent->numRows)
 				{
@@ -528,8 +542,9 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_calendar_events':
-				$objParent = $this->Database->prepare("SELECT id, title FROM tl_calendar_events WHERE id=?")
-											->execute($arrRow['parent']);
+				$objParent = $db
+					->prepare("SELECT id, title FROM tl_calendar_events WHERE id=?")
+					->execute($arrRow['parent']);
 
 				if ($objParent->numRows)
 				{

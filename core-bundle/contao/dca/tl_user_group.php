@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -252,7 +253,7 @@ class tl_user_group extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning, EXISTS(SELECT * FROM tl_user_group WHERE alexf LIKE '%\"tl_content::unfilteredHtml\"%' OR alexf LIKE '%\"tl_module::unfilteredHtml\"%' OR elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
+		$objResult = Database::getInstance()->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning, EXISTS(SELECT * FROM tl_user_group WHERE alexf LIKE '%\"tl_content::unfilteredHtml\"%' OR alexf LIKE '%\"tl_module::unfilteredHtml\"%' OR elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning > 0)
 		{

@@ -14,6 +14,7 @@ use Contao\Calendar;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -384,10 +385,12 @@ class tl_calendar extends Backend
 
 		if (is_array($arrNew['tl_calendar']) && in_array($insertId, $arrNew['tl_calendar']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -398,8 +401,7 @@ class tl_calendar extends Backend
 						$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
 						$arrCalendars[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
-									   ->execute(serialize($arrCalendars), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $objGroup->id);
 					}
 				}
 			}
@@ -407,9 +409,10 @@ class tl_calendar extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
@@ -418,8 +421,7 @@ class tl_calendar extends Backend
 					$arrCalendars = StringUtil::deserialize($objUser->calendars, true);
 					$arrCalendars[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
-								   ->execute(serialize($arrCalendars), $user->id);
+					$db->prepare("UPDATE tl_user SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $user->id);
 				}
 			}
 

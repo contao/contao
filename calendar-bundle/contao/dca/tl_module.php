@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
 
@@ -164,7 +165,7 @@ class tl_module_calendar extends Backend
 		}
 
 		$arrCalendars = array();
-		$objCalendars = $this->Database->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
@@ -186,7 +187,7 @@ class tl_module_calendar extends Backend
 	public function getReaderModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{

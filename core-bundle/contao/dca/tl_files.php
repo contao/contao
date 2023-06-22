@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\File;
@@ -520,8 +521,9 @@ class tl_files extends Backend
 			$data['content'] = $file->getContent();
 		}
 
-		$this->Database->prepare("UPDATE tl_version SET data=? WHERE pid=? AND version=? AND fromTable=?")
-					   ->execute(serialize($data), $pid, $version, $table);
+		Database::getInstance()
+			->prepare("UPDATE tl_version SET data=? WHERE pid=? AND version=? AND fromTable=?")
+			->execute(serialize($data), $pid, $version, $table);
 	}
 
 	/**
@@ -542,9 +544,10 @@ class tl_files extends Backend
 		}
 
 		// Refetch the data, because not existing field have been unset
-		$objData = $this->Database->prepare("SELECT data FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
-								  ->limit(1)
-								  ->execute($table, $pid, $version);
+		$objData = Database::getInstance()
+			->prepare("SELECT data FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
+			->limit(1)
+			->execute($table, $pid, $version);
 
 		if ($objData->numRows < 1)
 		{

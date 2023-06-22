@@ -16,6 +16,7 @@ use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarModel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Environment;
@@ -347,6 +348,8 @@ class tl_calendar_feed extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
@@ -356,7 +359,7 @@ class tl_calendar_feed extends Backend
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -367,8 +370,7 @@ class tl_calendar_feed extends Backend
 						$arrCalendarfeeds = StringUtil::deserialize($objGroup->calendarfeeds, true);
 						$arrCalendarfeeds[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")
-									   ->execute(serialize($arrCalendarfeeds), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $objGroup->id);
 					}
 				}
 			}
@@ -376,9 +378,10 @@ class tl_calendar_feed extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT calendarfeeds, calendarfeedp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT calendarfeeds, calendarfeedp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrCalendarfeedp = StringUtil::deserialize($objUser->calendarfeedp);
 
@@ -387,8 +390,7 @@ class tl_calendar_feed extends Backend
 					$arrCalendarfeeds = StringUtil::deserialize($objUser->calendarfeeds, true);
 					$arrCalendarfeeds[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")
-								   ->execute(serialize($arrCalendarfeeds), $user->id);
+					$db->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $user->id);
 				}
 			}
 

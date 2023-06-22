@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -414,10 +415,12 @@ class tl_form extends Backend
 
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
 			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -428,8 +431,7 @@ class tl_form extends Backend
 						$arrForms = StringUtil::deserialize($objGroup->forms, true);
 						$arrForms[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")
-									   ->execute(serialize($arrForms), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")->execute(serialize($arrForms), $objGroup->id);
 					}
 				}
 			}
@@ -437,9 +439,10 @@ class tl_form extends Backend
 			// Add the permissions on user level
 			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($user->id);
+				$objUser = $db
+					->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrFormp = StringUtil::deserialize($objUser->formp);
 
@@ -448,8 +451,7 @@ class tl_form extends Backend
 					$arrForms = StringUtil::deserialize($objUser->forms, true);
 					$arrForms[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
-								   ->execute(serialize($arrForms), $user->id);
+					$db->prepare("UPDATE tl_user SET forms=? WHERE id=?")->execute(serialize($arrForms), $user->id);
 				}
 			}
 
@@ -471,8 +473,8 @@ class tl_form extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			return Database::getInstance()->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
 		// Generate an alias if there is none
@@ -512,7 +514,7 @@ class tl_form extends Backend
 			return array();
 		}
 
-		$arrTables = $this->Database->listTables();
+		$arrTables = Database::getInstance()->listTables();
 		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))

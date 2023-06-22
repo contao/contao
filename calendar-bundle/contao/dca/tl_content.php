@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\System;
@@ -80,8 +81,9 @@ class tl_content_calendar extends Backend
 					$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
-										 ->execute($dc->currentPid);
+				$objCes = Database::getInstance()
+					->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
+					->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -116,15 +118,17 @@ class tl_content_calendar extends Backend
 	{
 		if ($blnIsPid)
 		{
-			$objCalendar = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_calendar_events n, tl_calendar a WHERE n.id=? AND n.pid=a.id")
-										  ->limit(1)
-										  ->execute($id);
+			$objCalendar = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_calendar_events n, tl_calendar a WHERE n.id=? AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 		else
 		{
-			$objCalendar = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_calendar_events n, tl_calendar a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
-										  ->limit(1)
-										  ->execute($id);
+			$objCalendar = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_calendar_events n, tl_calendar a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 
 		// Invalid ID

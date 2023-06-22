@@ -15,6 +15,7 @@ use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FormHidden;
@@ -432,6 +433,7 @@ class tl_form_field extends Backend
 			$root = $user->forms;
 		}
 
+		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -454,9 +456,10 @@ class tl_form_field extends Backend
 				// Get form ID
 				if (Input::get('mode') == 1)
 				{
-					$objField = $this->Database->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-											   ->limit(1)
-											   ->execute(Input::get('pid'));
+					$objField = $db
+						->prepare("SELECT pid FROM tl_form_field WHERE id=?")
+						->limit(1)
+						->execute(Input::get('pid'));
 
 					if ($objField->numRows < 1)
 					{
@@ -481,9 +484,10 @@ class tl_form_field extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objField = $this->Database->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-										   ->limit(1)
-										   ->execute($id);
+				$objField = $db
+					->prepare("SELECT pid FROM tl_form_field WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objField->numRows < 1)
 				{
@@ -506,8 +510,9 @@ class tl_form_field extends Backend
 					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 
-				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
-										  ->execute($id);
+				$objForm = $db
+					->prepare("SELECT id FROM tl_form_field WHERE pid=?")
+					->execute($id);
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objForm->fetchEach('id'));
@@ -550,13 +555,15 @@ class tl_form_field extends Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $user->fields[0];
 		}
 
+		$db = Database::getInstance();
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Prevent editing form fields with not allowed types
 		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
-			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
-									   ->execute(Input::get('id'));
+			$objField = $db
+				->prepare("SELECT type FROM tl_form_field WHERE id=?")
+				->execute(Input::get('id'));
 
 			if ($objField->numRows && !in_array($objField->type, $user->fields))
 			{
@@ -577,8 +584,9 @@ class tl_form_field extends Backend
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
-												->execute(...$user->fields);
+					$objFields = $db
+						->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+						->execute(...$user->fields);
 
 					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
 				}
@@ -600,8 +608,9 @@ class tl_form_field extends Backend
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
-												->execute(...$user->fields);
+					$objFields = $db
+						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+						->execute(...$user->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
 				}
