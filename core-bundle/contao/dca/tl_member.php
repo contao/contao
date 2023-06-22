@@ -491,8 +491,7 @@ class tl_member extends Backend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
+				System::importStatic($callback[0])->{$callback[1]}($objUser, $strPassword);
 			}
 		}
 

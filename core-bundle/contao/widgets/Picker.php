@@ -239,9 +239,7 @@ class Picker extends Widget
 
 			if (\is_array($callback))
 			{
-				$this->import($callback[0]);
-
-				return $this->{$callback[0]}->{$callback[1]}($arrRow);
+				return System::importStatic($callback[0])->{$callback[1]}($arrRow);
 			}
 
 			if (\is_callable($callback))

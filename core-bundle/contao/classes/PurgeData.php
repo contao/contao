@@ -52,8 +52,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 					foreach ($jobs as $job)
 					{
 						list($class, $method) = $GLOBALS['TL_PURGE'][$group][$job]['callback'];
-						$this->import($class);
-						$this->$class->$method();
+						System::importStatic($class)->$method();
 					}
 				}
 			}

@@ -71,8 +71,7 @@ class ModuleRegistration extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -256,8 +255,7 @@ class ModuleRegistration extends Module
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, null);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, null);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -414,8 +412,7 @@ class ModuleRegistration extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['createNewUser'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objNewUser->id, $arrData, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objNewUser->id, $arrData, $this);
 			}
 		}
 
@@ -520,8 +517,7 @@ class ModuleRegistration extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objMember, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objMember, $this);
 			}
 		}
 

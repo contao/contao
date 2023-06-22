@@ -408,8 +408,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$xlabel .= $this->{$callback[0]}->{$callback[1]}($this);
+					$xlabel .= System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -421,9 +420,7 @@ abstract class DataContainer extends Backend
 		// Input field callback
 		if (\is_array($arrData['input_field_callback'] ?? null))
 		{
-			$this->import($arrData['input_field_callback'][0]);
-
-			return $this->{$arrData['input_field_callback'][0]}->{$arrData['input_field_callback'][1]}($this, $xlabel);
+			return System::importStatic($arrData['input_field_callback'][0])->{$arrData['input_field_callback'][1]}($this, $xlabel);
 		}
 
 		if (\is_callable($arrData['input_field_callback'] ?? null))
@@ -624,8 +621,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$wizard .= $this->{$callback[0]}->{$callback[1]}($this);
+					$wizard .= System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -904,17 +900,16 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-
-				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
+				$callback = System::importStatic($v['button_callback'][0]);
+				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
 
 				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
-					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
+					$callback->{$v['button_callback'][1]}($config);
 				}
 				else
 				{
-					$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 					continue;
 				}
 			}
@@ -1078,8 +1073,7 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
+				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1170,8 +1164,7 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
+				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;
 			}
 
@@ -1392,8 +1385,7 @@ abstract class DataContainer extends Backend
 
 						if (\is_array($arrCallback))
 						{
-							$this->import($arrCallback[0]);
-							$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
+							$panel = System::importStatic($arrCallback[0])->{$arrCallback[1]}($this);
 						}
 						elseif (\is_callable($arrCallback))
 						{
@@ -1494,8 +1486,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$tags = $this->{$callback[0]}->{$callback[1]}($this, $tags);
+					$tags = System::importStatic($callback[0])->{$callback[1]}($this, $tags);
 				}
 				elseif (\is_callable($callback))
 				{

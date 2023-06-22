@@ -208,8 +208,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -562,8 +561,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$data = $this->{$callback[0]}->{$callback[1]}($data, $currentRecord, $this);
+					$data = System::importStatic($callback[0])->{$callback[1]}($data, $currentRecord, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -702,8 +700,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
+							System::importStatic($callback[0])->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -809,8 +806,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -1009,8 +1005,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($insertID, $this);
+							System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -1188,8 +1183,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 								if (\is_array($callback))
 								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($insertID, $dc);
+									System::importStatic($callback[0])->{$callback[1]}($insertID, $dc);
 								}
 								elseif (\is_callable($callback))
 								{
@@ -1635,8 +1629,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this, $undoId);
+						System::importStatic($callback[0])->{$callback[1]}($this, $undoId);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -1840,8 +1833,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($table, $row, $this);
+							System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -2065,8 +2057,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -2256,8 +2247,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -2571,8 +2561,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							{
 								if (\is_array($callback))
 								{
-									$this->import($callback[0]);
-									$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+									$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 								}
 								elseif (\is_callable($callback))
 								{
@@ -2649,8 +2638,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -3029,8 +3017,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -3194,8 +3181,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$old = $this->{$callback[0]}->{$callback[1]}($old, $this);
+						$old = System::importStatic($callback[0])->{$callback[1]}($old, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -3242,8 +3228,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
+					$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3305,8 +3290,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+							$arrValues = System::importStatic($callback[0])->{$callback[1]}($arrValues, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -3403,8 +3387,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3567,8 +3550,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$status = $this->{$callback[0]}->{$callback[1]}($this->strTable, $new_records[$this->strTable] ?? null, $ptable, $ctable);
+					$status = System::importStatic($callback[0])->{$callback[1]}($this->strTable, $new_records[$this->strTable] ?? null, $ptable, $ctable);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3919,8 +3901,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-				$this->import($strClass);
-				$_buttons = $this->$strClass->$strMethod($this, array('id'=>0), $table, false, $arrClipboard);
+				$_buttons = System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
@@ -3985,8 +3966,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -4287,8 +4267,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-				$this->import($strClass);
-				$_buttons .= $this->$strClass->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$_buttons .= System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
@@ -4586,8 +4565,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strClass = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][1];
 
-					$this->import($strClass);
-					$options_callback = $this->$strClass->$strMethod($this);
+					$options_callback = System::importStatic($strClass)->$strMethod($this);
 
 					$_v = $options_callback[$_v] ?? '-';
 				}
@@ -4867,8 +4845,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
-					$this->import($strClass);
-					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+					$return .= '</div>' . System::importStatic($strClass)->$strMethod($row[$i]) . '</div>';
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
@@ -4955,8 +4932,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -5072,8 +5048,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][0];
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][1];
 
-						$this->import($strClass);
-						$keys = $this->$strClass->$strMethod($this);
+						$keys = System::importStatic($strClass)->$strMethod($this);
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'] ?? null))
 					{
@@ -5353,8 +5328,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+							$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -6153,8 +6127,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][0];
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][1];
 
-						$this->import($strClass);
-						$options_callback = $this->$strClass->$strMethod($this);
+						$options_callback = System::importStatic($strClass)->$strMethod($this);
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'] ?? null))
 					{
@@ -6447,8 +6420,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][1];
 
-				$this->import($strClass);
-				$lookup[$field] = $this->$strClass->$strMethod($this);
+				$lookup[$field] = System::importStatic($strClass)->$strMethod($this);
 			}
 
 			$group = $lookup[$field][$value] ?? null;
