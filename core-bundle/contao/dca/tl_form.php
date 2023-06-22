@@ -474,7 +474,11 @@ class tl_form extends Backend
 	public function generateAlias($varValue, DataContainer $dc)
 	{
 		$aliasExists = static function (string $alias) use ($dc): bool {
-			return Database::getInstance()->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate an alias if there is none

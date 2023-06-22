@@ -523,11 +523,11 @@ class File extends System
 	 */
 	public function close()
 	{
-		$files = Files::getInstance();
+		$filesObj = Files::getInstance();
 
 		if (\is_resource($this->resFile))
 		{
-			$files->fclose($this->resFile);
+			$filesObj->fclose($this->resFile);
 		}
 
 		// Create the file path
@@ -547,7 +547,7 @@ class File extends System
 		}
 
 		// Move the temporary file to its destination
-		$return = $files->rename($this->strTmp, $this->strFile);
+		$return = $filesObj->rename($this->strTmp, $this->strFile);
 		$this->strTmp = null;
 
 		// Update the database
@@ -818,18 +818,18 @@ class File extends System
 	{
 		if (!\is_resource($this->resFile))
 		{
-			$files = Files::getInstance();
+			$filesObj = Files::getInstance();
 
 			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 
 			// Copy the contents of the original file to append data
 			if (strncmp($strMode, 'a', 1) === 0 && file_exists($this->strRootDir . '/' . $this->strFile))
 			{
-				$files->copy($this->strFile, $this->strTmp);
+				$filesObj->copy($this->strFile, $this->strTmp);
 			}
 
 			// Open the temporary file
-			if (!$this->resFile = $files->fopen($this->strTmp, $strMode))
+			if (!$this->resFile = $filesObj->fopen($this->strTmp, $strMode))
 			{
 				return false;
 			}

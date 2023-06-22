@@ -256,11 +256,10 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 						$file['name'] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $file['name']);
 					}
 
-					$files = Files::getInstance();
-
 					// Move the file to its destination
-					$files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+					$filesObj = Files::getInstance();
+					$filesObj->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
+					$filesObj->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];

@@ -1040,12 +1040,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$files = Files::getInstance();
+		$filesObj = Files::getInstance();
 
 		// Delete the folder or file
 		if (is_dir($this->strRootDir . '/' . $source))
 		{
-			$files->rrdir($source);
+			$filesObj->rrdir($source);
 
 			$this->purgeCache($source);
 
@@ -1054,12 +1054,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Also delete the symlink (see #710)
 			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $source))
 			{
-				$files->delete($strWebDir . '/' . $source);
+				$filesObj->delete($strWebDir . '/' . $source);
 			}
 		}
 		else
 		{
-			$files->delete($source);
+			$filesObj->delete($source);
 		}
 
 		// Update the database AFTER the resource has been deleted
@@ -2246,7 +2246,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
 
-			$files = Files::getInstance();
+			$filesObj = Files::getInstance();
 			$arrImageTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 			// Remove potentially existing thumbnails (see #6641)
@@ -2254,12 +2254,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				foreach (glob(System::getContainer()->getParameter('contao.image.target_dir') . '/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
 				{
-					$files->delete(StringUtil::stripRootDir($strThumbnail));
+					$filesObj->delete(StringUtil::stripRootDir($strThumbnail));
 				}
 			}
 
 			// Rename the file
-			$files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
+			$filesObj->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
 			$this->purgeCache($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
@@ -2304,7 +2304,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the symlinks
 			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
 			{
-				$files->delete($strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
+				$filesObj->delete($strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
 				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, $strWebDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension, $this->strRootDir);
 			}
 
@@ -2547,7 +2547,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Scan directory and sort the result
 		else
 		{
-			$files = Files::getInstance();
+			$filesObj = Files::getInstance();
 
 			foreach (Folder::scan($path) as $v)
 			{
@@ -2568,7 +2568,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 				elseif ($v == '__new__')
 				{
-					$files->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
+					$filesObj->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
 				}
 				else
 				{

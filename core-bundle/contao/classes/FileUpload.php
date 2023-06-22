@@ -170,13 +170,13 @@ class FileUpload extends Backend
 				// Move the file to its destination
 				else
 				{
-					$files = Files::getInstance();
+					$filesObj = Files::getInstance();
 					$strNewFile = $strTarget . '/' . $file['name'];
 
 					// Set CHMOD and resize if necessary
-					if ($files->move_uploaded_file($file['tmp_name'], $strNewFile))
+					if ($filesObj->move_uploaded_file($file['tmp_name'], $strNewFile))
 					{
-						$files->chmod($strNewFile, 0666 & ~umask());
+						$filesObj->chmod($strNewFile, 0666 & ~umask());
 
 						// Notify the user
 						Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));

@@ -115,8 +115,8 @@ class ModuleQuicknav extends Module
 		++$level;
 
 		$container = System::getContainer();
-		$db = Database::getInstance();
 		$security = $container->get('security.helper');
+		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
 		{

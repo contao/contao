@@ -94,13 +94,13 @@ class Folder extends System
 		{
 			$strPath = '';
 			$arrChunks = explode('/', $this->strFolder);
-			$files = Files::getInstance();
+			$filesObj = Files::getInstance();
 
 			// Create the folder
 			foreach ($arrChunks as $strChunk)
 			{
 				$strPath .= ($strPath ? '/' : '') . $strChunk;
-				$files->mkdir($strPath);
+				$filesObj->mkdir($strPath);
 			}
 
 			// Update the database

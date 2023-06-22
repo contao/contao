@@ -1745,6 +1745,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Walk through each child table
 		foreach ($ctable as $v)
 		{
@@ -2400,6 +2402,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objSession->replace($session);
 		}
 
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
 		$user = BackendUser::getInstance();
 
@@ -2408,7 +2411,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
-			$db = Database::getInstance();
 			$class = 'tl_tbox';
 
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -3887,7 +3889,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
 			$topMostRootIds = $db
-				->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', [...$this->visibleRootTrails, ...$this->root]) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+				->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 				->execute()
 				->fetchEach('id');
 		}
@@ -5056,6 +5058,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$query .= (!empty($this->procedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 		}
 
+		$db = Database::getInstance();
+
 		if (\is_array($orderBy) && $orderBy[0])
 		{
 			foreach ($orderBy as $k=>$v)
@@ -5143,9 +5147,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$db = Database::getInstance();
-		$security = System::getContainer()->get('security.helper');
-
 		$objRowStmt = $db->prepare($query);
 
 		if ($this->limit)
@@ -5155,6 +5156,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objRow = $objRowStmt->execute(...$this->values);
+		$security = System::getContainer()->get('security.helper');
 
 		// Display buttons
 		$buttons = ((Input::get('act') == 'select' || $this->ptable) ? '
@@ -6640,8 +6642,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$arrRoot = $this->eliminateNestedPages(
 					array_intersect(
-						[...$arrRoot, ...$db->getChildRecords($arrRoot, $this->strTable)],
-						[...$this->root, ...$db->getChildRecords($this->root, $this->strTable)]
+						array_merge($arrRoot, $db->getChildRecords($arrRoot, $this->strTable)),
+						array_merge($this->root, $db->getChildRecords($this->root, $this->strTable))
 					),
 					$this->strTable,
 					$blnHasSorting
