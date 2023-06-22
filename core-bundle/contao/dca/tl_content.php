@@ -803,22 +803,15 @@ if (Input::get('do') == 'article')
 class tl_content extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_content
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
@@ -826,7 +819,7 @@ class tl_content extends Backend
 		// Get the pagemounts
 		$pagemounts = array();
 
-		foreach ($this->User->pagemounts as $root)
+		foreach ($user->pagemounts as $root)
 		{
 			$pagemounts[] = array($root);
 			$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
@@ -1036,19 +1029,21 @@ class tl_content extends Backend
 	 */
 	public function filterContentElements()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		if (empty($this->User->elements))
+		if (empty($user->elements))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $this->User->elements))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
 		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0];
 		}
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
@@ -1059,7 +1054,7 @@ class tl_content extends Backend
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Input::get('id'));
 
-			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
+			if ($objCes->numRows && !in_array($objCes->type, $user->elements))
 			{
 				throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
 			}
@@ -1072,14 +1067,14 @@ class tl_content extends Backend
 
 			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+											 ->execute(...$user->elements);
 
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				}
@@ -1095,14 +1090,14 @@ class tl_content extends Backend
 
 			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CLIPBOARD']['tl_content']['id'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+											 ->execute(...$user->elements);
 
 					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
 				}
@@ -1323,7 +1318,9 @@ class tl_content extends Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->forms))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->forms))
 		{
 			return array();
 		}

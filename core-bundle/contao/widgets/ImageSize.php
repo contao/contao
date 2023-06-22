@@ -106,10 +106,10 @@ class ImageSize extends Widget
 			$varInput[1] = parent::validator($varInput[1]);
 		}
 
-		$this->import(BackendUser::class, 'User');
-
+		$user = BackendUser::getInstance();
 		$imageSizes = System::getContainer()->get('contao.image.sizes');
-		$this->arrAvailableOptions = $this->User->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($this->User);
+
+		$this->arrAvailableOptions = $user->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($user);
 
 		if (!$this->isValidOption($varInput[2]))
 		{

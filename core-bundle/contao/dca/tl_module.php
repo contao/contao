@@ -563,26 +563,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 class tl_module extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit the table
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
 		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
@@ -639,7 +625,9 @@ class tl_module extends Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->forms))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->forms))
 		{
 			return array();
 		}

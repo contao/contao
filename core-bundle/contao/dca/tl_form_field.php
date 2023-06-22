@@ -405,15 +405,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 class tl_form_field extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_form_field
 	 *
 	 * @param DataContainer $dc
@@ -422,7 +413,9 @@ class tl_form_field extends Backend
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
@@ -430,13 +423,13 @@ class tl_form_field extends Backend
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Set root IDs
-		if (empty($this->User->forms) || !is_array($this->User->forms))
+		if (empty($user->forms) || !is_array($user->forms))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $user->forms;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -540,19 +533,21 @@ class tl_form_field extends Backend
 	 */
 	public function filterFormFields()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		if (empty($this->User->fields))
+		if (empty($user->fields))
 		{
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'] ?? null, $this->User->fields))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'] ?? null, $user->fields))
 		{
-			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
+			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $user->fields[0];
 		}
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
@@ -563,7 +558,7 @@ class tl_form_field extends Backend
 			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
 									   ->execute(Input::get('id'));
 
-			if ($objField->numRows && !in_array($objField->type, $this->User->fields))
+			if ($objField->numRows && !in_array($objField->type, $user->fields))
 			{
 				throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
 			}
@@ -576,14 +571,14 @@ class tl_form_field extends Backend
 
 			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
-				if (empty($this->User->fields))
+				if (empty($user->fields))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
-												->execute(...$this->User->fields);
+					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+												->execute(...$user->fields);
 
 					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
 				}
@@ -599,14 +594,14 @@ class tl_form_field extends Backend
 
 			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && is_array($session['CLIPBOARD']['tl_form_field']['id']))
 			{
-				if (empty($this->User->fields))
+				if (empty($user->fields))
 				{
 					$session['CLIPBOARD']['tl_form_field']['id'] = array();
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
-												->execute(...$this->User->fields);
+					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+												->execute(...$user->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
 				}

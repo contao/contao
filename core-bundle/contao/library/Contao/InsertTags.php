@@ -392,8 +392,7 @@ class InsertTags extends Controller
 					if ($blnFeUserLoggedIn)
 					{
 						$flags[] = 'attr';
-						$this->import(FrontendUser::class, 'User');
-						$value = $this->User->{$elements[1]};
+						$value = FrontendUser::getInstance()->{$elements[1]};
 
 						if (!$value)
 						{
@@ -477,8 +476,7 @@ class InsertTags extends Controller
 								break;
 							}
 
-							$this->import(FrontendUser::class, 'User');
-							$elements[1] = $this->User->loginPage;
+							$elements[1] = FrontendUser::getInstance()->loginPage;
 						}
 
 						$objNextPage = PageModel::findByIdOrAlias($elements[1]);

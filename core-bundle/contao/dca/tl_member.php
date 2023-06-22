@@ -370,15 +370,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 class tl_member extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Filter disabled groups
 	 *
 	 * @return array
@@ -449,14 +440,15 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = $this->User->isAdmin || (!empty($this->User->amg) && is_array($this->User->amg));
+		$user = BackendUser::getInstance();
+		$blnCanSwitchUser = $user->isAdmin || (!empty($user->amg) && is_array($user->amg));
 
 		if (!$blnCanSwitchUser)
 		{
 			return '';
 		}
 
-		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || !$row['username'] || (!$user->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $user->amg)) < 1))
 		{
 			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}

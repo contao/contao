@@ -306,22 +306,15 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 class tl_article extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_page
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
@@ -330,17 +323,17 @@ class tl_article extends Backend
 		$session = $objSession->all();
 
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $user->groups[0];
 
 		// Restrict the page tree
-		if (empty($this->User->pagemounts) || !is_array($this->User->pagemounts))
+		if (empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->pagemounts;
+			$root = $user->pagemounts;
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
@@ -470,7 +463,7 @@ class tl_article extends Backend
 			$pagemounts = array();
 
 			// Get all allowed pages for the current user
-			foreach ($this->User->pagemounts as $root)
+			foreach ($user->pagemounts as $root)
 			{
 				$pagemounts[] = array($root);
 				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');

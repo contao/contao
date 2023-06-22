@@ -280,34 +280,27 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 class tl_form extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_form
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !is_array($this->User->forms))
+		if (empty($user->forms) || !is_array($user->forms))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $user->forms;
 		}
 
 		$GLOBALS['TL_DCA']['tl_form']['list']['sorting']['root'] = $root;
@@ -392,19 +385,21 @@ class tl_form extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !is_array($this->User->forms))
+		if (empty($user->forms) || !is_array($user->forms))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $user->forms;
 		}
 
 		// The form is enabled already
@@ -420,9 +415,9 @@ class tl_form extends Backend
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
 		{
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -440,11 +435,11 @@ class tl_form extends Backend
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
 				$objUser = $this->Database->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
 										   ->limit(1)
-										   ->execute($this->User->id);
+										   ->execute($user->id);
 
 				$arrFormp = StringUtil::deserialize($objUser->formp);
 
@@ -454,13 +449,13 @@ class tl_form extends Backend
 					$arrForms[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
-								   ->execute(serialize($arrForms), $this->User->id);
+								   ->execute(serialize($arrForms), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->forms = $root;
+			$user->forms = $root;
 		}
 	}
 
@@ -512,7 +507,7 @@ class tl_form extends Backend
 
 		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
-		if (!$this->User->isAdmin)
+		if (!BackendUser::getInstance()->isAdmin)
 		{
 			return array();
 		}

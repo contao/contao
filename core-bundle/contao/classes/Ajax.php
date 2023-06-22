@@ -313,8 +313,6 @@ class Ajax extends Backend
 
 			// Toggle sub-palettes
 			case 'toggleSubpalette':
-				$this->import(BackendUser::class, 'User');
-
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (DataContainer::isFieldExcluded($dc->table, Input::post('field')) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
 				{

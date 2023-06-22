@@ -57,8 +57,6 @@ class ModuleChangePassword extends Module
 	 */
 	protected function compile()
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -94,7 +92,8 @@ class ModuleChangePassword extends Module
 
 		$strFields = '';
 		$doNotSubmit = false;
-		$objMember = MemberModel::findByPk($this->User->id);
+		$user = FrontendUser::getInstance();
+		$objMember = MemberModel::findByPk($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -183,7 +182,7 @@ class ModuleChangePassword extends Module
 			}
 
 			// Update the current user, so they are not logged out automatically
-			$this->User->findBy('id', $objMember->id);
+			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
 			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

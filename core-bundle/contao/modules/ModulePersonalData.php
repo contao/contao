@@ -68,8 +68,6 @@ class ModulePersonalData extends Module
 	 */
 	protected function compile()
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -106,7 +104,8 @@ class ModulePersonalData extends Module
 		);
 
 		$blnModified = false;
-		$objMember = MemberModel::findByPk($this->User->id);
+		$user = FrontendUser::getInstance();
+		$objMember = MemberModel::findByPk($user->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -152,21 +151,21 @@ class ModulePersonalData extends Module
 
 			if ($arrData['eval']['mandatory'] ?? null)
 			{
-				if (\is_array($this->User->$field))
+				if (\is_array($user->$field))
 				{
-					if (empty($this->User->$field))
+					if (empty($user->$field))
 					{
 						$arrData['eval']['required'] = true;
 					}
 				}
 				// Use strlen() here (see #3277)
-				elseif (!\strlen($this->User->$field))
+				elseif (!\strlen($user->$field))
 				{
 					$arrData['eval']['required'] = true;
 				}
 			}
 
-			$varValue = $this->User->$field;
+			$varValue = $user->$field;
 
 			// Convert CSV fields (see #4980)
 			if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
@@ -181,11 +180,11 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this->User, $this);
+						$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $user, $this);
 					}
 					elseif (\is_callable($callback))
 					{
-						$varValue = $callback($varValue, $this->User, $this);
+						$varValue = $callback($varValue, $user, $this);
 					}
 				}
 			}
@@ -232,7 +231,7 @@ class ModulePersonalData extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $user->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
@@ -246,11 +245,11 @@ class ModulePersonalData extends Module
 						{
 							if (\is_array($callback))
 							{
-								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this->User, $this);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $user, $this);
 							}
 							elseif (\is_callable($callback))
 							{
-								$varValue = $callback($varValue, $this->User, $this);
+								$varValue = $callback($varValue, $user, $this);
 							}
 						}
 						catch (ResponseException $e)
@@ -282,9 +281,9 @@ class ModulePersonalData extends Module
 					}
 
 					// Set the new value
-					if ($varValue !== $this->User->$field)
+					if ($varValue !== $user->$field)
 					{
-						$this->User->$field = $varValue;
+						$user->$field = $varValue;
 
 						// Set the new field in the member model
 						$blnModified = true;
@@ -328,7 +327,7 @@ class ModulePersonalData extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
-					System::importStatic($callback[0])->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
+					System::importStatic($callback[0])->{$callback[1]}($user, $arrSubmitted, $this, $arrFiles);
 				}
 			}
 
@@ -339,11 +338,11 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						System::importStatic($callback[0])->{$callback[1]}($this->User, $this);
+						System::importStatic($callback[0])->{$callback[1]}($user, $this);
 					}
 					elseif (\is_callable($callback))
 					{
-						$callback($this->User, $this);
+						$callback($user, $this);
 					}
 				}
 			}

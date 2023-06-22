@@ -715,8 +715,7 @@ class Theme extends Backend
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSession->remove('uploaded_themes');
 
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->generateSymlinks();
+		(new Automator())->generateSymlinks();
 
 		if (($exampleWebsite = Input::post('example_website')) && isset($exampleWebsites[$exampleWebsite]))
 		{

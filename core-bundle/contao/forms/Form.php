@@ -617,9 +617,7 @@ class Form extends Hybrid
 		// Add a log entry
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-
-			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . FrontendUser::getInstance()->username . '".');
 		}
 		else
 		{

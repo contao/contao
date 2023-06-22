@@ -140,7 +140,6 @@ class MetaWizard extends Widget
 		$return = '';
 
 		$this->import(Database::class, 'Database');
-		$this->import(BackendUser::class, 'User');
 
 		// Only show the root page languages (see #7112, #7667)
 		$objRootLangs = $this->Database->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
@@ -204,13 +203,15 @@ class MetaWizard extends Widget
 			}
 
 			// Sort the items by language name with the user language on top (see #3818)
-			uksort($items, function ($a, $b) use ($languages) {
-				if ($this->User->language === $a)
+			uksort($items, static function ($a, $b) use ($languages) {
+				$user = BackendUser::getInstance();
+
+				if ($user->language === $a)
 				{
 					return -1;
 				}
 
-				if ($this->User->language === $b)
+				if ($user->language === $b)
 				{
 					return 1;
 				}

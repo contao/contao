@@ -129,29 +129,22 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 class tl_undo extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to use table tl_undo
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Show only own undo steps
 		$objSteps = $this->Database->prepare("SELECT id FROM tl_undo WHERE pid=?")
-								   ->execute($this->User->id);
+								   ->execute($user->id);
 
 		// Restrict the list
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);

@@ -280,30 +280,23 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 class tl_files extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit the file system
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Permissions
-		if (!is_array($this->User->fop))
+		if (!is_array($user->fop))
 		{
-			$this->User->fop = array();
+			$user->fop = array();
 		}
 
 		$security = System::getContainer()->get('security.helper');
@@ -313,7 +306,7 @@ class tl_files extends Backend
 		$canDeleteRecursive = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY);
 
 		// Set the file mounts
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $this->User->filemounts;
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $user->filemounts;
 
 		// Disable the upload button if uploads are not allowed
 		if (!$canUpload)
@@ -448,7 +441,7 @@ class tl_files extends Backend
 					break;
 
 				default:
-					if (empty($this->User->fop))
+					if (empty($user->fop))
 					{
 						throw new AccessDeniedException('No permission to manipulate files.');
 					}
@@ -892,8 +885,7 @@ class tl_files extends Backend
 					$blnUnprotected = true;
 					$objFolder->unprotect();
 
-					$this->import(Automator::class, 'Automator');
-					$this->Automator->generateSymlinks();
+					(new Automator())->generateSymlinks();
 
 					System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been published');
 				}
@@ -903,8 +895,7 @@ class tl_files extends Backend
 				$blnUnprotected = false;
 				$objFolder->protect();
 
-				$this->import(Automator::class, 'Automator');
-				$this->Automator->generateSymlinks();
+				(new Automator())->generateSymlinks();
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been protected');
 			}

@@ -29,10 +29,10 @@ abstract class Backend extends Controller
 	/**
 	 * Load the database object
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		parent::__construct();
-		$this->import(Database::class, 'Database');
+		$this->import(Database::class, 'Database'); // backwards compatibility
 	}
 
 	/**
@@ -226,13 +226,12 @@ abstract class Backend extends Controller
 
 		unset($arrGroup);
 
-		$this->import(BackendUser::class, 'User');
 		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
 		{
-			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $this->User->username . '".');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . BackendUser::getInstance()->username . '".');
 		}
 
 		// The module does not exist
@@ -996,9 +995,9 @@ abstract class Backend extends Controller
 	 */
 	public function createPageList()
 	{
-		$this->import(BackendUser::class, 'User');
+		$user = BackendUser::getInstance();
 
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return $this->doCreatePageList();
 		}
@@ -1006,7 +1005,7 @@ abstract class Backend extends Controller
 		$return = '';
 		$processed = array();
 
-		foreach ($this->eliminateNestedPages($this->User->pagemounts) as $page)
+		foreach ($this->eliminateNestedPages($user->pagemounts) as $page)
 		{
 			$objPage = PageModel::findWithDetails($page);
 
@@ -1098,9 +1097,9 @@ abstract class Backend extends Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		$this->import(BackendUser::class, 'User');
+		$user = BackendUser::getInstance();
 
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return $this->doCreateFileList(System::getContainer()->getParameter('contao.upload_path'), -1, $strFilter);
 		}
@@ -1111,11 +1110,11 @@ abstract class Backend extends Controller
 		// Set custom file mount
 		if ($filemount)
 		{
-			$this->User->filemounts = array($filemount);
+			$user->filemounts = array($filemount);
 		}
 
 		// Limit nodes to the file mounts of the user
-		foreach ($this->eliminateNestedPaths($this->User->filemounts) as $path)
+		foreach ($this->eliminateNestedPaths($user->filemounts) as $path)
 		{
 			if (\in_array($path, $processed))
 			{

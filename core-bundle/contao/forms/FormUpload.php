@@ -212,11 +212,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Overwrite the upload folder with user's home directory
 				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 				{
-					$this->import(FrontendUser::class, 'User');
+					$user = FrontendUser::getInstance();
 
-					if ($this->User->assignDir && $this->User->homeDir)
+					if ($user->assignDir && $user->homeDir)
 					{
-						$intUploadFolder = $this->User->homeDir;
+						$intUploadFolder = $user->homeDir;
 					}
 				}
 
