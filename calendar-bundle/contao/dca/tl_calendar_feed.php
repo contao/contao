@@ -542,9 +542,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		$varValue = StringUtil::standardize($varValue); // see #5096
-
-		$this->import(Automator::class, 'Automator');
-		$arrFeeds = $this->Automator->purgeXmlFiles(true);
+		$arrFeeds = (new Automator())->purgeXmlFiles(true);
 
 		// Alias exists
 		if (in_array($varValue, $arrFeeds))

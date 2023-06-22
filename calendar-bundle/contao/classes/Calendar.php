@@ -71,8 +71,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeeds()
 	{
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->purgeXmlFiles();
+		(new Automator())->purgeXmlFiles();
 
 		$objCalendar = CalendarFeedModel::findAll();
 

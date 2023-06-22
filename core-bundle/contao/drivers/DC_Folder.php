@@ -754,8 +754,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Regenerate the symlinks (see #5903)
 			if (is_dir($this->strRootDir . '/' . $destination))
 			{
-				$this->import(Automator::class, 'Automator');
-				$this->Automator->generateSymlinks();
+				(new Automator())->generateSymlinks();
 			}
 
 			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
@@ -942,8 +941,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Regenerate the symlinks (see #5903)
 		if (is_dir($this->strRootDir . '/' . $destination))
 		{
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->generateSymlinks();
+			(new Automator())->generateSymlinks();
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
@@ -2169,8 +2167,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (!empty(array_intersect(array('css', 'scss', 'less', 'js'), $extensions)))
 		{
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->purgeScriptCache();
+			(new Automator())->purgeScriptCache();
 		}
 
 		$bundleTemplatePaths = array_filter(
