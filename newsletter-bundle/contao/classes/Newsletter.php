@@ -840,8 +840,7 @@ class Newsletter extends Backend
 		// Front end call
 		if ($isFrontend)
 		{
-			$this->import(FrontendUser::class, 'User');
-			$intUser = $this->User->id;
+			$intUser = FrontendUser::getInstance()->id;
 		}
 
 		// Return if there is no user (e.g. upon registration)
@@ -900,7 +899,7 @@ class Newsletter extends Backend
 				// Update the front end user object
 				if ($isFrontend)
 				{
-					$this->User->newsletter = $strNewsletters;
+					FrontendUser::getInstance()->newsletter = $strNewsletters;
 				}
 
 				// Check activation status
