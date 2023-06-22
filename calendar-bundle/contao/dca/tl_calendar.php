@@ -242,15 +242,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 class tl_calendar extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_calendar
 	 *
 	 * @throws AccessDeniedException
@@ -265,19 +256,21 @@ class tl_calendar extends Backend
 			unset($GLOBALS['TL_DCA']['tl_calendar']['fields']['allowComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		$GLOBALS['TL_DCA']['tl_calendar']['list']['sorting']['root'] = $root;
@@ -362,19 +355,21 @@ class tl_calendar extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		// The calendar is enabled already
@@ -390,9 +385,9 @@ class tl_calendar extends Backend
 		if (is_array($arrNew['tl_calendar']) && in_array($insertId, $arrNew['tl_calendar']))
 		{
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -410,11 +405,11 @@ class tl_calendar extends Backend
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
 				$objUser = $this->Database->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
 										   ->limit(1)
-										   ->execute($this->User->id);
+										   ->execute($user->id);
 
 				$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
@@ -424,13 +419,13 @@ class tl_calendar extends Backend
 					$arrCalendars[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
-								   ->execute(serialize($arrCalendars), $this->User->id);
+								   ->execute(serialize($arrCalendars), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->calendars = $root;
+			$user->calendars = $root;
 		}
 	}
 
@@ -507,7 +502,9 @@ class tl_calendar extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || !empty($this->User->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
+		$user = BackendUser::getInstance();
+
+		return ($user->isAdmin || !empty($user->calendarfeeds) || !empty($user->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**

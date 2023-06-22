@@ -1612,10 +1612,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
-		$this->import(BackendUser::class, 'User');
-
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+									  ->execute(BackendUser::getInstance()->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -2350,7 +2348,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
@@ -2372,6 +2369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$security = System::getContainer()->get('security.helper');
+		$user = BackendUser::getInstance();
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
@@ -2425,7 +2423,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions->initialize();
 
 					// Add meta fields if the current user is an administrator
-					if ($this->User->isAdmin)
+					if ($user->isAdmin)
 					{
 						if ($this->Database->fieldExists('sorting', $this->strTable))
 						{
@@ -2705,7 +2703,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
 
 			// Add meta fields if the current user is an administrator
-			if ($this->User->isAdmin)
+			if ($user->isAdmin)
 			{
 				if ($this->Database->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 				{
@@ -2857,7 +2855,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$this->import(BackendUser::class, 'User');
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
@@ -2874,6 +2871,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$security = System::getContainer()->get('security.helper');
+		$user = BackendUser::getInstance();
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
@@ -3083,7 +3081,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
 
 			// Add meta fields if the current user is an administrator
-			if ($this->User->isAdmin)
+			if ($user->isAdmin)
 			{
 				if ($this->Database->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 				{
@@ -4478,8 +4476,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// List all records of the child table
 		if (\in_array(Input::get('act'), array('paste', 'select', null)))
 		{
-			$this->import(BackendUser::class, 'User');
-
 			// Header
 			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
 			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);

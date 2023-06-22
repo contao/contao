@@ -254,15 +254,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 class tl_comments extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_comments
 	 *
 	 * @throws AccessDeniedException
@@ -372,7 +363,7 @@ class tl_comments extends Backend
 	 */
 	protected function isAllowedToEditComment($intParent, $strSource)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return true;
 		}

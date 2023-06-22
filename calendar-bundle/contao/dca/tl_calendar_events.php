@@ -497,15 +497,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 class tl_calendar_events extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_calendar_events
 	 *
 	 * @param DataContainer $dc
@@ -523,19 +514,21 @@ class tl_calendar_events extends Backend
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -810,9 +803,11 @@ class tl_calendar_events extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
-		if (!$this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin)
 		{
-			foreach ($this->User->pagemounts as $id)
+			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
 				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
@@ -856,7 +851,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}

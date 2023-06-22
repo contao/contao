@@ -150,22 +150,15 @@ if (isset($bundles['ContaoCommentsBundle']))
 class tl_module_calendar extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Get all calendars and return them as array
 	 *
 	 * @return array
 	 */
 	public function getCalendars()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->calendars))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->calendars))
 		{
 			return array();
 		}

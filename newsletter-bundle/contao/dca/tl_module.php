@@ -93,15 +93,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 class tl_module_newsletter extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Load the default subscribe text
 	 *
 	 * @param mixed $varValue
@@ -142,7 +133,9 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->newsletters))
 		{
 			return array();
 		}

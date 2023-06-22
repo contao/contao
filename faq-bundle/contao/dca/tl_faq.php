@@ -297,15 +297,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 class tl_faq extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_faq
 	 *
 	 * @param DataContainer $dc
@@ -321,19 +312,21 @@ class tl_faq extends Backend
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the root IDs
-		if (empty($this->User->faqs) || !is_array($this->User->faqs))
+		if (empty($user->faqs) || !is_array($user->faqs))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->faqs;
+			$root = $user->faqs;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;

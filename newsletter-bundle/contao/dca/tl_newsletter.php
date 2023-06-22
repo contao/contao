@@ -268,15 +268,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 class tl_newsletter extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_newsletter
 	 *
 	 * @param DataContainer $dc
@@ -285,19 +276,21 @@ class tl_newsletter extends Backend
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
+		if (empty($user->newsletters) || !is_array($user->newsletters))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->newsletters;
+			$root = $user->newsletters;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;

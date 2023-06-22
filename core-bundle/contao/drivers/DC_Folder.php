@@ -347,7 +347,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->import(Files::class, 'Files');
-		$this->import(BackendUser::class, 'User');
 
 		$arrFound = array();
 		$for = $session['search'][$this->strTable]['value'] ?? null;
@@ -1163,8 +1162,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Instantiate the uploader
-		$this->import(BackendUser::class, 'User');
-		$class = $this->User->uploader;
+		$class = BackendUser::getInstance()->uploader;
 
 		// See #4086
 		if (!class_exists($class))
@@ -2502,7 +2500,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->import(Files::class, 'Files');
-		$this->import(BackendUser::class, 'User');
 
 		return $this->generateTree($this->strRootDir . '/' . $strFolder, $level * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
@@ -2590,6 +2587,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$files = array_values($files);
 		}
 
+		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Folders
@@ -2694,7 +2692,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '">' . Image::getHtml('new.svg', $GLOBALS['TL_LANG']['tl_files']['move'][0]) . '</a>';
 
 				// Only show the upload button for mounted folders
-				if (!$this->User->isAdmin && \in_array($currentFolder, $this->User->filemounts))
+				if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 				{
 					$return .= $uploadButton;
 				}
@@ -2959,9 +2957,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not allow file operations on root folders
 		if (\in_array(Input::get('act'), array('edit', 'paste', 'delete')))
 		{
-			$this->import(BackendUser::class, 'User');
+			$user = BackendUser::getInstance();
 
-			if (!$this->User->isAdmin && \in_array($strFile, $this->User->filemounts))
+			if (!$user->isAdmin && \in_array($strFile, $user->filemounts))
 			{
 				throw new AccessDeniedException('Attempt to edit, copy, move or delete the root folder "' . $strFile . '".');
 			}

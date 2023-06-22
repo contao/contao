@@ -434,15 +434,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 class tl_news extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_news
 	 *
 	 * @param DataContainer $dc
@@ -460,19 +451,21 @@ class tl_news extends Backend
 			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
+		if (empty($user->news) || !is_array($user->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->news;
+			$root = $user->news;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -705,9 +698,11 @@ class tl_news extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
-		if (!$this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin)
 		{
-			foreach ($this->User->pagemounts as $id)
+			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
 				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
@@ -751,7 +746,7 @@ class tl_news extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
