@@ -452,11 +452,11 @@ class tl_calendar extends Backend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
-		$this->import(Calendar::class, 'Calendar');
+		$calendar = new Calendar();
 
 		foreach ($session as $id)
 		{
-			$this->Calendar->generateFeedsByCalendar($id);
+			$calendar->generateFeedsByCalendar($id);
 		}
 
 		if ($request)

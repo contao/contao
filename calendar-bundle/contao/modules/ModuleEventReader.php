@@ -445,7 +445,6 @@ class ModuleEventReader extends Events
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -470,7 +469,7 @@ class ModuleEventReader extends Events
 		$objConfig->bbcode = $objCalendar->bbcode;
 		$objConfig->moderate = $objCalendar->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
 	}
 
 	/**

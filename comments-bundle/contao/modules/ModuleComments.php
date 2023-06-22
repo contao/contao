@@ -61,9 +61,7 @@ class ModuleComments extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->import(Comments::class, 'Comments');
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $this->perPage;
 		$objConfig->order = $this->com_order;
 		$objConfig->template = $this->com_template;
@@ -72,6 +70,6 @@ class ModuleComments extends Module
 		$objConfig->bbcode = $this->com_bbcode;
 		$objConfig->moderate = $this->com_moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);
 	}
 }
