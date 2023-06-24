@@ -54,9 +54,15 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Return the adjusted logical name or the unchanged input if it does not
      * match the Contao Twig namespace.
+     *
+     * TODO change signature to public static function adjustTemplateName(string|TemplateWrapper $name, TemplateHierarchyInterface $hierarchy): string|TemplateWrapper in Contao 5.1
      */
-    public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
+    public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
     {
+        if (!is_string($name)) {
+            return $name;
+        }
+
         $parts = ContaoTwigUtil::parseContaoName($name);
 
         if ('Contao' !== ($parts[0] ?? null)) {
