@@ -18,6 +18,10 @@ class TitleBuilderTemplate extends AbstractDataContainerBuilderTemplate
                     'mode' => DataContainer::MODE_SORTABLE,
                     'fields' => ['title'],
                 ],
+                'label' => [
+                    'fields' => ['title'],
+                    'format' => '%s',
+                ],
             ],
             'fields' => [
                 'title' => [
