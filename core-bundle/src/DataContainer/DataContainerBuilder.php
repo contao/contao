@@ -86,7 +86,7 @@ class DataContainerBuilder implements DataContainerBuilderInterface
         return $this;
     }
 
-    public function addIndex(string $field, int $type = DataContainer::INDEX_REGULAR): self
+    public function addIndex(string $field, string $type = DataContainer::INDEX_SECONDARY): self
     {
         $this->dca['config']['sql']['keys'][$field] = $type;
 

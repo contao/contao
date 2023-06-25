@@ -24,7 +24,7 @@ interface DataContainerBuilderInterface
     /** 
      * @param $type One of DataContainer::INDEX_*.
      */
-    public function addIndex(string $field, int $type = DataContainer::INDEX_REGULAR): self;
+    public function addIndex(string $field, string $type = DataContainer::INDEX_SECONDARY): self;
 
     public function removeIndex(string $field): self;
 
