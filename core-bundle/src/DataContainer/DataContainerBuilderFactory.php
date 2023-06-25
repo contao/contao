@@ -20,17 +20,17 @@ class DataContainerBuilderFactory implements DataContainerBuilderFactoryInterfac
     {
         return new DataContainerBuilder($name, $this->templates);
     }
+}
 
-    /**
-     * Helper function to get a builder instance from within DCA files.
-     */
-    public static function get(string|null $name = null): DataContainerBuilderInterface
-    {
-        if (null === $name) {
-            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT, 1);
-            $name = pathinfo($trace[0]['file'], PATHINFO_FILENAME);
-        }
-
-        return (System::getContainer()->get('contao.data_container.builder_factory'))($name);
+/**
+ * Helper function to create a builder instance from within DCA files.
+ */
+function dca(string|null $name = null): DataContainerBuilderInterface
+{
+    if (null === $name) {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT, 1);
+        $name = pathinfo($trace[0]['file'], PATHINFO_FILENAME);
     }
+
+    return (System::getContainer()->get('contao.data_container.builder_factory'))($name);
 }
