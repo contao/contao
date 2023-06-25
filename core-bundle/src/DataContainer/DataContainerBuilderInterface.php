@@ -9,7 +9,7 @@ use Contao\DataContainer;
 interface DataContainerBuilderInterface
 {
     /**
-     * @param string $templates one ore more templates to apply
+     * @param string $templates One ore more templates to apply
      */
     public function applyTemplate(string ...$templates): self;
 
@@ -24,7 +24,7 @@ interface DataContainerBuilderInterface
     public function removeChildTable(string $table): self;
 
     /**
-     * @param One $type of DataContainer::INDEX_*
+     * @param string $type One of DataContainer::INDEX_*
      */
     public function addIndex(string $field, string $type = DataContainer::INDEX_SECONDARY): self;
 
@@ -45,7 +45,7 @@ interface DataContainerBuilderInterface
     /**
      * Defines the way the records are displayed in the Contao back end.
      *
-     * @param One $mode of DataContainer::MODE_*
+     * @param int $mode One of DataContainer::MODE_*
      */
     public function setListMode(int $mode): self;
 
@@ -74,7 +74,7 @@ interface DataContainerBuilderInterface
     /**
      * Stores the Data Container Array in $GLOBALS['TL_DCA'] and returns the array.
      *
-     * @param Only $returnOnly returns the Data Container Array and does not write to $GLOBALS['TL_DCA']
+     * @param bool $returnOnly Only returns the Data Container Array and does not write to $GLOBALS['TL_DCA']
      */
     public function create(bool $returnOnly = false): array;
 }
