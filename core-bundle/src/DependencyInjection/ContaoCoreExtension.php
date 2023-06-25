@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Cron\CronJob;
+use Contao\CoreBundle\DataContainer\DataContainerBuilderTemplateInterface;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
@@ -199,6 +200,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
             $loader->load('services_debug.yaml');
         }
+
+        $container
+            ->registerForAutoconfiguration(DataContainerBuilderTemplateInterface::class)
+            ->addTag('contao.data_container.builder_template')
+        ;
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
