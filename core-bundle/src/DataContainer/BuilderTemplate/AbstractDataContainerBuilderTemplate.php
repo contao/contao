@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\DataContainer;
+namespace Contao\CoreBundle\DataContainer\BuilderTemplate;
 
 abstract class AbstractDataContainerBuilderTemplate implements DataContainerBuilderTemplateInterface
 {

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Cron\CronJob;
-use Contao\CoreBundle\DataContainer\DataContainerBuilderTemplateInterface;
+use Contao\CoreBundle\DataContainer\BuilderTemplate\DataContainerBuilderTemplateInterface;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;

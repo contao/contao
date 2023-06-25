@@ -2,6 +2,7 @@
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\DataContainer\BuilderTemplate\DataContainerBuilderTemplateInterface;
 use Contao\DataContainer;
 use InvalidArgumentException;
 

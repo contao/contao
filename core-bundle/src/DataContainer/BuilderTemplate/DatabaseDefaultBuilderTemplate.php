@@ -2,7 +2,6 @@
 
 namespace Contao\CoreBundle\DataContainer\BuilderTemplate;
 
-use Contao\CoreBundle\DataContainer\AbstractDataContainerBuilderTemplate;
 use Contao\DataContainer;
 use Contao\DC_Table;
 
