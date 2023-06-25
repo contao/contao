@@ -18,8 +18,10 @@ class DataContainerBuilder implements DataContainerBuilderInterface
     /**
      * @param iterable<DataContainerBuilderTemplateInterface> $templates
      */
-    public function __construct(private string $name, iterable $templates = [])
-    {
+    public function __construct(
+        private string $name,
+        iterable $templates = [],
+    ) {
         $this->dca = $GLOBALS['TL_DCA'][$name] ?? [];
 
         foreach ($templates as $template) {
