@@ -169,7 +169,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Regular database index
 	 */
-	public const INDEX_REGULAR = 'index';
+	public const INDEX_SECONDARY = 'index';
 
 	/**
 	 * Unique database index
