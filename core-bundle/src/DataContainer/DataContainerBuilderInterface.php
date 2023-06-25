@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\DataContainer;
 
 interface DataContainerBuilderInterface
 {
-    /** 
-     * @param string One ore more templates to apply.
+    /**
+     * @param string $templates one ore more templates to apply
      */
     public function applyTemplate(string ...$templates): self;
 
@@ -21,8 +23,8 @@ interface DataContainerBuilderInterface
 
     public function removeChildTable(string $table): self;
 
-    /** 
-     * @param $type One of DataContainer::INDEX_*.
+    /**
+     * @param One $type of DataContainer::INDEX_*
      */
     public function addIndex(string $field, string $type = DataContainer::INDEX_SECONDARY): self;
 
@@ -36,20 +38,20 @@ interface DataContainerBuilderInterface
 
     public function removeGlobalOperation(string $operation): self;
 
-    public function addOperation(string $operation, ?array $config = null): self;
+    public function addOperation(string $operation, array|null $config = null): self;
 
     public function removeOperation(string $operation): self;
 
-    /** 
+    /**
      * Defines the way the records are displayed in the Contao back end.
-     * 
-     * @param $mode One of DataContainer::MODE_*.
+     *
+     * @param One $mode of DataContainer::MODE_*
      */
     public function setListMode(int $mode): self;
 
     public function addListField(string $field): self;
 
-    /** 
+    /**
      * Adds a header field for DataContainer::MODE_PARENT.
      * This is a reference to a field in the parent data container.
      */
@@ -69,10 +71,10 @@ interface DataContainerBuilderInterface
 
     public function removeSelector(string $name): self;
 
-    /** 
-     * Stores the Data Container Array in $GLOBALS['TL_DCA'] and returns the array. 
-     * 
-     * @param $returnOnly Only returns the Data Container Array and does not write to $GLOBALS['TL_DCA'].
+    /**
+     * Stores the Data Container Array in $GLOBALS['TL_DCA'] and returns the array.
+     *
+     * @param Only $returnOnly returns the Data Container Array and does not write to $GLOBALS['TL_DCA']
      */
     public function create(bool $returnOnly = false): array;
 }

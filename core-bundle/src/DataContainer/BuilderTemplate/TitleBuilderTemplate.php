@@ -1,12 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\DataContainer\BuilderTemplate;
 
 use Contao\DataContainer;
 
-/** 
- * This DCA template adds a searchable and sortable "title" field
- * and a default palette.
+/**
+ * Adds a searchable and sortable "title" field and a default palette.
  */
 class TitleBuilderTemplate extends AbstractDataContainerBuilderTemplate
 {
@@ -25,6 +34,7 @@ class TitleBuilderTemplate extends AbstractDataContainerBuilderTemplate
             ],
             'fields' => [
                 'title' => [
+                    'exclude' => true,
                     'search' => true,
                     'flag' => DataContainer::SORT_INITIAL_LETTER_ASC,
                     'inputType' => 'text',
@@ -33,7 +43,7 @@ class TitleBuilderTemplate extends AbstractDataContainerBuilderTemplate
                 ],
             ],
             'palettes' => [
-                'default' => '{title_legend},title'
+                'default' => '{title_legend},title',
             ],
         ];
     }

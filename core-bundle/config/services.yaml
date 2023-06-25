@@ -159,7 +159,7 @@ services:
             - '@contao.security.token_checker'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
-    
+
     contao.data_container.builder_factory:
         class: Contao\CoreBundle\DataContainer\DataContainerBuilderFactory
         public: true

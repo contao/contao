@@ -1,26 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\CoreBundle\DataContainer\BuilderTemplate\DataContainerBuilderTemplateInterface;
 use Contao\DataContainer;
-use InvalidArgumentException;
 
 class DataContainerBuilder implements DataContainerBuilderInterface
 {
-    private string $name;
     private array $dca;
-    /** 
+    /**
      * @var array<string, DataContainerBuilderTemplateInterface>
      */
     private array $templates = [];
 
-    /** 
-     * @param DataContainerBuilderTemplateInterface[] $templates
+    /**
+     * @param iterable<DataContainerBuilderTemplateInterface> $templates
      */
-    public function __construct(string $name, iterable $templates = [])
+    public function __construct(private string $name, iterable $templates = [])
     {
-        $this->name = $name;
         $this->dca = $GLOBALS['TL_DCA'][$name] ?? [];
 
         foreach ($templates as $template) {
@@ -34,7 +33,7 @@ class DataContainerBuilder implements DataContainerBuilderInterface
 
         foreach ($templates as $name) {
             if (!isset($this->templates[$name])) {
-                throw new InvalidArgumentException(sprintf('Could not find template "%s"', $name));
+                throw new \InvalidArgumentException(sprintf('Could not find template "%s"', $name));
             }
 
             $merged = array_replace_recursive($merged, $this->templates[$name]->getConfig());
@@ -124,7 +123,7 @@ class DataContainerBuilder implements DataContainerBuilderInterface
         return $this;
     }
 
-    public function addOperation(string $operation, ?array $config = null): self
+    public function addOperation(string $operation, array|null $config = null): self
     {
         return $this;
     }
