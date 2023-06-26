@@ -113,7 +113,7 @@
         "symfony/event-dispatcher": "^5.4 || ^6.0",
         "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
         "symfony/expression-language": "^5.4 || ^6.0",
-        "symfony/filesystem": "^5.4 || ^6.0",
+        "symfony/filesystem": "^5.4.25 || ^6.2.12",
         "symfony/finder": "^5.4 || ^6.0",
         "symfony/framework-bundle": "^6.1.2",
         "symfony/html-sanitizer": "^6.1",
