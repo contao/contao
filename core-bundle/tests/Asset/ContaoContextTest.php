@@ -195,7 +195,8 @@ class ContaoContextTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
             ->willReturn(new Schema())
         ;
 
@@ -220,7 +221,7 @@ class ContaoContextTest extends TestCase
         return $page->loadDetails();
     }
 
-    private function getContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
+    private function getContaoContext(string $field, RequestStack|null $requestStack = null): ContaoContext
     {
         $requestStack ??= new RequestStack();
 

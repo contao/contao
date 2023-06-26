@@ -33,8 +33,11 @@ use Symfony\Contracts\Cache\ItemInterface;
 #[AsFrontendModule(category: 'miscellaneous')]
 class FeedReaderController extends AbstractFrontendModuleController
 {
-    public function __construct(private readonly FeedIo $feedIo, private readonly LoggerInterface $logger, private readonly CacheInterface $cache)
-    {
+    public function __construct(
+        private readonly FeedIo $feedIo,
+        private readonly LoggerInterface $logger,
+        private readonly CacheInterface $cache,
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response

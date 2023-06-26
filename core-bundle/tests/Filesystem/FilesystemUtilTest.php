@@ -70,10 +70,10 @@ class FilesystemUtilTest extends TestCase
 
     public function provideResources(): \Generator
     {
-        $file1 = (new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694'));
-        $file2 = (new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9'));
-        $file3 = (new Uuid('0af407bc-ced3-4688-9971-f30dca7005b6'));
-        $directory = (new Uuid('1fc6c283-c0c8-420e-b1c7-712d388a6b3a'));
+        $file1 = new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694');
+        $file2 = new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9');
+        $file3 = new Uuid('0af407bc-ced3-4688-9971-f30dca7005b6');
+        $directory = new Uuid('1fc6c283-c0c8-420e-b1c7-712d388a6b3a');
 
         yield 'single file as RFC 4122' => [
             $file1->toRfc4122(),

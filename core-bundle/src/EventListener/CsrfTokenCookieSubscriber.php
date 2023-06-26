@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -29,8 +31,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
-    {
+    public function __construct(
+        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly MemoryTokenStorage $tokenStorage,
+        private readonly string $cookiePrefix = 'csrf_',
+    ) {
     }
 
     /**
@@ -55,6 +60,11 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
+
+        if (false === $request->attributes->get('_token_check')) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($this->requiresCsrf($request, $response)) {
@@ -66,6 +76,14 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Initializes an empty CSRF token storage for the command line.
+     */
+    public function onCommand(ConsoleCommandEvent $event): void
+    {
+        $this->tokenStorage->initialize([]);
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -73,6 +91,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             KernelEvents::REQUEST => ['onKernelRequest', 36],
             // The priority must be higher than the one of the make-response-private listener (defaults to -896)
             KernelEvents::RESPONSE => ['onKernelResponse', -832],
+            ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
     }
 
@@ -161,7 +180,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getTokensFromCookies(ParameterBag $cookies): array
     {

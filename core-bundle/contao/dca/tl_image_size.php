@@ -15,6 +15,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
+use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
@@ -95,7 +96,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
+		'__selector__'                => array('preserveMetadata'),
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
+	),
+
+	// Sub-palettes
+	'subpalettes' => array
+	(
+		'preserveMetadata'            => 'metadata'
 	),
 
 	// Fields
@@ -122,6 +130,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
+		),
+		'imageQuality' => array
+		(
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NULL"
 		),
 		'cssClass' => array
 		(
@@ -177,10 +191,22 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
 		),
+		'preserveMetadata' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
+		),
+		'metadata' => array
+		(
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('tl_image_size', 'getMetadata'),
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
@@ -352,7 +378,7 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -412,6 +438,25 @@ class tl_image_size extends Backend
 			$chunks = array_values(array_diff(explode(',', $to), array($from)));
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Return the image metadata options
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getMetadata(DataContainer $dc=null)
+	{
+		$options = array();
+
+		foreach ((new ResizeOptions())->getPreserveCopyrightMetadata() as $key => $value)
+		{
+			$options[serialize(array($key => $value))] = strtoupper($key) . ' (' . implode(', ', iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($value)))) . ')';
 		}
 
 		return $options;

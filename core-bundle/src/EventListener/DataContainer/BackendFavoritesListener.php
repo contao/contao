@@ -20,8 +20,10 @@ use Symfony\Component\Security\Core\Security;
 #[AsCallback(table: 'tl_favorites', target: 'config.onload')]
 class BackendFavoritesListener
 {
-    public function __construct(private readonly Security $security, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function __invoke(): void

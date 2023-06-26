@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class InterestCohortListener
 {
-    public function __construct(private ScopeMatcher $scopeMatcher)
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
     }
 

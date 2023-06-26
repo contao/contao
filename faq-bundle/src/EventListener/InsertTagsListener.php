@@ -30,7 +30,7 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -74,31 +74,23 @@ class InsertTagsListener
 
     private function generateReplacement(FaqModel $faq, string $key, string $url, bool $blank): string|false
     {
-        switch ($key) {
-            case 'faq':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>%s</a>',
-                    $url ?: './',
-                    StringUtil::specialcharsAttribute($faq->question),
-                    $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $faq->question
-                );
-
-            case 'faq_open':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>',
-                    $url ?: './',
-                    StringUtil::specialcharsAttribute($faq->question),
-                    $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
-                );
-
-            case 'faq_url':
-                return $url ?: './';
-
-            case 'faq_title':
-                return StringUtil::specialcharsAttribute($faq->question);
-        }
-
-        return false;
+        return match ($key) {
+            'faq' => sprintf(
+                '<a href="%s" title="%s"%s>%s</a>',
+                $url ?: './',
+                StringUtil::specialcharsAttribute($faq->question),
+                $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
+                $faq->question
+            ),
+            'faq_open' => sprintf(
+                '<a href="%s" title="%s"%s>',
+                $url ?: './',
+                StringUtil::specialcharsAttribute($faq->question),
+                $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
+            ),
+            'faq_url' => $url ?: './',
+            'faq_title' => StringUtil::specialcharsAttribute($faq->question),
+            default => false,
+        };
     }
 }

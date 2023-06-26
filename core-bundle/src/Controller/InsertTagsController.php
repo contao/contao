@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InsertTagsController
 {
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 

@@ -283,8 +283,7 @@ abstract class Template extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($this);
+				System::importStatic($callback[0])->{$callback[1]}($this);
 			}
 		}
 
@@ -558,8 +557,7 @@ abstract class Template extends Controller
 		$strType = null;
 
 		// Check for valid JavaScript types (see #7927)
-		$isJavaScript = static function ($strChunk)
-		{
+		$isJavaScript = static function ($strChunk) {
 			$typeMatch = array();
 
 			if (preg_match('/\stype\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !\in_array(strtolower($typeMatch['type']), static::$validJavaScriptTypes))

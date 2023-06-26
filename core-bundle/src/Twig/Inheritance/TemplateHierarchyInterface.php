@@ -34,17 +34,17 @@ interface TemplateHierarchyInterface
      *     ],
      *   ]
      *
-     * @return array<string,array<string, string>>
+     * @return array<string, array<string, string>>
      */
-    public function getInheritanceChains(string $themeSlug = null): array;
+    public function getInheritanceChains(string|null $themeSlug = null): array;
 
     /**
      * Finds the next template in the hierarchy and returns the logical name.
      */
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string;
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string|null $themeSlug = null): string;
 
     /**
      * Finds the first template in the hierarchy and returns the logical name.
      */
-    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string;
+    public function getFirst(string $shortNameOrIdentifier, string|null $themeSlug = null): string;
 }

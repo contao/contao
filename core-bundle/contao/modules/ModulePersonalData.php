@@ -80,8 +80,7 @@ class ModulePersonalData extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -116,7 +115,6 @@ class ModulePersonalData extends Module
 		// Initialize the versioning (see #7415)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
-		$objVersions->setUserId(0);
 		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id)));
 		$objVersions->initialize();
 
@@ -183,8 +181,7 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
+						$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this->User, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -237,7 +234,7 @@ class ModulePersonalData extends Module
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
 				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
+					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Trigger the save_callback (see #5247)
@@ -249,8 +246,7 @@ class ModulePersonalData extends Module
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this->User, $this);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -332,8 +328,7 @@ class ModulePersonalData extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
+					System::importStatic($callback[0])->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
 				}
 			}
 
@@ -344,8 +339,7 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->User, $this);
+						System::importStatic($callback[0])->{$callback[1]}($this->User, $this);
 					}
 					elseif (\is_callable($callback))
 					{

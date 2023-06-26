@@ -28,13 +28,13 @@ class FrontendPreviewAuthenticator
     final public const SESSION_NAME = '_contao_frontend_preview';
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
+     * @internal
      */
     public function __construct(
-        private Security $security,
-        private RequestStack $requestStack,
-        private UserProviderInterface $userProvider,
-        private LoggerInterface|null $logger = null,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly UserProviderInterface $userProvider,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 
@@ -60,7 +60,7 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    public function authenticateFrontendGuest(bool $showUnpublished, int $previewLinkId = null): bool
+    public function authenticateFrontendGuest(bool $showUnpublished, int|null $previewLinkId = null): bool
     {
         try {
             $session = $this->requestStack->getSession();

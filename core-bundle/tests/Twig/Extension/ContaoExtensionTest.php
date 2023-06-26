@@ -91,6 +91,8 @@ class ContaoExtensionTest extends TestCase
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
             'prefix_url' => [],
+            'frontend_module' => ['html'],
+            'content_element' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -211,11 +213,11 @@ class ContaoExtensionTest extends TestCase
             new Source('<code>', 'foo.html.twig')
         );
 
-        $original = $node->__toString();
+        $original = (string) $node;
 
         // Traverse tree first time (no changes expected)
         $traverser->traverse($node);
-        $iteration1 = $node->__toString();
+        $iteration1 = (string) $node;
 
         // Add rule that allows the template and traverse tree a second time (change expected)
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
@@ -224,7 +226,7 @@ class ContaoExtensionTest extends TestCase
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
 
         $traverser->traverse($node);
-        $iteration2 = $node->__toString();
+        $iteration2 = (string) $node;
 
         $this->assertSame($original, $iteration1);
         $this->assertStringNotContainsString("'contao_html'", $iteration1);
@@ -358,7 +360,7 @@ class ContaoExtensionTest extends TestCase
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment|null $environment = null, TemplateHierarchyInterface|null $hierarchy = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);

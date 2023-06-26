@@ -359,7 +359,7 @@ class ZipReader
 		$arrEFL = unpack('v', @fread($this->resFile, 2));
 
 		// Reposition pointer
-		fseek($this->resFile, ($this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1]), SEEK_CUR);
+		fseek($this->resFile, $this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1], SEEK_CUR);
 
 		// Empty file
 		if ($this->arrFiles[$this->intIndex]['compressed_size'] < 1)
@@ -447,7 +447,7 @@ class ZipReader
 		while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
 		// Reposition pointer
-		fseek($this->resFile, ($intOffset + $pos), SEEK_END);
+		fseek($this->resFile, $intOffset + $pos, SEEK_END);
 		$strSignature = @fread($this->resFile, 4);
 
 		// Read archive header
@@ -519,7 +519,7 @@ class ZipReader
 
 			// Split file path
 			$arrFile['file_basename'] = basename($arrFile['file_name']);
-			$arrFile['file_dirname'] = (($path = \dirname($arrFile['file_name'])) != '.' ? $path : '');
+			$arrFile['file_dirname'] = ($path = \dirname($arrFile['file_name'])) != '.' ? $path : '';
 
 			// Add UNIX time
 			$arrFile['last_mod_file_unix'] = $this->decToUnix((int) $arrFile['last_mod_file_time'], (int) $arrFile['last_mod_file_date']);
@@ -529,7 +529,7 @@ class ZipReader
 			$this->arrFiles[] = $arrFile;
 		}
 
-		$this->intLast = (\count($this->arrFiles) - 1);
+		$this->intLast = \count($this->arrFiles) - 1;
 
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);
@@ -551,7 +551,7 @@ class ZipReader
 			($intTime & 0x07E0) >>  5,
 			($intTime & 0x001F) <<  1,
 			($intDate & 0x01E0) >>  5,
-			($intDate & 0x001F),
+			$intDate & 0x001F,
 			(($intDate & 0xFE00) >>  9) + 1980
 		);
 	}

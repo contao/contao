@@ -288,8 +288,7 @@ class tl_templates extends Backend
 		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void
-			{
+			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void {
 				$filesystem = new Filesystem();
 				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
 
@@ -327,8 +326,7 @@ class tl_templates extends Backend
 				$filesystem->dumpFile($targetFile, $content);
 			};
 
-			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void
-			{
+			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use ($arrAllTemplates, &$strError): void {
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Validate the target path
@@ -407,7 +405,7 @@ class tl_templates extends Backend
 
 			foreach ($v as $kk=>$vv)
 			{
-				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, ((Input::post('original') == $kk) ? ' selected="selected"' : ''), $vv);
+				$strAllTemplates .= sprintf('<option value="%s"%s>%s</option>', $kk, (Input::post('original') == $kk) ? ' selected="selected"' : '', $vv);
 			}
 
 			$strAllTemplates .= '</optgroup>';
@@ -586,7 +584,7 @@ class tl_templates extends Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -627,8 +625,8 @@ class tl_templates extends Backend
 			}
 
 			$strRelPath = $strFolder . '/' . $strFile;
-			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, ((Input::post('target') == $strRelPath) ? ' selected="selected"' : ''), str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
-			$strFolders .= $this->getTargetFolders($strRelPath, ($intLevel + 1));
+			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, (Input::post('target') == $strRelPath) ? ' selected="selected"' : '', str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
+			$strFolders .= $this->getTargetFolders($strRelPath, $intLevel + 1);
 		}
 
 		return $strFolders;
@@ -649,10 +647,10 @@ class tl_templates extends Backend
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
 		/** @var DC_Folder $dc */
-		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
+		$dc = func_num_args() <= 12 ? null : func_get_arg(12);
 		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')));
 
-		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

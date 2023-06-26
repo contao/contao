@@ -106,7 +106,8 @@ final class ContaoCorePermissions
 
     /**
      * Access is granted if the current user can access the form field type.
-     * Subject must be a content element type (e.g. "hidden").
+     * Subject can be a content element type (e.g. "hidden") or null to
+     * check if any field type is allowed.
      */
     public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
@@ -153,8 +154,14 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_PAGE_TYPE = 'contao_user.alpty';
 
     /**
+     * Access is granted if the given page is mounted for the current user.
+     * Subject must be a page ID from tl_page.
+     */
+    public const USER_CAN_ACCESS_PAGE = 'contao_user.pagemounts';
+
+    /**
      * Access is granted if the given path is mounted for the current user.
-     * Subject must be path as string (e.g. "files/content/foo").
+     * Subject must be a path as string (e.g. "files/content/foo").
      */
     public const USER_CAN_ACCESS_PATH = 'contao_user.filemounts';
 

@@ -93,9 +93,10 @@ class ModuleBreadcrumb extends Module
 			array_pop($pages);
 		}
 
-		for ($i=(\count($pages)-1); $i>0; $i--)
+		for ($i=\count($pages)-1; $i>0; $i--)
 		{
-			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
+			// Skip pages that require an item (see #3450) and hidden or unpublished pages
+			if ($pages[$i]->requireItem || ($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
 			{
 				continue;
 			}
@@ -134,19 +135,23 @@ class ModuleBreadcrumb extends Module
 					break;
 			}
 
-			$items[] = array
-			(
-				'isRoot'   => false,
-				'isActive' => false,
-				'href'     => $href,
-				'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
-				'link'     => $pages[$i]->title,
-				'data'     => $pages[$i]->row(),
-			);
+			// Do not add non-root pages with an empty URL to the breadcrumbs
+			if ($href)
+			{
+				$items[] = array
+				(
+					'isRoot'   => false,
+					'isActive' => false,
+					'href'     => $href,
+					'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
+					'link'     => $pages[$i]->title,
+					'data'     => $pages[$i]->row(),
+				);
+			}
 		}
 
-		// Active article
-		if (Input::get('articles') !== null)
+		// Only add active article(s) to the breadcrumbs if the current page does not require an item (see #3450)
+		if (Input::get('articles') !== null && !$pages[0]->requireItem)
 		{
 			$items[] = array
 			(
@@ -194,7 +199,8 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => true,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
+				// Use the current request without query string for the current page (see #3450)
+				'href'     => strtok(Environment::get('request'), '?'),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -206,13 +212,11 @@ class ModuleBreadcrumb extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateBreadcrumb'] as $callback)
 			{
-				$this->import($callback[0]);
-				$items = $this->{$callback[0]}->{$callback[1]}($items, $this);
+				$items = System::importStatic($callback[0])->{$callback[1]}($items, $this);
 			}
 		}
 
-		$this->Template->getSchemaOrgData = static function () use ($items): array
-		{
+		$this->Template->getSchemaOrgData = static function () use ($items): array {
 			$jsonLd = array(
 				'@type' => 'BreadcrumbList',
 				'itemListElement' => array()

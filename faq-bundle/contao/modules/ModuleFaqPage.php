@@ -100,7 +100,7 @@ class ModuleFaqPage extends Module
 					->createFigureBuilder()
 					->from($objFaq->singleSRC)
 					->setSize($objFaq->size)
-					->setMetadata($objFaq->getOverwriteMetadata())
+					->setOverwriteMetadata($objFaq->getOverwriteMetadata())
 					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
 					->enableLightbox($objFaq->fullsize)
 					->buildIfResourceExists();
@@ -148,8 +148,7 @@ class ModuleFaqPage extends Module
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
-		$this->Template->getSchemaOrgData = static function () use ($objFaqs)
-		{
+		$this->Template->getSchemaOrgData = static function () use ($objFaqs) {
 			return ModuleFaq::getSchemaOrgData($objFaqs);
 		};
 	}

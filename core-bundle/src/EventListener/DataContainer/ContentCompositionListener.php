@@ -35,20 +35,20 @@ class ContentCompositionListener
     /**
      * @var Adapter<Image>
      */
-    private Adapter $image;
+    private readonly Adapter $image;
 
     /**
      * @var Adapter<Backend>
      */
-    private Adapter $backend;
+    private readonly Adapter $backend;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Security $security,
-        private PageRegistry $pageRegistry,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly PageRegistry $pageRegistry,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
     ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);
@@ -66,7 +66,7 @@ class ContentCompositionListener
         $pageModel->setRow($row);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return null !== $icon ? $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ' : '';
+            return null !== $icon ? $this->image->getHtml(str_replace('.svg', '--disabled.svg', $icon)).' ' : '';
         }
 
         return sprintf(
@@ -140,7 +140,7 @@ class ContentCompositionListener
     }
 
     #[AsCallback(table: 'tl_article', target: 'list.sorting.paste_button')]
-    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
+    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array|null $clipboard = null): string
     {
         if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
@@ -149,7 +149,7 @@ class ContentCompositionListener
         return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
     }
 
-    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
@@ -161,7 +161,7 @@ class ContentCompositionListener
         }
 
         if ($cr || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
-            return $this->image->getHtml('pasteinto_.svg').' ';
+            return $this->image->getHtml('pasteinto--disabled.svg').' ';
         }
 
         return sprintf(
@@ -172,7 +172,7 @@ class ContentCompositionListener
         );
     }
 
-    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pageModel = $pageAdapter->findByPk($row['pid']);
@@ -192,7 +192,7 @@ class ContentCompositionListener
             || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
             || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
         ) {
-            return $this->image->getHtml('pasteafter_.svg').' ';
+            return $this->image->getHtml('pasteafter--disabled.svg').' ';
         }
 
         return sprintf(

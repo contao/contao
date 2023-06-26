@@ -570,7 +570,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
+    private function renderMacro(string $call, array $context = [], ResponseContextAccessor|null $responseContextAccessor = null): string
     {
         $templates = [
             '_macros.html.twig' => file_get_contents(

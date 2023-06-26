@@ -32,8 +32,8 @@ class CsrfTokenCookieSubscriberTest extends TestCase
     public function testInitializesTheStorage(): void
     {
         $token = (new UriSafeTokenGenerator())->generateToken();
-
         $request = Request::create('https://foobar.com');
+
         $request->cookies = new InputBag([
             'csrf_foo' => 'bar',
             'csrf_generated' => $token,
@@ -126,6 +126,28 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             ->expects($this->once())
             ->method('getUsedTokens')
             ->willReturn(['foo' => 'bar'])
+        ;
+
+        $response = new Response();
+
+        $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertCount(0, $response->headers->getCookies());
+    }
+
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfTheTokenCheckHasBeenDisabled(): void
+    {
+        $request = Request::create('https://foobar.com');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->attributes->set('_token_check', false);
+
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
         ;
 
         $response = new Response();
@@ -290,7 +312,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertSame('value="'.$tokenValue.'"', $response->getContent());
     }
 
-    public function getRequestEvent(Request $request = null): RequestEvent
+    public function getRequestEvent(Request|null $request = null): RequestEvent
     {
         if (!$request) {
             $request = new Request();
@@ -299,7 +321,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         return new RequestEvent($this->createMock(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
-    public function getResponseEvent(Request $request = null, Response $response = null): ResponseEvent
+    public function getResponseEvent(Request|null $request = null, Response|null $response = null): ResponseEvent
     {
         if (!$request) {
             $request = new Request();

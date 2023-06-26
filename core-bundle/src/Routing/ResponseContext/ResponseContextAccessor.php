@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessor
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 

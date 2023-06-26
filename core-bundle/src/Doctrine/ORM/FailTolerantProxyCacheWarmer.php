@@ -18,8 +18,10 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private CacheWarmerInterface $inner, private Connection $connection)
-    {
+    public function __construct(
+        private readonly CacheWarmerInterface $inner,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function isOptional(): bool
@@ -37,7 +39,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
         // exception during the automatic version detection
         try {
             $this->connection->getDatabasePlatform();
-        } catch (DoctrineDbalException | \mysqli_sql_exception) {
+        } catch (DoctrineDbalException|\mysqli_sql_exception) {
             return [];
         }
 

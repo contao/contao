@@ -83,7 +83,7 @@ class ModuleSearch extends Module
 		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
 		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$this->Template->advanced = ($this->searchType == 'advanced');
+		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -130,8 +130,7 @@ class ModuleSearch extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['customizeSearch'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
+					System::importStatic($callback[0])->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
 				}
 			}
 
@@ -145,7 +144,7 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
+				$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
 			}
 			catch (\Exception $e)
 			{
@@ -159,8 +158,7 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (System::getContainer()->getParameter('contao.search.index_protected'))
 			{
-				$objResult->applyFilter(static function ($v)
-				{
+				$objResult->applyFilter(static function ($v) {
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
@@ -302,8 +300,10 @@ class ModuleSearch extends Module
 				continue;
 			}
 
+			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,

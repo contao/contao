@@ -35,21 +35,21 @@ class BackendCsvImportController
     final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
-     * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
+     * @internal
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private string $projectDir,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly string $projectDir,
     ) {
     }
 
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            static fn (array $data, array $row): array => array_merge($data, $row),
+            static fn (array $data, array $row): array => [...$data, ...$row],
             $dc->table,
             'listitems',
             (int) $dc->id,
@@ -93,7 +93,7 @@ class BackendCsvImportController
         );
     }
 
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string|null $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -182,7 +182,7 @@ class BackendCsvImportController
     }
 
     /**
-     * @return array<string,array<string,string>>
+     * @return array<string, array<string, string>>
      */
     private function getSeparators(bool $allowLinebreak = false): array
     {

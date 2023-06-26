@@ -71,8 +71,7 @@ class BackendHelp extends Backend
 			}
 			elseif (\is_array($arrData['options_callback'] ?? null))
 			{
-				$this->import($arrData['options_callback'][0]);
-				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new DC_Table($table));
+				$options = System::importStatic($arrData['options_callback'][0])->{$arrData['options_callback'][1]}(new DC_Table($table));
 			}
 			elseif (\is_callable($arrData['options_callback'] ?? null))
 			{

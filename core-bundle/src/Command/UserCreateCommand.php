@@ -37,12 +37,12 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 )]
 class UserCreateCommand extends Command
 {
-    private array $locales;
+    private readonly array $locales;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
@@ -55,7 +55,7 @@ class UserCreateCommand extends Command
         $this
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
-            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The email address')
+            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The e-mail address')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The password')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The user language (ISO 639-1 language code)')
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Give admin permissions to the new user')
@@ -80,14 +80,14 @@ class UserCreateCommand extends Command
 
         $emailCallback = static function ($value) {
             if (!Validator::isEmail($value)) {
-                throw new \InvalidArgumentException('The email address is invalid.');
+                throw new \InvalidArgumentException('The e-mail address is invalid.');
             }
 
             return $value;
         };
 
         if (null === $input->getOption('email')) {
-            $email = $this->ask('Please enter the email address: ', $input, $output, $emailCallback);
+            $email = $this->ask('Please enter the e-mail address: ', $input, $output, $emailCallback);
 
             $input->setOption('email', $email);
         } else {
@@ -104,7 +104,7 @@ class UserCreateCommand extends Command
         $minLength = $config->get('minPasswordLength');
         $username = $input->getOption('username');
 
-        $passwordCallback = static function ($value) use ($username, $minLength): string {
+        $passwordCallback = static function ($value) use ($minLength, $username): string {
             if ('' === trim($value)) {
                 throw new \RuntimeException('The password cannot be empty');
             }
@@ -189,7 +189,7 @@ class UserCreateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string
+    private function ask(string $label, InputInterface $input, OutputInterface $output, callable|null $callback = null): string
     {
         $question = new Question($label);
         $question->setMaxAttempts(3);
@@ -251,7 +251,7 @@ class UserCreateCommand extends Command
         return $groups->fetchEach('name');
     }
 
-    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
+    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array|null $groups = null, bool $pwChange = false): void
     {
         $time = time();
         $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);

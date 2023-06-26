@@ -35,15 +35,15 @@ class TokenChecker
     private array $previewLinks = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
+     * @internal
      */
     public function __construct(
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
-        private TokenStorageInterface $tokenStorage,
-        private AuthenticationTrustResolverInterface $trustResolver,
-        private VoterInterface $roleVoter,
-        private Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthenticationTrustResolverInterface $trustResolver,
+        private readonly VoterInterface $roleVoter,
+        private readonly Connection $connection,
     ) {
     }
 

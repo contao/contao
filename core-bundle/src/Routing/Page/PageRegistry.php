@@ -37,7 +37,7 @@ class PageRegistry
      */
     private array $contentComposition = [];
 
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -134,7 +134,7 @@ class PageRegistry
         return $this->urlSuffixes;
     }
 
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): self
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface|null $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;

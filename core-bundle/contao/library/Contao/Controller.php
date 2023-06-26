@@ -250,8 +250,7 @@ abstract class Controller extends System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, static function ($a)
-			{
+			$v = array_filter($v, static function ($a) {
 				return $a != 'root';
 			});
 
@@ -356,7 +355,7 @@ abstract class Controller extends System
 			}
 
 			$return = '';
-			$blnMultiMode = ($objArticles->count() > 1);
+			$blnMultiMode = $objArticles->count() > 1;
 
 			while ($objArticles->next())
 			{
@@ -399,7 +398,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -460,7 +459,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, (!$blnIsInsertTag ? $objPage->id : null));
+			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
 			{
@@ -488,7 +487,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -559,7 +558,7 @@ abstract class Controller extends System
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -1094,7 +1093,7 @@ abstract class Controller extends System
 			$strAttribute = $arrUrls[$i+2];
 			$strUrl = $arrUrls[$i+3];
 
-			if (!preg_match('@^(?:[a-z0-9]+:|#)@i', $strUrl))
+			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
 				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
 			}
@@ -1324,7 +1323,7 @@ abstract class Controller extends System
 		}
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
-		$arrPages = array_intersect($arrPages, $this->Database->getChildRecords(0, $strTable, $blnSorting));
+		$arrPages = array_filter(array_map('intval', $arrPages));
 		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
@@ -1512,8 +1511,7 @@ abstract class Controller extends System
 		;
 
 		// Match the actual regex and filter the files
-		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex)
-		{
+		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex) {
 			$path = $info->getPathname();
 
 			return preg_match($regex, $path) && $info->isFile();

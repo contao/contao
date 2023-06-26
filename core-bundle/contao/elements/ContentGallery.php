@@ -66,6 +66,12 @@ class ContentGallery extends ContentElement
 			return '';
 		}
 
+		// Make sure we have at least one item per row to prevent division by zero
+		if ($this->perRow < 1)
+		{
+			$this->perRow = 1;
+		}
+
 		return parent::generate();
 	}
 
@@ -144,29 +150,25 @@ class ContentGallery extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($images, static function ($a, $b): int
-				{
+				uksort($images, static function ($a, $b): int {
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($images, static function ($a, $b): int
-				{
+				uksort($images, static function ($a, $b): int {
 					return -strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'date_asc':
-				uasort($images, static function (array $a, array $b)
-				{
+				uasort($images, static function (array $a, array $b) {
 					return $a['mtime'] <=> $b['mtime'];
 				});
 				break;
 
 			case 'date_desc':
-				uasort($images, static function (array $a, array $b)
-				{
+				uasort($images, static function (array $a, array $b) {
 					return $b['mtime'] <=> $a['mtime'];
 				});
 				break;

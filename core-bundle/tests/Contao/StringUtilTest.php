@@ -264,7 +264,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider getRevertInputEncoding
      */
-    public function testRevertInputEncoding(string $source, string $expected = null): void
+    public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request(['value' => $source]));
@@ -291,7 +291,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
 
@@ -383,7 +383,7 @@ class StringUtilTest extends TestCase
 
         yield 'Stringable argument' => [
             new class('foobar') implements \Stringable {
-                public function __construct(private string $value)
+                public function __construct(private readonly string $value)
                 {
                 }
 
@@ -477,16 +477,18 @@ class StringUtilTest extends TestCase
         yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
         yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
         yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+        yield [1.23456, '1.23456', -1];
+        yield [1.23456, '1.2', 2];
     }
 
     /**
      * @dataProvider numberToStringFailsProvider
      */
-    public function testNumberToStringFails(float|int $source, string $exception): void
+    public function testNumberToStringFails(float|int $source, string $exception, int|null $precision = null): void
     {
         $this->expectException($exception);
 
-        StringUtil::numberToString($source);
+        StringUtil::numberToString($source, $precision);
     }
 
     public function numberToStringFailsProvider(): \Generator
@@ -494,6 +496,9 @@ class StringUtilTest extends TestCase
         yield [INF, \InvalidArgumentException::class];
         yield [NAN, \InvalidArgumentException::class];
         yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
+        yield [1.2, \InvalidArgumentException::class, -2];
+        yield [1.2, \InvalidArgumentException::class, 0];
+        yield [1.2, \InvalidArgumentException::class, 1];
     }
 
     public function testResolvesReferencesInArrays(): void

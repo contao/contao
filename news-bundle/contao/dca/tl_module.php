@@ -64,8 +64,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),

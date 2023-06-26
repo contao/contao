@@ -43,7 +43,7 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory = null): self
+    public function addLazy(string $classname, \Closure|null $factory = null): self
     {
         $factory ??= fn () => new $classname($this);
 

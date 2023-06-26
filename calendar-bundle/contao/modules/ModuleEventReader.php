@@ -96,7 +96,8 @@ class ModuleEventReader extends Events
 		}
 
 		// Redirect if the event has a target URL (see #1498)
-		switch ($objEvent->source) {
+		switch ($objEvent->source)
+		{
 			case 'internal':
 				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
 				{
@@ -266,8 +267,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id)
-			{
+			$objTemplate->details = function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -282,8 +282,7 @@ class ModuleEventReader extends Events
 				return $strDetails;
 			};
 
-			$objTemplate->hasDetails = static function () use ($id)
-			{
+			$objTemplate->hasDetails = static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};
 		}
@@ -312,7 +311,7 @@ class ModuleEventReader extends Events
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objEvent->getOverwriteMetadata())
+				->setOverwriteMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox($objEvent->fullsize)
 				->buildIfResourceExists();
 
@@ -328,8 +327,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
-		{
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -366,8 +364,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
-		{
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -404,8 +401,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array
-		{
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)

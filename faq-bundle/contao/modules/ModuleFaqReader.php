@@ -136,7 +136,7 @@ class ModuleFaqReader extends Module
 				->createFigureBuilder()
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
-				->setMetadata($objFaq->getOverwriteMetadata())
+				->setOverwriteMetadata($objFaq->getOverwriteMetadata())
 				->enableLightbox($objFaq->fullsize)
 				->buildIfResourceExists();
 
@@ -169,8 +169,7 @@ class ModuleFaqReader extends Module
 		}
 
 		// schema.org information
-		$this->Template->getSchemaOrgData = static function () use ($objFaq)
-		{
+		$this->Template->getSchemaOrgData = static function () use ($objFaq) {
 			return ModuleFaq::getSchemaOrgData(array($objFaq));
 		};
 

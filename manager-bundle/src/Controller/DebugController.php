@@ -21,10 +21,13 @@ use Symfony\Component\Security\Core\Security;
 class DebugController
 {
     /**
-     * @internal Do not inherit from this class; decorate the "Contao\ManagerBundle\Controller\DebugController" service instead
+     * @internal
      */
-    public function __construct(private Security $security, private RequestStack $requestStack, private JwtManager $jwtManager)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly JwtManager $jwtManager,
+    ) {
     }
 
     public function enableAction(): RedirectResponse

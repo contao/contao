@@ -55,7 +55,10 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'label' => array
 		(
-			'group_callback'          => array('tl_module', 'getGroupHeader')
+			'group_callback' => array
+			(
+				array('tl_module', 'getGroupHeader')
+			)
 		),
 		'global_operations' => array
 		(
@@ -101,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'defineRoot'                  => 'rootPage',
@@ -197,8 +200,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'navigationTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -270,8 +272,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'memberTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -329,8 +330,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'searchTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -424,8 +424,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rss_template' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -723,7 +722,7 @@ class tl_module extends Backend
 	{
 		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null));
+			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null);
 		}
 
 		return $varValue;
@@ -740,7 +739,7 @@ class tl_module extends Backend
 	{
 		if (trim($varValue) === '')
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null));
+			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
 		}
 
 		return $varValue;

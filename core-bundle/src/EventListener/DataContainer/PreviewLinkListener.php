@@ -35,14 +35,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PreviewLinkListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private Security $security,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private UrlGeneratorInterface $urlGenerator,
-        private UriSigner $uriSigner,
-        private string $previewScript = '',
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UriSigner $uriSigner,
+        private readonly string $previewScript = '',
     ) {
     }
 
@@ -171,7 +171,7 @@ class PreviewLinkListener
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
-            return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
+            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
         return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);

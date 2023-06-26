@@ -31,8 +31,10 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
@@ -47,7 +49,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
+            return $this->replaceNewsInsertTags($key, $elements[1], [...$flags, ...\array_slice($elements, 2)]);
         }
 
         return false;
@@ -65,34 +67,24 @@ class InsertTagsListener
 
         $news = $this->framework->getAdapter(News::class);
 
-        switch ($insertTag) {
-            case 'news':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>%s</a>',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->headline),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $model->headline
-                );
-
-            case 'news_open':
-                return sprintf(
-                    '<a href="%s" title="%s"%s>',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->headline),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
-                );
-
-            case 'news_url':
-                return $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './';
-
-            case 'news_title':
-                return StringUtil::specialcharsAttribute($model->headline);
-
-            case 'news_teaser':
-                return $model->teaser;
-        }
-
-        return '';
+        return match ($insertTag) {
+            'news' => sprintf(
+                '<a href="%s" title="%s"%s>%s</a>',
+                $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                StringUtil::specialcharsAttribute($model->headline),
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
+                $model->headline
+            ),
+            'news_open' => sprintf(
+                '<a href="%s" title="%s"%s>',
+                $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                StringUtil::specialcharsAttribute($model->headline),
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
+            ),
+            'news_url' => $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+            'news_title' => StringUtil::specialcharsAttribute($model->headline),
+            'news_teaser' => $model->teaser,
+            default => '',
+        };
     }
 }

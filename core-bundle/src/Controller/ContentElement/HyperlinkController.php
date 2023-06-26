@@ -25,14 +25,16 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'links')]
 class HyperlinkController extends AbstractContentElementController
 {
-    public function __construct(private readonly Studio $studio, private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly Studio $studio,
+        private readonly InsertTagParser $insertTagParser,
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Link with attributes
-        $href = $this->insertTagParser->replaceInline($model->url);
+        $href = $this->insertTagParser->replaceInline($model->url ?? '');
 
         if (Validator::isRelativeUrl($href)) {
             $href = $request->getBasePath().'/'.$href;
@@ -66,7 +68,7 @@ class HyperlinkController extends AbstractContentElementController
             ->createFigureBuilder()
             ->fromUuid($model->singleSRC ?: '')
             ->setSize($model->size)
-            ->setMetadata($model->getOverwriteMetadata())
+            ->setOverwriteMetadata($model->getOverwriteMetadata())
             ->setLinkAttributes($linkAttributes)
             ->buildIfResourceExists()
         ;

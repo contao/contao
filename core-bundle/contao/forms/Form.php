@@ -155,7 +155,7 @@ class Form extends Hybrid
 
 		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
 
-		// Add a confirmation to the template and remove it afterwards
+		// Add a confirmation to the template and remove it afterward
 		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 		{
 			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
@@ -194,8 +194,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileFormFields'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrFields = $this->{$callback[0]}->{$callback[1]}($arrFields, $formId, $this);
+				$arrFields = System::importStatic($callback[0])->{$callback[1]}($arrFields, $formId, $this);
 			}
 		}
 
@@ -239,8 +238,7 @@ class Form extends Hybrid
 				{
 					foreach ($GLOBALS['TL_HOOKS']['loadFormField'] as $callback)
 					{
-						$this->import($callback[0]);
-						$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+						$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 					}
 				}
 
@@ -254,8 +252,7 @@ class Form extends Hybrid
 					{
 						foreach ($GLOBALS['TL_HOOKS']['validateFormField'] as $callback)
 						{
-							$this->import($callback[0]);
-							$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+							$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 						}
 					}
 
@@ -390,8 +387,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
 		}
 
@@ -439,7 +435,7 @@ class Form extends Hybrid
 				if ($this->format == 'csv' || $this->format == 'csv_excel')
 				{
 					$keys[] = $k;
-					$values[] = (\is_array($v) ? implode(',', $v) : $v);
+					$values[] = \is_array($v) ? implode(',', $v) : $v;
 				}
 			}
 
@@ -589,8 +585,7 @@ class Form extends Hybrid
 			{
 				foreach ($GLOBALS['TL_HOOKS']['storeFormData'] as $callback)
 				{
-					$this->import($callback[0]);
-					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
+					$arrSet = System::importStatic($callback[0])->{$callback[1]}($arrSet, $this);
 				}
 			}
 
@@ -615,8 +610,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['processFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
 			}
 		}
 

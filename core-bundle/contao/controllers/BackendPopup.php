@@ -66,13 +66,13 @@ class BackendPopup extends Backend
 	{
 		if (!$this->strFile)
 		{
-			die('No file given');
+			exit('No file given');
 		}
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $this->strFile) || preg_match('@\.+/@', $this->strFile) || preg_match('@(://)+@', $this->strFile))
 		{
-			die('Invalid file name');
+			exit('Invalid file name');
 		}
 
 		$container = System::getContainer();
@@ -80,7 +80,7 @@ class BackendPopup extends Backend
 		// Limit preview to the files directory
 		if (!preg_match('@^' . preg_quote($container->getParameter('contao.upload_path'), '@') . '@i', $this->strFile))
 		{
-			die('Invalid path');
+			exit('Invalid path');
 		}
 
 		$projectDir = $container->getParameter('kernel.project_dir');
@@ -88,13 +88,13 @@ class BackendPopup extends Backend
 		// Check whether the file exists
 		if (!file_exists($projectDir . '/' . $this->strFile))
 		{
-			die('File not found');
+			exit('File not found');
 		}
 
 		// Check whether the file is mounted (thanks to Marko Cupic)
 		if (!$this->User->hasAccess($this->strFile, 'filemounts'))
 		{
-			die('Permission denied');
+			exit('Permission denied');
 		}
 
 		// Open the download dialogue
@@ -135,6 +135,16 @@ class BackendPopup extends Backend
 				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
+
+				try
+				{
+					$readerWriter = System::getContainer()->get('contao.image.metadata');
+					$objTemplate->metadata = $readerWriter->toReadable($readerWriter->parse($projectDir . '/' . $this->strFile));
+				}
+				catch (\Throwable)
+				{
+					// Ignore
+				}
 			}
 			else
 			{

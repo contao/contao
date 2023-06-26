@@ -54,7 +54,7 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @phpstan-return Adapter<T>
      */
-    protected function getContaoAdapter(string $class)
+    protected function getContaoAdapter(string $class): Adapter
     {
         return $this->container->get('contao.framework')->getAdapter($class);
     }

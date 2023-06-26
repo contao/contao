@@ -128,6 +128,6 @@ Visit the [support page][5] to learn about the available support options.
 [2]: https://symfony.com
 [3]: https://github.com/contao/managed-edition
 [4]: https://packagist.org/providers/php-http/client-implementation
-[5]: https://contao.org/en/support.html
+[5]: https://to.contao.org/support
 [6]: https://github.com/symfony/recipes-contrib
 [7]: http://symfony.com/doc/current/components/dotenv.html

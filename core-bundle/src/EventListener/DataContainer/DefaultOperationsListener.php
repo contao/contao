@@ -28,8 +28,10 @@ use Symfony\Component\Security\Core\Security;
 #[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
-    public function __construct(private readonly Security $security, private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function __invoke(string $table): void
@@ -69,7 +71,7 @@ class DefaultOperationsListener
     {
         $operations = [];
 
-        $isTreeMode = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE;
+        $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
@@ -212,7 +214,7 @@ class DefaultOperationsListener
     private function isGranted(string $actionClass, string $table, DataContainerOperation $operation): bool
     {
         $subject = match ($actionClass) {
-            CreateAction::class => new CreateAction($table),
+            CreateAction::class => $this->copyAction($table, $operation),
             UpdateAction::class => new UpdateAction($table, $operation->getRecord()),
             DeleteAction::class => new DeleteAction($table, $operation->getRecord()),
             default => throw new \InvalidArgumentException(sprintf('Invalid action class "%s".', $actionClass)),
@@ -221,12 +223,21 @@ class DefaultOperationsListener
         return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
     }
 
+    private function copyAction(string $table, DataContainerOperation $operation): CreateAction
+    {
+        $new = $operation->getRecord();
+        unset($new['id']);
+        $new['tstamp'] = 0;
+
+        return new CreateAction($table, $new);
+    }
+
     private function disableOperation(DataContainerOperation $operation): void
     {
         unset($operation['route'], $operation['href']);
 
         if (isset($operation['icon'])) {
-            $operation['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $operation['icon']);
+            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
         }
     }
 }

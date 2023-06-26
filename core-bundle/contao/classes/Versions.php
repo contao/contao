@@ -236,8 +236,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -341,8 +340,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -443,8 +441,12 @@ class Versions extends Controller
 				$arrFields = $objDcaExtractor->getFields();
 
 				// Find the changed fields and highlight the changes
-				foreach ($to as $k=>$v)
+				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
+					$deleted = !\array_key_exists($k, $to);
+					$to[$k] ??= null;
+					$from[$k] ??= null;
+
 					if ($from[$k] != $to[$k])
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
@@ -467,7 +469,7 @@ class Versions extends Controller
 							}
 						}
 
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null))
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null)
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -486,12 +488,12 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
+								if (!\is_array($to[$k]) && \is_array($tmp = StringUtil::deserialize($to[$k])))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
-								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
+								if (!\is_array($from[$k]) && \is_array($tmp = StringUtil::deserialize($from[$k])))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
@@ -558,6 +560,11 @@ class Versions extends Controller
 						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
 						{
 							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
+						if ($deleted)
+						{
+							$field = "<del>$field</del>";
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
@@ -678,7 +685,7 @@ class Versions extends Controller
 			$arrRow = $objVersions->row();
 
 			// Add some parameters
-			$arrRow['from'] = max(($objVersions->version - 1), 1); // see #4828
+			$arrRow['from'] = max($objVersions->version - 1, 1); // see #4828
 			$arrRow['to'] = $objVersions->version;
 			$arrRow['date'] = date(Config::get('datimFormat'), $objVersions->tstamp);
 			$arrRow['description'] = StringUtil::substr($arrRow['description'], 32);
@@ -692,7 +699,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -708,7 +715,7 @@ class Versions extends Controller
 				$objDeleted = $objDatabase->prepare("SELECT COUNT(*) AS count FROM " . $v['fromTable'] . " WHERE id=?")
 										  ->execute($v['pid']);
 
-				$arrVersions[$k]['deleted'] = ($objDeleted->count < 1);
+				$arrVersions[$k]['deleted'] = $objDeleted->count < 1;
 			}
 			catch (\Exception $e)
 			{
@@ -783,15 +790,18 @@ class Versions extends Controller
 			return $this->strUsername;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if ($user = System::getContainer()->get('security.helper')->getUser())
+		{
+			return $user->getUserIdentifier();
+		}
 
-		return $this->User->username;
+		throw new \LogicException('No user logged in. Provide the username via "setUsername()" or call "create(true)" to create a version without user.');
 	}
 
 	/**
 	 * Return the user ID
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getUserId()
 	{
@@ -800,9 +810,12 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		{
+			return $user->id;
+		}
 
-		return $this->User->id;
+		return 0;
 	}
 
 	/**

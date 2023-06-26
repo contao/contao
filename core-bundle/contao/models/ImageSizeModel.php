@@ -27,8 +27,11 @@ use Contao\Model\Collection;
  * @property string       $resizeMode
  * @property integer|null $zoom
  * @property string       $formats
+ * @property boolean      $preserveMetadata
+ * @property string       $metadata
  * @property boolean      $skipIfDimensionsMatch
  * @property boolean      $lazyLoading
+ * @property integer      $imageQuality
  *
  * @method static ImageSizeModel|null findById($id, array $opt=array())
  * @method static ImageSizeModel|null findByPk($id, array $opt=array())
@@ -47,6 +50,7 @@ use Contao\Model\Collection;
  * @method static ImageSizeModel|null findOneByFormats($val, array $opt=array())
  * @method static ImageSizeModel|null findOneBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByLazyLoading($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneByImageQuality($val, array $opt=array())
  *
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByPid($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, array $opt=array())
@@ -61,6 +65,7 @@ use Contao\Model\Collection;
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByFormats($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByLazyLoading($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByImageQuality($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findAll(array $opt=array())
@@ -79,6 +84,7 @@ use Contao\Model\Collection;
  * @method static integer countByFormats($val, array $opt=array())
  * @method static integer countBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static integer countByLazyLoading($val, array $opt=array())
+ * @method static integer countByImageQuality($val, array $opt=array())
  */
 class ImageSizeModel extends Model
 {

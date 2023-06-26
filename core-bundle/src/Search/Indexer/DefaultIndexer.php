@@ -20,10 +20,13 @@ use Doctrine\DBAL\Connection;
 class DefaultIndexer implements IndexerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly bool $indexProtected = false,
+    ) {
     }
 
     public function index(Document $document): void
@@ -134,6 +137,6 @@ class DefaultIndexer implements IndexerInterface
         }
 
         // Merge all entries to one meta array (the latter overrides the former)
-        $meta = array_merge($meta, array_merge(...$jsonLds));
+        $meta = [...$meta, ...array_merge(...$jsonLds)];
     }
 }

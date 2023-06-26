@@ -22,8 +22,10 @@ class PageCandidates extends AbstractCandidates
 {
     private bool $initialized = false;
 
-    public function __construct(private Connection $connection, private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly PageRegistry $pageRegistry,
+    ) {
         parent::__construct([], []);
     }
 
@@ -43,7 +45,7 @@ class PageCandidates extends AbstractCandidates
             /** @var Result $result */
             $result = $qb->executeQuery();
 
-            return array_unique(array_merge($candidates, $result->fetchFirstColumn()));
+            return array_unique([...$candidates, ...$result->fetchFirstColumn()]);
         }
 
         return $candidates;
@@ -74,7 +76,7 @@ class PageCandidates extends AbstractCandidates
         $paths = [];
 
         foreach ($pathMap as $type => $pathRegex) {
-            // Remove existing named subpatterns
+            // Remove existing named sub-patterns
             $pathRegex = preg_replace('/\?P<[^>]+>/', '', $pathRegex);
 
             $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
@@ -93,7 +95,7 @@ class PageCandidates extends AbstractCandidates
         );
 
         preg_match_all(
-            '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')'.'$#sD',
+            '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
             $pathInfo,
             $matches
         );

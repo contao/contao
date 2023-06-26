@@ -19,10 +19,12 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 class ControllerResolver implements ControllerResolverInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.controller_resolver" service instead
+     * @internal
      */
-    public function __construct(private ControllerResolverInterface $resolver, private FragmentRegistry $registry)
-    {
+    public function __construct(
+        private readonly ControllerResolverInterface $resolver,
+        private readonly FragmentRegistry $registry,
+    ) {
     }
 
     public function getController(Request $request): callable|false

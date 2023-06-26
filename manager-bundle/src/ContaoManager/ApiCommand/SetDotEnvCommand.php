@@ -28,7 +28,7 @@ use Symfony\Component\Filesystem\Path;
 )]
 class SetDotEnvCommand extends Command
 {
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {
@@ -47,14 +47,21 @@ class SetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $filesystem = new Filesystem();
         $path = Path::join($this->projectDir, '.env');
+        $localPath = $path.'.local';
 
-        $dumper = new DotenvDumper($path.'.local');
+        // Get the realpath in case it is a symlink (see #6066)
+        if ($realpath = realpath($localPath)) {
+            $localPath = $realpath;
+        }
+
+        $dumper = new DotenvDumper($localPath, $filesystem);
         $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
         $dumper->dump();
 
         if (!file_exists($path)) {
-            (new Filesystem())->touch($path);
+            $filesystem->touch($path);
         }
 
         return 0;

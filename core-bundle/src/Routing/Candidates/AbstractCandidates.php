@@ -26,8 +26,10 @@ class AbstractCandidates implements CandidatesInterface
      */
     private const LIMIT = 20;
 
-    public function __construct(protected array $urlPrefixes, protected array $urlSuffixes)
-    {
+    public function __construct(
+        protected array $urlPrefixes,
+        protected array $urlSuffixes,
+    ) {
     }
 
     /**

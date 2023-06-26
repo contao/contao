@@ -31,10 +31,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class BackendPreviewController
 {
     public function __construct(
-        private string $previewScript,
-        private FrontendPreviewAuthenticator $previewAuthenticator,
-        private EventDispatcherInterface $dispatcher,
-        private AuthorizationCheckerInterface $authorizationChecker,
+        private readonly string $previewScript,
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 

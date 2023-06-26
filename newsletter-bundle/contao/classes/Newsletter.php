@@ -15,6 +15,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -98,10 +99,7 @@ class Newsletter extends Backend
 		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
 
 		// Convert relative URLs
-		if ($objNewsletter->externalImages)
-		{
-			$html = $this->convertRelativeUrls($html);
-		}
+		$html = $this->convertRelativeUrls($html);
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
@@ -155,13 +153,11 @@ class Newsletter extends Backend
 			$intPages = Input::get('mpc') ?: 10;
 
 			// Get recipients
-			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
+			$objRecipients = $this->Database->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
 											->limit($intPages, $intStart)
 											->execute($objNewsletter->pid);
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
-
-			$arrSkippedRecipients = array();
 
 			// Send newsletter
 			if ($objRecipients->numRows > 0)
@@ -177,6 +173,7 @@ class Newsletter extends Backend
 				}
 
 				$time = time();
+				$arrSkippedRecipients = $objSession->get('skipped_recipients', array());
 
 				while ($objRecipients->next())
 				{
@@ -200,9 +197,9 @@ class Newsletter extends Backend
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 				}
-			}
 
-			$objSession->set('skipped_recipients', $arrSkippedRecipients);
+				$objSession->set('skipped_recipients', $arrSkippedRecipients);
+			}
 
 			echo '<div style="margin-top:12px">';
 
@@ -224,7 +221,7 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
 									   ->execute($strRecipient);
 
-						System::getContainer()->get('monolog.logger.contao.error')->error('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
+						System::getContainer()->get('monolog.logger.contao.general')->info('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
 					}
 				}
 
@@ -382,9 +379,6 @@ class Newsletter extends Backend
 			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
-		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
-
 		return $objEmail;
 	}
 
@@ -403,6 +397,9 @@ class Newsletter extends Backend
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
+
+		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
@@ -446,9 +443,10 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (RfcComplianceException $e)
+		catch (RfcComplianceException|TransportException $e)
 		{
 			$arrRejected[] = $arrRecipient['email'];
+			System::getContainer()->get('monolog.logger.contao.error')->error(sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		// Rejected recipients
@@ -740,7 +738,7 @@ class Newsletter extends Backend
 		if ($objUser->numRows)
 		{
 			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), ($blnDisabled ? 0 : 1), $objUser->email);
+						   ->execute(time(), $blnDisabled ? 0 : 1, $objUser->email);
 		}
 
 		return $blnDisabled;
@@ -824,7 +822,7 @@ class Newsletter extends Backend
 			if ($objRecipient->count < 1)
 			{
 				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-							   ->execute($intId, $objUser->email, ($objUser->disable ? '' : 1), ($blnIsFrontend ? $time : ''));
+							   ->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
@@ -910,7 +908,7 @@ class Newsletter extends Backend
 				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);
+								   ->execute(Input::post('disable') ? '' : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}

@@ -29,10 +29,14 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     use FrameworkAwareTrait;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
+     * @internal
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        TranslatorInterface|null $translator,
+        private readonly Security $security,
+    ) {
         parent::__construct($menuFactory, $router, $translator);
     }
 
@@ -51,7 +55,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_news';
     }
@@ -76,7 +80,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'news'];
 

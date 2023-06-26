@@ -37,6 +37,7 @@ use Doctrine\DBAL\Types\Types;
  *     }
  *
  * @property string        $id                 The field ID
+ * @property string        $type               the field type
  * @property string        $name               the field name
  * @property string        $label              The field label
  * @property mixed         $value              The field value
@@ -548,7 +549,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ($isBackend ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
+		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', $this->arrErrors[$intIndex]) : '';
 	}
 
 	/**
@@ -597,8 +598,7 @@ abstract class Widget extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this);
 			}
 		}
 
@@ -619,11 +619,11 @@ abstract class Widget extends Controller
 
 		return sprintf(
 			'<label%s%s>%s%s%s</label>',
-			($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
-			($this->strClass ? ' class="' . $this->strClass . '"' : ''),
-			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : '',
+			$this->strClass ? ' class="' . $this->strClass . '"' : '',
+			$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$this->strLabel,
-			($this->mandatory ? '<span class="mandatory">*</span>' : '')
+			$this->mandatory ? '<span class="mandatory">*</span>' : ''
 		);
 	}
 
@@ -1043,11 +1043,7 @@ abstract class Widget extends Controller
 					{
 						foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
 						{
-							$this->import($callback[0]);
-							$break = $this->{$callback[0]}->{$callback[1]}($this->rgxp, $varInput, $this);
-
-							// Stop the loop if a callback returned true
-							if ($break === true)
+							if (System::importStatic($callback[0])->{$callback[1]}($this->rgxp, $varInput, $this) === true)
 							{
 								break;
 							}

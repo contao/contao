@@ -100,7 +100,7 @@ abstract class Model
 	protected $blnPreventSaving = false;
 
 	/**
-	 * @var array<string,array<string,string>>
+	 * @var array<string, array<string, string>>
 	 */
 	private static $arrColumnCastTypes = array();
 
@@ -154,6 +154,11 @@ abstract class Model
 			// Create the related models
 			foreach ($arrRelated as $key=>$row)
 			{
+				if (!isset($this->arrRelations[$key]['table']))
+				{
+					throw new \Exception('Incomplete relation defined for ' . static::$strTable . '.' . $key);
+				}
+
 				$table = $this->arrRelations[$key]['table'];
 
 				/** @var static $strClass */
@@ -390,25 +395,33 @@ abstract class Model
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDatabase(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
-		);
+		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
+
+		// Backwards compatibility with doctrine/dbal < 3.5
+		if (method_exists($schemaManager, 'introspectSchema'))
+		{
+			$schema = $schemaManager->introspectSchema();
+		}
+		else
+		{
+			$schema = $schemaManager->createSchema();
+		}
+
+		return static::getColumnCastTypesFromSchema($schema);
 	}
 
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDca(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
-		);
+		return static::getColumnCastTypesFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
 	}
 
 	private static function getColumnCastTypesFromSchema(Schema $schema): array
@@ -978,7 +991,7 @@ abstract class Model
 	 * Find a single record by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
@@ -1004,7 +1017,7 @@ abstract class Model
 	 * Find records by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return static|Collection|null A model, model collection or null if the result is empty
@@ -1167,11 +1180,11 @@ abstract class Model
 
 		if (!isset($arrOptions['value']))
 		{
-			$arrOptions['value'] = array();
+			$arrOptions['value'] = \is_string($arrOptions['column'] ?? null) ? array(null) : array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
+		$objResult = $objStatement->execute(...(array) $arrOptions['value']);
 
 		if ($objResult->numRows < 1)
 		{

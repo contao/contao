@@ -122,13 +122,13 @@ class ModuleEventMenu extends ModuleCalendar
 		foreach ($arrData as $intYear=>$intCount)
 		{
 			$intDate = $intYear;
-			$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
+			$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strLink . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
-			$arrItems[$intYear]['isActive'] = (Input::get('year') == $intDate);
+			$arrItems[$intYear]['isActive'] = Input::get('year') == $intDate;
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
@@ -191,13 +191,13 @@ class ModuleEventMenu extends ModuleCalendar
 				$intDate = $intYear . $intMonth;
 				$intMonth = (int) $intMonth - 1;
 
-				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
+				$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
-				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
+				$arrItems[$intYear][$intMonth]['isActive'] = Input::get('month') == $intDate;
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}
 		}

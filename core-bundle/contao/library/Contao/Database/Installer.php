@@ -154,8 +154,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -200,8 +199,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -283,8 +281,7 @@ class Installer extends Controller
 					$index_fields = implode(
 						', ',
 						array_map(
-							static function ($item) use ($quote)
-							{
+							static function ($item) use ($quote) {
 								if (strpos($item, '(') === false)
 								{
 									return $quote($item);
@@ -330,8 +327,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 

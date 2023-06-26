@@ -236,7 +236,7 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    private function getCommand(Connection $connection = null, string $password = null): UserPasswordCommand
+    private function getCommand(Connection|null $connection = null, string|null $password = null): UserPasswordCommand
     {
         $connection ??= $this->createMock(Connection::class);
         $password ??= '12345678';

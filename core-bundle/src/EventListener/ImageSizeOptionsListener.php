@@ -22,8 +22,10 @@ use Symfony\Component\Security\Core\Security;
 #[AsCallback(table: 'tl_module', target: 'fields.imgSize.options')]
 class ImageSizeOptionsListener
 {
-    public function __construct(private Security $security, private ImageSizes $imageSizes)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly ImageSizes $imageSizes,
+    ) {
     }
 
     public function __invoke(): array

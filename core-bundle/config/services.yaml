@@ -103,6 +103,7 @@ services:
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.util.process_util'
+            - ~
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -332,6 +333,13 @@ services:
         class: Contao\ImagineSvg\Imagine
         public: true
 
+    contao.image.metadata:
+        class: Contao\Image\Metadata\MetadataReaderWriter
+        public: true
+        arguments:
+            - !tagged_iterator contao.image.metadata_format
+            - !tagged_iterator contao.image.metadata_container
+
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         public: true
@@ -369,9 +377,11 @@ services:
         public: true
         arguments:
             - '%contao.image.target_dir%'
+            - '%kernel.secret%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
             - '@contao.image.deferred_image_storage'
+            - '@contao.image.metadata'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
@@ -400,6 +410,7 @@ services:
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
+            - '%contao.web_dir%'
             - '%contao.image.valid_extensions%'
 
     contao.image.studio.figure_renderer:
@@ -587,14 +598,10 @@ services:
             - '%contao.resources_paths%'
 
     contao.routing.backend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - [matchAttribute, [_scope, backend]]
+        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
     contao.routing.frontend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - [matchAttribute, [_scope, frontend]]
+        class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
@@ -608,6 +615,7 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - '@contao.framework'
+            - '@request_stack'
         tags:
             - contao.page_router_enhancer
 
@@ -665,6 +673,13 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.routing.page_registry'
+
+    contao.routing.page_finder:
+        class: Contao\CoreBundle\Routing\PageFinder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@router'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
@@ -766,6 +781,8 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
@@ -782,17 +799,17 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    contao.security.backend_favorites_voter:
-        class: Contao\CoreBundle\Security\Voter\BackendFavoritesVoter
-        arguments:
-            - '@security.helper'
-            - '@database_connection'
-
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
             - Contao\BackendUser
+
+    contao.security.data_container.favorites_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
@@ -1036,6 +1053,11 @@ services:
 
     contao.twig.formatter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
+        arguments:
+            - '@contao.framework'
+
+    contao.twig.fragment_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FragmentRuntime
         arguments:
             - '@contao.framework'
 

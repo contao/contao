@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+
 /**
  * Provide methods to handle image size fields.
  *
@@ -175,6 +177,7 @@ class ImageSize extends Widget
 		$arrFields = array();
 		$arrOptions = array();
 		$arrAllOptions = $this->arrOptions;
+		$arrValues = array();
 
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[2]))
@@ -192,6 +195,8 @@ class ImageSize extends Widget
 					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
+
+				$arrValues[] = $arrOption['value'] ?? '';
 			}
 			else
 			{
@@ -205,6 +210,8 @@ class ImageSize extends Widget
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
 						$arrOptgroup['label'] ?? null
 					);
+
+					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
@@ -233,11 +240,44 @@ class ImageSize extends Widget
 		}
 
 		return sprintf(
-			'<div id="ctrl_%s" class="tl_image_size%s">%s</div>%s',
+			'<div id="ctrl_%s" class="tl_image_size%s"%s>%s</div>%s',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
+			$this->getStimulusAttributes($arrValues),
 			implode(' ', $arrFields),
 			$this->wizard
 		);
+	}
+
+	private function getStimulusAttributes($arrValues): string
+	{
+		if ($this->wizard)
+		{
+			return '';
+		}
+
+		$ids = array_values(array_filter($arrValues, static fn ($v) => is_numeric($v)));
+
+		if (empty($ids))
+		{
+			return '';
+		}
+
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
+		{
+			return '';
+		}
+
+		$config = array(
+			'ids' => $ids,
+			'href' => System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_image_size_item', 'popup'=>'1', 'nb'=>'1')),
+			'title' => $GLOBALS['TL_LANG']['MSC']['editImageSize'],
+			'icon' => Image::getUrl('edit.svg'),
+			'iconDisabled' => Image::getUrl('edit--disabled.svg'),
+		);
+
+		return ' data-controller="contao--image-size" data-contao--image-size-config-value="' . StringUtil::specialchars(json_encode($config)) . '"';
 	}
 }

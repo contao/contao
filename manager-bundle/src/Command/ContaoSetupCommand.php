@@ -29,20 +29,24 @@ use Symfony\Component\Process\Process;
 )]
 class ContaoSetupCommand extends Command
 {
-    private string $webDir;
-    private string $consolePath;
-    private string|false $phpPath;
+    private readonly string $webDir;
+    private readonly string $consolePath;
+    private readonly string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private \Closure $createProcessHandler;
+    private readonly \Closure $createProcessHandler;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(private string $projectDir, string $webDir, #[\SensitiveParameter] private string|null $kernelSecret, \Closure $createProcessHandler = null)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        string $webDir,
+        #[\SensitiveParameter] private readonly string|null $kernelSecret,
+        \Closure|null $createProcessHandler = null,
+    ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
@@ -64,8 +68,14 @@ class ContaoSetupCommand extends Command
         // Auto-generate a kernel secret if none was set
         if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
+            $localPath = Path::join($this->projectDir, '.env.local');
 
-            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            // Get the realpath in case it is a symlink (see #6066)
+            if ($realpath = realpath($localPath)) {
+                $localPath = $realpath;
+            }
+
+            $dotenv = new DotenvDumper($localPath, $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
@@ -108,7 +118,7 @@ class ContaoSetupCommand extends Command
         ]);
 
         foreach ($commands as $command) {
-            $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
+            $this->executeCommand([...$php, $this->consolePath, ...$command, ...$commandFlags], $output);
         }
 
         $io->info('Done! Please run the contao:migrate command to make sure the database is up-to-date.');

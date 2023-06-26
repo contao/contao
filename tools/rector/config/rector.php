@@ -16,10 +16,8 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
-use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -34,19 +32,26 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__.'/../../../*/tests',
         __DIR__.'/../../../tools/*/bin',
         __DIR__.'/../../../tools/*/config',
-        __DIR__.'/../../../tools/*/src',
+
+        // Using ../tools/*/src leads to a "class was not found while trying to analyse
+        // it" error, so add the paths to the /src directories explicitly.
+        __DIR__.'/../../../tools/isolated-tests/src',
+        __DIR__.'/../../../tools/servlice-linter/src',
     ]);
 
     $rectorConfig->skip([
         '*/Fixtures/system/*',
         '*-bundle/contao/*',
+        '*-bundle/src/Resources/contao/*',
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
-        ChangeSwitchToMatchRector::class,
-        FirstClassCallableRector::class,
+        FirstClassCallableRector::class => [
+            'core-bundle/tests/Contao/InsertTagsTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperNodeVisitorTest.php',
+            'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
+        ],
         NullToStrictStringFuncCallArgRector::class,
-        ReadOnlyPropertyRector::class,
     ]);
 
     $services = $rectorConfig->services();

@@ -24,6 +24,8 @@ use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
@@ -221,10 +223,26 @@ class ImageFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 80,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 77,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'quality' => 77,
+                                'webp_quality' => 77,
+                                'avif_quality' => 77,
+                                'heic_quality' => 77,
+                                'jxl_quality' => 77,
+                            ],
+                            $options->getImagineOptions()
+                        );
+
+                        $this->assertSame(
+                            [
+                                ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS,
+                                IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS,
+                            ],
+                            $options->getPreserveCopyrightMetadata(),
+                        );
 
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
@@ -240,6 +258,12 @@ class ImageFactoryTest extends TestCase
             'height' => 200,
             'resizeMode' => ResizeConfiguration::MODE_BOX,
             'zoom' => 50,
+            'preserveMetadata' => true,
+            'imageQuality' => 77,
+            'metadata' => serialize([
+                serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
+                serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
+            ]),
         ];
 
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
@@ -308,6 +332,14 @@ class ImageFactoryTest extends TestCase
                 'height' => 200,
                 'resizeMode' => ResizeConfiguration::MODE_BOX,
                 'zoom' => 50,
+                'imagineOptions' => [
+                    'jpeg_quality' => 77,
+                    'jxl_quality' => 66,
+                ],
+                'preserveMetadata' => [
+                    ExifFormat::NAME => [],
+                    IptcFormat::NAME => ['2#116', '2#080'],
+                ],
             ],
         ];
 
@@ -336,13 +368,24 @@ class ImageFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeOptions $options): bool {
+                    function (ResizeOptions $options) use ($predefinedSizes): bool {
                         $this->assertSame(
                             [
-                                'jpeg_quality' => 80,
+                                'jpeg_quality' => 77,
                                 'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'jxl_quality' => 66,
                             ],
                             $options->getImagineOptions()
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadata'][ExifFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadata'][IptcFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
                         );
 
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
@@ -585,7 +628,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
+    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null, bool|null $bypassCache = null, array|null $imagineOptions = null, array|null $validExtensions = null, string|null $uploadDir = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);

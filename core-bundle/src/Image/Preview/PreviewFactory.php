@@ -35,19 +35,19 @@ class PreviewFactory
     private array $predefinedSizes = [];
 
     /**
-     * @param iterable<int,PreviewProviderInterface> $previewProviders
+     * @param iterable<int, PreviewProviderInterface> $previewProviders
      */
     public function __construct(
-        private iterable $previewProviders,
-        private ImageFactoryInterface $imageFactory,
-        private PictureFactoryInterface $pictureFactory,
-        private Studio $imageStudio,
-        private ContaoFramework $framework,
-        #[\SensitiveParameter] private string $secret,
-        private string $cacheDir,
-        private array $validImageExtensions,
-        private int $defaultSize,
-        private int $maxSize,
+        private readonly iterable $previewProviders,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly PictureFactoryInterface $pictureFactory,
+        private readonly Studio $imageStudio,
+        private readonly ContaoFramework $framework,
+        #[\SensitiveParameter] private readonly string $secret,
+        private readonly string $cacheDir,
+        private readonly array $validImageExtensions,
+        private readonly int $defaultSize,
+        private readonly int $maxSize,
     ) {
     }
 
@@ -76,9 +76,9 @@ class PreviewFactory
     }
 
     /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
-     *
      * @return iterable<ImageInterface>
+     *
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
     public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
@@ -118,7 +118,7 @@ class PreviewFactory
                         $previewOptions
                     );
 
-                    if (!\is_array($previews)) {
+                    if ($previews instanceof \Traversable) {
                         $previews = iterator_to_array($previews, false);
                     }
 
@@ -144,7 +144,7 @@ class PreviewFactory
         throw $lastProviderException ?? new MissingPreviewProviderException();
     }
 
-    public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
+    public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
     {
         return $this->imageFactory->create(
             $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
@@ -156,7 +156,7 @@ class PreviewFactory
     /**
      * @return iterable<ImageInterface>
      */
-    public function createPreviewImages(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewImages(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -168,11 +168,11 @@ class PreviewFactory
 
         return array_map(
             fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
-            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
         );
     }
 
-    public function createPreviewPicture(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
+    public function createPreviewPicture(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
     {
         $previewPath = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
 
@@ -182,7 +182,7 @@ class PreviewFactory
     /**
      * @return iterable<PictureInterface>
      */
-    public function createPreviewPictures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewPictures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         return $this->convertPreviewsToPictures(
             $this->createPreviews(
@@ -197,7 +197,7 @@ class PreviewFactory
         );
     }
 
-    public function createPreviewFigure(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
+    public function createPreviewFigure(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
     {
         return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $page, $previewOptions)->build();
     }
@@ -205,7 +205,7 @@ class PreviewFactory
     /**
      * @return iterable<Figure>
      */
-    public function createPreviewFigures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewFigures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -225,7 +225,7 @@ class PreviewFactory
         return $figures;
     }
 
-    public function createPreviewFigureBuilder(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
+    public function createPreviewFigureBuilder(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
         return $this->imageStudio
             ->createFigureBuilder()
@@ -333,11 +333,11 @@ class PreviewFactory
      *
      * @return iterable<PictureInterface>
      */
-    private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions $resizeOptions = null): iterable
+    private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions|null $resizeOptions = null): iterable
     {
         return array_map(
             fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
-            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
         );
     }
 

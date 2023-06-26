@@ -110,10 +110,10 @@
 
     document.querySelectorAll('.tl_sectionwizard tr').forEach(init);
 
-    new MutationObserver(function (mutationsList) {
+    new MutationObserver(function(mutationsList) {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function (element) {
+                mutation.addedNodes.forEach(function(element) {
                     if (element.matches && element.matches('.tl_sectionwizard tr, .tl_sectionwizard tr *')) {
                         init(element.closest('tr'));
                     }

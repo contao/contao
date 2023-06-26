@@ -16,10 +16,10 @@ use Symfony\Component\Filesystem\Path;
 
 class FileExtensionFilterIterator implements \IteratorAggregate
 {
-    private \Traversable $iterator;
+    private readonly \Traversable $iterator;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.twig.file_extension_filter_iterator" service instead
+     * @internal
      */
     public function __construct(\IteratorAggregate $templateIterator)
     {

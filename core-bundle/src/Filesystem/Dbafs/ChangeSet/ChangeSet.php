@@ -45,10 +45,10 @@ class ChangeSet
      * @internal
      */
     public function __construct(
-        private array $itemsToCreate,
-        private array $itemsToUpdate,
-        private array $itemsToDelete,
-        private array $lastModifiedUpdates = [],
+        private readonly array $itemsToCreate,
+        private readonly array $itemsToUpdate,
+        private readonly array $itemsToDelete,
+        private readonly array $lastModifiedUpdates = [],
     ) {
     }
 
@@ -65,17 +65,17 @@ class ChangeSet
 
         foreach ($changeSet->itemsToCreate as $item) {
             $prefixedPath = Path::join($pathPrefix, $item[self::ATTR_PATH]);
-            $itemsToCreate[$prefixedPath] = array_merge($item, [self::ATTR_PATH => $prefixedPath]);
+            $itemsToCreate[$prefixedPath] = [...$item, self::ATTR_PATH => $prefixedPath];
         }
 
         foreach ($changeSet->itemsToUpdate as $path => $item) {
             $prefixedPath = Path::join($pathPrefix, (string) $path);
 
             if (null !== ($newPath = $item[self::ATTR_PATH] ?? null)) {
-                $item = array_merge($item, [self::ATTR_PATH => Path::join($pathPrefix, $newPath)]);
+                $item = [...$item, self::ATTR_PATH => Path::join($pathPrefix, $newPath)];
             }
 
-            $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
+            $itemsToUpdate[$prefixedPath] = [...$itemsToUpdate[$prefixedPath] ?? [], ...$item];
         }
 
         foreach ($changeSet->itemsToDelete as $path => $type) {

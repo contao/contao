@@ -25,10 +25,9 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\HttpKernel\HttpCacheSubscriberPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
-use ProxyManager\Configuration;
-use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\Filesystem\Path;
@@ -146,37 +145,41 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($parametersFile = $this->getConfigFile('parameters')) {
-            $loader->load($parametersFile);
-        }
+        $loader->load(
+            function (ContainerBuilder $container) use ($loader): void {
+                if ($parametersFile = $this->getConfigFile('parameters', $container)) {
+                    $loader->load($parametersFile);
+                }
 
-        $config = $this->getManagerConfig()->all();
-        $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
+                $config = $this->getManagerConfig()->all();
+                $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        /** @var array<ConfigPluginInterface> $plugins */
-        foreach ($plugins as $plugin) {
-            $plugin->registerContainerConfiguration($loader, $config);
-        }
+                /** @var array<ConfigPluginInterface> $plugins */
+                foreach ($plugins as $plugin) {
+                    $plugin->registerContainerConfiguration($loader, $config);
+                }
 
-        // Reload the parameters.yaml file
-        if ($parametersFile) {
-            $loader->load($parametersFile);
-        }
+                // Reload the parameters.yaml file
+                if ($parametersFile) {
+                    $loader->load($parametersFile);
+                }
 
-        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment())) {
-            $loader->load($configFile);
-        } elseif ($configFile = $this->getConfigFile('config')) {
-            $loader->load($configFile);
-        }
+                if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment(), $container)) {
+                    $loader->load($configFile);
+                } elseif ($configFile = $this->getConfigFile('config', $container)) {
+                    $loader->load($configFile);
+                }
 
-        // Automatically load the services.yaml file if it exists
-        if ($servicesFile = $this->getConfigFile('services')) {
-            $loader->load($servicesFile);
-        }
+                // Automatically load the services.yaml file if it exists
+                if ($servicesFile = $this->getConfigFile('services', $container)) {
+                    $loader->load($servicesFile);
+                }
 
-        if (is_dir(Path::join($this->getProjectDir(), 'src'))) {
-            $loader->load(__DIR__.'/../../skeleton/config/services.php');
-        }
+                if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
+                    $loader->load(__DIR__.'/../../skeleton/config/services.php');
+                }
+            }
+        );
     }
 
     public function getHttpCache(): ContaoCache
@@ -276,10 +279,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
         $container->getParameterBag()->add($this->getKernelParameters());
 
-        if (class_exists(Configuration::class) && class_exists(RuntimeInstantiator::class)) {
-            $container->setProxyInstantiator(new RuntimeInstantiator());
-        }
-
         return $container;
     }
 
@@ -300,21 +299,23 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private function getConfigFile(string $file): string|null
+    private function getConfigFile(string $file, ContainerBuilder $container): string|null
     {
         $projectDir = $this->getProjectDir();
+        $exists = [];
 
-        if (file_exists($path = Path::join($projectDir, 'config', $file.'.yaml'))) {
-            return $path;
+        foreach (['.yaml', '.php', '.xml'] as $ext) {
+            if ($container->fileExists($path = Path::join($projectDir, 'config', $file.$ext))) {
+                $exists[] = $path;
+            }
         }
 
-        if (file_exists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
+        if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
             trigger_deprecation('contao/manager-bundle', '5.0', sprintf('Using a %s.yml file has been deprecated and will no longer work in Contao 6.0. Use a %s.yaml file instead', $file, $file));
-
-            return $path;
+            $exists[] = $path;
         }
 
-        return null;
+        return $exists[0] ?? null;
     }
 
     private function addBundlesFromPlugins(array &$bundles): void
@@ -336,7 +337,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private static function create(string $projectDir, string $env = null): self
+    private static function create(string $projectDir, string|null $env = null): self
     {
         $env ??= $_SERVER['APP_ENV'] ?? 'prod';
 

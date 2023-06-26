@@ -28,7 +28,7 @@ class Document
      * The key is the header name in lowercase letters and the value is again
      * an array of header values.
      *
-     * @param array<string,array> $headers
+     * @param array<string, array> $headers
      */
     public function __construct(
         private UriInterface $uri,
@@ -147,7 +147,7 @@ class Document
             foreach ($jsonLdItems as $jsonLdItem) {
                 if (\is_array($graphs = $jsonLdItem['@graph'] ?? null)) {
                     foreach ($graphs as $graph) {
-                        $this->jsonLds[] = array_merge(array_diff_key($jsonLdItem, ['@graph' => null]), $graph);
+                        $this->jsonLds[] = [...array_diff_key($jsonLdItem, ['@graph' => null]), ...$graph];
                     }
                 } else {
                     $this->jsonLds[] = $jsonLdItem;

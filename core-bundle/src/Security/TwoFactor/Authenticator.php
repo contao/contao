@@ -26,7 +26,7 @@ class Authenticator
     /**
      * Validates the code which was entered by the user.
      */
-    public function validateCode(User $user, string $code, int $timestamp = null): bool
+    public function validateCode(User $user, string $code, int|null $timestamp = null): bool
     {
         $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user));
 
@@ -65,7 +65,7 @@ class Authenticator
     }
 
     /**
-     * Encodes the binary secret into base32 format (uppercase and unpadded).
+     * Encodes the binary secret into base32 format (uppercase and not padded).
      *
      * The 2FA app from Google (Google authenticator) does not strictly confirm
      * to RFC 4648 [1] but to the old RFC 3548 [2].

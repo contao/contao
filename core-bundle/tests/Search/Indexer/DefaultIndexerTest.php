@@ -25,7 +25,7 @@ class DefaultIndexerTest extends TestCase
     /**
      * @dataProvider indexProvider
      */
-    public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
+    public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string|null $expectedMessage = null, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
 

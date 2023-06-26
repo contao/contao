@@ -28,6 +28,10 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'onload_callback' => array
+		(
+			array('tl_news_archive', 'adjustDca')
+		),
 		'oncreate_callback' => array
 		(
 			array('tl_news_archive', 'adjustPermissions')
@@ -83,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'protected'                   => 'groups',

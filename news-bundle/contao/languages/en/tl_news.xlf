@@ -162,13 +162,13 @@
         <source>Show from</source>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -230,8 +230,14 @@
       <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>

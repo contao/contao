@@ -107,29 +107,13 @@ abstract class System
 	/**
 	 * Get an object property
 	 *
-	 * Lazy load the Input and Environment libraries (which are now static) and
-	 * only include them as object property if an old module requires it
-	 *
 	 * @param string $strKey The property name
 	 *
 	 * @return mixed|null The property value or null
 	 */
 	public function __get($strKey)
 	{
-		if (!isset($this->arrObjects[$strKey]))
-		{
-			/** @var Input|Environment|Session|string $strKey */
-			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
-			{
-				$this->arrObjects[$strKey] = $strKey::getInstance();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		return $this->arrObjects[$strKey];
+		return $this->arrObjects[$strKey] ?? null;
 	}
 
 	/**
@@ -353,8 +337,7 @@ abstract class System
 			}
 
 			// Remove parameters helper
-			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise'))
-			{
+			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
 				if (!$url || strpos($url, '?') === false)
 				{
 					return $url;
@@ -404,7 +387,7 @@ abstract class System
 		}
 
 		// Do not urldecode here!
-		return preg_replace('/&(amp;)?/i', ($blnEncodeAmpersands ? '&amp;' : '&'), $return);
+		return preg_replace('/&(amp;)?/i', $blnEncodeAmpersands ? '&amp;' : '&', $return);
 	}
 
 	/**

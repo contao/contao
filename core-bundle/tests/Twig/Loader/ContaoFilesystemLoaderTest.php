@@ -310,10 +310,11 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     /**
      * @dataProvider provideTemplateFilemtimeSamples
+     *
      * @preserveGlobalState disabled
      * @runInSeparateProcess because filemtime gets mocked
      */
-    public function testIsFresh(array $mtimeMappings, bool $isFresh, bool $expectWarning = false): void
+    public function testIsFresh(array $mtimeMappings, bool $isFresh): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $cacheTime = 1623924000;
@@ -323,11 +324,6 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
         $this->mockFilemtime($mtimeMappings);
-
-        if ($expectWarning) {
-            $this->expectWarning();
-            $this->expectWarningMessageMatches('/filemtime\(\): stat failed for .*/');
-        }
 
         $this->assertSame($isFresh, $loader->isFresh('@Contao/text.html.twig', $cacheTime));
     }
@@ -365,7 +361,6 @@ class ContaoFilesystemLoaderTest extends TestCase
                 // do not register $textPath2
             ],
             false,
-            true,
         ];
     }
 
@@ -657,7 +652,7 @@ class ContaoFilesystemLoaderTest extends TestCase
                             return $mtime;
                         }
 
-                        trigger_error("filemtime(): stat failed for $filename", E_USER_WARNING);
+                        return false;
                     }
                     EOPHP,
                 $namespace,
@@ -668,7 +663,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         }
     }
 
-    private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
+    private function getContaoFilesystemLoader(AdapterInterface|null $cacheAdapter = null, TemplateLocator|null $templateLocator = null): ContaoFilesystemLoader
     {
         return new ContaoFilesystemLoader(
             $cacheAdapter ?? new NullAdapter(),

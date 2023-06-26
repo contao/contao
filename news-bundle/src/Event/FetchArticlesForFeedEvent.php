@@ -24,8 +24,11 @@ class FetchArticlesForFeedEvent
      */
     private array|null $articles = null;
 
-    public function __construct(private readonly FeedInterface $feed, private readonly Request $request, private readonly PageModel $pageModel)
-    {
+    public function __construct(
+        private readonly FeedInterface $feed,
+        private readonly Request $request,
+        private readonly PageModel $pageModel,
+    ) {
     }
 
     public function getFeed(): FeedInterface

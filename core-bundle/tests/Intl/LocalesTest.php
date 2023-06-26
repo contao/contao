@@ -126,6 +126,9 @@ class LocalesTest extends TestCase
         $this->assertNotEmpty($languages);
         $this->assertTrue(ArrayUtil::isAssoc($languages));
 
+        $this->assertArrayNotHasKey('en_POSIX', $languages);
+        $this->assertArrayNotHasKey('en_US_POSIX', $languages);
+
         foreach ($languages as $localeId => $label) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
             $this->assertNotEmpty($label);
@@ -185,7 +188,7 @@ class LocalesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, string|null $locale = null) {
                     $this->assertSame('contao_languages', $domain);
                     $this->assertSame('de', $locale);
 
@@ -273,7 +276,7 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3}|POSIX)(?=_|$)/', '', $localeId),
             $expected
         )));
 
@@ -304,7 +307,7 @@ class LocalesTest extends TestCase
 
         yield [
             ['+zzz_ZZ', '+zzz'],
-            array_merge(\ResourceBundle::getLocales(''), ['zzz', 'zzz_ZZ']),
+            [...\ResourceBundle::getLocales(''), 'zzz', 'zzz_ZZ'],
         ];
 
         yield [
@@ -358,7 +361,7 @@ class LocalesTest extends TestCase
         ], $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true));
     }
 
-    private function getLocalesService(Translator $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
+    private function getLocalesService(Translator|null $translator = null, RequestStack|null $requestStack = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales
     {
         if (null === $translator) {
             $translator = $this->createMock(Translator::class);

@@ -19,9 +19,9 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 class LogoutListener
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.security.logout_handler" service instead
+     * @internal
      */
-    public function __construct(private JwtManager|null $jwtManager = null)
+    public function __construct(private readonly JwtManager|null $jwtManager = null)
     {
     }
 

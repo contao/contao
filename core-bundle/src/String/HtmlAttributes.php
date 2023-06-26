@@ -23,6 +23,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private array $attributes = [];
 
+    private bool $doubleEncoding = false;
+
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
@@ -219,7 +221,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string,string> $styles
+     * @param string|array<string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -237,10 +239,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             $styles = implode(';', $styles);
         }
 
-        $mergedStyles = array_merge(
-            $this->parseStyles($this->attributes['style'] ?? ''),
-            $this->parseStyles($styles),
-        );
+        $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
 
         $this->attributes['style'] = $this->serializeStyles($mergedStyles);
 
@@ -259,7 +258,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|list<string>|array<string,string> $styles
+     * @param string|list<string>|array<string, string> $styles
      */
     public function removeStyle(array|string $styles, mixed $condition = true): self
     {
@@ -289,6 +288,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         if (empty($this->attributes['style'])) {
             unset($this->attributes['style']);
         }
+
+        return $this;
+    }
+
+    public function setDoubleEncoding(bool $doubleEncoding): self
+    {
+        $this->doubleEncoding = $doubleEncoding;
 
         return $this;
     }
@@ -354,7 +360,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function test(mixed $condition): bool
     {
         if ($condition instanceof \Stringable) {
-            $condition = $condition->__toString();
+            $condition = (string) $condition;
         }
 
         return (bool) $condition;
@@ -405,7 +411,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }

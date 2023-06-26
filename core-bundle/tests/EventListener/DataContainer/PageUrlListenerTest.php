@@ -25,7 +25,6 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -183,7 +182,7 @@ class PageUrlListenerTest extends TestCase
                 $currentRecord['title'],
                 $currentRecord['id'],
                 $this->callback(
-                    function (callable $callback) use ($generated, $expectExists) {
+                    function (callable $callback) use ($expectExists, $generated) {
                         $this->assertSame($expectExists, $callback($generated));
 
                         return true;
@@ -289,7 +288,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
@@ -341,7 +340,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
         $currentRoute = new PageRoute($currentPage);
@@ -1179,7 +1178,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1273,7 +1272,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(2))
@@ -1507,7 +1506,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1712,7 +1711,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return TranslatorInterface&MockObject
      */
-    private function mockTranslator(string $messageKey = null, array $arguments = []): TranslatorInterface
+    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1743,16 +1742,10 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnectionWithStatement(): Connection
     {
-        $statement = $this->createMock(Result::class);
-        $statement
-            ->method('fetchAll')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('executeQuery')
-            ->willReturn($statement)
+            ->method('fetchOne')
+            ->willReturn(0)
         ;
 
         return $connection;

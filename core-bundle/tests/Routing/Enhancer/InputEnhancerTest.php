@@ -19,6 +19,7 @@ use Contao\Input;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
@@ -31,7 +32,7 @@ class InputEnhancerTest extends TestCase
             ->method('initialize')
         ;
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, new RequestStack());
         $enhancer->enhance([], Request::create('/'));
     }
 
@@ -49,12 +50,16 @@ class InputEnhancerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
+        $request = Request::create('/');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $defaults = [
             'pageModel' => $this->mockPageModel($language, $urlPrefix),
         ];
 
-        $enhancer = new InputEnhancer($framework);
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer = new InputEnhancer($framework, $requestStack);
+        $enhancer->enhance($defaults, $request);
     }
 
     public function getLocales(): \Generator
@@ -87,13 +92,17 @@ class InputEnhancerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
+        $request = Request::create('/');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => $parameters,
         ];
 
-        $enhancer = new InputEnhancer($framework);
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer = new InputEnhancer($framework, $requestStack);
+        $enhancer->enhance($defaults, $request);
     }
 
     public function getParameters(): \Generator
@@ -115,17 +124,21 @@ class InputEnhancerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
+        $request = Request::create('/');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
             'parameters' => '/foo/bar/foo/bar',
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, $requestStack);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer->enhance($defaults, $request);
     }
 
     public function testThrowsAnExceptionUponParametersInQuery(): void
@@ -138,17 +151,21 @@ class InputEnhancerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
+        $request = Request::create('/?foo=bar');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar',
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, $requestStack);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
-        $enhancer->enhance($defaults, Request::create('/?foo=bar'));
+        $enhancer->enhance($defaults, $request);
     }
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
@@ -167,17 +184,21 @@ class InputEnhancerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $request = Request::create('/');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
             'parameters' => '/foo/bar//baz',
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, $requestStack);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Empty fragment key in path');
 
-        $enhancer->enhance($defaults, Request::create('/'));
+        $enhancer->enhance($defaults, $request);
     }
 
     /**

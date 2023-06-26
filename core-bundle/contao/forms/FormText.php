@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * Class FormText
  *
  * @property string  $value
- * @property string  $type
  * @property integer $maxlength
  * @property boolean $mandatory
  * @property integer $min
@@ -278,8 +277,8 @@ class FormText extends Widget
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->hideInput ? ' password' : ''),
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->hideInput ? ' password' : '',
+			$this->strClass ? ' ' . $this->strClass : '',
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

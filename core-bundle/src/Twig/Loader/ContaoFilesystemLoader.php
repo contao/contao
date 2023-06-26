@@ -49,20 +49,20 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private string|false|null $currentThemeSlug = null;
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private array $trackedTemplatesPaths = [];
 
     /**
-     * @var array<string,array<string,string>>|null
+     * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
 
     public function __construct(
-        private CacheItemPoolInterface $cachePool,
-        private TemplateLocator $templateLocator,
-        private ThemeNamespace $themeNamespace,
-        string $rootPath = null,
+        private readonly CacheItemPoolInterface $cachePool,
+        private readonly TemplateLocator $templateLocator,
+        private readonly ThemeNamespace $themeNamespace,
+        string|null $rootPath = null,
     ) {
         parent::__construct([], $rootPath);
 
@@ -268,7 +268,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
         foreach (array_keys($chain) as $path) {
-            if (filemtime($path) > $time) {
+            $mTime = @filemtime($path);
+
+            if (false === $mTime || $mTime > $time) {
                 return false;
             }
         }
@@ -286,7 +288,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $this->currentThemeSlug = null;
     }
 
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string|null $themeSlug = null): string
     {
         $hierarchy = $this->getInheritanceChains($themeSlug);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
@@ -306,7 +308,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $next;
     }
 
-    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string
+    public function getFirst(string $shortNameOrIdentifier, string|null $themeSlug = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
         $hierarchy = $this->getInheritanceChains($themeSlug);
@@ -318,7 +320,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chain[array_key_first($chain)];
     }
 
-    public function getInheritanceChains(string $themeSlug = null): array
+    public function getInheritanceChains(string|null $themeSlug = null): array
     {
         if (null === $this->inheritanceChains) {
             $this->buildInheritanceChains();

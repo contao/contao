@@ -50,7 +50,7 @@ class Comments extends Frontend
 
 			// Calculate the key (e.g. tl_form_field becomes page_cff12)
 			$key = '';
-			$chunks = explode('_', substr($strSource, ((strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0)));
+			$chunks = explode('_', substr($strSource, (strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0));
 
 			foreach ($chunks as $chunk)
 			{
@@ -81,11 +81,11 @@ class Comments extends Frontend
 		// Get all published comments
 		if ($limit)
 		{
-			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'), $limit, $offset);
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, $objConfig->order == 'descending', $limit, $offset);
 		}
 		else
 		{
-			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'));
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, $objConfig->order == 'descending');
 		}
 
 		// Parse the comments
@@ -352,8 +352,7 @@ class Comments extends Frontend
 			{
 				foreach ($GLOBALS['TL_HOOKS']['addComment'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($objComment->id, $arrSet, $this);
+					System::importStatic($callback[0])->{$callback[1]}($objComment->id, $arrSet, $this);
 				}
 			}
 

@@ -27,7 +27,7 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    public function __construct(private ImagineInterface $imagine)
+    public function __construct(private readonly ImagineInterface $imagine)
     {
     }
 
@@ -101,9 +101,9 @@ class ImaginePreviewProvider implements PreviewProviderInterface
     private function imagineSupportsFormat(string $format): bool
     {
         // TODO: Use once Imagine 1.3.0 was released
-        //if ($this->imagine instanceof InfoProvider) {
+        // if ($this->imagine instanceof InfoProvider) {
         //    return $this->imagine->getDriverInfo()->isFormatSupported($format);
-        //}
+        // }
 
         if ($this->imagine instanceof ImagickImagine) {
             return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);

@@ -33,9 +33,11 @@ class FigureBuilderStub extends FigureBuilder
     /**
      * @param array<string, ImageResult> $imageMap
      */
-    public function __construct(private readonly array $imageMap, private readonly array $uuidMap = [])
-    {
-        // do not call parent constructor
+    public function __construct(
+        private readonly array $imageMap,
+        private readonly array $uuidMap = [],
+    ) {
+        // Do not call parent constructor
     }
 
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): FigureBuilder

@@ -320,6 +320,12 @@ class DbafsTest extends TestCase
                 'baz' => 'complex c',
             ]
         );
+
+        // Assert internal cache is cleared and file item correctly contains new metadata
+        $item = $dbafs->getRecord('some/path');
+
+        $this->assertSame('complex a', $item->getExtraMetadata()['foo']);
+        $this->assertSame('complex c', $item->getExtraMetadata()['baz']);
     }
 
     public function testSetExtraMetadataThrowsOnInvalidPath(): void
@@ -1350,7 +1356,7 @@ class DbafsTest extends TestCase
         return (new MountManager())->mount(new InMemoryFilesystemAdapter());
     }
 
-    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs
+    private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
 

@@ -137,7 +137,7 @@ class BackupManagerTest extends ContaoTestCase
         // Assert it's gzipped
         $this->assertSame(
             0,
-            mb_strpos($this->vfs->read($config->getBackup()->getFilename()), "\x1f"."\x8b"."\x08", 0, 'US-ASCII')
+            mb_strpos($this->vfs->read($config->getBackup()->getFilename()), "\x1f\x8b\x08", 0, 'US-ASCII')
         );
     }
 
@@ -391,7 +391,7 @@ class BackupManagerTest extends ContaoTestCase
         ;
     }
 
-    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicyInterface $retentionPolicy = null): BackupManager
+    private function getBackupManager(Connection|null $connection = null, DumperInterface|null $dumper = null, RetentionPolicyInterface|null $retentionPolicy = null): BackupManager
     {
         $connection ??= $this->createMock(Connection::class);
         $dumper ??= $this->createMock(DumperInterface::class);

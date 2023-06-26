@@ -133,4 +133,4 @@ Visit the [support page][3] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://contao.org/en/support.html
+[3]: https://to.contao.org/support

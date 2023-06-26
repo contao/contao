@@ -55,7 +55,10 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array('tl_user_group', 'addIcon')
+			'label_callback'          => array
+			(
+				array('tl_user_group', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
@@ -172,8 +175,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
@@ -294,17 +296,18 @@ class tl_user_group extends Backend
 	{
 		$image = 'group';
 		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
+		$icon = $image;
 
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_'),
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled'),
 			$label
 		);
 	}

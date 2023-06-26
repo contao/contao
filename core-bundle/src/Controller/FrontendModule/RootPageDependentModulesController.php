@@ -23,20 +23,20 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
         if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
         }
 
         if (!$pageModel = $this->getPageModel()) {
-            return new Response('');
+            return new Response();
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $modules = StringUtil::deserialize($model->rootPageDependentModules, true);
 
-        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
-            return new Response('');
+        if (empty($modules[$pageModel->rootId])) {
+            return new Response();
         }
 
         $framework = $this->container->get('contao.framework');
@@ -45,13 +45,17 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         $moduleModel = $framework->getAdapter(ModuleModel::class);
         $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
 
+        if (null === $module) {
+            return new Response();
+        }
+
         $cssID = StringUtil::deserialize($module->cssID, true);
 
         if ($idAttribute = $request->attributes->get('templateProperties', [])['cssID'] ?? null) {
             $cssID[0] = substr($idAttribute, 5, -1);
         }
 
-        $cssID[1] = trim(sprintf('%s %s', $cssID[1] ?? '', implode(' ', $model->classes)));
+        $cssID[1] = trim(sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
 
         $module->cssID = $cssID;
 

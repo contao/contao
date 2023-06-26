@@ -38,7 +38,7 @@ abstract class AbstractAction implements \Stringable
      */
     private array|null $preloadHints = null;
 
-    public function __construct(private string $dataSource)
+    public function __construct(private readonly string $dataSource)
     {
     }
 

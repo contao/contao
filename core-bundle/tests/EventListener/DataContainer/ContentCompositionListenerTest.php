@@ -161,8 +161,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->with('foo--disabled.svg')
+            ->willReturn('<img src="foo--disabled.svg">')
         ;
 
         $this->backendAdapter
@@ -171,7 +171,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="foo_.svg"> ',
+            '<img src="foo--disabled.svg"> ',
             $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
         );
     }
@@ -192,8 +192,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->with('foo--disabled.svg')
+            ->willReturn('<img src="foo--disabled.svg">')
         ;
 
         $this->backendAdapter
@@ -202,7 +202,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="foo_.svg"> ',
+            '<img src="foo--disabled.svg"> ',
             $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
         );
     }
@@ -730,8 +730,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
+            ->with('pasteinto--disabled.svg')
+            ->willReturn('<img src="pasteinto--disabled.svg">')
         ;
 
         $this->security
@@ -746,7 +746,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
+            '<img src="pasteinto--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
         );
     }
@@ -767,8 +767,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
+            ->with('pasteinto--disabled.svg')
+            ->willReturn('<img src="pasteinto--disabled.svg">')
         ;
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
@@ -778,7 +778,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
+            '<img src="pasteinto--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
         );
     }
@@ -932,12 +932,12 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
+            '<img src="pasteafter--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2])
         );
     }
@@ -962,12 +962,12 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
+            '<img src="pasteafter--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]])
         );
     }
@@ -992,12 +992,12 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
+            '<img src="pasteafter--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
         );
     }
@@ -1024,12 +1024,12 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
+            '<img src="pasteafter--disabled.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
         );
     }
@@ -1083,7 +1083,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function expectRequest(bool $hasSession, array $newRecords = null): void
+    private function expectRequest(bool $hasSession, array|null $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
         $request

@@ -21,8 +21,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContaoContext implements ContextInterface
 {
-    public function __construct(private RequestStack $requestStack, private string $field, private bool $debug = false)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly string $field,
+        private readonly bool $debug = false,
+    ) {
     }
 
     public function getBasePath(): string

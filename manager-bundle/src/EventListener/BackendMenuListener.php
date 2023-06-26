@@ -26,13 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendMenuListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private bool $debug,
-        private string|null $managerPath,
-        private JwtManager|null $jwtManager,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly bool $debug,
+        private readonly string|null $managerPath,
+        private readonly JwtManager|null $jwtManager,
     ) {
     }
 
@@ -104,14 +104,14 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode) {
+        if (null === $categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
         $item = $event->getFactory()
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
-            ->setUri('/'.$this->managerPath)
+            ->setUri($request->getUriForPath('/'.$this->managerPath))
             ->setLinkAttribute('class', 'navigation contao_manager')
             ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', false)

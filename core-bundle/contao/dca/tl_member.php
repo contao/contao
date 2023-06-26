@@ -59,7 +59,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'fields'                  => array('', 'firstname', 'lastname', 'username', 'dateAdded'),
 			'showColumns'             => true,
-			'label_callback'          => array('tl_member', 'addIcon')
+			'label_callback' => array
+			(
+				array('tl_member', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
@@ -93,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'default'                     => '{personal_legend},firstname,lastname,language,dateOfBirth,gender;{address_legend:hide},company,street,postal,city,state,country;{contact_legend},phone,mobile,email,website,fax;{groups_legend},groups;{login_legend},login;{homedir_legend:hide},assignDir;{account_legend},disable,start,stop',
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'login'                       => 'username,password',
@@ -232,10 +235,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.intl.locales')->getLocales();
-			},
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'groups' => array
@@ -419,16 +419,18 @@ class tl_member extends Backend
 			$image .= '_two_factor';
 		}
 
+		$icon = $image;
+
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_')
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled')
 		);
 
 		return $args;
@@ -447,7 +449,7 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && is_array($this->User->amg)));
+		$blnCanSwitchUser = $this->User->isAdmin || (!empty($this->User->amg) && is_array($this->User->amg));
 
 		if (!$blnCanSwitchUser)
 		{
@@ -456,7 +458,7 @@ class tl_member extends Backend
 
 		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
@@ -489,8 +491,7 @@ class tl_member extends Backend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
+				System::importStatic($callback[0])->{$callback[1]}($objUser, $strPassword);
 			}
 		}
 

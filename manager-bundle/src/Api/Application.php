@@ -29,7 +29,7 @@ class Application extends BaseApplication
 {
     final public const VERSION = '2';
 
-    private string $projectDir;
+    private readonly string $projectDir;
     private PluginLoader|null $pluginLoader = null;
     private ManagerConfig|null $managerConfig = null;
 

@@ -343,8 +343,7 @@ class Combiner extends System
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getCombinedFile'] as $callback)
 				{
-					$this->import($callback[0]);
-					$content = $this->{$callback[0]}->{$callback[1]}($content, $strKey, $this->strMode, $arrFile);
+					$content = System::importStatic($callback[0])->{$callback[1]}($content, $strKey, $this->strMode, $arrFile);
 				}
 			}
 
@@ -403,7 +402,7 @@ class Combiner extends System
 		{
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
-			$objCompiler->setOutputStyle(($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
+			$objCompiler->setOutputStyle($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
 
 			if ($blnDebug)
 			{
@@ -452,8 +451,7 @@ class Combiner extends System
 
 		return preg_replace_callback(
 			'/url\(("[^"\n]+"|\'[^\'\n]+\'|[^"\'\s()]+)\)/',
-			static function ($matches) use ($strDirname, $strGlue)
-			{
+			static function ($matches) use ($strDirname, $strGlue) {
 				$strData = $matches[1];
 
 				if ($strData[0] == '"' || $strData[0] == "'")

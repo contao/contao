@@ -187,6 +187,14 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.toggle_nodes_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
@@ -273,6 +281,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
+            - '%kernel.secret%'
             - '%contao.web_dir%'
         tags:
             - kernel.event_listener
@@ -426,6 +435,7 @@ services:
             - '@security.helper'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+            - '@contao.routing.page_finder'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, priority: -96 }
@@ -531,6 +541,13 @@ services:
             - kernel.event_listener
             - { name: monolog.logger, channel: contao.access }
 
+    contao.listener.security.token_deauthenticated:
+        class: Contao\CoreBundle\EventListener\Security\TokenDeauthenticatedListener
+        arguments:
+            - '@contao.repository.remember_me'
+        tags:
+            - kernel.event_listener
+
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
         arguments:
@@ -573,6 +590,12 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
+
+    contao.listener.unwrap_twig_exception:
+        class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
+        tags:
+            # The priority must be higher than the exception converter listener (defaults to 96)
+            - { name: kernel.event_listener, priority: 128 }
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener

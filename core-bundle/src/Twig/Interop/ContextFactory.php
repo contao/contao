@@ -129,8 +129,10 @@ final class ContextFactory
              */
             private $callable;
 
-            public function __construct(callable $callable, private string $name)
-            {
+            public function __construct(
+                callable $callable,
+                private readonly string $name,
+            ) {
                 $this->callable = $callable;
             }
 
