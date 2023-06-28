@@ -44,13 +44,18 @@ Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts
 if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
-bundles:
+bundles and set `contao/contao` to prefer the source under the `config` key:
 
 ```json
 "require": {
     "php": "^8.0",
     "contao/contao": "5.x-dev"
 },
+"config": {
+    "preferred-install": {
+        "contao/contao": "source"
+    }
+}
 ```
 
 Again, use `5.x-dev` if you want to add a new feature or `<lts-version>.x-dev` if you want to fix a bug.
@@ -62,20 +67,27 @@ composer update
 ```
 
 Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
-running `contao:setup` on the command line.
+running `contao:setup` on the command line. If you created the project from the Managed Edition, Contao have done this
+automaticly.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
 from within your application.
 
 ## Running scripts
 
-First install the code quality tools:
+First switch to `vendor\contao\contao` and update Composer:
+
+```bash
+composer update
+```
+
+Then install the code quality tools:
 
 ```bash
 composer bin all install
 ```
 
-Then run the code quality scripts via Composer:
+After that run the code quality scripts via Composer:
 
 ```bash
 composer run all
