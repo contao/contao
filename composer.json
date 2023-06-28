@@ -108,7 +108,7 @@
         "symfony/event-dispatcher": "^5.4",
         "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
         "symfony/expression-language": "^5.4",
-        "symfony/filesystem": "^5.4",
+        "symfony/filesystem": "^5.4.25",
         "symfony/finder": "^5.4",
         "symfony/framework-bundle": "^5.4",
         "symfony/http-client": "^5.4",
