@@ -1735,7 +1735,7 @@ abstract class DataContainer extends Backend
 
 					$implode = static function ($v) use (&$implode)
 					{
-						return implode(', ', array_map(static fn($vv) => \is_array($vv) ? $implode($vv) : $vv, $v));
+						return implode(', ', array_map(static fn ($vv) => \is_array($vv) ? $implode($vv) : $vv, $v));
 					};
 
 					$args[$k] = $implode($args_k);
