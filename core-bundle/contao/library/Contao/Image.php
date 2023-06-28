@@ -16,6 +16,40 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
+	private static array $deprecated = array
+	(
+		'admin_',
+		'admin_two_factor_',
+		'article_',
+		'children_',
+		'copy_',
+		'copychilds_',
+		'cut_',
+		'delete_',
+		'diffTemplate_',
+		'diff_',
+		'edit_',
+		'editor_',
+		'featured_',
+		'group_',
+		'header_',
+		'layout_',
+		'member_',
+		'member_two_factor_',
+		'mgroup_',
+		'modules_',
+		'parent_',
+		'pasteafter_',
+		'pasteinto_',
+		'share_',
+		'sizes_',
+		'su_',
+		'theme_export_',
+		'user_',
+		'user_two_factor_',
+		'visible_',
+	);
+
 	/**
 	 * Get the relative path to an image
 	 *
@@ -59,6 +93,11 @@ class Image
 
 		$theme = Backend::getTheme();
 		$filename = pathinfo($src, PATHINFO_FILENAME);
+
+		if (\in_array($filename, self::$deprecated))
+		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
+		}
 
 		// Prefer SVG icons
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
@@ -137,26 +176,29 @@ class Image
 		$objFile = new File($src);
 
 		// Strip the contao.web_dir directory prefix (see #337)
-		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
+		if (str_starts_with($src, $webDir . '/'))
 		{
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
+		$darkSrc = \dirname($objFile->path) . '/' . $objFile->filename . '--dark.' . $objFile->extension;
+
 		// Check for a dark theme icon and return a picture element if there is one
-		if ($objFile->mime == 'image/svg+xml' && str_contains($src, 'system/themes/'))
+		if (file_exists(Path::join($projectDir, $darkSrc)))
 		{
-			$darkSrc = 'system/themes/' . Backend::getTheme() . '/icons-dark/' . $objFile->filename . '.svg';
-
-			if (file_exists(Path::join($projectDir, $darkSrc)))
+			// Strip the contao.web_dir directory prefix (see #337)
+			if (str_starts_with($darkSrc, $webDir . '/'))
 			{
-				$darkAttributes = new HtmlAttributes($attributes);
-				$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
-
-				$lightAttributes = new HtmlAttributes($attributes);
-				$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
-
-				return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
+				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
+
+			$darkAttributes = new HtmlAttributes($attributes);
+			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
+
+			$lightAttributes = new HtmlAttributes($attributes);
+			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
+
+			return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
 		}
 
 		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';

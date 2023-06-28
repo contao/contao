@@ -195,8 +195,7 @@ class PageRegular extends Frontend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 
@@ -265,8 +264,7 @@ class PageRegular extends Frontend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 

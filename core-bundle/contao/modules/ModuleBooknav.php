@@ -129,9 +129,9 @@ class ModuleBooknav extends Module
 			$intKey = $arrLookup[$current - 1];
 
 			// Skip forward pages (see #5074)
-			while ($this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
+			while (isset($this->arrPages[$intKey]) && $this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
 			{
-				$intKey = $arrLookup[$current - 1];
+				$intKey = $arrLookup[$current - 1] ?? null;
 			}
 
 			if ($intKey === null)

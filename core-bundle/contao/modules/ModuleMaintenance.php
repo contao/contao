@@ -37,16 +37,16 @@ class ModuleMaintenance extends BackendModule
 
 		foreach ($GLOBALS['TL_MAINTENANCE'] as $callback)
 		{
-			$this->import($callback);
+			$module = System::importStatic($callback);
 
-			if (!$this->$callback instanceof MaintenanceModuleInterface)
+			if (!$module instanceof MaintenanceModuleInterface)
 			{
 				throw new \Exception("$callback is not an executable class");
 			}
 
-			$buffer = $this->$callback->run();
+			$buffer = $module->run();
 
-			if ($this->$callback->isActive())
+			if ($module->isActive())
 			{
 				$this->Template->content = $buffer;
 				break;

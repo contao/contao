@@ -59,7 +59,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'fields'                  => array('', 'firstname', 'lastname', 'username', 'dateAdded'),
 			'showColumns'             => true,
-			'label_callback'          => array('tl_member', 'addIcon')
+			'label_callback' => array
+			(
+				array('tl_member', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
@@ -416,16 +419,18 @@ class tl_member extends Backend
 			$image .= '_two_factor';
 		}
 
+		$icon = $image;
+
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_')
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled')
 		);
 
 		return $args;
@@ -453,7 +458,7 @@ class tl_member extends Backend
 
 		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
@@ -486,8 +491,7 @@ class tl_member extends Backend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
+				System::importStatic($callback[0])->{$callback[1]}($objUser, $strPassword);
 			}
 		}
 

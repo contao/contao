@@ -1088,8 +1088,7 @@ class InsertTags extends Controller
 						{
 							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
 
 								// Replace the tag and stop the loop
 								if ($varValue !== false)
@@ -1159,8 +1158,7 @@ class InsertTags extends Controller
 							{
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
-									$this->import($callback[0]);
-									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, array(), $_rit, $_cnt); // see #5806
+									$varValue = System::importStatic($callback[0])->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, array(), $_rit, $_cnt); // see #5806
 
 									// Replace the tag and stop the loop
 									if ($varValue !== false)

@@ -236,8 +236,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -341,8 +340,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{

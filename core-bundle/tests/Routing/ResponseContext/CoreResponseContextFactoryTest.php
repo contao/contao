@@ -170,6 +170,59 @@ class CoreResponseContextFactoryTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider getContaoWebpageResponseContextCanonicalUrls
+     */
+    public function testContaoWebpageResponseContextCanonicalUrls(string $url, string $expected): void
+    {
+        $responseAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseAccessor
+            ->expects($this->once())
+            ->method('setResponseContext')
+        ;
+
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->method('replaceInline')
+            ->withConsecutive([''], [''], ['{{link_url::42}}'])
+            ->willReturnOnConsecutiveCalls('My title', 'My description', $url)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/'));
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 0;
+        $pageModel->enableCanonical = true;
+        $pageModel->canonicalLink = '{{link_url::42}}';
+        $pageModel->noSearch = false;
+        $pageModel->protected = false;
+
+        $factory = new CoreResponseContextFactory(
+            $responseAccessor,
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(TokenChecker::class),
+            new HtmlDecoder($insertTagsParser),
+            $requestStack,
+            $insertTagsParser
+        );
+
+        $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
+
+        $this->assertSame($expected, $responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest(new Request()));
+    }
+
+    public function getContaoWebpageResponseContextCanonicalUrls(): \Generator
+    {
+        yield ['//example.de/foobar.html', 'https://example.de/foobar.html'];
+        yield ['/de/foobar.html', 'https://example.com/de/foobar.html'];
+        yield ['de/foobar.html', 'https://example.com/de/foobar.html'];
+        yield ['foobar.html', 'https://example.com/foobar.html'];
+        yield ['https://example.de/foobar.html', 'https://example.de/foobar.html'];
+        yield ['http://example.de/foobar.html', 'http://example.de/foobar.html'];
+    }
+
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();

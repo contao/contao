@@ -195,6 +195,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
@@ -216,6 +217,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
@@ -246,31 +248,31 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUrl(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = $this->getTestFilePaths();
 
-        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
-        $this->getFigureBuilder($studio)->fromUrl('images/d%75mmy.jpg')->build();
+        $this->getFigureBuilder($studio)->fromUrl('images/d%75mmy_public.jpg')->build();
     }
 
     public function testFromPathAbsoluteUrl(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = $this->getTestFilePaths();
 
-        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
-        $this->getFigureBuilder($studio)->fromUrl('/images/d%75mmy.jpg')->build();
+        $this->getFigureBuilder($studio)->fromUrl('/images/d%75mmy_public.jpg')->build();
     }
 
     public function testFromUrlRelativeToBaseUrl(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = $this->getTestFilePaths();
 
-        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
         $this->getFigureBuilder($studio)
             ->fromUrl(
-                'https://example.com/folder/images/d%75mmy.jpg',
+                'https://example.com/folder/images/d%75mmy_public.jpg',
                 ['https://not.example.com', 'https://example.com/folder/'],
             )
             ->build()
@@ -279,13 +281,13 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUrlRelativeToRelativeBaseUrl(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = $this->getTestFilePaths();
 
-        $studio = $this->mockStudioForImage(Path::join($projectDir, 'images/dummy.jpg'));
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
         $this->getFigureBuilder($studio)
             ->fromUrl(
-                'folder/subfolder/images/d%75mmy.jpg',
+                'folder/subfolder/images/d%75mmy_public.jpg',
                 ['folder/subfolder'],
             )
             ->build()
@@ -299,7 +301,7 @@ class FigureBuilderTest extends TestCase
 
         $this->getFigureBuilder()
             ->fromUrl(
-                'https://example.com/images/d%75mmy.jpg',
+                'https://example.com/images/d%75mmy_public.jpg',
                 ['https://not.example.com'],
             )
             ->build()
@@ -312,7 +314,7 @@ class FigureBuilderTest extends TestCase
         $this->expectExceptionMessageMatches('/outside of base URLs/');
 
         $this->getFigureBuilder()
-            ->fromUrl('https://example.com/images/d%75mmy.jpg')
+            ->fromUrl('https://example.com/images/d%75mmy_public.jpg')
             ->build()
         ;
     }
@@ -324,6 +326,17 @@ class FigureBuilderTest extends TestCase
 
         $this->getFigureBuilder()
             ->fromUrl('images%2Fdummy.jpg')
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToWebDir(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/No resource could be located at path/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('images/dummy.jpg')
             ->build()
         ;
     }
@@ -1454,7 +1467,7 @@ class FigureBuilderTest extends TestCase
 
     private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null): FigureBuilder
     {
-        [, , $projectDir, $uploadPath] = $this->getTestFilePaths();
+        [, , $projectDir, $uploadPath, $webDir] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
 
         $locator = $this->createMock(ContainerInterface::class);
@@ -1467,7 +1480,7 @@ class FigureBuilderTest extends TestCase
             ])
         ;
 
-        return new FigureBuilder($locator, $projectDir, $uploadPath, $validExtensions);
+        return new FigureBuilder($locator, $projectDir, $uploadPath, $webDir, $validExtensions);
     }
 
     private function getTestFilePaths(): array
@@ -1476,8 +1489,9 @@ class FigureBuilderTest extends TestCase
         $uploadPath = 'files';
         $relativeFilePath = Path::join($uploadPath, 'public/foo.jpg');
         $absoluteFilePath = Path::join($projectDir, $relativeFilePath);
+        $webDir = Path::join($projectDir, 'public');
 
-        return [$absoluteFilePath, $relativeFilePath, $projectDir, $uploadPath];
+        return [$absoluteFilePath, $relativeFilePath, $projectDir, $uploadPath, $webDir];
     }
 
     private function getTestFileExtensions(): array
