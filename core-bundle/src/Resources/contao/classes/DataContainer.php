@@ -1733,7 +1733,8 @@ abstract class DataContainer extends Backend
 						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
-					$implode = static function ($v) use (&$implode) {
+					$implode = static function ($v) use (&$implode)
+					{
 						return implode(', ', array_map(static fn($vv) => \is_array($vv) ? $implode($vv) : $vv, $v));
 					};
 
