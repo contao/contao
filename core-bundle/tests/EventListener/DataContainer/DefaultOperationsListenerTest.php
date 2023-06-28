@@ -604,7 +604,7 @@ class DefaultOperationsListenerTest extends TestCase
             CreateAction::class,
             ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
-            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+            ['foo' => 'bar', 'tstamp' => 0],
         ];
 
         yield 'cut operation in tree mode' => [
