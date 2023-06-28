@@ -21,11 +21,6 @@ class TablePickerProvider extends AbstractTablePickerProvider
         return 'tablePicker';
     }
 
-    protected function getDataContainer(): string
-    {
-        return DC_Table::class;
-    }
-
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = parent::getDcaAttributes($config);
@@ -35,5 +30,10 @@ class TablePickerProvider extends AbstractTablePickerProvider
         }
 
         return $attributes;
+    }
+
+    protected function getDataContainer(): string
+    {
+        return DC_Table::class;
     }
 }
