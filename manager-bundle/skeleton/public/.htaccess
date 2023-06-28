@@ -21,13 +21,6 @@
     <IfModule mod_filter.c>
         # Brotli compression
         <IfModule mod_brotli.c>
-            # Force proxies to cache compressed and non-compressed files separately
-            <IfModule mod_headers.c>
-                <FilesMatch ".(appcache|bmp|css|eot|geojson|html|htm|htc|ics|ico|js|json|jsonld|manifest|md|rdf|rss|svg|ttf|txt|vcard|vtt|wasm|webapp|webmanifest|woff2|xdr|xml|xht|xhtml|xloc)$">
-                    Header append Vary "Accept-Encoding"
-                </FilesMatch>
-            </IfModule>
-
             AddOutputFilterByType BROTLI_COMPRESS "application/atom+xml" \
                                                   "application/javascript" \
                                                   "application/json" \
@@ -70,13 +63,6 @@
 
         # Gzip compression
         <IfModule mod_deflate.c>
-            # Force proxies to cache compressed and non-compressed files separately
-            <IfModule mod_headers.c>
-                <FilesMatch ".(appcache|bmp|css|eot|geojson|html|htm|htc|ics|ico|js|json|jsonld|manifest|md|rdf|rss|svg|ttf|txt|vcard|vtt|wasm|webapp|webmanifest|woff2|xdr|xml|xht|xhtml|xloc)$">
-                    Header append Vary "Accept-Encoding"
-                </FilesMatch>
-            </IfModule>
-
             AddOutputFilterByType DEFLATE "application/atom+xml" \
                                           "application/javascript" \
                                           "application/json" \
