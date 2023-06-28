@@ -25,4 +25,15 @@ class TablePickerProvider extends AbstractTablePickerProvider
     {
         return DC_Table::class;
     }
+
+    public function getDcaAttributes(PickerConfig $config): array
+    {
+        $attributes = parent::getDcaAttributes($config);
+
+        if (\is_array($rootNodes = $config->getExtra('rootNodes'))) {
+            $attributes['rootNodes'] = $rootNodes;
+        }
+
+        return $attributes;
+    }
 }
