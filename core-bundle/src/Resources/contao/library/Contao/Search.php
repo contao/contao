@@ -454,6 +454,26 @@ class Search
 			}
 		}
 
+		foreach ($arrMatches as $match)
+		{
+			$iterator->setText($match);
+
+			if (iterator_count($iterator->getPartsIterator()) < 2)
+			{
+				continue;
+			}
+
+			preg_match_all('/' . str_replace(' ', '[^[:alnum:]]+', preg_quote($match, '/')) . '/ui', $strText, $phrases);
+
+			foreach ($phrases[0] as $phrase)
+			{
+				if (!\in_array($phrase, $variants, true))
+				{
+					$variants[] = $phrase;
+				}
+			}
+		}
+
 		return $variants;
 	}
 

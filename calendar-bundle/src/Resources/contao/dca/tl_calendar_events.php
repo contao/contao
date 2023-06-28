@@ -1104,6 +1104,12 @@ class tl_calendar_events extends Backend
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+
+		if ($calendar === null)
+		{
+			return $tags;
+		}
+
 		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
 
 		if ($pageModel === null)
