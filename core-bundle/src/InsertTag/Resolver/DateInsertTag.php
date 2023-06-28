@@ -12,16 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
+use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\Date;
 
-class FragmentInsertTag
+class DateInsertTag
 {
-    #[AsInsertTag('fragment', asFragment: true)]
+    #[AsInsertTag('date', asFragment: true)]
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        return new InsertTagResult(substr($insertTag->getParameters()->serialize(), 2), OutputType::html);
+        return new InsertTagResult(
+            Date::parse($insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat')),
+            OutputType::text,
+        );
     }
 }

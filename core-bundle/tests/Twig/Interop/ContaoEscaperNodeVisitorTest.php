@@ -112,6 +112,8 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         System::setContainer($container);
 

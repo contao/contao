@@ -101,7 +101,10 @@ class InsertTagParser implements ResetInterface
     {
         return implode(
             '',
-            array_map(static fn ($tagResult) => $tagResult->getValue(), $this->executeReplace($input, true)),
+            array_map(
+                static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
+                $this->executeReplace($input, true, OutputType::html),
+            ),
         );
     }
 
@@ -114,7 +117,10 @@ class InsertTagParser implements ResetInterface
     {
         return implode(
             '',
-            array_map(static fn ($tagResult) => $tagResult->getValue(), $this->executeReplace($input, false)),
+            array_map(
+                static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
+                $this->executeReplace($input, false, OutputType::html),
+            ),
         );
     }
 
@@ -165,11 +171,11 @@ class InsertTagParser implements ResetInterface
             return new InsertTagResult('', OutputType::text);
         }
 
-        if (1 !== \count($chunked) || ChunkedText::TYPE_RAW !== $chunked[0][0] || !\is_string($chunked[0][1])) {
-            throw new \RuntimeException('Rendering a single insert tag has to return a single raw chunk');
+        if (1 !== \count($chunked) || !\is_string($chunked[0][1])) {
+            throw new \RuntimeException('Rendering a single insert tag has to return a single chunk');
         }
 
-        return new InsertTagResult($chunked[0][1], OutputType::html);
+        return new InsertTagResult($chunked[0][1], ChunkedText::TYPE_RAW === $chunked[0][0] ? OutputType::html : OutputType::text);
     }
 
     /**
@@ -297,7 +303,7 @@ class InsertTagParser implements ResetInterface
     /**
      * @return list<InsertTagResult>
      */
-    private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags): array
+    private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType = OutputType::text): array
     {
         if (!$input instanceof ParsedSequence) {
             $input = $this->parse($input);
@@ -320,6 +326,7 @@ class InsertTagParser implements ResetInterface
                     ...$this->executeReplace(
                         $this->renderBlockSubscription($wrapStart, new ParsedSequence($wrapContent)),
                         $allowEsiTags,
+                        $sourceType,
                     ),
                 ];
 
@@ -345,7 +352,7 @@ class InsertTagParser implements ResetInterface
             }
 
             if (\is_string($item)) {
-                $return[] = new InsertTagResult($item, OutputType::text);
+                $return[] = new InsertTagResult($item, $sourceType);
                 continue;
             }
 
@@ -360,7 +367,7 @@ class InsertTagParser implements ResetInterface
         // Missing end tag
         if ($wrapStart) {
             $return[] = new InsertTagResult($wrapStart->serialize(), OutputType::text);
-            $return = [...$return, ...$this->executeReplace(new ParsedSequence($wrapContent), $allowEsiTags)];
+            $return = [...$return, ...$this->executeReplace(new ParsedSequence($wrapContent), $allowEsiTags, $sourceType)];
         }
 
         return $return;
@@ -481,7 +488,7 @@ class InsertTagParser implements ResetInterface
                     continue;
                 }
 
-                $value .= $this->renderTag($value)->getValue();
+                $value .= $this->renderTag($item)->getValue();
             }
 
             $resolvedParameters[] = $value;
@@ -574,7 +581,7 @@ class InsertTagParser implements ResetInterface
     private function handleLegacyTagsHook(ParsedSequence $input, bool $allowEsiTags): ParsedSequence
     {
         if (empty($GLOBALS['TL_HOOKS']['replaceInsertTags'])) {
-            // return $input; TODO: enable once all insert tags are moved over
+            return $input;
         }
 
         $hasLegacyTags = false;
@@ -614,15 +621,18 @@ class InsertTagParser implements ResetInterface
         $tags = ['', substr($tag->serialize(), 2, -2), ''];
         $rit = 0;
         $cnt = 3;
-        $system = $this->framework->getAdapter(System::class);
+        $flagName = $flag->getName();
+        $tagNameAndParameters = $tag->getName().$tag->getParameters()->serialize();
+        $currentResult = $result->getValue();
+        $allowEsiTags = false;
 
         foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] ?? [] as $callback) {
-            $hookResult = $system->importStatic($callback[0])->{$callback[1]}(
-                $flag->getName(),
-                $tag->getName().$tag->getParameters()->serialize(),
-                $result->getValue(),
+            $hookResult = System::importStatic($callback[0])->{$callback[1]}(
+                $flagName,
+                $tagNameAndParameters,
+                $currentResult,
                 $flags,
-                false,
+                $allowEsiTags,
                 $tags,
                 [],
                 $rit,

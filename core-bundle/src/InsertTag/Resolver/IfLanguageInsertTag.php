@@ -28,7 +28,7 @@ class IfLanguageInsertTag
 
     #[AsBlockInsertTag('iflng', endTag: 'iflng')]
     #[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
-    public function replaceInsertTag(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
+    public function __invoke(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
     {
         $inverse = 'iflng' !== $insertTag->getName();
         $language = $insertTag->getParameters()->get(0) ?: throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));

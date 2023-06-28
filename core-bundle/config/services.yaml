@@ -438,19 +438,32 @@ services:
     contao.insert_tag.flag.string_util:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
 
+    contao.insert_tag.resolver.date:
+        class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
+
+    contao.insert_tag.resolver.form:
+        class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
+        arguments:
+            - '@request_stack'
+
+    contao.insert_tag.resolver.fragment:
+        class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
+
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
         arguments:
             - '@request_stack'
+
+    contao.insert_tag.resolver.legacy:
+        class: Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag
+        arguments:
+            - '@service_container'
 
     contao.insert_tag.resolver.link:
         class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
         arguments:
             - '@contao.framework'
             - '@contao.security.token_checker'
-
-    contao.insert_tag.resolver.fragment:
-        class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
 
     contao.intl.countries:
         class: Contao\CoreBundle\Intl\Countries

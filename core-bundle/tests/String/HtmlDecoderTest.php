@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Tests\String;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
+use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -59,7 +62,10 @@ class HtmlDecoderTest extends TestCase
      */
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $parser->addSubscription(new InsertTagSubscription(new DateInsertTag(), '__invoke', 'date', null, true, true));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
+        $htmlDecoder = new HtmlDecoder($parser);
 
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
@@ -93,7 +99,11 @@ class HtmlDecoderTest extends TestCase
      */
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $parser->addSubscription(new InsertTagSubscription(new DateInsertTag(), '__invoke', 'date', null, true, true));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $htmlDecoder = new HtmlDecoder($parser);
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 
