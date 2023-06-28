@@ -143,7 +143,6 @@ services:
     Contao\CoreBundle\Controller\SitemapController:
         arguments:
             - '@contao.routing.page_registry'
-            - '%kernel.charset%'
         tags:
             - controller.service_arguments
 

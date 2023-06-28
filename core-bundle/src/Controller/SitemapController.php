@@ -32,7 +32,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 class SitemapController extends AbstractController
 {
     private PageRegistry $pageRegistry;
-    private string $encoding;
 
     public function __construct(PageRegistry $pageRegistry)
     {
