@@ -34,10 +34,9 @@ class SitemapController extends AbstractController
     private PageRegistry $pageRegistry;
     private string $encoding;
 
-    public function __construct(PageRegistry $pageRegistry, string $encoding = 'UTF-8')
+    public function __construct(PageRegistry $pageRegistry)
     {
         $this->pageRegistry = $pageRegistry;
-        $this->encoding = $encoding;
     }
 
     /**
