@@ -179,7 +179,7 @@ class InsertTagParser implements ResetInterface
 
         // Fallback to old implementation
         if ($input instanceof InsertTag) {
-            $input = $input->serialize();
+            $input = substr($input->serialize(), 2, -2);
         }
 
         $chunked = iterator_to_array($this->replaceInlineChunked('{{'.$input.'}}'));
@@ -224,7 +224,7 @@ class InsertTagParser implements ResetInterface
 
     private function doParse(string $input): ParsedSequence
     {
-        if (!preg_match_all('('.self::TAG_REGEX.')x', $input, $matches, PREG_OFFSET_CAPTURE)) {
+        if (!preg_match_all('('.self::TAG_REGEX.')ix', $input, $matches, PREG_OFFSET_CAPTURE)) {
             return new ParsedSequence([$input]);
         }
 
