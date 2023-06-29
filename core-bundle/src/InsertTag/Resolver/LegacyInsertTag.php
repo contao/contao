@@ -683,7 +683,11 @@ class LegacyInsertTag
                 break;
         }
 
-        return new InsertTagResult($result, $outputType);
+        if (\is_array($result)) {
+            $result = ArrayUtil::flattenToString($result);
+        }
+
+        return new InsertTagResult((string) $result, $outputType);
     }
 
     /**

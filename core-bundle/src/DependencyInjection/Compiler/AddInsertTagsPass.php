@@ -125,8 +125,6 @@ class AddInsertTagsPass implements CompilerPassInterface
             throw new InvalidDefinitionException($invalid);
         }
 
-        // TODO: validate method signature?
-
         return $method;
     }
 }

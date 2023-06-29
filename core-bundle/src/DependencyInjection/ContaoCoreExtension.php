@@ -197,18 +197,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                         $tagAttributes['method'] = $reflector->getName();
                     }
 
-                    if (AsInsertTag::class === $attributeClass) {
-                        // TODO: $this->validateInsertTagMethodSignature($method);
-                    }
-
-                    if (AsBlockInsertTag::class === $attributeClass) {
-                        // TODO: $this->validateInsertTagMethodSignature($method);
-                    }
-
-                    if (AsInsertTagFlag::class === $attributeClass) {
-                        // TODO: $this->validateInsertTagMethodSignature($method);
-                    }
-
                     $definition->addTag($tag, $tagAttributes);
                 }
             );

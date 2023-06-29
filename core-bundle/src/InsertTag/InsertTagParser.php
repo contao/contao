@@ -635,14 +635,14 @@ class InsertTagParser implements ResetInterface
     private function handleLegacyFlagsHook(InsertTagResult $result, InsertTagFlag $flag, InsertTag $tag): InsertTagResult
     {
         // Set up as variables as they may be used by reference in the hooks
-        $flags = array_map(static fn ($flag) => $flag->getName(), $tag->getFlags());
-        $tags = ['', substr($tag->serialize(), 2, -2), ''];
-        $rit = 0;
-        $cnt = 3;
         $flagName = $flag->getName();
         $tagNameAndParameters = $tag->getName().$tag->getParameters()->serialize();
         $currentResult = $result->getValue();
+        $flags = array_map(static fn ($flag) => $flag->getName(), $tag->getFlags());
         $allowEsiTags = false;
+        $tags = ['', substr($tag->serialize(), 2, -2), ''];
+        $rit = 0;
+        $cnt = 3;
 
         foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] ?? [] as $callback) {
             $hookResult = System::importStatic($callback[0])->{$callback[1]}(
