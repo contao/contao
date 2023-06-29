@@ -114,6 +114,9 @@ class InsertTagParser implements ResetInterface
         $this->flagCallbacks[$name] = $service->$method(...);
     }
 
+    /**
+     * @return string may include <esi> tags
+     */
     public function replace(ParsedSequence|string $input): string
     {
         return implode(
@@ -125,11 +128,17 @@ class InsertTagParser implements ResetInterface
         );
     }
 
+    /**
+     * @return ChunkedText may include <esi> tags
+     */
     public function replaceChunked(string $input): ChunkedText
     {
         return $this->toChunkedText($this->executeReplace($input, true));
     }
 
+    /**
+     * @return string does not include <esi> tags
+     */
     public function replaceInline(ParsedSequence|string $input): string
     {
         return implode(
@@ -141,6 +150,9 @@ class InsertTagParser implements ResetInterface
         );
     }
 
+    /**
+     * @return ChunkedText does not include <esi> tags
+     */
     public function replaceInlineChunked(string $input): ChunkedText
     {
         return $this->toChunkedText($this->executeReplace($input, false));
