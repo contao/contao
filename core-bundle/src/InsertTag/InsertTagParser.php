@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\InsertTags;
@@ -594,6 +595,12 @@ class InsertTagParser implements ResetInterface
 
     private function handleLegacyFlagsHook(InsertTagResult $result, InsertTagFlag $flag, InsertTag $tag): InsertTagResult
     {
+        if (!isset($GLOBALS['TL_HOOKS']['insertTagFlags']) || !\is_array($GLOBALS['TL_HOOKS']['insertTagFlags'])) {
+            return $result;
+        }
+
+        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+
         // Set up as variables as they may be used by reference in the hooks
         $flagName = $flag->getName();
         $tagNameAndParameters = $tag->getName().$tag->getParameters()->serialize();
@@ -604,7 +611,7 @@ class InsertTagParser implements ResetInterface
         $rit = 0;
         $cnt = 3;
 
-        foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] ?? [] as $callback) {
+        foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback) {
             $hookResult = System::importStatic($callback[0])->{$callback[1]}(
                 $flagName,
                 $tagNameAndParameters,

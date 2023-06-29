@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -228,6 +230,8 @@ class InsertTags extends Controller
 					{
 						if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 						{
+							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTag::class);
+
 							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
 								$varValue = System::importStatic($callback[0])->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
@@ -286,6 +290,8 @@ class InsertTags extends Controller
 							// HOOK: pass unknown flags to callback functions
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
+								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
 									$varValue = System::importStatic($callback[0])->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, array(), $_rit, $_cnt); // see #5806
