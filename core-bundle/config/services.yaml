@@ -428,6 +428,8 @@ services:
             - '@monolog.logger.contao.error'
             - '@fragment.handler'
             - '@request_stack'
+            - ~
+            - '%contao.insert_tags.allowed_tags%'
 
     contao.insert_tag.flag.format:
         class: Contao\CoreBundle\InsertTag\Flag\FormatFlag

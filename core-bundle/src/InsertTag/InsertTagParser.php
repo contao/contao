@@ -71,23 +71,41 @@ class InsertTagParser implements ResetInterface
      */
     private array $flagCallbacks = [];
 
+    private readonly string $allowedTagsRegex;
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly LoggerInterface $logger,
         private readonly FragmentHandler $fragmentHandler,
         private readonly RequestStack $requestStack,
         private InsertTags|null $insertTags = null,
+        array $allowedTags = ['*'],
     ) {
+        $this->allowedTagsRegex = '('.implode(
+            '|',
+            array_map(
+                static fn ($allowedTag) => '^'.implode('.+', array_map('preg_quote', explode('*', $allowedTag))).'$',
+                $allowedTags ?: [''],
+            ),
+        ).')';
     }
 
     public function addSubscription(InsertTagSubscription $subscription): void
     {
+        if (1 !== preg_match($this->allowedTagsRegex, $subscription->name)) {
+            return;
+        }
+
         unset($this->blockSubscriptions[$subscription->name]);
         $this->subscriptions[$subscription->name] = $subscription;
     }
 
     public function addBlockSubscription(InsertTagSubscription $subscription): void
     {
+        if (1 !== preg_match($this->allowedTagsRegex, $subscription->name)) {
+            return;
+        }
+
         unset($this->subscriptions[$subscription->name]);
         $this->blockSubscriptions[$subscription->name] = $subscription;
     }

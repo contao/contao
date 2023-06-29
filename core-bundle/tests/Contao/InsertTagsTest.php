@@ -18,7 +18,9 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
 use Contao\CoreBundle\InsertTag\Flag\StringUtilFlag;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -442,9 +444,25 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), null, $allowedTags);
 
         $output = (string) (new InsertTags())->replaceInternal($source, false, $insertTagParser);
+
+        $this->assertSame($expected, $output);
+
+        $plainInsertTag = new class() {
+            public function __invoke(ResolvedInsertTag $tag): InsertTagResult
+            {
+                return new InsertTagResult(substr($tag->getParameters()->serialize(), 2));
+            }
+        };
+
+        $insertTagParser->addSubscription(new InsertTagSubscription($plainInsertTag, '__invoke', 'plain1', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription($plainInsertTag, '__invoke', 'plain2', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription($plainInsertTag, '__invoke', 'plain', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription($plainInsertTag, '__invoke', 'plin', null, true, false));
+
+        $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
     }
