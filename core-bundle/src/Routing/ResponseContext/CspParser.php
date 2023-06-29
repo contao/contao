@@ -17,7 +17,7 @@ use ParagonIE\CSPBuilder\CSPBuilder;
 class CspParser
 {
     /**
-     * @param string $cspString The Content-Security-Policy header content.
+     * @param string $cspString the Content-Security-Policy header content
      */
     public function parse(CSPBuilder $csp, string $cspString): CSPBuilder
     {
@@ -48,22 +48,21 @@ class CspParser
                 } elseif ('require-sri-for' === $name) {
                     $csp->requireSRIFor($value);
                 } else {
-                    switch ($value) {
-                        case "'none'": $csp->addDirective($name, false); break;
-                        case "'self'": $csp->setSelfAllowed($name, true); break;
-                        case 'blob:': $csp->setBlobAllowed($name, true); break;
-                        case 'data:': $csp->setDataAllowed($name, true); break;
-                        case 'filesystem:': $csp->setFileSystemAllowed($name, true); break;
-                        case 'https:': $csp->setHttpsAllowed($name, true); break;
-                        case 'mediastream:': $csp->setMediaStreamAllowed($name, true); break;
-                        case "'report-sample'": $csp->setReportSample($name, true); break;
-                        case "'strict-dynamic'": $csp->setStrictDynamic($name, true); break;
-                        case "'unsafe-eval'": $csp->setAllowUnsafeEval($name, true); break;
-                        case "'unsafe-hashes'": $csp->setAllowUnsafeHashes($name, true); break;
-                        case "'unsafe-inline'": $csp->setAllowUnsafeInline($name, true); break;
-
-                        default: $csp->addSource($name, $value);
-                    }
+                    match ($value) {
+                        "'none'" => $csp->addDirective($name, false),
+                        "'self'" => $csp->setSelfAllowed($name, true),
+                        'blob:' => $csp->setBlobAllowed($name, true),
+                        'data:' => $csp->setDataAllowed($name, true),
+                        'filesystem:' => $csp->setFileSystemAllowed($name, true),
+                        'https:' => $csp->setHttpsAllowed($name, true),
+                        'mediastream:' => $csp->setMediaStreamAllowed($name, true),
+                        "'report-sample'" => $csp->setReportSample($name, true),
+                        "'strict-dynamic'" => $csp->setStrictDynamic($name, true),
+                        "'unsafe-eval'" => $csp->setAllowUnsafeEval($name, true),
+                        "'unsafe-hashes'" => $csp->setAllowUnsafeHashes($name, true),
+                        "'unsafe-inline'" => $csp->setAllowUnsafeInline($name, true),
+                        default => $csp->addSource($name, $value),
+                    };
                 }
             }
         }
