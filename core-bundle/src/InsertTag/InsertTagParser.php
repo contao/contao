@@ -22,7 +22,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -533,57 +532,6 @@ class InsertTagParser implements ResetInterface
         }
 
         return new ChunkedText($chunked);
-    }
-
-    /**
-     * @return array<string|null, array>
-     */
-    private function parseQuery(ParsedSequence $query): array
-    {
-        $nestedTags = [];
-
-        $queryString = '';
-
-        foreach ($query as $item) {
-            if (!\is_string($item)) {
-                /** @var non-empty-string $uuid */
-                $uuid = Uuid::v4()->toBase32();
-                $nestedTags[$uuid] = $item;
-                $item = array_key_last($nestedTags);
-            }
-            $queryString .= $item;
-        }
-
-        // Restore = and &
-        $queryString = str_replace(['&#61;', '&amp;'], ['=', '&'], $queryString);
-
-        parse_str($queryString, $attributes);
-
-        array_walk_recursive(
-            $attributes,
-            static function (&$value) use ($nestedTags): void {
-                $items = [StringUtil::specialcharsAttribute($value)];
-
-                foreach ($nestedTags as $uuid => $tag) {
-                    $splitItems = [];
-
-                    foreach ($items as $item) {
-                        $item = explode($uuid, (string) $item, 2);
-                        $splitItems[] = array_shift($item);
-
-                        if ($item) {
-                            $splitItems[] = $tag;
-                            $splitItems[] = array_shift($item);
-                        }
-                    }
-                    $items = $splitItems;
-                }
-
-                $value = new ParsedSequence($items);
-            }
-        );
-
-        return $attributes;
     }
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
