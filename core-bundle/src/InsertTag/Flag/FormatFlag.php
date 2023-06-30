@@ -23,33 +23,27 @@ class FormatFlag
     #[AsInsertTagFlag('number_format')]
     public function numberFormat(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            System::getFormattedNumber((float) $result->getValue(), 0),
-            OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(System::getFormattedNumber((float) $result->getValue(), 0))
+            ->withOutputType(OutputType::text)
+        ;
     }
 
     #[AsInsertTagFlag('currency_format')]
     public function currencyFormat(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            System::getFormattedNumber((float) $result->getValue()),
-            OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(System::getFormattedNumber((float) $result->getValue()))
+            ->withOutputType(OutputType::text)
+        ;
     }
 
     #[AsInsertTagFlag('readable_size')]
     public function readableSize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            System::getReadableSize((int) $result->getValue()),
-            OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(System::getReadableSize((int) $result->getValue()))
+            ->withOutputType(OutputType::text)
+        ;
     }
 }

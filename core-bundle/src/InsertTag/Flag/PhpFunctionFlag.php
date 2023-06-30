@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\InsertTag\Flag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
-use Contao\CoreBundle\InsertTag\OutputType;
 
 class PhpFunctionFlag
 {
@@ -54,11 +53,8 @@ class PhpFunctionFlag
             throw new \LogicException(sprintf('Invalid flag "%s".', $flag->getName()));
         }
 
-        return new InsertTagResult(
-            $flag->getName()($result->getValue()),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue($flag->getName()($result->getValue()))
+        ;
     }
 }

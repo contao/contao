@@ -24,111 +24,85 @@ class StringUtilFlag
     #[AsInsertTagFlag('attr')]
     public function attr(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::specialcharsAttribute($result->getValue()),
-            OutputType::html,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::specialcharsAttribute($result->getValue()))
+            ->withOutputType(OutputType::html)
+        ;
     }
 
     #[AsInsertTagFlag('urlattr')]
     public function urlattr(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::specialcharsUrl($result->getValue()),
-            OutputType::html, // Not type URL because HTML entities are encoded here
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::specialcharsUrl($result->getValue()))
+            ->withOutputType(OutputType::html) // Not type URL because HTML entities are encoded here
+        ;
     }
 
     #[AsInsertTagFlag('standardize')]
     public function standardize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::standardize($result->getValue()),
-            OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::standardize($result->getValue()))
+            ->withOutputType(OutputType::text)
+        ;
     }
 
     #[AsInsertTagFlag('ampersand')]
     public function ampersand(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::ampersand($result->getValue()),
-            OutputType::text, // We can not safely assume HTML here as the method only encodes ampersands
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::ampersand($result->getValue()))
+            ->withOutputType(OutputType::text) // We can not safely assume HTML here as the method only encodes ampersands
+        ;
     }
 
     #[AsInsertTagFlag('specialchars')]
     public function specialchars(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::specialchars($result->getValue()),
-            OutputType::html,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::specialchars($result->getValue()))
+            ->withOutputType(OutputType::html)
+        ;
     }
 
     #[AsInsertTagFlag('encode_email')]
     #[AsInsertTagFlag('encodeemail')]
     public function encodeEmail(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            StringUtil::encodeEmail($result->getValue()),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(StringUtil::encodeEmail($result->getValue()))
+            ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
+        ;
     }
 
     #[AsInsertTagFlag('utf8_strtolower')]
     public function utf8Strtolower(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            mb_strtolower($result->getValue()),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result->withValue(mb_strtolower($result->getValue()));
     }
 
     #[AsInsertTagFlag('utf8_strtoupper')]
     public function utf8Strtoupper(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            mb_strtoupper($result->getValue()),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result->withValue(mb_strtoupper($result->getValue()));
     }
 
     #[AsInsertTagFlag('utf8_romanize')]
     public function utf8Romanize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            (new UnicodeString($result->getValue()))->ascii()->toString(),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue((new UnicodeString($result->getValue()))->ascii()->toString())
+            ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
+        ;
     }
 
     #[AsInsertTagFlag('nl2br')]
     public function nl2Br(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return new InsertTagResult(
-            preg_replace('/\r?\n/', '<br>', $result->getValue()),
-            OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-            $result->getExpiresAt(),
-            $result->getCacheTags(),
-        );
+        return $result
+            ->withValue(preg_replace('/\r?\n/', '<br>', $result->getValue()))
+            ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
+        ;
     }
 }

@@ -47,4 +47,27 @@ class InsertTagResult
     {
         return $this->cacheTags;
     }
+
+    public function withValue(\Stringable|string $value): self
+    {
+        return new self($value, $this->outputType, $this->expiresAt, $this->cacheTags);
+    }
+
+    public function withOutputType(OutputType $outputType): self
+    {
+        return new self($this->value, $outputType, $this->expiresAt, $this->cacheTags);
+    }
+
+    public function withExpiresAt(\DateTimeImmutable|null $expiresAt): self
+    {
+        return new self($this->value, $this->outputType, $expiresAt, $this->cacheTags);
+    }
+
+    /**
+     * @param list<string> $cacheTags
+     */
+    public function withCacheTags(array $cacheTags): self
+    {
+        return new self($this->value, $this->outputType, $this->expiresAt, $cacheTags);
+    }
 }

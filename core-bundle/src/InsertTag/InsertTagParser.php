@@ -626,12 +626,10 @@ class InsertTagParser implements ResetInterface
 
             // Replace the tag and stop the loop
             if (false !== $hookResult) {
-                return new InsertTagResult(
-                    (string) $hookResult,
-                    OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text,
-                    $result->getExpiresAt(),
-                    $result->getCacheTags(),
-                );
+                return $result
+                    ->withValue((string) $hookResult)
+                    ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
+                ;
             }
         }
 
