@@ -41,6 +41,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
+/**
+ * @internal
+ */
 class LegacyInsertTag
 {
     public function __construct(
