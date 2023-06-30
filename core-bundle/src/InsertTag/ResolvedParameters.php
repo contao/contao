@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @method list<float|int|string> all(string|null $name = null)
- * @method float|int|string|null  get(int|string $key)
+ * @method list<string> all(string|null $name = null)
+ * @method string|null  get(int|string $key)
  */
 final class ResolvedParameters extends InsertTagParameters
 {
@@ -32,8 +32,34 @@ final class ResolvedParameters extends InsertTagParameters
         parent::__construct(array_values($parameters));
     }
 
+    public function getScalar(int|string $key): float|int|string|null
+    {
+        return $this->toScalar($this->get($key));
+    }
+
+    /**
+     * @return list<float|int|string>
+     */
+    public function allScalar(string|null $name = null): array
+    {
+        return array_map($this->toScalar(...), $this->all($name));
+    }
+
     public function hasInsertTags(): bool
     {
         return false;
+    }
+
+    private function toScalar(string|null $value): float|int|string|null
+    {
+        if ((string) (int) $value === $value) {
+            return (int) $value;
+        }
+
+        if ((string) (float) $value === $value) {
+            return (float) $value;
+        }
+
+        return $value;
     }
 }

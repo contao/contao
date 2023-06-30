@@ -47,18 +47,28 @@ class InsertTagParametersTest extends TestCase
     {
         $parameters = new ResolvedParameters(['123', '0123', '1.23', '1.230', 'a=123', 'b=0123', 'c=1.23', 'd=1.230']);
 
-        $this->assertSame(123, $parameters->get(0));
+        $this->assertSame('123', $parameters->get(0));
         $this->assertSame('0123', $parameters->get(1));
-        $this->assertSame(1.23, $parameters->get(2));
+        $this->assertSame('1.23', $parameters->get(2));
         $this->assertSame('1.230', $parameters->get(3));
 
-        $this->assertSame(123, $parameters->get('a'));
+        $this->assertSame('123', $parameters->get('a'));
         $this->assertSame('0123', $parameters->get('b'));
-        $this->assertSame(1.23, $parameters->get('c'));
+        $this->assertSame('1.23', $parameters->get('c'));
         $this->assertSame('1.230', $parameters->get('d'));
 
-        $this->assertSame([123, '0123', 1.23, '1.230', 'a=123', 'b=0123', 'c=1.23', 'd=1.230'], $parameters->all());
-        $this->assertSame([123], $parameters->all('a'));
+        $this->assertSame(123, $parameters->getScalar(0));
+        $this->assertSame('0123', $parameters->getScalar(1));
+        $this->assertSame(1.23, $parameters->getScalar(2));
+        $this->assertSame('1.230', $parameters->getScalar(3));
+
+        $this->assertSame(123, $parameters->getScalar('a'));
+        $this->assertSame('0123', $parameters->getScalar('b'));
+        $this->assertSame(1.23, $parameters->getScalar('c'));
+        $this->assertSame('1.230', $parameters->getScalar('d'));
+
+        $this->assertSame([123, '0123', 1.23, '1.230', 'a=123', 'b=0123', 'c=1.23', 'd=1.230'], $parameters->allScalar());
+        $this->assertSame([123], $parameters->allScalar('a'));
     }
 
     public function testNamedParameters(): void

@@ -23,22 +23,22 @@ abstract class InsertTagParameters
 
     abstract public function hasInsertTags(): bool;
 
-    public function get(int|string $key): ParsedSequence|float|int|string|null
+    public function get(int|string $key): ParsedSequence|string|null
     {
         if (\is_int($key)) {
-            return $this->toValue($this->parameters[$key] ?? null);
+            return $this->parameters[$key] ?? null;
         }
 
         return $this->all($key)[0] ?? null;
     }
 
     /**
-     * @return list<ParsedSequence|float|int|string>
+     * @return list<ParsedSequence|string>
      */
     public function all(string|null $name = null): array
     {
         if (null === $name) {
-            return array_map($this->toValue(...), $this->parameters);
+            return $this->parameters;
         }
 
         return $this->getNamed($name);
@@ -80,7 +80,7 @@ abstract class InsertTagParameters
                 \is_string($parameter)
                 && str_starts_with($parameter, $key.'=')
             ) {
-                $values[] = $this->toValue(substr($parameter, \strlen($key) + 1));
+                $values[] = substr($parameter, \strlen($key) + 1);
             } elseif (
                 $parameter instanceof ParsedSequence
                 && $parameter->count()
@@ -94,22 +94,5 @@ abstract class InsertTagParameters
         }
 
         return $values;
-    }
-
-    private function toValue(ParsedSequence|string|null $value): ParsedSequence|float|int|string|null
-    {
-        if (!\is_string($value)) {
-            return $value;
-        }
-
-        if ((string) (int) $value === $value) {
-            return (int) $value;
-        }
-
-        if ((string) (float) $value === $value) {
-            return (float) $value;
-        }
-
-        return $value;
     }
 }

@@ -109,9 +109,12 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('first', $insertTag->getParameters()->get(0));
         $this->assertSame('second', $insertTag->getParameters()->get(1));
         $this->assertSame('bar', $insertTag->getParameters()->get('foo'));
-        $this->assertSame(1, $insertTag->getParameters()->get('baz[]'));
-        $this->assertSame(1, $insertTag->getParameters()->all('baz[]')[0]);
-        $this->assertSame(1.23, $insertTag->getParameters()->all('baz[]')[1]);
+        $this->assertSame('1', $insertTag->getParameters()->get('baz[]'));
+        $this->assertSame(1, $insertTag->getParameters()->getScalar('baz[]'));
+        $this->assertSame('1', $insertTag->getParameters()->all('baz[]')[0]);
+        $this->assertSame(1, $insertTag->getParameters()->allScalar('baz[]')[0]);
+        $this->assertSame('1.23', $insertTag->getParameters()->all('baz[]')[1]);
+        $this->assertSame(1.23, $insertTag->getParameters()->allScalar('baz[]')[1]);
         $this->assertSame('flag1', $insertTag->getFlags()[0]->getName());
         $this->assertSame('flag2', $insertTag->getFlags()[1]->getName());
 
