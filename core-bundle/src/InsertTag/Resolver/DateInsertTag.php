@@ -24,9 +24,18 @@ class DateInsertTag
     #[AsInsertTag('date', asFragment: true)]
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        return new InsertTagResult(
-            Date::parse($insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat')),
-            OutputType::text,
-        );
+        $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat');
+        $result = new InsertTagResult(Date::parse($format), OutputType::text);
+
+        // Special handling for the very common {{date::Y}} (e.g. in the website footer) case
+        if ('Y' === $format) {
+            $result = $result->withExpiresAt(new \DateTimeImmutable($result->getValue().'-12-31 23:59:59'));
+
+            if ($rootId = $GLOBALS['objPage']->rootId ?? null) {
+                $result = $result->withCacheTags(["contao.db.tl_page.$rootId"]);
+            }
+        }
+
+        return $result;
     }
 }

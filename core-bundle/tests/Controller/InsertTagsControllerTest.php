@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,12 +25,12 @@ class InsertTagsControllerTest extends TestCase
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
-            ->method('replaceInline')
-            ->with('{{request_token}}')
-            ->willReturn('3858f62230ac3c915f300c664312c63f')
+            ->method('renderTag')
+            ->with('request_token')
+            ->willReturn(new InsertTagResult('3858f62230ac3c915f300c664312c63f'))
         ;
 
-        $controller = new InsertTagsController($insertTagParser);
+        $controller = new InsertTagsController($insertTagParser, null);
         $response = $controller->renderAction(new Request(), '{{request_token}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -39,7 +41,7 @@ class InsertTagsControllerTest extends TestCase
         $request = new Request();
         $request->query->set('clientCache', '300');
 
-        $controller = new InsertTagsController($insertTagParser);
+        $controller = new InsertTagsController($insertTagParser, null);
         $response = $controller->renderAction($request, '{{request_token}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -54,12 +56,12 @@ class InsertTagsControllerTest extends TestCase
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
-            ->method('replaceInline')
-            ->with('{{date::Y}}')
-            ->willReturn($year)
+            ->method('renderTag')
+            ->with('date::Y')
+            ->willReturn(new InsertTagResult($year, OutputType::text, new \DateTimeImmutable($year.'-12-31 23:59:59')))
         ;
 
-        $controller = new InsertTagsController($insertTagParser);
+        $controller = new InsertTagsController($insertTagParser, null);
         $response = $controller->renderAction(new Request(), '{{date::Y}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('public'));

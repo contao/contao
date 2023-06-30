@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\StringUtil;
+use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,13 +28,26 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InsertTagsController
 {
-    public function __construct(private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly InsertTagParser $insertTagParser,
+        private readonly ResponseTagger|null $responseTagger,
+    ) {
     }
 
     public function renderAction(Request $request, string $insertTag): Response
     {
-        $response = new Response($this->insertTagParser->replaceInline($insertTag));
+        if (!str_starts_with($insertTag, '{{') || !str_ends_with($insertTag, '}}')) {
+            throw new \InvalidArgumentException(sprintf('Invalid insert tag "%s"', $insertTag));
+        }
+
+        $result = $this->insertTagParser->renderTag(substr($insertTag, 2, -2));
+
+        if (OutputType::html === $result->getOutputType()) {
+            $response = new Response($result->getValue());
+        } else {
+            $response = new Response(StringUtil::specialchars($result->getValue()));
+        }
+
         $response->setPrivate(); // always private
 
         if ($clientCache = $request->query->getInt('clientCache')) {
@@ -40,13 +56,13 @@ class InsertTagsController
             $response->headers->addCacheControlDirective('no-store');
         }
 
-        // Special handling for the very common {{date::Y}} (e.g. in the website footer) case until
-        // we have a new way to register insert tags and add that caching information to the tag itself
-        if ('{{date::Y}}' === $insertTag) {
+        if ($result->getExpiresAt()) {
             $response->setPublic();
-            $response->setExpires(new \DateTimeImmutable(date('Y').'-12-31 23:59:59'));
+            $response->setExpires($result->getExpiresAt());
             $response->headers->removeCacheControlDirective('no-store');
         }
+
+        $this->responseTagger?->addTags($result->getCacheTags());
 
         return $response;
     }
