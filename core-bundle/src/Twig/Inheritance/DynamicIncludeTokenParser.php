@@ -60,7 +60,11 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
     {
         if (!is_string($name)) {
-            return $name;
+            if ($name instanceof TemplateWrapper) {
+                return $name;
+            }
+
+            throw new \TypeError(sprintf('Argument 1 passed to %s() must be of the type string|TemplateWrapper, %s given', __METHOD__, get_debug_type($name)));
         }
 
         $parts = ContaoTwigUtil::parseContaoName($name);
