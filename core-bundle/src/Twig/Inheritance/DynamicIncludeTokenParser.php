@@ -56,6 +56,10 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
      * match the Contao Twig namespace.
      *
      * TODO change signature to public static function adjustTemplateName(string|TemplateWrapper $name, TemplateHierarchyInterface $hierarchy): string|TemplateWrapper in Contao 5.1
+     *
+     * @param string|TemplateWrapper $name
+     *
+     * @return string|TemplateWrapper
      */
     public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
     {
