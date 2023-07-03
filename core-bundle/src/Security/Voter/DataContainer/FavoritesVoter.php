@@ -21,13 +21,12 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
  */
-class FavoritesVoter implements VoterInterface, CacheableVoterInterface
+class FavoritesVoter implements CacheableVoterInterface
 {
     public function __construct(private Security $security, private Connection $connection)
     {
