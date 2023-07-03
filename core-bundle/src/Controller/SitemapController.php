@@ -78,6 +78,7 @@ class SitemapController extends AbstractController
         foreach ($urls as $url) {
             $loc = $sitemap->createElement('loc');
             $loc->appendChild($sitemap->createTextNode($url));
+
             $urlEl = $sitemap->createElement('url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);

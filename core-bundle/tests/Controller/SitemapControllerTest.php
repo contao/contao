@@ -730,6 +730,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry);
         $controller->setContainer($container);
+
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
