@@ -136,8 +136,7 @@ class DcaLoader extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($this->strTable);
+				System::importStatic($callback[0])->{$callback[1]}($this->strTable);
 			}
 		}
 

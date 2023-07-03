@@ -47,8 +47,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate, $this);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate, $this);
 			}
 		}
 
@@ -94,8 +93,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = System::importStatic($callback[0])->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -106,8 +104,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = System::importStatic($callback[0])->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 

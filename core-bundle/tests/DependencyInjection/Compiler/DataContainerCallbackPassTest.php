@@ -337,7 +337,7 @@ class DataContainerCallbackPassTest extends TestCase
             'contao.callback',
             [
                 'table' => 'tl_content',
-                'target' => 'list.label.label_callback',
+                'target' => 'list.sorting.child_record_callback',
             ]
         );
 
@@ -364,8 +364,8 @@ class DataContainerCallbackPassTest extends TestCase
                     ]],
                 ],
                 'tl_content' => [
-                    'list.label.label_callback' => [[
-                        ['test.callback_listener', 'onLabelCallback'],
+                    'list.sorting.child_record_callback' => [[
+                        ['test.callback_listener', 'onChildRecordCallback'],
                     ]],
                 ],
             ],

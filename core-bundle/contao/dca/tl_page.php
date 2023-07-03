@@ -91,7 +91,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s',
-			'label_callback'          => array('tl_page', 'addIcon')
+			'label_callback'          => array
+			(
+				array('tl_page', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
@@ -1473,8 +1476,7 @@ class tl_page extends Backend
 					{
 						if (is_array($callback))
 						{
-							$this->import($callback[0]);
-							$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
+							$strAlias = System::importStatic($callback[0])->{$callback[1]}($strAlias, $dc);
 						}
 						elseif (is_callable($callback))
 						{

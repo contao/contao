@@ -371,8 +371,7 @@ class BackendUser extends User
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrModules = $this->{$callback[0]}->{$callback[1]}($arrModules, true);
+				$arrModules = System::importStatic($callback[0])->{$callback[1]}($arrModules, true);
 			}
 		}
 

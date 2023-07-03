@@ -59,7 +59,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'fields'                  => array('', 'firstname', 'lastname', 'username', 'dateAdded'),
 			'showColumns'             => true,
-			'label_callback'          => array('tl_member', 'addIcon')
+			'label_callback' => array
+			(
+				array('tl_member', 'addIcon')
+			)
 		),
 		'global_operations' => array
 		(
@@ -488,8 +491,7 @@ class tl_member extends Backend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
+				System::importStatic($callback[0])->{$callback[1]}($objUser, $strPassword);
 			}
 		}
 

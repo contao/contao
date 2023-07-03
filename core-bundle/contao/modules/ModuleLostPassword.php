@@ -60,8 +60,7 @@ class ModuleLostPassword extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -257,8 +256,7 @@ class ModuleLostPassword extends Module
 				{
 					foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($objMember, $objWidget->value, $this);
+						System::importStatic($callback[0])->{$callback[1]}($objMember, $objWidget->value, $this);
 					}
 				}
 

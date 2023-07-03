@@ -77,7 +77,10 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array('tl_comments', 'listComments')
+			'label_callback'          => array
+			(
+				array('tl_comments', 'listComments')
+			)
 		),
 		'global_operations' => array
 		(
@@ -449,9 +452,7 @@ class tl_comments extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['isAllowedToEditComment'] as $callback)
 					{
-						$this->import($callback[0]);
-
-						if ($this->{$callback[0]}->{$callback[1]}($intParent, $strSource) === true)
+						if (System::importStatic($callback[0])->{$callback[1]}($intParent, $strSource) === true)
 						{
 							$cache[$strKey] = true;
 							break;
@@ -551,9 +552,7 @@ class tl_comments extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['listComments'] as $callback)
 					{
-						$this->import($callback[0]);
-
-						if ($tmp = $this->{$callback[0]}->{$callback[1]}($arrRow))
+						if ($tmp = System::importStatic($callback[0])->{$callback[1]}($arrRow))
 						{
 							$title .= $tmp;
 							break;
