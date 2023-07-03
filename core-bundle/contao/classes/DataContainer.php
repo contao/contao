@@ -162,6 +162,21 @@ abstract class DataContainer extends Backend
 	public const SORT_BOTH = 18;
 
 	/**
+	 * Primary database index
+	 */
+	public const INDEX_PRIMARY = 'primary';
+
+	/**
+	 * Regular database index
+	 */
+	public const INDEX_SECONDARY = 'index';
+
+	/**
+	 * Unique database index
+	 */
+	public const INDEX_UNIQUE = 'unique';
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
