@@ -280,6 +280,11 @@ class Picker extends Widget
 		$extras['fieldType'] = $this->multiple ? 'checkbox' : 'radio';
 		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
 
+		if (\is_array($this->rootNodes))
+		{
+			$extras['rootNodes'] = array_values($this->rootNodes);
+		}
+
 		return $extras;
 	}
 }
