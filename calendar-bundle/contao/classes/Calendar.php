@@ -53,8 +53,7 @@ class Calendar extends Frontend
 		{
 			$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
-			$this->import(Files::class, 'Files');
-			$this->Files->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
+			Files::getInstance()->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -71,8 +70,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeeds()
 	{
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->purgeXmlFiles();
+		(new Automator())->purgeXmlFiles();
 
 		$objCalendar = CalendarFeedModel::findAll();
 

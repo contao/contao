@@ -24,7 +24,7 @@ class Messages extends Backend
 	{
 		$arrRoots = array();
 		$time = Date::floorToMinute();
-		$objRoots = $this->Database->execute("SELECT fallback, dns FROM tl_page WHERE type='root' AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY dns");
+		$objRoots = Database::getInstance()->execute("SELECT fallback, dns FROM tl_page WHERE type='root' AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY dns");
 
 		while ($objRoots->next())
 		{

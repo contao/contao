@@ -20,16 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 class FrontendIndex extends Frontend
 {
 	/**
-	 * Initialize the object
-	 */
-	public function __construct()
-	{
-		// Load the user object before calling the parent constructor
-		$this->import(FrontendUser::class, 'User');
-		parent::__construct();
-	}
-
-	/**
 	 * Render a page
 	 *
 	 * @return Response

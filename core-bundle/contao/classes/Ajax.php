@@ -202,11 +202,13 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
+					$db = Database::getInstance();
+
 					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
-					elseif ($intId && $this->Database->tableExists($dc->table))
+					elseif ($intId && $db->tableExists($dc->table))
 					{
 						$idField = 'id';
 
@@ -216,8 +218,9 @@ class Ajax extends Backend
 							$idField = 'path';
 						}
 
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
-												 ->execute($intId);
+						$objRow = $db
+							->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
+							->execute($intId);
 
 						// The record does not exist
 						if ($objRow->numRows < 1)
@@ -313,8 +316,6 @@ class Ajax extends Backend
 
 			// Toggle sub-palettes
 			case 'toggleSubpalette':
-				$this->import(BackendUser::class, 'User');
-
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (DataContainer::isFieldExcluded($dc->table, Input::post('field')) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
 				{

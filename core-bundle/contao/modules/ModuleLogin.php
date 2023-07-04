@@ -119,8 +119,6 @@ class ModuleLogin extends Module
 
 		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
 		{
-			$this->import(FrontendUser::class, 'User');
-
 			$strRedirect = Environment::get('uri');
 
 			// Redirect to last page visited
@@ -135,16 +133,18 @@ class ModuleLogin extends Module
 				$strRedirect = Environment::get('base');
 			}
 
+			$user = FrontendUser::getInstance();
+
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
-			if ($this->User->lastLogin > 0)
+			if ($user->lastLogin > 0)
 			{
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $this->User->lastLogin));
+				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
 			}
 
 			return;

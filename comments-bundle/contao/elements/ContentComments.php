@@ -49,9 +49,7 @@ class ContentComments extends ContentElement
 	 */
 	protected function compile()
 	{
-		$this->import(Comments::class, 'Comments');
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $this->com_perPage;
 		$objConfig->order = $this->com_order;
 		$objConfig->template = $this->com_template;
@@ -60,6 +58,6 @@ class ContentComments extends ContentElement
 		$objConfig->bbcode = $this->com_bbcode;
 		$objConfig->moderate = $this->com_moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_content', $this->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_content', $this->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);
 	}
 }

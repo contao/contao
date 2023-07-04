@@ -185,7 +185,6 @@ class ModuleNewsReader extends ModuleNews
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -201,7 +200,6 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $objArchive->perPage;
 		$objConfig->order = $objArchive->sortOrder;
 		$objConfig->template = $this->com_template;
@@ -210,6 +208,6 @@ class ModuleNewsReader extends ModuleNews
 		$objConfig->bbcode = $objArchive->bbcode;
 		$objConfig->moderate = $objArchive->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }

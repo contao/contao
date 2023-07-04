@@ -98,6 +98,8 @@ class ModuleSearch extends Module
 		// Execute the search if there are keywords
 		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
+			$db = Database::getInstance();
+
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
@@ -106,7 +108,7 @@ class ModuleSearch extends Module
 				foreach ($this->pages as $intPageId)
 				{
 					$arrPages[] = array($intPageId);
-					$arrPages[] = $this->Database->getChildRecords($intPageId, 'tl_page');
+					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
 				}
 
 				if (!empty($arrPages))
@@ -122,7 +124,7 @@ class ModuleSearch extends Module
 				/** @var PageModel $objPage */
 				global $objPage;
 
-				$arrPages = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)
@@ -249,7 +251,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|(?:\b|^).{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}(?:\b|$)|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{

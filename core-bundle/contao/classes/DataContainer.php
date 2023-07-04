@@ -1514,8 +1514,9 @@ abstract class DataContainer extends Backend
 
 		Controller::loadDataContainer($ptable);
 
-		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
-								 ->execute($intId);
+		$objPid = Database::getInstance()
+			->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
+			->execute($intId);
 
 		if (!$objPid->numRows || $objPid->pid == 0)
 		{

@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\Database;
 use Contao\System;
 
 // Add palettes to tl_module
@@ -100,7 +101,7 @@ class tl_module_listing extends Backend
 	 */
 	public function getAllTables()
 	{
-		$arrTables = $this->Database->listTables();
+		$arrTables = Database::getInstance()->listTables();
 		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))

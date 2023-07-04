@@ -225,7 +225,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'user':
                 if ($this->container->get('contao.security.token_checker')->hasFrontendUser()) {
                     $outputType = OutputType::text;
-                    $value = System::importStatic(FrontendUser::class)->{$insertTag->getParameters()->get(0)};
+                    $value = FrontendUser::getInstance()->{$insertTag->getParameters()->get(0)};
 
                     if (!$value) {
                         $result = $value;
