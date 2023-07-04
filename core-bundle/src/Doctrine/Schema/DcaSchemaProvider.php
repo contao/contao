@@ -98,7 +98,7 @@ class DcaSchemaProvider
                         continue;
                     }
 
-                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen((string) $fieldName) + 3));
+                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen($fieldName) + 3));
                 }
             }
 
@@ -294,7 +294,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, string|array<string>>>
+     * @return array<string, array<string, string|array<string, string|array<string>>>>
      */
     private function getSqlDefinitions(): array
     {
