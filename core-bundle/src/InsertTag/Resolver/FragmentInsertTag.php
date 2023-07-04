@@ -17,9 +17,9 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 
-class FragmentInsertTag
+#[AsInsertTag('fragment', asFragment: true)]
+class FragmentInsertTag implements InsertTagResolverNestedResolvedInterface
 {
-    #[AsInsertTag('fragment', asFragment: true)]
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         return new InsertTagResult(substr($insertTag->getParameters()->serialize(), 2), OutputType::html);

@@ -16,19 +16,19 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 
-class PhpFunctionFlag
+#[AsInsertTagFlag('addslashes')]
+#[AsInsertTagFlag('strtolower')]
+#[AsInsertTagFlag('strtoupper')]
+#[AsInsertTagFlag('ucfirst')]
+#[AsInsertTagFlag('lcfirst')]
+#[AsInsertTagFlag('ucwords')]
+#[AsInsertTagFlag('trim')]
+#[AsInsertTagFlag('rtrim')]
+#[AsInsertTagFlag('ltrim')]
+#[AsInsertTagFlag('urlencode')]
+#[AsInsertTagFlag('rawurlencode')]
+class PhpFunctionFlag implements InsertTagFlagInterface
 {
-    #[AsInsertTagFlag('addslashes')]
-    #[AsInsertTagFlag('strtolower')]
-    #[AsInsertTagFlag('strtoupper')]
-    #[AsInsertTagFlag('ucfirst')]
-    #[AsInsertTagFlag('lcfirst')]
-    #[AsInsertTagFlag('ucwords')]
-    #[AsInsertTagFlag('trim')]
-    #[AsInsertTagFlag('rtrim')]
-    #[AsInsertTagFlag('ltrim')]
-    #[AsInsertTagFlag('urlencode')]
-    #[AsInsertTagFlag('rawurlencode')]
     public function __invoke(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         if (

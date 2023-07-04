@@ -41,46 +41,45 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
+#[AsInsertTag('lang')]
+#[AsInsertTag('br')]
+#[AsInsertTag('email')]
+#[AsInsertTag('email_open')]
+#[AsInsertTag('email_url')]
+#[AsInsertTag('label')]
+#[AsInsertTag('user')]
+#[AsInsertTag('email_close')]
+#[AsInsertTag('insert_article')]
+#[AsInsertTag('insert_content')]
+#[AsInsertTag('insert_module')]
+#[AsInsertTag('insert_form')]
+#[AsInsertTag('article')]
+#[AsInsertTag('article_open')]
+#[AsInsertTag('article_url')]
+#[AsInsertTag('article_title')]
+#[AsInsertTag('article_teaser')]
+#[AsInsertTag('last_update')]
+#[AsInsertTag('version')]
+#[AsInsertTag('env')]
+#[AsInsertTag('page')]
+#[AsInsertTag('abbr')]
+#[AsInsertTag('acronym')]
+#[AsInsertTag('figure')]
+#[AsInsertTag('image')]
+#[AsInsertTag('picture')]
+#[AsInsertTag('file')]
 /**
  * @internal
+ *
+ * @todo Refactor into separate insert tags
  */
-class LegacyInsertTag
+class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
     ) {
     }
 
-    #[AsInsertTag('lang')]
-    #[AsInsertTag('br')]
-    #[AsInsertTag('email')]
-    #[AsInsertTag('email_open')]
-    #[AsInsertTag('email_url')]
-    #[AsInsertTag('label')]
-    #[AsInsertTag('user')]
-    #[AsInsertTag('email_close')]
-    #[AsInsertTag('insert_article')]
-    #[AsInsertTag('insert_content')]
-    #[AsInsertTag('insert_module')]
-    #[AsInsertTag('insert_form')]
-    #[AsInsertTag('article')]
-    #[AsInsertTag('article_open')]
-    #[AsInsertTag('article_url')]
-    #[AsInsertTag('article_title')]
-    #[AsInsertTag('article_teaser')]
-    #[AsInsertTag('last_update')]
-    #[AsInsertTag('version')]
-    #[AsInsertTag('env')]
-    #[AsInsertTag('page')]
-    #[AsInsertTag('abbr')]
-    #[AsInsertTag('acronym')]
-    #[AsInsertTag('figure')]
-    #[AsInsertTag('image')]
-    #[AsInsertTag('picture')]
-    #[AsInsertTag('file')]
-    /**
-     * @todo Refactor into separate insert tags
-     */
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $result = '';

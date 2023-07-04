@@ -20,14 +20,14 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class IfLanguageInsertTag
+#[AsBlockInsertTag('iflng', endTag: 'iflng')]
+#[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
+class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterface
 {
     public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
-    #[AsBlockInsertTag('iflng', endTag: 'iflng')]
-    #[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
     public function __invoke(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
     {
         $inverse = 'iflng' !== $insertTag->getName();

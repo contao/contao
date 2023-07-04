@@ -19,9 +19,9 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\Date;
 
-class DateInsertTag
+#[AsInsertTag('date', asFragment: true)]
+class DateInsertTag implements InsertTagResolverNestedResolvedInterface
 {
-    #[AsInsertTag('date', asFragment: true)]
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat');
