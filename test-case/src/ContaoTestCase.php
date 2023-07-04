@@ -128,7 +128,7 @@ abstract class ContaoTestCase extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
+            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
 
         if (0 !== \count($instances)) {
