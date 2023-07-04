@@ -31,25 +31,16 @@ class PhpFunctionFlag implements InsertTagFlagInterface
 {
     public function __invoke(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        if (
-            !\in_array(
-                $flag->getName(),
-                [
-                    'addslashes',
-                    'strtolower',
-                    'strtoupper',
-                    'ucfirst',
-                    'lcfirst',
-                    'ucwords',
-                    'trim',
-                    'rtrim',
-                    'ltrim',
-                    'urlencode',
-                    'rawurlencode',
-                ],
-                true,
-            )
-        ) {
+        static $allowedNames = null;
+
+        if (null === $allowedNames) {
+            foreach ((new \ReflectionClass(__CLASS__))->getAttributes(AsInsertTagFlag::class) as $attribute) {
+                $allowedNames[] = $attribute->newInstance()->name;
+            }
+        }
+
+        // Do not allow arbitrary PHP functions for security reasons
+        if (!\in_array($flag->getName(), $allowedNames, true)) {
             throw new \LogicException(sprintf('Invalid flag "%s".', $flag->getName()));
         }
 
