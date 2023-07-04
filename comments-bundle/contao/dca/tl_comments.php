@@ -261,8 +261,6 @@ class tl_comments extends Backend
 	 */
 	public function checkPermission()
 	{
-		$db = Database::getInstance();
-
 		switch (Input::get('act'))
 		{
 			case 'select':
@@ -273,7 +271,7 @@ class tl_comments extends Backend
 			case 'edit':
 			case 'delete':
 			case 'toggle':
-				$objComment = $db
+				$objComment = Database::getInstance()
 					->prepare("SELECT id, parent, source FROM tl_comments WHERE id=?")
 					->limit(1)
 					->execute(Input::get('id'));
@@ -300,7 +298,7 @@ class tl_comments extends Backend
 					break;
 				}
 
-				$objComment = $db->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
+				$objComment = Database::getInstance()->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
 
 				while ($objComment->next())
 				{
@@ -385,12 +383,11 @@ class tl_comments extends Backend
 		// Order deny,allow
 		$cache[$strKey] = false;
 		$security = System::getContainer()->get('security.helper');
-		$db = Database::getInstance();
 
 		switch ($strSource)
 		{
 			case 'tl_content':
-				$objPage = $db
+				$objPage = Database::getInstance()
 					->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?))")
 					->limit(1)
 					->execute($intParent);
@@ -403,7 +400,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_page':
-				$objPage = $db
+				$objPage = Database::getInstance()
 					->prepare("SELECT * FROM tl_page WHERE id=?")
 					->limit(1)
 					->execute($intParent);
@@ -416,7 +413,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_news':
-				$objArchive = $db
+				$objArchive = Database::getInstance()
 					->prepare("SELECT pid FROM tl_news WHERE id=?")
 					->limit(1)
 					->execute($intParent);
@@ -429,7 +426,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_calendar_events':
-				$objCalendar = $db
+				$objCalendar = Database::getInstance()
 					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
 					->limit(1)
 					->execute($intParent);
@@ -493,12 +490,11 @@ class tl_comments extends Backend
 	{
 		$router = System::getContainer()->get('router');
 		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
-		$db = Database::getInstance();
 
 		switch ($arrRow['source'])
 		{
 			case 'tl_content':
-				$objParent = $db
+				$objParent = Database::getInstance()
 					->prepare("SELECT id, title FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?)")
 					->execute($arrRow['parent']);
 
@@ -509,7 +505,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_page':
-				$objParent = $db
+				$objParent = Database::getInstance()
 					->prepare("SELECT id, title FROM tl_page WHERE id=?")
 					->execute($arrRow['parent']);
 
@@ -520,7 +516,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_news':
-				$objParent = $db
+				$objParent = Database::getInstance()
 					->prepare("SELECT id, headline FROM tl_news WHERE id=?")
 					->execute($arrRow['parent']);
 
@@ -531,7 +527,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_faq':
-				$objParent = $db
+				$objParent = Database::getInstance()
 					->prepare("SELECT id, question FROM tl_faq WHERE id=?")
 					->execute($arrRow['parent']);
 
@@ -542,7 +538,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_calendar_events':
-				$objParent = $db
+				$objParent = Database::getInstance()
 					->prepare("SELECT id, title FROM tl_calendar_events WHERE id=?")
 					->execute($arrRow['parent']);
 

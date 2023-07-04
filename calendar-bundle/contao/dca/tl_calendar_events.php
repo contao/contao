@@ -532,7 +532,6 @@ class tl_calendar_events extends Backend
 			$root = $user->calendars;
 		}
 
-		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -566,7 +565,7 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objCalendar = $db
+				$objCalendar = Database::getInstance()
 					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
 					->limit(1)
 					->execute($id);
@@ -592,7 +591,7 @@ class tl_calendar_events extends Backend
 					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 
-				$objCalendar = $db->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
+				$objCalendar = Database::getInstance()->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();

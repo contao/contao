@@ -469,7 +469,6 @@ class tl_news extends Backend
 			$root = $user->news;
 		}
 
-		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -495,7 +494,7 @@ class tl_news extends Backend
 			case 'copy':
 				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
-					$objArchive = $db
+					$objArchive = Database::getInstance()
 						->prepare("SELECT pid FROM tl_news WHERE id=?")
 						->limit(1)
 						->execute(Input::get('pid'));
@@ -522,7 +521,7 @@ class tl_news extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objArchive = $db
+				$objArchive = Database::getInstance()
 					->prepare("SELECT pid FROM tl_news WHERE id=?")
 					->limit(1)
 					->execute($id);
@@ -548,7 +547,7 @@ class tl_news extends Backend
 					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
 
-				$objArchive = $db->prepare("SELECT id FROM tl_news WHERE pid=?")->execute($id);
+				$objArchive = Database::getInstance()->prepare("SELECT id FROM tl_news WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();

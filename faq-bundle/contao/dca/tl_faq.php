@@ -330,7 +330,6 @@ class tl_faq extends Backend
 			$root = $user->faqs;
 		}
 
-		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -348,7 +347,7 @@ class tl_faq extends Backend
 			case 'create':
 				if (Input::get('mode') == 1)
 				{
-					$objFaq = $db
+					$objFaq = Database::getInstance()
 						->prepare("SELECT pid FROM tl_faq WHERE id=?")
 						->limit(1)
 						->execute(Input::get('pid'));
@@ -375,7 +374,7 @@ class tl_faq extends Backend
 			case 'copy':
 				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
-					$objFaq = $db
+					$objFaq = Database::getInstance()
 						->prepare("SELECT pid FROM tl_faq WHERE id=?")
 						->limit(1)
 						->execute(Input::get('pid'));
@@ -402,7 +401,7 @@ class tl_faq extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objFaq = $db
+				$objFaq = Database::getInstance()
 					->prepare("SELECT pid FROM tl_faq WHERE id=?")
 					->limit(1)
 					->execute($id);
@@ -428,7 +427,7 @@ class tl_faq extends Backend
 					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
 
-				$objFaq = $db->prepare("SELECT id FROM tl_faq WHERE pid=?")->execute($id);
+				$objFaq = Database::getInstance()->prepare("SELECT id FROM tl_faq WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();

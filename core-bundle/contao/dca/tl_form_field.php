@@ -433,7 +433,6 @@ class tl_form_field extends Backend
 			$root = $user->forms;
 		}
 
-		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -456,7 +455,7 @@ class tl_form_field extends Backend
 				// Get form ID
 				if (Input::get('mode') == 1)
 				{
-					$objField = $db
+					$objField = Database::getInstance()
 						->prepare("SELECT pid FROM tl_form_field WHERE id=?")
 						->limit(1)
 						->execute(Input::get('pid'));
@@ -484,7 +483,7 @@ class tl_form_field extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objField = $db
+				$objField = Database::getInstance()
 					->prepare("SELECT pid FROM tl_form_field WHERE id=?")
 					->limit(1)
 					->execute($id);
@@ -510,7 +509,7 @@ class tl_form_field extends Backend
 					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 
-				$objForm = $db
+				$objForm = Database::getInstance()
 					->prepare("SELECT id FROM tl_form_field WHERE pid=?")
 					->execute($id);
 
