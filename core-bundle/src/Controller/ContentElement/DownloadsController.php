@@ -110,10 +110,15 @@ class DownloadsController extends AbstractContentElementController
      */
     private function getFilesystemItems(ContentModel $model): FilesystemItemIterator
     {
+        $homeDir = null;
+
+        if ($model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir) {
+            $homeDir = $user->homeDir;
+        }
+
         $sources = match (true) {
             'download' === $model->type => [$model->singleSRC],
-            $model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir && ($homeDir = $user->homeDir) => $homeDir,
-            default => $model->multiSRC,
+            default => $homeDir ?: $model->multiSRC,
         };
 
         // Find filesystem items
