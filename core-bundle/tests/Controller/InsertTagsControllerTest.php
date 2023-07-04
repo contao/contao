@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class InsertTagsControllerTest extends TestCase
 {
@@ -68,5 +69,14 @@ class InsertTagsControllerTest extends TestCase
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
         $this->assertSame((new \DateTimeImmutable($year.'-12-31 23:59:59'))->getTimestamp(), $response->getExpires()->getTimestamp());
         $this->assertSame($year, $response->getContent());
+    }
+
+    public function testInvalidTagsThrowsBadRequestException(): void
+    {
+        $controller = new InsertTagsController($this->createMock(InsertTagParser::class), null);
+
+        $this->expectException(BadRequestHttpException::class);
+
+        $controller->renderAction(new Request(), 'invalid {{insert}} tag');
     }
 }

@@ -18,6 +18,7 @@ use Contao\StringUtil;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @internal Do not use this controller in your code
@@ -37,7 +38,7 @@ class InsertTagsController
     public function renderAction(Request $request, string $insertTag): Response
     {
         if (!str_starts_with($insertTag, '{{') || !str_ends_with($insertTag, '}}')) {
-            throw new \InvalidArgumentException(sprintf('Invalid insert tag "%s"', $insertTag));
+            throw new BadRequestHttpException(sprintf('Invalid insert tag "%s"', $insertTag));
         }
 
         $result = $this->insertTagParser->renderTag(substr($insertTag, 2, -2));
