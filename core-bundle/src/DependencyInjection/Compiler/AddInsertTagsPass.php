@@ -42,6 +42,10 @@ class AddInsertTagsPass implements CompilerPassInterface
                         throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
                     }
 
+                    if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$|^$/i', (string) ($attributes['endTag'] ?? ''))) {
+                        throw new InvalidDefinitionException(sprintf('Invalid insert tag end tag name "%s"', $attributes['endTag'] ?? ''));
+                    }
+
                     $method = $this->getMethod($attributes['method'], $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
 
                     $priorities[] = $attributes['priority'];
