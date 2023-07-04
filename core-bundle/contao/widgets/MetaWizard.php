@@ -200,10 +200,10 @@ class MetaWizard extends Widget
 				++$count;
 			}
 
-			// Sort the items by language name with the user language on top (see #3818)
-			uksort($items, static function ($a, $b) use ($languages) {
-				$user = BackendUser::getInstance();
+			$user = BackendUser::getInstance();
 
+			// Sort the items by language name with the user language on top (see #3818)
+			uksort($items, static function ($a, $b) use ($user, $languages) {
 				if ($user->language === $a)
 				{
 					return -1;
