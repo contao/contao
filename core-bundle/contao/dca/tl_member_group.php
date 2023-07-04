@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -137,15 +136,6 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
  */
 class tl_member_group extends Backend
 {
-	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
 	/**
 	 * Add an image to each record
 	 *

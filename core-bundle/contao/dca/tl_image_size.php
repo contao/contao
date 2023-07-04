@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -226,22 +227,13 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 class tl_image_size extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit the table
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return;
 		}
@@ -265,19 +257,21 @@ class tl_image_size extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the image sizes
-		if (empty($this->User->imageSizes) || !is_array($this->User->imageSizes))
+		if (empty($user->imageSizes) || !is_array($user->imageSizes))
 		{
 			$imageSizes = array();
 		}
 		else
 		{
-			$imageSizes = $this->User->imageSizes;
+			$imageSizes = $user->imageSizes;
 		}
 
 		// The image size is enabled already
@@ -292,10 +286,12 @@ class tl_image_size extends Backend
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -306,18 +302,20 @@ class tl_image_size extends Backend
 						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-									   ->execute(serialize($arrImageSizes), $objGroup->id);
+						$db
+							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
+							->execute(serialize($arrImageSizes), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrThemes = StringUtil::deserialize($objUser->themes);
 
@@ -326,14 +324,15 @@ class tl_image_size extends Backend
 					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-								   ->execute(serialize($arrImageSizes), $this->User->id);
+					$db
+						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
+						->execute(serialize($arrImageSizes), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$imageSizes[] = $insertId;
-			$this->User->imageSizes = $imageSizes;
+			$user->imageSizes = $imageSizes;
 		}
 	}
 

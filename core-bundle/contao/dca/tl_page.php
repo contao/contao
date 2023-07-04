@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Idna;
@@ -711,22 +712,15 @@ if (Input::get('popup'))
 class tl_page extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_page
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
@@ -735,21 +729,23 @@ class tl_page extends Backend
 		$session = $objSession->all();
 
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $user->groups[0];
 
 		// Restrict the page tree
-		if (empty($this->User->pagemounts) || !is_array($this->User->pagemounts))
+		if (empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->pagemounts;
+			$root = $user->pagemounts;
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['rootPaste'] = false;
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
@@ -760,9 +756,10 @@ class tl_page extends Backend
 
 			foreach ($session['CURRENT']['IDS'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -777,7 +774,7 @@ class tl_page extends Backend
 				}
 
 				// Mounted pages cannot be deleted
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$user->hasAccess($id, 'pagemounts'))
 				{
 					$delete_all[] = $id;
 				}
@@ -793,9 +790,10 @@ class tl_page extends Backend
 
 			foreach ($session['CLIPBOARD']['tl_page']['id'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -817,9 +815,10 @@ class tl_page extends Backend
 		// Check permissions to save and create new
 		if (Input::get('act') == 'edit')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = $db
+				->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->numRows && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
@@ -857,9 +856,10 @@ class tl_page extends Backend
 					// Check the parent's parent page in "paste after" mode
 					else
 					{
-						$objPage = $this->Database->prepare("SELECT pid FROM tl_page WHERE id=?")
-												  ->limit(1)
-												  ->execute(Input::get('pid'));
+						$objPage = $db
+							->prepare("SELECT pid FROM tl_page WHERE id=?")
+							->limit(1)
+							->execute(Input::get('pid'));
 
 						$ids[] = $objPage->pid;
 					}
@@ -874,14 +874,14 @@ class tl_page extends Backend
 			$pagemounts = array();
 
 			// Get all allowed pages for the current user
-			foreach ($this->User->pagemounts as $root)
+			foreach ($user->pagemounts as $root)
 			{
 				if (Input::get('act') != 'delete')
 				{
 					$pagemounts[] = array($root);
 				}
 
-				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+				$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 			}
 
 			if (!empty($pagemounts))
@@ -892,7 +892,7 @@ class tl_page extends Backend
 			$pagemounts = array_unique($pagemounts);
 
 			// Do not allow pasting after pages on the root level (page mounts)
-			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($user->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
 			}
@@ -971,9 +971,10 @@ class tl_page extends Backend
 		}
 		elseif (Input::get('mode') == 1)
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('pid'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('pid'));
 
 			if ($objPage->pid == 0)
 			{
@@ -1052,9 +1053,10 @@ class tl_page extends Backend
 	 */
 	public function makeRedirectPageMandatory(DataContainer $dc)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-								  ->limit(1)
-								  ->execute($dc->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		if ($objPage->numRows && $objPage->type == 'logout')
 		{
@@ -1107,9 +1109,7 @@ class tl_page extends Backend
 		}
 
 		$varValue = StringUtil::standardize($varValue); // see #5096
-
-		$this->import(Automator::class, 'Automator');
-		$arrFeeds = $this->Automator->purgeXmlFiles(true);
+		$arrFeeds = (new Automator())->purgeXmlFiles(true);
 
 		// Alias exists
 		if (in_array($varValue, $arrFeeds))
@@ -1190,8 +1190,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
-								  ->execute($dc->activeRecord->dns, $dc->activeRecord->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
+			->execute($dc->activeRecord->dns, $dc->activeRecord->id);
 
 		if ($objPage->numRows)
 		{
@@ -1353,9 +1354,10 @@ class tl_page extends Backend
 		// Prevent adding non-root pages on top-level
 		if (empty($row['pid']) && Input::get('mode') != 'create')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->type != 'root')
 			{
@@ -1369,7 +1371,7 @@ class tl_page extends Backend
 		}
 
 		// Check permissions if the user is not an administrator
-		if (!$this->User->isAdmin)
+		if (!BackendUser::getInstance()->isAdmin)
 		{
 			// Disable "paste into" button if there is no permission 2 (move) or 1 (create) for the current page
 			if (!$disablePI)
@@ -1430,7 +1432,7 @@ class tl_page extends Backend
 		$root = func_get_arg(7);
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && (BackendUser::getInstance()->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1496,8 +1498,9 @@ class tl_page extends Backend
 				$objVersions->initialize();
 
 				// Store the new alias
-				$this->Database->prepare("UPDATE tl_page SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
+				Database::getInstance()
+					->prepare("UPDATE tl_page SET alias=? WHERE id=?")
+					->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();

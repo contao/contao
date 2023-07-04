@@ -346,18 +346,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$arrClipboard = null;
 		}
 
-		$this->import(Files::class, 'Files');
-		$this->import(BackendUser::class, 'User');
-
 		$arrFound = array();
 		$for = $session['search'][$this->strTable]['value'] ?? null;
 
 		// Limit the results by modifying $this->arrFilemounts
 		if ((string) $for !== '')
 		{
+			$db = Database::getInstance();
+
 			try
 			{
-				$this->Database->prepare("SELECT '' REGEXP ?")->execute($for);
+				$db->prepare("SELECT '' REGEXP ?")->execute($for);
 			}
 			catch (DriverException $exception)
 			{
@@ -367,8 +366,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
-			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-									  ->execute($for);
+			$objRoot = $db
+				->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+				->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -627,7 +627,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
-		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 		$id = $strFolder . '/__new__';
 
@@ -645,7 +644,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->Files->mkdir($id);
+		Files::getInstance()->mkdir($id);
 		$this->redirect(html_entity_decode($this->switchToEdit($id)));
 	}
 
@@ -697,8 +696,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->import(Files::class, 'Files');
-
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
 
@@ -714,7 +711,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		else
 		{
-			$this->Files->rename($source, $destination);
+			Files::getInstance()->rename($source, $destination);
 
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
@@ -755,8 +752,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Regenerate the symlinks (see #5903)
 			if (is_dir($this->strRootDir . '/' . $destination))
 			{
-				$this->import(Automator::class, 'Automator');
-				$this->Automator->generateSymlinks();
+				(new Automator())->generateSymlinks();
 			}
 
 			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
@@ -873,8 +869,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->import(Files::class, 'Files');
-
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
 		{
@@ -888,7 +882,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$destination = $new;
-			$this->Files->rcopy($source, $destination);
+			Files::getInstance()->rcopy($source, $destination);
 		}
 
 		// Copy a file
@@ -905,7 +899,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$destination = $new;
-			$this->Files->copy($source, $destination);
+			Files::getInstance()->copy($source, $destination);
 		}
 
 		// Update the database AFTER the file has been copied
@@ -943,8 +937,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Regenerate the symlinks (see #5903)
 		if (is_dir($this->strRootDir . '/' . $destination))
 		{
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->generateSymlinks();
+			(new Automator())->generateSymlinks();
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
@@ -1047,12 +1040,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->import(Files::class, 'Files');
+		$filesObj = Files::getInstance();
 
 		// Delete the folder or file
 		if (is_dir($this->strRootDir . '/' . $source))
 		{
-			$this->Files->rrdir($source);
+			$filesObj->rrdir($source);
 
 			$this->purgeCache($source);
 
@@ -1061,12 +1054,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Also delete the symlink (see #710)
 			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $source))
 			{
-				$this->Files->delete($strWebDir . '/' . $source);
+				$filesObj->delete($strWebDir . '/' . $source);
 			}
 		}
 		else
 		{
-			$this->Files->delete($source);
+			$filesObj->delete($source);
 		}
 
 		// Update the database AFTER the resource has been deleted
@@ -1163,8 +1156,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Instantiate the uploader
-		$this->import(BackendUser::class, 'User');
-		$class = $this->User->uploader;
+		$class = BackendUser::getInstance()->uploader;
 
 		// See #4086
 		if (!class_exists($class))
@@ -1595,8 +1587,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Set the current timestamp before creating a new version
 			if ($this->blnIsDbAssisted && $objModel !== null)
 			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $objModel->id);
+				Database::getInstance()
+					->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+					->execute(time(), $objModel->id);
 			}
 
 			// Save the current version
@@ -1811,8 +1804,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					// Set the current timestamp before adding a new version
 					if ($this->blnIsDbAssisted && $objModel !== null)
 					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $objModel->id);
+						Database::getInstance()
+							->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+							->execute(time(), $objModel->id);
 					}
 
 					// Create a new version
@@ -2171,8 +2165,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (!empty(array_intersect(array('css', 'scss', 'less', 'js'), $extensions)))
 		{
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->purgeScriptCache();
+			(new Automator())->purgeScriptCache();
 		}
 
 		$bundleTemplatePaths = array_filter(
@@ -2231,8 +2224,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				return;
 			}
 
-			$this->import(Files::class, 'Files');
-
 			// Trigger the save_callback
 			if (\is_array($arrData['save_callback'] ?? null))
 			{
@@ -2255,6 +2246,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
 
+			$filesObj = Files::getInstance();
 			$arrImageTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 			// Remove potentially existing thumbnails (see #6641)
@@ -2262,12 +2254,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				foreach (glob(System::getContainer()->getParameter('contao.image.target_dir') . '/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
 				{
-					$this->Files->delete(StringUtil::stripRootDir($strThumbnail));
+					$filesObj->delete(StringUtil::stripRootDir($strThumbnail));
 				}
 			}
 
 			// Rename the file
-			$this->Files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
+			$filesObj->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
 			$this->purgeCache($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
@@ -2312,7 +2304,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the symlinks
 			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
 			{
-				$this->Files->delete($strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
+				$filesObj->delete($strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
 				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, $strWebDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension, $this->strRootDir);
 			}
 
@@ -2394,8 +2386,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
+			$db = Database::getInstance();
+
 			// Make sure unique fields are unique
-			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
 			}
@@ -2406,7 +2400,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
+					$db->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
 				}
 
 				// Set the correct empty value (see #6284, #6373)
@@ -2501,9 +2495,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$arrClipboard = null;
 		}
 
-		$this->import(Files::class, 'Files');
-		$this->import(BackendUser::class, 'User');
-
 		return $this->generateTree($this->strRootDir . '/' . $strFolder, $level * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
 
@@ -2556,6 +2547,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Scan directory and sort the result
 		else
 		{
+			$filesObj = Files::getInstance();
+
 			foreach (Folder::scan($path) as $v)
 			{
 				if (strncmp($v, '.', 1) === 0)
@@ -2575,7 +2568,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 				elseif ($v == '__new__')
 				{
-					$this->Files->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
+					$filesObj->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
 				}
 				else
 				{
@@ -2590,6 +2583,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$files = array_values($files);
 		}
 
+		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Folders
@@ -2694,7 +2688,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '">' . Image::getHtml('new.svg', $GLOBALS['TL_LANG']['tl_files']['move'][0]) . '</a>';
 
 				// Only show the upload button for mounted folders
-				if (!$this->User->isAdmin && \in_array($currentFolder, $this->User->filemounts))
+				if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 				{
 					$return .= $uploadButton;
 				}
@@ -2848,7 +2842,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			try
 			{
-				$this->Database->prepare("SELECT '' REGEXP ?")->execute($searchValue);
+				Database::getInstance()->prepare("SELECT '' REGEXP ?")->execute($searchValue);
 			}
 			catch (DriverException $exception)
 			{
@@ -2959,9 +2953,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not allow file operations on root folders
 		if (\in_array(Input::get('act'), array('edit', 'paste', 'delete')))
 		{
-			$this->import(BackendUser::class, 'User');
+			$user = BackendUser::getInstance();
 
-			if (!$this->User->isAdmin && \in_array($strFile, $this->User->filemounts))
+			if (!$user->isAdmin && \in_array($strFile, $user->filemounts))
 			{
 				throw new AccessDeniedException('Attempt to edit, copy, move or delete the root folder "' . $strFile . '".');
 			}

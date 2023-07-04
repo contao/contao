@@ -98,6 +98,8 @@ class ModuleSearch extends Module
 		// Execute the search if there are keywords
 		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
+			$db = Database::getInstance();
+
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
@@ -106,7 +108,7 @@ class ModuleSearch extends Module
 				foreach ($this->pages as $intPageId)
 				{
 					$arrPages[] = array($intPageId);
-					$arrPages[] = $this->Database->getChildRecords($intPageId, 'tl_page');
+					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
 				}
 
 				if (!empty($arrPages))
@@ -122,7 +124,7 @@ class ModuleSearch extends Module
 				/** @var PageModel $objPage */
 				global $objPage;
 
-				$arrPages = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)

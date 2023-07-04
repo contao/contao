@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
@@ -370,15 +371,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 class tl_member extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Filter disabled groups
 	 *
 	 * @return array
@@ -449,14 +441,15 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = $this->User->isAdmin || (!empty($this->User->amg) && is_array($this->User->amg));
+		$user = BackendUser::getInstance();
+		$blnCanSwitchUser = $user->isAdmin || (!empty($user->amg) && is_array($user->amg));
 
 		if (!$blnCanSwitchUser)
 		{
 			return '';
 		}
 
-		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || !$row['username'] || (!$user->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $user->amg)) < 1))
 		{
 			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
@@ -482,9 +475,10 @@ class tl_member extends Backend
 			return $strPassword;
 		}
 
-		$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
-								  ->limit(1)
-								  ->execute($user->id);
+		$objUser = Database::getInstance()
+			->prepare("SELECT * FROM tl_member WHERE id=?")
+			->limit(1)
+			->execute($user->id);
 
 		// HOOK: set new password callback
 		if ($objUser->numRows && isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
@@ -527,7 +521,8 @@ class tl_member extends Backend
 			$time = time();
 		}
 
-		$this->Database->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
-					   ->execute($time, $dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
+			->execute($time, $dc->id);
 	}
 }

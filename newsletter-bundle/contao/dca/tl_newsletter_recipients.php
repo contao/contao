@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -175,15 +176,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 class tl_newsletter_recipients extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_newsletter_recipients
 	 *
 	 * @param DataContainer $dc
@@ -192,21 +184,24 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
+		if (empty($user->newsletters) || !is_array($user->newsletters))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->newsletters;
+			$root = $user->newsletters;
 		}
 
+		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -240,9 +235,10 @@ class tl_newsletter_recipients extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objRecipient = $this->Database->prepare("SELECT pid FROM tl_newsletter_recipients WHERE id=?")
-											   ->limit(1)
-											   ->execute($id);
+				$objRecipient = $db
+					->prepare("SELECT pid FROM tl_newsletter_recipients WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objRecipient->numRows < 1)
 				{
@@ -265,9 +261,7 @@ class tl_newsletter_recipients extends Backend
 					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 
-				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
-											 ->execute($id);
-
+				$objRecipient = $db->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -296,8 +290,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function clearOptInData(DataContainer $dc)
 	{
-		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
-					   ->execute($dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
+			->execute($dc->id);
 	}
 
 	/**
@@ -312,8 +307,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkUniqueRecipient($varValue, DataContainer $dc)
 	{
-		$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
-									   ->execute($varValue, $dc->id, $dc->id);
+		$objRecipient = Database::getInstance()
+			->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+			->execute($varValue, $dc->id, $dc->id);
 
 		if ($objRecipient->count > 0)
 		{
@@ -335,8 +331,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkDenyList($varValue, DataContainer $dc)
 	{
-		$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
-									   ->execute(md5($varValue), $dc->id, $dc->id);
+		$objDenyList = Database::getInstance()
+			->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+			->execute(md5($varValue), $dc->id, $dc->id);
 
 		if ($objDenyList->count > 0)
 		{

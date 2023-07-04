@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -155,8 +156,9 @@ class tl_opt_in extends Backend
 		System::loadLanguageFile('tl_opt_in_related');
 		Controller::loadDataContainer('tl_opt_in_related');
 
-		$objRelated = $this->Database->prepare("SELECT * FROM tl_opt_in_related WHERE pid=?")
-									 ->execute($row['id']);
+		$objRelated = Database::getInstance()
+			->prepare("SELECT * FROM tl_opt_in_related WHERE pid=?")
+			->execute($row['id']);
 
 		while ($objRelated->next())
 		{

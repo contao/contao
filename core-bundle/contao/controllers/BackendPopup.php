@@ -40,7 +40,6 @@ class BackendPopup extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
@@ -92,7 +91,7 @@ class BackendPopup extends Backend
 		}
 
 		// Check whether the file is mounted (thanks to Marko Cupic)
-		if (!$this->User->hasAccess($this->strFile, 'filemounts'))
+		if (!BackendUser::getInstance()->hasAccess($this->strFile, 'filemounts'))
 		{
 			exit('Permission denied');
 		}

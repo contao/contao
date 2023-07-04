@@ -117,7 +117,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year ORDER BY year DESC");
+		$objDates = Database::getInstance()->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year ORDER BY year DESC");
 
 		while ($objDates->next())
 		{
@@ -160,7 +160,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
+		$objDates = Database::getInstance()->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
 
 		while ($objDates->next())
 		{
@@ -214,7 +214,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY day ORDER BY day DESC");
+		$objDates = Database::getInstance()->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : "") . " GROUP BY day ORDER BY day DESC");
 
 		while ($objDates->next())
 		{
