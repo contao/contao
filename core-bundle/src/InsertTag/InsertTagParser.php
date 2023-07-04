@@ -235,32 +235,6 @@ class InsertTagParser implements ResetInterface
         return $this->doParse($input);
     }
 
-    private function doParse(string $input): ParsedSequence
-    {
-        if (!preg_match_all('('.self::TAG_REGEX.')ix', $input, $matches, PREG_OFFSET_CAPTURE)) {
-            return new ParsedSequence([$input]);
-        }
-
-        $lastOffset = 0;
-        $result = [];
-
-        foreach ($matches[0] as [$insertTag, $offset]) {
-            $result[] = substr($input, $lastOffset, $offset - $lastOffset);
-
-            try {
-                $result[] = $this->parseTag(substr($insertTag, 2, -2));
-            } catch (\Throwable) {
-                $result[] = $insertTag;
-            }
-
-            $lastOffset = $offset + \strlen((string) $insertTag);
-        }
-
-        $result[] = substr($input, $lastOffset);
-
-        return new ParsedSequence($result);
-    }
-
     public function parseTag(string $insertTag): InsertTag
     {
         $flags = [];
@@ -328,6 +302,32 @@ class InsertTagParser implements ResetInterface
         return
             isset($this->subscriptions[$name])
             || isset($this->blockSubscriptions[$name]);
+    }
+
+    private function doParse(string $input): ParsedSequence
+    {
+        if (!preg_match_all('('.self::TAG_REGEX.')ix', $input, $matches, PREG_OFFSET_CAPTURE)) {
+            return new ParsedSequence([$input]);
+        }
+
+        $lastOffset = 0;
+        $result = [];
+
+        foreach ($matches[0] as [$insertTag, $offset]) {
+            $result[] = substr($input, $lastOffset, $offset - $lastOffset);
+
+            try {
+                $result[] = $this->parseTag(substr($insertTag, 2, -2));
+            } catch (\Throwable) {
+                $result[] = $insertTag;
+            }
+
+            $lastOffset = $offset + \strlen((string) $insertTag);
+        }
+
+        $result[] = substr($input, $lastOffset);
+
+        return new ParsedSequence($result);
     }
 
     /**
