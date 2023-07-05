@@ -581,7 +581,7 @@ class InsertTagParser implements ResetInterface
 
         foreach ($this->callLegacyClass($input->serialize(), $allowEsiTags) as [$type, $chunk]) {
             $outputs[] = match ($type) {
-                ChunkedText::TYPE_TEXT => [...$this->doParse($chunk)],
+                ChunkedText::TYPE_TEXT => iterator_to_array($this->doParse($chunk)),
                 ChunkedText::TYPE_RAW => [new InsertTagResult($chunk, OutputType::html)],
             };
         }
