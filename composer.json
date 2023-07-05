@@ -312,8 +312,7 @@
             "@monorepo-tools",
             "@unit-tests",
             "@functional-tests",
-            "@phpstan",
-            "@require-checker"
+            "@phpstan"
         ],
         "cs-fixer": [
             "@ecs",

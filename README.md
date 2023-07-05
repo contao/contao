@@ -84,13 +84,14 @@ composer run all
 You can also run the scripts separately:
 
 ```bash
-composer run unit-tests
-composer run functional-tests
+composer run rector
 composer run cs-fixer
 composer run service-linter
+composer run monorepo-tools
+composer run unit-tests
+composer run functional-tests
 composer run phpstan
 composer run require-checker
-composer run monorepo-tools
 ```
 
 If you want to pass additional flags to the underlying commands, you can use the `--` argument:
