@@ -350,16 +350,15 @@ class InsertTagParserTest extends TestCase
                     return strtoupper($cachedValue);
                 }
 
+                $this->assertSame(['foo', 'bar'], $flags);
+                $this->assertSame(0, $_rit);
+
                 if ('foo' === $flag) {
-                    $this->assertSame(['foo', 'bar'], $flags);
-                    $this->assertSame(0, $_rit);
                     $this->assertSame('<br>', $cachedValue);
 
                     return strtoupper($cachedValue);
                 }
 
-                $this->assertSame(['foo', 'bar'], $flags);
-                $this->assertSame(0, $_rit);
                 $this->assertSame('<BR>', $cachedValue);
                 $this->assertSame('bar', $flag);
 

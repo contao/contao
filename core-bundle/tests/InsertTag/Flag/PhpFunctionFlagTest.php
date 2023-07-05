@@ -25,6 +25,7 @@ class PhpFunctionFlagTest extends TestCase
     public function testFlags(string $flagName, string $source, string $expected): void
     {
         $flag = new PhpFunctionFlag();
+
         $this->assertSame($expected, $flag(new InsertTagFlag($flagName), new InsertTagResult($source))->getValue());
     }
 

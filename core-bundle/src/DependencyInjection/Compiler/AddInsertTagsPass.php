@@ -48,7 +48,6 @@ class AddInsertTagsPass implements CompilerPassInterface
 
                     $method = $this->getMethod($attributes['method'], $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
 
-                    $priorities[] = $attributes['priority'];
                     $subscriptions[] = new Definition(
                         InsertTagSubscription::class,
                         [
@@ -60,6 +59,8 @@ class AddInsertTagsPass implements CompilerPassInterface
                             $attributes['asFragment'] ?? false,
                         ],
                     );
+
+                    $priorities[] = $attributes['priority'];
                 }
             }
 
@@ -83,12 +84,13 @@ class AddInsertTagsPass implements CompilerPassInterface
 
                 $method = $this->getMethod($attributes['method'], 'contao.insert_tag_flag', $container->findDefinition($serviceId)->getClass(), $serviceId);
 
-                $priorities[] = $attributes['priority'];
                 $flags[] = [
                     $attributes['name'],
                     new Reference($serviceId),
                     $method,
                 ];
+
+                $priorities[] = $attributes['priority'];
             }
         }
 

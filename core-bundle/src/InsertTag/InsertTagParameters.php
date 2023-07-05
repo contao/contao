@@ -76,10 +76,7 @@ abstract class InsertTagParameters
         $values = [];
 
         foreach ($this->parameters as $parameter) {
-            if (
-                \is_string($parameter)
-                && str_starts_with($parameter, $key.'=')
-            ) {
+            if (\is_string($parameter) && str_starts_with($parameter, $key.'=')) {
                 $values[] = substr($parameter, \strlen($key) + 1);
             } elseif (
                 $parameter instanceof ParsedSequence

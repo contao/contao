@@ -75,9 +75,8 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  */
 class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 {
-    public function __construct(
-        private readonly ContainerInterface $container,
-    ) {
+    public function __construct(private readonly ContainerInterface $container)
+    {
     }
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
@@ -234,7 +233,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                     Controller::loadDataContainer('tl_member');
 
-                    if (($GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['inputType'] ?? null) === 'password') {
+                    if ('password' === ($GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['inputType'] ?? null)) {
                         $result = '';
                         break;
                     }
@@ -273,7 +272,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
             // Insert article
             case 'insert_article':
-                if (($strOutput = Controller::getArticle($insertTag->getParameters()->get(0), false, true)) !== false) {
+                if (false !== ($strOutput = Controller::getArticle($insertTag->getParameters()->get(0), false, true))) {
                     $result = ltrim($strOutput);
                 } else {
                     $result = '<p class="error">'.sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
@@ -444,19 +443,14 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 $responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
 
-                if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($property, ['pageTitle', 'description'], true)) {
+                if ($responseContext?->has(HtmlHeadBag::class) && \in_array($property, ['pageTitle', 'description'], true)) {
                     /** @var HtmlHeadBag $htmlHeadBag */
                     $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-                    switch ($property) {
-                        case 'pageTitle':
-                            $result = htmlspecialchars($htmlHeadBag->getTitle());
-                            break;
-
-                        case 'description':
-                            $result = htmlspecialchars($htmlHeadBag->getMetaDescription());
-                            break;
-                    }
+                    $result = match ($property) {
+                        'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle()),
+                        'description' => htmlspecialchars($htmlHeadBag->getMetaDescription()),
+                    };
                 } elseif ($GLOBALS['objPage']) {
                     // Do not use StringUtil::specialchars() here (see #4687)
                     if (!\in_array($property, ['title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'], true)) {

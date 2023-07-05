@@ -81,10 +81,10 @@ class AddInsertTagsPassTest extends TestCase
 
             if ('addFlagCallback' === $methodCall[0]) {
                 $this->assertSame($expected[1], $methodCall[1][0]);
-                $this->assertSame($expected[2], $methodCall[1][1]->__toString());
+                $this->assertSame($expected[2], (string) $methodCall[1][1]);
                 $this->assertSame($expected[3], $methodCall[1][2]);
             } else {
-                $this->assertSame($expected[1], $methodCall[1][0]->getArgument(0)->__toString());
+                $this->assertSame($expected[1], (string) $methodCall[1][0]->getArgument(0));
                 $this->assertSame($expected[2], $methodCall[1][0]->getArgument(1));
                 $this->assertSame($expected[3], $methodCall[1][0]->getArgument(2));
                 $this->assertSame($expected[4], $methodCall[1][0]->getArgument(3));
@@ -202,14 +202,20 @@ class AddInsertTagsPassTest extends TestCase
     private function getContainerBuilder(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.insert_tag.parser', new Definition(InsertTagParser::class, [
-            new Reference('contao.framework'),
-            new Reference('monolog.logger.contao.error'),
-            new Reference('fragment.handler'),
-            new Reference('request_stack'),
-            null,
-            ['*'],
-        ]));
+        $container->setDefinition(
+            'contao.insert_tag.parser',
+            new Definition(
+                InsertTagParser::class,
+                [
+                    new Reference('contao.framework'),
+                    new Reference('monolog.logger.contao.error'),
+                    new Reference('fragment.handler'),
+                    new Reference('request_stack'),
+                    null,
+                    ['*'],
+                ]
+            )
+        );
 
         return $container;
     }

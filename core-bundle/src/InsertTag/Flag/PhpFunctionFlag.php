@@ -44,8 +44,6 @@ class PhpFunctionFlag implements InsertTagFlagInterface
             throw new \LogicException(sprintf('Invalid flag "%s".', $flag->getName()));
         }
 
-        return $result
-            ->withValue($flag->getName()($result->getValue()))
-        ;
+        return $result->withValue($flag->getName()($result->getValue()));
     }
 }

@@ -22,9 +22,8 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class FormInsertTag
 {
-    public function __construct(
-        private readonly RequestStack $requestStack,
-    ) {
+    public function __construct(private readonly RequestStack $requestStack)
+    {
     }
 
     #[AsInsertTag('form_session_data', asFragment: true)]

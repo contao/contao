@@ -217,10 +217,7 @@ class InsertTagParser implements ResetInterface
             return false;
         }
 
-        return $callback(
-            new InsertTagFlag($flag),
-            new InsertTagResult($result, OutputType::html),
-        )->getValue();
+        return $callback(new InsertTagFlag($flag), new InsertTagResult($result, OutputType::html))->getValue();
     }
 
     public function parse(string $input): ParsedSequence
@@ -258,6 +255,7 @@ class InsertTagParser implements ResetInterface
                 if (!str_starts_with($parameterMatch, '::')) {
                     throw new \InvalidArgumentException(sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
                 }
+
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
             }
 
@@ -299,9 +297,7 @@ class InsertTagParser implements ResetInterface
      */
     public function hasInsertTag(string $name): bool
     {
-        return
-            isset($this->subscriptions[$name])
-            || isset($this->blockSubscriptions[$name]);
+        return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]);
     }
 
     private function doParse(string $input): ParsedSequence
