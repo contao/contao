@@ -138,7 +138,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     try {
                         $result = $this->container->get('contao.intl.locales')->getDisplayNames([$keys[1]])[$keys[1]];
                         break;
-                    } catch (\Throwable $exception) {
+                    } catch (\Throwable) {
                         // Fall back to loading the label via $GLOBALS['TL_LANG']
                     }
                 }
@@ -147,7 +147,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     try {
                         $result = $this->container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
                         break;
-                    } catch (\Throwable $exception) {
+                    } catch (\Throwable) {
                         // Fall back to loading the label via $GLOBALS['TL_LANG']
                     }
                 }
@@ -306,7 +306,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 try {
                     $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
-                } catch (ExceptionInterface $exception) {
+                } catch (ExceptionInterface) {
+                    // Ignore routing exception
                 }
 
                 // Replace the tag
@@ -486,7 +487,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 try {
                     $result = $figureRenderer->render($from, $size, $configuration, $template) ?? '';
-                } catch (\Throwable $e) {
+                } catch (\Throwable) {
                     // Ignore
                 }
                 break;
@@ -616,7 +617,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     if ($rel) {
                         $result = '<a href="'.StringUtil::specialcharsUrl(Controller::addFilesUrlTo($strFile)).'"'.($alt ? ' title="'.StringUtil::specialcharsAttribute($alt).'"' : '').' data-lightbox="'.StringUtil::specialcharsAttribute($rel).'">'.$result.'</a>';
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     $result = '';
                 }
                 break;
