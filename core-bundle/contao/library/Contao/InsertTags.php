@@ -331,34 +331,6 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * @return array{string|null, array}
-	 */
-	private function parseUrlWithQueryString(string $url): array
-	{
-		// Restore = and &
-		$url = str_replace(array('&#61;', '&amp;'), array('=', '&'), $url);
-
-		$base = parse_url($url, PHP_URL_PATH) ?: null;
-		$query = parse_url($url, PHP_URL_QUERY) ?: '';
-
-		parse_str($query, $attributes);
-
-		// Cast and encode values
-		array_walk_recursive($attributes, static function (&$value) {
-			if (is_numeric($value))
-			{
-				$value = (int) $value;
-
-				return;
-			}
-
-			$value = StringUtil::specialcharsAttribute($value);
-		});
-
-		return array($base, $attributes);
-	}
-
-	/**
 	 * Add the specialchars flag to all insert tags used in HTML attributes
 	 *
 	 * @internal
