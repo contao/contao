@@ -24,7 +24,9 @@ final class ResolvedInsertTag extends InsertTag
 
     public function getParameters(): ResolvedParameters
     {
-        if (!($parameters = parent::getParameters()) instanceof ResolvedParameters) {
+        $parameters = parent::getParameters();
+
+        if (!$parameters instanceof ResolvedParameters) {
             throw new \TypeError(sprintf('%s(): Return value must be of type %s, got %s', __METHOD__, ResolvedParameters::class, $parameters::class));
         }
 

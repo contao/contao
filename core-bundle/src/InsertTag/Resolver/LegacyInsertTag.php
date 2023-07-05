@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\InsertTag\Resolver;
 
 use Contao\ArrayUtil;
 use Contao\ArticleModel;
-use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
@@ -105,7 +104,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'email_open':
             case 'email_url':
                 if (empty($insertTag->getParameters()->get(0))) {
-                    $result = '';
                     break;
                 }
 
@@ -133,7 +131,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 $keys = explode(':', $insertTag->getParameters()->get(0));
 
                 if (\count($keys) < 2) {
-                    $result = '';
                     break;
                 }
 
@@ -234,7 +231,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     Controller::loadDataContainer('tl_member');
 
                     if ('password' === ($GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['inputType'] ?? null)) {
-                        $result = '';
                         break;
                     }
 
@@ -245,11 +241,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['reference'] ?? null;
 
                     if ('date' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat'), $value);
+                        $result = Date::parse($GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '', $value);
                     } elseif ('time' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->timeFormat ?? Config::get('timeFormat'), $value);
+                        $result = Date::parse($GLOBALS['objPage']->timeFormat ?? $GLOBALS['TL_CONFIG']['timeFormat'] ?? '', $value);
                     } elseif ('datim' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->datimFormat ?? Config::get('datimFormat'), $value);
+                        $result = Date::parse($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
                     } elseif (\is_array($value)) {
                         $result = implode(', ', $value);
                     } elseif (\is_array($opts) && ArrayUtil::isAssoc($opts)) {
@@ -363,7 +359,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
-                    $result = Date::parse($insertTag->getParameters()->get(0) ?? ($GLOBALS['objPage']->datimFormat ?? Config::get('datimFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+                    $result = Date::parse($insertTag->getParameters()->get(0) ?? ($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? ''), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
                 }
                 break;
 
@@ -477,7 +473,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 [$from, $configuration] = $this->parseUrlWithQueryString((string) $insertTag->getParameters()->get(0));
 
                 if (null === $from || 1 !== \count($insertTag->getParameters()->all()) || Validator::isInsecurePath($from) || Path::isAbsolute($from)) {
-                    $result = '';
                     break;
                 }
 
@@ -492,7 +487,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 try {
                     $result = $figureRenderer->render($from, $size, $configuration, $template) ?? '';
                 } catch (\Throwable $e) {
-                    $result = '';
+                    // Ignore
                 }
                 break;
 
@@ -560,7 +555,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $objFile = FilesModel::findByUuid($strFile);
 
                     if (null === $objFile) {
-                        $result = '';
                         break;
                     }
 
@@ -570,7 +564,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $objFile = FilesModel::findByPk($strFile);
 
                     if (null === $objFile) {
-                        $result = '';
                         break;
                     }
 

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
@@ -24,7 +23,7 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? Config::get('dateFormat');
+        $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
         $result = new InsertTagResult(Date::parse($format), OutputType::text);
 
         // Special handling for the very common {{date::Y}} (e.g. in the website footer) case
