@@ -32,10 +32,12 @@ use FeedIo\Reader\Document;
 use FeedIo\Reader\Result;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\LoaderInterface;
@@ -50,6 +52,8 @@ class FeedReaderControllerTest extends TestCase
 
         $this->container = $this->getContainerWithContaoConfiguration();
         $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('monolog.logger.contao.error', new NullLogger());
+        $this->container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         System::setContainer($this->container);
     }

@@ -24,6 +24,9 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -109,6 +112,8 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         System::setContainer($container);
 
@@ -150,7 +155,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

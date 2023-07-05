@@ -27,7 +27,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
 
     public function renderInsertTag(string $insertTag): string
     {
-        return $this->insertTagParser->render($insertTag);
+        return $this->insertTagParser->renderTag($insertTag)->getValue();
     }
 
     public function replaceInsertTags(string $text): string

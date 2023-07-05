@@ -52,6 +52,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
@@ -59,6 +60,7 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -116,6 +118,8 @@ class ContentElementTestCase extends TestCase
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $environment);
         $container->set('contao.framework', $this->getDefaultFramework());
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         $controller->setContainer($container);
         System::setContainer($container);

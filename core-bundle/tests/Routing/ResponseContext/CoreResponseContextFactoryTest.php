@@ -24,9 +24,11 @@ use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends TestCase
@@ -224,7 +226,7 @@ class CoreResponseContextFactoryTest extends TestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
