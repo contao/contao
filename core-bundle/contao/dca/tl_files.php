@@ -70,7 +70,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	(
 		'sorting' => array
 		(
-			'panelLayout'             => 'search'
+			'panelLayout'             => 'search',
+			'showRootTrails'          => true
 		),
 		'global_operations' => array
 		(
