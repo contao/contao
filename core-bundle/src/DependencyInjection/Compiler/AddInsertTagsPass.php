@@ -48,8 +48,9 @@ class AddInsertTagsPass implements CompilerPassInterface
                         throw new InvalidDefinitionException(sprintf('Invalid insert tag end tag name "%s"', $attributes['endTag'] ?? ''));
                     }
 
-                    $method = $this->getMethod($attributes['method'], $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
-                    $attributes['resolveNestedTags'] ??= $this->getResolveNestedTagsFromMethod($container->findDefinition($serviceId)->getClass(), $method);
+                    $class = $container->findDefinition($serviceId)->getClass();
+                    $method = $this->getMethod($attributes['method'], $serviceTag, $class, $serviceId);
+                    $attributes['resolveNestedTags'] ??= $this->getResolveNestedTagsFromMethod($class, $method);
 
                     $subscriptions[] = new Definition(
                         InsertTagSubscription::class,
