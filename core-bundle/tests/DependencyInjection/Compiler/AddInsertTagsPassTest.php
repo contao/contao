@@ -128,7 +128,7 @@ class AddInsertTagsPassTest extends TestCase
                 'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
                 'service_b' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'iflng'))),
                 'service_c' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag'))),
-                'service_d' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('not_date', false, true, 1, '__invoke'))),
+                'service_d' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('not_date', true, 1, '__invoke', false))),
                 'service_e' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('ifnlng', 'end_ifnlng', priority: -1))),
                 'service_f' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag', 0, '__invoke'))),
             ],
