@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\InsertTag;
+namespace Contao\CoreBundle\Tests\InsertTag\Flag;
 
 use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
