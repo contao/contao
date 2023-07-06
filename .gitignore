@@ -4,6 +4,7 @@
 
 # Composer bin
 /tools/*/vendor
+/tools/*/node_modules
 /tools/monorepo/composer.lock
 
 # Monorepo Tools
@@ -21,3 +22,6 @@
 
 # Ignore the symlinks required for upstream merging
 /*-bundle/src/Resources/
+
+# Cypress
+/tests/cypress/videos/

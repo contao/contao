@@ -4,8 +4,8 @@ import user from '../../fixtures/users/admin.json'
 describe('Backend', { execTimeout: 90000 }, () => {
 
     before(() => {
-        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:migrate --no-interaction --with-deletes --no-backup --quiet', { failOnNonZeroExit: false })
-        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:user:create --username='+user.username+' --name='+user.name+' --email='+user.email+' --password='+user.password+' --language='+user.language+' --admin', { failOnNonZeroExit: false })
+        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:migrate --no-interaction --with-deletes --no-backup')
+        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:user:create --username='+user.username+' --name='+user.name+' --email='+user.email+' --password='+user.password+' --language='+user.language+' --admin')
     })
 
     it('Login', () => {
@@ -31,8 +31,8 @@ describe('Backend', { execTimeout: 90000 }, () => {
 
     after(() => {
         // drop db and recreate
-        cy.exec('mysql -u'+app.database_username+' -e "DROP DATABASE '+app.database_name+'";', {failOnNonZeroExit: false})
-        cy.exec('mysql -u'+app.database_username+' -e "CREATE DATABASE '+app.database_name+'";', {failOnNonZeroExit: false})
+        cy.exec('mysql -u'+app.database_username+' -p'+app.database_password+' -e "DROP DATABASE '+app.database_name+'";')
+        cy.exec('mysql -u'+app.database_username+' -p'+app.database_password+' -e "CREATE DATABASE '+app.database_name+'";')
         cy.log('Database is back to initial state.')
     })
 })
