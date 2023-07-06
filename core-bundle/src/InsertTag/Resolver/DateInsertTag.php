@@ -28,7 +28,7 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
         $result = new InsertTagResult(Date::parse($format), OutputType::text);
 
-        preg_match_all('/[dmY]/', $format, $matches);
+        preg_match_all('/['.implode('', self::CACHEABLE_FORMAT_CHARACTERS).']/', $format, $matches);
         $usedFormatChars = $matches[0] ?? [];
         sort($usedFormatChars);
 
