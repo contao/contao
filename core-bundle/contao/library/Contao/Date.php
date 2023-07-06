@@ -40,6 +40,21 @@ namespace Contao;
  */
 class Date
 {
+	public const SUPPORTED_FORMAT_CHARACTERS = array(
+		'd',
+		'j',
+		'm',
+		'n',
+		'y',
+		'Y',
+		'h',
+		'H',
+		'g',
+		'G',
+		'i',
+		's',
+	);
+
 	/**
 	 * Date string
 	 * @var int

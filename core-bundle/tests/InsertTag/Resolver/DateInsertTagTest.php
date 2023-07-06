@@ -23,8 +23,13 @@ class DateInsertTagTest extends TestCase
 
     public function expiresAtProvider(): \Generator
     {
-        yield 'Null when not cacheable' => [
+        yield 'Null when using only using uncacheable format characters' => [
             'H:i:s',
+            null,
+        ];
+
+        yield 'Null when combining with uncacheable format characters' => [
+            'd.m.Y H:i:s',
             null,
         ];
 
