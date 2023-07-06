@@ -442,6 +442,8 @@ services:
 
     contao.insert_tag.resolver.date:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
+        arguments:
+            - '@contao.framework'
 
     contao.insert_tag.resolver.form:
         class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
