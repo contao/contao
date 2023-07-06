@@ -1,4 +1,3 @@
-import app from '../../fixtures/app.json'
 import user from '../../fixtures/users/admin.json'
 
 describe('Backend', { execTimeout: 90000 }, () => {
@@ -30,9 +29,8 @@ describe('Backend', { execTimeout: 90000 }, () => {
     })
 
     after(() => {
-        // drop db and recreate
-        cy.exec('mysql -u'+app.database_username+' -p'+app.database_password+' -e "DROP DATABASE '+app.database_name+'";')
-        cy.exec('mysql -u'+app.database_username+' -p'+app.database_password+' -e "CREATE DATABASE '+app.database_name+'";')
+        // drop schema
+        cy.exec(Cypress.env('CONTAO_CONSOLE')+' doctrine:schema:drop --force')
         cy.log('Database is back to initial state.')
     })
 })
