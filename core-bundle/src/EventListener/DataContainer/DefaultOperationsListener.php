@@ -231,7 +231,7 @@ class DefaultOperationsListener
         // between the copy operation (without PID) and the paste button (with new target PID)
         if (
             ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE
-            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null)
+            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
         ) {
             unset($new['pid']);
         }
