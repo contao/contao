@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ParsedSequence;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -46,7 +48,9 @@ class AddInsertTagsPass implements CompilerPassInterface
                         throw new InvalidDefinitionException(sprintf('Invalid insert tag end tag name "%s"', $attributes['endTag'] ?? ''));
                     }
 
-                    $method = $this->getMethod($attributes['method'], $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
+                    $class = $container->findDefinition($serviceId)->getClass();
+                    $method = $this->getMethod($attributes['method'], $serviceTag, $class, $serviceId);
+                    $attributes['resolveNestedTags'] ??= $this->getResolveNestedTagsFromMethod($class, $method);
 
                     $subscriptions[] = new Definition(
                         InsertTagSubscription::class,
@@ -132,5 +136,17 @@ class AddInsertTagsPass implements CompilerPassInterface
         }
 
         return $method;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function getResolveNestedTagsFromMethod(string $class, string $method): bool
+    {
+        return match ($type = (string) (((new \ReflectionMethod($class, $method))->getParameters()[0] ?? null)?->getType() ?? 'NULL')) {
+            ResolvedInsertTag::class => true,
+            ParsedInsertTag::class => false,
+            default => throw new InvalidDefinitionException(sprintf('The "%s::%s" method has an invalid parameter type. Expected "%s" or "%s", got "%s".', $class, $method, ResolvedInsertTag::class, ParsedInsertTag::class, $type)),
+        };
     }
 }

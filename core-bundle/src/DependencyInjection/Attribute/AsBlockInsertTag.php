@@ -21,9 +21,9 @@ class AsBlockInsertTag
     public function __construct(
         public string $name,
         public string $endTag,
-        public bool $resolveNestedTags = true,
         public int $priority = 0,
         public string|null $method = null,
+        public bool|null $resolveNestedTags = null,
     ) {
     }
 }

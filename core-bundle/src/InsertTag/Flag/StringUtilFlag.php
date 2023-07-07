@@ -53,7 +53,8 @@ class StringUtilFlag
     {
         return $result
             ->withValue(StringUtil::ampersand($result->getValue()))
-            ->withOutputType(OutputType::text) // We can not safely assume HTML here as the method only encodes ampersands
+            // We cannot safely assume HTML here as the method only encodes ampersands
+            ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
         ;
     }
 
