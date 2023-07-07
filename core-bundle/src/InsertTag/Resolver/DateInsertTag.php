@@ -35,8 +35,8 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $this->framework->initialize();
-        $date = $this->framework->getAdapter(Date::class);
 
+        $date = $this->framework->getAdapter(Date::class);
         $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
         $result = new InsertTagResult($date->parse($format), OutputType::text);
 
