@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\InsertTag\Flag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\OutputType;
 
 #[AsInsertTagFlag('addslashes')]
 #[AsInsertTagFlag('strtolower')]
@@ -42,6 +43,11 @@ class PhpFunctionFlag implements InsertTagFlagInterface
         // Do not allow arbitrary PHP functions for security reasons
         if (!\in_array($flag->getName(), $allowedNames, true)) {
             throw new \LogicException(sprintf('Invalid flag "%s".', $flag->getName()));
+        }
+
+        // These flags are safe for HTML, otherwise change to text
+        if (\in_array($flag->getName(), ['addslashes', 'urlencode', 'rawurlencode'], true)) {
+            $result = $result->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text);
         }
 
         return $result->withValue($flag->getName()($result->getValue()));

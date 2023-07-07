@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\InsertTag\Flag;
 use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Tests\TestCase;
 
 class PhpFunctionFlagTest extends TestCase
@@ -42,6 +43,15 @@ class PhpFunctionFlagTest extends TestCase
         yield ['ltrim', "\t\n foo\t\n ", "foo\t\n "];
         yield ['urlencode', 'foö bar', 'fo%C3%B6+bar'];
         yield ['rawurlencode', 'foö bar', 'fo%C3%B6%20bar'];
+    }
+
+    public function testFixesOutputType(): void
+    {
+        $flag = new PhpFunctionFlag();
+
+        $this->assertSame(OutputType::html, $flag(new InsertTagFlag('urlencode'), new InsertTagResult('foo', OutputType::html))->getOutputType());
+        $this->assertSame(OutputType::text, $flag(new InsertTagFlag('urlencode'), new InsertTagResult('foo', OutputType::js))->getOutputType());
+        $this->assertSame(OutputType::text, $flag(new InsertTagFlag('urlencode'), new InsertTagResult('foo', OutputType::css))->getOutputType());
     }
 
     public function testDoesNotExecuteArbitraryFunctions(): void

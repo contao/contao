@@ -96,7 +96,10 @@ class InsertTagParser implements ResetInterface
             return;
         }
 
-        unset($this->blockSubscriptions[$subscription->name]);
+        if (isset($this->blockSubscriptions[$subscription->name])) {
+            throw new \InvalidArgumentException(sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
+        }
+
         $this->subscriptions[$subscription->name] = $subscription;
     }
 
@@ -106,7 +109,10 @@ class InsertTagParser implements ResetInterface
             return;
         }
 
-        unset($this->subscriptions[$subscription->name]);
+        if (isset($this->subscriptions[$subscription->name])) {
+            throw new \InvalidArgumentException(sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+        }
+
         $this->blockSubscriptions[$subscription->name] = $subscription;
     }
 
