@@ -15,6 +15,9 @@ use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\File;
@@ -683,7 +686,10 @@ class tl_files extends Backend
 	 */
 	public function editFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+		$subject = new UpdateAction('tl_files', $row);
+
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -700,7 +706,15 @@ class tl_files extends Backend
 	 */
 	public function copyFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		$new = $row;
+		unset($new['id']);
+		$new['tstamp'] = 0;
+
+		$subject = new CreateAction('tl_files', $new);
+
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -717,7 +731,10 @@ class tl_files extends Backend
 	 */
 	public function cutFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+		$subject = new UpdateAction('tl_files', $row);
+
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -734,7 +751,10 @@ class tl_files extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ' : ' ';
+		$security = System::getContainer()->get('security.helper');
+		$subject = new UpdateAction('tl_files', $row);
+
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ' : ' ';
 	}
 
 	/**
@@ -751,12 +771,19 @@ class tl_files extends Backend
 	 */
 	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
+		if (($row['type'] ?? null) != 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) || Input::get('act') == 'select')
 		{
-			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+			return ' ';
 		}
 
-		return ' ';
+		$subject = new CreateAction('tl_files', ['pid' => $row['id'], 'type' => 'file']);
+
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject))
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
+		return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -774,6 +801,12 @@ class tl_files extends Backend
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
 		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', new DeleteAction('tl_files', $row)))
+		{
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$path = $projectDir . '/' . urldecode($row['id']);
 
@@ -806,7 +839,10 @@ class tl_files extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FILE))
+		$security = System::getContainer()->get('security.helper');
+		$subject = new UpdateAction('tl_files', $row);
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FILE) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_files', $subject))
 		{
 			return '';
 		}
@@ -916,7 +952,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnUnprotected || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+	<input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnUnprotected || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';
@@ -995,7 +1031,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . ($blnUnsynchronized ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
+	<input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . ($blnUnsynchronized ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
 </div>';
