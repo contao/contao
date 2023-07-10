@@ -40,8 +40,8 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
 Replace `<directory>` with the directory you want to install the Managed Edition in (use `.` for the current one).
-Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently `4.9.x-dev`)
-if you want to fix a bug.
+Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently
+`4.13.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
 bundles:
