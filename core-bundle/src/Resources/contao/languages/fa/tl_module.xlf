@@ -513,6 +513,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>انتخال ماژول &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

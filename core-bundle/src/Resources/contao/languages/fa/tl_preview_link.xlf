@@ -50,6 +50,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.share.0">
         <source>Copy to clipboard</source>
+        <target>کپی کردن به کلیپ‌بورد</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
@@ -86,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>لینک پیش‌نمایش &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>

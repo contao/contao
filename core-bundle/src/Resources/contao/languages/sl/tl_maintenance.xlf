@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
+        <target>Izprazni pajkovo (crawler) čakalno vrsto</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
@@ -77,9 +78,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>Izprazni predpomnilnik s predogledi</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odstrani samodejno ustvarjene slike predogledov in nato še sprazni deljeni predpomnilnik, s čimer se odstranijo povezave do odstranjenih slik.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -111,6 +114,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Ponovno ustvari datoteke XML v mapi &lt;code&gt;shared&lt;/code&gt;in nato sprazni deljeni predpomnilnik, s čimer se odstranijo vse povezave do izbrisanih datotek.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -126,6 +130,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
+        <target>Poženi pajka - crawler</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.0">
         <source>Enabled features</source>
@@ -133,6 +138,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Pajek - crawler obišče vse povezave, ki jih najde. Tu se lahko odločite, kaj storiti z njegovimi rezultati.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
@@ -155,6 +161,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadLog">
         <source>Download log</source>
+        <target>Dnevnik prenosov</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

@@ -846,6 +846,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
+        <target>ویدیو حلقه</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

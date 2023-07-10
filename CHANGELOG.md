@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.26] (2023-07-10)
+
+**Fixed issues:**
+
+- [#6197] Handle empty label fields in the picker ([leofeyer])
+- [#6187] Make the template module more flexible ([fritzmg])
+- [#6148] Correctly encode URLs in the sitemap ([aschempp])
+- [#6180] Fix rootNodes for table picker ([aschempp])
+- [#6171] Revert 'Use real path for `.env.local`' ([ausi])
+- [#6168] Fix highlighting for phrase searches ([ausi])
+
 ## [4.13.25] (2023-06-21)
 
 **Fixed issues:**
@@ -737,6 +748,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.26]: https://github.com/contao/contao/releases/tag/4.13.26
 [4.13.25]: https://github.com/contao/contao/releases/tag/4.13.25
 [4.13.24]: https://github.com/contao/contao/releases/tag/4.13.24
 [4.13.23]: https://github.com/contao/contao/releases/tag/4.13.23
@@ -1365,7 +1377,13 @@ This project adheres to [Semantic Versioning].
 [#6142]: https://github.com/contao/contao/pull/6142
 [#6144]: https://github.com/contao/contao/pull/6144
 [#6145]: https://github.com/contao/contao/pull/6145
+[#6148]: https://github.com/contao/contao/pull/6148
 [#6151]: https://github.com/contao/contao/pull/6151
 [#6152]: https://github.com/contao/contao/pull/6152
 [#6160]: https://github.com/contao/contao/pull/6160
 [#6161]: https://github.com/contao/contao/pull/6161
+[#6168]: https://github.com/contao/contao/pull/6168
+[#6171]: https://github.com/contao/contao/pull/6171
+[#6180]: https://github.com/contao/contao/pull/6180
+[#6187]: https://github.com/contao/contao/pull/6187
+[#6197]: https://github.com/contao/contao/pull/6197
