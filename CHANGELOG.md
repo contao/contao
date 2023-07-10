@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.9] (2023-07-10)
+
+**Fixed issues:**
+
+- [#6178] Correctly encode URLs in the sitemap ([aschempp])
+- [#6173] Increase Symfony filesystem dependency version ([ausi])
+- [#6177] Remove field permissions on favorites table ([aschempp])
+
 ## [5.1.8] (2023-06-21)
 
 **Fixed issues:**
@@ -161,6 +169,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.9]: https://github.com/contao/contao/releases/tag/5.1.9
 [5.1.8]: https://github.com/contao/contao/releases/tag/5.1.8
 [5.1.7]: https://github.com/contao/contao/releases/tag/5.1.7
 [5.1.6]: https://github.com/contao/contao/releases/tag/5.1.6
@@ -285,3 +294,6 @@ This project adheres to [Semantic Versioning].
 [#6112]: https://github.com/contao/contao/pull/6112
 [#6136]: https://github.com/contao/contao/pull/6136
 [#6147]: https://github.com/contao/contao/pull/6147
+[#6173]: https://github.com/contao/contao/pull/6173
+[#6177]: https://github.com/contao/contao/pull/6177
+[#6178]: https://github.com/contao/contao/pull/6178
