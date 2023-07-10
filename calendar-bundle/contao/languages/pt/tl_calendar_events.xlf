@@ -274,16 +274,14 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <target>Mostrar de</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Caso pretenda prevenir que o evento surja no website antes de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Mostrar Até</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Caso pretenda prevenir que o evento surja no website depois de uma determinada data/hora, pode defini-lo aqui. Caso contrário, deixe este campo em branco.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -384,9 +382,15 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <source>Delete event ID %s</source>
         <target>Remover evento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>Publicar/despublicar evento ID %s</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>Publicar/despublicar evento</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Unpublish event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

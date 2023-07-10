@@ -65,9 +65,14 @@
         <source>Delete media query ID %s</source>
         <target>ID %sのメディアクエリを削除</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle">
-        <source>Activate/deactivate media query ID %s</source>
-        <target>ID %sのメディアクエリを有効/無効</target>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>

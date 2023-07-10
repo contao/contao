@@ -274,16 +274,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ события на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ события на веб-сайте до определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ события на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ события на веб-сайте после определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -385,9 +385,15 @@
         <source>Delete event ID %s</source>
         <target>Удалить событие ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>Опубликовать/изъять событие ID %s</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>Опубликовать/изъять событие</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Unpublish event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

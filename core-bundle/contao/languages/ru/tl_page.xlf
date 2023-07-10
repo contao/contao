@@ -438,16 +438,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ страницы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ страницы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -601,9 +601,15 @@
         <source>Delete page ID %s</source>
         <target>Удалить страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Опубликовать/изъять страницу ID %s</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Опубликовать/изъять страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

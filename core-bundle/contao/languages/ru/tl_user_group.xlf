@@ -30,7 +30,7 @@
         <target>Активировать с</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить активацию группы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
@@ -38,7 +38,7 @@
         <target>Деактивировать с</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить активацию группы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
@@ -105,9 +105,14 @@
         <source>Delete user group ID %s</source>
         <target>Удалить группу пользователей ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.toggle">
-        <source>Activate/deactivate user group ID %s</source>
-        <target>Активировать/деактивировать группу пользователей ID %s</target>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
       </trans-unit>
     </body>
   </file>

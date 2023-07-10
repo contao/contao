@@ -274,7 +274,7 @@
         <target>Görüntülenme başlangıcı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Etkinliğin belirli bir tarih/saatten önce sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
@@ -282,7 +282,7 @@
         <target>Görüntülenme bitişi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Etkinliğin belirli bir tarih/saatten sonra sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
@@ -385,9 +385,15 @@
         <source>Delete event ID %s</source>
         <target>%s kodlu etkinliği sil</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>%s kodlu etkinliği yayınla/yayından kaldır</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>Etkinliği yayımla/yayımlama</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Unpublish event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

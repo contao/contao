@@ -214,16 +214,14 @@
         <target>Wrapper start</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby aktualność była wyświetlana przed jakąś datą, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Wrapper stop</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby aktualność była wyświetlana po jakiejś dacie, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -305,9 +303,14 @@
         <source>Delete news item ID %s</source>
         <target>Usuń aktualność ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
-        <target>Publikuj/ukryj aktualność ID %s</target>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>

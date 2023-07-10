@@ -182,7 +182,7 @@
         <target>Etkinleştirilme zamanı</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Hesabın belirli bir tarih/saatten önce etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
@@ -190,7 +190,7 @@
         <target>Devre dışı bırakılma zamanı</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Hesabın belirli bir tarih/saatten sonra etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
@@ -265,9 +265,14 @@
         <source>Delete member ID %s</source>
         <target>%s kodlu üyeyi sil</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle">
-        <source>Activate/deactivate member ID %s</source>
-        <target>%s kodlu üyeyi etkinleştir/devre dışı bırak</target>
+      <trans-unit id="tl_member.toggle.0">
+        <source>Activate/deactivate member</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.1">
+        <source>Deactivate member ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.2">
+        <source>Activate member ID %s</source>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

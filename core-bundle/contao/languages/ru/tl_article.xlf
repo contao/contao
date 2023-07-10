@@ -110,7 +110,7 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить показ статьи на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
@@ -118,7 +118,7 @@
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить показ статьи на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
@@ -209,9 +209,15 @@
         <source>Delete article ID %s</source>
         <target>Удалить статью ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle">
-        <source>Publish/unpublish article ID %s</source>
-        <target>Опубликовать/изъять статью ID %s</target>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Опубликовать/изъять статью</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

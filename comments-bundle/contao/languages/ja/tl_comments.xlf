@@ -177,9 +177,15 @@
         <source>Delete comment ID %s</source>
         <target>ID %sのコメントを削除</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>ID %sのコメントの公開と非公開を切り替え</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>コメントの公開と非公開を切り替え</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
       </trans-unit>
     </body>
   </file>

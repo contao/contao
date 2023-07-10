@@ -438,16 +438,14 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -601,9 +599,15 @@
         <source>Delete page ID %s</source>
         <target>Smazat stránku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Publikovat / nepublikovat stránku ID %s</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Publikovat / nepublikovat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

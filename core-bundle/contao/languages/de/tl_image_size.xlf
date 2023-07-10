@@ -77,6 +77,22 @@
         <source>The following formats are not supported on your server: %s</source>
         <target>Folgende Formate werden von Ihrem Server nicht unterstützt: %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+        <target>Urheberrechts-Metadaten bewahren</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Urheberrechtlich relevante Bild-Metadatenfelder (EXIF, IPTC, XMP) bewahren.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata.0">
+        <source>Metadata fields</source>
+        <target>Metadaten-Felder</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata.1">
+        <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
+        <target>Hier können Sie auswählen, welche Metadatenfelder erhalten bleiben sollen. Standardmäßig wird die Konfiguration &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; verwendet.</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
         <target>Originalbild bei passenden Abmessungen verwenden</target>
@@ -84,6 +100,14 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
         <target>Beachten Sie, dass in diesem Fall keine Optimierung der Metadaten oder der JPEG-Komprimierung erfolgt.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+        <target>Bildqualität</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
+        <target>Optionale Bildkomprimierungsqualität zwischen 0 (niedrigste Qualität) und 100 (höchste Qualität). Bleibt diese Option leer, gilt die systemweite Konfiguration.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -112,6 +136,10 @@
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
         <target>Ladeoptionen</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+        <target>Metadaten-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

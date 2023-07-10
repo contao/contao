@@ -177,9 +177,15 @@
         <source>Delete comment ID %s</source>
         <target>%s kodlu yorumu sil</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>%s kodlu yorumu yayınla/yayından kaldır</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>Yorumu yayınla/yayınlama</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
       </trans-unit>
     </body>
   </file>

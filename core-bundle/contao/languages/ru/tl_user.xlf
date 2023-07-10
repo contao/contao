@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.0">
         <source>Do not collapse content elements</source>
+        <target>Не сворачивать элементы контента</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
+        <target>Не сворачивать элементы контента в предпросмотре панели управления.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -244,7 +246,7 @@
         <target>Активировать с</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить активацию учетной записи на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
@@ -252,7 +254,7 @@
         <target>Деактивировать с</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Если хотите запретить активацию учетной записи на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
@@ -387,9 +389,15 @@
         <source>Delete user ID %s</source>
         <target>Удалить пользователя ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle">
-        <source>Activate/deactivate user ID %s</source>
-        <target>Активировать/деактивировать пользователя ID %s</target>
+      <trans-unit id="tl_user.toggle.0">
+        <source>Activate/deactivate user</source>
+        <target>Активировать/деактивировать пользователя</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.1">
+        <source>Deactivate user ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.2">
+        <source>Activate user ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

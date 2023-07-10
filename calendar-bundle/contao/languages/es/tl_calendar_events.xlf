@@ -274,16 +274,14 @@
         <target>Mostrar desde</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que el evento se muestre en el sitio web antes de una fecha / hora determinada, puede definirlo aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>Mostrar hasta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que el evento se muestre en el sitio web después de una determinada fecha / hora, puede definirlo aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -385,9 +383,15 @@
         <source>Delete event ID %s</source>
         <target>Eliminar evento con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>Publicar/retirar el evento con ID %s</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>Publicar/retirar evento</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Unpublish event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

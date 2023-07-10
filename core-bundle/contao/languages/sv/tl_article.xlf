@@ -110,16 +110,14 @@
         <target>Börja visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att artikeln visas på webbplatsen före ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
         <target>Sluta visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att artikeln visas på webbplatsen efter ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -209,9 +207,15 @@
         <source>Delete article ID %s</source>
         <target>Ta bort artikel med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle">
-        <source>Publish/unpublish article ID %s</source>
-        <target>Publicera / avpublicera artikel med ID %s</target>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Publicera / avpublicera artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

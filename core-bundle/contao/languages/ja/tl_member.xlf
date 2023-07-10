@@ -182,16 +182,16 @@
         <target>使用開始日</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より前はアカウントの使用を可能にしたくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より前はアカウントの使用を不可能にしたい場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>使用停止日</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より後はアカウントの使用を不可能にしたい場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より後はアカウントの使用を不可能にしたい場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
@@ -265,9 +265,15 @@
         <source>Delete member ID %s</source>
         <target>ID %sのメンバーを削除</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle">
-        <source>Activate/deactivate member ID %s</source>
-        <target>ID %sのメンバーの使用の開始と停止を切り替え</target>
+      <trans-unit id="tl_member.toggle.0">
+        <source>Activate/deactivate member</source>
+        <target>メンバーの使用と停止を切り替え</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.1">
+        <source>Deactivate member ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.2">
+        <source>Activate member ID %s</source>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
