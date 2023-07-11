@@ -157,8 +157,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(NewsModel::class, [
             'id' => 42,
             'date' => 1656578758,
-            'headline' => 'Example title',
-            'teaser' => 'Example teaser',
+            'headline' => 'Example title &#40;Episode 1&#41;',
+            'teaser' => 'Example teaser &#40;Episode 1&#41;',
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
@@ -234,7 +234,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame('Example title', $item->getTitle());
+        $this->assertSame('Example title (Episode 1)', $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('https://example.org/news/example-title', $item->getPublicId());
@@ -254,7 +254,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
     public function getFeedSource(): \Generator
     {
-        yield 'Teaser only' => ['source_teaser', 'Example teaser'];
+        yield 'Teaser only' => ['source_teaser', 'Example teaser &#40;Episode 1&#41;'];
         yield 'Text' => ['source_text', 'Example content'];
     }
 }
