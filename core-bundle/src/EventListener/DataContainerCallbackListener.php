@@ -21,9 +21,12 @@ class DataContainerCallbackListener
         'panel_callback',
         'paste_button_callback',
         'button_callback',
+        'label_callback',
+        'header_callback',
         'child_record_callback',
         'input_field_callback',
         'options_callback',
+        'group_callback',
         'url_callback',
         'title_tag_callback',
     ];

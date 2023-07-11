@@ -78,10 +78,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array
-			(
-				array('tl_comments', 'listComments')
-			)
+			'label_callback'          => array('tl_comments', 'listComments')
 		),
 		'global_operations' => array
 		(
