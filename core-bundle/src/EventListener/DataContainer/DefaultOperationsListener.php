@@ -233,7 +233,7 @@ class DefaultOperationsListener
             ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE
             || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
         ) {
-            unset($new['pid']);
+            unset($new['pid'], $new['sorting']);
         }
 
         return new CreateAction($table, $new);

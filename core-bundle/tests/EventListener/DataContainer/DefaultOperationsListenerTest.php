@@ -594,7 +594,7 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation with parent table' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['config' => ['ptable' => 'tl_bar']],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
@@ -602,7 +602,7 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copyChilds operation in tree mode' => [
             'copyChilds',
             CreateAction::class,
-            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
