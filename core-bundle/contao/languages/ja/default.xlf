@@ -2814,6 +2814,7 @@
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
+        <target>画像の大きさを編集</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
@@ -3017,12 +3018,15 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
+        <target>要素の公開または非公開</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
+        <target>ID %sの要素を非公開</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
+        <target>ID %sの要素を公開</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

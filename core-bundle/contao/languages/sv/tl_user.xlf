@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att kontot är aktivt före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -254,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att kontot är aktivt efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -393,9 +395,11 @@
       </trans-unit>
       <trans-unit id="tl_user.toggle.1">
         <source>Deactivate user ID %s</source>
+        <target>Avaktivera användare ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.toggle.2">
         <source>Activate user ID %s</source>
+        <target>Aktivera användare ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

@@ -607,9 +607,11 @@
       </trans-unit>
       <trans-unit id="tl_page.toggle.1">
         <source>Unpublish page ID %s</source>
+        <target>ID %sのページを非公開</target>
       </trans-unit>
       <trans-unit id="tl_page.toggle.2">
         <source>Publish page ID %s</source>
+        <target>ID %sのページを公開</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

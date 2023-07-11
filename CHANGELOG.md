@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.0-RC2] (2023-07-11)
+
+**Fixed issues:**
+
+- [#6202] Correctly set the APP_SECRET environment variable in the manager plugin ([leofeyer])
+- [#6203] Revert 'Allow multiple label callbacks' ([leofeyer])
+
 ## [5.2.0-RC1] (2023-07-10)
 
 **New features:**
@@ -42,6 +49,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.0-RC2]: https://github.com/contao/contao/releases/tag/5.2.0-RC2
 [5.2.0-RC1]: https://github.com/contao/contao/releases/tag/5.2.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -80,3 +88,5 @@ This project adheres to [Semantic Versioning].
 [#6165]: https://github.com/contao/contao/pull/6165
 [#6194]: https://github.com/contao/contao/pull/6194
 [#6195]: https://github.com/contao/contao/pull/6195
+[#6202]: https://github.com/contao/contao/pull/6202
+[#6203]: https://github.com/contao/contao/pull/6203

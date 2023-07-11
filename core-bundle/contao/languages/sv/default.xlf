@@ -31,9 +31,11 @@
       </trans-unit>
       <trans-unit id="ERR.minval">
         <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Fältet &quot;%s &quot; måste vara minst %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Fältet &quot;%s&quot; får inte vara större an %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1961,6 +1963,7 @@
       </trans-unit>
       <trans-unit id="MSC.imageMetadata">
         <source>%s metadata</source>
+        <target>%s metadata</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2812,6 +2815,7 @@
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
+        <target>Redigera bildstorleken</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
@@ -3015,12 +3019,15 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
+        <target>Publicera/avpublicera element</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
+        <target>Avpublicera element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
+        <target>Publicera element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

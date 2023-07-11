@@ -275,6 +275,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att evenemanget visas på hemsidan före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -282,6 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att evenemanget visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -389,9 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Publish event ID %s</source>
+        <target>Publicera händelse ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.2">
         <source>Unpublish event ID %s</source>
+        <target>Avpublicera händelse ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

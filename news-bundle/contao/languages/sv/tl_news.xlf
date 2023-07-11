@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att nyheten visas på hemsidan före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -222,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att nyheten visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -305,12 +307,15 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>
+        <target>Publicera/avpublicera nyhet</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
         <source>Unpublish news item ID %s</source>
+        <target>Avpublicera nyhet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
+        <target>Publicera nyhet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
