@@ -205,8 +205,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
-                if (!isset($_SERVER['APP_SECRET']) && $container->hasParameter('secret')) {
-                    $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                if (!isset($_SERVER['APP_SECRET'])) {
+                    if ($container->hasParameter('secret')) {
+                        $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    } else {
+                        $container->setParameter('env(APP_SECRET)', '');
+                    }
                 }
 
                 if (!isset($_SERVER['MAILER_DSN'])) {

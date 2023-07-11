@@ -57,10 +57,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array
-			(
-				array('tl_theme', 'addPreviewImage')
-			)
+			'label_callback'          => array('tl_theme', 'addPreviewImage')
 		),
 		'global_operations' => array
 		(

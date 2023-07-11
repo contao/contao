@@ -56,10 +56,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'label' => array
 		(
-			'group_callback' => array
-			(
-				array('tl_module', 'getGroupHeader')
-			)
+			'group_callback'          => array('tl_module', 'getGroupHeader')
 		),
 		'global_operations' => array
 		(
