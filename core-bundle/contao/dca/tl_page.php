@@ -92,10 +92,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s',
-			'label_callback'          => array
-			(
-				array('tl_page', 'addIcon')
-			)
+			'label_callback'          => array('tl_page', 'addIcon')
 		),
 		'global_operations' => array
 		(

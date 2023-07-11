@@ -56,10 +56,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array
-			(
-				array('tl_user_group', 'addIcon')
-			)
+			'label_callback'          => array('tl_user_group', 'addIcon')
 		),
 		'global_operations' => array
 		(
