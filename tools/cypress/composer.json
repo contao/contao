@@ -1,6 +1,13 @@
 {
     "require": {},
     "scripts": {
-        "post-install-cmd": "npm install"
+        "post-install-cmd": [
+            "composer install --working-dir=webspace",
+            "npm install"
+        ],
+        "post-update-cmd": [
+            "composer update --working-dir=webspace",
+            "npm update"
+        ]
     }
 }

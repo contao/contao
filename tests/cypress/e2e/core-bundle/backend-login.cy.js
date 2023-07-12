@@ -21,7 +21,7 @@ describe('Backend', { execTimeout: 90000 }, () => {
         cy.getCookie('PHPSESSID').should('exist')
 
         // our csrf_token cookie should be present
-        cy.getCookie('csrf_contao_csrf_token').should('exist')
+        cy.getCookie('csrf_https-contao_csrf_token').should('exist')
 
         // UI should reflect this user being logged in
         cy.get('ul[id="tmenu"] button').should('contain', 'User ')

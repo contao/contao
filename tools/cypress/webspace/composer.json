@@ -1,0 +1,78 @@
+{
+    "name": "contao/cypress-tests-webspace",
+    "license": "LGPL-3.0-or-later",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../../manager-bundle",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
+            "type": "path",
+            "url": "../../../core-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../calendar-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../comments-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../faq-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../listing-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../maker-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../news-bundle"
+        },
+        {
+            "type": "path",
+            "url": "../../../newsletter-bundle"
+        }
+    ],
+    "require": {
+        "contao/calendar-bundle": "self.version",
+        "contao/comments-bundle": "self.version",
+        "contao/conflicts": "@dev",
+        "contao/faq-bundle": "self.version",
+        "contao/listing-bundle": "self.version",
+        "contao/manager-bundle": "self.version",
+        "contao/news-bundle": "self.version",
+        "contao/newsletter-bundle": "self.version"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "contao-community-alliance/composer-plugin": true,
+            "contao-components/installer": true,
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "contao-component-dir": "assets"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php vendor/bin/contao-setup"
+        ],
+        "post-update-cmd": [
+            "@php vendor/bin/contao-setup"
+        ]
+    }
+}

@@ -25,3 +25,7 @@
 
 # Cypress
 /tests/cypress/videos/
+/tools/cypress/webspace/*
+!/tools/cypress/webspace/.env
+!/tools/cypress/webspace/composer.json
+!/tools/cypress/webspace/composer.lock
