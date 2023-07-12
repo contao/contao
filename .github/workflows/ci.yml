@@ -391,9 +391,10 @@ jobs:
                   cd tools/cypress
                   npx cypress run
                   cd ../../
-                  symfony server:stop --dir=tools/cypress/webspace"
+                  symfony server:stop --dir=tools/cypress/webspace
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+                  TERM: xterm-256color
 
             - name: Upload videos
               uses: actions/upload-artifact@v2
