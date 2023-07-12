@@ -8,12 +8,18 @@ describe('Backend', { execTimeout: 90000 }, () => {
     })
 
     it('Login', () => {
-        cy.visit('/contao/login')
+        cy.visit('/contao')
+        cy.url().should('match', /\/contao\/login($|\?)/)
 
         cy.get('input[name=username]').type(user.username)
+        cy.get('input[name=password]').type(`wrong{enter}`)
 
-        // {enter} causes the form to submit
-        cy.get('input[name=password]').type(`${user.password}{enter}`)
+        // TODO: Fix accept language header
+        cy.get('.tl_error').contains(/Login failed|Anmeldung fehlgeschlagen/)
+
+        cy.get('input[name=username]').type(user.username)
+        cy.get('input[name=password]').type(`${user.password}`)
+        cy.get('button[type=submit]').click()
 
         cy.get('h1').should('contain', 'Dashboard')
 

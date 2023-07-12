@@ -24,6 +24,7 @@
 /*-bundle/src/Resources/
 
 # Cypress
+/tests/cypress/screenshots/
 /tests/cypress/videos/
 /tools/cypress/webspace/*
 !/tools/cypress/webspace/.env
