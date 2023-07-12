@@ -23,3 +23,17 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('contaoConsole', (command, ...args) => {
+    cy.exec(Cypress.env('CONTAO_CONSOLE') + ' ' + [command, ...args].join(' '))
+})
+
+Cypress.Commands.add('contaoResetSchema', () => {
+    cy.contaoConsole('doctrine:schema:drop', '--force')
+    cy.contaoConsole('contao:migrate', '--no-interaction', '--with-deletes', '--no-backup')
+})
+
+Cypress.Commands.add('contaoResetFiles', () => {
+    cy.exec('rm -rf webspace/files/')
+    cy.exec('mkdir webspace/files/')
+})

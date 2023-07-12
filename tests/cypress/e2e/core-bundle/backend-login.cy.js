@@ -3,8 +3,16 @@ import user from '../../fixtures/users/admin.json'
 describe('Backend', { execTimeout: 90000 }, () => {
 
     before(() => {
-        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:migrate --no-interaction --with-deletes --no-backup')
-        cy.exec(Cypress.env('CONTAO_CONSOLE')+' contao:user:create --username='+user.username+' --name='+user.name+' --email='+user.email+' --password='+user.password+' --language='+user.language+' --admin')
+        cy.contaoResetSchema();
+        cy.contaoConsole(
+            'contao:user:create',
+            '--username='+user.username,
+            '--name='+user.name,
+            '--email='+user.email,
+            '--password='+user.password,
+            '--language='+user.language,
+            '--admin',
+        );
     })
 
     it('Login', () => {
@@ -32,11 +40,5 @@ describe('Backend', { execTimeout: 90000 }, () => {
         // UI should reflect this user being logged in
         cy.get('ul[id="tmenu"] button').should('contain', 'User ')
         cy.get('ul[id="tmenu"] button').should('contain', user.username)
-    })
-
-    after(() => {
-        // drop schema
-        cy.exec(Cypress.env('CONTAO_CONSOLE')+' doctrine:schema:drop --force')
-        cy.log('Database is back to initial state.')
     })
 })
