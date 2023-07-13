@@ -126,6 +126,13 @@ composer run functional-tests
 
 ## End to end tests with Cypress
 
+Install the Symfony CLI (see <https://symfony.com/download#step-1-install-symfony-cli>)
+and install the HTTPS CI afterwards if you haven't already.
+
+```bash
+symfony server:ca:install
+```
+
 Install Cypress
 
 ```bash
