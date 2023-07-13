@@ -59,7 +59,7 @@ describe('Backend', { execTimeout: 90000 }, () => {
         cy.get('select[name=type]').select('text', { force: true })
         cy.get('input[name="headline[value]"]').type('Headline')
         cy.get('select[name="headline[unit]"]').select('h1')
-        cy.get('.tox-tinymce iframe').its('0.contentDocument.body').should('not.be.empty').then(cy.wrap).click().type('Lorem ipsum dolor sit amet.')
+        cy.get('.tox-tinymce iframe').its('0.contentDocument.body').should('have.attr', 'contenteditable', 'true').then(cy.wrap).click().type('Lorem ipsum dolor sit amet.')
         cy.get('input[name=addImage][type=checkbox]').check()
         cy.get('#ft_singleSRC').click()
 
