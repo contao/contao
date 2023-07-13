@@ -3,7 +3,7 @@
     "scripts": {
         "post-install-cmd": [
             "rm -rf webspace/vendor/contao/manager-bundle",
-            "composer install --working-dir=webspace",
+            "composer update --working-dir=webspace",
             "npm install"
         ],
         "post-update-cmd": [
