@@ -75,6 +75,7 @@ describe('Backend', { execTimeout: 90000 }, () => {
         simpleModal('input[value="files/images/dummy.jpg"]').click()
 
         cy.get('.simple-modal a:contains(Apply)').click()
+        cy.get('img[title^="files/images/dummy.jpg"]').should('exist')
         cy.get('button:contains(Save and close)').click()
         cy.get('h1:contains(Headline)').should('exist')
 
