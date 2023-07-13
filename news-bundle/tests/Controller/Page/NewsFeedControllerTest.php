@@ -22,6 +22,7 @@ use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use DOMDocument;
 use FeedIo\Feed\Item;
 use FeedIo\Specification;
 use Psr\Log\NullLogger;
@@ -60,6 +61,7 @@ class NewsFeedControllerTest extends ContaoTestCase
             PageModel::class,
             [
                 'id' => 42,
+                'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => $format,
             ]
@@ -79,6 +81,7 @@ class NewsFeedControllerTest extends ContaoTestCase
             PageModel::class,
             [
                 'id' => 42,
+                'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => 'foo',
             ]
@@ -119,6 +122,38 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
+    public function testProperlyEncodesEntities(): void
+    {
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 42,
+                'title' => 'Latest News &lt;/channel&gt;',
+                'alias' => 'latest-news',
+                'feedDescription' => 'Get latest news &lt;/channel&gt;',
+                'feedFormat' => 'rss',
+                'language' => 'en',
+            ]
+        );
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+
+        $controller = $this->getController();
+        $controller->setContainer($container);
+
+        $request = Request::create('https://example.org/latest-news.xml');
+        $response = $controller($request, $pageModel);
+
+        $document = new DOMDocument('1.0', 'utf-8');
+        $document->loadXML($response->getContent());
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
+        $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
+    }
+
     /**
      * @dataProvider getFeedFormats
      */
@@ -128,6 +163,7 @@ class NewsFeedControllerTest extends ContaoTestCase
             PageModel::class,
             [
                 'id' => 42,
+                'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => $format,
             ]
