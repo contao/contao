@@ -125,7 +125,7 @@ class NewsFeedControllerTest extends ContaoTestCase
     /**
      * @dataProvider getXMLFeedFormats
      */
-    public function testProperlyEncodesXMLEntities(string $format):  void
+    public function testProperlyEncodesXMLEntities(string $format): void
     {
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
