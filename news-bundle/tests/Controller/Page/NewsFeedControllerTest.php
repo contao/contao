@@ -122,7 +122,10 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testProperlyEncodesEntities(): void
+    /**
+     * @dataProvider getFeedFormats
+     */
+    public function testProperlyEncodesEntities(string $format, string $suffix, string $url, string $contentType):  void
     {
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
@@ -131,7 +134,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'title' => 'Latest News &lt;/channel&gt;',
                 'alias' => 'latest-news',
                 'feedDescription' => 'Get latest news &lt;/channel&gt;',
-                'feedFormat' => 'rss',
+                'feedFormat' => $format,
                 'language' => 'en',
             ]
         );
@@ -146,12 +149,18 @@ class NewsFeedControllerTest extends ContaoTestCase
         $request = Request::create('https://example.org/latest-news.xml');
         $response = $controller($request, $pageModel);
 
-        $document = new DOMDocument('1.0', 'utf-8');
-        $document->loadXML($response->getContent());
-
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
-        $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
+
+        if (in_array($format, ['rss', 'atom'])) {
+            $document = new DOMDocument('1.0', 'utf-8');
+            $document->loadXML($response->getContent());
+            $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
+            $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
+        } else {
+            $document = \json_decode($response->getContent());
+            $this->assertSame('Latest News </channel>', $document->title);
+            $this->assertSame('Get latest news </channel>', $document->description);
+        }
     }
 
     /**
