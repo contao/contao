@@ -34,6 +34,6 @@ Cypress.Commands.add('contaoResetSchema', () => {
 })
 
 Cypress.Commands.add('contaoResetFiles', () => {
-    cy.exec('rm -rf webspace/files/')
-    cy.exec('mkdir webspace/files/')
+    cy.exec('rm -rf "tools/cypress/webspace/files/"')
+    cy.exec('mkdir "tools/cypress/webspace/files/"')
 })

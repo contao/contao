@@ -389,7 +389,7 @@ jobs:
                   symfony server:ca:install
                   symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon
                   cd tools/cypress
-                  npx cypress run
+                  npx cypress run --project ../../ --config-file tools/cypress/cypress.config.js
                   cd ../../
                   symfony server:stop --dir=tools/cypress/webspace
               env:

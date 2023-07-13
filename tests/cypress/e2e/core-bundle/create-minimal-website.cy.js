@@ -69,7 +69,7 @@ describe('Backend', { execTimeout: 90000 }, () => {
         simpleModal('#saveNclose').click()
         simpleModal('#tl_buttons a:contains(Upload files)').click()
         simpleModal('a[title^="Paste into folder"]').click()
-        simpleModal('.dropzone.dz-clickable').selectFile('../../core-bundle/tests/Fixtures/images/dummy.jpg', { action: 'drag-drop' })
+        simpleModal('.dropzone.dz-clickable').selectFile('core-bundle/tests/Fixtures/images/dummy.jpg', { action: 'drag-drop' })
         simpleModal('a:contains(Go back)').click()
         simpleModal('#tl_buttons a:contains(Expand all)').click()
         simpleModal('input[value="files/images/dummy.jpg"]').click()
