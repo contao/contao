@@ -22,7 +22,6 @@ use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use DOMDocument;
 use FeedIo\Feed\Item;
 use FeedIo\Specification;
 use Psr\Log\NullLogger;
@@ -53,7 +52,8 @@ class NewsFeedControllerTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getFeedFormats
+     * @dataProvider getXMLFeedFormats
+     * @dataProvider getJSONFeedFormats
      */
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
@@ -123,9 +123,9 @@ class NewsFeedControllerTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getFeedFormats
+     * @dataProvider getXMLFeedFormats
      */
-    public function testProperlyEncodesEntities(string $format, string $suffix, string $url, string $contentType):  void
+    public function testProperlyEncodesXMLEntities(string $format):  void
     {
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
@@ -151,20 +151,15 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
-        if (in_array($format, ['rss', 'atom'])) {
-            $document = new DOMDocument('1.0', 'utf-8');
-            $document->loadXML($response->getContent());
-            $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
-            $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
-        } else {
-            $document = \json_decode($response->getContent());
-            $this->assertSame('Latest News </channel>', $document->title);
-            $this->assertSame('Get latest news </channel>', $document->description);
-        }
+        $document = new \DOMDocument('1.0', 'utf-8');
+        $document->loadXML($response->getContent());
+        $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
+        $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
     }
 
     /**
-     * @dataProvider getFeedFormats
+     * @dataProvider getXMLFeedFormats
+     * @dataProvider getJSONFeedFormats
      */
     public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
     {
@@ -215,10 +210,14 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame($contentType, $response->headers->get('content-type'));
     }
 
-    public function getFeedFormats(): \Generator
+    public function getXMLFeedFormats(): \Generator
     {
         yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
         yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
+    }
+
+    public function getJSONFeedFormats(): \Generator
+    {
         yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
     }
 
