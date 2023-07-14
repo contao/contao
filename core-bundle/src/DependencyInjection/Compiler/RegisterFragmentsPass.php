@@ -104,13 +104,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 // Set a default template name if not defined. We are falling back to "ce_<type>" and
                 // "mod_<type>" in Contao 4.13; as of Contao 5 this will be "content_element/<type"
                 // and "frontend_module/<type>" instead.
-                if (in_array(substr($tag, 7), ['content_element', 'frontend_module'], true)) {
+                if ($this->templateOptionsListener) {
                     $attributes['template'] = $attributes['template'] ??
-                        ['content_element' => 'ce_', 'frontend_module' => 'mod_'][substr($tag, 7)] . $attributes['type']
-                    ;
-                }
+                        ['content_element' => 'ce_', 'frontend_module' => 'mod_'][substr($tag, 7)].$attributes['type'];
 
-                if (isset($attributes['template'])) {
                     $templates[$attributes['type']] = $attributes['template'];
                 }
 
