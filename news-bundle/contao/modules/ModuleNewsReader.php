@@ -159,6 +159,11 @@ class ModuleNewsReader extends ModuleNews
 			{
 				$htmlHeadBag->setMetaRobots($objArticle->robots);
 			}
+
+			if ($objArticle->canonicalLink)
+			{
+				$htmlHeadBag->setCanonicalUri($objArticle->canonicalLink);
+			}
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');

@@ -154,6 +154,11 @@ class ModuleEventReader extends Events
 			{
 				$htmlHeadBag->setMetaRobots($objEvent->robots);
 			}
+
+			if ($objEvent->canonicalLink)
+			{
+				$htmlHeadBag->setCanonicalUri($objEvent->canonicalLink);
+			}
 		}
 
 		$intStartTime = $objEvent->startTime;
