@@ -42,7 +42,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         'rss' => '.xml',
     ];
 
-    public function __construct(private readonly ContaoContext $contaoContext, private readonly Specification $specification)
+    public function __construct(private readonly ContaoContext $contaoContext, private readonly Specification $specification, private readonly string $charset)
     {
     }
 
@@ -54,8 +54,8 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = (new Feed())
-            ->setTitle(html_entity_decode($pageModel->title))
-            ->setDescription(html_entity_decode($pageModel->feedDescription ?? ''))
+            ->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES, $this->charset))
+            ->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES, $this->charset))
             ->setLanguage($pageModel->language)
         ;
 

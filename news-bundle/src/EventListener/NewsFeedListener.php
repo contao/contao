@@ -43,6 +43,7 @@ class NewsFeedListener
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
         private readonly EntityCacheTags $cacheTags,
+        private readonly string $charset,
     ) {
     }
 
@@ -71,7 +72,7 @@ class NewsFeedListener
 
         $item = new Item();
         $item
-            ->setTitle(html_entity_decode($article->headline, ENT_QUOTES, 'UTF-8'))
+            ->setTitle(html_entity_decode($article->headline, ENT_QUOTES, $this->charset))
             ->setLastModified((new \DateTime())->setTimestamp($article->date))
             ->setLink($this->getLink($article))
             ->setContent($this->getContent($article, $item, $event))

@@ -226,7 +226,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $contaoContext = $this->createMock(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
-        return new NewsFeedController($contaoContext, $specification);
+        return new NewsFeedController($contaoContext, $specification, 'UTF-8');
     }
 
     private function getArticlesAsArray(int $count = 1): array
