@@ -18,6 +18,10 @@ use Symfony\Component\Filesystem\Path;
 class UrlUtil
 {
     /**
+     * Creates an absolute URL from the given relative and base URL according to the URL standard.
+     *
+     * @see https://url.spec.whatwg.org/#concept-basic-url-parser
+     *
      * @param string $relativeUrl Any valid URL, relative or absolute
      * @param string $baseUrl     Domain-relative (starts with a slash) or absolute URL
      */
