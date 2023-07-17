@@ -32,7 +32,7 @@ class PageRedirect extends Frontend
 
 		$this->prepare($objPage);
 
-		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path'));
+		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path') . '/');
 
 		$this->redirect($url, $this->getRedirectStatusCode($objPage));
 	}
@@ -48,7 +48,7 @@ class PageRedirect extends Frontend
 	{
 		$this->prepare($objPage);
 
-		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path'));
+		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path') . '/');
 
 		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));
 	}
