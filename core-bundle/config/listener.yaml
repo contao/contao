@@ -13,6 +13,11 @@ services:
         tags:
             - { name: contao.hook, hook: getSystemMessages }
 
+    contao.listener.data_container.add_permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\AddPermissionsListener
+        arguments:
+            - '@database_connection'
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
