@@ -17,37 +17,35 @@ use Symfony\Component\Filesystem\Path;
 
 class UrlUtil
 {
+    /**
+     * @param string $relativeUrl Any valid URL, relative or absolute
+     * @param string $baseUrl     Domain-relative (starts with a slash) or absolute URL
+     */
     public static function makeAbsolute(string $relativeUrl, string $baseUrl): string
     {
-        if ('' === $relativeUrl) {
-            return $baseUrl;
-        }
-
         $relative = new Uri($relativeUrl);
 
         if ('' !== $relative->getScheme()) {
-            return $relativeUrl;
+            return (string) $relative->withPath($relative->getPath() ?: '/');
         }
 
         $base = new Uri($baseUrl);
 
         if ('' !== $relative->getAuthority()) {
-            return (string) $relative->withScheme($base->getScheme());
+            return (string) $relative->withScheme($base->getScheme())->withPath($relative->getPath() ?: '/');
         }
 
         $path = $relative->getPath() ?: '/';
         $query = $relative->getQuery();
 
-        if (!str_starts_with($relative->getPath(), '/')) {
-            if ('' === $relative->getPath()) {
-                $path = $base->getPath() ?: '/';
+        if ('' === $relative->getPath()) {
+            $path = $base->getPath() ?: '/';
 
-                if ('' === $relative->getQuery()) {
-                    $query = $base->getQuery();
-                }
-            } else {
-                $path = Path::makeAbsolute($relative->getPath(), preg_replace('([^/]+$)', '', $base->getPath()) ?: '/');
+            if ('' === $relative->getQuery()) {
+                $query = $base->getQuery();
             }
+        } elseif (!str_starts_with($relative->getPath(), '/')) {
+            $path = Path::makeAbsolute($relative->getPath(), preg_replace('([^/]+$)', '', $base->getPath()) ?: '/');
         }
 
         return (string) $base->withPath($path)->withQuery($query)->withFragment($relative->getFragment());
