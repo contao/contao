@@ -126,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected', 'allowComments'),
-		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
+		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments;{permissions_legend:hide},permissions'
 	),
 
 	// Sub-palettes
@@ -229,7 +229,12 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
-		)
+		),
+		'permissions' => array
+		(
+			// input_field_callback from AddPermissionsListener
+			'eval' => array('target' => 'calendars'),
+		),
 	)
 );
 
