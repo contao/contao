@@ -12,13 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Input;
+use Contao\Model;
 use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
@@ -54,8 +59,8 @@ class StringUtilTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, System::class, Registry::class]);
-        unset($GLOBALS['TL_MODELS']);
+        $this->resetStaticProperties([Input::class, System::class, Registry::class, Model::class, Config::class, DcaLoader::class, Database::class, DcaExtractor::class]);
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
