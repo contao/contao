@@ -83,6 +83,18 @@
       <trans-unit id="tl_news_archive.title_legend">
         <source>Title and redirect page</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.permissions_legend">
+        <source>Permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.permissions">
+        <source>Add permissions to users and groups</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.group_permissions">
+        <source>Groups</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.user_permissions">
+        <source>Users</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.comments_legend">
         <source>Comments</source>
       </trans-unit>

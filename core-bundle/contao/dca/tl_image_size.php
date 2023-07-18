@@ -218,6 +218,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'permissions' => array
 		(
+			// input_field_callback from AddPermissionsListener
+			'eval' => array('target' => 'imageSizes'),
 		),
 	)
 );

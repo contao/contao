@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle;
 
+use Contao\NewsBundle\DependencyInjection\Compiler\AddPermissionsListenerPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoNewsBundle extends Bundle
@@ -19,5 +22,10 @@ class ContaoNewsBundle extends Bundle
     public function getPath(): string
     {
         return \dirname(__DIR__);
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AddPermissionsListenerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
     }
 }
