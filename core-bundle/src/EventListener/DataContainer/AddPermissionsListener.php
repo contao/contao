@@ -34,6 +34,7 @@ class AddPermissionsListener
     public function __invoke(DataContainer $dc): string
     {
         $widget = $this->getWidget();
+
         return '<div class="widget">'.$widget->generateWithError().'</div>';
     }
 
@@ -83,7 +84,7 @@ class AddPermissionsListener
             /** @var array $imageSizes */
             $imageSizes = StringUtil::deserialize($group['imageSizes'], true);
 
-            if (!in_array($id, $imageSizes, true)) {
+            if (!\in_array($id, $imageSizes, true)) {
                 $imageSizes[] = $id;
             }
 
@@ -106,7 +107,7 @@ class AddPermissionsListener
             /** @var array $imageSizes */
             $imageSizes = StringUtil::deserialize($user['imageSizes'], true);
 
-            if (!in_array($id, $imageSizes, true)) {
+            if (!\in_array($id, $imageSizes, true)) {
                 $imageSizes[] = $id;
             }
 
@@ -118,9 +119,20 @@ class AddPermissionsListener
         }
     }
 
+    public function getWidget(): CheckBox
+    {
+        return new CheckBox([
+            'id' => 'permissions',
+            'name' => 'permissions',
+            'label' => $this->translator->trans('tl_image_size.permissions', [], 'contao_default'),
+            'options' => $this->getUserAndGroupOptions(),
+            'multiple' => true,
+        ]);
+    }
+
     private function getUserAndGroupOptions(): array
     {
-        $groups = $this->connection->fetchAllAssociative("SELECT id, name FROM tl_user_group ORDER BY name ASC");
+        $groups = $this->connection->fetchAllAssociative('SELECT id, name FROM tl_user_group ORDER BY name ASC');
         $users = $this->connection->fetchAllAssociative("SELECT id, name FROM tl_user WHERE inherit IN ('extend', 'custom') AND admin = false ORDER BY name ASC");
 
         $groupLabel = $this->translator->trans('tl_image_size.group_permissions', [], 'contao_default');
@@ -130,16 +142,5 @@ class AddPermissionsListener
             $groupLabel => array_map(static fn ($row) => ['label' => $row['name'], 'value' => 'g_'.$row['id']], $groups),
             $userLabel => array_map(static fn ($row) => ['label' => $row['name'], 'value' => 'u_'.$row['id']], $users),
         ];
-    }
-
-    public function getWidget(): CheckBox
-    {
-        return new CheckBox([
-            'id'       => 'permissions',
-            'name'     => 'permissions',
-            'label'    => $this->translator->trans('tl_image_size.permissions', [], 'contao_default'),
-            'options'  => $this->getUserAndGroupOptions(),
-            'multiple' => true,
-        ]);
     }
 }
