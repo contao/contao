@@ -91,7 +91,7 @@ class PageRoot extends Frontend
 	 */
 	protected function getRedirectUrl($rootPageId)
 	{
-		return $this->getNextPage($rootPageId)->getFrontendUrl();
+		return $this->getNextPage($rootPageId)->getAbsoluteUrl();
 	}
 }
 
