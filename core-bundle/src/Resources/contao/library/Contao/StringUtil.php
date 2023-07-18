@@ -736,7 +736,7 @@ class StringUtil
 			}
 			else
 			{
-				$return .= $paths[$i+2] . '="' . $paths[$i+3] . $paths[$i+4] . '"';
+				$return .= $paths[$i+1];
 			}
 		}
 
