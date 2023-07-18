@@ -31,7 +31,7 @@ class AddPermissionsListener
     }
 
     #[AsCallback('tl_image_size', 'fields.permissions.input_field')]
-    public function __invoke(DataContainer $dc): string
+    public function generateFieldMarkup(DataContainer $dc): string
     {
         $widget = $this->getWidget();
 
