@@ -17,6 +17,8 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\AddPermissionsListener
         arguments:
             - '@database_connection'
+            - '@translator'
+            - '@request_stack'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener

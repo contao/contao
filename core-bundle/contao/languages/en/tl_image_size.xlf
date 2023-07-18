@@ -134,6 +134,18 @@
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.permissions_legend">
+        <source>Permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.permissions">
+        <source>Add permissions to users and groups</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.group_permissions">
+        <source>Groups</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.user_permissions">
+        <source>Users</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
       </trans-unit>
