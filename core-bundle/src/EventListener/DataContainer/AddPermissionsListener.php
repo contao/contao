@@ -119,7 +119,7 @@ class AddPermissionsListener
         }
     }
 
-    public function getWidget(): CheckBox
+    private function getWidget(): CheckBox
     {
         return new CheckBox([
             'id' => 'permissions',
