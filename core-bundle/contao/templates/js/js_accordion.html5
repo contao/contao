@@ -30,7 +30,6 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
       new handorgel(document.body, Object.assign({
         headerElements,
         contentElements,
-        multiSelectable: false,
         headerOpenClass: 'open',
         contentOpenClass: 'open',
         headerOpenedClass: 'active',
@@ -47,6 +46,7 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
     initAccordion('.ce_accordion > .toggler', {
       // put custom Handorgel options here
       // see https://github.com/oncode/handorgel#javascript
+      multiSelectable: false
     });
   })();
 </script>
