@@ -792,6 +792,7 @@ services:
         arguments:
             - '@security.helper'
             - '@security.token_storage'
+            - '@contao.security.token_checker'
             - '@session'
             - '@contao.security.frontend_user_provider'
             - '@?logger'

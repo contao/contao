@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
@@ -27,6 +28,7 @@ class FrontendPreviewAuthenticator
 {
     private Security $security;
     private TokenStorageInterface $tokenStorage;
+    private TokenChecker $tokenChecker;
     private SessionInterface $session;
     private UserProviderInterface $userProvider;
     private ?LoggerInterface $logger;
@@ -34,10 +36,11 @@ class FrontendPreviewAuthenticator
     /**
      * @internal
      */
-    public function __construct(Security $security, TokenStorageInterface $tokenStorage, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(Security $security, TokenStorageInterface $tokenStorage, TokenChecker $tokenChecker, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
         $this->security = $security;
         $this->tokenStorage = $tokenStorage;
+        $this->tokenChecker = $tokenChecker;
         $this->session = $session;
         $this->userProvider = $userProvider;
         $this->logger = $logger;
@@ -83,14 +86,12 @@ class FrontendPreviewAuthenticator
 
     private function updateToken(FrontendPreviewToken|null $token): void
     {
-        if (null === $token) {
+        if ($this->tokenChecker->isFrontendFirewall()) {
+            $this->tokenStorage->setToken($token);
+        } elseif (null === $token) {
             $this->session->remove('_security_contao_frontend');
         } else {
             $this->session->set('_security_contao_frontend', serialize($token));
-        }
-
-        if ($this->security->getToken() instanceof FrontendPreviewToken) {
-            $this->tokenStorage->setToken($token);
         }
     }
 
