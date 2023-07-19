@@ -88,7 +88,7 @@ class FrontendPreviewAuthenticator
      * Replaces the current token if the frontend firewall is active.
      * Otherwise, the token is stored in the session.
      */
-    private function updateToken(FrontendPreviewToken|null $token): void
+    private function updateToken(?FrontendPreviewToken $token): void
     {
         if ($this->tokenChecker->isFrontendFirewall()) {
             $this->tokenStorage->setToken($token);

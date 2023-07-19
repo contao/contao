@@ -178,7 +178,7 @@ class TokenChecker
         return $this->tokenStorage->getToken();
     }
 
-    private function getFirewallContext(): string|null
+    private function getFirewallContext(): ?string
     {
         $request = $this->requestStack->getMainRequest();
 
