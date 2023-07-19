@@ -18,6 +18,7 @@ use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -25,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class FrontendPreviewAuthenticator
 {
     private Security $security;
+    private TokenStorageInterface $tokenStorage;
     private SessionInterface $session;
     private UserProviderInterface $userProvider;
     private ?LoggerInterface $logger;
@@ -32,9 +34,10 @@ class FrontendPreviewAuthenticator
     /**
      * @internal
      */
-    public function __construct(Security $security, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(Security $security, TokenStorageInterface $tokenStorage, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
         $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->userProvider = $userProvider;
         $this->logger = $logger;
@@ -60,6 +63,10 @@ class FrontendPreviewAuthenticator
         $token = new FrontendPreviewToken(null, $showUnpublished, $previewLinkId);
 
         $this->session->set('_security_contao_frontend', serialize($token));
+
+        if (null !== $previewLinkId) {
+            $this->tokenStorage->setToken($token);
+        }
 
         return true;
     }

@@ -791,6 +791,7 @@ services:
         public: true
         arguments:
             - '@security.helper'
+            - '@security.token_storage'
             - '@session'
             - '@contao.security.frontend_user_provider'
             - '@?logger'
