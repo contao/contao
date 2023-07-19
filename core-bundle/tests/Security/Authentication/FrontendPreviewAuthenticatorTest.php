@@ -15,10 +15,12 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -52,7 +54,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn($user)
         ;
 
-        $authenticator = $this->getAuthenticator($security, $session, $userProvider);
+        $authenticator = $this->getAuthenticator($security, null, null, $session, $userProvider);
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
         $this->assertTrue($session->has('_security_contao_frontend'));
@@ -92,7 +94,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->with('Could not find a front end user with the username "foobar"')
         ;
 
-        $authenticator = $this->getAuthenticator($security, null, $userProvider, $logger);
+        $authenticator = $this->getAuthenticator($security, null, null, null, $userProvider, $logger);
 
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
@@ -119,7 +121,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn($user)
         ;
 
-        $authenticator = $this->getAuthenticator($security, null, $userProvider);
+        $authenticator = $this->getAuthenticator($security, null, null, null, $userProvider);
 
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
@@ -136,7 +138,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session = $this->mockSession();
-        $authenticator = $this->getAuthenticator($security, $session);
+        $authenticator = $this->getAuthenticator($security, null, null, $session);
 
         $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished, $previewLinkId));
         $this->assertTrue($session->has('_security_contao_frontend'));
@@ -147,6 +149,43 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame('anon.', $token->getUser());
         $this->assertSame($showUnpublished, $token->showUnpublished());
         $this->assertSame($previewLinkId, $token->getPreviewLinkId());
+    }
+
+    /**
+     * @dataProvider getShowUnpublishedPreviewLinkIdData
+     */
+    public function testAuthenticatesAFrontendGuestViaFrontendFirewall(bool $showUnpublished, ?int $previewLinkId): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('setToken')
+            ->with($this->callback(
+                static function (FrontendPreviewToken $token) use ($showUnpublished, $previewLinkId): bool {
+                    return 'anon.' === $token->getUser()
+                        && $showUnpublished === $token->showUnpublished()
+                        && $previewLinkId === $token->getPreviewLinkId()
+                    ;
+                }
+            ))
+        ;
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('isFrontendFirewall')
+            ->willReturn(true)
+        ;
+
+        $authenticator = $this->getAuthenticator($security, $tokenStorage, $tokenChecker);
+
+        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished, $previewLinkId));
     }
 
     public function getShowUnpublishedPreviewLinkIdData(): \Generator
@@ -179,7 +218,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->with('_security_contao_frontend')
         ;
 
-        $authenticator = $this->getAuthenticator(null, $session);
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
 
         $this->assertTrue($authenticator->removeFrontendAuthentication());
     }
@@ -193,7 +232,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(false)
         ;
 
-        $authenticator = $this->getAuthenticator(null, $session);
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
 
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
@@ -214,12 +253,12 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(false)
         ;
 
-        $authenticator = $this->getAuthenticator(null, $session);
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
 
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
-    private function getAuthenticator(Security $security = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
+    private function getAuthenticator(Security $security = null, TokenStorageInterface $tokenStorage = null, TokenChecker $tokenChecker = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);
@@ -230,9 +269,11 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         }
 
         $security ??= $this->createMock(Security::class);
+        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
+        $tokenChecker ??= $this->createMock(TokenChecker::class);
         $userProvider ??= $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
+        return new FrontendPreviewAuthenticator($security, $tokenStorage, $tokenChecker, $session, $userProvider, $logger);
     }
 }
