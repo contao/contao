@@ -89,6 +89,36 @@ class StringUtilFlag
         return $result->withValue(mb_strtoupper($result->getValue()));
     }
 
+    #[AsInsertTagFlag('utf8_ucfirst')]
+    public function utf8Ucfirst(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(
+            mb_strtoupper(mb_substr($result->getValue(), 0, 1))
+            .mb_substr($result->getValue(), 1)
+        );
+    }
+
+    #[AsInsertTagFlag('utf8_lcfirst')]
+    public function utf8Lcfirst(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(
+            mb_strtolower(mb_substr($result->getValue(), 0, 1))
+            .mb_substr($result->getValue(), 1)
+        );
+    }
+
+    #[AsInsertTagFlag('utf8_ucwords')]
+    public function utf8Ucwords(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(
+            preg_replace_callback(
+                '/(?<=^|[ \t\r\n\f\v])./u',
+                static fn (array $match) => mb_strtoupper($match[0]),
+                $result->getValue(),
+            ),
+        );
+    }
+
     #[AsInsertTagFlag('utf8_romanize')]
     public function utf8Romanize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
