@@ -53,7 +53,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken($user, $showUnpublished);
 
-        $this->session->set('_security_contao_frontend', serialize($token));
+        $this->updateToken($token);
 
         return true;
     }
@@ -62,11 +62,7 @@ class FrontendPreviewAuthenticator
     {
         $token = new FrontendPreviewToken(null, $showUnpublished, $previewLinkId);
 
-        $this->session->set('_security_contao_frontend', serialize($token));
-
-        if (null !== $previewLinkId) {
-            $this->tokenStorage->setToken($token);
-        }
+        $this->updateToken($token);
 
         return true;
     }
@@ -80,9 +76,22 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $this->session->remove('_security_contao_frontend');
+        $this->updateToken(null);
 
         return true;
+    }
+
+    private function updateToken(FrontendPreviewToken|null $token): void
+    {
+        if (null === $token) {
+            $this->session->remove('_security_contao_frontend');
+        } else {
+            $this->session->set('_security_contao_frontend', serialize($token));
+        }
+
+        if ($this->security->getToken() instanceof FrontendPreviewToken) {
+            $this->tokenStorage->setToken($token);
+        }
     }
 
     /**
