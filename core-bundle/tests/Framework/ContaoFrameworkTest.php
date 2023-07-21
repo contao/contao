@@ -774,7 +774,7 @@ class ContaoFrameworkTest extends TestCase
 
         $isInitialized = $ref->getProperty('initialized');
         $isInitialized->setAccessible(true);
-        $isInitialized->setValue(false);
+        $isInitialized->setValue(null, false);
 
         return $framework;
     }
