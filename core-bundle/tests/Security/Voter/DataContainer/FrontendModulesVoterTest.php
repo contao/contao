@@ -56,7 +56,7 @@ class FrontendModulesVoterTest extends TestCase
         );
     }
 
-    public function testAdminHasAllPermissions(): void
+    public function testAdminHasUnlimitedAccess(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => true]);
 
