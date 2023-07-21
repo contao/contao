@@ -86,18 +86,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink);
-
-            // Ensure absolute links
-            if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getCurrentRequest()) {
-                    throw new \RuntimeException('The request stack did not contain a request');
-                }
-
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
-            }
-
-            $htmlHeadBag->setCanonicalUri($url);
+            $htmlHeadBag->setCanonicalUri($pageModel->canonicalLink);
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {

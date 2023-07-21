@@ -200,6 +200,7 @@ class PageRegular extends Frontend
 		}
 
 		$headBag = $this->responseContext->get(HtmlHeadBag::class);
+		$insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
@@ -215,7 +216,7 @@ class PageRegular extends Frontend
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
+			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request, $insertTagParser));
 		}
 
 		// Fall back to the default title tag
@@ -225,7 +226,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
+		$this->Template->title = strip_tags($insertTagParser->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes
