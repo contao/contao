@@ -49,7 +49,7 @@ class FrontendModulesVoter implements CacheableVoterInterface
             }
 
             if (empty($user->frontendModules)) {
-                return self::ACCESS_DENIED;
+                return self::ACCESS_GRANTED;
             }
 
             $isGranted = match (true) {
