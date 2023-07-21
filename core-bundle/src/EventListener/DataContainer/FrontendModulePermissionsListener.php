@@ -35,6 +35,10 @@ class FrontendModulePermissionsListener
             return;
         }
 
+        if ($user->isAdmin || empty($user->frontendModules)) {
+            return;
+        }
+
         if (!empty($user->frontendModules) && !\in_array($GLOBALS['TL_DCA']['tl_module']['fields']['type']['sql']['default'] ?? null, $user->frontendModules, true)) {
             $GLOBALS['TL_DCA']['tl_module']['fields']['type']['default'] = $user->frontendModules[0];
         }
