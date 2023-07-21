@@ -24,7 +24,6 @@ services:
         arguments:
             - '@security.helper'
             - '@database_connection'
-            - '@request_stack'
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
