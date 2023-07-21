@@ -103,6 +103,7 @@ class ModuleFaqList extends Module
 			$objPid = $objFaq->getRelated('pid');
 
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
+
 			$arrFaq[$objFaq->pid] = array(
 				...$objPid->row(),
 				'items' => $arrFaq[$objFaq->pid]['items']

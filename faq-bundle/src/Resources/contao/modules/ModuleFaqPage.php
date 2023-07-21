@@ -134,6 +134,7 @@ class ModuleFaqPage extends Module
 
 			// Order by PID
 			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
+
 			$arrFaqs[$objFaq->pid] = array(
 				...$objPid->row(),
 				'items' => $arrFaqs[$objFaq->pid]['items']
