@@ -20,14 +20,13 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use GuzzleHttp\Promise\Create;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FrontendModulesVoterTest extends TestCase
 {
-        public function testVoter(): void
+    public function testVoter(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
 
@@ -163,7 +162,6 @@ class FrontendModulesVoterTest extends TestCase
             )
         );
 
-
         // The navigation module is only permitted for one user in this dataset (create, update, delete)
         $this->assertSame(
             $expected['navigation'],
@@ -197,11 +195,11 @@ class FrontendModulesVoterTest extends TestCase
     {
         yield 'Unlimited access to front end modules' => [
             ['frontendModules' => []],
-            [ 'html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED ],
+            ['html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED],
         ];
         yield 'Access limited to specific module type' => [
             ['frontendModules' => ['navigation']],
-            [ 'html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_GRANTED ],
+            ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_GRANTED],
         ];
     }
 }
