@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s geçersiz e-posta adresi devre dışı bırakıldı sistem günlüğü bölümüne bakın).</target>
+        <target>%s geçersiz e-posta adresi etkisizleştirildi sistem günlüğü bölümüne bakın).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
-        <target>%s kodlu haber bültenini gönder</target>
+        <target>%s kimlikli haber bültenini gönder</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
@@ -223,23 +223,23 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
-        <target>%s kodlu haber bülteninin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli haber bülteninin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
-        <target>%s kodlu haber bültenini düzenle</target>
+        <target>%s kimlikli haber bültenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
-        <target>%s kodlu haber bültenini kopyala</target>
+        <target>%s kimlikli haber bültenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
-        <target>%s kodlu haber bültenini taşı</target>
+        <target>%s kimlikli haber bültenini taşı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
-        <target>%s kodlu haber bültenini sil</target>
+        <target>%s kimlikli haber bültenini sil</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.27] (2023-07-21)
+
+**Fixed issues:**
+
+- [#6226] Replace the token in the storage for preview link authentication ([ausi])
+- [#5829] Make the RegisterFragmentType compiler pass reusable ([richardhj])
+- [#6159] Include the category data in the FAQ list template ([aschempp])
+- [#6229] Fix PHP8 issues in the database installer ([aschempp])
+- [#6222] Handle missing files in the `StringUtil::insertTagToSrc()` method ([ausi])
+- [#6231] Fix the `ReflectionProperty::setValue()` method signature ([ausi])
+- [#6217] Fix relative redirects ([fritzmg])
+- [#6221] Improve the `UrlUtil::makeAbsolute()` method ([ausi])
+
 ## [4.13.26] (2023-07-10)
 
 **Fixed issues:**
@@ -748,6 +761,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.27]: https://github.com/contao/contao/releases/tag/4.13.27
 [4.13.26]: https://github.com/contao/contao/releases/tag/4.13.26
 [4.13.25]: https://github.com/contao/contao/releases/tag/4.13.25
 [4.13.24]: https://github.com/contao/contao/releases/tag/4.13.24
@@ -1294,6 +1308,7 @@ This project adheres to [Semantic Versioning].
 [#5815]: https://github.com/contao/contao/pull/5815
 [#5817]: https://github.com/contao/contao/pull/5817
 [#5820]: https://github.com/contao/contao/pull/5820
+[#5829]: https://github.com/contao/contao/pull/5829
 [#5830]: https://github.com/contao/contao/pull/5830
 [#5834]: https://github.com/contao/contao/pull/5834
 [#5842]: https://github.com/contao/contao/pull/5842
@@ -1380,6 +1395,7 @@ This project adheres to [Semantic Versioning].
 [#6148]: https://github.com/contao/contao/pull/6148
 [#6151]: https://github.com/contao/contao/pull/6151
 [#6152]: https://github.com/contao/contao/pull/6152
+[#6159]: https://github.com/contao/contao/pull/6159
 [#6160]: https://github.com/contao/contao/pull/6160
 [#6161]: https://github.com/contao/contao/pull/6161
 [#6168]: https://github.com/contao/contao/pull/6168
@@ -1387,3 +1403,9 @@ This project adheres to [Semantic Versioning].
 [#6180]: https://github.com/contao/contao/pull/6180
 [#6187]: https://github.com/contao/contao/pull/6187
 [#6197]: https://github.com/contao/contao/pull/6197
+[#6217]: https://github.com/contao/contao/pull/6217
+[#6221]: https://github.com/contao/contao/pull/6221
+[#6222]: https://github.com/contao/contao/pull/6222
+[#6226]: https://github.com/contao/contao/pull/6226
+[#6229]: https://github.com/contao/contao/pull/6229
+[#6231]: https://github.com/contao/contao/pull/6231

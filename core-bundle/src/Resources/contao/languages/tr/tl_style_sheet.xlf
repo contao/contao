@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.embedImages.1">
         <source>Here you can enter the file size in bytes up to which images will be embedded in the style sheet as data: string. Set to 0 to disable the feature.</source>
-        <target>Buraya biçem sayfasına veri:dizge biçiminde veri olarak gömülebilecek en büyük görsel dosyası boyutunu yazabilirsiniz. Bu özelliği devre dışı bırakmak için 0 yazın.</target>
+        <target>Buraya biçem sayfasına veri:dizge biçiminde veri olarak gömülebilecek en büyük görsel dosyası boyutunu yazabilirsiniz. Bu özelliği etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.0">
         <source>Conditional comment</source>
@@ -107,31 +107,31 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasının ayrıntılarını görüntüle</target>
+        <target>%s kimlikli biçem sayfasının ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasını düzenle</target>
+        <target>%s kimlikli biçem sayfasını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader">
         <source>Edit the settings of style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasının ayarlarını düzenle</target>
+        <target>%s kimlikli biçem sayfasının ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasını kopyala</target>
+        <target>%s kimlikli biçem sayfasını kopyala</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut">
         <source>Move style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasını taşı</target>
+        <target>%s kimlikli biçem sayfasını taşı</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasını sil</target>
+        <target>%s kimlikli biçem sayfasını sil</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
-        <target>%s kodlu biçem sayfasını dışa aktar</target>
+        <target>%s kimlikli biçem sayfasını dışa aktar</target>
       </trans-unit>
     </body>
   </file>

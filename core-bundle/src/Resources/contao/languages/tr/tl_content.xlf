@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
-        <target>Web tarayıcıda görüntülensin</target>
+        <target>Tarayıcıda görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Bu seçenek etkinleştirildiğinde, dosya web tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
+        <target>Bu seçenek etkinleştirildiğinde, dosya tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir web tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_content.listitems.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışıysa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_content.tableitems.0">
         <source>Table items</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_content.tableitems.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışıysa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_content.summary.0">
         <source>Table summary</source>
@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -427,19 +427,19 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
-        <target>YouTube kodu</target>
+        <target>YouTube kimliği</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
-        <target>YouTube görüntüsünün kodunu yazın (&lt;em&gt;j0sYj4wxyk0&lt;/em&gt; gibi).</target>
+        <target>YouTube görüntüsünün kimliğini yazın (&lt;em&gt;j0sYj4wxyk0&lt;/em&gt; gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
-        <target>Vimeo kodu</target>
+        <target>Vimeo kimliği</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
-        <target>Vimeo görüntüsünün kodu (&lt;em&gt;275028611&lt;/em&gt; gibi).</target>
+        <target>Vimeo görüntüsünün kimliği (&lt;em&gt;275028611&lt;/em&gt; gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -471,7 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
-        <target>Buradan web tarayıcının görüntüyü önceden nasıl yükleyeceğini önerebilirsiniz.</target>
+        <target>Buradan tarayıcının görüntüyü önceden nasıl yükleyeceğini önerebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
@@ -527,7 +527,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.1">
         <source>The time in milliseconds between slides (1000 = 1s). Set to 0 to disable auto sliding.</source>
-        <target>Milisaniye (1000 = 1s) cinsinden slaytlar arasındaki süre. Otomatik kaydırmayı devre dışı bırakmak için 0 olarak ayarlayın.</target>
+        <target>Milisaniye (1000 = 1s) cinsinden slaytlar arasındaki süre. Otomatik kaydırmayı etkisizleştirmek için 0 olarak ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderSpeed.0">
         <source>Transition speed</source>
@@ -619,11 +619,11 @@
       </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
-        <target>CSS kodu/sınıfı</target>
+        <target>CSS kimliği/sınıfı</target>
       </trans-unit>
       <trans-unit id="tl_content.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Buradan bir kod ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible.0">
         <source>Invisible</source>
@@ -631,7 +631,7 @@
       </trans-unit>
       <trans-unit id="tl_content.invisible.1">
         <source>Hide the element on the website.</source>
-        <target>Bileşeni web sitesinde gizler.</target>
+        <target>Bileşeni sitede gizler.</target>
       </trans-unit>
       <trans-unit id="tl_content.start.0">
         <source>Show from</source>
@@ -883,23 +883,23 @@
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>%s kodlu içerik bileşeninin bilgilerini görüntüle</target>
+        <target>%s kimlikli içerik bileşeninin bilgilerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
-        <target>%s kodlu içerik bileşenini taşı</target>
+        <target>%s kimlikli içerik bileşenini taşı</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>%s kodlu içerik bileşenini kopyala</target>
+        <target>%s kimlikli içerik bileşenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
-        <target>%s kodlu içerik bileşenini sil</target>
+        <target>%s kimlikli içerik bileşenini sil</target>
       </trans-unit>
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
-        <target>%s kodlu içerik bileşenini düzenle</target>
+        <target>%s kimlikli içerik bileşenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
@@ -907,7 +907,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
-        <target>%s kodlu içerik bileşenini gizle/görüntüle</target>
+        <target>%s kimlikli içerik bileşenini gizle/görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -915,7 +915,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
-        <target>%s kodlu içerik bileşeninden sonra yapıştır</target>
+        <target>%s kimlikli içerik bileşeninden sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
@@ -923,15 +923,15 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
-        <target>%s kodlu içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
+        <target>%s kimlikli içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-        <target>%s kodlu kaynak bileşenini düzenle</target>
+        <target>%s kimlikli kaynak bileşenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
-        <target>%s kodlu makaleyi düzenle</target>
+        <target>%s kimlikli makaleyi düzenle</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

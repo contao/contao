@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
-        <target>En az uzunluğu aşan anahtar sözcükler, arama sonuçlarında yok sayılır. Bu seçeneği devre dışı bırakmak için 0 olarak ayarlayın.</target>
+        <target>En az uzunluğu aşan anahtar sözcükler, arama sonuçlarında yok sayılır. Bu seçeneği etkisizleştirmek için 0 olarak ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_module.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir web tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
@@ -395,19 +395,19 @@
       </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>
-        <target>CSS kodu/sınıfı</target>
+        <target>CSS kimliği/sınıfı</target>
       </trans-unit>
       <trans-unit id="tl_module.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Buradan bir kod ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
-        <target>Spam koruması devre dışı bırakılsın</target>
+        <target>Spam koruması etkisizleştirilsin</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
-        <target>Buradan spam korumasını devre dışı bırakabilirsiniz (önerilmez).</target>
+        <target>Buradan spam korumasını etkisizleştirebilirsiniz (önerilmez).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -622,7 +622,7 @@ Yeni parolayı ayarlamak için şuraya tıklayın:
 
 ##link##
 
-Böyle bir istekte bulunmadıysanız, lütfen web sitesinin yöneticisi ile görüşün.
+Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
@@ -635,7 +635,7 @@ Böyle bir istekte bulunmadıysanız, lütfen web sitesinin yöneticisi ile gör
       </trans-unit>
       <trans-unit id="tl_module.close_deactivate">
         <source>Deactivate account</source>
-        <target>Hesabı devre dışı bırak</target>
+        <target>Hesabı etkisizleştir</target>
       </trans-unit>
       <trans-unit id="tl_module.close_delete">
         <source>Irrevocably delete account</source>
@@ -651,23 +651,23 @@ Böyle bir istekte bulunmadıysanız, lütfen web sitesinin yöneticisi ile gör
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
-        <target>%s kodlu modülün ayrıntılarını görüntüle</target>
+        <target>%s kimlikli modülün ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
-        <target>%s kodlu modülü düzenle</target>
+        <target>%s kimlikli modülü düzenle</target>
       </trans-unit>
       <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
-        <target>%s kodlu modülü kopyala</target>
+        <target>%s kimlikli modülü kopyala</target>
       </trans-unit>
       <trans-unit id="tl_module.cut">
         <source>Move module ID %s</source>
-        <target>%s kodlu modülü taşı</target>
+        <target>%s kimlikli modülü taşı</target>
       </trans-unit>
       <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
-        <target>%s kodlu modülü sil</target>
+        <target>%s kimlikli modülü sil</target>
       </trans-unit>
     </body>
   </file>
