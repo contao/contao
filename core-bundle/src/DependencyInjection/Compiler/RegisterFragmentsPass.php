@@ -105,8 +105,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 // "mod_<type>" in Contao 4.13; as of Contao 5 this will be "content_element/<type"
                 // and "frontend_module/<type>" instead.
                 if ($this->templateOptionsListener) {
-                    $attributes['template'] = $attributes['template'] ??
-                        ['content_element' => 'ce_', 'frontend_module' => 'mod_'][substr($tag, 7)].$attributes['type'];
+                    $attributes['template'] = $attributes['template']
+                        ?? ['content_element' => 'ce_', 'frontend_module' => 'mod_'][substr($tag, 7)].$attributes['type'];
 
                     $templates[$attributes['type']] = $attributes['template'];
                 }
