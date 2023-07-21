@@ -423,7 +423,7 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache->setValue($framework, $adapters);
 
         $isInitialized = $ref->getProperty('initialized');
-        $isInitialized->setValue(false);
+        $isInitialized->setValue(null, false);
 
         return $framework;
     }
