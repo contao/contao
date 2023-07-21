@@ -25,14 +25,14 @@ class FrontendModulePermissionsListenerTest extends TestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
         unset($GLOBALS['TL_DCA'], $GLOBALS['FE_MOD']);
-
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['FE_MOD']);
-
+        parent::tearDown();
     }
 
     public function testSetsDefaultTypeIfUserHasLimitedAccess(): void
