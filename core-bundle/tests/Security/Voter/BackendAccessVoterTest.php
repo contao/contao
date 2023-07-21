@@ -168,7 +168,7 @@ class BackendAccessVoterTest extends TestCase
         ];
 
         yield 'Check access on front end module' => [
-            ['elements' => ['navigation']],
+            ['frontendModules' => ['navigation']],
             ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE,
             'navigation',
         ];
