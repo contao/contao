@@ -66,7 +66,7 @@ class FrontendModulesVoter implements CacheableVoterInterface
         return self::ACCESS_ABSTAIN;
     }
 
-    private function isAllowedType(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, $user): bool
+    private function isAllowedType(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, BackendUser $user): bool
     {
         if ($subject instanceof CreateAction) {
             $type = $subject->getNew()['type'];

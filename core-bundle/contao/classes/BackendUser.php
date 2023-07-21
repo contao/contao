@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property array   $groups
  * @property array   $elements
  * @property array   $fields
+ * @property array   $frontendModules
  * @property array   $pagemounts
  * @property array   $filemounts
  * @property array   $filemountIds
