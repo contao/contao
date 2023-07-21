@@ -155,7 +155,7 @@ class Installer extends Controller
 			}
 
 			// Fields
-			if (\is_array($v['TABLE_FIELDS']))
+			if (\is_array($v['TABLE_FIELDS'] ?? null))
 			{
 				foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 				{
@@ -171,7 +171,7 @@ class Installer extends Controller
 			}
 
 			// Create definitions
-			if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+			if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 			{
 				foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 				{
@@ -187,7 +187,7 @@ class Installer extends Controller
 			}
 
 			// Move auto_increment fields to the end of the array
-			if (\is_array($return['ALTER_ADD']))
+			if (\is_array($return['ALTER_ADD'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv)
 				{
@@ -196,7 +196,7 @@ class Installer extends Controller
 				}
 			}
 
-			if (\is_array($return['ALTER_CHANGE']))
+			if (\is_array($return['ALTER_CHANGE'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv)
 				{
@@ -219,7 +219,7 @@ class Installer extends Controller
 			if (!\in_array($k, $drop))
 			{
 				// Create definitions
-				if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+				if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 				{
 					foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 					{
@@ -231,7 +231,7 @@ class Installer extends Controller
 				}
 
 				// Fields
-				if (\is_array($v['TABLE_FIELDS']))
+				if (\is_array($v['TABLE_FIELDS'] ?? null))
 				{
 					foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 					{

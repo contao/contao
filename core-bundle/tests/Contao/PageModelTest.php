@@ -554,7 +554,7 @@ class PageModelTest extends TestCase
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
         $property->setAccessible(true);
-        $property->setValue([md5(implode('', [])) => $database]);
+        $property->setValue(null, [md5(implode('', [])) => $database]);
 
         $this->assertSame($database, Database::getInstance());
     }
