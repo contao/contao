@@ -56,57 +56,6 @@ class FrontendModulesVoterTest extends TestCase
         );
     }
 
-    public function testAdminHasUnlimitedAccess(): void
-    {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => true]);
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $voter = new FrontendModulesVoter($security);
-
-        $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
-            $voter->vote(
-                $token,
-                new CreateAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
-        );
-
-        $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
-            $voter->vote(
-                $token,
-                new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
-        );
-
-        $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
-            $voter->vote(
-                $token,
-                new UpdateAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
-        );
-
-        $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
-            $voter->vote(
-                $token,
-                new DeleteAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
-        );
-    }
-
     /**
      * @dataProvider userDataProvider
      */
@@ -193,12 +142,16 @@ class FrontendModulesVoterTest extends TestCase
 
     public function userDataProvider(): \Generator
     {
-        yield 'Unlimited access to front end modules' => [
-            ['frontendModules' => []],
+        yield 'Admin user has unlimited access' => [
+            ['isAdmin' => true],
             ['html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED],
         ];
-        yield 'Access limited to specific module type' => [
-            ['frontendModules' => ['navigation']],
+        yield 'User has unlimited access to front end modules' => [
+            ['isAdmin' => false, 'frontendModules' => []],
+            ['html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED],
+        ];
+        yield 'User access limited to specific module type' => [
+            ['isAdmin' => false, 'frontendModules' => ['navigation']],
             ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_GRANTED],
         ];
     }
