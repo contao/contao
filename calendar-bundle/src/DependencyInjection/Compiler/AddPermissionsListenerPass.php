@@ -1,4 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
 namespace Contao\CalendarBundle\DependencyInjection\Compiler;
 
@@ -14,7 +24,7 @@ class AddPermissionsListenerPass implements CompilerPassInterface
             [
                 'table' => 'tl_calendar',
                 'target' => 'fields.permissions.input_field',
-                'method' => 'generateFieldMarkup'
+                'method' => 'generateFieldMarkup',
             ]
         );
         $permissionsListener->addTag(
@@ -22,7 +32,7 @@ class AddPermissionsListenerPass implements CompilerPassInterface
             [
                 'table' => 'tl_calendar',
                 'target' => 'config.onsubmit',
-                'method' => 'updateUserAndGroupPermissions'
+                'method' => 'updateUserAndGroupPermissions',
             ]
         );
     }

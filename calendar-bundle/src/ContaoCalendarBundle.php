@@ -24,7 +24,7 @@ class ContaoCalendarBundle extends Bundle
         return \dirname(__DIR__);
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new AddPermissionsListenerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
     }
