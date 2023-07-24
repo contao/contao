@@ -39,6 +39,7 @@ jobs:
 
             - name: Install the dependencies
               run: |
+                  npm update
                   composer install --no-interaction --no-progress
                   composer bin cypress install --no-interaction --no-progress
 
