@@ -142,13 +142,13 @@ composer bin cypress install
 Run the end-to-end tests without UI:
 
 ```bash
-composer run cypress
+yarn cypress
 ```
 
 Run the end-to-end tests with the Cypress test suite:
 
 ```bash
-composer run cypress-ui
+yarn cypress-ui
 ```
 
 ## License
