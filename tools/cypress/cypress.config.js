@@ -7,17 +7,17 @@ const CONTAO_CONSOLE = process.env.CONTAO_CONSOLE || ('Win32' !== platform.os.fa
     : 'tools\\cypress\\webspace\\vendor\\bin\\contao-console';
 
 module.exports = defineConfig({
-    downloadsFolder: "tests/cypress/downloads",
-    fixturesFolder: "tests/cypress/fixtures",
-    screenshotsFolder: "tests/cypress/screenshots",
-    videosFolder: "tests/cypress/videos",
+    downloadsFolder: "tools/cypress/downloads",
+    fixturesFolder: "tools/cypress/fixtures",
+    screenshotsFolder: "tools/cypress/screenshots",
+    videosFolder: "tools/cypress/videos",
     env: {
         CONTAO_CONSOLE: CONTAO_CONSOLE
     },
     e2e: {
         baseUrl: 'https://localhost:8765',
-        supportFile: 'tests/cypress/support/e2e.js',
-        specPattern: 'tests/cypress/e2e/**/*.cy.js',
+        supportFile: 'tools/cypress/support/e2e.js',
+        specPattern: 'tools/cypress/e2e/**/*.cy.js',
         setupNodeEvents(on, config) {
             // Implement node event listeners here
         },

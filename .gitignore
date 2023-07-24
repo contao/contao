@@ -7,6 +7,13 @@
 /tools/*/node_modules
 /tools/monorepo/composer.lock
 
+# Cypress
+/tools/cypress/screenshots/
+/tools/cypress/videos/
+/tools/cypress/webspace/*
+!/tools/cypress/webspace/.env
+!/tools/cypress/webspace/composer.json
+
 # Monorepo Tools
 /.monorepo-split-cache/
 
@@ -22,10 +29,3 @@
 
 # Ignore the symlinks required for upstream merging
 /*-bundle/src/Resources/
-
-# Cypress
-/tests/cypress/screenshots/
-/tests/cypress/videos/
-/tools/cypress/webspace/*
-!/tools/cypress/webspace/.env
-!/tools/cypress/webspace/composer.json

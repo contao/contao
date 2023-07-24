@@ -1,0 +1,62 @@
+name: Cypress
+
+on:
+    pull_request: ~ # FIXME
+    schedule:
+        - cron: 0 13 * * MON,THU
+
+permissions: read-all
+
+jobs:
+    cypress:
+        name: Cypress
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Install Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Symfony CLI
+              run: |
+                  wget https://get.symfony.com/cli/installer -O - | bash
+                  mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin cypress install --no-interaction --no-progress
+
+            - name: Run Cypress tests
+              id: cypress
+              run: |
+                  symfony server:ca:install
+                  symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon
+                  npx cypress run --config-file tools/cypress/cypress.config.js
+                  symfony server:stop --dir=tools/cypress/webspace
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+                  TERM: xterm-256color
+
+            - name: Upload videos
+              uses: actions/upload-artifact@v2
+              if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
+              with:
+                  name: Cypress videos
+                  path: tools/cypress/videos
+                  retention-days: 14

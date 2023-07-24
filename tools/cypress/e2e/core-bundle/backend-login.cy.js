@@ -3,6 +3,7 @@ import user from '../../fixtures/users/admin.json'
 describe('Backend', { execTimeout: 90000 }, () => {
     before(() => {
         cy.contaoResetSchema();
+
         cy.contaoConsole(
             'contao:user:create',
             '--username='+user.username,

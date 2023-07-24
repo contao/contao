@@ -4,6 +4,7 @@ describe('Backend', { execTimeout: 90000 }, () => {
     before(() => {
         cy.contaoResetSchema()
         cy.contaoResetFiles()
+
         cy.contaoConsole(
             'contao:user:create',
             '--username='+user.username,
