@@ -2,6 +2,16 @@
     "name": "contao/cypress-tests-webspace",
     "license": "LGPL-3.0-or-later",
     "type": "project",
+    "require": {
+        "contao/calendar-bundle": "self.version",
+        "contao/comments-bundle": "self.version",
+        "contao/conflicts": "@dev",
+        "contao/faq-bundle": "self.version",
+        "contao/listing-bundle": "self.version",
+        "contao/manager-bundle": "self.version",
+        "contao/news-bundle": "self.version",
+        "contao/newsletter-bundle": "self.version"
+    },
     "repositories": [
         {
             "type": "path",
@@ -43,16 +53,6 @@
             "url": "../../../newsletter-bundle"
         }
     ],
-    "require": {
-        "contao/calendar-bundle": "self.version",
-        "contao/comments-bundle": "self.version",
-        "contao/conflicts": "@dev",
-        "contao/faq-bundle": "self.version",
-        "contao/listing-bundle": "self.version",
-        "contao/manager-bundle": "self.version",
-        "contao/news-bundle": "self.version",
-        "contao/newsletter-bundle": "self.version"
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {

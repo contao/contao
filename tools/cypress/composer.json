@@ -1,5 +1,4 @@
 {
-    "require": {},
     "scripts": {
         "post-install-cmd": [
             "rm -rf webspace/vendor/contao/manager-bundle",
