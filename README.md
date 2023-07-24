@@ -135,6 +135,7 @@ symfony server:ca:install
 Install Cypress:
 
 ```bash
+yarn install
 composer bin cypress install
 ```
 
