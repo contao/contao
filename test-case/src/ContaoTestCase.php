@@ -351,7 +351,7 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $property->setValue($defaultValue);
+                $property->setValue(null, $defaultValue);
             }
         }
     }
