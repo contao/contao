@@ -319,6 +319,16 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
+        "cypress": [
+            "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
+            "yarn cypress run --config-file tools/cypress/cypress.config.js",
+            "symfony server:stop --dir=tools/cypress/webspace"
+        ],
+        "cypress-ui": [
+            "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
+            "yarn cypress open --config-file tools/cypress/cypress.config.js",
+            "symfony server:stop --dir=tools/cypress/webspace"
+        ],
         "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --fix --ansi",
         "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --fix --ansi",

@@ -124,26 +124,31 @@ Then run the functional tests via the `run` command:
 composer run functional-tests
 ```
 
-## End to end tests with Cypress
+## End-to-end tests with Cypress
 
-Install Cypress and copy `cypress.config.dev.js` from `vendor/contao/contao/cypress.config.dev.js` to root and rename to ``cypress.config.js`.
-
+Install the [Symfony CLI][3] and the HTTPS CA if you haven't already:
 
 ```bash
-npm install cypress platform --save-dev
-cp vendor/contao/contao/cypress.config.dev.js ./cypress.config.js
+symfony server:ca:install
 ```
 
-Run e2e tests without ui.
+Install Cypress:
 
 ```bash
-npx cypress run
+yarn install
+composer bin cypress install
 ```
 
-Run e2e tests with Cypress test suite.
+Run the end-to-end tests without UI:
 
 ```bash
-npx cypress open
+composer run cypress
+```
+
+Run the end-to-end tests with the Cypress test suite:
+
+```bash
+composer run cypress-ui
 ```
 
 ## License
@@ -152,8 +157,9 @@ Contao is licensed under the terms of the LGPLv3.
 
 ## Getting support
 
-Visit the [support page][3] to learn about the available support options.
+Visit the [support page][4] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://to.contao.org/support
+[3]: https://symfony.com/download#step-1-install-symfony-cli
+[4]: https://to.contao.org/support
