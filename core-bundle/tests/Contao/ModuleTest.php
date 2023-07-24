@@ -146,7 +146,7 @@ class ModuleTest extends TestCase
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('objInstance');
-        $property->setValue($database);
+        $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());
     }
