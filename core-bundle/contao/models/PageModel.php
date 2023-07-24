@@ -1086,7 +1086,7 @@ class PageModel extends Model
 		$objRouter = System::getContainer()->get('router');
 		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
-		if (is_array($strParams))
+		if (\is_array($strParams))
 		{
 			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $page));
 		}
@@ -1130,7 +1130,7 @@ class PageModel extends Model
 
 		$objRouter = System::getContainer()->get('router');
 
-		if (is_array($strParams))
+		if (\is_array($strParams))
 		{
 			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
 		}
@@ -1187,7 +1187,7 @@ class PageModel extends Model
 
 		$objRouter = System::getContainer()->get('router');
 
-		if (is_array($strParams))
+		if (\is_array($strParams))
 		{
 			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
 		}
