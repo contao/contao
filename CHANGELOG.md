@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.28] (2023-07-25)
+
+**Security fixes:**
+
+- Validate unit select menus in widgets ([ausi])
+
 ## [4.13.27] (2023-07-21)
 
 **Fixed issues:**
@@ -761,6 +767,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.28]: https://github.com/contao/contao/releases/tag/4.13.28
 [4.13.27]: https://github.com/contao/contao/releases/tag/4.13.27
 [4.13.26]: https://github.com/contao/contao/releases/tag/4.13.26
 [4.13.25]: https://github.com/contao/contao/releases/tag/4.13.25
