@@ -183,9 +183,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.1">
         <source>Unpublish comment ID %s</source>
+        <target>Verberg reactie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.2">
         <source>Publish comment ID %s</source>
+        <target>Publiceer reactie ID %s</target>
       </trans-unit>
     </body>
   </file>

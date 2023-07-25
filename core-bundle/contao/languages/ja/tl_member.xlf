@@ -267,13 +267,15 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.0">
         <source>Activate/deactivate member</source>
-        <target>メンバーの使用と停止を切り替え</target>
+        <target>メンバーを有効または無効</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.1">
         <source>Deactivate member ID %s</source>
+        <target>ID %sのメンバーを無効化</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.2">
         <source>Activate member ID %s</source>
+        <target>ID %sのメンバーを有効化</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

@@ -15,8 +15,8 @@
  * Dominik Tomasi ([dtomasi](https://github.com/dtomasi))
  * Marco Biedermann ([marcobiedermann](https://github.com/marcobiedermann))
  * Benedict Zinke ([bezin](https://github.com/bezin))
- * Ralf Baussenwein ([rabauss](https://github.com/rabauss))
  * Richard Henkenjohann ([richardhj](https://github.com/richardhj))
+ * Ralf Baussenwein ([rabauss](https://github.com/rabauss))
  * Christoph Wiechert ([psi-4ward](https://github.com/psi-4ward))
  * Severin Glöckle ([SeverinGloeckle](https://github.com/SeverinGloeckle))
  * Dominik Zogg ([dominikzogg](https://github.com/dominikzogg))
@@ -61,6 +61,7 @@
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * kroka ([kroka](https://github.com/kroka))
  * Alex ([Alex](https://github.com/Alex))
+ * Mathias Arzberger ([MDevster](https://github.com/MDevster))
  * Arndt H. Ziegler
  * Christian Romeni ([christianromeni](https://github.com/christianromeni))
  * Defcon0 ([Defcon0](https://github.com/Defcon0))
@@ -71,7 +72,6 @@
  * Sebastian Zoglowek
  * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
  * Benny Born ([bennyborn](https://github.com/bennyborn))
- * Mathias Arzberger ([MDevster](https://github.com/MDevster))
  * Patrick Froch ([eS-IT](https://github.com/eS-IT))
  * Simon Reitinger ([simonreitinger](https://github.com/simonreitinger))
  * Adrián Granado ([playmono](https://github.com/playmono))

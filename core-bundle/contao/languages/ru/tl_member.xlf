@@ -271,9 +271,11 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.1">
         <source>Deactivate member ID %s</source>
+        <target>Деактивировать участника ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.2">
         <source>Activate member ID %s</source>
+        <target>Активировать участника ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

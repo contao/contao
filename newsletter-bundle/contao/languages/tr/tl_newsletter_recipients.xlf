@@ -79,33 +79,35 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.show">
         <source>Show the details of recipient ID %s</source>
-        <target>%s kodlu alıcının ayrıntılarını görüntüle</target>
+        <target>%s kimlikli alıcının ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit">
         <source>Edit recipient ID %s</source>
-        <target>%s kodlu alıcıyı düzenle</target>
+        <target>%s kimlikli alıcıyı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.cut">
         <source>Move recipient ID %s</source>
-        <target>%s kodlu alıcıyı taşı</target>
+        <target>%s kimlikli alıcıyı taşı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.copy">
         <source>Duplicate recipient ID %s</source>
-        <target>%s kodlu alıcıyı kopyala</target>
+        <target>%s kimlikli alıcıyı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.delete">
         <source>Delete recipient ID %s</source>
-        <target>%s kodlu alıcıyı sil</target>
+        <target>%s kimlikli alıcıyı sil</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.0">
         <source>Activate/deactivate recipient</source>
-        <target>Alıcıyı etkinleştir/etkinleştirme</target>
+        <target>Alıcıyı etkinleştir/etkisizleştir</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.1">
         <source>Deactivate recipient ID %s</source>
+        <target>%s kimlikli alıcıyı etkisizleştir</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.2">
         <source>Activate recipient ID %s</source>
+        <target>%s kimlikli alıcıyı etkinleştir</target>
       </trans-unit>
     </body>
   </file>

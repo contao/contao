@@ -159,9 +159,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Unpublish question ID %s</source>
+        <target>Отменить публикацию вопроса ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
+        <target>Опубликовать вопрос ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

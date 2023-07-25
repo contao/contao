@@ -391,9 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Publish event ID %s</source>
+        <target>Опубликовать событие ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.2">
         <source>Unpublish event ID %s</source>
+        <target>Отменить публикацию события ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>

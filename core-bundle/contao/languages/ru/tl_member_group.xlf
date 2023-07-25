@@ -87,12 +87,15 @@
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.0">
         <source>Activate/deactivate member group</source>
+        <target>Активировать/деактивировать группу участников</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.1">
         <source>Deactivate member group ID %s</source>
+        <target>Деактивировать группу участников ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.2">
         <source>Activate member group ID %s</source>
+        <target>Активировать группу участников ID %s</target>
       </trans-unit>
     </body>
   </file>

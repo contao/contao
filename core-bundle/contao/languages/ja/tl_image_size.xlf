@@ -79,15 +79,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
+        <target>著作権のメタデータを保存</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
+        <target>著作権に関する画像のメタデータのフィールド(EXIF、IPTC、XMP)を保存します。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.0">
         <source>Metadata fields</source>
+        <target>メタデータのフィールド</target>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.1">
         <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
+        <target>保存するメタデータのフィールドを選択できます。&lt;code&gt;contao.image.preserve_metadata&lt;/code&gt;の構成を初期値とします。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -99,9 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.0">
         <source>Image quality</source>
+        <target>画像の品質</target>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
+        <target>オプションで画像圧縮の品質を0(最低の品質)と100(最大の品質)の間で指定します。空にした場合はシステム全体の設定を適用します。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -133,6 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.metadata_legend">
         <source>Metadata settings</source>
+        <target>メタデータの設定</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

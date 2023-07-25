@@ -79,15 +79,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
+        <target>Telif hakkı üst bilgisi korunsun</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Bu seçenek etkinleştirildiğinde, telif hakkı ile ilgili üst veri alanları korunur (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.0">
         <source>Metadata fields</source>
+        <target>Üst veri alanları</target>
       </trans-unit>
       <trans-unit id="tl_image_size.metadata.1">
         <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
+        <target>Burada hangi üst veri alanlarının korunacağını seçebilirsiniz. Varsayılan olarak &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; yapılandırması.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -99,9 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.0">
         <source>Image quality</source>
+        <target>Görsel kalitesi</target>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
+        <target>0 (en düşük kalite) ile 100 (en yüksek kalite) arasında isteğe bağlı görüntü sıkıştırma kalitesi. Boş bırakılırsa, sistem genel yapılandırmasındaki ayar uygulanır.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -133,6 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.metadata_legend">
         <source>Metadata settings</source>
+        <target>Üst veri ayarları</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
@@ -172,27 +179,27 @@
       </trans-unit>
       <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli görsel boyutunun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
-        <target>%s kodlu görsel boyutunu düzenle</target>
+        <target>%s kimlikli görsel boyutunu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.children">
         <source>Edit the media queries of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ortam sorgularını düzenle</target>
+        <target>%s kimlikli görsel boyutunun ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
-        <target>%s kodlu görsel boyutunu taşı</target>
+        <target>%s kimlikli görsel boyutunu taşı</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
-        <target>%s kodlu görsel boyutunu kopyala</target>
+        <target>%s kimlikli görsel boyutunu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
-        <target>%s kodlu görsel boyutunu sil</target>
+        <target>%s kimlikli görsel boyutunu sil</target>
       </trans-unit>
     </body>
   </file>

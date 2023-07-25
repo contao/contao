@@ -215,9 +215,11 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Unpublish article ID %s</source>
+        <target>ID %sのアーティクルを非公開</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.2">
         <source>Publish article ID %s</source>
+        <target>ID %sのアーティクルを公開</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
