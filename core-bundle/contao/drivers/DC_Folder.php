@@ -2667,7 +2667,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			// Add the current folder
 			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
-			$return .= Image::getHtml($folderImg, $folderAlt) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
+			$strFolderLabel = '<strong>' . $strFolderNameEncoded . '</strong>';
+
+			if ($this->isMounted($currentFolder))
+			{
+				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolderLabel . '</a>';
+			}
+
+			$return .= Image::getHtml($folderImg, $folderAlt) . ' ' . $strFolderLabel . '</div> <div class="tl_right">';
 
 			if ($this->isMounted($currentFolder))
 			{
