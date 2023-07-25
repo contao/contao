@@ -419,7 +419,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			// Show an empty tree if there are no search results
 		}
-		elseif (BackendUser::getInstance()->isAdmin)
+		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
 			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
 		}
