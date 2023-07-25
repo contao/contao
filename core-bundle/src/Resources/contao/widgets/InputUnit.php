@@ -33,12 +33,6 @@ class InputUnit extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
-	 * Units
-	 * @var array
-	 */
-	protected $arrUnits = array();
-
-	/**
 	 * Add specific attributes
 	 *
 	 * @param string $strKey
@@ -72,7 +66,7 @@ class InputUnit extends Widget
 				break;
 
 			case 'options':
-				$this->arrUnits = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -82,8 +76,6 @@ class InputUnit extends Widget
 	}
 
 	/**
-	 * Do not validate unit fields
-	 *
 	 * @param mixed $varInput
 	 *
 	 * @return mixed
@@ -92,7 +84,15 @@ class InputUnit extends Widget
 	{
 		foreach ($varInput as $k=>$v)
 		{
-			if ($k != 'unit')
+			if ($k == 'unit')
+			{
+				if (!$this->isValidOption($v))
+				{
+					$varInput[$k] = '';
+					$this->addError($GLOBALS['TL_LANG']['ERR']['invalid']);
+				}
+			}
+			else
 			{
 				$varInput[$k] = parent::validator($v);
 			}
@@ -132,7 +132,7 @@ class InputUnit extends Widget
 	{
 		$arrUnits = array();
 
-		foreach ($this->arrUnits as $arrUnit)
+		foreach ($this->arrOptions as $arrUnit)
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
