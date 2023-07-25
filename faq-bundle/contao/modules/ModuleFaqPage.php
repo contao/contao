@@ -131,8 +131,11 @@ class ModuleFaqPage extends Module
 
 			// Order by PID
 			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
-			$arrFaqs[$objFaq->pid]['headline'] = $objPid->headline;
-			$arrFaqs[$objFaq->pid]['title'] = $objPid->title;
+
+			$arrFaqs[$objFaq->pid] = array(
+				...$objPid->row(),
+				'items' => $arrFaqs[$objFaq->pid]['items']
+			);
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}

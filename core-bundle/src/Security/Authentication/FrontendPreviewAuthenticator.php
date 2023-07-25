@@ -13,11 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
@@ -32,6 +35,8 @@ class FrontendPreviewAuthenticator
      */
     public function __construct(
         private readonly Security $security,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TokenChecker $tokenChecker,
         private readonly RequestStack $requestStack,
         private readonly UserProviderInterface $userProvider,
         private readonly LoggerInterface|null $logger = null,
@@ -48,13 +53,12 @@ class FrontendPreviewAuthenticator
 
         $token = new UsernamePasswordToken($user, 'contao_frontend', $user->getRoles());
 
-        try {
-            $session = $this->requestStack->getSession();
-        } catch (SessionNotFoundException) {
+        $this->updateToken($token);
+
+        if (!$session = $this->getSession()) {
             return false;
         }
 
-        $session->set('_security_contao_frontend', serialize($token));
         $session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
 
         return true;
@@ -62,9 +66,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendGuest(bool $showUnpublished, int|null $previewLinkId = null): bool
     {
-        try {
-            $session = $this->requestStack->getSession();
-        } catch (SessionNotFoundException) {
+        if (!$session = $this->getSession()) {
             return false;
         }
 
@@ -78,20 +80,34 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        try {
-            $session = $this->requestStack->getSession();
-        } catch (SessionNotFoundException) {
+        $this->updateToken(null);
+
+        if (
+            (!$session = $this->getSession())
+            || !$session->isStarted()
+            || (!$session->has('_security_contao_frontend') && !$session->has(self::SESSION_NAME))
+        ) {
             return false;
         }
 
-        if (!$session->isStarted() || (!$session->has('_security_contao_frontend') && !$session->has(self::SESSION_NAME))) {
-            return false;
-        }
-
-        $session->remove('_security_contao_frontend');
         $session->remove(self::SESSION_NAME);
 
         return true;
+    }
+
+    /**
+     * Replaces the current token if the frontend firewall is active.
+     * Otherwise, the token is stored in the session.
+     */
+    private function updateToken(UsernamePasswordToken|null $token): void
+    {
+        if ($this->tokenChecker->isFrontendFirewall()) {
+            $this->tokenStorage->setToken($token);
+        } elseif (null === $token) {
+            $this->getSession()?->remove('_security_contao_frontend');
+        } else {
+            $this->getSession()?->set('_security_contao_frontend', serialize($token));
+        }
     }
 
     /**
@@ -123,5 +139,14 @@ class FrontendPreviewAuthenticator
         }
 
         return $frontendUser;
+    }
+
+    private function getSession(): SessionInterface|null
+    {
+        try {
+            return $this->requestStack->getSession();
+        } catch (SessionNotFoundException) {
+            return null;
+        }
     }
 }
