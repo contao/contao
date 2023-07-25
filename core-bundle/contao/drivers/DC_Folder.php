@@ -419,6 +419,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			// Show an empty tree if there are no search results
 		}
+		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
+		{
+			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
+		}
 		else
 		{
 			$topMostVisibleRootTrails = $this->eliminateNestedPaths($this->visibleRootTrails);
@@ -3073,13 +3077,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			foreach ($this->arrFilemounts as $filemount)
 			{
 				$visibleRootTrails = array(...$visibleRootTrails, ...$this->getParentFilemounts($filemount));
-			}
-
-			// If there are no $visibleRootTrails (= no file mounts = everything should
-			// be visible), we have to fall back to all top level folders in case the user is an administrator
-			if (array() === $visibleRootTrails && BackendUser::getInstance()->isAdmin)
-			{
-				$visibleRootTrails = array_map(fn (string $folder) => $this->strUploadPath . '/' . $folder, Folder::scan($this->strUploadPath));
 			}
 		}
 
