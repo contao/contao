@@ -392,7 +392,10 @@ class Newsletter extends Backend
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+		if (isset($arrRecipient['recipient']))
+		{
+			$objEmail->addHeader('List-Unsubscribe', '<mailto:'.$objNewsletter->sender.'?subject=Unsubscribe%20ID%20'.$arrRecipient['recipient'].'%20Channel%20'.$objNewsletter->pid.'>');
+		}
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
