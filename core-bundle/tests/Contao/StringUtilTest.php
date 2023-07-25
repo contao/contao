@@ -12,16 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\FilesModel;
 use Contao\Input;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -49,7 +62,18 @@ class StringUtilTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, System::class]);
+        $this->resetStaticProperties([
+            Input::class,
+            System::class,
+            Registry::class,
+            Model::class,
+            Config::class,
+            DcaLoader::class,
+            Database::class,
+            DcaExtractor::class,
+        ]);
+
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
@@ -264,7 +288,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider getRevertInputEncoding
      */
-    public function testRevertInputEncoding(string $source, string $expected = null): void
+    public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request(['value' => $source]));
@@ -291,7 +315,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
 
@@ -548,6 +572,55 @@ class StringUtilTest extends TestCase
                 ],
             ],
             $dereferenced
+        );
+    }
+
+    public function testInsertTagToSrc(): void
+    {
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            // Backwards compatibility with doctrine/dbal < 3.5
+            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $container = System::getContainer();
+        $container->set('database_connection', $connection);
+
+        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+        $container->set('contao.resource_finder', $finder);
+
+        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+        $container->set('contao.resource_locator', $locator);
+
+        $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
+
+        $file = new FilesModel([
+            'id' => 1,
+            'tstamp' => time(),
+            'uuid' => StringUtil::uuidToBin('9e474bae-ce18-11ec-9465-cadae3e5cf5d'),
+            'type' => 'file',
+            'path' => 'files/test.jpg',
+            'extension' => 'jpg',
+            'name' => 'test.jpg',
+        ]);
+
+        Registry::getInstance()->registerAlias($file, 'uuid', $file->uuid);
+
+        $this->assertSame(
+            'Foo <img src="files/test.jpg" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar')
+        );
+
+        $this->assertSame(
+            'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar')
         );
     }
 }
