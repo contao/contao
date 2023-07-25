@@ -147,6 +147,16 @@ class TokenChecker
         return (bool) $preview['showUnpublished'];
     }
 
+    public function isFrontendFirewall(): bool
+    {
+        return self::FRONTEND_FIREWALL === $this->getFirewallContext();
+    }
+
+    public function isBackendFirewall(): bool
+    {
+        return self::BACKEND_FIREWALL === $this->getFirewallContext();
+    }
+
     private function getToken(string $context): TokenInterface|null
     {
         $token = $this->getTokenFromStorage($context);
@@ -168,6 +178,15 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): TokenInterface|null
     {
+        if ($this->getFirewallContext() !== $context) {
+            return null;
+        }
+
+        return $this->tokenStorage->getToken();
+    }
+
+    private function getFirewallContext(): string|null
+    {
         $request = $this->requestStack->getCurrentRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
@@ -176,11 +195,11 @@ class TokenChecker
 
         $config = $this->firewallMap->getFirewallConfig($request);
 
-        if (!$config instanceof FirewallConfig || $config->getContext() !== $context) {
+        if (!$config instanceof FirewallConfig) {
             return null;
         }
 
-        return $this->tokenStorage->getToken();
+        return $config->getContext();
     }
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
