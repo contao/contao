@@ -53,11 +53,12 @@ class FrontendPreviewAuthenticator
 
         $token = new UsernamePasswordToken($user, 'contao_frontend', $user->getRoles());
 
+        $this->updateToken($token);
+
         if (!$session = $this->getSession()) {
             return false;
         }
 
-        $this->updateToken($token);
         $session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
 
         return true;
@@ -79,6 +80,8 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
+        $this->updateToken(null);
+
         if (
             (!$session = $this->getSession())
             || !$session->isStarted()
@@ -87,7 +90,6 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $this->updateToken(null);
         $session->remove(self::SESSION_NAME);
 
         return true;
