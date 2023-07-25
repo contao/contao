@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.42] (2023-07-25)
+
+**Fixed issues:**
+
+- Validate unit select menus in widgets ([ausi])
+
 ## [4.9.41] (2023-05-03)
 
 **Fixed issues:**
@@ -1108,6 +1114,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.42]: https://github.com/contao/contao/releases/tag/4.9.42
 [4.9.41]: https://github.com/contao/contao/releases/tag/4.9.41
 [4.9.40]: https://github.com/contao/contao/releases/tag/4.9.40
 [4.9.39]: https://github.com/contao/contao/releases/tag/4.9.39

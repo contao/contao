@@ -10,7 +10,7 @@
 
 // Core version
 define('VERSION', '4.9');
-define('BUILD', '41');
+define('BUILD', '42');
 define('LONG_TERM_SUPPORT', true);
 
 // Link constants
