@@ -16,16 +16,11 @@
     },
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
-        "watch": "encore dev --watch",
+        "e2e": "cypress/run.sh",
         "build": "encore production --progress",
-        "precypress": "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
-        "cypress": "cypress run --config-file tools/cypress/cypress.config.js",
-        "postcypress": "symfony server:stop --dir=tools/cypress/webspace",
-        "precypress-ui": "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
-        "cypress-ui": "cypress open --config-file tools/cypress/cypress.config.js",
-        "postcypress-ui": "symfony server:stop --dir=tools/cypress/webspace"
+        "dev": "encore dev",
+        "dev-server": "encore dev-server",
+        "watch": "encore dev --watch"
     },
     "browserslist": [
         "defaults"
