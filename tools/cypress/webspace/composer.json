@@ -15,10 +15,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../../../manager-bundle",
-            "options": {
-                "symlink": false
-            }
+            "url": "../../../manager-bundle"
         },
         {
             "type": "path",

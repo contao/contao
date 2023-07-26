@@ -19,17 +19,15 @@ set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
 @ini_set('display_errors', '0');
 
-if (file_exists(__DIR__.'/../autoload.php')) {
-    $projectDir = \dirname(__DIR__, 2);
-} elseif (file_exists(__DIR__.'/../../../autoload.php')) {
-    $projectDir = \dirname(__DIR__, 4);
-} elseif (file_exists(__DIR__.'/../../../../autoload.php')) {
-    $projectDir = \dirname(__DIR__, 5);
-} elseif (false !== ($cwd = getcwd()) && file_exists($cwd.'/vendor/autoload.php')) {
-    $projectDir = $cwd;
-} else {
-    $projectDir = \dirname(__DIR__, 4);
-}
+$cwd = getcwd();
+
+$projectDir = match (true) {
+    false !== $cwd && str_ends_with($cwd, '/tools/cypress/webspace') => $cwd,
+    file_exists(__DIR__.'/../autoload.php') => \dirname(__DIR__, 2),
+    file_exists(__DIR__.'/../../../../autoload.php') => \dirname(__DIR__, 5),
+    false !== $cwd && file_exists($cwd.'/vendor/autoload.php') => $cwd,
+    default => \dirname(__DIR__, 4)
+};
 
 require $projectDir.'/vendor/autoload.php';
 
