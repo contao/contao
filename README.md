@@ -132,23 +132,16 @@ Install the [Symfony CLI][3] and the HTTPS CA if you haven't already:
 symfony server:ca:install
 ```
 
-Install Cypress:
+Install the Node packages:
 
 ```bash
 yarn install
-composer bin cypress install
 ```
 
-Run the end-to-end tests without UI:
+Run the end-to-end tests:
 
 ```bash
-yarn cypress
-```
-
-Run the end-to-end tests with the Cypress test suite:
-
-```bash
-yarn cypress-ui
+yarn e2e [-i]
 ```
 
 ## License
