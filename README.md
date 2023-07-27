@@ -132,16 +132,11 @@ Install the [Symfony CLI][3] and the HTTPS CA if you haven't already:
 symfony server:ca:install
 ```
 
-Install the Node packages:
+Install the Node packages and run the end-to-end tests:
 
 ```bash
 yarn install
-```
-
-Run the end-to-end tests:
-
-```bash
-yarn e2e [-i]
+yarn e2e
 ```
 
 ## License
