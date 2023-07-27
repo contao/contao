@@ -8,15 +8,8 @@ DIR=$(dirname "$(readlink -f "$0")")
 rm -rf "$DIR/webspace/vendor/contao/manager-bundle"
 composer up --working-dir="$DIR/webspace"
 
-# If the -i flag is given, Cypress will open in the interactive GUI. Otherwise,
-# the tests are run from the CLI without the GUI.
-COMMAND="run"
-if [[ ${1-} == "-i" ]]; then
-    COMMAND="open"
-fi
-
 symfony server:start --port=8765 --dir="$DIR/webspace" --daemon
-yarn cypress $COMMAND --config-file "$DIR/cypress.config.js"
+yarn cypress run --config-file "$DIR/cypress.config.js"
 symfony server:stop --dir="$DIR/webspace"
 
 exit 0

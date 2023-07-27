@@ -16,7 +16,7 @@
     },
     "private": true,
     "scripts": {
-        "e2e": "cypress/run.sh",
+        "e2e": "node cypress/run.js",
         "build": "encore production --progress",
         "dev": "encore dev",
         "dev-server": "encore dev-server",
