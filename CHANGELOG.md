@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.10] (2023-07-25)
+
+**Security fixes:**
+
+- Validate unit select menus in widgets ([ausi])
+
 ## [5.1.9] (2023-07-10)
 
 **Fixed issues:**
@@ -169,6 +175,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.10]: https://github.com/contao/contao/releases/tag/5.1.10
 [5.1.9]: https://github.com/contao/contao/releases/tag/5.1.9
 [5.1.8]: https://github.com/contao/contao/releases/tag/5.1.8
 [5.1.7]: https://github.com/contao/contao/releases/tag/5.1.7
