@@ -9,23 +9,17 @@
         "cypress": "^12.17.0",
         "gulp": "^4.0.2",
         "gulp-svgo": "^2.2.1",
-        "platform": "^1.3.6",
         "pump": "^3.0",
         "webpack": "^5.75.0",
         "webpack-cli": "^5.0.1"
     },
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
-        "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "precypress": "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
-        "cypress": "cypress run --config-file tools/cypress/cypress.config.js",
-        "postcypress": "symfony server:stop --dir=tools/cypress/webspace",
-        "precypress-ui": "symfony server:start --port=8765 --dir=tools/cypress/webspace --daemon",
-        "cypress-ui": "cypress open --config-file tools/cypress/cypress.config.js",
-        "postcypress-ui": "symfony server:stop --dir=tools/cypress/webspace"
+        "watch": "encore dev --watch",
+        "pree2e-tests": "rm -rf cypress/webspace/vendor/contao/manager-bundle && composer up --working-dir=cypress/webspace",
+        "e2e-tests": "symfony server:start --port=8765 --dir=cypress/webspace --daemon && yarn cypress run",
+        "poste2e-tests": "symfony server:stop --dir=cypress/webspace"
     },
     "browserslist": [
         "defaults"
