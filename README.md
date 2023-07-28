@@ -62,7 +62,7 @@ composer update
 ```
 
 Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
-running `contao:setup` on the command line.
+running `vendor/bin/contao-setup` on the command line.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
 from within your application.
@@ -124,19 +124,19 @@ Then run the functional tests via the `run` command:
 composer run functional-tests
 ```
 
-## End-to-end tests with Cypress
+## End-to-end tests
 
-Install the [Symfony CLI][3] and the HTTPS CA if you haven't already:
-
-```bash
-symfony server:ca:install
-```
-
-Install the Node packages and run the end-to-end tests:
+Before you can run the end-to-end tests, you have to install the [Symfony Local Web Server][3] with TLS support. Then
+install the required Node packages:
 
 ```bash
 yarn install
-yarn e2e
+```
+
+Then run the end-to-end tests:
+
+```bash
+yarn run e2e-tests
 ```
 
 ## License
@@ -149,5 +149,5 @@ Visit the [support page][4] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://symfony.com/download#step-1-install-symfony-cli
+[3]: https://symfony.com/doc/current/setup/symfony_server.html
 [4]: https://to.contao.org/support
