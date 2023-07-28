@@ -174,7 +174,7 @@ class BackendFavoritesListener
 
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $requestUri, $ref, $user, $node['id']);
+            $this->buildTree($item, $factory, $requestUri, $ref, $user, (int) $node['id']);
         }
     }
 
