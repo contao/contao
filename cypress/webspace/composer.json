@@ -15,42 +15,42 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../../../manager-bundle",
+            "url": "../../manager-bundle",
             "options": {
                 "symlink": false
             }
         },
         {
             "type": "path",
-            "url": "../../../core-bundle"
+            "url": "../../core-bundle"
         },
         {
             "type": "path",
-            "url": "../../../calendar-bundle"
+            "url": "../../calendar-bundle"
         },
         {
             "type": "path",
-            "url": "../../../comments-bundle"
+            "url": "../../comments-bundle"
         },
         {
             "type": "path",
-            "url": "../../../faq-bundle"
+            "url": "../../faq-bundle"
         },
         {
             "type": "path",
-            "url": "../../../listing-bundle"
+            "url": "../../listing-bundle"
         },
         {
             "type": "path",
-            "url": "../../../maker-bundle"
+            "url": "../../maker-bundle"
         },
         {
             "type": "path",
-            "url": "../../../news-bundle"
+            "url": "../../news-bundle"
         },
         {
             "type": "path",
-            "url": "../../../newsletter-bundle"
+            "url": "../../newsletter-bundle"
         }
     ],
     "minimum-stability": "dev",
