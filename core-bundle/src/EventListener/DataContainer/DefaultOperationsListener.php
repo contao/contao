@@ -227,6 +227,15 @@ class DefaultOperationsListener
         unset($new['id']);
         $new['tstamp'] = 0;
 
+        // Unset the PID field for the copy operation (act=paste&mode=copy), so a voter can differentiate
+        // between the copy operation (without PID) and the paste operation (with new target PID)
+        if (
+            DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)
+            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
+        ) {
+            unset($new['pid'], $new['sorting']);
+        }
+
         return new CreateAction($table, $new);
     }
 
