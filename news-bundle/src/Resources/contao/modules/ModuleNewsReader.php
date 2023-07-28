@@ -125,7 +125,15 @@ class ModuleNewsReader extends ModuleNews
 			case 'external':
 				if ($objArticle->url)
 				{
-					throw new RedirectResponseException($objArticle->url, 301);
+					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
+
+					// Make the URL absolute
+					if (!preg_match('@^https?://@i', $url))
+					{
+						$url = Environment::get('base') . ltrim($url, '/');
+					}
+
+					throw new RedirectResponseException($url, 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
