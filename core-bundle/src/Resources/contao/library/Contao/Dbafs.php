@@ -368,7 +368,7 @@ class Dbafs
 					/** @var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
-					$objNew->pid    = $arrMapper[$objFiles->uuid] ?? $objNewFile->uuid;
+					$objNew->pid    = $arrMapper[$objFiles->pid] ?? $objNewFile->uuid;
 					$objNew->tstamp = time();
 					$objNew->uuid   = $objDatabase->getUuid();
 					$objNew->path   = str_replace($strSource . '/', $strDestination . '/', $objFiles->path);
