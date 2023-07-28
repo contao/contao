@@ -65,6 +65,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($collection)
         ;
 
+        $framework = $this->mockContaoFramework([NewsModel::class => $newsModel]);
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
 
@@ -79,7 +80,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
-        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
+        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onFetchArticlesForFeed($event);
 
         $this->assertSame($collection, $event->getArticles());
@@ -254,7 +255,16 @@ class NewsFeedListenerTest extends ContaoTestCase
 
     public function getFeedSource(): \Generator
     {
-        yield 'Teaser' => ['source_teaser', ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'], ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;']];
-        yield 'Text' => ['source_text', ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'], ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;']];
+        yield 'Teaser' => [
+            'source_teaser',
+            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
+            ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;'],
+        ];
+
+        yield 'Text' => [
+            'source_text',
+            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
+            ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;'],
+        ];
     }
 }

@@ -42,8 +42,11 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         'rss' => '.xml',
     ];
 
-    public function __construct(private readonly ContaoContext $contaoContext, private readonly Specification $specification, private readonly string $charset)
-    {
+    public function __construct(
+        private readonly ContaoContext $contaoContext,
+        private readonly Specification $specification,
+        private readonly string $charset,
+    ) {
     }
 
     public function __invoke(Request $request, PageModel $pageModel): Response
