@@ -60,6 +60,7 @@ class FavoritesVoterTest extends TestCase
 
         $token = $this->createMock(TokenInterface::class);
 
+        // Unsupported attribute
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
@@ -69,8 +70,10 @@ class FavoritesVoterTest extends TestCase
             )
         );
 
+        // Permission granted, so abstain! Our voters either deny or abstain,
+        // they must never grant access (see #6201).
         $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
+            VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
@@ -78,6 +81,7 @@ class FavoritesVoterTest extends TestCase
             )
         );
 
+        // Permission denied
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
