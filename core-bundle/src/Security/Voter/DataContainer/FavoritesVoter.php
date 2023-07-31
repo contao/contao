@@ -59,7 +59,9 @@ class FavoritesVoter implements CacheableVoterInterface
                 default => false,
             };
 
-            return $isGranted ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+            if (!$isGranted) {
+                return self::ACCESS_DENIED;
+            }
         }
 
         return self::ACCESS_ABSTAIN;

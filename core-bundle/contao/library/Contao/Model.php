@@ -597,7 +597,7 @@ abstract class Model
 
 			if (static::$strPk == 'id')
 			{
-				$this->id = $stmt->insertId;
+				$this->id = (int) $stmt->insertId;
 			}
 
 			$this->postSave(self::INSERT);
