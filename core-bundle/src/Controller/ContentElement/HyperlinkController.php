@@ -40,7 +40,7 @@ class HyperlinkController extends AbstractContentElementController
 
         $linkAttributes = (new HtmlAttributes())
             ->set('href', $href)
-            ->setIfExists('title', $model->linkTitle)
+            ->setIfExists('title', $model->titleText)
             ->setIfExists('data-lightbox', $model->rel)
         ;
 
