@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "news reader".
@@ -126,12 +127,7 @@ class ModuleNewsReader extends ModuleNews
 				if ($objArticle->url)
 				{
 					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
-
-					// Make the URL absolute
-					if (!preg_match('@^https?://@i', $url))
-					{
-						$url = Environment::get('base') . ltrim($url, '/');
-					}
+					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
 
 					throw new RedirectResponseException($url, 301);
 				}
