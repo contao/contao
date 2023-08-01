@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_member.city.1">
         <source>Please enter the name of the city.</source>
+        <target>Vul a.u.b. de naam van de stad in.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Please enter the name of the state.</source>
+        <target>Vul a.u.b. de naam van de provincie in.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>
@@ -180,16 +182,16 @@
         <target>Activeer op</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het account vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het account voor een bepaalde datum/tijd actief is, kunt u dit hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>Deactiveer op</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het account na een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het account na een bepaalde datum/tijd actief wordt, kunt u dit hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>

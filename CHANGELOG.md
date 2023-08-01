@@ -2,11 +2,25 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.1.11] (2023-08-01)
+
+**Fixed issues:**
+
+- [#6263] Ensure absolute URLs in the PageRedirect class ([leofeyer])
+- [#6253] Correctly set the link title in the hyperlink controller ([leofeyer])
+- [#6254] Ensure the PID in the favorites listener is an integer ([leofeyer])
+- [#6201] Favorites voter must not grant access ([aschempp])
+- [#6210] Decode HTML entities in feed item titles ([bezin])
+- [#6183] Unset PID for copy button callbacks ([aschempp])
+- [#6230] Set the correct type on model ID ([aschempp])
+- [#6225] Skip type error when trying to assign DCA label to string ([aschempp])
+- [#6242] Replace the token in the storage for front end authentication ([ausi])
+
 ## [5.1.10] (2023-07-25)
 
 **Security fixes:**
 
-- Validate unit select menus in widgets ([ausi])
+- [CVE-2023-36806]: Cross site scripting in widgets with units
 
 ## [5.1.9] (2023-07-10)
 
@@ -51,6 +65,10 @@ This project adheres to [Semantic Versioning].
 
 ## [5.1.4] (2023-04-25)
 
+**Security fixes:**
+
+- [CVE-2023-29200]: Directory traversal in the file manager
+
 **Fixed issues:**
 
 - [#5988] Harden the file manager against directory traversal attacks ([ausi])
@@ -64,7 +82,7 @@ This project adheres to [Semantic Versioning].
 - [#5946] Load the default language when generating the calendar feeds ([leofeyer])
 - [#5960] Prevent double slashes in version URLs ([leofeyer])
 - [#5949] Add the "adjustDca" load callback to tl_news_archive again ([leofeyer])
-- [#5941] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5941] Do not treat subdirectories of Twig namespace roots as template paths ([m-vo])
 - [#5922] Correctly pass null values in findBy queries ([ausi])
 
 ## [5.1.2] (2023-04-04)
@@ -175,6 +193,7 @@ This project adheres to [Semantic Versioning].
 - [#5593] Fix the `aria-hidden` attribute in the tips.js file ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.1.11]: https://github.com/contao/contao/releases/tag/5.1.11
 [5.1.10]: https://github.com/contao/contao/releases/tag/5.1.10
 [5.1.9]: https://github.com/contao/contao/releases/tag/5.1.9
 [5.1.8]: https://github.com/contao/contao/releases/tag/5.1.8
@@ -189,6 +208,8 @@ This project adheres to [Semantic Versioning].
 [5.1.0-RC3]: https://github.com/contao/contao/releases/tag/5.1.0-RC3
 [5.1.0-RC2]: https://github.com/contao/contao/releases/tag/5.1.0-RC2
 [5.1.0-RC1]: https://github.com/contao/contao/releases/tag/5.1.0-RC1
+[CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
+[CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
@@ -304,3 +325,12 @@ This project adheres to [Semantic Versioning].
 [#6173]: https://github.com/contao/contao/pull/6173
 [#6177]: https://github.com/contao/contao/pull/6177
 [#6178]: https://github.com/contao/contao/pull/6178
+[#6183]: https://github.com/contao/contao/pull/6183
+[#6201]: https://github.com/contao/contao/pull/6201
+[#6210]: https://github.com/contao/contao/pull/6210
+[#6225]: https://github.com/contao/contao/pull/6225
+[#6230]: https://github.com/contao/contao/pull/6230
+[#6242]: https://github.com/contao/contao/pull/6242
+[#6253]: https://github.com/contao/contao/pull/6253
+[#6254]: https://github.com/contao/contao/pull/6254
+[#6263]: https://github.com/contao/contao/pull/6263

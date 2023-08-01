@@ -78,7 +78,7 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>##domain## web sitesindeki şu kanallara abone oldunuz: 
+        <target>##domain## sitesindeki şu kanallara abone oldunuz: 
 
 ##channels##
 
@@ -100,7 +100,7 @@ Abonelik başvurusunda bulunmadıysanız bu e-postayı yok sayabilirsiniz.
 
 ##channels##
 </source>
-        <target>##domain## web sitesindeki şu kanalların aboneliğinden ayrıldınız:
+        <target>##domain## sitesindeki şu kanalların aboneliğinden ayrıldınız:
 
 ##channels##
 </target>

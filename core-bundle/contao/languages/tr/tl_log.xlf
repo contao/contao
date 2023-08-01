@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
-        <target>Web tarayıcı</target>
+        <target>Tarayıcı</target>
       </trans-unit>
       <trans-unit id="tl_log.browser.1">
         <source>Name of the user agent</source>
@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
-        <target>Sayfa kodu</target>
+        <target>Sayfa kimliği</target>
       </trans-unit>
       <trans-unit id="tl_log.page.1">
         <source>The ID of the page</source>
-        <target>Sayfanın kodu</target>
+        <target>Sayfanın kimliği</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>

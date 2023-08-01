@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
-        <target>Tasarımcı</target>
+        <target>Yazar</target>
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
@@ -283,35 +283,35 @@
       </trans-unit>
       <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
-        <target>%s kodlu haberin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli haberin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
-        <target>%s kodlu haberi düzenle</target>
+        <target>%s kimlikli haberi düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news.children">
         <source>Edit the content elements of news item ID %s</source>
-        <target>%s kodlu haberin içerik bileşenlerini düzenle</target>
+        <target>%s kimlikli haberin içerik bileşenlerini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
-        <target>%s kodlu haberi kopyala</target>
+        <target>%s kimlikli haberi kopyala</target>
       </trans-unit>
       <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
-        <target>%s kodlu haberi taşı</target>
+        <target>%s kimlikli haberi taşı</target>
       </trans-unit>
       <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
-        <target>%s kodlu haberi sil</target>
+        <target>%s kimlikli haberi sil</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
-        <target>%s kodlu haberi yayınla/yayından kaldır</target>
+        <target>%s kimlikli haberi yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
-        <target>%s kodlu haberi öne çıkarılmışlara ekle/kaldır</target>
+        <target>%s kimlikli haberi öne çıkarılmışlara ekle/kaldır</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

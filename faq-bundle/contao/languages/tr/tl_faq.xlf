@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.alias.1">
         <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
-        <target>Sık sorulan soru kısaltması SSS sayısal kodu olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Sık sorulan soru kısaltması SSS sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_faq.author.0">
         <source>Author</source>
-        <target>Tasarımcı</target>
+        <target>Yazar</target>
       </trans-unit>
       <trans-unit id="tl_faq.author.1">
         <source>Here you can change the author of the FAQ.</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.published.1">
         <source>Make the FAQ publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesi web sitesinde herkese açık olarak yayınlanır.</target>
+        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesi sitede herkese açık olarak yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_faq.title_legend">
         <source>Title and author</source>
@@ -135,27 +135,27 @@
       </trans-unit>
       <trans-unit id="tl_faq.show">
         <source>Show the details of question ID %s</source>
-        <target>%s kodlu sorunun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli sorunun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_faq.edit">
         <source>Edit question ID %s</source>
-        <target>%s kodlu soruyu düzenle</target>
+        <target>%s kimlikli soruyu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_faq.copy">
         <source>Duplicate question ID %s</source>
-        <target>%s kodlu soruyu kopyala</target>
+        <target>%s kimlikli soruyu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
-        <target>%s kodlu soruyu taşı</target>
+        <target>%s kimlikli soruyu taşı</target>
       </trans-unit>
       <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
-        <target>%s kodlu soruyu sil</target>
+        <target>%s kimlikli soruyu sil</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle">
         <source>Publish/unpublish question ID %s</source>
-        <target>%s kodlu soruyu yayınla/yayından kaldır</target>
+        <target>%s kimlikli soruyu yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.1">
         <source>Paste after question ID %s</source>
-        <target>%s kodlu sorudan sonra yapıştır</target>
+        <target>%s kimlikli sorudan sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
-        <target>%s kodlu sorudan sonra yeni bir soru ekle</target>
+        <target>%s kimlikli sorudan sonra yeni bir soru ekle</target>
       </trans-unit>
     </body>
   </file>

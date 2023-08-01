@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.parent.0">
         <source>Parent ID</source>
-        <target>Üst öge kodu</target>
+        <target>Üst öge kimliği</target>
       </trans-unit>
       <trans-unit id="tl_comments.parent.1">
         <source>The associated record.</source>
@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
-        <target>Web sitesi</target>
+        <target>Site</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.1">
         <source>Here you can enter a website address.</source>
-        <target>Buraya bir web sitesi adresi yazabilirsiniz.</target>
+        <target>Buraya bir site adresi yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.member.0">
         <source>Member</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
-        <target>Tasarımcı</target>
+        <target>Yazar</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment_legend">
         <source>Comment</source>
@@ -167,19 +167,19 @@
       </trans-unit>
       <trans-unit id="tl_comments.show">
         <source>Show the details of comment ID %s</source>
-        <target>%s kodlu yorumun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli yorumun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
-        <target>%s kodlu yorumu düzenle</target>
+        <target>%s kimlikli yorumu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_comments.delete">
         <source>Delete comment ID %s</source>
-        <target>%s kodlu yorumu sil</target>
+        <target>%s kimlikli yorumu sil</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle">
         <source>Publish/unpublish comment ID %s</source>
-        <target>%s kodlu yorumu yayınla/yayından kaldır</target>
+        <target>%s kimlikli yorumu yayınla/yayından kaldır</target>
       </trans-unit>
     </body>
   </file>

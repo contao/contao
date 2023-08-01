@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
-        <target>&quot;%s&quot; adres ön eki aynı etki alanı adıyla başka bir web sitesi kök sayfasında kullanılmış!</target>
+        <target>&quot;%s&quot; adres ön eki aynı etki alanı adıyla başka bir site kök sayfasında kullanılmış!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
-        <target>Kısaltma &quot;%s&quot; sayfasıyla çakışıyor (%s kodlu)!</target>
+        <target>Kısaltma &quot;%s&quot; sayfasıyla çakışıyor (%s kimlikli)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -251,7 +251,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
-        <target>Seçiminizde geçersiz sayfa kodları var!</target>
+        <target>Seçiminizde geçersiz sayfa kimlikleri var!</target>
       </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
@@ -263,23 +263,23 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
-        <target>Açık bir DNS ayarı olmayan etkin web sitesi kök sayfalarının hiçbiri için varsayılan dil seçeneği ayarlanmamış.</target>
+        <target>Açık bir DNS ayarı olmayan etkin site kök sayfalarının hiçbiri için varsayılan dil seçeneği ayarlanmamış.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
-        <target>&lt;strong&gt;%s&lt;/strong&gt; etkin web sitesi kök sayfalarının hiçbiri için varsayılan dil seçeneği ayarlanmamış.</target>
+        <target>&lt;strong&gt;%s&lt;/strong&gt; etkin site kök sayfalarının hiçbiri için varsayılan dil seçeneği ayarlanmamış.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
-        <target>Her etki alanı için varsayılan dil olarak yalnızca bir web sitesi kök sayfası tanımlayabilirsiniz.</target>
+        <target>Her etki alanı için varsayılan dil olarak yalnızca bir site kök sayfası tanımlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-        <target>En üst düzeydeki sayfalar web sitesi kök sayfaları olmalıdır!</target>
+        <target>En üst düzeydeki sayfalar site kök sayfaları olmalıdır!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
-        <target>Web sitesi kök sayfaları olmayan en üst düzey sayfalar var.</target>
+        <target>Site yapısında site kök sayfaları olmayan en üst düzey sayfalar var.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -287,7 +287,7 @@
       </trans-unit>
       <trans-unit id="ERR.formCookieWarning">
         <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
-        <target>Web tarayıcınızda çerezleri devre dışı bırakmış olduğunuzdan bu formu gönderemeyeceksiniz.</target>
+        <target>Tarayıcınızda çerezleri etkisizleştirmiş olduğunuzdan bu formu gönderemeyeceksiniz.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
-        <target>%s için bir veritabanı kaydı bulunamadı. Lütfen dosya sistemini eşitleyin.</target>
+        <target>%s için bir veri tabanı kaydı bulunamadı. Lütfen dosya sistemini eşitleyin.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
-        <target>Lütfen hem başlığı hem de kodu yazın!</target>
+        <target>Lütfen hem başlığı hem de kimliği yazın!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
-        <target>&quot;%s&quot; kodlu düzen bölümü zaten var!</target>
+        <target>&quot;%s&quot; kimlikli düzen bölümü zaten var!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
@@ -359,7 +359,7 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
-        <target>Artık geçerli veritabanı yapısıyla uyumlu olmadığından %d sürümü geri yüklenemedi. Lütfen verileri el ile geri yükleyin.</target>
+        <target>Artık geçerli veri tabanı yapısıyla uyumlu olmadığından %d sürümü geri yüklenemedi. Lütfen verileri el ile geri yükleyin.</target>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
@@ -523,7 +523,7 @@
       </trans-unit>
       <trans-unit id="CTE.hyperlink.1">
         <source>Generates a link to another website.</source>
-        <target>Başka bir web sitesine bir bağlantı oluşturur.</target>
+        <target>Başka bir siteye bir bağlantı oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.0">
         <source>Top link</source>
@@ -775,7 +775,7 @@
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
-        <target>Bu sayfa türü ziyaretcileri otomatik olarak bir dış web sitesine yönlendirir. Bir hiperlink bağlantısı gibi çalışır.</target>
+        <target>Bu sayfa türü ziyaretcileri otomatik olarak bir dış siteye yönlendirir. Bir hiperlink bağlantısı gibi çalışır.</target>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
@@ -787,11 +787,11 @@
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
-        <target>Web sitesi kökü</target>
+        <target>Site kökü</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
-        <target>Bu sayfa türü yeni bir web sitesinin başlangıç noktasını oluşturur.</target>
+        <target>Bu sayfa türü site yapısı içindeki yeni bir sitenin başlangıç noktasını oluşturur.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -831,7 +831,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
-        <target>Bir web sitesi kök sayfası bakım kipindeyken, yapılan tüm isteklere 503 hata sayfası gösterilir.</target>
+        <target>Bir site kök sayfası bakım kipindeyken, yapılan tüm isteklere 503 hata sayfası gösterilir.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -863,7 +863,7 @@
       </trans-unit>
       <trans-unit id="FOP.f6">
         <source>Synchronize the file system with the database</source>
-        <target>Dosya sistemini veritabanı ile eşitleme</target>
+        <target>Dosya sistemini veri tabanı ile eşitle</target>
       </trans-unit>
       <trans-unit id="CHMOD.editpage">
         <source>Edit page</source>
@@ -1131,7 +1131,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Lütfen bir web adresi (http://...), bir e-posta adresi (mailto:...) ya da bir eklenebilecek kod imi yazın.</target>
+        <target>Lütfen bir site adresi (http://...), bir e-posta adresi (mailto:...) ya da bir eklenebilecek kod imi yazın.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -1331,7 +1331,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
-        <target>Modülü etkinleştir/devre dışı bırak</target>
+        <target>Modülü etkinleştir/etkisizleştir</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1359,7 +1359,7 @@
       </trans-unit>
       <trans-unit id="MSC.sw_id">
         <source>ID</source>
-        <target>Kod</target>
+        <target>Kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.sw_template">
         <source>Template</source>
@@ -1479,19 +1479,19 @@
       </trans-unit>
       <trans-unit id="MSC.id.0">
         <source>ID</source>
-        <target>Kod</target>
+        <target>Kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.id.1">
         <source>Note that changing the ID can break data integrity!</source>
-        <target>Kod değiştirilirse veri bütünlüğünün bozulabileceğini unutmayın!</target>
+        <target>Kimlik değiştirilirse veri bütünlüğünün bozulabileceğini unutmayın!</target>
       </trans-unit>
       <trans-unit id="MSC.pid.0">
         <source>Parent ID</source>
-        <target>Üst öge kodu</target>
+        <target>Üst öge kimliği</target>
       </trans-unit>
       <trans-unit id="MSC.pid.1">
         <source>Note that changing the parent ID can break data integrity!</source>
-        <target>Üst öge kodu değiştirilirse veri bütünlüğünün bozulabileceğini unutmayın!</target>
+        <target>Üst öge kimliği değiştirilirse veri bütünlüğünün bozulabileceğini unutmayın!</target>
       </trans-unit>
       <trans-unit id="MSC.sorting.0">
         <source>Sorting value</source>
@@ -1707,7 +1707,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
-        <target>%s kodlu bileşeni silmek istediğinize emin misiniz?</target>
+        <target>%s kimlikli bileşeni silmek istediğinize emin misiniz?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1947,7 +1947,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileUuid">
         <source>Unique ID</source>
-        <target>Eşsiz kod</target>
+        <target>Eşsiz kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.fileImageSize">
         <source>Width/height in pixel</source>
@@ -2167,7 +2167,7 @@
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
-        <target>Web tarayıcınızda JavaScript özelliğini devre dışı bırakmış gibi görünüyorsunuz. Contao yönetim bölümü JavaScript özelliği olmadan düzgün şekilde çalışmaz.</target>
+        <target>Tarayıcınızda JavaScript özelliğini etkisizleştirmiş gibi görünüyorsunuz. Contao yönetim bölümü JavaScript özelliği olmadan düzgün şekilde çalışmaz.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2207,7 +2207,7 @@
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Web sitenizde yeni bir üye (%s kodlu) hesap açtı.%sE-posta ile etkinleştirmeye izin vermiyorsanız bu hesabı yönetim bölümünden el ile onaylamanız gerekir.</target>
+        <target>Sitenizde yeni bir üye (%s kimlikli) hesap açtı.%sE-posta ile etkinleştirmeye izin vermiyorsanız bu hesabı yönetim bölümünden el ile onaylamanız gerekir.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2567,7 +2567,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
-        <target>Dosya üst verilerini yazmak için bir web sitesi kök sayfası eklemelisiniz.</target>
+        <target>Dosya üst verilerini yazmak için site yapısına bir kök sayfa eklemelisiniz.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2627,7 +2627,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
-        <target>Lütfen 2FA/TOTP uygulamanız ile QR kodunu tarayın.</target>
+        <target>Lütfen 2FA/TOTP uygulamanız ile kare kodu tarayın.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
@@ -2639,7 +2639,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
-        <target>QR kodunu tarayamazsanız onun yerine bu anahtarı yazın:</target>
+        <target>Kare kodu tarayamazsanız onun yerine bu anahtarı yazın:</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
@@ -2715,7 +2715,7 @@
       </trans-unit>
       <trans-unit id="MSC.disable">
         <source>Disable</source>
-        <target>Devre dışı bırak</target>
+        <target>Etkisizleştir</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2751,7 +2751,7 @@
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
-        <target>Web tarayıcı</target>
+        <target>Tarayıcı</target>
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
@@ -2983,35 +2983,35 @@
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
-        <target>%s kodlu bileşenin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli bileşenin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
-        <target>%s kodlu bileşeni düzenle</target>
+        <target>%s kimlikli bileşeni düzenle</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
-        <target>%s kodlu bileşeni taşı</target>
+        <target>%s kimlikli bileşeni taşı</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
-        <target>%s kodlu bileşeni kopyala</target>
+        <target>%s kimlikli bileşeni kopyala</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
-        <target>%s kodlu bileşeni sil</target>
+        <target>%s kimlikli bileşeni sil</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
-        <target>%s kodlu bileşeni sürükle</target>
+        <target>%s kimlikli bileşeni sürükle</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
-        <target>%s kodlu bileşenin alt bileşenlerini düzenle</target>
+        <target>%s kimlikli bileşenin alt bileşenlerini düzenle</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
-        <target>%s kodlu bileşeni yayınla/yayından kaldır</target>
+        <target>%s kimlikli bileşeni yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -3019,7 +3019,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
-        <target>%s kodlu bileşene yapıştır</target>
+        <target>%s kimlikli bileşene yapıştır</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -3027,7 +3027,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
-        <target>%s kodlu bileşenden sonra yapıştır</target>
+        <target>%s kimlikli bileşenden sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
@@ -3035,7 +3035,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
-        <target>%s kodlu bileşenden sonra yeni bir bileşen ekle</target>
+        <target>%s kimlikli bileşenden sonra yeni bir bileşen ekle</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

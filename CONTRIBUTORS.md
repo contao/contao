@@ -15,8 +15,8 @@
  * Dominik Tomasi ([dtomasi](https://github.com/dtomasi))
  * Marco Biedermann ([marcobiedermann](https://github.com/marcobiedermann))
  * Benedict Zinke ([bezin](https://github.com/bezin))
- * Ralf Baussenwein ([rabauss](https://github.com/rabauss))
  * Richard Henkenjohann ([richardhj](https://github.com/richardhj))
+ * Ralf Baussenwein ([rabauss](https://github.com/rabauss))
  * Christoph Wiechert ([psi-4ward](https://github.com/psi-4ward))
  * Severin Glöckle ([SeverinGloeckle](https://github.com/SeverinGloeckle))
  * Dominik Zogg ([dominikzogg](https://github.com/dominikzogg))
@@ -79,6 +79,7 @@
  * Andreas Allacher ([AndreasA](https://github.com/AndreasA))
  * Andreas Fieger ([fiedsch](https://github.com/fiedsch))
  * Anthony Clark
+ * Benedict Steele ([Benedict](https://github.com/Benedict))
  * Christian Barkowsky
  * Christian Berger
  * Christian Kolb ([christian-kolb](https://github.com/christian-kolb))
