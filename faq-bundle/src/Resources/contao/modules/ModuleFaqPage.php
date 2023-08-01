@@ -132,13 +132,12 @@ class ModuleFaqPage extends Module
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
 
-			// Order by PID
-			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
+			if (empty($arrFaqs[$objFaq->pid]))
+			{
+				$arrFaqs[$objFaq->pid] = $objPid->row();
+			}
 
-			$arrFaqs[$objFaq->pid] = array(
-				...$objPid->row(),
-				'items' => $arrFaqs[$objFaq->pid]['items']
-			);
+			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}
