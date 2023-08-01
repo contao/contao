@@ -31,9 +31,11 @@
       </trans-unit>
       <trans-unit id="ERR.minval">
         <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Il campo &quot;%s&quot; deve essere di almeno %d!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Il campo &quot;%s&quot; non deve essere maggiore di %d!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1958,6 +1960,7 @@
       </trans-unit>
       <trans-unit id="MSC.imageMetadata">
         <source>%s metadata</source>
+        <target>%s metadata</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2667,6 +2670,7 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>Preferiti</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2810,6 +2814,7 @@
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>Modalità scura</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
@@ -2952,15 +2957,19 @@
       </trans-unit>
       <trans-unit id="DCA.expandNodes.0">
         <source>Expand all</source>
+        <target>Espandi tutto</target>
       </trans-unit>
       <trans-unit id="DCA.expandNodes.1">
         <source>Expand all nodes</source>
+        <target>Espandi tutti i nodi</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.0">
         <source>Collapse all</source>
+        <target>Chiudi tutto</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.1">
         <source>Collapse all nodes</source>
+        <target>Chiudi tutti i nodi</target>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>

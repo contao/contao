@@ -79,6 +79,7 @@
  * Andreas Allacher ([AndreasA](https://github.com/AndreasA))
  * Andreas Fieger ([fiedsch](https://github.com/fiedsch))
  * Anthony Clark
+ * Benedict Steele ([Benedict](https://github.com/Benedict))
  * Christian Barkowsky
  * Christian Berger
  * Christian Kolb ([christian-kolb](https://github.com/christian-kolb))
