@@ -29,7 +29,8 @@ class PageRedirect extends Frontend
 	{
 		$this->prepare($objPage);
 
-		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path') . '/');
+		$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url);
+		$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
 
 		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));
 	}
