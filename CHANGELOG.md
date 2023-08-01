@@ -2,11 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.29] (2023-08-01)
+
+**Fixed issues:**
+
+- [#6261] Fix the FAQ page and list modules ([leofeyer])
+- [#6251] Handle insert tags in news and event URLs ([leofeyer])
+- [#6252] Set the correct PIDs when copying folders recursively ([leofeyer])
+- [#6127] Recursively implode fields when generating record labels ([aschempp])
+- [#6250] Correctly show options with the same label in the filter menu ([leofeyer])
+- [#6240] Do not set the unsubscribe header for test newsletters ([aschempp])
+- [#6234] Fix the variable naming in the DCA schema provider ([leofeyer])
+
 ## [4.13.28] (2023-07-25)
 
 **Security fixes:**
 
-- Validate unit select menus in widgets ([ausi])
+- [CVE-2023-36806]: Cross site scripting in widgets with units
 
 ## [4.13.27] (2023-07-21)
 
@@ -105,6 +117,10 @@ This project adheres to [Semantic Versioning].
 
 ## [4.13.21] (2023-04-25)
 
+**Security fixes:**
+
+- [CVE-2023-29200]: Directory traversal in the file manager
+
 **Fixed issues:**
 
 - [#5987] Harden the file manager against directory traversal attacks ([ausi])
@@ -114,12 +130,12 @@ This project adheres to [Semantic Versioning].
 **Fixed issues:**
 
 - [#5962] Fix an undefined array key warning when comparing versions with different fields ([fritzmg])
-- [#5851] Do not auto-link images in the news reader ([leofeyer])
+- [#5851] Do not auto-link images in the newsreader ([leofeyer])
 - [#5959] Remove unnecessary locale tags from languages ([ausi])
 - [#5955] Remove the "symfony/proxy-manager-bridge" dependency ([leofeyer])
 - [#5893] Correctly check the mounted pages in the `hasAccess()` method ([leofeyer])
 - [#5952] Ignore exceptions when adding trusted devices ([aschempp])
-- [#5942] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5942] Do not treat subdirectories of Twig namespace roots as template paths ([m-vo])
 - [#5908] Correctly handle response status codes from legacy entry points ([aschempp])
 - [#5934] Fix the search query in DC_Folder ([leofeyer])
 - [#5917] Consider foreign keys when sorting the list view ([dennisbohn])
@@ -468,7 +484,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS via canonical tags in the front end ([ausi])
+- [CVE-2022-24899]: Cross site scripting via canonical URL
 
 ## [4.13.2] (2022-03-31)
 
@@ -767,6 +783,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.29]: https://github.com/contao/contao/releases/tag/4.13.29
 [4.13.28]: https://github.com/contao/contao/releases/tag/4.13.28
 [4.13.27]: https://github.com/contao/contao/releases/tag/4.13.27
 [4.13.26]: https://github.com/contao/contao/releases/tag/4.13.26
@@ -799,6 +816,9 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
+[CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
+[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [a-v-l]: https://github.com/a-v-l
 [agonyz]: https://github.com/agonyz
 [AlexanderWillner]: https://github.com/AlexanderWillner
@@ -1390,6 +1410,7 @@ This project adheres to [Semantic Versioning].
 [#6113]: https://github.com/contao/contao/pull/6113
 [#6121]: https://github.com/contao/contao/pull/6121
 [#6123]: https://github.com/contao/contao/pull/6123
+[#6127]: https://github.com/contao/contao/pull/6127
 [#6130]: https://github.com/contao/contao/pull/6130
 [#6132]: https://github.com/contao/contao/pull/6132
 [#6138]: https://github.com/contao/contao/pull/6138
@@ -1416,3 +1437,9 @@ This project adheres to [Semantic Versioning].
 [#6226]: https://github.com/contao/contao/pull/6226
 [#6229]: https://github.com/contao/contao/pull/6229
 [#6231]: https://github.com/contao/contao/pull/6231
+[#6234]: https://github.com/contao/contao/pull/6234
+[#6240]: https://github.com/contao/contao/pull/6240
+[#6250]: https://github.com/contao/contao/pull/6250
+[#6251]: https://github.com/contao/contao/pull/6251
+[#6252]: https://github.com/contao/contao/pull/6252
+[#6261]: https://github.com/contao/contao/pull/6261
