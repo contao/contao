@@ -1032,6 +1032,10 @@ h2.sub_headline {
 	list-style: none;
 }
 
+.two-factor .tl_trusted_devices th, .two-factor .tl_trusted_devices td {
+	line-height: 16px;
+}
+
 /* Picker search */
 #search {
 	margin: 18px 18px -9px;

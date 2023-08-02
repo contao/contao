@@ -294,7 +294,6 @@ p {
 
 /* Tables */
 .zebra-table th, .zebra-table td {
-	line-height: 16px;
 	border: solid var(--border);
 	border-width: 1px 0;
 }

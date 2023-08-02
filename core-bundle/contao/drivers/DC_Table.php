@@ -5168,7 +5168,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
-<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
+<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns zebra-table' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
@@ -5200,6 +5200,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 			{
 				$return .= '
+<thead>
   <tr>';
 
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
@@ -5215,7 +5216,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
     <th class="tl_folder_tlist tl_right_nowrap"></th>
-  </tr>';
+  </tr>
+</thead>
+<tbody>';
 			}
 
 			// Process result and add label and buttons
@@ -5315,6 +5318,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
     <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" value="' . $row['id'] . '"></td>' : '
     <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
   </tr>';
+			}
+
+			// Close the table body if the "show columns" option is active
+			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			{
+				$return .= '</tbody>';
 			}
 
 			// Close the table
