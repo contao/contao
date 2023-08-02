@@ -284,7 +284,7 @@ body.popup {
 
 /* Left */
 #left {
-	width: 210px;
+	width: 220px;
 	background: var(--nav-bg);
 	display: flex;
 	flex-direction: column;
@@ -303,7 +303,7 @@ body.popup {
 
 /* Main */
 #main {
-	width: calc(100% - 210px);
+	width: calc(100% - 220px);
 	display: flex;
 	flex-direction: column;
 }
@@ -1124,6 +1124,7 @@ table.tl_listing {
 }
 
 .tl_folder_tlist {
+	line-height: 16px;
 	border-top: 1px solid var(--border);
 }
 
@@ -1178,6 +1179,10 @@ table.tl_listing {
 	width: 96%;
 	margin: 18px 2%;
 	padding: 9px 0 18px;
+}
+
+.tl_show + .tl_show {
+	margin-top: 36px;
 }
 
 .tl_show th, .tl_show td {
@@ -1904,6 +1909,10 @@ ul.sgallery li {
 
 #tl_versions th, #tl_versions td {
 	padding: 6px;
+}
+
+#tl_versions th {
+	line-height: 16px;
 }
 
 #tl_versions td:first-child {

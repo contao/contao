@@ -575,31 +575,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--with-padding zebra-table--no-border">';
+		$return = '';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
 		{
 			foreach ($rows as $entries)
 			{
-				// Separate multiple rows
 				if ($separate)
 				{
-					$return .= '
-  <tr>
-    <td colspan="2" style="height:1em"></td>
-   </tr>';
+					$return .= '</tbody></table>';
 				}
 
 				$separate = true;
 
-				// Add the table name
 				$return .= '
-  <tr>
-    <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
-    <th>' . $table . '</th>
-  </tr>
-';
+<table class="tl_show zebra-table zebra-table--with-padding zebra-table--no-border">
+  <thead>
+    <tr>
+      <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
+      <th>' . $table . '</th>
+    </tr>
+  </thead>
+  <tbody>';
 
 				foreach ($entries as $lbl=>$val)
 				{
@@ -613,8 +611,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Return table
-		return $return . '</table>';
+		return $return . '</tbody></table>';
 	}
 
 	/**
