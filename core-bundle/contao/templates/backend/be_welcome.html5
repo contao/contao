@@ -15,7 +15,7 @@
   <div id="tl_versions">
     <h2><?= $this->trans('MSC.latestChanges') ?></h2>
     <?php if (!empty($this->versions)): ?>
-      <table class="tl_listing zebra-table">
+      <table class="tl_listing with-border">
       <thead>
         <tr>
           <th><?= $this->trans('MSC.date') ?></th>

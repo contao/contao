@@ -590,7 +590,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$separate = true;
 
 				$return .= '
-<table class="tl_show zebra-table zebra-table--with-padding zebra-table--no-border">
+<table class="tl_show with-padding with-zebra">
   <thead>
     <tr>
       <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
@@ -5168,7 +5168,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
-<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns zebra-table' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
+<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)

@@ -293,41 +293,28 @@ p {
 }
 
 /* Tables */
-.zebra-table th, .zebra-table td {
+table.with-border th, table.with-border td {
 	border: solid var(--border);
 	border-width: 1px 0;
 }
 
-.zebra-table th {
+table.with-border th {
 	background-color: var(--table-header);
 }
 
-.zebra-table tbody tr:nth-child(odd) td {
-	background-color: var(--table-odd);
-}
-
-.zebra-table tbody tr:nth-child(even) td {
-	background-color: var(--table-even);
-}
-
-.zebra-table--with-padding th, .zebra-table--with-padding td {
+table.with-padding th, table.with-padding td {
 	padding: 6px;
 }
 
-.zebra-table--no-border td {
-	border: 0;
-}
-
-.zebra-table--no-border th {
-	border-top: 0;
+table.with-zebra th {
 	background-color: var(--table-nb-header);
 }
 
-.zebra-table--no-border tbody tr:nth-child(odd) td {
+table.with-zebra tbody tr:nth-child(odd) td {
 	background-color: var(--table-nb-odd);
 }
 
-.zebra-table--no-border tbody tr:nth-child(even) td {
+table.with-zebra tbody tr:nth-child(even) td {
 	background-color: var(--table-nb-even);
 }
 
