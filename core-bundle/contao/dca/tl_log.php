@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
@@ -167,8 +168,7 @@ class tl_log extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['colorizeLogEntries'] as $callback)
 					{
-						$this->import($callback[0]);
-						$label = $this->{$callback[0]}->{$callback[1]}($row, $label);
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label);
 					}
 				}
 				break;

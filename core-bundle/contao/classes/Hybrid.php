@@ -120,9 +120,10 @@ abstract class Hybrid extends Frontend
 		// Directly query the database if there is no model class
 		else
 		{
-			$objHybrid = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-										->limit(1)
-										->execute($objElement->{$this->strKey});
+			$objHybrid = Database::getInstance()
+				->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($objElement->{$this->strKey});
 
 			if ($objHybrid->numRows < 1)
 			{

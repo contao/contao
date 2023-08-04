@@ -62,7 +62,9 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc', $url);
+            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+            $loc->appendChild($sitemap->createTextNode($url));
+
             $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);

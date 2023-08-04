@@ -8,7 +8,7 @@
 	--icon-security: url("icons/shield_small.svg");
 	--icon-favorites: url("icons/favorites_small.svg");
 	--icon-logout: url("icons/exit.svg");
-	--icon-toggle-all: url("icons/folPlus.svg");
+	--icon-toggle-all: url("icons/chevron-right.svg");
 	--icon-alert: url("icons/alert.svg");
 	--icon-favorite: url("icons/favorite.svg");
 	--icon-favorite--active: url("icons/favorite_active.svg");
@@ -26,7 +26,7 @@ html[data-color-scheme="dark"] {
 	--icon-security: url("icons/shield_small--dark.svg");
 	--icon-favorites: url("icons/favorites_small--dark.svg");
 	--icon-logout: url("icons/exit--dark.svg");
-	--icon-toggle-all: url("icons/folPlus--dark.svg");
+	--icon-toggle-all: url("icons/chevron-right--dark.svg");
 	--icon-alert: url("icons/alert--dark.svg");
 	--icon-favorite: url("icons/favorite--dark.svg");
 	--icon-favorite--active: url("icons/favorite_active--dark.svg");
@@ -2476,6 +2476,16 @@ time[title] {
 
 .float_right {
 	float: right;
+}
+
+.foldable img {
+	transition: transform .2s ease;
+	transform: none;
+	will-change: transform;
+}
+
+.foldable--open img {
+	transform: rotateZ(90deg);
 }
 
 /* Default icon classes */

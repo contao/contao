@@ -425,6 +425,49 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@monolog.logger.contao.error'
+            - '@fragment.handler'
+            - '@request_stack'
+            - ~
+            - '%contao.insert_tags.allowed_tags%'
+
+    contao.insert_tag.flag.format:
+        class: Contao\CoreBundle\InsertTag\Flag\FormatFlag
+
+    contao.insert_tag.flag.php_function:
+        class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
+
+    contao.insert_tag.flag.string_util:
+        class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
+
+    contao.insert_tag.resolver.date:
+        class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
+        arguments:
+            - '@contao.framework'
+
+    contao.insert_tag.resolver.form:
+        class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
+        arguments:
+            - '@request_stack'
+
+    contao.insert_tag.resolver.fragment:
+        class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
+
+    contao.insert_tag.resolver.if_language:
+        class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
+        arguments:
+            - '@request_stack'
+
+    contao.insert_tag.resolver.legacy:
+        class: Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag
+        arguments:
+            - '@service_container'
+
+    contao.insert_tag.resolver.link:
+        class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.token_checker'
 
     contao.intl.countries:
         class: Contao\CoreBundle\Intl\Countries
@@ -824,6 +867,8 @@ services:
         public: true
         arguments:
             - '@security.helper'
+            - '@security.token_storage'
+            - '@contao.security.token_checker'
             - '@request_stack'
             - '@contao.security.frontend_user_provider'
             - '@?logger'

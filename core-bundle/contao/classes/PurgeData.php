@@ -52,8 +52,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 					foreach ($jobs as $job)
 					{
 						list($class, $method) = $GLOBALS['TL_PURGE'][$group][$job]['callback'];
-						$this->import($class);
-						$this->$class->$method();
+						System::importStatic($class)->$method();
 					}
 				}
 			}
@@ -74,11 +73,13 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 				'affected' => ''
 			);
 
+			$db = Database::getInstance();
+
 			// Get the current table size
 			foreach ($config['affected'] as $table)
 			{
-				$objCount = $this->Database->execute("SELECT COUNT(*) AS count FROM " . $table);
-				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($this->Database->getSizeOf($table), 0) . '</span>';
+				$objCount = $db->execute("SELECT COUNT(*) AS count FROM " . $table);
+				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($db->getSizeOf($table), 0) . '</span>';
 			}
 		}
 

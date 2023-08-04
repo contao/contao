@@ -35,7 +35,7 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
     }
 
     /**
-     * @return \Generator<array{0:int, 1:string}>
+     * @return \Generator<array{0:self::TYPE_*, 1:string}>
      */
     public function getIterator(): \Generator
     {

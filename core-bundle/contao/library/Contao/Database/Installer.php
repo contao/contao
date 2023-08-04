@@ -60,7 +60,7 @@ class Installer extends Controller
 			}
 
 			// Fields
-			if (\is_array($v['TABLE_FIELDS']))
+			if (\is_array($v['TABLE_FIELDS'] ?? null))
 			{
 				foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 				{
@@ -76,7 +76,7 @@ class Installer extends Controller
 			}
 
 			// Create definitions
-			if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+			if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 			{
 				foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 				{
@@ -92,7 +92,7 @@ class Installer extends Controller
 			}
 
 			// Move auto_increment fields to the end of the array
-			if (\is_array($return['ALTER_ADD']))
+			if (\is_array($return['ALTER_ADD'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv)
 				{
@@ -101,7 +101,7 @@ class Installer extends Controller
 				}
 			}
 
-			if (\is_array($return['ALTER_CHANGE']))
+			if (\is_array($return['ALTER_CHANGE'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv)
 				{
@@ -124,7 +124,7 @@ class Installer extends Controller
 			if (!\in_array($k, $drop))
 			{
 				// Create definitions
-				if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+				if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 				{
 					foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 					{
@@ -136,7 +136,7 @@ class Installer extends Controller
 				}
 
 				// Fields
-				if (\is_array($v['TABLE_FIELDS']))
+				if (\is_array($v['TABLE_FIELDS'] ?? null))
 				{
 					foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 					{
@@ -154,8 +154,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -200,8 +199,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -215,8 +213,8 @@ class Installer extends Controller
 	 */
 	public function getFromDb()
 	{
-		$this->import(Database::class, 'Database');
-		$tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
+		$db = Database::getInstance();
+		$tables = preg_grep('/^tl_/', $db->listTables(null, true));
 
 		if (empty($tables))
 		{
@@ -228,7 +226,7 @@ class Installer extends Controller
 
 		foreach ($tables as $table)
 		{
-			$fields = $this->Database->listFields($table, true);
+			$fields = $db->listFields($table, true);
 
 			foreach ($fields as $field)
 			{
@@ -329,8 +327,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 

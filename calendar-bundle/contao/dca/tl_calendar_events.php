@@ -16,6 +16,7 @@ use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -497,15 +498,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 class tl_calendar_events extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_calendar_events
 	 *
 	 * @param DataContainer $dc
@@ -523,19 +515,21 @@ class tl_calendar_events extends Backend
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -571,9 +565,10 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+				$objCalendar = Database::getInstance()
+					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objCalendar->numRows < 1)
 				{
@@ -596,9 +591,7 @@ class tl_calendar_events extends Backend
 					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 
-				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
-											  ->execute($id);
-
+				$objCalendar = Database::getInstance()->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -632,8 +625,12 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate the alias if there is none
@@ -810,12 +807,15 @@ class tl_calendar_events extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
-		if (!$this->User->isAdmin)
+		$db = Database::getInstance();
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin)
 		{
-			foreach ($this->User->pagemounts as $id)
+			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
+				$arrPids[] = $db->getChildRecords($id, 'tl_page');
 			}
 
 			if (!empty($arrPids))
@@ -827,11 +827,11 @@ class tl_calendar_events extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 		else
 		{
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
 		}
 
 		if ($objAlias->numRows)
@@ -856,7 +856,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
@@ -961,7 +961,7 @@ class tl_calendar_events extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
 
 	/**
@@ -985,11 +985,11 @@ class tl_calendar_events extends Backend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
-		$this->import(Calendar::class, 'Calendar');
+		$calendar = new Calendar();
 
 		foreach ($session as $id)
 		{
-			$this->Calendar->generateFeedsByCalendar($id);
+			$calendar->generateFeedsByCalendar($id);
 		}
 
 		if ($request)

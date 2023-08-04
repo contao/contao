@@ -50,6 +50,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
+                'titleText' => 'See the sprintf() documentation',
                 'linkTitle' => 'sprintf() documentation',
                 'target' => true,
                 'embed' => 'See the %s on how to use the %s placeholder.',
@@ -62,7 +63,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-hyperlink">
-                See the <a href="https://www.php.net/manual/en/function.sprintf.php" title="sprintf() documentation" target="_blank" rel="noreferrer noopener">sprintf() documentation</a>
+                See the <a href="https://www.php.net/manual/en/function.sprintf.php" title="See the sprintf() documentation" target="_blank" rel="noreferrer noopener">sprintf() documentation</a>
                 on how to use the %s placeholder.
             </div>
             HTML;

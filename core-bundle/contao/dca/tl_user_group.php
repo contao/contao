@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -240,15 +241,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 class tl_user_group extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Add a warning if there are users with access to the template editor.
 	 */
 	public function addTemplateWarning()
@@ -258,7 +250,7 @@ class tl_user_group extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning, EXISTS(SELECT * FROM tl_user_group WHERE alexf LIKE '%\"tl_content::unfilteredHtml\"%' OR alexf LIKE '%\"tl_module::unfilteredHtml\"%' OR elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
+		$objResult = Database::getInstance()->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning, EXISTS(SELECT * FROM tl_user_group WHERE alexf LIKE '%\"tl_content::unfilteredHtml\"%' OR alexf LIKE '%\"tl_module::unfilteredHtml\"%' OR elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning > 0)
 		{
@@ -341,7 +333,7 @@ class tl_user_group extends Backend
 		$modules = StringUtil::deserialize($dc->activeRecord->modules);
 
 		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
+		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
 		{
 			unset($arrModules['design'][$key]);
 			$arrModules['design'] = array_values($arrModules['design']);
@@ -388,6 +380,7 @@ class tl_user_group extends Backend
 		}
 
 		$arrReturn = array();
+		$user = BackendUser::getInstance();
 
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
@@ -397,7 +390,7 @@ class tl_user_group extends Backend
 				foreach ($v['fields'] as $kk=>$vv)
 				{
 					// Hide the "admin" field if the user is not an admin (see #184)
-					if ($k == 'tl_user' && $kk == 'admin' && !$this->User->isAdmin)
+					if ($k == 'tl_user' && $kk == 'admin' && !$user->isAdmin)
 					{
 						continue;
 					}

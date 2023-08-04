@@ -6,6 +6,7 @@
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@symfony/webpack-encore": "^4.2.0",
         "css-loader": "^6.7.0",
+        "cypress": "^12.17.0",
         "gulp": "^4.0.2",
         "gulp-svgo": "^2.2.1",
         "pump": "^3.0",
@@ -14,10 +15,11 @@
     },
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
+        "build": "encore production --progress",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "pree2e-tests": "rm -rf cypress/webspace/vendor/contao/manager-bundle && composer up --working-dir=cypress/webspace",
+        "e2e-tests": "symfony server:start --port=8765 --dir=cypress/webspace --daemon && yarn cypress run",
+        "poste2e-tests": "symfony server:stop --dir=cypress/webspace"
     },
     "browserslist": [
         "defaults"

@@ -197,7 +197,6 @@ class ModuleFaqReader extends Module
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -213,7 +212,6 @@ class ModuleFaqReader extends Module
 		}
 
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $objCategory->perPage;
 		$objConfig->order = $objCategory->sortOrder;
 		$objConfig->template = $this->com_template;
@@ -222,6 +220,6 @@ class ModuleFaqReader extends Module
 		$objConfig->bbcode = $objCategory->bbcode;
 		$objConfig->moderate = $objCategory->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
 	}
 }

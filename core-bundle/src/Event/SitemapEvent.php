@@ -38,7 +38,9 @@ class SitemapEvent extends Event
             return $this;
         }
 
-        $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc', $url);
+        $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+        $loc->appendChild($sitemap->createTextNode($url));
+
         $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
         $urlEl->appendChild($loc);
         $urlSet->appendChild($urlEl);

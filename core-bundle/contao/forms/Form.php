@@ -194,8 +194,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileFormFields'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrFields = $this->{$callback[0]}->{$callback[1]}($arrFields, $formId, $this);
+				$arrFields = System::importStatic($callback[0])->{$callback[1]}($arrFields, $formId, $this);
 			}
 		}
 
@@ -239,8 +238,7 @@ class Form extends Hybrid
 				{
 					foreach ($GLOBALS['TL_HOOKS']['loadFormField'] as $callback)
 					{
-						$this->import($callback[0]);
-						$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+						$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 					}
 				}
 
@@ -254,8 +252,7 @@ class Form extends Hybrid
 					{
 						foreach ($GLOBALS['TL_HOOKS']['validateFormField'] as $callback)
 						{
-							$this->import($callback[0]);
-							$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+							$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 						}
 					}
 
@@ -390,8 +387,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
 		}
 
@@ -548,10 +544,11 @@ class Form extends Hybrid
 		// Store the values in the database
 		if ($this->storeValues && $this->targetTable)
 		{
+			$db = Database::getInstance();
 			$arrSet = array();
 
 			// Add the timestamp
-			if ($this->Database->fieldExists('tstamp', $this->targetTable))
+			if ($db->fieldExists('tstamp', $this->targetTable))
 			{
 				$arrSet['tstamp'] = time();
 			}
@@ -589,8 +586,7 @@ class Form extends Hybrid
 			{
 				foreach ($GLOBALS['TL_HOOKS']['storeFormData'] as $callback)
 				{
-					$this->import($callback[0]);
-					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
+					$arrSet = System::importStatic($callback[0])->{$callback[1]}($arrSet, $this);
 				}
 			}
 
@@ -607,7 +603,7 @@ class Form extends Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
-			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
+			$db->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
 		// HOOK: process form data callback
@@ -615,17 +611,14 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['processFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
 			}
 		}
 
 		// Add a log entry
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-
-			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . FrontendUser::getInstance()->username . '".');
 		}
 		else
 		{
