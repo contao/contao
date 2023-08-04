@@ -82,16 +82,14 @@
         <target>著作権のメタデータを保存</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
-        <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
-        <target>著作権に関する画像のメタデータのフィールド(EXIF、IPTC、XMP)を保存します。</target>
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metadata.0">
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
         <target>メタデータのフィールド</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.metadata.1">
-        <source>Here you can select which metadata fields to preserve. Defaults to the &lt;code&gt;contao.image.preserve_metadata&lt;/code&gt; configuration.</source>
-        <target>保存するメタデータのフィールドを選択できます。&lt;code&gt;contao.image.preserve_metadata&lt;/code&gt;の構成を初期値とします。</target>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -106,8 +104,7 @@
         <target>画像の品質</target>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
-        <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
-        <target>オプションで画像圧縮の品質を0(最低の品質)と100(最大の品質)の間で指定します。空にした場合はシステム全体の設定を適用します。</target>
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -168,6 +165,15 @@
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>画像を指定した寸法に変更します。必要な場合は画像を切り取ります。</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
