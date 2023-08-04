@@ -202,17 +202,17 @@ class ImageFactory implements ImageFactoryInterface
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
-                    if ('metaDelete' === $imageSize->preserveMetadata) {
+                    if ('delete' === $imageSize->preserveMetadata) {
                         $options->setPreserveCopyrightMetadata([]);
                     } elseif (
-                        'metaOverwrite' === $imageSize->preserveMetadata
-                        && ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true))
+                        'overwrite' === $imageSize->preserveMetadata
+                        && ($metadataFields = StringUtil::deserialize($imageSize->preserveMetadataFields, true))
                     ) {
                         $options->setPreserveCopyrightMetadata(
                             array_merge_recursive(
                                 ...array_map(
                                     static fn ($metadata) => StringUtil::deserialize($metadata, true),
-                                    $preserveMetadata,
+                                    $metadataFields,
                                 ),
                             ),
                         );
@@ -251,7 +251,7 @@ class ImageFactory implements ImageFactoryInterface
 
                 $options->setPreserveCopyrightMetadata([
                     ...$options->getPreserveCopyrightMetadata(),
-                    ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadataFields'] ?? [],
                 ]);
 
                 if (!empty($this->predefinedSizes[$size[2]]['imagineOptions'])) {

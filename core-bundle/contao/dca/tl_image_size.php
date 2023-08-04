@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	(
 		'__selector__'                => array('preserveMetadata'),
 		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
-		'metaOverwrite'               => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,metadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
+		'overwrite'                   => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,preserveMetadataFields;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Fields
@@ -190,15 +190,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'preserveMetadata' => array
 		(
 			'inputType'               => 'radio',
-			'options'                 => array('metaDefault', 'metaOverwrite', 'metaDelete'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
+			'options_callback'        => array('tl_image_size', 'getMetadataOptions'),
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "varchar(16) NOT NULL default 'metaDefault'"
+			'sql'                     => "varchar(12) NOT NULL default 'default'"
 		),
-		'metadata' => array
+		'preserveMetadataFields' => array
 		(
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_image_size', 'getMetadata'),
+			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL"
 		),
@@ -446,7 +445,23 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getMetadata(DataContainer $dc=null)
+	public function getMetadataOptions(DataContainer $dc=null)
+	{
+		return array(
+			'default' => $GLOBALS['TL_LANG']['tl_image_size']['metaDefault'],
+			'overwrite' => $GLOBALS['TL_LANG']['tl_image_size']['metaOverwrite'],
+			'delete' => $GLOBALS['TL_LANG']['tl_image_size']['metaDelete']
+		);
+	}
+
+	/**
+	 * Return the image metadata fields
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getMetadataFields(DataContainer $dc=null)
 	{
 		$options = array();
 

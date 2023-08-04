@@ -157,17 +157,17 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
-                    if ('metaDelete' === $imageSizes->preserveMetadata) {
+                    if ('delete' === $imageSizes->preserveMetadata) {
                         $options->setPreserveCopyrightMetadata([]);
                     } elseif (
-                        'metaOverwrite' === $imageSizes->preserveMetadata
-                        && ($preserveMetadata = StringUtil::deserialize($imageSizes->metadata, true))
+                        'overwrite' === $imageSizes->preserveMetadata
+                        && ($metadataFields = StringUtil::deserialize($imageSizes->preserveMetadataFields, true))
                     ) {
                         $options->setPreserveCopyrightMetadata(
                             array_merge_recursive(
                                 ...array_map(
                                     static fn ($metadata) => StringUtil::deserialize($metadata, true),
-                                    $preserveMetadata,
+                                    $metadataFields,
                                 ),
                             ),
                         );
@@ -262,7 +262,7 @@ class PictureFactory implements PictureFactoryInterface
 
                 $options->setPreserveCopyrightMetadata([
                     ...$options->getPreserveCopyrightMetadata(),
-                    ...$imageSizes['preserveMetadata'] ?? [],
+                    ...$imageSizes['preserveMetadataFields'] ?? [],
                 ]);
 
                 if (!empty($imageSizes['imagineOptions'])) {

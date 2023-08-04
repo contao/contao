@@ -28,7 +28,7 @@ use Contao\Model\Collection;
  * @property integer|null $zoom
  * @property string       $formats
  * @property boolean      $preserveMetadata
- * @property string       $metadata
+ * @property string       $preserveMetadataFields
  * @property boolean      $skipIfDimensionsMatch
  * @property boolean      $lazyLoading
  * @property integer      $imageQuality
@@ -48,6 +48,8 @@ use Contao\Model\Collection;
  * @method static ImageSizeModel|null findOneByResizeMode($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByZoom($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByFormats($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneByPreserveMetadata($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneByPreserveMetadataFields($val, array $opt=array())
  * @method static ImageSizeModel|null findOneBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByLazyLoading($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByImageQuality($val, array $opt=array())
@@ -63,6 +65,8 @@ use Contao\Model\Collection;
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByResizeMode($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByZoom($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByFormats($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByPreserveMetadata($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByPreserveMetadataFields($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByLazyLoading($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByImageQuality($val, array $opt=array())
@@ -82,6 +86,8 @@ use Contao\Model\Collection;
  * @method static integer countByResizeMode($val, array $opt=array())
  * @method static integer countByZoom($val, array $opt=array())
  * @method static integer countByFormats($val, array $opt=array())
+ * @method static integer countByPreserveMetadata($val, array $opt=array())
+ * @method static integer countByPreserveMetadataFields($val, array $opt=array())
  * @method static integer countBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static integer countByLazyLoading($val, array $opt=array())
  * @method static integer countByImageQuality($val, array $opt=array())

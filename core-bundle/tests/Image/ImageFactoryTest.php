@@ -259,8 +259,8 @@ class ImageFactoryTest extends TestCase
             'resizeMode' => ResizeConfiguration::MODE_BOX,
             'zoom' => 50,
             'imageQuality' => 77,
-            'preserveMetadata' => 'metaOverwrite',
-            'metadata' => serialize([
+            'preserveMetadata' => 'overwrite',
+            'preserveMetadataFields' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
             ]),
@@ -336,7 +336,7 @@ class ImageFactoryTest extends TestCase
                     'jpeg_quality' => 77,
                     'jxl_quality' => 66,
                 ],
-                'preserveMetadata' => [
+                'preserveMetadataFields' => [
                     ExifFormat::NAME => [],
                     IptcFormat::NAME => ['2#116', '2#080'],
                 ],
@@ -379,12 +379,12 @@ class ImageFactoryTest extends TestCase
                         );
 
                         $this->assertSame(
-                            $predefinedSizes['foobar']['preserveMetadata'][ExifFormat::NAME],
+                            $predefinedSizes['foobar']['preserveMetadataFields'][ExifFormat::NAME],
                             $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
                         );
 
                         $this->assertSame(
-                            $predefinedSizes['foobar']['preserveMetadata'][IptcFormat::NAME],
+                            $predefinedSizes['foobar']['preserveMetadataFields'][IptcFormat::NAME],
                             $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
                         );
 

@@ -63,13 +63,13 @@
         <source>Preserve copyright metadata</source>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
-        <source>Preserve copyright-related image metadata fields (EXIF, IPTC, XMP).</source>
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metadata.0">
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metadata.1">
-        <source>Here you can select which metadata fields to preserve.</source>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -81,7 +81,7 @@
         <source>Image quality</source>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
-        <source>Optional image compression quality between 0 (lowest quality) and 100 (highest quality). If left empty, the system-wide configuration applies.</source>
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
