@@ -202,9 +202,12 @@ class ImageFactory implements ImageFactoryInterface
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
-                    if (!$imageSize->preserveMetadata) {
+                    if ('metaDelete' === $imageSize->preserveMetadata) {
                         $options->setPreserveCopyrightMetadata([]);
-                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true)) {
+                    } elseif (
+                        'metaOverwrite' === $imageSize->preserveMetadata
+                        && ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true))
+                    ) {
                         $options->setPreserveCopyrightMetadata(
                             array_merge_recursive(
                                 ...array_map(

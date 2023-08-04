@@ -258,8 +258,8 @@ class ImageFactoryTest extends TestCase
             'height' => 200,
             'resizeMode' => ResizeConfiguration::MODE_BOX,
             'zoom' => 50,
-            'preserveMetadata' => true,
             'imageQuality' => 77,
+            'preserveMetadata' => 'metaOverwrite',
             'metadata' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),

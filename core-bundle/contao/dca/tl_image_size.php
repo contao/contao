@@ -98,13 +98,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
-	),
-
-	// Sub-palettes
-	'subpalettes' => array
-	(
-		'preserveMetadata'            => 'metadata'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
+		'metaOverwrite'               => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,metadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Fields
@@ -194,15 +189,17 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'preserveMetadata' => array
 		(
-			'inputType'               => 'checkbox',
+			'inputType'               => 'radio',
+			'options'                 => array('metaDefault', 'metaOverwrite', 'metaDelete'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => true)
+			'sql'                     => "varchar(16) NOT NULL default 'metaDefault'"
 		),
 		'metadata' => array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getMetadata'),
-			'eval'                    => array('multiple'=>true),
+			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'skipIfDimensionsMatch' => array

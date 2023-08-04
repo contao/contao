@@ -149,9 +149,9 @@ class PictureFactoryTest extends TestCase
             'cssClass' => 'my-size',
             'lazyLoading' => true,
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
-            'preserveMetadata' => true,
             'skipIfDimensionsMatch' => true,
             'imageQuality' => 77,
+            'preserveMetadata' => 'metaOverwrite',
             'metadata' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
