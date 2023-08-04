@@ -128,13 +128,13 @@
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metaDefault">
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metaOverwrite">
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.metaDelete">
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">

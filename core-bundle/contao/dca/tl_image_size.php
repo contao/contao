@@ -190,7 +190,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'preserveMetadata' => array
 		(
 			'inputType'               => 'radio',
-			'options_callback'        => array('tl_image_size', 'getMetadataOptions'),
+			'options'                 => array('default', 'overwrite', 'delete'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "varchar(12) NOT NULL default 'default'"
 		),
@@ -436,22 +437,6 @@ class tl_image_size extends Backend
 		}
 
 		return $options;
-	}
-
-	/**
-	 * Return the image metadata options
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getMetadataOptions(DataContainer $dc=null)
-	{
-		return array(
-			'default' => $GLOBALS['TL_LANG']['tl_image_size']['metaDefault'],
-			'overwrite' => $GLOBALS['TL_LANG']['tl_image_size']['metaOverwrite'],
-			'delete' => $GLOBALS['TL_LANG']['tl_image_size']['metaDelete']
-		);
 	}
 
 	/**
