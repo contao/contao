@@ -31,7 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
-    private array $preserveMetadata;
+    private array $preserveMetadataFields;
 
     /**
      * @internal
@@ -47,7 +47,7 @@ class ImageFactory implements ImageFactoryInterface
         private readonly array $validExtensions,
         private readonly string $uploadDir,
     ) {
-        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
+        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -58,9 +58,9 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function setPreserveMetadata(array $preserveMetadata): void
+    public function setPreserveMetadataFields(array $preserveMetadataFields): void
     {
-        $this->preserveMetadata = $preserveMetadata;
+        $this->preserveMetadataFields = $preserveMetadataFields;
     }
 
     public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
@@ -191,7 +191,7 @@ class ImageFactory implements ImageFactoryInterface
         $config = new ResizeConfiguration();
 
         $options = new ResizeOptions();
-        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
+        $options->setPreserveCopyrightMetadata($this->preserveMetadataFields);
 
         if (isset($size[2])) {
             // Database record

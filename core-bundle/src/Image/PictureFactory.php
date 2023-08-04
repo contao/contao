@@ -43,7 +43,7 @@ class PictureFactory implements PictureFactoryInterface
     private array $imageSizeItemsCache = [];
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
-    private array $preserveMetadata;
+    private array $preserveMetadataFields;
 
     /**
      * @internal
@@ -55,7 +55,7 @@ class PictureFactory implements PictureFactoryInterface
         private readonly bool $bypassCache,
         private readonly array $imagineOptions,
     ) {
-        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
+        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     public function setDefaultDensities(string $densities): static
@@ -73,9 +73,9 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function setPreserveMetadata(array $preserveMetadata): void
+    public function setPreserveMetadataFields(array $preserveMetadataFields): void
     {
-        $this->preserveMetadata = $preserveMetadata;
+        $this->preserveMetadataFields = $preserveMetadataFields;
     }
 
     public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $options = null): PictureInterface
@@ -108,7 +108,7 @@ class PictureFactory implements PictureFactoryInterface
             $config = $size;
 
             $configOptions = new ResizeOptions();
-            $configOptions->setPreserveCopyrightMetadata($this->preserveMetadata);
+            $configOptions->setPreserveCopyrightMetadata($this->preserveMetadataFields);
         } else {
             [$config, $attributes, $configOptions] = $this->createConfig($size);
         }
@@ -141,7 +141,7 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         $options = new ResizeOptions();
-        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
+        $options->setPreserveCopyrightMetadata($this->preserveMetadataFields);
 
         $config = new PictureConfiguration();
         $attributes = [];
