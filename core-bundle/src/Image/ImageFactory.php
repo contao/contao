@@ -31,7 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
-    private array $preserveMetadata;
+    private array $preserveMetadataFields;
 
     /**
      * @internal
@@ -47,7 +47,7 @@ class ImageFactory implements ImageFactoryInterface
         private readonly array $validExtensions,
         private readonly string $uploadDir,
     ) {
-        $this->preserveMetadata = (new ResizeOptions())->getPreserveCopyrightMetadata();
+        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -58,9 +58,9 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function setPreserveMetadata(array $preserveMetadata): void
+    public function setPreserveMetadataFields(array $preserveMetadataFields): void
     {
-        $this->preserveMetadata = $preserveMetadata;
+        $this->preserveMetadataFields = $preserveMetadataFields;
     }
 
     public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
@@ -191,7 +191,7 @@ class ImageFactory implements ImageFactoryInterface
         $config = new ResizeConfiguration();
 
         $options = new ResizeOptions();
-        $options->setPreserveCopyrightMetadata($this->preserveMetadata);
+        $options->setPreserveCopyrightMetadata($this->preserveMetadataFields);
 
         if (isset($size[2])) {
             // Database record
@@ -202,14 +202,17 @@ class ImageFactory implements ImageFactoryInterface
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
-                    if (!$imageSize->preserveMetadata) {
+                    if ('delete' === $imageSize->preserveMetadata) {
                         $options->setPreserveCopyrightMetadata([]);
-                    } elseif ($preserveMetadata = StringUtil::deserialize($imageSize->metadata, true)) {
+                    } elseif (
+                        'overwrite' === $imageSize->preserveMetadata
+                        && ($metadataFields = StringUtil::deserialize($imageSize->preserveMetadataFields, true))
+                    ) {
                         $options->setPreserveCopyrightMetadata(
                             array_merge_recursive(
                                 ...array_map(
                                     static fn ($metadata) => StringUtil::deserialize($metadata, true),
-                                    $preserveMetadata,
+                                    $metadataFields,
                                 ),
                             ),
                         );
@@ -248,7 +251,7 @@ class ImageFactory implements ImageFactoryInterface
 
                 $options->setPreserveCopyrightMetadata([
                     ...$options->getPreserveCopyrightMetadata(),
-                    ...$this->predefinedSizes[$size[2]]['preserveMetadata'] ?? [],
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadataFields'] ?? [],
                 ]);
 
                 if (!empty($this->predefinedSizes[$size[2]]['imagineOptions'])) {
