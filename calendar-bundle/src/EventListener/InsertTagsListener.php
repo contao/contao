@@ -35,7 +35,7 @@ class InsertTagsListener
     {
     }
 
-    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
+    public function __invoke(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);

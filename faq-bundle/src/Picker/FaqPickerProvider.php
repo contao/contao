@@ -45,7 +45,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return 'faqPicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'faq');
     }
@@ -75,7 +75,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, mixed $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }

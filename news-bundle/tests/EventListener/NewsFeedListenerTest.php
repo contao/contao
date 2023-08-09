@@ -52,20 +52,27 @@ class NewsFeedListenerTest extends ContaoTestCase
      */
     public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
-        $collection = [$this->mockClassWithProperties(NewsModel::class)];
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
+        $newsModel = $this->createMock(NewsModel::class);
 
-        $newsModel = $this->mockAdapter(['findPublishedByPids']);
-        $newsModel
+        $collection = $this->createMock(Collection::class);
+        $collection
+            ->expects($this->once())
+            ->method('getModels')
+            ->willReturn([$newsModel])
+        ;
+
+        $newsAdapter = $this->mockAdapter(['findPublishedByPids']);
+        $newsAdapter
             ->expects($this->once())
             ->method('findPublishedByPids')
-            ->with([1], $featuredOnly, 0, 0)
+            ->with([1], $featuredOnly, 0)
             ->willReturn($collection)
         ;
 
-        $framework = $this->mockContaoFramework([NewsModel::class => $newsModel]);
+        $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter]);
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
 
@@ -83,7 +90,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onFetchArticlesForFeed($event);
 
-        $this->assertSame($collection, $event->getArticles());
+        $this->assertSame([$newsModel], $event->getArticles());
     }
 
     /**
