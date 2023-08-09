@@ -527,7 +527,6 @@ class InsertTagsTest extends TestCase
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
-        /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
         $insertTagParser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
@@ -761,7 +760,6 @@ class InsertTagsTest extends TestCase
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
-        /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
 

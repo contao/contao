@@ -265,7 +265,6 @@ class InsertTagParser implements ResetInterface
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
             }
 
-            /** @var list<ParsedSequence> $parameters */
             $parameters = array_map($this->parse(...), $parameterMatches[0]);
         }
 

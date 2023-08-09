@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 
 class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
@@ -56,7 +55,6 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         // The default locale must be the first supported language (see contao/core#6533)
         $languages = [$defaultLocale];
 
-        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);
 
         foreach ($finder as $file) {

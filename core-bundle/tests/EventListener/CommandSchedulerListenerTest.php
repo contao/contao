@@ -90,8 +90,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $ref = new \ReflectionClass(Request::class);
-
-        /** @var Request $request */
         $request = $ref->newInstance();
 
         $pathInfo = $ref->getProperty('pathInfo');

@@ -184,7 +184,6 @@ class BackendMenuListenerTest extends TestCase
 
     public function testBuildsTheHeaderMenu(): void
     {
-        /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->name = 'Foo Bar';
         $user->username = 'foo';

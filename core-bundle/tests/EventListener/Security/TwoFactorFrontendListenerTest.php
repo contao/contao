@@ -222,7 +222,6 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -302,7 +301,6 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -461,7 +459,6 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);

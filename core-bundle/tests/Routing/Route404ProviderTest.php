@@ -115,7 +115,6 @@ class Route404ProviderTest extends TestCase
             $pageRegistry
         );
 
-        /** @var array $routes */
         $routes = $provider->getRoutesByNames();
 
         $this->assertIsArray($routes);
@@ -124,7 +123,6 @@ class Route404ProviderTest extends TestCase
         $this->assertArrayHasKey('tl_page.2.error_404', $routes);
         $this->assertArrayHasKey('tl_page.3.locale', $routes);
 
-        /** @var Route $route */
         $route = $routes['tl_page.3.locale'];
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(RedirectController::class, $route->getDefault('_controller'));

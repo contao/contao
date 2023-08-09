@@ -31,14 +31,12 @@ class ContaoJsonLdSchemaListener
             return;
         }
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
 
         if (!$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class)) {
             return;
         }
 
-        /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
         /** @var ContaoPageSchema $schema */

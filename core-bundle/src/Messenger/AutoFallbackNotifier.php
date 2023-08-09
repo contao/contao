@@ -16,7 +16,6 @@ use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransport;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Mailer\Transport\TransportInterface;
 
 class AutoFallbackNotifier
 {
@@ -53,7 +52,6 @@ class AutoFallbackNotifier
             return false;
         }
 
-        /** @var TransportInterface $transport */
         $transport = $this->messengerTransportLocator->get($transportName);
 
         return $transport instanceof AutoFallbackTransport;

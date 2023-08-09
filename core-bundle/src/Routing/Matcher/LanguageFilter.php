@@ -35,7 +35,6 @@ class LanguageFilter implements RouteFilterInterface
         $languages = $request->getLanguages();
 
         foreach ($collection->all() as $name => $route) {
-            /** @var PageModel $pageModel */
             $pageModel = $route->getDefault('pageModel');
 
             if (!$pageModel instanceof PageModel) {

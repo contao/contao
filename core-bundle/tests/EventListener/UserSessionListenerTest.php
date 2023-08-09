@@ -73,9 +73,9 @@ class UserSessionListenerTest extends TestCase
         $listener = $this->getListener(null, $security, $eventDispatcher);
         $listener($this->getRequestEvent($request));
 
-        /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
+        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
         $this->assertSame($sessionValues, $bag->all());
     }
 

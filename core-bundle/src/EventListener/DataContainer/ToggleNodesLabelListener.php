@@ -56,10 +56,13 @@ class ToggleNodesLabelListener
             return;
         }
 
-        /** @var AttributeBagInterface $sessionBag */
         $sessionBag = $session->getBag('contao_backend');
-        $session = $sessionBag->all();
 
+        if (!$sessionBag instanceof AttributeBagInterface) {
+            return;
+        }
+
+        $session = $sessionBag->all();
         $node = $table.'_tree';
 
         if (DataContainer::MODE_TREE_EXTENDED === (int) ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? 0)) {

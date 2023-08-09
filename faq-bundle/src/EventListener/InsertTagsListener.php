@@ -59,10 +59,15 @@ class InsertTagsListener
 
     private function generateUrl(FaqModel $faq, bool $absolute): string|false
     {
-        if (
-            !($category = $faq->getRelated('pid')) instanceof FaqCategoryModel
-            || !($jumpTo = $category->getRelated('jumpTo')) instanceof PageModel
-        ) {
+        $category = $faq->getRelated('pid');
+
+        if (!$category instanceof FaqCategoryModel) {
+            return false;
+        }
+
+        $jumpTo = $category->getRelated('jumpTo');
+
+        if (!$jumpTo instanceof PageModel) {
             return false;
         }
 

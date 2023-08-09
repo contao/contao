@@ -36,7 +36,6 @@ class AdministratorEmailListener
 
     public function __invoke(): string|null
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if ($config->get('adminEmail')) {

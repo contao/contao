@@ -125,7 +125,6 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        /** @var Process $process */
         $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)

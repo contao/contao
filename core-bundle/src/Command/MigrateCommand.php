@@ -17,11 +17,9 @@ use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
-use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -269,7 +267,6 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            /** @var MigrationResult $result */
             foreach ($this->migrations->run() as $result) {
                 ++$count;
 
@@ -691,8 +688,6 @@ class MigrateCommand extends Command
 
         $version = $driverConnection->getServerVersion();
         $correctPlatform = $driver->createDatabasePlatformForVersion($version);
-
-        /** @var AbstractPlatform $currentPlatform */
         $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {

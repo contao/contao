@@ -61,7 +61,6 @@ final class ContaoExtension extends AbstractExtension
     ) {
         $contaoEscaper = new ContaoEscaper();
 
-        /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
         $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
         $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));

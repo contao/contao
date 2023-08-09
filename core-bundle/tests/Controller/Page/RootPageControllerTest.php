@@ -62,7 +62,6 @@ class RootPageControllerTest extends TestCase
         $controller = new RootPageController(new NullLogger());
         $controller->setContainer($container);
 
-        /** @var RedirectResponse $response */
         $response = $controller($rootPage);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
