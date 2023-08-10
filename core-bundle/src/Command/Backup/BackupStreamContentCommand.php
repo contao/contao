@@ -54,7 +54,7 @@ class BackupStreamContentCommand extends Command
     {
         $this
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the backup')
-            ->setHidden()
+            ->setHidden(true)
         ;
     }
 }
