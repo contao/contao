@@ -44,8 +44,11 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        /** @var Session $session */
         $session = $request->getSession();
+
+        if (!$session instanceof Session) {
+            return;
+        }
 
         $session->getFlashBag()->add(
             'contao.BE.info',

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
@@ -81,7 +82,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
             return $GLOBALS['objPage'];
         }
 
-        /** @var Model $model */
+        /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
 
         return $model->findByPk((int) $value);

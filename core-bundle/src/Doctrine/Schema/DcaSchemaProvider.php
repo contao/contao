@@ -63,7 +63,6 @@ class DcaSchemaProvider
             }
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
-                /** @var array $conf */
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
                     if ($table->hasColumn($fieldName)) {
                         continue;

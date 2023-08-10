@@ -146,7 +146,6 @@ class PreviewUrlConverterListenerTest extends TestCase
         $request->query->set('page', '9');
         $request->query->set('article', 'foobar');
 
-        /** @var ArticleModel $articleModel */
         $articleModel = $this->mockClassWithProperties(ArticleModel::class);
         $articleModel->alias = 'foobar';
         $articleModel->inColumn = 'main';

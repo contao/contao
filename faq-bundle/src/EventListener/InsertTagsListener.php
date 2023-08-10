@@ -37,7 +37,7 @@ class InsertTagsListener
     /**
      * Replaces the FAQ insert tags.
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags): string|false
+    public function onReplaceInsertTags(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -59,11 +59,15 @@ class InsertTagsListener
 
     private function generateUrl(FaqModel $faq, bool $absolute): string|false
     {
-        /** @var PageModel $jumpTo */
-        if (
-            !($category = $faq->getRelated('pid')) instanceof FaqCategoryModel
-            || !($jumpTo = $category->getRelated('jumpTo')) instanceof PageModel
-        ) {
+        $category = $faq->getRelated('pid');
+
+        if (!$category instanceof FaqCategoryModel) {
+            return false;
+        }
+
+        $jumpTo = $category->getRelated('jumpTo');
+
+        if (!$jumpTo instanceof PageModel) {
             return false;
         }
 

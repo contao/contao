@@ -72,8 +72,12 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        /** @var AttributeBagInterface $bag */
         $bag = $this->requestStack->getSession()->getBag('contao_backend');
+
+        if (!$bag instanceof AttributeBagInterface) {
+            return;
+        }
+
         $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
 
         $tree = $factory

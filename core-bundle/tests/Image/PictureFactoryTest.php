@@ -78,7 +78,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('1x, 2x', $size->getDensities());
                         $this->assertSame('100vw', $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
                         $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
@@ -328,7 +327,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $config->getSizeItems()[0];
 
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['width'], $sizeItem->getResizeConfig()->getWidth());

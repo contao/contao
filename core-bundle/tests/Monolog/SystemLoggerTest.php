@@ -80,7 +80,6 @@ class SystemLoggerTest extends TestCase
     {
         return $this->callback(
             function (array $context) use ($expectedContext) {
-                /** @var ContaoContext $contaoContext */
                 $contaoContext = $context['contao'] ?? null;
 
                 $this->assertInstanceOf(ContaoContext::class, $contaoContext);

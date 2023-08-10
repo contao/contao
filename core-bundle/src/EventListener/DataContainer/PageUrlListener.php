@@ -172,7 +172,6 @@ class PageUrlListener
             return;
         }
 
-        /** @var PageModel $page */
         foreach ($pages as $page) {
             if ($page->alias && $this->pageRegistry->isRoutable($page)) {
                 // Inherit root page settings from post data

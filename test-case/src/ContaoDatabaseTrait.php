@@ -40,7 +40,7 @@ trait ContaoDatabaseTrait
                 $params = [
                     'driver' => 'pdo_mysql',
                     'host' => getenv('DB_HOST'),
-                    'port' => getenv('DB_PORT'),
+                    'port' => (int) getenv('DB_PORT'),
                     'user' => getenv('DB_USER'),
                     'password' => getenv('DB_PASS'),
                     'dbname' => getenv('DB_NAME'),

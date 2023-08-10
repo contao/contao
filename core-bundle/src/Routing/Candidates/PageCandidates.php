@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,7 +41,6 @@ class PageCandidates extends AbstractCandidates
         $hasRegex = $this->addRegexQuery($qb, $request->getPathInfo());
 
         if ($hasRoot || $hasRegex) {
-            /** @var Result $result */
             $result = $qb->executeQuery();
 
             return array_unique([...$candidates, ...$result->fetchFirstColumn()]);

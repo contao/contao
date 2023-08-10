@@ -137,7 +137,6 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function getVariables(string $expression): array
     {
-        /** @var array<Token> $tokens */
         $tokens = [];
 
         try {

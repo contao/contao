@@ -322,7 +322,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     {
         // Read from DBAFS but enhance result with file metadata on demand
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
                 $item = $item->withPath(Path::makeRelative($path, $this->prefix));
@@ -344,7 +343,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         // Read from adapter, but enhance result with extra metadata on demand
-        /** @var FilesystemItem $item */
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
             $path = $item->getPath();
 
