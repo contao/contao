@@ -90,7 +90,7 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->fetchField());
         }
 
-        $this->assertSame('value1', $results[1]->fetchField(0));
+        $this->assertSame('value1', $results[1]->fetchField());
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The result does not contain any data at offset 1.');
@@ -140,7 +140,7 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->fetchField());
         }
 
-        $this->assertSame('value2', $results[1]->fetchField(0));
+        $this->assertSame('value2', $results[1]->fetchField());
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The result does not contain any data at offset 1.');

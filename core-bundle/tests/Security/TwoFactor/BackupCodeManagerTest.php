@@ -32,7 +32,7 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesNullValue(): void
     {
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
         $frontendUser->backupCodes = null;
 
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
@@ -46,7 +46,7 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesInvalidJson(): void
     {
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
         $frontendUser->backupCodes = 'foobar';
 
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
@@ -65,7 +65,7 @@ class BackupCodeManagerTest extends TestCase
             password_hash('234567', PASSWORD_DEFAULT),
         ]);
 
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
         $frontendUser->backupCodes = $backupCodes;
 
         $backendUser = $this->mockClassWithProperties(BackendUser::class);

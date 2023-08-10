@@ -270,24 +270,13 @@ class FrontendModuleControllerTest extends TestCase
             ->with($model)
         ;
 
-        $container = $this->mockContainerWithFrameworkTemplate('mod_test');
-        $container->set('contao.cache.entity_tags', $entityCacheTags);
-
-        $controller = new TestController();
-        $controller->setContainer($container);
-
-        $controller(new Request(), $model, 'main');
-    }
-
-    private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
-    {
         $framework = $this->mockContaoFramework();
         $framework
             ->method('createInstance')
             ->willReturnCallback(
-                function (string $class, array $params) use ($templateName): FragmentTemplate {
+                function (string $class, array $params): FragmentTemplate {
                     $this->assertSame(FragmentTemplate::class, $class);
-                    $this->assertSame($templateName, $params[0]);
+                    $this->assertSame('mod_test', $params[0]);
 
                     return new FragmentTemplate(...$params);
                 }
@@ -296,8 +285,12 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+        $this->container->set('contao.cache.entity_tags', $entityCacheTags);
 
-        return $this->container;
+        $controller = new TestController();
+        $controller->setContainer($this->container);
+
+        $controller(new Request(), $model, 'main');
     }
 
     private function getTestController(array $fragmentOptions = []): TestController

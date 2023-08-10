@@ -58,7 +58,7 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        $this->setHidden(true);
+        $this->setHidden();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
