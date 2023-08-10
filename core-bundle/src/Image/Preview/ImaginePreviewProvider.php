@@ -144,7 +144,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
         $pagedPath = $sourcePath.'['.($firstPage - 1).'-'.($lastPage - 1).']';
         $magick = new $magickClass();
-        $magick->setOption('pdf:use-trimbox', 'true');
+
+        if (\is_callable([$magick, 'setOption'])) {
+            $magick->setOption('pdf:use-trimbox', 'true');
+        }
 
         if (\is_callable([$magick, 'setResolution'])) {
             $resolution = 72;
@@ -164,8 +167,11 @@ class ImaginePreviewProvider implements PreviewProviderInterface
                 $magick->clear();
 
                 $magick = new $magickClass();
-                $magick->setOption('pdf:use-trimbox', 'true');
                 $magick->setResolution($resolution, $resolution);
+
+                if (\is_callable([$magick, 'setOption'])) {
+                    $magick->setOption('pdf:use-trimbox', 'true');
+                }
             }
         }
 
