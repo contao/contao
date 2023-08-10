@@ -147,6 +147,8 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
         if (\is_callable([$magick, 'setOption'])) {
             $magick->setOption('pdf:use-trimbox', 'true');
+        } elseif (\is_callable([$magick, 'setImageOption'])) {
+            $magick->setImageOption('pdf', 'use-cropbox', 'true');
         }
 
         if (\is_callable([$magick, 'setResolution'])) {
@@ -171,6 +173,8 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
                 if (\is_callable([$magick, 'setOption'])) {
                     $magick->setOption('pdf:use-trimbox', 'true');
+                } elseif (\is_callable([$magick, 'setImageOption'])) {
+                    $magick->setImageOption('pdf', 'use-cropbox', 'true');
                 }
             }
         }
