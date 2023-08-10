@@ -2087,6 +2087,9 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.morePreviewPages">
+        <source>More pages...</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
