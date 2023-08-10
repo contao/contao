@@ -386,9 +386,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             (
                 [\s/]*+                                 # Optional white space including slash
                 ([^>\s/][^>\s/=]*+)                     # Attribute name
-                [\s]*+                                  # Optional white space
+                \s*+                                    # Optional white space
                 (?:=                                    # Assignment
-                    [\s]*+                              # Optional white space
+                    \s*+                                # Optional white space
                     (?|                                 # Value
                         "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
                         |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
