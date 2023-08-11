@@ -104,7 +104,7 @@
       <?php if ($this->hasPreview): ?>
         <div id="preview">
           <?php foreach ($this->previewPictures as $index => $picture): ?>
-            <?php if ($index === 8): ?>
+            <?php if (8 === $index): ?>
               <p><?= $this->labels->morePreviewPages ?></p>
               <?php break; ?>
             <?php endif; ?>
