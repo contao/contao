@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Сохранять поля метаданных, связанные с авторскими правами (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -90,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Выберите поля метаданных, которые нужно сохранить.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Вы можете установить качество сжатия изображения от 0 (самое низкое качество) до 100 (самое высокое качество). Оставьте пустым, чтобы использовать системные настройки по умолчанию.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -168,12 +171,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
+        <target>Использовать настройки по умолчанию</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
+        <target>Выберите настраиваемые поля метаданных</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
+        <target>Удалить все поля метаданных</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

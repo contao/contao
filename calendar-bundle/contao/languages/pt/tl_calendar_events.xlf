@@ -387,14 +387,20 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <target>Publicar/despublicar evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
-        <source>Publish event ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.2">
         <source>Unpublish event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.feature">
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>ID %s do evento de recurso/desencaracterística</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.1">
+        <source>Unfeature event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.2">
+        <source>Feature event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

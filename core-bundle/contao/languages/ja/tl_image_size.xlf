@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>著作権に関するメタデータのフィールド(EXIF、IPTC、XMP)を保持します。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -90,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>保持したいメタデータのフィールドを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>画像圧縮の品質を0(最低の品質)と100(最大の品質)の間で指定します。空にした場合はシステムの初期設定を適用します。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -168,12 +171,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
+        <target>初期設定を使用</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
+        <target>独自のメタデータのフィールドを選択</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
+        <target>すべてのメタデータのフィールドを削除</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

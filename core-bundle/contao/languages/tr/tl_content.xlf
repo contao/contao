@@ -321,6 +321,14 @@
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Hedef adres yerine bağlantı metnini görüntüler.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Değiştirilecek bağlantı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Özel bir bağlantı metni ve başlığı ayarlayın.</target>
+      </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
         <target>Bağlantı başlığı</target>

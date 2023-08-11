@@ -321,6 +321,14 @@
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Der Link-Text wird anstelle der Link-Adresse angezeigt.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Link überschreiben</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Einen benutzerdefinierten Linktext und Linktitel festlegen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
         <target>Link-Titel</target>

@@ -319,6 +319,12 @@
         <source>The link text will be displayed instead of the target URL.</source>
         <target>En vez de ver la URL del código fuente, se mostrará el título a los visitantes de tu web. Si generas una imagen como link, se verá la imagen en vez del título del link.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+      </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
         <target>Enlace titulo</target>
