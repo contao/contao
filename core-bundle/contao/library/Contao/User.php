@@ -254,6 +254,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
+			/** @var class-string<Model> $strModelClass */
 			$strModelClass = Model::getClassFromTable($this->strTable);
 			$this->arrData = array();
 

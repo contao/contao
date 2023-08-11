@@ -1117,7 +1117,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return Collection<static>|static|null A model, model collection or null if the result is empty
+	 * @return Collection<static>|static[]|static|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{

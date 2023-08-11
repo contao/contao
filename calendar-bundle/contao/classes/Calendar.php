@@ -141,13 +141,15 @@ class Calendar extends Frontend
 		$time = time();
 
 		// Get the upcoming events
-		$objArticle = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
+		$objArticles = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
 
 		// Parse the items
-		if ($objArticle !== null)
+		if ($objArticles !== null)
 		{
-			while ($objArticle->next())
+			while ($objArticles->next())
 			{
+				$objArticle = $objArticles->current();
+
 				// Never add unpublished elements to the RSS feeds
 				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
 				{
