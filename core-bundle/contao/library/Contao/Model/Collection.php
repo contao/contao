@@ -17,7 +17,7 @@ use Contao\Model;
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
  *
- * @template T
+ * @template T of Model
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -264,7 +264,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the previous row
 	 *
-	 * @return Collection<T>|false The model collection object or false if there is no previous row
+	 * @return static|false The model collection object or false if there is no previous row
 	 */
 	public function prev()
 	{
@@ -296,7 +296,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the next row
 	 *
-	 * @return Collection<T>|false The model collection object or false if there is no next row
+	 * @return static|false The model collection object or false if there is no next row
 	 */
 	public function next()
 	{
