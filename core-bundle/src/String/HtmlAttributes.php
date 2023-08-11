@@ -418,20 +418,20 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function parseStyles(string $styles): array
     {
         // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
-        $declarationRegex = '(
+        $declarationRegex = '/
             (?:
                 \.                                # Escape
                 |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
                 |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
                 |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
                 |\[(?:(?R)|[^]])*+(?:]|$)         # []-block
-                |\((?:(?R)|[^\)])*+(?:\)|$)       # ()-block
+                |\((?:(?R)|[^)])*+(?:\)|$)        # ()-block
                 |[^;{}\[\]()"\']                  # Anything else
             )++
-        )ixs';
+        /ixs';
 
         // Regular expression to match an <ident-token> according to https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
-        $propertyRegex = '(
+        $propertyRegex = '/
             ^
             (?!\d)                              # Must not start with a digit
             (?!-\d)                             # Must not start with a dash followed by a digit
@@ -441,7 +441,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
             )++
             $
-        )ixs';
+        /ixs';
 
         preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
