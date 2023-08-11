@@ -91,7 +91,9 @@ class PreviewUrlConverterListenerTest extends TestCase
         $request = new Request();
         $request->query->set('page', '9');
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 9;
+
         $pageModel
             ->expects($this->once())
             ->method('getPreviewUrl')
@@ -101,7 +103,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByAlias' => null]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => null]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -150,7 +152,9 @@ class PreviewUrlConverterListenerTest extends TestCase
         $articleModel->alias = 'foobar';
         $articleModel->inColumn = 'main';
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 9;
+
         $pageModel
             ->expects($this->once())
             ->method('getPreviewUrl')
@@ -160,7 +164,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByAlias' => $articleModel]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => $articleModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

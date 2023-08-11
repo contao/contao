@@ -158,9 +158,9 @@ class NewsFeedListener
         }
 
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
-        $files = $filesAdapter->findMultipleByUuids($uuids);
+        $fileModels = $filesAdapter->findMultipleByUuids($uuids);
 
-        if (null === $files) {
+        if (null === $fileModels) {
             return [];
         }
 
@@ -169,8 +169,8 @@ class NewsFeedListener
         $size = StringUtil::deserialize($pageModel->imgSize, true);
         $enclosures = [];
 
-        while ($files->next()) {
-            $file = new File($files->path);
+        foreach ($fileModels as $fileModel) {
+            $file = new File($fileModel->path);
 
             if (!$file->exists()) {
                 continue;
