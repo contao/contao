@@ -420,25 +420,25 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
         $declarationRegex = '(
             (?:
-                \.                              # Escape
-                |"(?:\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
-                |\'(?:\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
-                |\{(?:(?R)|[^}])*+(?:}|$)       # {}-block
-                |\[(?:(?R)|[^]])*+(?:]|$)       # []-block
-                |\((?:(?R)|[^\)])*+(?:\)|$)     # ()-block
-                |[^;{}\[\]()"\']                # Anything else
+                \.                                # Escape
+                |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
+                |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
+                |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
+                |\[(?:(?R)|[^]])*+(?:]|$)         # []-block
+                |\((?:(?R)|[^\)])*+(?:\)|$)       # ()-block
+                |[^;{}\[\]()"\']                  # Anything else
             )++
         )ixs';
 
         // Regular expression to match an <ident-token> according to https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
         $propertyRegex = '(
             ^
-            (?!\d)                               # Must not start with a digit
-            (?!-\d)                              # Must not start with a dash followed by a digit
-            -?+                                  # Optional leading dash
+            (?!\d)                              # Must not start with a digit
+            (?!-\d)                             # Must not start with a dash followed by a digit
+            -?+                                 # Optional leading dash
             (?:
                 [a-z0-9\x80-\xFF_-]
-                |\\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
+                |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
             )++
             $
         )ixs';
