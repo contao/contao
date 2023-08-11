@@ -40,15 +40,15 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class InsertTagParser implements ResetInterface
 {
-    private const TAG_REGEX = /** @lang RegExp */ '
-        (?<it>                 # Named capturing group "it"
+    private const TAG_REGEX = '
+        (?\'it\'               # Named capturing group "it"
             {{                 # Starts with two opening curly braces
             [a-z0-9\x80-\xFF]  # The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
             (?>[^{}]|(?&it))*  # Match any character not curly brace or a nested insert tag
             }}                 # Ends with two closing curly braces
         )';
 
-    private const PARAMETER_REGEX = /** @lang RegExp */ '
+    private const PARAMETER_REGEX = '
         ::                        # Starts with double colon
         (?:
             [^{}|:]               # Match any character not curly brace, pipe or colon

@@ -382,21 +382,20 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function parseString(string $attributesString): \Generator
     {
         // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
-        $attributeRegex = <<<'EOD'
-            (
-                [\s/]*+                                 # Optional white space including slash
-                ([^>\s/][^>\s/=]*+)                     # Attribute name
-                [\s]*+                                  # Optional white space
-                (?:=                                    # Assignment
-                    [\s]*+                              # Optional white space
-                    (?|                                 # Value
-                        "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
-                        |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
-                        |([^\s>]*+)                     # Or unquoted or missing value
-                    )                                   # Value end
-                )?+                                     # Assignment is optional
-            )ix
-            EOD;
+        $attributeRegex = '(
+            [\s/]*+                                    # Optional white space including slash
+            ([^>\s/][^>\s/=]*+)                        # Attribute name
+            \s*+                                       # Optional white space
+            (?:
+                =                                      # Assignment
+                \s*+                                   # Optional white space
+                (?|                                    # Value
+                    "([^"]*)(?:"|$(*SKIP)(*FAIL))      # Double quoted value
+                    |\'([^\']*)(?:\'|$(*SKIP)(*FAIL))  # Or single quoted value
+                    |([^\s>]*+)                        # Or unquoted or missing value
+                )                                      # Value end
+            )?+                                        # Assignment is optional
+        )ix';
 
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
@@ -419,34 +418,30 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function parseStyles(string $styles): array
     {
         // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
-        $declarationRegex = <<<'EOD'
-            (
-                (?:
-                    \\.                           # Escape
-                    |"(?:\\.|[^"\n])*+(?:"|\n|$)  # String token double quotes
-                    |'(?:\\.|[^'\n])*+(?:'|\n|$)  # String token single quotes
-                    |\{(?:(?R)|[^}])*+(?:\}|$)    # {}-block
-                    |\[(?:(?R)|[^]])*+(?:\]|$)    # []-block
-                    |\((?:(?R)|[^\)])*+(?:\)|$)   # ()-block
-                    |[^;{}\[\]()"']               # Anything else
-                )++
-            )ixs
-            EOD;
+        $declarationRegex = '/
+            (?:
+                \.                                # Escape
+                |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
+                |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
+                |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
+                |\[(?:(?R)|[^]])*+(?:]|$)         # []-block
+                |\((?:(?R)|[^)])*+(?:\)|$)        # ()-block
+                |[^;{}\[\]()"\']                  # Anything else
+            )++
+        /ixs';
 
         // Regular expression to match an <ident-token> according to https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
-        $propertyRegex = <<<'EOD'
-            (
-                ^
-                (?!\d)                             # Must not start with a digit
-                (?!-\d)                            # Must not start with a dash followed by a digit
-                -?+                                # Optional leading dash
-                (?:
-                    [a-z0-9\x80-\xFF_-]
-                    |\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
-                )++
-                $
-            )ixs
-            EOD;
+        $propertyRegex = '/
+            ^
+            (?!\d)                              # Must not start with a digit
+            (?!-\d)                             # Must not start with a dash followed by a digit
+            -?+                                 # Optional leading dash
+            (?:
+                [a-z0-9\x80-\xFF_-]
+                |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
+            )++
+            $
+        /ixs';
 
         preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 

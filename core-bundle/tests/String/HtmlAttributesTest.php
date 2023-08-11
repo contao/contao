@@ -128,6 +128,16 @@ class HtmlAttributesTest extends TestCase
             ['style' => "color:'r\\'ed'"],
         ];
 
+        yield 'escaped string hacking' => [
+            "style=\"color: 'r\\'; eval : foo '\"",
+            ['style' => "color:'r\\'; eval : foo '"],
+        ];
+
+        yield 'escaped string hacking double quotes' => [
+            "style='color: \"r\\\"; eval : foo \"'",
+            ['style' => 'color:"r\\"; eval : foo "'],
+        ];
+
         yield 'newline' => [
             "style=\"content:'new\\\nline'\"",
             ['style' => "content:'new\\\nline'"],
