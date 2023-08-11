@@ -80,9 +80,9 @@ class ModuleFaqList extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaqs = FaqModel::findPublishedByPids($this->faq_categories);
 
-		if ($objFaq === null)
+		if ($objFaqs === null)
 		{
 			$this->Template->faq = array();
 
@@ -93,8 +93,10 @@ class ModuleFaqList extends Module
 		$arrFaq = array_fill_keys($this->faq_categories, array());
 
 		// Add FAQs
-		while ($objFaq->next())
+		while ($objFaqs->next())
 		{
+			$objFaq = $objFaqs->current();
+
 			$arrTemp = $objFaq->row();
 			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);

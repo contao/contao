@@ -692,6 +692,7 @@ class PageModel extends Model
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
 		{
+			/** @var PageModel|null $objModel */
 			$objModel = Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
 
 			if ($objModel !== null)
