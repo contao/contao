@@ -420,13 +420,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
         $declarationRegex = '(
             (?:
-                \\.                              # Escape
-                |"(?:\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
-                |\'(?:\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
-                |\{(?:(?R)|[^}])*+(?:\}|$)       # {}-block
-                |\[(?:(?R)|[^]])*+(?:\]|$)       # []-block
-                |\((?:(?R)|[^\)])*+(?:\)|$)      # ()-block
-                |[^;{}\[\]()"\']                 # Anything else
+                \.                              # Escape
+                |"(?:\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
+                |\'(?:\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
+                |\{(?:(?R)|[^}])*+(?:}|$)       # {}-block
+                |\[(?:(?R)|[^]])*+(?:]|$)       # []-block
+                |\((?:(?R)|[^\)])*+(?:\)|$)     # ()-block
+                |[^;{}\[\]()"\']                # Anything else
             )++
         )ixs';
 
