@@ -43,6 +43,13 @@ type = XLIFF
 source_lang = en
 resource_name = v5_2-tl_content
 
+[o:contao:p:core-bundle:r:v5_2-tl_favorites]
+file_filter = contao/languages/<lang>/tl_favorites.xlf
+source_file = contao/languages/en/tl_favorites.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_2-tl_favorites
+
 [o:contao:p:core-bundle:r:v5_2-tl_files]
 file_filter = contao/languages/<lang>/tl_files.xlf
 source_file = contao/languages/en/tl_files.xlf
