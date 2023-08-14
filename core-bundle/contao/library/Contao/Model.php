@@ -1188,7 +1188,14 @@ abstract class Model
 
 		if ($objResult->numRows < 1)
 		{
-			return ($arrOptions['return'] ?? null) == 'Array' ? array() : null;
+			if (($arrOptions['return'] ?? null) == 'Array')
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+
+				return array();
+			}
+
+			return null;
 		}
 
 		$objResult = static::postFind($objResult);
@@ -1208,6 +1215,8 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
 
