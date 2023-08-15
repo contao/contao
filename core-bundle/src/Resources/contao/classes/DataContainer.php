@@ -276,6 +276,14 @@ abstract class DataContainer extends Backend
 				$this->intId = $varValue;
 				break;
 
+			case 'field':
+				$this->strField = $varValue;
+				break;
+
+			case 'inputName':
+				$this->strInputName = $varValue;
+				break;
+
 			default:
 				$this->$strKey = $varValue; // backwards compatibility
 				break;
