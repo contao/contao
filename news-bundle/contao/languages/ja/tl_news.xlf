@@ -323,9 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
         <source>Unfeature news item ID %s</source>
+        <target>ID %sのニュース項目を通常に設定</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
+        <target>ID %sのニュース項目を特別に設定</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Bevara upphovsrättsrelaterade metadatafält (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -90,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Välj de metadatafält som ska bevaras.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Här kan du ställa in bildkomprimeringskvaliteten mellan 0 (lägsta kvalitet) och 100 (högsta kvalitet). Lämna tomt för att använda systemets standard.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -168,12 +171,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
+        <target>Använd standardinställningar</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
+        <target>Välj anpassade metadatafält</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
+        <target>Ta bort alla metadatafält</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

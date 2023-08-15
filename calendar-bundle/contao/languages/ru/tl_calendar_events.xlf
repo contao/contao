@@ -403,9 +403,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
+        <target>Простое событие ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
+        <target>Популярное событие ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

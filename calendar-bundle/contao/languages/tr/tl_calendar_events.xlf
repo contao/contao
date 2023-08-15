@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinliği öne çıkar</target>
+        <target>Etkinliği öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -403,9 +403,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
+        <target>%s kimlikli etkinliği öne çıkarılmışlardan kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
+        <target>%s kimlikli etkinliği öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
