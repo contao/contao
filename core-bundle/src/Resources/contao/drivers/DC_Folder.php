@@ -2826,13 +2826,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				{
 					try
 					{
-						$thumbnail .= '<br>' . $this->getPreviewImage($currentEncoded);
+						$thumbnail .= '<br>' . $this->getPreviewImage(rawurldecode($currentEncoded));
 
 						$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
-							$thumbnail .= ' ' . $this->getPreviewImage($currentEncoded, true);
+							$thumbnail .= ' ' . $this->getPreviewImage(rawurldecode($currentEncoded), true);
 						}
 					}
 					catch (RuntimeException $e)
@@ -3170,7 +3170,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$picture = $container
 			->get('contao.image.preview_factory')
-			->createPreviewPicture($this->strRootDir . '/' . rawurldecode($relpath), $pictureSize);
+			->createPreviewPicture($projectDir . '/' . $relpath, $pictureSize);
 
 		$srcset = '';
 		$img = $picture->getImg($projectDir);
