@@ -39,7 +39,6 @@ class PublishedFilter implements RouteFilterInterface
         }
 
         foreach ($collection->all() as $name => $route) {
-            /** @var PageModel $pageModel */
             $pageModel = $route->getDefault('pageModel');
 
             if (!$pageModel instanceof PageModel) {

@@ -84,7 +84,6 @@ class MakeDcaCallback extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $targets[$target];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 

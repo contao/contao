@@ -145,12 +145,7 @@ class UserCreateCommand extends Command
         }
 
         if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
-            $answer = $this->askMultipleChoice(
-                'Assign which groups to the user (select multiple comma-separated)?',
-                $options,
-                $input,
-                $output
-            );
+            $answer = $this->askForUserGroups($options, $input, $output);
 
             $input->setOption('group', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
         }
@@ -225,9 +220,9 @@ class UserCreateCommand extends Command
         return $helper->ask($input, $output, $question);
     }
 
-    private function askMultipleChoice(string $label, array $options, InputInterface $input, OutputInterface $output): array
+    private function askForUserGroups(array $options, InputInterface $input, OutputInterface $output): array
     {
-        $question = new ChoiceQuestion($label, $options);
+        $question = new ChoiceQuestion('Assign which groups to the user (select multiple comma-separated)?', $options);
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 

@@ -78,7 +78,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('1x, 2x', $size->getDensities());
                         $this->assertSame('100vw', $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
                         $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
@@ -149,10 +148,10 @@ class PictureFactoryTest extends TestCase
             'cssClass' => 'my-size',
             'lazyLoading' => true,
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
-            'preserveMetadata' => true,
             'skipIfDimensionsMatch' => true,
             'imageQuality' => 77,
-            'metadata' => serialize([
+            'preserveMetadata' => 'overwrite',
+            'preserveMetadataFields' => serialize([
                 serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
                 serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
             ]),
@@ -281,7 +280,7 @@ class PictureFactoryTest extends TestCase
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
-                'preserveMetadata' => [
+                'preserveMetadataFields' => [
                     ExifFormat::NAME => [],
                     IptcFormat::NAME => ['2#116', '2#080'],
                 ],
@@ -328,7 +327,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $config->getSizeItems()[0];
 
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['width'], $sizeItem->getResizeConfig()->getWidth());
@@ -344,12 +342,12 @@ class PictureFactoryTest extends TestCase
                 $this->callback(
                     function (ResizeOptions $options) use ($predefinedSizes): bool {
                         $this->assertSame(
-                            $predefinedSizes['foobar']['preserveMetadata'][ExifFormat::NAME],
+                            $predefinedSizes['foobar']['preserveMetadataFields'][ExifFormat::NAME],
                             $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
                         );
 
                         $this->assertSame(
-                            $predefinedSizes['foobar']['preserveMetadata'][IptcFormat::NAME],
+                            $predefinedSizes['foobar']['preserveMetadataFields'][IptcFormat::NAME],
                             $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
                         );
 

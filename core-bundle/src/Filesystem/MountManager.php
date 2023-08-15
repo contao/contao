@@ -74,7 +74,6 @@ class MountManager
         }
 
         try {
-            /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
         } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
@@ -98,7 +97,6 @@ class MountManager
         }
 
         try {
-            /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
         } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
@@ -117,7 +115,6 @@ class MountManager
      */
     public function read(string $path): string
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -134,7 +131,6 @@ class MountManager
      */
     public function readStream(string $path)
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -149,7 +145,6 @@ class MountManager
      */
     public function write(string $path, string $contents, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -169,7 +164,6 @@ class MountManager
         FilesystemUtil::assertIsResource($contents);
         FilesystemUtil::rewindStream($contents);
 
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -184,7 +178,6 @@ class MountManager
      */
     public function delete(string $path): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -199,7 +192,6 @@ class MountManager
      */
     public function deleteDirectory(string $path): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -214,7 +206,6 @@ class MountManager
      */
     public function createDirectory(string $path, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -229,10 +220,7 @@ class MountManager
      */
     public function copy(string $pathFrom, string $pathTo, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapterFrom */
         [$adapterFrom, $adapterPathFrom] = $this->getAdapterAndPath($pathFrom);
-
-        /** @var FilesystemAdapter $adapterTo */
         [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathTo);
 
         try {
@@ -256,10 +244,7 @@ class MountManager
      */
     public function move(string $pathFrom, string $pathTo, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapterFrom */
         [$adapterFrom, $adapterPathFrom] = $this->getAdapterAndPath($pathFrom);
-
-        /** @var FilesystemAdapter $adapterTo */
         [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathTo);
 
         try {
@@ -330,7 +315,6 @@ class MountManager
      */
     public function getLastModified(string $path): int
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -345,7 +329,6 @@ class MountManager
      */
     public function getFileSize(string $path): int
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -360,7 +343,6 @@ class MountManager
      */
     public function getMimeType(string $path): string
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -372,7 +354,6 @@ class MountManager
 
     public function generatePublicUri(string $path, OptionsInterface|null $options = null): UriInterface|null
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         foreach ($this->publicUriProviders as $provider) {
@@ -384,6 +365,9 @@ class MountManager
         return null;
     }
 
+    /**
+     * @return array{0: FilesystemAdapter, 1: string, 2: string}
+     */
     private function getAdapterAndPath(string $path): array
     {
         if ('' !== $path) {
@@ -410,7 +394,6 @@ class MountManager
      */
     private function doListContents(string $path, bool $deep): \Generator
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
 
         try {

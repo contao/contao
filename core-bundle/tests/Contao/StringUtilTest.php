@@ -75,7 +75,7 @@ class StringUtilTest extends TestCase
             DcaExtractor::class,
         ]);
 
-        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
@@ -601,6 +601,7 @@ class StringUtilTest extends TestCase
         $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
         $container->set('contao.resource_locator', $locator);
 
+        $GLOBALS['TL_DCA']['tl_files'] = [];
         $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
 
         $file = new FilesModel([

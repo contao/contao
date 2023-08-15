@@ -77,7 +77,6 @@ class PageRegistry
             return $route;
         }
 
-        /** @var DynamicRouteInterface $enhancer */
         $enhancer = $this->routeEnhancers[$type];
         $enhancer->configurePageRoute($route);
 

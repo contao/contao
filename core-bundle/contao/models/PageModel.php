@@ -176,67 +176,67 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
  *
- * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByRoutePriority($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTarget($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDns($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDisableLanguageRedirect($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByEnableCanonical($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCanonicalLink($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCanonicalKeepParams($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDatimFormat($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByValidAliasCharacters($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUrlPrefix($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUrlSuffix($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByAutoforward($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByProtected($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findBySubpageLayout($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCuser($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCgroup($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByChmod($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByNoSearch($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByCssClass($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findBySitemap($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByHide($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByAccesskey($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByStart($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByEnforceTwoFactor($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTwoFactorJumpTo($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByPid($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findBySorting($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByTitle($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByAlias($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByType($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByRoutePriority($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByPageTitle($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByLanguage($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByRobots($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByDescription($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByRedirect($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByJumpTo($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByRedirectBack($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByUrl($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByTarget($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByDns($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByStaticFiles($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByStaticPlugins($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByFallback($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByDisableLanguageRedirect($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByFavicon($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByRobotsTxt($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByMailerTransport($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByEnableCanonical($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCanonicalLink($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCanonicalKeepParams($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByAdminEmail($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByDateFormat($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByTimeFormat($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByDatimFormat($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByValidAliasCharacters($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByUseFolderUrl($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByUrlPrefix($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByUrlSuffix($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByUseSSL($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByAutoforward($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByProtected($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByGroups($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByIncludeLayout($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByLayout($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findBySubpageLayout($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByIncludeCache($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCache($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByIncludeChmod($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCuser($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCgroup($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByChmod($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByNoSearch($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCssClass($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findBySitemap($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByHide($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByAccesskey($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByPublished($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByStart($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByStop($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByEnforceTwoFactor($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -349,7 +349,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -535,7 +535,7 @@ class PageModel extends Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -574,7 +574,7 @@ class PageModel extends Model
 	/**
 	 * Find pages that have a similar alias
 	 *
-	 * @return Collection|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
@@ -597,7 +597,7 @@ class PageModel extends Model
 	 * @param mixed $varId      The numeric ID or the alias name
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -619,7 +619,7 @@ class PageModel extends Model
 	 * @param array $arrIds     An array of page IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularByIds($arrIds, array $arrOptions=array())
 	{
@@ -657,7 +657,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
@@ -685,13 +685,14 @@ class PageModel extends Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return PageModel|Model|null The model or null if there is no fallback page
+	 * @return PageModel|null The model or null if there is no fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
 		{
+			/** @var PageModel|null $objModel */
 			$objModel = Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
 
 			if ($objModel !== null)
@@ -727,7 +728,7 @@ class PageModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no parent pages
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
@@ -753,7 +754,7 @@ class PageModel extends Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
+	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no parent pages
 	 */
 	public static function findParentsById($intId)
 	{

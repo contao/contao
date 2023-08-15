@@ -123,7 +123,6 @@ class SymlinksCommand extends Command
 
     private function symlinkThemes(): void
     {
-        /** @var array<SplFileInfo> $themes */
         $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
@@ -216,13 +215,12 @@ class SymlinksCommand extends Command
      */
     private function filterNestedPaths(Finder $finder, string $prepend): array
     {
+        /** @var array<string, SplFileInfo> $files */
         $files = iterator_to_array($finder);
 
-        /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
             $path = $file->getRelativePath();
 
-            /** @var SplFileInfo $otherFile */
             foreach ($files as $otherFile) {
                 $otherPath = $otherFile->getRelativePath();
 

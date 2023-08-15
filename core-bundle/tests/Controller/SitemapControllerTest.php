@@ -711,7 +711,6 @@ class SitemapControllerTest extends TestCase
      */
     private function mockPageFinder(Request $request): PageFinder
     {
-        /** @var PageModel $rootPage1 */
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
         $rootPage1->id = 42;
         $rootPage1->dns = 'www.foobar.com';
@@ -719,7 +718,6 @@ class SitemapControllerTest extends TestCase
         $rootPage1->language = 'en';
         $rootPage1->fallback = true;
 
-        /** @var PageModel $rootPage2 */
         $rootPage2 = $this->mockClassWithProperties(PageModel::class);
         $rootPage2->id = 21;
         $rootPage2->dns = 'www.foobar.com';

@@ -98,13 +98,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
-	),
-
-	// Sub-palettes
-	'subpalettes' => array
-	(
-		'preserveMetadata'            => 'metadata'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
+		'overwrite'                   => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,preserveMetadataFields;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Fields
@@ -194,15 +189,17 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'preserveMetadata' => array
 		(
-			'inputType'               => 'checkbox',
+			'inputType'               => 'radio',
+			'options'                 => array('default', 'overwrite', 'delete'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => true)
+			'sql'                     => "varchar(12) NOT NULL default 'default'"
 		),
-		'metadata' => array
+		'preserveMetadataFields' => array
 		(
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_image_size', 'getMetadata'),
-			'eval'                    => array('multiple'=>true),
+			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
+			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'skipIfDimensionsMatch' => array
@@ -443,13 +440,13 @@ class tl_image_size extends Backend
 	}
 
 	/**
-	 * Return the image metadata options
+	 * Return the image metadata fields
 	 *
 	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getMetadata(DataContainer $dc=null)
+	public function getMetadataFields(DataContainer $dc=null)
 	{
 		$options = array();
 

@@ -32,10 +32,7 @@ class AddCronJobsPass implements CompilerPassInterface
         $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
         $definition = $container->findDefinition('contao.cron');
 
-        /** @var array<Definition> $sync */
         $sync = [];
-
-        /** @var array<Definition> $async */
         $async = [];
 
         foreach ($serviceIds as $serviceId => $tags) {

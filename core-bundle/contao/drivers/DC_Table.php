@@ -575,31 +575,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--with-padding zebra-table--no-border">';
+		$return = '';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
 		{
 			foreach ($rows as $entries)
 			{
-				// Separate multiple rows
 				if ($separate)
 				{
-					$return .= '
-  <tr>
-    <td colspan="2" style="height:1em"></td>
-   </tr>';
+					$return .= '</tbody></table>';
 				}
 
 				$separate = true;
 
-				// Add the table name
 				$return .= '
-  <tr>
-    <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
-    <th>' . $table . '</th>
-  </tr>
-';
+<table class="tl_show with-padding with-zebra">
+  <thead>
+    <tr>
+      <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
+      <th>' . $table . '</th>
+    </tr>
+  </thead>
+  <tbody>';
 
 				foreach ($entries as $lbl=>$val)
 				{
@@ -613,8 +611,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Return table
-		return $return . '</table>';
+		return $return . '</tbody></table>';
 	}
 
 	/**
@@ -5203,6 +5200,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 			{
 				$return .= '
+<thead>
   <tr>';
 
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
@@ -5218,7 +5216,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
     <th class="tl_folder_tlist tl_right_nowrap"></th>
-  </tr>';
+  </tr>
+</thead>
+<tbody>';
 			}
 
 			// Process result and add label and buttons
@@ -5318,6 +5318,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
     <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" value="' . $row['id'] . '"></td>' : '
     <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
   </tr>';
+			}
+
+			// Close the table body if the "show columns" option is active
+			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			{
+				$return .= '</tbody>';
 			}
 
 			// Close the table

@@ -75,7 +75,6 @@ class FeedReaderController extends AbstractFrontendModuleController
         $template->set('feeds', $feeds);
 
         // Take the configured amount of items from each feed and merge them into one list
-        /** @var list<array{feed: Feed, item: Item}> $elements */
         $elements = array_merge(
             ...array_map(
                 static fn (FeedInterface $feed): array => array_map(

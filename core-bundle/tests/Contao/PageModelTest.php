@@ -175,8 +175,7 @@ class PageModelTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $result);
 
-        /** @var PageModel $pageModel */
-        $pageModel = $result->first();
+        $pageModel = $result->current();
 
         $this->assertSame(42, $pageModel->id);
     }

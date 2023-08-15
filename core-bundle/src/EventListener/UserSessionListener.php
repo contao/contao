@@ -18,7 +18,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -55,7 +54,6 @@ class UserSessionListener
         $session = $user->session;
 
         if (\is_array($session)) {
-            /** @var AttributeBagInterface $sessionBag */
             $sessionBag = $this->getSessionBag($event->getRequest());
             $sessionBag->replace($session);
         }
@@ -79,7 +77,6 @@ class UserSessionListener
             return;
         }
 
-        /** @var AttributeBagInterface $sessionBag */
         $sessionBag = $this->getSessionBag($event->getRequest());
         $data = $sessionBag->all();
 
@@ -89,7 +86,7 @@ class UserSessionListener
     /**
      * Returns the session bag.
      */
-    private function getSessionBag(Request $request): SessionBagInterface
+    private function getSessionBag(Request $request): AttributeBagInterface
     {
         if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
@@ -101,6 +98,12 @@ class UserSessionListener
             $name = 'contao_backend';
         }
 
-        return $request->getSession()->getBag($name);
+        $bag = $request->getSession()->getBag($name);
+
+        if ($bag instanceof AttributeBagInterface) {
+            return $bag;
+        }
+
+        throw new \RuntimeException(sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
     }
 }

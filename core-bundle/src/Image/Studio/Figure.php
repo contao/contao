@@ -74,7 +74,6 @@ final class Figure
             return null;
         }
 
-        /** @var LightboxResult */
         return $this->lightbox;
     }
 
@@ -94,7 +93,6 @@ final class Figure
             return null;
         }
 
-        /** @var Metadata */
         return $this->metadata;
     }
 

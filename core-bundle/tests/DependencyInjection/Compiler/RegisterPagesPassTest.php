@@ -147,7 +147,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
@@ -178,7 +177,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
@@ -212,7 +210,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
@@ -278,7 +275,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
@@ -312,7 +308,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Reference $reference */
                         $reference = $arguments[2];
                         $this->assertInstanceOf(Reference::class, $reference);
 
@@ -343,7 +338,6 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Reference $reference */
                         $reference = $arguments[3];
                         $this->assertInstanceOf(Reference::class, $reference);
 

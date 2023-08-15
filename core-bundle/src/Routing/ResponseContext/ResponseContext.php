@@ -31,7 +31,6 @@ final class ResponseContext
 
         $event->setResponseContext($this);
 
-        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get(EventDispatcherInterface::class);
         $eventDispatcher->dispatch($event);
     }
@@ -67,13 +66,11 @@ final class ResponseContext
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $serviceId
      *
-     * @return object
-     *
-     * @phpstan-return T
+     * @return T
      */
     public function get(string $serviceId)
     {

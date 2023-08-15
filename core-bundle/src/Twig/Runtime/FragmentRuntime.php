@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\ModuleModel;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -47,7 +48,9 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel
     {
         if (is_numeric($typeOrId)) {
-            $model = $this->framework->getAdapter($class)->findByPk($typeOrId);
+            /** @var Adapter<ContentModel|ModuleModel> $adapter */
+            $adapter = $this->framework->getAdapter($class);
+            $model = $adapter->findByPk($typeOrId);
         } else {
             $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\Transport;
 
 use Contao\CoreBundle\Messenger\AutoFallbackNotifier;
-use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransport;
 use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
@@ -46,7 +45,6 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
 
-        /** @var AutoFallbackTransport $transport */
         $transport = $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],

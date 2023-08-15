@@ -325,7 +325,6 @@ class RouteProviderTest extends TestCase
         ksort($pages);
 
         foreach ($collection as $name => $route) {
-            /** @var PageModel $routedPage */
             $routedPage = $route->getDefault('pageModel');
 
             $this->assertInstanceOf(PageModel::class, $routedPage);
@@ -532,7 +531,6 @@ class RouteProviderTest extends TestCase
         ksort($pages);
 
         foreach ($collection as $name => $route) {
-            /** @var PageModel $routedPage */
             $routedPage = $route->getDefault('pageModel');
 
             if ($i > $c - 1) {

@@ -284,7 +284,7 @@ body.popup {
 
 /* Left */
 #left {
-	width: 210px;
+	width: 220px;
 	background: var(--nav-bg);
 	display: flex;
 	flex-direction: column;
@@ -303,7 +303,7 @@ body.popup {
 
 /* Main */
 #main {
-	width: calc(100% - 210px);
+	width: calc(100% - 220px);
 	display: flex;
 	flex-direction: column;
 }
@@ -1032,6 +1032,10 @@ h2.sub_headline {
 	list-style: none;
 }
 
+.two-factor .tl_trusted_devices th, .two-factor .tl_trusted_devices td {
+	line-height: 16px;
+}
+
 /* Picker search */
 #search {
 	margin: 18px 18px -9px;
@@ -1124,6 +1128,7 @@ table.tl_listing {
 }
 
 .tl_folder_tlist {
+	line-height: 16px;
 	border-top: 1px solid var(--border);
 }
 
@@ -1178,6 +1183,10 @@ table.tl_listing {
 	width: 96%;
 	margin: 18px 2%;
 	padding: 9px 0 18px;
+}
+
+.tl_show + .tl_show {
+	margin-top: 36px;
 }
 
 .tl_show th, .tl_show td {
@@ -1267,11 +1276,14 @@ table.tl_listing {
 }
 
 .tl_content_header {
-	margin-top: 18px;
 	padding: 7px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--table-header);
 	font-weight: 600;
+}
+
+.tl_header + .tl_content_header {
+	border-top: 1px solid var(--border);
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -1875,11 +1887,6 @@ ul.sgallery li {
 	border-bottom: 0;
 }
 
-#tl_soverview table {
-	width: 100%;
-	margin-bottom: 14px;
-}
-
 #tl_messages h2, #tl_shortcuts h2, #tl_versions h2 {
 	margin: 14px 0 6px;
 }
@@ -1902,8 +1909,17 @@ ul.sgallery li {
 	margin-bottom: 0;
 }
 
+#tl_versions table {
+	width: 100%;
+	margin-bottom: 18px;
+}
+
 #tl_versions th, #tl_versions td {
 	padding: 6px;
+}
+
+#tl_versions th {
+	line-height: 16px;
 }
 
 #tl_versions td:first-child {
@@ -1919,6 +1935,8 @@ ul.sgallery li {
 #tl_versions .pagination {
 	margin-top: 18px;
 	margin-bottom: 14px;
+	padding: 12px 6px;
+	background: var(--table-header);
 }
 
 /* CHMOD table */
@@ -2679,7 +2697,7 @@ fieldset.collapsed > legend {
 
 #tl_maintenance_cache td {
 	line-height: 1.2;
-	padding: 4px 6px 5px;
+	padding: 9px 6px;
 }
 
 #tl_maintenance_cache td span {
@@ -2822,8 +2840,9 @@ fieldset.collapsed > legend {
 }
 
 .tl_undo_preview {
+	margin-top: 5px;
+	padding: 10px 15px;
 	position: relative;
-	padding: 22px 0 10px;
 }
 
 .tl_undo_preview td {
@@ -2840,9 +2859,26 @@ fieldset.collapsed > legend {
 	height: auto;
 }
 
-.tl_listing .odd .tl_undo_preview .limit_toggler {
-	background-color: var(--table-odd);
+.tl_undo_preview {
+	font-size: .75rem;
 }
+
+.tl_undo_preview .cte_preview h1 {
+	font-size: 1.15rem;
+}
+
+.tl_undo_preview .cte_preview h2 {
+	font-size: .9rem;
+}
+
+.tl_undo_preview .cte_preview h3 {
+	font-size: .8rem;
+}
+
+.tl_undo_preview .cte_preview h4, .tl_undo_preview .cte_preview h5, .tl_undo_preview .cte_preview h6 {
+	font-size: .775rem;
+}
+
 
 /* Tablet */
 @media (max-width: 991px) {

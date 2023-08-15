@@ -40,18 +40,18 @@ use Contao\Model\Collection;
  * @method static CommentsNotifyModel|null findOneByActive($val, array $opt=array())
  * @method static CommentsNotifyModel|null findOneByTokenRemove($val, array $opt=array())
  *
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findBySource($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByParent($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByName($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByEmail($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByUrl($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByAddedOn($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByActive($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByTokenRemove($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findAll(array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findBySource($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByParent($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByName($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByEmail($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByUrl($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByAddedOn($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByActive($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByTokenRemove($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -96,7 +96,7 @@ class CommentsNotifyModel extends Model
 	 * @param integer $intParent  The parent ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection|CommentsNotifyModel[]|CommentsNotifyModel|null A collection of models or null if there are no active subscriptions
+	 * @return Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null A collection of models or null if there are no active subscriptions
 	 */
 	public static function findActiveBySourceAndParent($strSource, $intParent, array $arrOptions=array())
 	{
@@ -110,7 +110,7 @@ class CommentsNotifyModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|CommentsNotifyModel[]|CommentsNotifyModel|null A collection of models or null if there are no expired subscriptions
+	 * @return Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null A collection of models or null if there are no expired subscriptions
 	 */
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{

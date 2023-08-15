@@ -288,24 +288,17 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         // We're identifying items by their (old) path and store any detected
         // changes as an array of definitions
-        /** @phpstan-var array<string|int, CreateItemDefinition> $itemsToCreate */
         $itemsToCreate = [];
-
-        /** @phpstan-var array<string|int, UpdateItemDefinition> $itemsToUpdate */
         $itemsToUpdate = [];
 
         // To detect orphans, we start with a list of all items and remove them
         // once found
-        /** @phpstan-var array<string|int, DeleteItemDefinition> $itemsToDelete */
         $itemsToDelete = $dbPaths;
 
         // We keep a list of hashes and names of traversed child elements
         // indexed by their directory path, so that we are later able to
         // compute the directory hash
-        /** @var array<string|int, array<string>> $dirHashesParts */
         $dirHashesParts = [];
-
-        /** @var array<string|int, int|null> $lastModifiedUpdates */
         $lastModifiedUpdates = [];
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
@@ -719,7 +712,6 @@ class Dbafs implements DbafsInterface, ResetInterface
                 return;
             }
 
-            /** @var FilesystemItem $item */
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
 
@@ -748,7 +740,6 @@ class Dbafs implements DbafsInterface, ResetInterface
         $analyzeDirectory = function (string $path): array {
             $paths = [];
 
-            /** @var FilesystemItem $entry */
             foreach ($this->filesystem->listContents($path, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $entry) {
                 $paths[$entry->getPath()] = !$entry->isFile();
             }

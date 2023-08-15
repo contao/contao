@@ -212,10 +212,9 @@ class ContentCompositionListener
     {
         $pageModel->loadDetails();
 
-        /** @var LayoutModel|null $layout */
         $layout = $pageModel->getRelated('layout');
 
-        if (null === $layout) {
+        if (!$layout instanceof LayoutModel) {
             return 'main';
         }
 

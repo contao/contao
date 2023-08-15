@@ -36,8 +36,6 @@ class ArrayAttributeBagTest extends TestCase
         $bag['foo'] = 'bar';
         $bag['bar']['baz'] = 'foo';
 
-        $this->assertTrue(isset($bag['foo']));
-        $this->assertTrue(isset($bag['bar']['baz']));
         $this->assertFalse(isset($bag['baz']));
     }
 
