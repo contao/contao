@@ -3174,7 +3174,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$img = $picture->getImg($projectDir);
 
-		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview_image');
+		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
 	}
 }
 
