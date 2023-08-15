@@ -3172,15 +3172,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			->get('contao.image.preview_factory')
 			->createPreviewPicture($projectDir . '/' . $relpath, $pictureConfig);
 
-		$srcset = '';
 		$img = $picture->getImg($projectDir);
 
-		if ($img['srcset'] != $img['src'])
-		{
-			$srcset = sprintf(' srcset="%s"', $img['srcset']);
-		}
-
-		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $srcset, $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview_image');
+		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview_image');
 	}
 }
 
