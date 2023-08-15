@@ -16,6 +16,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
 use Imagine\Exception\RuntimeException;
@@ -2824,21 +2826,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				{
 					try
 					{
-						// Inline the image if no preview image will be generated (see #636)
-						if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
-						{
-							$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="preview-image">';
-						}
-						else
-						{
-							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image" loading="lazy"');
-						}
+						$thumbnail .= '<br>' . $this->getPreviewImage($currentEncoded);
 
 						$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
-							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important" loading="lazy"');
+							$thumbnail .= ' ' . $this->getPreviewImage($currentEncoded, true);
 						}
 					}
 					catch (RuntimeException $e)
@@ -3146,6 +3140,47 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		return $attributes;
+	}
+
+	/**
+	 * Generate a preview image with a 1x, 2x source set for retina displays
+	 *
+	 * @param string  $relpath
+	 * @param boolean $isImportantPath
+	 *
+	 * @return string
+	 */
+	private function getPreviewImage($relpath, $isImportantPath=false)
+	{
+		$container = System::getContainer();
+		$projectDir = $container->getParameter('kernel.project_dir');
+
+		$pictureConfig = (new ResizeConfiguration())
+			->setWidth($isImportantPath ? 80 : 100)
+			->setHeight($isImportantPath ? 60 : 75)
+			->setMode(ResizeConfiguration::MODE_BOX)
+			->setZoomLevel($isImportantPath ? 100 : 0);
+
+		$pictureSize = (new PictureConfiguration())
+			->setSize(
+				(new PictureConfigurationItem())
+					->setResizeConfig($pictureConfig)
+					->setDensities('1x, 2x')
+			);
+
+		$picture = $container
+			->get('contao.image.preview_factory')
+			->createPreviewPicture($this->strRootDir . '/' . rawurldecode($relpath), $pictureSize);
+
+		$srcset = '';
+		$img = $picture->getImg($projectDir);
+
+		if ($img['srcset'] != $img['src'])
+		{
+			$srcset = sprintf(' srcset="%s"', $img['srcset']);
+		}
+
+		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $srcset, $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview_image');
 	}
 }
 
