@@ -3155,22 +3155,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
 
-		$pictureConfig = (new ResizeConfiguration())
+		$resizeConfig = (new ResizeConfiguration())
 			->setWidth($isImportantPath ? 80 : 100)
 			->setHeight($isImportantPath ? 60 : 75)
 			->setMode(ResizeConfiguration::MODE_BOX)
 			->setZoomLevel($isImportantPath ? 100 : 0);
 
-		$pictureSize = (new PictureConfiguration())
+		$pictureConfig = (new PictureConfiguration())
 			->setSize(
 				(new PictureConfigurationItem())
-					->setResizeConfig($pictureConfig)
+					->setResizeConfig($resizeConfig)
 					->setDensities('1x, 2x')
 			);
 
 		$picture = $container
 			->get('contao.image.preview_factory')
-			->createPreviewPicture($projectDir . '/' . $relpath, $pictureSize);
+			->createPreviewPicture($projectDir . '/' . $relpath, $pictureConfig);
 
 		$srcset = '';
 		$img = $picture->getImg($projectDir);
