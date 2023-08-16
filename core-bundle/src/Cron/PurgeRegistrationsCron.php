@@ -36,7 +36,6 @@ class PurgeRegistrationsCron
             return;
         }
 
-        /** @var MemberModel $member */
         foreach ($members as $member) {
             $member->delete();
         }

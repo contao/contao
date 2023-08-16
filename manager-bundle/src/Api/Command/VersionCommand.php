@@ -54,9 +54,7 @@ class VersionCommand extends Command
      */
     private function getFeatures(): array
     {
-        /** @var array<ApiPluginInterface> $plugins */
         $plugins = $this->application->getPluginLoader()->getInstancesOf(ApiPluginInterface::class);
-
         $features = [];
 
         foreach ($plugins as $packageName => $plugin) {

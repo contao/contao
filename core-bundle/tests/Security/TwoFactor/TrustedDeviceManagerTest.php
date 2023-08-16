@@ -32,7 +32,6 @@ class TrustedDeviceManagerTest extends TestCase
             ->willReturn(true)
         ;
 
-        /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->id = 1;
         $user->trustedTokenVersion = 1;

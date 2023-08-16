@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -48,12 +47,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter($input),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($input),
+        ]);
 
         $expectedTitle = $input['title'] ?? $page->title;
 
@@ -167,12 +164,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($aliasPages)
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter([]),
+        ]);
 
         $slug = $this->createMock(Slug::class);
         $slug
@@ -245,12 +240,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($aliasPages)
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter([]),
+        ]);
 
         $slug = $this->createMock(Slug::class);
         $slug
@@ -305,12 +298,10 @@ class PageUrlListenerTest extends TestCase
             ->method('findSimilarByAlias')
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter([]),
+        ]);
 
         $slug = $this->createMock(Slug::class);
         $slug
@@ -369,12 +360,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($aliasPages)
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter([]),
+        ]);
 
         $slug = $this->createMock(Slug::class);
         $slug
@@ -982,12 +971,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter([]),
-            ]
-        );
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter([]),
+        ]);
 
         $slug = $this->createMock(Slug::class);
         $slug
@@ -1023,12 +1010,13 @@ class PageUrlListenerTest extends TestCase
 
     public function testReturnsValueWhenValidatingUrlPrefix(): void
     {
-        $framework = $this->mockFrameworkWithPages(
-            [
-                'dns' => '',
-                'urlPrefix' => 'de',
-                'urlSuffix' => '.html',
-            ],
+        $inputData = [
+            'dns' => '',
+            'urlPrefix' => 'de',
+            'urlSuffix' => '.html',
+        ];
+
+        $pageModels = $this->getPageModels([
             [
                 'id' => 1,
                 'pid' => 0,
@@ -1045,19 +1033,26 @@ class PageUrlListenerTest extends TestCase
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
                 'rootLanguage' => '',
-            ]
-        );
+            ],
+        ]);
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
-        $pageAdapter = $framework->getAdapter(PageModel::class);
+        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
-            ->expects($this->once())
-            ->method('findSimilarByAlias')
-            ->with($pageAdapter->findWithDetails(2))
-            ->willReturn(null)
+            ->method('findWithDetails')
+            ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
 
-        $route = new PageRoute($pageAdapter->findWithDetails(2));
+        $pageAdapter
+            ->method('findByPid')
+            ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($inputData),
+        ]);
+
+        $route = new PageRoute($pageModels['id'][2]);
         $pageRegistry = $this->mockPageRegistry([true, true], [$route]);
 
         $listener = new PageUrlListener(
@@ -1120,13 +1115,14 @@ class PageUrlListenerTest extends TestCase
 
     public function testThrowsExceptionIfUrlPrefixLeadsToDuplicatePages(): void
     {
-        $framework = $this->mockFrameworkWithPages(
-            [
-                'dns' => '',
-                'urlPrefix' => 'de',
-                'urlSuffix' => '.html',
-                'rootLanguage' => 'de',
-            ],
+        $inputData = [
+            'dns' => '',
+            'urlPrefix' => 'de',
+            'urlSuffix' => '.html',
+            'rootLanguage' => 'de',
+        ];
+
+        $pageModels = $this->getPageModels([
             [
                 'id' => 1,
                 'pid' => 0,
@@ -1175,21 +1171,29 @@ class PageUrlListenerTest extends TestCase
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
                 'rootLanguage' => 'de',
-            ]
-        );
+            ],
+        ]);
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
-        $pageAdapter = $framework->getAdapter(PageModel::class);
+        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
-            ->expects($this->exactly(3))
-            ->method('findSimilarByAlias')
-            ->withConsecutive(
-                [$pageAdapter->findWithDetails(2)],
-                [$pageAdapter->findWithDetails(3)],
-                [$pageAdapter->findWithDetails(4)],
-            )
-            ->willReturn(null, null, [$pageAdapter->findWithDetails(6)])
+            ->method('findWithDetails')
+            ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
+
+        $pageAdapter
+            ->method('findByPid')
+            ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
+        ;
+
+        $pageAdapter
+            ->method('findSimilarByAlias')
+            ->willReturn(null, null, [$pageModels['id'][6]])
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($inputData),
+        ]);
 
         // Expects exception
         $translator = $this->mockTranslator('ERR.pageUrlPrefix', ['/de/bar/foo.html']);
@@ -1215,12 +1219,13 @@ class PageUrlListenerTest extends TestCase
 
     public function testIgnoresPagesWithoutAliasWhenValidatingUrlPrefix(): void
     {
-        $framework = $this->mockFrameworkWithPages(
-            [
-                'dns' => '',
-                'urlPrefix' => 'de',
-                'urlSuffix' => '.html',
-            ],
+        $inputData = [
+            'dns' => '',
+            'urlPrefix' => 'de',
+            'urlSuffix' => '.html',
+        ];
+
+        $pageModels = $this->getPageModels([
             [
                 'id' => 1,
                 'pid' => 0,
@@ -1269,21 +1274,29 @@ class PageUrlListenerTest extends TestCase
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
                 'rootLanguage' => 'de',
-            ]
-        );
+            ],
+        ]);
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
-        $pageAdapter = $framework->getAdapter(PageModel::class);
+        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
-            ->expects($this->exactly(2))
-            ->method('findSimilarByAlias')
-            ->withConsecutive(
-                [$pageAdapter->findWithDetails(2)],
-                [$pageAdapter->findWithDetails(3)],
-                [$pageAdapter->findWithDetails(4)],
-            )
-            ->willReturn(null, null, [$pageAdapter->findWithDetails(4)])
+            ->method('findWithDetails')
+            ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
+
+        $pageAdapter
+            ->method('findByPid')
+            ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
+        ;
+
+        $pageAdapter
+            ->method('findSimilarByAlias')
+            ->willReturn(null, null, [$pageModels['id'][4]])
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($inputData),
+        ]);
 
         $listener = new PageUrlListener(
             $framework,
@@ -1405,12 +1418,13 @@ class PageUrlListenerTest extends TestCase
 
     public function testReturnsValueWhenValidatingUrlSuffix(): void
     {
-        $framework = $this->mockFrameworkWithPages(
-            [
-                'dns' => '',
-                'urlPrefix' => 'de',
-                'urlSuffix' => '.html',
-            ],
+        $inputData = [
+            'dns' => '',
+            'urlPrefix' => 'de',
+            'urlSuffix' => '.html',
+        ];
+
+        $pageModels = $this->getPageModels([
             [
                 'id' => 1,
                 'pid' => 0,
@@ -1427,8 +1441,24 @@ class PageUrlListenerTest extends TestCase
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
                 'rootLanguage' => '',
-            ]
-        );
+            ],
+        ]);
+
+        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter
+            ->method('findWithDetails')
+            ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
+        ;
+
+        $pageAdapter
+            ->method('findByPid')
+            ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($inputData),
+        ]);
 
         $listener = new PageUrlListener(
             $framework,
@@ -1451,12 +1481,13 @@ class PageUrlListenerTest extends TestCase
 
     public function testThrowsExceptionOnDuplicateUrlSuffix(): void
     {
-        $framework = $this->mockFrameworkWithPages(
-            [
-                'dns' => '',
-                'urlPrefix' => 'de',
-                'urlSuffix' => '.html',
-            ],
+        $inputData = [
+            'dns' => '',
+            'urlPrefix' => 'de',
+            'urlSuffix' => '.html',
+        ];
+
+        $pageModels = $this->getPageModels([
             [
                 'id' => 1,
                 'pid' => 0,
@@ -1503,21 +1534,29 @@ class PageUrlListenerTest extends TestCase
                 'alias' => 'bar/foo',
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
-            ]
-        );
+            ],
+        ]);
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
-        $pageAdapter = $framework->getAdapter(PageModel::class);
+        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
-            ->expects($this->exactly(3))
-            ->method('findSimilarByAlias')
-            ->withConsecutive(
-                [$pageAdapter->findWithDetails(2)],
-                [$pageAdapter->findWithDetails(3)],
-                [$pageAdapter->findWithDetails(4)],
-            )
-            ->willReturn(null, null, [$pageAdapter->findWithDetails(4)])
+            ->method('findWithDetails')
+            ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
+
+        $pageAdapter
+            ->method('findByPid')
+            ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
+        ;
+
+        $pageAdapter
+            ->method('findSimilarByAlias')
+            ->willReturn(null, null, [$pageModels['id'][4]])
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            Input::class => $this->mockInputAdapter($inputData),
+        ]);
 
         $translator = $this->mockTranslator('ERR.pageUrlSuffix', ['/de/bar/foo.html']);
 
@@ -1640,6 +1679,26 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
+     * @return array{id: array<PageModel&MockObject>, pid: array<int, array<PageModel&MockObject>>}
+     */
+    private function getPageModels(array $pages): array
+    {
+        $return = ['id' => [], 'pid' => []];
+
+        foreach ($pages as $row) {
+            $page = $this->mockClassWithProperties(PageModel::class, $row);
+
+            $return['id'][$row['id']] = $page;
+
+            if (isset($row['pid'])) {
+                $return['pid'][$row['pid']][] = $page;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * @return Connection&MockObject
      */
     private function mockConnection(bool $prefixCheck = false): Connection
@@ -1656,42 +1715,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         return $connection;
-    }
-
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithPages(array $inputData, array ...$data): ContaoFramework
-    {
-        $pagesById = [];
-        $pagesByPid = [];
-
-        foreach ($data as $row) {
-            $page = $this->mockClassWithProperties(PageModel::class, $row);
-            $pagesById[$row['id']] = $page;
-
-            if (isset($row['pid'])) {
-                $pagesByPid[$row['pid']][] = $page;
-            }
-        }
-
-        $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
-        $pageAdapter
-            ->method('findWithDetails')
-            ->willReturnCallback(static fn (int $id) => $pagesById[$id] ?? null)
-        ;
-
-        $pageAdapter
-            ->method('findByPid')
-            ->willReturnCallback(static fn (int $pid) => $pagesByPid[$pid] ?? null)
-        ;
-
-        return $this->mockContaoFramework(
-            [
-                PageModel::class => $pageAdapter,
-                Input::class => $this->mockInputAdapter($inputData),
-            ]
-        );
     }
 
     /**

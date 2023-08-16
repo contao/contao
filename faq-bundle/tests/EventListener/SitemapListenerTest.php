@@ -68,7 +68,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             FaqModel::class => $this->mockConfiguredAdapter([
                 'findPublishedByPid' => [
-                    $this->mockClassWithProperties(FaqModel::class, []),
+                    $this->mockClassWithProperties(FaqModel::class),
                 ],
             ]),
         ];

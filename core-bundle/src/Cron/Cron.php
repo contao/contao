@@ -119,13 +119,8 @@ class Cron
             throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
         }
 
-        /** @var CronJobRepository $repository */
         $repository = ($this->repository)();
-
-        /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
-
-        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
 
         $now = new \DateTimeImmutable();
@@ -187,7 +182,6 @@ class Cron
      */
     private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
     {
-        /** @var array<string, PromiseInterface> $promises */
         $promises = [];
         $exception = null;
 

@@ -34,7 +34,6 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
-        /** @var RedirectResponse $response */
         $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -54,7 +53,6 @@ class BackendPreviewControllerTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/public/index.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -125,7 +123,6 @@ class BackendPreviewControllerTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/preview.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertTrue($response->isRedirection());
@@ -144,7 +141,6 @@ class BackendPreviewControllerTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/preview.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);

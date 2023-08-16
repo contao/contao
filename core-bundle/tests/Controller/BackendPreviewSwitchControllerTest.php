@@ -296,7 +296,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return RouterInterface&MockObject
      */
-    private function mockRouter(bool $canShare = false, bool $isPreviewMode = true): RouterInterface
+    private function mockRouter(bool $canShare = false): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 
@@ -307,7 +307,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ->withConsecutive(
                     [
                         'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => $isPreviewMode ? '1' : '', 'rt' => 'csrf', 'nb' => '1'],
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'],
                     ],
                     ['contao_backend_switch']
                 )
@@ -327,7 +327,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return TokenChecker&MockObject
      */
-    private function mockTokenChecker(string|null $frontendUsername = null, bool $previewMode = true): TokenChecker
+    private function mockTokenChecker(string|null $frontendUsername = null): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -337,7 +337,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn($previewMode)
+            ->willReturn(true)
         ;
 
         return $tokenChecker;

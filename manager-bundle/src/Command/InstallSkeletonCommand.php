@@ -21,7 +21,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(
     name: 'skeleton:install',
@@ -103,7 +102,6 @@ class InstallSkeletonCommand extends Command
     {
         $finder = Finder::create()->files()->in(__DIR__.'/../../skeleton/public');
 
-        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $targetPath = Path::join($this->projectDir, $webDir, $file->getRelativePathname());
 

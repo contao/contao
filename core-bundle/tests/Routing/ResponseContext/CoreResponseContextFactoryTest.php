@@ -121,7 +121,6 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'My title';
@@ -191,7 +190,6 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
@@ -230,7 +228,6 @@ class CoreResponseContextFactoryTest extends TestCase
 
         System::setContainer($container);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';

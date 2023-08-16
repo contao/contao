@@ -141,7 +141,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
-        $this->setPreserveMetadata($config, $container);
+        $this->setPreserveMetadataFields($config, $container);
         $this->setImagineService($config, $container);
         $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
@@ -348,17 +348,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function setPreserveMetadata(array $config, ContainerBuilder $container): void
+    private function setPreserveMetadataFields(array $config, ContainerBuilder $container): void
     {
-        if (!isset($config['image']['preserve_metadata'])) {
+        if (!isset($config['image']['preserve_metadata_fields'])) {
             return;
         }
 
         $services = ['contao.image.factory', 'contao.image.picture_factory'];
 
         foreach ($services as $service) {
-            if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPreserveMetadata')) {
-                $container->getDefinition($service)->addMethodCall('setPreserveMetadata', [$config['image']['preserve_metadata']]);
+            if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPreserveMetadataFields')) {
+                $container->getDefinition($service)->addMethodCall('setPreserveMetadataFields', [$config['image']['preserve_metadata_fields']]);
             }
         }
     }

@@ -96,7 +96,6 @@ class Application extends BaseApplication
         $commands = parent::getDefaultCommands();
         $commands[] = new VersionCommand($this);
 
-        /** @var ApiPluginInterface $plugin */
         foreach ($this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class) as $plugin) {
             foreach ($plugin->getApiCommands() as $class) {
                 if (!is_a($class, Command::class, true)) {

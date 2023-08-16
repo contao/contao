@@ -173,7 +173,6 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn('https://localhost.wip/foobar')
         ;
 
-        /** @var RedirectResponse $response */
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertNull($user->backupCodes);
@@ -335,7 +334,6 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
-        /** @var RedirectResponse $response */
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -369,7 +367,6 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
-        /** @var RedirectResponse $response */
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());

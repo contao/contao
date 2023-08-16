@@ -84,7 +84,7 @@ class AdministratorEmailListenerTest extends TestCase
         $this->assertSame('<p class="tl_error">ERR.noAdminEmailUrl</p>', $listener());
     }
 
-    private function createAdministratorEmailListener(ContaoFramework|null $framework = null, TranslatorInterface|null $translator = null, RouterInterface|null $router = null, RequestStack|null $requestStack = null, Security|null $security = null): AdministratorEmailListener
+    private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
         if (null === $framework) {
             $configAdapter = $this->mockAdapter(['get']);
@@ -97,32 +97,26 @@ class AdministratorEmailListenerTest extends TestCase
             $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
         }
 
-        if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
-            $translator
-                ->method('trans')
-                ->willReturnMap([
-                    ['ERR.noAdminEmailUrl', ['settingsUrl' => 'https://example.com'], 'contao_default', null, 'ERR.noAdminEmailUrl'],
-                    ['ERR.noAdminEmail', [], 'contao_default', null, 'ERR.noAdminEmail'],
-                ])
-            ;
-        }
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnMap([
+                ['ERR.noAdminEmailUrl', ['settingsUrl' => 'https://example.com'], 'contao_default', null, 'ERR.noAdminEmailUrl'],
+                ['ERR.noAdminEmail', [], 'contao_default', null, 'ERR.noAdminEmail'],
+            ])
+        ;
 
-        if (null === $router) {
-            $router = $this->createMock(RouterInterface::class);
-            $router
-                ->method('generate')
-                ->willReturn('https://example.com')
-            ;
-        }
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->method('generate')
+            ->willReturn('https://example.com')
+        ;
 
-        if (null === $requestStack) {
-            $requestStack = $this->createMock(RequestStack::class);
-            $requestStack
-                ->method('getCurrentRequest')
-                ->willReturn(new Request())
-            ;
-        }
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->method('getCurrentRequest')
+            ->willReturn(new Request())
+        ;
 
         if (null === $security) {
             $security = $this->createMock(Security::class);

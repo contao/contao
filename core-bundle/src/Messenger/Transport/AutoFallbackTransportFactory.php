@@ -17,7 +17,6 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Exception\InvalidArgumentException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
-use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class AutoFallbackTransportFactory implements TransportFactoryInterface
 {
@@ -27,7 +26,7 @@ class AutoFallbackTransportFactory implements TransportFactoryInterface
     ) {
     }
 
-    public function createTransport(string $dsn, array $options, SerializerInterface $serializer): TransportInterface
+    public function createTransport(string $dsn, array $options, SerializerInterface $serializer): AutoFallbackTransport
     {
         if (!$parsedUrl = parse_url($dsn)) {
             throw new InvalidArgumentException(sprintf('The given Auto Fallback DSN "%s" is invalid.', $dsn));

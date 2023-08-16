@@ -295,11 +295,18 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article_open':
             case 'article_url':
             case 'article_title':
-                if (!(($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel)) {
+                $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
+
+                if (!$objArticle instanceof ArticleModel) {
                     break;
                 }
 
-                /** @var PageModel $objPid */
+                $objPid = $objArticle->getRelated('pid');
+
+                if (!$objPid instanceof PageModel) {
+                    break;
+                }
+
                 $params = '/articles/'.($objArticle->alias ?: $objArticle->id);
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
                 $strUrl = '';
@@ -441,7 +448,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 $responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
 
                 if ($responseContext?->has(HtmlHeadBag::class) && \in_array($property, ['pageTitle', 'description'], true)) {
-                    /** @var HtmlHeadBag $htmlHeadBag */
                     $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
                     $result = match ($property) {

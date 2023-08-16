@@ -65,7 +65,6 @@ class RegisterFragmentsPassTest extends TestCase
         $arguments = $container->getDefinition((string) $element[1][1])->getArguments();
         $this->assertSame('forward', $arguments[1]);
 
-        /** @var ChildDefinition $definition */
         $definition = $container->getDefinition($arguments[0]);
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('app.fragments.content_controller', $definition->getParent());
@@ -80,7 +79,6 @@ class RegisterFragmentsPassTest extends TestCase
         $arguments = $container->getDefinition((string) $module[1][1])->getArguments();
         $this->assertSame('esi', $arguments[1]);
 
-        /** @var ChildDefinition $definition */
         $definition = $container->getDefinition($arguments[0]);
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('app.fragments.module_controller', $definition->getParent());
@@ -132,7 +130,6 @@ class RegisterFragmentsPassTest extends TestCase
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
-        /** @var ChildDefinition $definition */
         $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
 
         $this->assertInstanceOf(ChildDefinition::class, $definition);
@@ -153,7 +150,6 @@ class RegisterFragmentsPassTest extends TestCase
         $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
         $pass->process($container);
 
-        /** @var ChildDefinition $definition */
         $definition = $container->findDefinition('contao.fragment._contao.frontend_module.two_factor');
         $calls = $definition->getMethodCalls();
 
@@ -178,7 +174,6 @@ class RegisterFragmentsPassTest extends TestCase
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
-        /** @var ChildDefinition $definition */
         $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
 
         $this->assertInstanceOf(ChildDefinition::class, $definition);

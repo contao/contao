@@ -78,9 +78,10 @@ class BackendFavoritesListenerTest extends TestCase
         ;
 
         $session = $this->mockSession();
-
-        /** @var AttributeBagInterface $bag */
         $bag = $session->getBag('contao_backend');
+
+        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+
         $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');

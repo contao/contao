@@ -25,6 +25,7 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
@@ -34,6 +35,8 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);
@@ -106,8 +109,13 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
     }
 
+    /**
+     * @group legacy
+     */
     public function testHtmlAttrFilter(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
 
         $container = $this->getContainerWithContaoConfiguration();

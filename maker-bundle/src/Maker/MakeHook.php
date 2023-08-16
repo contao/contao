@@ -87,7 +87,6 @@ class MakeHook extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $hooks[$hook];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 

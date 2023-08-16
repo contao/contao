@@ -114,7 +114,6 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -134,7 +133,6 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -154,7 +152,6 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -249,7 +246,6 @@ class DbafsManager
      */
     public function sync(string ...$paths): ChangeSet
     {
-        /** @var array<string|int, array{0: DbafsInterface, 1:array<string>}> $dbafsAndPathsByPrefix */
         $dbafsAndPathsByPrefix = [];
 
         // Sync all DBAFS if no paths are supplied, otherwise individually

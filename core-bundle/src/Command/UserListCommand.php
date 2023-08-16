@@ -79,6 +79,9 @@ class UserListCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @return Collection<UserModel>|null
+     */
     private function getUsers(bool $onlyAdmins = false): Collection|null
     {
         $this->framework->initialize();
@@ -92,6 +95,9 @@ class UserListCommand extends Command
         return $userModel->findAll();
     }
 
+    /**
+     * @param Collection<UserModel> $users
+     */
     private function formatTableRows(Collection $users, array &$columns): array
     {
         if ([] === $columns) {
@@ -122,6 +128,9 @@ class UserListCommand extends Command
         return $rows;
     }
 
+    /**
+     * @param Collection<UserModel>|null $users
+     */
     private function formatJson(Collection|null $users, array $columns): array
     {
         if (!$users) {
