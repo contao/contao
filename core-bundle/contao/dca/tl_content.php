@@ -1175,9 +1175,10 @@ class tl_content extends Backend
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
+		$isWrapper = in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 
 		// Remove the class if it is a wrapper element
-		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
+		if ($isWrapper)
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
@@ -1256,7 +1257,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . ' limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . $preview . '</div>';
+<div class="' . $class . '"' .(!$isWrapper && !Config::get('doNotCollapse') ? ' data-controller="contao--limit-height" data-contao--limit-height-max-value="112"' : '') . '>' . $preview . '</div>';
 	}
 
 	/**
