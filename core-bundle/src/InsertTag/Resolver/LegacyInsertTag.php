@@ -590,7 +590,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Generate the thumbnail image
                 try {
-                    // Image
                     if ('image' === $insertTag->getName()) {
                         $dimensions = '';
                         $src = $this->container->get('contao.image.factory')->create($this->container->getParameter('kernel.project_dir').'/'.rawurldecode($strFile), [$width, $height, $mode])->getUrl($this->container->getParameter('kernel.project_dir'));
@@ -602,20 +601,20 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         }
 
                         $result = '<img src="'.StringUtil::specialcharsUrl(Controller::addFilesUrlTo($src)).'" '.$dimensions.' alt="'.StringUtil::specialcharsAttribute($alt).'"'.($class ? ' class="'.StringUtil::specialcharsAttribute($class).'"' : '').'>';
-                    } // Picture
-                    else {
+                    } else {
                         $staticUrl = $this->container->get('contao.assets.files_context')->getStaticUrl();
                         $picture = $this->container->get('contao.image.picture_factory')->create($this->container->getParameter('kernel.project_dir').'/'.$strFile, $size);
 
-                        $picture = [
+                        $data = [
                             'img' => $picture->getImg($this->container->getParameter('kernel.project_dir'), $staticUrl),
                             'sources' => $picture->getSources($this->container->getParameter('kernel.project_dir'), $staticUrl),
+                            'alt' => StringUtil::specialcharsAttribute($alt),
+                            'class' => StringUtil::specialcharsAttribute($class),
                         ];
 
-                        $picture['alt'] = StringUtil::specialcharsAttribute($alt);
-                        $picture['class'] = StringUtil::specialcharsAttribute($class);
                         $pictureTemplate = new FrontendTemplate($strTemplate);
-                        $pictureTemplate->setData($picture);
+                        $pictureTemplate->setData($data);
+
                         $result = $pictureTemplate->parse();
                     }
 
