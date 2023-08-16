@@ -103,11 +103,7 @@
       <?php endif; ?>
       <?php if ($this->hasPreview): ?>
         <div id="preview">
-          <?php foreach ($this->previewPictures as $index => $picture): ?>
-            <?php if (8 === $index): ?>
-              <p><?= $this->labels->morePreviewPages ?></p>
-              <?php break; ?>
-            <?php endif; ?>
+          <?php foreach ($this->previewPictures as $picture): ?>
             <div class="checkerbox"<?php if (!empty($picture['img']['width']) && !empty($picture['img']['height'])): ?> style="width:<?= $picture['img']['width'] ?>px;height:<?= $picture['img']['height'] ?>px"<?php endif; ?>>
               <?php $this->insert('picture_default', $picture) ?>
             </div>
