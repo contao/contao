@@ -298,11 +298,10 @@
         "all": [
             "@cs-fixer",
             "@service-linter",
+            "@monorepo-tools",
             "@unit-tests",
             "@functional-tests",
-            "@phpstan",
-            "@require-checker",
-            "@monorepo-tools"
+            "@phpstan"
         ],
         "cs-fixer": [
             "@ecs",
