@@ -889,7 +889,6 @@ class Image
 		catch (\Exception $e)
 		{
 			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $image . '" could not be processed: ' . $e->getMessage());
-			throw $e;
 		}
 
 		return null;
