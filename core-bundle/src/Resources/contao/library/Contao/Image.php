@@ -845,7 +845,7 @@ class Image
 		$imageSize = new \stdClass();
 		$imageSize->width = $predefinedSizes[$size]['width'] ?? 0;
 		$imageSize->height = $predefinedSizes[$size]['height'] ?? 0;
-		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'] ?? 'proportional';
+		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'] ?? 'crop';
 		$imageSize->zoom = $predefinedSizes[$size]['zoom'] ?? 0;
 
 		return $imageSize;
