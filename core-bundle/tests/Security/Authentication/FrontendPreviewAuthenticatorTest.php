@@ -170,8 +170,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
                 static function (FrontendPreviewToken $token) use ($showUnpublished, $previewLinkId): bool {
                     return 'anon.' === $token->getUser()
                         && $showUnpublished === $token->showUnpublished()
-                        && $previewLinkId === $token->getPreviewLinkId()
-                    ;
+                        && $previewLinkId === $token->getPreviewLinkId();
                 }
             ))
         ;
