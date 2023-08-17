@@ -843,10 +843,10 @@ class Image
 		}
 
 		$imageSize = new \stdClass();
-		$imageSize->width = $predefinedSizes[$size]['width'];
-		$imageSize->height = $predefinedSizes[$size]['height'];
-		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'];
-		$imageSize->zoom = $predefinedSizes[$size]['zoom'];
+		$imageSize->width = $predefinedSizes[$size]['width'] ?? 0;
+		$imageSize->height = $predefinedSizes[$size]['height'] ?? 0;
+		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'] ?? 'proportional';
+		$imageSize->zoom = $predefinedSizes[$size]['zoom'] ?? 0;
 
 		return $imageSize;
 	}
@@ -889,6 +889,7 @@ class Image
 		catch (\Exception $e)
 		{
 			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $image . '" could not be processed: ' . $e->getMessage());
+			throw $e;
 		}
 
 		return null;
