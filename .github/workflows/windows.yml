@@ -13,7 +13,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: [4.13, 5.1, 5.2, 5.x]
+                contao: [4.13, 5.2, 5.x]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
