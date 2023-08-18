@@ -110,6 +110,7 @@ class MakeEventListener extends AbstractMaker
      */
     private function getAvailableEvents(): array
     {
+        /** @var array<string, array<string, mixed>> $yaml */
         $yaml = Yaml::parseFile(__DIR__.'/../../config/events.yaml');
         $events = [];
 

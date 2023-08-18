@@ -150,9 +150,10 @@ class NewsFeedControllerTest extends ContaoTestCase
         $response = $controller($request, $pageModel);
 
         $this->assertSame(200, $response->getStatusCode());
+        $this->assertNotFalse($xml = $response->getContent());
 
         $document = new \DOMDocument('1.0', 'utf-8');
-        $document->loadXML($response->getContent());
+        $document->loadXML($xml);
 
         $this->assertSame('Latest News </channel>', $document->getElementsByTagName('title')->item(0)->textContent);
         $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);

@@ -30,7 +30,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        $backupCodes = json_decode($user->backupCodes, true);
+        $backupCodes = json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $backupCodes) {
             return false;
@@ -55,7 +55,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
         }
 
         $codeToInvalidate = false;
-        $backupCodes = array_values(json_decode($user->backupCodes, true));
+        $backupCodes = array_values(json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
 
         foreach ($backupCodes as $backupCode) {
             if (password_verify($code, $backupCode)) {
@@ -76,7 +76,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
 
         unset($backupCodes[$key]);
 
-        $user->backupCodes = json_encode(array_values($backupCodes));
+        $user->backupCodes = json_encode(array_values($backupCodes), JSON_THROW_ON_ERROR);
         $user->save();
     }
 

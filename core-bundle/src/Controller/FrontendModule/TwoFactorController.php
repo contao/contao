@@ -112,7 +112,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
-        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
+        $template->backupCodes = json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR) ?? [];
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $template->showBackupCodes = true;
