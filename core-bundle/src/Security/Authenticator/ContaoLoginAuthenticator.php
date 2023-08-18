@@ -176,11 +176,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $page = $request->attributes->get('pageModel');
 
-        if (!$page instanceof PageModel) {
-            return false;
-        }
-
-        return true;
+        return $page instanceof PageModel;
     }
 
     private function getCredentials(Request $request): array
@@ -221,6 +217,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         $page = $request->attributes->get('pageModel');
         $page->loadDetails();
+
         $page->protected = false;
 
         if (null === $this->tokenStorage->getToken()) {

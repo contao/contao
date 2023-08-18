@@ -10,9 +10,16 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Rector\CodeQuality\Rector\BooleanNot\SimplifyDeMorganBinaryRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
+use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
+use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
+use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
+use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
+use Rector\CodingStyle\Rector\String_\SymplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
+use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -52,11 +59,21 @@ return static function (RectorConfig $rectorConfig): void {
             'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
         ],
         NullToStrictStringFuncCallArgRector::class,
+        SimplifyIfReturnBoolRector::class => [
+            'core-bundle/src/EventListener/CommandSchedulerListener.php',
+            'core-bundle/src/HttpKernel/ModelArgumentResolver.php',
+        ],
     ]);
 
-    $services = $rectorConfig->services();
-    $services->set(ArraySpreadInsteadOfArrayMergeRector::class);
-    $services->set(CompactToVariablesRector::class);
-    $services->set(RemoveUnusedPrivateMethodParameterRector::class);
-    $services->set(RestoreDefaultNullToNullableTypePropertyRector::class);
+    $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
+    $rectorConfig->rule(CompactToVariablesRector::class);
+    $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
+    $rectorConfig->rule(RemoveConcatAutocastRector::class);
+    $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);
+    $rectorConfig->rule(RestoreDefaultNullToNullableTypePropertyRector::class);
+    $rectorConfig->rule(SimplifyBoolIdenticalTrueRector::class);
+    $rectorConfig->rule(SimplifyDeMorganBinaryRector::class);
+    $rectorConfig->rule(SimplifyIfReturnBoolRector::class);
+    $rectorConfig->rule(SymplifyQuoteEscapeRector::class);
+    $rectorConfig->rule(SimplifyUselessVariableRector::class);
 };

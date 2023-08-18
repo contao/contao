@@ -443,9 +443,10 @@ class PrettyErrorScreenListenerTest extends TestCase
     private function getRequest(string $scope = 'backend', string $format = 'html', string $accept = 'text/html'): Request
     {
         $request = new Request();
+        $request->headers->set('Accept', $accept);
+
         $request->attributes->set('_scope', $scope);
         $request->attributes->set('_format', $format);
-        $request->headers->set('Accept', $accept);
 
         return $request;
     }

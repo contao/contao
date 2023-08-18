@@ -653,8 +653,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsContentElementAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -694,8 +692,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsFrontendModuleAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -735,8 +731,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPageAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -786,8 +780,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPickerProviderAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -810,8 +802,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCronjobAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -840,8 +830,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsHookAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -870,8 +858,6 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCallbackAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -911,8 +897,6 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -964,12 +948,5 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         return $container;
-    }
-
-    private function skipTestIfAttributesAreNotSupported(): void
-    {
-        if (\PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
     }
 }

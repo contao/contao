@@ -87,9 +87,10 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         $request = Request::create('https://localhost/managed-edition/preview.php/en/');
+        $request->query->set('user', '9');
+
         $request->server->set('SCRIPT_NAME', '/managed-edition/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/preview.php');
-        $request->query->set('user', '9');
 
         $controller = new BackendPreviewController(
             '/preview.php',

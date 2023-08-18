@@ -29,6 +29,7 @@ class FragmentTemplateTest extends TestCase
         $template->setData(['foobar' => 'foobar']);
         $template->set('foo', 'f');
         $template->set('bar', 42);
+
         $template->baz = true;
 
         $this->assertSame(

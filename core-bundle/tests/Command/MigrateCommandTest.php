@@ -561,10 +561,10 @@ class MigrateCommandTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnCallback(
                 static fn (string $query): array|false => match ($query) {
-                    sprintf('SHOW COLLATION LIKE \'%s\'', $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_large_prefix\'' => $configuration['innodb_large_prefix'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_per_table\'' => $configuration['innodb_file_per_table'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_format\'' => $configuration['innodb_file_format'] ?? false,
+                    sprintf("SHOW COLLATION LIKE '%s'", $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $configuration['innodb_large_prefix'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $configuration['innodb_file_per_table'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_format'" => $configuration['innodb_file_format'] ?? false,
                     default => false,
                 }
             )
