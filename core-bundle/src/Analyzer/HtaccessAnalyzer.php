@@ -38,7 +38,11 @@ class HtaccessAnalyzer
      */
     public function grantsAccess(): bool
     {
-        $content = array_filter(file((string) $this->file));
+        if (!$lines = file((string) $this->file)) {
+            return false;
+        }
+
+        $content = array_filter($lines);
 
         foreach ($content as $line) {
             if ($this->hasRequireGranted($line)) {

@@ -92,7 +92,7 @@ class XliffFileLoader extends Loader
         $xml->preserveWhiteSpace = false;
 
         // Use loadXML() instead of load() (see contao/core#7192)
-        $xml->loadXML(file_get_contents($name));
+        $xml->loadXML((string) file_get_contents($name));
 
         return $xml;
     }

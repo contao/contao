@@ -48,7 +48,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
             $this->backupManager->restore($config);
         } catch (BackupManagerException $e) {
             if ($this->isJson($input)) {
-                $io->writeln(json_encode(['error' => $e->getMessage()]));
+                $io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
             } else {
                 $io->error($e->getMessage());
             }
@@ -57,7 +57,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         }
 
         if ($this->isJson($input)) {
-            $io->writeln(json_encode($config->getBackup()->toArray()));
+            $io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
 
             return Command::SUCCESS;
         }
