@@ -366,7 +366,7 @@ class InsertTagParser implements ResetInterface
 
                 // Reprocess non-empty end tags to enable chaining block insert tags
                 // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
-                if (!\count($item->getParameters()->all())) {
+                if (!$item->getParameters()->all()) {
                     continue;
                 }
             }

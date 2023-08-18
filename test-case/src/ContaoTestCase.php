@@ -131,7 +131,7 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
 
-        if (0 !== \count($instances)) {
+        if ($instances) {
             $framework
                 ->method('createInstance')
                 ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
@@ -325,7 +325,7 @@ abstract class ContaoTestCase extends TestCase
                 && method_exists($class, 'reset')
                 && $reflectionClass->getMethod('reset')->isStatic()
                 && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
-                && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
+                && [] === $reflectionClass->getMethod('reset')->getParameters()
             ) {
                 $class::reset();
 

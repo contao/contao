@@ -48,7 +48,7 @@ class ThemeNamespace
             explode('/', $path)
         ));
 
-        if (!empty($invalidCharacters)) {
+        if ($invalidCharacters) {
             throw new InvalidThemePathException($path, $invalidCharacters);
         }
 

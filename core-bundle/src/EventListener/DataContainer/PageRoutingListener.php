@@ -88,7 +88,7 @@ class PageRoutingListener
             ];
         }
 
-        if (empty($conflicts)) {
+        if (!$conflicts) {
             return '';
         }
 

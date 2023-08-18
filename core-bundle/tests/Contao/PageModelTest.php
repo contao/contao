@@ -321,7 +321,7 @@ class PageModelTest extends TestCase
             ->method('execute')
             ->willReturnCallback(
                 static function () use (&$parents) {
-                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
+                    return $parents ? new Result(array_shift($parents), '') : new Result([], '');
                 }
             )
         ;

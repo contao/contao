@@ -65,9 +65,7 @@ class PageCandidates extends AbstractCandidates
 
     private function addRegexQuery(QueryBuilder $queryBuilder, string $pathInfo): bool
     {
-        $pathMap = $this->pageRegistry->getPathRegex();
-
-        if (empty($pathMap)) {
+        if (!$pathMap = $this->pageRegistry->getPathRegex()) {
             return false;
         }
 
@@ -100,7 +98,7 @@ class PageCandidates extends AbstractCandidates
 
         $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));
 
-        if (empty($types)) {
+        if (!$types) {
             return false;
         }
 

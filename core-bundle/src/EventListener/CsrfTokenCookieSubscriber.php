@@ -103,7 +103,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             }
         }
 
-        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
+        if ($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
             return true;
         }
 
@@ -145,7 +145,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $content = $response->getContent();
         $tokens = $this->tokenManager->getUsedTokenValues();
 
-        if (!\is_string($content) || empty($tokens)) {
+        if (!$tokens || !\is_string($content)) {
             return;
         }
 

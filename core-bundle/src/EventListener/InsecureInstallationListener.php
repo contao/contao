@@ -44,7 +44,7 @@ class InsecureInstallationListener
         }
 
         // The secret is still at its default value or empty
-        if (empty($this->secret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret) {
+        if (!$this->secret || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret) {
             throw new InsecureInstallationException('Your installation is not secure. Please set the "APP_SECRET" in your .env.local.');
         }
     }

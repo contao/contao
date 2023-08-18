@@ -58,9 +58,7 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize();
 
-        $ids = $this->getPageIdsFromNames([$name]);
-
-        if (empty($ids)) {
+        if (!$ids = $this->getPageIdsFromNames([$name])) {
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
@@ -95,9 +93,7 @@ class Route404Provider extends AbstractPageRouteProvider
         if (null === $names) {
             $pages = $pageAdapter->findAll();
         } else {
-            $ids = $this->getPageIdsFromNames($names);
-
-            if (empty($ids)) {
+            if (!$ids = $this->getPageIdsFromNames($names)) {
                 return [];
             }
 

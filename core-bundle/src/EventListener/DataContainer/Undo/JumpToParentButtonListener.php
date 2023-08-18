@@ -71,7 +71,7 @@ class JumpToParentButtonListener
 
     private function getParentLinkParameters(array $parent, string $table): string
     {
-        if (empty($parent)) {
+        if (!$parent) {
             return '';
         }
 

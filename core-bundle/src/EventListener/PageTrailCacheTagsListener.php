@@ -43,7 +43,7 @@ class PageTrailCacheTagsListener
             $tags[] = 'contao.db.tl_page.'.$trail;
         }
 
-        if (\count($tags)) {
+        if ($tags) {
             $this->responseTagger->addTags($tags);
         }
     }

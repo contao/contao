@@ -51,7 +51,7 @@ class SwitchUserListener
         if ($originalUser === $targetUser) {
             $this->logger->info(sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
         } else {
-            if (!empty($originalUser)) {
+            if ($originalUser) {
                 $sourceUser = $originalUser;
             }
 

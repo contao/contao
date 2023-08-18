@@ -72,7 +72,7 @@ class AutomatorCommand extends Command
      */
     private function getCommands(): array
     {
-        if (empty($this->commands)) {
+        if (!$this->commands) {
             $this->commands = $this->generateCommandMap();
         }
 
