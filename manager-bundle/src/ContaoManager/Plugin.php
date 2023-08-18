@@ -105,7 +105,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
             }
 
-            if (!empty($iniConfigs)) {
+            if ($iniConfigs) {
                 $configs = array_merge($configs, ...$iniConfigs);
             }
         }

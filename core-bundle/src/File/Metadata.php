@@ -48,7 +48,7 @@ class Metadata
      */
     public function with(array $values): self
     {
-        if (empty($values)) {
+        if (!$values) {
             return $this;
         }
 
@@ -117,7 +117,7 @@ class Metadata
      */
     public function empty(): bool
     {
-        return empty($this->values);
+        return [] === $this->values;
     }
 
     public function getSchemaOrgData(string|null $type = null): array

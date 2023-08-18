@@ -369,7 +369,7 @@ class PictureFactory implements PictureFactoryInterface
 
     private function addImageAttributes(PictureInterface $picture, array $attributes): PictureInterface
     {
-        if (empty($attributes)) {
+        if (!$attributes) {
             return $picture;
         }
 

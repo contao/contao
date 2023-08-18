@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 
 use Rector\CodeQuality\Rector\BooleanNot\SimplifyDeMorganBinaryRector;
+use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
 use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
@@ -75,6 +76,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(RestoreDefaultNullToNullableTypePropertyRector::class);
     $rectorConfig->rule(SimplifyBoolIdenticalTrueRector::class);
     $rectorConfig->rule(SimplifyDeMorganBinaryRector::class);
+    $rectorConfig->rule(SimplifyEmptyCheckOnEmptyArrayRector::class);
     $rectorConfig->rule(SimplifyIfReturnBoolRector::class);
     $rectorConfig->rule(SymplifyQuoteEscapeRector::class);
     $rectorConfig->rule(SimplifyUselessVariableRector::class);

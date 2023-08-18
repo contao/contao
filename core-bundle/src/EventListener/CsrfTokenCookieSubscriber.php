@@ -145,7 +145,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $content = $response->getContent();
         $tokens = $this->tokenManager->getUsedTokenValues();
 
-        if (!\is_string($content) || empty($tokens)) {
+        if (!$tokens || !\is_string($content)) {
             return;
         }
 

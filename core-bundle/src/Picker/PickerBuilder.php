@@ -52,7 +52,7 @@ class PickerBuilder implements PickerBuilderInterface
             static fn (PickerProviderInterface $provider): bool => $provider->supportsContext($config->getContext())
         );
 
-        if (empty($providers)) {
+        if (!$providers) {
             return null;
         }
 

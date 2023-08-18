@@ -51,7 +51,7 @@ class InstallCommand extends Command
 
         $this->addEmptyDirs();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->listing($this->rows);

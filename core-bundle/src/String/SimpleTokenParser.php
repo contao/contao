@@ -118,7 +118,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $unmatchedVariables = array_diff($this->getVariables($expression), array_keys($data));
 
-        if (!empty($unmatchedVariables)) {
+        if ($unmatchedVariables) {
             $this->logUnmatchedVariables(...$unmatchedVariables);
 
             // Define variables that weren't provided with the value 'null'

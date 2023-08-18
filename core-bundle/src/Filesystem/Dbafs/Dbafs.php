@@ -385,7 +385,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2)
         );
 
-        if (!empty($shallowDirectories)) {
+        if ($shallowDirectories) {
             foreach (array_keys($itemsToDelete) as $item) {
                 if ($this->inPath((string) $item, $shallowDirectories)) {
                     unset($itemsToDelete[$item]);
@@ -583,7 +583,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $inserts[] = $dataToInsert;
         }
 
-        if (!empty($inserts)) {
+        if ($inserts) {
             $table = $this->connection->quoteIdentifier($this->table);
             $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)

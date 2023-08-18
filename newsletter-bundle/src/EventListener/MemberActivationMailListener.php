@@ -37,7 +37,7 @@ class MemberActivationMailListener
             [Types::SIMPLE_ARRAY]
         );
 
-        if (empty($channels)) {
+        if (!$channels) {
             return;
         }
 

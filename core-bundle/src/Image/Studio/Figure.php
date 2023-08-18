@@ -278,7 +278,7 @@ final class Figure
             $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
         }
 
-        if (!empty($linkAttributes)) {
+        if ($linkAttributes) {
             $htmlAttributes = array_map(
                 static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),

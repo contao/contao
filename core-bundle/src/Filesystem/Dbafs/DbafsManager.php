@@ -250,7 +250,7 @@ class DbafsManager
 
         // Sync all DBAFS if no paths are supplied, otherwise individually
         // match paths according to the configured DBAFS prefixes
-        if (empty($paths)) {
+        if (!$paths) {
             foreach ($this->dbafs as $prefix => $dbafs) {
                 $dbafsAndPathsByPrefix[$prefix] = [$dbafs, []];
             }

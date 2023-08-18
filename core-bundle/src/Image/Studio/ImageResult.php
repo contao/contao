@@ -156,7 +156,7 @@ class ImageResult
             static fn ($image): bool => $image instanceof DeferredImageInterface
         );
 
-        if (empty($deferredImages)) {
+        if (!$deferredImages) {
             return;
         }
 
