@@ -44,7 +44,11 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
             return false;
         }
 
-        return !(!$argument->isNullable() && null === $this->fetchModel($request, $argument));
+        if (!$argument->isNullable() && null === $this->fetchModel($request, $argument)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): \Generator

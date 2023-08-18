@@ -59,6 +59,10 @@ return static function (RectorConfig $rectorConfig): void {
             'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
         ],
         NullToStrictStringFuncCallArgRector::class,
+        SimplifyIfReturnBoolRector::class => [
+            'core-bundle/src/EventListener/CommandSchedulerListener.php',
+            'core-bundle/src/HttpKernel/ModelArgumentResolver.php',
+        ],
     ]);
 
     $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
