@@ -29,7 +29,7 @@ class XliffMerger
             $id = $importNode->getAttribute('id');
 
             $duplicatesPath = new \DOMXPath($root);
-            $duplicates = $duplicatesPath->query('//trans-unit[@id=\''.$id.'\']');
+            $duplicates = $duplicatesPath->query("//trans-unit[@id='".$id."']");
 
             if (false === $duplicates || $duplicates->length > 0) {
                 continue;

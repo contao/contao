@@ -408,7 +408,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // identify them by their name.
                 $candidates = array_filter(
                     $candidates,
-                    static fn (string $candidatePath): bool => basename((string) $path) === basename((string) $candidatePath)
+                    static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath)
                 );
             }
 

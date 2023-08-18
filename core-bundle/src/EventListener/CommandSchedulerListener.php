@@ -55,11 +55,7 @@ class CommandSchedulerListener
             return false;
         }
 
-        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
-            return false;
-        }
-
-        return true;
+        return !($this->autoMode && $this->cron->hasMinutelyCliCron());
     }
 
     /**

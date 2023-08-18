@@ -100,7 +100,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'inline svg single quotes' => [
             'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
-            ['style' => 'background:url(\'data:image/svg+xml;utf8,<svg/>\')'],
+            ['style' => "background:url('data:image/svg+xml;utf8,<svg/>')"],
         ];
 
         yield 'inline svg double quotes' => [

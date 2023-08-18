@@ -72,6 +72,7 @@ class FrontendController extends AbstractController
 
         $response = new Response(base64_decode($image, true));
         $response->setPrivate();
+
         $response->headers->set('Content-Type', 'image/png');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');
@@ -90,6 +91,7 @@ class FrontendController extends AbstractController
 
         $response = new Response();
         $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$tokenValue.'})');
+
         $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');

@@ -47,6 +47,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         //  Urchin Tracking Module (UTM) parameters
         'utm_[a-z]+',
     ];
+
     private array $removeFromDenyList = [];
 
     public function __construct(private readonly array $allowList = [])

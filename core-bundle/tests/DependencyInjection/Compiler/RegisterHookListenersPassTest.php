@@ -393,7 +393,7 @@ class RegisterHookListenersPassTest extends TestCase
     }
 
     /**
-     * Returns the container builder with a dummy contao.framework definition.
+     * Returns the container builder with a dummy "contao.framework" definition.
      */
     private function getContainerBuilder(): ContainerBuilder
     {

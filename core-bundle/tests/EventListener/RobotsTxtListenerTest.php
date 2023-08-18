@@ -44,6 +44,7 @@ class RobotsTxtListenerTest extends TestCase
 
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
+
         $file = $parser->getFile();
 
         $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);

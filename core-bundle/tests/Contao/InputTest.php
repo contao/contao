@@ -579,7 +579,7 @@ class InputTest extends TestCase
         ];
 
         yield [
-            '<IMG SRC=JaVaScRiPt:alert(\'XSS\')>',
+            "<IMG SRC=JaVaScRiPt:alert('XSS')>",
             '<img src="JaVaScRiPt%3Aalert(&#039;XSS&#039;)">',
         ];
 
@@ -679,7 +679,7 @@ class InputTest extends TestCase
         ];
 
         yield [
-            '<svg/onload=alert(\'XSS\')>',
+            "<svg/onload=alert('XSS')>",
             '&#60;svg/onload&#61;alert(&#39;XSS&#39;)&#62;',
         ];
 
@@ -716,7 +716,7 @@ class InputTest extends TestCase
 
     public function testStripTagsAllAttributesAllowed(): void
     {
-        $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV>';
+        $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV>";
         $expected = '<div class="gets-normalized" bar-foo-something="keep"><span>foo</span></div>';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([['key' => 'div', 'value' => '*']])));
@@ -734,7 +734,7 @@ class InputTest extends TestCase
      */
     public function testStripTagsNoAttributesAllowed(): void
     {
-        $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV><notallowed></notallowed>';
+        $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
         $expected = '<div><span>foo</span></div>&#60;notallowed&#62;&#60;/notallowed&#62;';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([['key' => '', 'value' => '']])));
@@ -839,13 +839,13 @@ class InputTest extends TestCase
         ];
 
         yield 'Condition encoded in attribute' => [
-            '<b title=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></b>',
+            "<b title='a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j'></b>",
             ['foo' => 'bar', 'bar' => 5],
             '<b title="abdeghj"></b>',
         ];
 
         yield 'Condition encoded in URL attribute' => [
-            '<a href=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></a>',
+            "<a href='a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j'></a>",
             ['foo' => 'bar', 'bar' => 5],
             '<a href="abdeghj"></a>',
         ];
@@ -865,6 +865,7 @@ class InputTest extends TestCase
 
         $stack->pop();
         $stack->push(new Request($data));
+
         $_POST = $_GET = $data;
 
         $this->assertSame(['key1', '123'], Input::getKeys());

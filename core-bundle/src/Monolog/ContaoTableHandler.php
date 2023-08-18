@@ -55,7 +55,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             return false;
         }
 
-        return false === $this->bubble;
+        return !$this->bubble;
     }
 
     protected function write(array $record): void

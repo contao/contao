@@ -156,7 +156,7 @@ class XliffFileLoader extends Loader
      */
     private function addGlobal(array $chunks, string $value): void
     {
-        if (false === $this->addToGlobals) {
+        if (!$this->addToGlobals) {
             return;
         }
 

@@ -32,6 +32,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
+
         $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
 
         $event = new ResponseEvent(
@@ -178,6 +179,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
+
         $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
         $response->headers->setCookie(Cookie::create('foobar2', 'foobar'));
 
