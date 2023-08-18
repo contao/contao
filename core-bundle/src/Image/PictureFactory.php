@@ -388,7 +388,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if (0 === \count($picture->getRawSources())) {
+        if (!$picture->getRawSources()) {
             return true;
         }
 

@@ -16,6 +16,7 @@ use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
 use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
+use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
 use Rector\CodingStyle\Rector\String_\SymplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
@@ -67,6 +68,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
     $rectorConfig->rule(CompactToVariablesRector::class);
+    $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);
     $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
     $rectorConfig->rule(RemoveConcatAutocastRector::class);
     $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);

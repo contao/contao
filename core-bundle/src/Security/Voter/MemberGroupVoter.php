@@ -47,6 +47,6 @@ class MemberGroupVoter extends Voter
             return false;
         }
 
-        return \count(array_intersect($subject, $groups)) > 0;
+        return [] !== array_intersect($subject, $groups);
     }
 }

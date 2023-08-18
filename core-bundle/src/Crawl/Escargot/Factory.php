@@ -62,7 +62,7 @@ class Factory
      */
     public function getSubscribers(array $selectedSubscribers = []): array
     {
-        if (0 === \count($selectedSubscribers)) {
+        if (!$selectedSubscribers) {
             return $this->subscribers;
         }
 
@@ -190,7 +190,7 @@ class Factory
     {
         $selectedSubscribers = array_intersect($this->getSubscriberNames(), $selectedSubscribers);
 
-        if (0 === \count($selectedSubscribers)) {
+        if ($selectedSubscribers) {
             throw new \InvalidArgumentException('You have to specify at least one valid subscriber name. Valid subscribers are: '.implode(', ', $this->getSubscriberNames()));
         }
 

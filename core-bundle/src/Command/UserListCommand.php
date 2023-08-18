@@ -100,7 +100,7 @@ class UserListCommand extends Command
      */
     private function formatTableRows(Collection $users, array &$columns): array
     {
-        if ([] === $columns) {
+        if (!$columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
@@ -137,7 +137,7 @@ class UserListCommand extends Command
             return [];
         }
 
-        if ([] === $columns) {
+        if (!$columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 

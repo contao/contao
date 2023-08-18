@@ -224,7 +224,7 @@ class Cron
             }
         }
 
-        if (0 !== \count($promises)) {
+        if ($promises) {
             Utils::settle($promises)->wait();
         }
 

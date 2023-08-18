@@ -153,7 +153,7 @@ class NewsFeedListener
             $uuids = [...$uuids, ...StringUtil::deserialize($article->enclosure, true)];
         }
 
-        if (0 === \count($uuids)) {
+        if (!$uuids) {
             return [];
         }
 

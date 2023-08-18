@@ -73,9 +73,7 @@ class MakeResponsePrivateListener
         }
 
         // 3) The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
-        $cookies = $response->headers->getCookies();
-
-        if (0 !== \count($cookies)) {
+        if ($cookies = $response->headers->getCookies()) {
             $this->makePrivate(
                 $response,
                 sprintf(

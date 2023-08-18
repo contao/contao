@@ -103,7 +103,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             }
         }
 
-        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
+        if ($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
             return true;
         }
 

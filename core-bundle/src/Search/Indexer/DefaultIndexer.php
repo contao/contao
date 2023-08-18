@@ -132,7 +132,7 @@ class DefaultIndexer implements IndexerInterface
     {
         $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
 
-        if (0 === \count($jsonLds)) {
+        if (!$jsonLds) {
             $this->throwBecause('No JSON-LD found.');
         }
 

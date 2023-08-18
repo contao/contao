@@ -214,7 +214,7 @@ class MigrateCommand extends Command
             return true;
         }
 
-        return \count($this->commandCompiler->compileCommands()) > 0;
+        return [] !== $this->commandCompiler->compileCommands();
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
@@ -319,7 +319,7 @@ class MigrateCommand extends Command
         while (true) {
             $commands = $this->commandCompiler->compileCommands();
 
-            $hasNewCommands = \count(array_diff($commands, $lastCommands)) > 0;
+            $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
             $commandsHash = hash('sha256', json_encode($commands));
@@ -424,7 +424,7 @@ class MigrateCommand extends Command
                 }
             }
 
-            if (\count($exceptions)) {
+            if ($exceptions) {
                 return false;
             }
 
