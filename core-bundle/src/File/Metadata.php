@@ -117,7 +117,7 @@ class Metadata
      */
     public function empty(): bool
     {
-        return [] === $this->values;
+        return !$this->values;
     }
 
     public function getSchemaOrgData(string|null $type = null): array
