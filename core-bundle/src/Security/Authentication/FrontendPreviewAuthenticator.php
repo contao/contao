@@ -47,7 +47,7 @@ class FrontendPreviewAuthenticator
     {
         $user = $this->loadFrontendUser($username);
 
-        if (null === $user) {
+        if (!$user instanceof FrontendUser) {
             return false;
         }
 
@@ -82,8 +82,10 @@ class FrontendPreviewAuthenticator
     {
         $this->updateToken(null);
 
+        $session = $this->getSession();
+
         if (
-            (!$session = $this->getSession())
+            (!$session instanceof SessionInterface)
             || !$session->isStarted()
             || (!$session->has('_security_contao_frontend') && !$session->has(self::SESSION_NAME))
         ) {
@@ -103,7 +105,7 @@ class FrontendPreviewAuthenticator
     {
         if ($this->tokenChecker->isFrontendFirewall()) {
             $this->tokenStorage->setToken($token);
-        } elseif (null === $token) {
+        } elseif (!$token instanceof UsernamePasswordToken) {
             $this->getSession()?->remove('_security_contao_frontend');
         } else {
             $this->getSession()?->set('_security_contao_frontend', serialize($token));

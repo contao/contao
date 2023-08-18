@@ -53,7 +53,7 @@ class PageUrlListener
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pageModel = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel instanceof PageModel) {
             return $value;
         }
 
@@ -121,7 +121,7 @@ class PageUrlListener
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage instanceof PageModel) {
             return $value;
         }
 
@@ -148,7 +148,7 @@ class PageUrlListener
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage instanceof PageModel) {
             return $value;
         }
 

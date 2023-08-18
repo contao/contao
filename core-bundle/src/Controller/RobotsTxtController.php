@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\PageModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +39,7 @@ class RobotsTxtController
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        if (null === $rootPage) {
+        if (!$rootPage instanceof PageModel) {
             throw new NotFoundHttpException();
         }
 

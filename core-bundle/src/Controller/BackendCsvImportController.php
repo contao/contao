@@ -97,7 +97,7 @@ class BackendCsvImportController
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             throw new InternalServerErrorException('No request object given.');
         }
 

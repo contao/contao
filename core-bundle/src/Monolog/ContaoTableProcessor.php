@@ -19,6 +19,7 @@ use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ContaoTableProcessor implements ProcessorInterface
 {
@@ -77,7 +78,7 @@ class ContaoTableProcessor implements ProcessorInterface
             return;
         }
 
-        $context->setBrowser(null === $request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
+        $context->setBrowser(!$request instanceof Request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
     }
 
     private function updateUsername(ContaoContext $context): void
@@ -88,7 +89,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
+        $context->setUsername(!$token instanceof TokenInterface ? 'N/A' : $token->getUserIdentifier());
     }
 
     private function updateSource(ContaoContext $context, Request|null $request = null): void
@@ -97,12 +98,12 @@ class ContaoTableProcessor implements ProcessorInterface
             return;
         }
 
-        $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
+        $context->setSource($request instanceof Request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
     }
 
     private function updateUri(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return;
         }
 
@@ -111,7 +112,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
     private function updatePageId(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request || !$request->attributes->has('pageModel')) {
+        if (!$request instanceof Request || !$request->attributes->has('pageModel')) {
             return;
         }
 

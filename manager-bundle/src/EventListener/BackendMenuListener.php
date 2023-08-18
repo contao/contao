@@ -14,7 +14,9 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -51,7 +53,7 @@ class BackendMenuListener
      */
     private function addDebugButton(MenuEvent $event): void
     {
-        if (null === $this->jwtManager) {
+        if (!$this->jwtManager instanceof JwtManager) {
             return;
         }
 
@@ -104,7 +106,13 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
+        if (!$categoryNode instanceof ItemInterface) {
+            return;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request instanceof Request) {
             return;
         }
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 use Nyholm\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -61,10 +62,18 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
         // Only check URIs that are part of our base collection or were found on one
         $fromBaseUriCollection = $this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost());
+        $foundOnBaseUriCollection = false;
 
-        $foundOnBaseUriCollection = null !== $crawlUri->getFoundOn()
-            && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
-            && $this->escargot->getBaseUris()->containsHost($originalCrawlUri->getUri()->getHost());
+        if ($crawlUri->getFoundOn() instanceof UriInterface) {
+            $originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn());
+
+            if ($originalCrawlUri instanceof CrawlUri) {
+                $foundOnBaseUriCollection = $this->escargot
+                    ->getBaseUris()
+                    ->containsHost($originalCrawlUri->getUri()->getHost())
+                ;
+            }
+        }
 
         if (!$fromBaseUriCollection && !$foundOnBaseUriCollection) {
             $this->logWithCrawlUri(
@@ -117,7 +126,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     {
         $stats = $this->stats;
 
-        if (null !== $previousResult) {
+        if ($previousResult instanceof SubscriberResult) {
             $stats['ok'] += $previousResult->getInfo('stats')['ok'];
             $stats['error'] += $previousResult->getInfo('stats')['error'];
         }

@@ -51,7 +51,7 @@ class AvailableTransports
         $options = [];
 
         foreach ($this->transports as $name => $config) {
-            $label = null !== $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
+            $label = $this->translator instanceof TranslatorInterface ? $this->translator->trans($name, [], 'mailer_transports') : $name;
 
             if (null !== ($from = $config->getFrom())) {
                 $label .= ' ('.$from.')';

@@ -27,7 +27,7 @@ class SearchIndexMessageHandler
     public function __invoke(SearchIndexMessage $message): void
     {
         // No search indexing activated at all
-        if (null === $this->indexer) {
+        if (!$this->indexer instanceof IndexerInterface) {
             return;
         }
 

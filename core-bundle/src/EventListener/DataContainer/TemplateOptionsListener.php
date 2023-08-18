@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class TemplateOptionsListener
@@ -148,7 +149,7 @@ class TemplateOptionsListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->query->has('act')) {
+        if (!$request instanceof Request || !$request->query->has('act')) {
             return false;
         }
 

@@ -363,7 +363,7 @@ class LocalesTest extends TestCase
 
     private function getLocalesService(Translator|null $translator = null, RequestStack|null $requestStack = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales
     {
-        if (null === $translator) {
+        if (!$translator instanceof Translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

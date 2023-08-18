@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Spatie\SchemaOrg\Graph;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -33,7 +34,7 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
-        if (!$responseContext || !$responseContext->has(JsonLdManager::class)) {
+        if (!$responseContext instanceof ResponseContext || !$responseContext->has(JsonLdManager::class)) {
             return;
         }
 

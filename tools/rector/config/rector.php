@@ -14,6 +14,7 @@ use Rector\CodeQuality\Rector\BooleanNot\SimplifyDeMorganBinaryRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
+use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
@@ -29,6 +30,7 @@ use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\SetList;
 use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
+use Rector\TypeDeclaration\Rector\BooleanAnd\BinaryOpNullableToInstanceofRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
@@ -65,9 +67,11 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
+    $rectorConfig->rule(BinaryOpNullableToInstanceofRector::class);
     $rectorConfig->rule(CompactToVariablesRector::class);
     $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);
     $rectorConfig->rule(DisallowedEmptyRuleFixerRector::class);
+    $rectorConfig->rule(FlipTypeControlToUseExclusiveTypeRector::class);
     $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
     $rectorConfig->rule(RemoveConcatAutocastRector::class);
     $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);

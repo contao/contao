@@ -158,7 +158,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $layout = $this->getLayout();
 
-        if (null === $layout) {
+        if (!$layout instanceof LayoutModel) {
             return '';
         }
 
@@ -169,7 +169,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $layout = $this->getLayout();
 
-        if (null === $layout) {
+        if (!$layout instanceof LayoutModel) {
             return '';
         }
 

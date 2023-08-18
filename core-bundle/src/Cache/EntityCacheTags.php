@@ -50,7 +50,7 @@ class EntityCacheTags
     {
         $metadata = $this->getClassMetadata($className);
 
-        if (null === $metadata) {
+        if (!$metadata instanceof ClassMetadata) {
             throw new \InvalidArgumentException(sprintf('The given class name "%s" is no valid entity class.', $className));
         }
 
@@ -64,7 +64,7 @@ class EntityCacheTags
     {
         $metadata = $this->getClassMetadata($instance::class);
 
-        if (null === $metadata) {
+        if (!$metadata instanceof ClassMetadata) {
             throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
         }
 
@@ -166,7 +166,7 @@ class EntityCacheTags
      */
     public function tagWithEntityClass(string $className): void
     {
-        if (null === $this->responseTagger) {
+        if (!$this->responseTagger instanceof ResponseTagger) {
             return;
         }
 
@@ -178,7 +178,7 @@ class EntityCacheTags
      */
     public function tagWithEntityInstance(object $instance): void
     {
-        if (null === $this->responseTagger) {
+        if (!$this->responseTagger instanceof ResponseTagger) {
             return;
         }
 
@@ -190,7 +190,7 @@ class EntityCacheTags
      */
     public function tagWithModelClass(string $className): void
     {
-        if (null === $this->responseTagger) {
+        if (!$this->responseTagger instanceof ResponseTagger) {
             return;
         }
 
@@ -202,7 +202,7 @@ class EntityCacheTags
      */
     public function tagWithModelInstance(Model $instance): void
     {
-        if (null === $this->responseTagger) {
+        if (!$this->responseTagger instanceof ResponseTagger) {
             return;
         }
 
@@ -216,7 +216,7 @@ class EntityCacheTags
      */
     public function tagWith(array|object|string|null $target): void
     {
-        if (null === $this->responseTagger) {
+        if (!$this->responseTagger instanceof ResponseTagger) {
             return;
         }
 
@@ -228,7 +228,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityClass(string $className): void
     {
-        if (null === $this->cacheInvalidator) {
+        if (!$this->cacheInvalidator instanceof CacheInvalidator) {
             return;
         }
 
@@ -240,7 +240,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityInstance(object $instance): void
     {
-        if (null === $this->cacheInvalidator) {
+        if (!$this->cacheInvalidator instanceof CacheInvalidator) {
             return;
         }
 
@@ -252,7 +252,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelClass(string $className): void
     {
-        if (null === $this->cacheInvalidator) {
+        if (!$this->cacheInvalidator instanceof CacheInvalidator) {
             return;
         }
 
@@ -264,7 +264,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelInstance(Model $instance): void
     {
-        if (null === $this->cacheInvalidator) {
+        if (!$this->cacheInvalidator instanceof CacheInvalidator) {
             return;
         }
 
@@ -278,7 +278,7 @@ class EntityCacheTags
      */
     public function invalidateTagsFor(array|object|string|null $target): void
     {
-        if (null === $this->cacheInvalidator) {
+        if (!$this->cacheInvalidator instanceof CacheInvalidator) {
             return;
         }
 

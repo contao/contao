@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
@@ -47,7 +48,7 @@ class TwoFactorFrontendListener
 
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token) {
+        if (!$token instanceof TokenInterface) {
             return;
         }
 

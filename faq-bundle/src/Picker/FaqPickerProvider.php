@@ -84,7 +84,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     {
         $params = ['do' => 'faq'];
 
-        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config instanceof PickerConfig || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 

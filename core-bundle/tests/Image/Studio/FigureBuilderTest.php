@@ -1422,7 +1422,7 @@ class FigureBuilderTest extends TestCase
         $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
 
-        if (null !== $configureBuilderCallback) {
+        if ($configureBuilderCallback instanceof \Closure) {
             $configureBuilderCallback($builder);
         }
 

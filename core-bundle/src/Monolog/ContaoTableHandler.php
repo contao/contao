@@ -19,6 +19,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
@@ -86,7 +87,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     private function getConnection(): Connection
     {
-        if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
+        if (!$this->container instanceof ContainerInterface || !$this->container->has($this->dbalServiceName)) {
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 

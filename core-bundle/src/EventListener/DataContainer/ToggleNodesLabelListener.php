@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -31,7 +32,7 @@ class ToggleNodesLabelListener
         $request = $this->requestStack->getCurrentRequest();
 
         // Ignore if not in the back end
-        if (!$request || !$this->scopeMatcher->isBackendRequest($request)) {
+        if (!$request instanceof Request || !$this->scopeMatcher->isBackendRequest($request)) {
             return;
         }
 

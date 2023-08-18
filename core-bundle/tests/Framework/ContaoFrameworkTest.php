@@ -408,7 +408,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $requestStack = new RequestStack();
 
-        if (null !== $request) {
+        if ($request instanceof Request) {
             $requestStack->push($request);
         }
 

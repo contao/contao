@@ -54,7 +54,7 @@ class ImageResult
      */
     public function getPicture(): PictureInterface
     {
-        if (null === $this->picture) {
+        if (!$this->picture instanceof PictureInterface) {
             $this->picture = $this
                 ->pictureFactory()
                 ->create($this->filePathOrImageInterface, $this->sizeConfiguration, $this->resizeOptions)
@@ -101,7 +101,7 @@ class ImageResult
      */
     public function getOriginalDimensions(): ImageDimensions
     {
-        if (null !== $this->originalDimensions) {
+        if ($this->originalDimensions instanceof ImageDimensions) {
             return $this->originalDimensions;
         }
 

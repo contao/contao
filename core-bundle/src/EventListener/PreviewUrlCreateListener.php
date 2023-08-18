@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -40,7 +41,7 @@ class PreviewUrlCreateListener
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
@@ -56,7 +57,7 @@ class PreviewUrlCreateListener
 
         $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (null !== $adapter->findByPk($id)) {
+        if ($adapter->findByPk($id) instanceof PageModel) {
             $event->setQuery('page='.$id);
         }
     }

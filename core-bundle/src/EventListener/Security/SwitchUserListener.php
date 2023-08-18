@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\Security;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 /**
@@ -35,7 +36,7 @@ class SwitchUserListener
     {
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token) {
+        if (!$token instanceof TokenInterface) {
             throw new \RuntimeException('The token storage did not contain a token.');
         }
 

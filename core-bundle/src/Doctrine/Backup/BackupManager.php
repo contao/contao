@@ -55,7 +55,7 @@ class BackupManager
     {
         $latestBackup = $this->getLatestBackup();
 
-        if (null === $latestBackup) {
+        if (!$latestBackup instanceof Backup) {
             throw new BackupManagerException('No backups found.');
         }
 
@@ -115,7 +115,7 @@ class BackupManager
      */
     public function readStream(Backup $backup)
     {
-        if (null === $this->getBackupByName($backup->getFilename())) {
+        if (!$this->getBackupByName($backup->getFilename()) instanceof Backup) {
             throw new BackupManagerException('Cannot read stream of a non-existent backup.');
         }
 

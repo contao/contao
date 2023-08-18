@@ -194,7 +194,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
             $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
 
-            while (null !== $parentPage && false === $row['chmod'] && $pid > 0) {
+            while ($parentPage instanceof PageModel && false === $row['chmod'] && $pid > 0) {
                 $cacheIds[] = $parentPage->id;
                 $pid = $parentPage->pid;
 

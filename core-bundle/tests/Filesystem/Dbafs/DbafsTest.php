@@ -1368,7 +1368,7 @@ class DbafsTest extends TestCase
             ;
         }
 
-        if (null === $eventDispatcher) {
+        if (!$eventDispatcher instanceof EventDispatcherInterface) {
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
             $eventDispatcher
                 ->method('dispatch')

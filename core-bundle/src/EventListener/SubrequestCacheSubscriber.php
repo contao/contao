@@ -69,7 +69,7 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
         $response = $event->getResponse();
         $isMainRequest = HttpKernelInterface::MAIN_REQUEST === $event->getRequestType();
 
-        if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
+        if ($this->currentStrategy instanceof ResponseCacheStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
             if ($isMainRequest) {
                 $this->currentStrategy->update($response);
             } elseif ($response->headers->has('Cache-Control')) {

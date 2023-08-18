@@ -24,6 +24,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -84,7 +85,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
 
-        if (null === $this->container) {
+        if (!$this->container instanceof ContainerInterface) {
             throw new \LogicException('The service container has not been set.');
         }
 
@@ -190,7 +191,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     {
         $language = 'en';
 
-        if (null !== $this->request) {
+        if ($this->request instanceof Request) {
             $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 

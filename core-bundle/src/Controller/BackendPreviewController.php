@@ -65,7 +65,9 @@ class BackendPreviewController
 
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
-        if (null !== ($response = $urlConvertEvent->getResponse())) {
+        $response = $urlConvertEvent->getResponse();
+
+        if ($response instanceof Response) {
             return $response;
         }
 

@@ -45,8 +45,10 @@ class ImagesController extends AbstractContentElementController
             ->filter(fn ($item) => \in_array($item->getExtension(true), $this->validExtensions, true))
         ;
 
+        $sortMode = SortMode::tryFrom($sortBy = $model->sortBy);
+
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
+        if ($sortMode instanceof SortMode) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 

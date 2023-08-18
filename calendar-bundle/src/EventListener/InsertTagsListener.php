@@ -56,8 +56,9 @@ class InsertTagsListener
         $this->framework->initialize();
 
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
+        $feed = $adapter->findByPk($feedId);
 
-        if (null === ($feed = $adapter->findByPk($feedId))) {
+        if (!$feed instanceof CalendarFeedModel) {
             return '';
         }
 
@@ -69,8 +70,9 @@ class InsertTagsListener
         $this->framework->initialize();
 
         $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
+        $model = $adapter->findByIdOrAlias($idOrAlias);
 
-        if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
+        if (!$model instanceof CalendarEventsModel) {
             return '';
         }
 

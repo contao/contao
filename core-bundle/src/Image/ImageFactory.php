@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\CoordinatesOutOfBoundsException;
 use Contao\Image\Image;
@@ -89,13 +90,17 @@ class ImageFactory implements ImageFactoryInterface
                 throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
             }
 
-            if (
-                $this->resizer instanceof DeferredResizerInterface
-                && !$this->filesystem->exists($path)
-                && $deferredImage = $this->resizer->getDeferredImage($path, $imagine)
-            ) {
-                $image = $deferredImage;
-            } else {
+            $image = null;
+
+            if ($this->resizer instanceof DeferredResizerInterface && !$this->filesystem->exists($path)) {
+                $deferredImage = $this->resizer->getDeferredImage($path, $imagine);
+
+                if ($deferredImage instanceof DeferredImageInterface) {
+                    $image = $deferredImage;
+                }
+            }
+
+            if (!$image) {
                 $image = new Image($path, $imagine, $this->filesystem);
             }
         }
@@ -197,8 +202,9 @@ class ImageFactory implements ImageFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
+                $imageSize = $imageModel->findByPk($size[2]);
 
-                if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
+                if ($imageSize instanceof ImageSizeModel) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
@@ -326,7 +332,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file instanceof FilesModel || !$file->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 

@@ -36,7 +36,9 @@ class PreviewUrlConvertListener
             return;
         }
 
-        if (null === ($eventModel = $this->getEventModel($event->getRequest()))) {
+        $eventModel = $this->getEventModel($event->getRequest());
+
+        if (!$eventModel instanceof CalendarEventsModel) {
             return;
         }
 

@@ -19,7 +19,7 @@ class SimpleTokenExpressionLanguage extends ExpressionLanguage
 {
     public function __construct(CacheItemPoolInterface|null $cache = null, \IteratorAggregate|null $taggedProviders = null)
     {
-        $providers = null !== $taggedProviders ? iterator_to_array($taggedProviders->getIterator()) : [];
+        $providers = $taggedProviders instanceof \IteratorAggregate ? iterator_to_array($taggedProviders->getIterator()) : [];
 
         parent::__construct($cache, $providers);
 

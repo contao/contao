@@ -188,10 +188,10 @@ class InsertTagParser implements ResetInterface
             }
         }
 
-        if (null !== $tag) {
+        if ($tag instanceof InsertTag) {
             $result = $this->renderSubscription($tag, false);
 
-            if (null !== $result) {
+            if ($result instanceof InsertTagResult) {
                 return $result;
             }
         }
@@ -228,7 +228,7 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags instanceof InsertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -348,7 +348,7 @@ class InsertTagParser implements ResetInterface
 
         foreach ($input as $item) {
             if (
-                $wrapStart
+                $wrapStart instanceof InsertTag
                 && $item instanceof InsertTag
                 && $item->getName() === $this->blockSubscriptions[$wrapStart->getName()]->endTag
             ) {
@@ -550,7 +550,7 @@ class InsertTagParser implements ResetInterface
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags instanceof InsertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }

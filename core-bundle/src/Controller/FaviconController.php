@@ -16,6 +16,7 @@ use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\FilesModel;
+use Contao\PageModel;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +42,7 @@ class FaviconController
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        if (null === $rootPage || null === ($favicon = $rootPage->favicon)) {
+        if (!$rootPage instanceof PageModel || (!$favicon = $rootPage->favicon)) {
             throw new NotFoundHttpException();
         }
 
@@ -50,7 +51,7 @@ class FaviconController
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $faviconModel = $filesModel->findByUuid($favicon);
 
-        if (null === $faviconModel) {
+        if (!$faviconModel instanceof FilesModel) {
             throw new NotFoundHttpException();
         }
 

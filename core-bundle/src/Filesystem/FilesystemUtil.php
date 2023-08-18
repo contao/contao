@@ -102,8 +102,9 @@ class FilesystemUtil
 
             try {
                 $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
+                $item = $storage->get($uuidObject);
 
-                if (null === ($item = $storage->get($uuidObject))) {
+                if (!$item instanceof FilesystemItem) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {

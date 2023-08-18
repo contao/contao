@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Psr\Http\Message\UriInterface;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -39,7 +40,9 @@ class DefaultIndexer implements IndexerInterface
             $this->throwBecause('Cannot index empty response.');
         }
 
-        if (($canonical = $document->extractCanonicalUri()) && ((string) $canonical !== (string) $document->getUri())) {
+        $canonical = $document->extractCanonicalUri();
+
+        if ($canonical instanceof UriInterface && ((string) $canonical !== (string) $document->getUri())) {
             $this->throwBecause(sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
         }
 

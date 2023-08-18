@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\OptIn;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model;
+use Contao\Model\Collection;
 use Contao\OptInModel;
 
 class OptIn implements OptInInterface
@@ -93,7 +94,7 @@ class OptIn implements OptInInterface
                     /** @var Adapter<Model> $model */
                     $model = $this->framework->getAdapter($class);
 
-                    if (null !== $model->findMultipleByIds($id)) {
+                    if ($model->findMultipleByIds($id) instanceof Collection) {
                         $delete = false;
                         break;
                     }

@@ -36,7 +36,7 @@ class Picker implements PickerInterface
 
     public function getMenu(): ItemInterface
     {
-        if (null !== $this->menu) {
+        if ($this->menu instanceof ItemInterface) {
             return $this->menu;
         }
 

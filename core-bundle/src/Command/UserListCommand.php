@@ -55,7 +55,7 @@ class UserListCommand extends Command
 
         switch ($input->getOption('format')) {
             case 'txt':
-                if (!$users || 0 === $users->count()) {
+                if (!$users instanceof Collection || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return Command::SUCCESS;

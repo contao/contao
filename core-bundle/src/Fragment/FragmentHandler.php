@@ -47,7 +47,7 @@ class FragmentHandler extends BaseFragmentHandler
 
         $config = $this->fragmentRegistry->get($uri->controller);
 
-        if (null === $config) {
+        if (!$config instanceof FragmentConfig) {
             throw new UnknownFragmentException(sprintf('Invalid fragment identifier "%s"', $uri->controller));
         }
 

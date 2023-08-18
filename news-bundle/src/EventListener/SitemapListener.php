@@ -62,7 +62,7 @@ class SitemapListener
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent instanceof PageModel) {
                 continue;
             }
 

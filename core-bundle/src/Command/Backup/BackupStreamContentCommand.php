@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command\Backup;
 
+use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -39,7 +40,9 @@ class BackupStreamContentCommand extends Command
             return Command::FAILURE;
         }
 
-        if (null === ($backup = $this->backupManager->getBackupByName($input->getArgument('name')))) {
+        $backup = $this->backupManager->getBackupByName($input->getArgument('name'));
+
+        if (!$backup instanceof Backup) {
             $io->error(sprintf('Backup "%s" not found.', $input->getArgument('name')));
 
             return Command::FAILURE;

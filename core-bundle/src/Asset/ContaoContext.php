@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Asset;
 
 use Contao\PageModel;
 use Symfony\Component\Asset\Context\ContextInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -30,7 +31,9 @@ class ContaoContext implements ContextInterface
 
     public function getBasePath(): string
     {
-        if (null === ($request = $this->requestStack->getCurrentRequest())) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request instanceof Request) {
             return '';
         }
 
@@ -48,13 +51,13 @@ class ContaoContext implements ContextInterface
     {
         $page = $this->getPageModel();
 
-        if (null !== $page) {
+        if ($page instanceof PageModel) {
             return $page->loadDetails()->rootUseSSL;
         }
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return false;
         }
 
@@ -73,11 +76,17 @@ class ContaoContext implements ContextInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
-            return $pageModel;
+        if (!$request instanceof Request) {
+            return null;
         }
 
-        return null;
+        $pageModel = $request->attributes->get('pageModel');
+
+        if (!$pageModel instanceof PageModel) {
+            return null;
+        }
+
+        return $pageModel;
     }
 
     /**

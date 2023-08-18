@@ -54,7 +54,7 @@ class ResponseContextAccessor
     {
         $responseContext = $this->getResponseContext();
 
-        if (null === $responseContext) {
+        if (!$responseContext instanceof ResponseContext) {
             return $this;
         }
 

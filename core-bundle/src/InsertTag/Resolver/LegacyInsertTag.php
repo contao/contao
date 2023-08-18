@@ -341,7 +341,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article_teaser':
                 $objTeaser = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
 
-                if (null !== $objTeaser) {
+                if ($objTeaser instanceof ArticleModel) {
                     $result = $objTeaser->teaser;
                 }
                 break;
@@ -561,7 +561,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     // Handle UUIDs
                     $objFile = FilesModel::findByUuid($strFile);
 
-                    if (null === $objFile) {
+                    if (!$objFile instanceof FilesModel) {
                         break;
                     }
 
@@ -570,7 +570,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     // Handle numeric IDs (see #4805)
                     $objFile = FilesModel::findByPk($strFile);
 
-                    if (null === $objFile) {
+                    if (!$objFile instanceof FilesModel) {
                         break;
                     }
 
@@ -580,11 +580,15 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 // Use the alternative text from the image metadata if none is given
-                if (!$alt && ($objFile = FilesModel::findByPath($strFile))) {
-                    $arrMeta = Frontend::getMetaData($objFile->meta, $GLOBALS['objPage']->language ?? $GLOBALS['TL_LANGUAGE']);
+                if (!$alt) {
+                    $objFile = FilesModel::findByPath($strFile);
 
-                    if (isset($arrMeta['alt'])) {
-                        $alt = $arrMeta['alt'];
+                    if ($objFile instanceof FilesModel) {
+                        $arrMeta = Frontend::getMetaData($objFile->meta, $GLOBALS['objPage']->language ?? $GLOBALS['TL_LANGUAGE']);
+
+                        if (isset($arrMeta['alt'])) {
+                            $alt = $arrMeta['alt'];
+                        }
                     }
                 }
 
@@ -632,7 +636,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if (Validator::isUuid($insertTag->getParameters()->get(0))) {
                     $objFile = FilesModel::findByUuid($insertTag->getParameters()->get(0));
 
-                    if (null !== $objFile) {
+                    if ($objFile instanceof FilesModel) {
                         $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
                         break;
                     }

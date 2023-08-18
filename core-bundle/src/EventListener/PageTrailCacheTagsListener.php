@@ -27,7 +27,7 @@ class PageTrailCacheTagsListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (null === $this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->responseTagger instanceof ResponseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 

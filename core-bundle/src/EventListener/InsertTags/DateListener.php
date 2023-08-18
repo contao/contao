@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -125,8 +126,9 @@ class DateListener
         }
 
         $key = $dateFormat.'Format';
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if ($request instanceof Request) {
             $attributes = $request->attributes;
 
             if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {

@@ -65,7 +65,9 @@ class ExceptionConverterListener
             return;
         }
 
-        if (null !== ($httpException = $this->convertToHttpException($exception, $class))) {
+        $httpException = $this->convertToHttpException($exception, $class);
+
+        if ($httpException instanceof HttpException) {
             $event->setThrowable($httpException);
         }
     }

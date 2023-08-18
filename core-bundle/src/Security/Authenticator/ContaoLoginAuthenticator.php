@@ -170,7 +170,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return false;
         }
 
@@ -220,11 +220,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $page->protected = false;
 
-        if (null === $this->tokenStorage->getToken()) {
+        if (!$this->tokenStorage->getToken() instanceof TokenInterface) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
 
-            if (null === $errorPage) {
+            if (!$errorPage instanceof PageModel) {
                 throw new PageNotFoundException('No error page found.');
             }
 

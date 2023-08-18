@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -65,8 +66,12 @@ class Locales
      */
     public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
+        if (null === $displayLocale) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if ($request instanceof Request) {
+                $displayLocale = $request->getLocale();
+            }
         }
 
         return $this->getDisplayNames($this->getLanguageLocaleIds(), $displayLocale, $addNativeSuffix);
@@ -117,8 +122,12 @@ class Locales
      */
     public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
+        if (null === $displayLocale) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if ($request instanceof Request) {
+                $displayLocale = $request->getLocale();
+            }
         }
 
         $locales = [];

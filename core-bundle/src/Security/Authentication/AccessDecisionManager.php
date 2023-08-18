@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -47,7 +48,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         // their own firewall in Symfony
         $request = $this->requestStack->getMainRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+        if (!$this->firewallMap instanceof FirewallMap || !$request instanceof Request) {
             return false;
         }
 

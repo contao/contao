@@ -290,7 +290,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
 
-        if (null === $route) {
+        if (!$route instanceof PageRoute) {
             $pageRegistry
                 ->expects($this->never())
                 ->method('getRoute')

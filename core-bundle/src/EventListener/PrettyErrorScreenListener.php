@@ -20,6 +20,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
@@ -142,7 +143,7 @@ class PrettyErrorScreenListener
             $request = $event->getRequest();
             $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_'.$type);
 
-            if (null === $errorPage) {
+            if (!$errorPage instanceof PageModel) {
                 return;
             }
 
@@ -179,7 +180,7 @@ class PrettyErrorScreenListener
             if ($exception instanceof InvalidRequestTokenException) {
                 $template = 'invalid_request_token';
             }
-        } while (null === $template && null !== ($exception = $exception->getPrevious()));
+        } while (null === $template && ($exception = $exception->getPrevious()) instanceof \Throwable);
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }

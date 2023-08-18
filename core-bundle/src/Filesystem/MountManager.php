@@ -357,7 +357,9 @@ class MountManager
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         foreach ($this->publicUriProviders as $provider) {
-            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+            $uri = $provider->getUri($adapter, $adapterPath, $options);
+
+            if ($uri instanceof UriInterface) {
                 return $uri;
             }
         }
@@ -375,14 +377,18 @@ class MountManager
 
             // Find the adapter with the longest (= most specific) matching prefix
             do {
-                if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
+                $adapter = $this->mounts[$prefix] ?? null;
+
+                if ($adapter instanceof FilesystemAdapter) {
                     return [$adapter, Path::makeRelative($path, $prefix), $prefix];
                 }
             } while ('.' !== ($prefix = \dirname($prefix)));
         }
 
         // Root adapter
-        if (null !== ($adapter = $this->mounts[''] ?? null)) {
+        $adapter = $this->mounts[''] ?? null;
+
+        if ($adapter instanceof FilesystemAdapter) {
             return [$adapter, $path, ''];
         }
 

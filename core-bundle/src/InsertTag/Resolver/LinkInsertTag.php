@@ -68,7 +68,7 @@ class LinkInsertTag
 
             $objNextPage = $this->framework->getAdapter(PageModel::class)->findByIdOrAlias($urlParam);
 
-            if (null === $objNextPage) {
+            if (!$objNextPage instanceof PageModel) {
                 // Prevent broken markup with link_open and link_close (see #92)
                 if ('link_open' === $insertTag->getName()) {
                     return new InsertTagResult('<a>', OutputType::html);

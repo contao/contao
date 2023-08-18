@@ -412,7 +412,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageRegistry = $this->createMock(PageRegistry::class);
 
-        if (null !== $errorPage) {
+        if ($errorPage instanceof PageModel) {
             $pageFinder
                 ->expects($this->once())
                 ->method('findFirstPageOfTypeForRequest')

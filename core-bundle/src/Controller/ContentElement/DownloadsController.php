@@ -32,7 +32,9 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\StringUtil;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,9 +65,10 @@ class DownloadsController extends AbstractContentElementController
         $this->handleDownload($request, $model);
 
         $filesystemItems = $this->getFilesystemItems($model);
+        $sortMode = SortMode::tryFrom($sortBy = $model->sortBy);
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
+        if ($sortMode instanceof SortMode) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 
@@ -163,8 +166,9 @@ class DownloadsController extends AbstractContentElementController
     {
         $path = $filesystemItem->getPath();
         $inline = $model->inline;
+        $publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline));
 
-        if (null !== ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline)))) {
+        if ($publicUri instanceof UriInterface) {
             return (string) $publicUri;
         }
 
@@ -199,7 +203,9 @@ class DownloadsController extends AbstractContentElementController
         $getLightboxSize = function (): string|null {
             $this->initializeContaoFramework();
 
-            if (null === ($page = $this->getPageModel()) || null === $page->layout) {
+            $page = $this->getPageModel();
+
+            if (!$page instanceof PageModel || null === $page->layout) {
                 return null;
             }
 

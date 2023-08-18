@@ -40,7 +40,7 @@ class PreviewUrlCreateListener
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
@@ -49,7 +49,13 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if ((!$id = $this->getId($event, $request)) || (!$eventModel = $this->getEventModel($id))) {
+        if (!$id = $this->getId($event, $request)) {
+            return;
+        }
+
+        $eventModel = $this->getEventModel($id);
+
+        if (!$eventModel instanceof CalendarEventsModel) {
             return;
         }
 

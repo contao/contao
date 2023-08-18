@@ -295,7 +295,7 @@ class PreviewFactory
         if (is_numeric($size[2])) {
             $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
 
-            if (null === $imageSize) {
+            if (!$imageSize instanceof ImageSizeModel) {
                 return 0;
             }
 

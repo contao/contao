@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel;
 
+use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -35,7 +36,7 @@ class ControllerResolver implements ControllerResolverInterface
         ) {
             $fragmentConfig = $this->registry->get($controller);
 
-            if (null !== $fragmentConfig) {
+            if ($fragmentConfig instanceof FragmentConfig) {
                 $request->attributes->set('_controller', $fragmentConfig->getController());
             }
         }

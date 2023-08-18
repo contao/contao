@@ -52,7 +52,7 @@ class DbafsManager
      */
     public function match(string $path): bool
     {
-        return null !== $this->getDbafsForPath($path)->current();
+        return $this->getDbafsForPath($path)->current() instanceof DbafsInterface;
     }
 
     /**
@@ -60,7 +60,7 @@ class DbafsManager
      */
     public function has(string $path): bool
     {
-        return null !== $this->getRecord($path);
+        return $this->getRecord($path) instanceof FilesystemItem;
     }
 
     /**
@@ -68,7 +68,9 @@ class DbafsManager
      */
     public function fileExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && $record->isFile();
+        $record = $this->getRecord($path);
+
+        return $record instanceof FilesystemItem && $record->isFile();
     }
 
     /**
@@ -76,7 +78,9 @@ class DbafsManager
      */
     public function directoryExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && !$record->isFile();
+        $record = $this->getRecord($path);
+
+        return $record instanceof FilesystemItem && !$record->isFile();
     }
 
     /**
@@ -111,12 +115,18 @@ class DbafsManager
     public function getLastModified(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
+        $dbafs = $dbafsIterator->current();
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            !$dbafs instanceof DbafsInterface
+            || !$dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
         ) {
+            return null;
+        }
+
+        $record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key()));
+
+        if ($record instanceof FilesystemItem) {
             return $record->getLastModified();
         }
 
@@ -130,12 +140,18 @@ class DbafsManager
     public function getFileSize(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
+        $dbafs = $dbafsIterator->current();
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            !$dbafs instanceof DbafsInterface
+            || !($dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE)
         ) {
+            return null;
+        }
+
+        $record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key()));
+
+        if ($record instanceof FilesystemItem) {
             return $record->getFileSize();
         }
 
@@ -149,12 +165,18 @@ class DbafsManager
     public function getMimeType(string $path): string|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
+        $dbafs = $dbafsIterator->current();
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            !$dbafs instanceof DbafsInterface
+            || !($dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE)
         ) {
+            return null;
+        }
+
+        $record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key()));
+
+        if ($record instanceof FilesystemItem) {
             return $record->getMimeType();
         }
 
@@ -173,7 +195,9 @@ class DbafsManager
         $metadataKeys = [];
 
         foreach ($this->getDbafsForPath($path) as $prefix => $dbafs) {
-            if (null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix)))) {
+            $record = $dbafs->getRecord(Path::makeRelative($path, $prefix));
+
+            if ($record instanceof FilesystemItem) {
                 $chunk = $record->getExtraMetadata();
                 $keys = array_keys($chunk);
 
@@ -279,8 +303,9 @@ class DbafsManager
     private function getRecord(string $path): FilesystemItem|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
+        $dbafs = $dbafsIterator->current();
 
-        if (null === ($dbafs = $dbafsIterator->current())) {
+        if (!$dbafs instanceof DbafsInterface) {
             return null;
         }
 

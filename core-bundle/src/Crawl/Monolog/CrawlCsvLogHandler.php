@@ -64,10 +64,10 @@ class CrawlCsvLogHandler extends StreamHandler
         $columns = [
             $record['datetime']->format(self::DATETIME_FORMAT),
             $record['context']['source'],
-            null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
-            null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
-            null === $crawlUri ? '---' : $crawlUri->getLevel(),
-            null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
+            !$crawlUri instanceof CrawlUri ? '---' : (string) $crawlUri->getUri(),
+            !$crawlUri instanceof CrawlUri ? '---' : (string) $crawlUri->getFoundOn(),
+            !$crawlUri instanceof CrawlUri ? '---' : $crawlUri->getLevel(),
+            !$crawlUri instanceof CrawlUri ? '---' : implode(', ', $crawlUri->getTags()),
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 

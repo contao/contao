@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem\PublicUri;
 use League\Flysystem\FilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
@@ -32,7 +33,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      */
     public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null
     {
-        if ($adapter !== $this->localFilesAdapter || null !== $options) {
+        if ($adapter !== $this->localFilesAdapter || $options instanceof OptionsInterface) {
             return null;
         }
 
@@ -41,7 +42,9 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 
     private function getSchemeAndHost(): string
     {
-        if (null === ($request = $this->requestStack->getCurrentRequest())) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request instanceof Request) {
             return '';
         }
 

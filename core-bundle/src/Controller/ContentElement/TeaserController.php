@@ -58,14 +58,15 @@ class TeaserController extends AbstractContentElementController
         $this->initializeContaoFramework();
 
         $articleModel = $this->getContaoAdapter(ArticleModel::class);
+        $article = $articleModel->findPublishedById($model->article);
 
-        if (null === ($article = $articleModel->findPublishedById($model->article))) {
+        if (!$article instanceof ArticleModel) {
             return null;
         }
 
         $pageModel = $this->getContaoAdapter(PageModel::class);
         $page = $pageModel->findPublishedById($article->pid);
 
-        return null !== $page ? [$article, $page] : null;
+        return $page instanceof PageModel ? [$article, $page] : null;
     }
 }

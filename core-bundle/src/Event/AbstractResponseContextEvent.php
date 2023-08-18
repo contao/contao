@@ -20,7 +20,7 @@ abstract class AbstractResponseContextEvent
 
     public function setResponseContext(ResponseContext $responseContext): self
     {
-        if (null !== $this->responseContext) {
+        if ($this->responseContext instanceof ResponseContext) {
             throw new \LogicException('ResponseContext is already set!');
         }
 
@@ -31,7 +31,7 @@ abstract class AbstractResponseContextEvent
 
     public function getResponseContext(): ResponseContext
     {
-        if (null === $this->responseContext) {
+        if (!$this->responseContext instanceof ResponseContext) {
             throw new \LogicException('ResponseContext must be set!');
         }
 

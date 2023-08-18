@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Mailer;
 
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\RawMessage;
@@ -53,7 +55,7 @@ final class ContaoMailer implements MailerInterface
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request instanceof Request) {
             return;
         }
 
@@ -71,7 +73,11 @@ final class ContaoMailer implements MailerInterface
 
         $page->loadDetails();
 
-        if (empty($page->mailerTransport) || null === $this->transports->getTransport($page->mailerTransport)) {
+        if (empty($page->mailerTransport)) {
+            return;
+        }
+
+        if (!$this->transports->getTransport($page->mailerTransport) instanceof TransportConfig) {
             return;
         }
 
@@ -90,7 +96,7 @@ final class ContaoMailer implements MailerInterface
         $transportName = $message->getHeaders()->get('X-Transport')->getBodyAsString();
         $transport = $this->transports->getTransport($transportName);
 
-        if (null === $transport) {
+        if (!$transport instanceof TransportConfig) {
             return;
         }
 
@@ -103,11 +109,11 @@ final class ContaoMailer implements MailerInterface
         $message->from($from);
 
         // Also override "Return-Path" and "Sender" if set (see #4712)
-        if (null !== $message->getReturnPath()) {
+        if ($message->getReturnPath() instanceof Address) {
             $message->returnPath($from);
         }
 
-        if (null !== $message->getSender()) {
+        if ($message->getSender() instanceof Address) {
             $message->sender($from);
         }
     }

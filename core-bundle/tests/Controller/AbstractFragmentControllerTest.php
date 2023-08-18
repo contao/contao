@@ -109,7 +109,7 @@ class AbstractFragmentControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        if (null === $twig) {
+        if (!$twig instanceof Environment) {
             $twig = $this->createMock(Environment::class);
             $twig
                 ->method('render')

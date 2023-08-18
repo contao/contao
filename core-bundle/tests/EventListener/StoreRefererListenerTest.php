@@ -269,7 +269,7 @@ class StoreRefererListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
+            ->expects($expectsSecurityCall || $user instanceof UserInterface ? $this->once() : $this->never())
             ->method('getUser')
             ->willReturn($user)
         ;

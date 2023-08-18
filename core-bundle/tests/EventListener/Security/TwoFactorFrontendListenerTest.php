@@ -546,7 +546,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $kernel = $this->createMock(Kernel::class);
         $event = new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
 
-        if (null !== $response) {
+        if ($response instanceof Response) {
             $event->setResponse($response);
         }
 

@@ -54,7 +54,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
+        return $token instanceof TokenInterface && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
     }
 
     /**
@@ -64,7 +64,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
+        return $token instanceof TokenInterface && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
     }
 
     /**
@@ -92,7 +92,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        if (null === $token || !$token->getUser() instanceof FrontendUser) {
+        if (!$token instanceof TokenInterface || !$token->getUser() instanceof FrontendUser) {
             return null;
         }
 
@@ -106,7 +106,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        if (null === $token || !$token->getUser() instanceof BackendUser) {
+        if (!$token instanceof TokenInterface || !$token->getUser() instanceof BackendUser) {
             return null;
         }
 
@@ -128,7 +128,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$request instanceof Request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -161,7 +161,7 @@ class TokenChecker
     {
         $token = $this->getTokenFromStorage($context);
 
-        if (null === $token) {
+        if (!$token instanceof TokenInterface) {
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
@@ -189,7 +189,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+        if (!$this->firewallMap instanceof FirewallMap || !$request instanceof Request) {
             return null;
         }
 
@@ -204,7 +204,9 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request instanceof Request || !$request->hasSession()) {
             return null;
         }
 
@@ -269,6 +271,6 @@ class TokenChecker
 
         $request = $this->requestStack->getMainRequest();
 
-        return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
+        return $request instanceof Request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
     }
 }

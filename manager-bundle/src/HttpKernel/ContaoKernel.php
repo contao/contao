@@ -84,7 +84,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getPluginLoader(): PluginLoader
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader instanceof PluginLoader) {
             $this->pluginLoader = new PluginLoader();
 
             $config = $this->getManagerConfig()->all();
@@ -107,7 +107,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getBundleLoader(): BundleLoader
     {
-        if (null === $this->bundleLoader) {
+        if (!$this->bundleLoader instanceof BundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
             $parser->addParser(new IniParser(Path::join($this->getProjectDir(), 'system/modules')));
@@ -184,7 +184,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getHttpCache(): ContaoCache
     {
-        if (null !== $this->httpCache) {
+        if ($this->httpCache instanceof ContaoCache) {
             return $this->httpCache;
         }
 
@@ -286,11 +286,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         parent::initializeContainer();
 
-        if (null === ($container = $this->getContainer())) {
-            return;
-        }
-
         // Set the plugin loader again, so it is available at runtime (synthetic service)
+        $container = $this->getContainer();
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables

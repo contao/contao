@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\String;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\Lexer;
@@ -182,7 +183,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (null === $this->logger) {
+        if (!$this->logger instanceof LoggerInterface) {
             return;
         }
 

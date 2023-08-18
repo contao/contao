@@ -66,7 +66,7 @@ class PageFinder
     {
         $pageModel = $this->findRootPageForHostAndLanguage($hostname);
 
-        if (null === $pageModel) {
+        if (!$pageModel instanceof PageModel) {
             return [];
         }
 
@@ -103,7 +103,7 @@ class PageFinder
     {
         $pageModel = $this->matchPageForRequest($request);
 
-        if (null === $pageModel) {
+        if (!$pageModel instanceof PageModel) {
             return null;
         }
 
