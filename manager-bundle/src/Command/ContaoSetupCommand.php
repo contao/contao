@@ -66,7 +66,7 @@ class ContaoSetupCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // Auto-generate a kernel secret if none was set
-        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+        if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
 
             $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);

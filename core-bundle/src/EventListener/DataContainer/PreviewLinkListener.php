@@ -49,7 +49,7 @@ class PreviewLinkListener
     #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
-        if (empty($this->previewScript)) {
+        if (!$this->previewScript) {
             unset($GLOBALS['BE_MOD']['system']['preview_link']);
         }
     }
@@ -57,7 +57,7 @@ class PreviewLinkListener
     #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
-        if ('tl_preview_link' === $table && empty($this->previewScript)) {
+        if ('tl_preview_link' === $table && !$this->previewScript) {
             unset($GLOBALS['TL_DCA'][$table]);
         }
     }

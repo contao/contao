@@ -28,6 +28,7 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\SetList;
+use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
@@ -70,6 +71,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
     $rectorConfig->rule(CompactToVariablesRector::class);
     $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);
+    $rectorConfig->rule(DisallowedEmptyRuleFixerRector::class);
     $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
     $rectorConfig->rule(RemoveConcatAutocastRector::class);
     $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);

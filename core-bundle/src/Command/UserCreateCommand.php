@@ -264,7 +264,7 @@ class UserCreateCommand extends Command
             'dateAdded' => $time,
         ];
 
-        if (!$isAdmin && !empty($groups)) {
+        if (!$isAdmin && $groups) {
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 

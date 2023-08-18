@@ -177,7 +177,7 @@ class DbafsManager
                 $chunk = $record->getExtraMetadata();
                 $keys = array_keys($chunk);
 
-                if (!empty($duplicates = array_intersect($metadataKeys, $keys))) {
+                if ($duplicates = array_intersect($metadataKeys, $keys)) {
                     throw new \LogicException(sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
                 }
 
