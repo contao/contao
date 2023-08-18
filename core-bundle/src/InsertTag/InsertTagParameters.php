@@ -49,7 +49,7 @@ abstract class InsertTagParameters
 
     public function serialize(): string
     {
-        if (!\count($this->parameters)) {
+        if (!$this->parameters) {
             return '';
         }
 

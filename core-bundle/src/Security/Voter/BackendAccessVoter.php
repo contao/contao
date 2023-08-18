@@ -90,7 +90,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
     private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
     {
         if (null === $subject) {
-            return \is_array($user->$field) && 0 !== \count($user->$field);
+            return \is_array($user->$field) && [] !== $user->$field;
         }
 
         if (!\is_scalar($subject) && !\is_array($subject)) {
@@ -158,7 +158,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'u'.$flag;
         }
 
-        return \count(array_intersect($permission, $chmod)) > 0;
+        return [] !== array_intersect($permission, $chmod);
     }
 
     /**

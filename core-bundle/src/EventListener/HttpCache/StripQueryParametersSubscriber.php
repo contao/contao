@@ -47,6 +47,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         //  Urchin Tracking Module (UTM) parameters
         'utm_[a-z]+',
     ];
+
     private array $removeFromDenyList = [];
 
     public function __construct(private readonly array $allowList = [])
@@ -74,7 +75,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         }
 
         // Use a custom allow list if present, otherwise use the default deny list
-        if (0 !== \count($this->allowList)) {
+        if ($this->allowList) {
             $this->filterQueryParams($request, $this->allowList);
         } else {
             $this->filterQueryParams($request, $this->removeFromDenyList, self::DENY_LIST);

@@ -29,6 +29,7 @@ class ResultTest extends TestCase
                 if ($methodName) {
                     $this->assertSame($result, $result->$methodName());
                 }
+
                 $this->assertFalse($result->isModified);
                 $this->assertSame(0, $result->numFields);
                 $this->assertSame(0, $result->numRows);
@@ -42,7 +43,9 @@ class ResultTest extends TestCase
                 $this->assertSame([], $result->row(true));
                 $this->assertFalse(isset($result->modifiedKey));
                 $this->assertNull($result->modifiedKey);
+
                 $result->modifiedKey = 'value';
+
                 $this->assertSame(['modifiedKey' => 'value'], $result->row());
                 $this->assertSame(['value'], $result->row(true));
                 $this->assertTrue(isset($result->modifiedKey));

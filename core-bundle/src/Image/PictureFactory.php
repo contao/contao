@@ -369,7 +369,7 @@ class PictureFactory implements PictureFactoryInterface
 
     private function addImageAttributes(PictureInterface $picture, array $attributes): PictureInterface
     {
-        if (empty($attributes)) {
+        if (!$attributes) {
             return $picture;
         }
 
@@ -388,7 +388,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if (0 === \count($picture->getRawSources())) {
+        if (!$picture->getRawSources()) {
             return true;
         }
 

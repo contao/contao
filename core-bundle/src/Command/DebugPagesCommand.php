@@ -127,6 +127,6 @@ class DebugPagesCommand extends Command
             $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
-        return !empty($return) ? implode("\n", $return) : '-';
+        return $return ? implode("\n", $return) : '-';
     }
 }

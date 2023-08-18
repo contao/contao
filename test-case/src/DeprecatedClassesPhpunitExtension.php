@@ -87,13 +87,13 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
             restore_error_handler();
         }
 
-        if (!\count($expectedDeprecations)) {
+        if (!$expectedDeprecations) {
             return;
         }
 
         $expectedDeprecation = array_values($expectedDeprecations)[0];
 
-        if (\count($unhandledErrors)) {
+        if ($unhandledErrors) {
             (new StringMatchesFormatDescription($expectedDeprecation))->evaluate(
                 $unhandledErrors[0],
                 sprintf('Expected deprecation for "%s" did not match.', $className)

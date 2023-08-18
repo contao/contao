@@ -44,6 +44,7 @@ class RobotsTxtController
 
         $parser = new Parser();
         $parser->setSource((string) $rootPage->robotsTxt);
+
         $file = $parser->getFile();
 
         $this->eventDispatcher->dispatch(new RobotsTxtEvent($file, $request, $rootPage), ContaoCoreEvents::ROBOTS_TXT);

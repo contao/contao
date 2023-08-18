@@ -28,9 +28,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
             return;
         }
 
-        $callbacks = $this->getCallbacks($container);
-
-        if (empty($callbacks)) {
+        if (!$callbacks = $this->getCallbacks($container)) {
             return;
         }
 

@@ -144,7 +144,7 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
+        if (false === $input->getOption('admin') && ($options = $this->getGroups())) {
             $answer = $this->askForUserGroups($options, $input, $output);
 
             $input->setOption('group', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
@@ -264,7 +264,7 @@ class UserCreateCommand extends Command
             'dateAdded' => $time,
         ];
 
-        if (!$isAdmin && !empty($groups)) {
+        if (!$isAdmin && $groups) {
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 

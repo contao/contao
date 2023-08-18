@@ -287,11 +287,13 @@ class FeedReaderControllerTest extends TestCase
         $item = $feed->newItem();
         $item->setTitle('Example item');
         $item->setContent('Example content');
+
         $feed->add($item);
 
         $item = $feed->newItem();
         $item->setTitle('Example item 2');
         $item->setContent('Example content 2');
+
         $feed->add($item);
 
         return $feed;

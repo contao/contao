@@ -40,7 +40,7 @@ class SitemapController extends AbstractController
     {
         $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        if (empty($rootPages)) {
+        if (!$rootPages) {
             throw $this->createNotFoundException();
         }
 

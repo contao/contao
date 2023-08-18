@@ -151,10 +151,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $pathsItem = $this->cachePool->getItem(self::CACHE_KEY_PATHS);
         $pathsItem->set($this->paths);
+
         $this->cachePool->save($pathsItem);
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
         $hierarchyItem->set($this->inheritanceChains);
+
         $this->cachePool->save($hierarchyItem);
     }
 

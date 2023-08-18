@@ -158,7 +158,7 @@ class VideoController extends AbstractContentElementController
             'options' => $options,
             'base_url' => $baseUrl = "$domain/embed/$videoId",
             'query' => $query = http_build_query($options),
-            'url' => empty($query) ? $baseUrl : "$baseUrl?$query",
+            'url' => $query ? "$baseUrl?$query" : $baseUrl,
         ];
     }
 }

@@ -105,7 +105,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
             }
 
-            if (!empty($iniConfigs)) {
+            if ($iniConfigs) {
                 $configs = array_merge($configs, ...$iniConfigs);
             }
         }
@@ -225,9 +225,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
                 $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
-                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $extensionConfigs;
+                return $this->setDefaultCollation($extensionConfigs);
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);

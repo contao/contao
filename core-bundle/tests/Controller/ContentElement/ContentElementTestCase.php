@@ -246,7 +246,7 @@ class ContentElementTestCase extends TestCase
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
-                    !empty($parameters) ? '['.implode(', ', $parameters).']' : ''
+                    $parameters ? '['.implode(', ', $parameters).']' : ''
                 )
             )
         ;

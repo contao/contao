@@ -139,6 +139,9 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request(server: $_SERVER));
+
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -146,11 +149,9 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('session', $this->createMock(Session::class));
         $container->set('twig', $twig);
         $container->set('router', $this->createMock(RouterInterface::class));
+        $container->set('request_stack', $requestStack);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
-
-        $container->set('request_stack', $stack = new RequestStack());
-        $stack->push(new Request(server: $_SERVER));
 
         return $container;
     }

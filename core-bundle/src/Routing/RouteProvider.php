@@ -42,9 +42,7 @@ class RouteProvider extends AbstractPageRouteProvider
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
-        $pages = $this->findCandidatePages($request);
-
-        if (empty($pages)) {
+        if (!$pages = $this->findCandidatePages($request)) {
             return new RouteCollection();
         }
 
@@ -57,9 +55,7 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $this->framework->initialize();
 
-        $ids = $this->getPageIdsFromNames([$name]);
-
-        if (empty($ids)) {
+        if (!$ids = $this->getPageIdsFromNames([$name])) {
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
@@ -90,9 +86,7 @@ class RouteProvider extends AbstractPageRouteProvider
         if (null === $names) {
             $pages = $pageModel->findAll();
         } else {
-            $ids = $this->getPageIdsFromNames($names);
-
-            if (empty($ids)) {
+            if (!$ids = $this->getPageIdsFromNames($names)) {
                 return [];
             }
 

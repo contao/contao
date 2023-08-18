@@ -177,7 +177,7 @@ class DbafsManager
                 $chunk = $record->getExtraMetadata();
                 $keys = array_keys($chunk);
 
-                if (!empty($duplicates = array_intersect($metadataKeys, $keys))) {
+                if ($duplicates = array_intersect($metadataKeys, $keys)) {
                     throw new \LogicException(sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
                 }
 
@@ -250,7 +250,7 @@ class DbafsManager
 
         // Sync all DBAFS if no paths are supplied, otherwise individually
         // match paths according to the configured DBAFS prefixes
-        if (empty($paths)) {
+        if (!$paths) {
             foreach ($this->dbafs as $prefix => $dbafs) {
                 $dbafsAndPathsByPrefix[$prefix] = [$dbafs, []];
             }

@@ -98,7 +98,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         }
 
         // Use a custom allow list if present, otherwise use the default deny list
-        if (0 !== \count($this->allowList)) {
+        if ($this->allowList) {
             $this->filterCookies($request, $this->allowList);
         } else {
             $this->filterCookies($request, $this->removeFromDenyList, self::DENY_LIST);

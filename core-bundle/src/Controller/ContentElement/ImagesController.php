@@ -80,7 +80,7 @@ class ImagesController extends AbstractContentElementController
             iterator_to_array($filesystemItems)
         );
 
-        if (empty($imageList)) {
+        if (!$imageList) {
             return new Response();
         }
 

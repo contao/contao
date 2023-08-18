@@ -301,7 +301,7 @@ class TemplateOptionsListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;
 
-        if (!empty($currentRecord)) {
+        if ($currentRecord) {
             $dc
                 ->method('getCurrentRecord')
                 ->willReturn($currentRecord)

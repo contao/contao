@@ -57,8 +57,10 @@ class Cron
             throw new CronExecutionSkippedException();
         }
 
+        // 70 instead of 60 seconds to give some time for stale caches
         $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-        $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
+        $cacheItem->expiresAfter(70);
+
         $this->cachePool->saveDeferred($cacheItem);
 
         // Using a promise here not because the cache file takes forever to create but in order to make sure
@@ -171,6 +173,7 @@ class Cron
         $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
             $lastRunEntity = $repository->findOneByName($cron->getName());
             $lastRunEntity->setLastRun($cron->getPreviousRun());
+
             $entityManager->flush();
         };
 
@@ -221,7 +224,7 @@ class Cron
             }
         }
 
-        if (0 !== \count($promises)) {
+        if ($promises) {
             Utils::settle($promises)->wait();
         }
 

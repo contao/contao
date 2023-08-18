@@ -253,7 +253,7 @@ class ImageResultTest extends TestCase
 
         $deferredResizer = $this->createMock(DeferredResizerInterface::class);
         $deferredResizer
-            ->expects(empty($expectedDeferredImages) ? $this->never() : $this->atLeast(\count($expectedDeferredImages)))
+            ->expects($expectedDeferredImages ? $this->atLeast(\count($expectedDeferredImages)) : $this->never())
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {

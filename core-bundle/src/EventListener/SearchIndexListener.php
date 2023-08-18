@@ -93,9 +93,11 @@ class SearchIndexListener
             // No meta robots tag found
         }
 
-        $lds = $document->extractJsonLdScripts();
-
         // If there are no json ld scripts at all, this should not be handled by our indexer
-        return 0 !== \count($lds);
+        if (!$document->extractJsonLdScripts()) {
+            return false;
+        }
+
+        return true;
     }
 }

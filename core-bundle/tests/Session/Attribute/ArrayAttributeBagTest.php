@@ -83,8 +83,10 @@ class ArrayAttributeBagTest extends TestCase
 
         $foo = $bag['foo'];
         $foo = '';
+
         $baz = $bag['bar']['baz'];
         $baz = '';
+
         $bar = $bag['bar'];
         $bar = [];
 

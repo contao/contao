@@ -86,7 +86,7 @@ class MetadataBag implements \ArrayAccess
 
     public function empty(): bool
     {
-        return empty($this->metadata);
+        return !$this->metadata;
     }
 
     public function offsetExists(mixed $offset): bool

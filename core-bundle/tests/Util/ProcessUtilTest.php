@@ -66,7 +66,7 @@ class ProcessUtilTest extends TestCase
     {
         // Remove the PHP binary path and undo proper quoting (not relevant for
         // this test and required for easier cross-platform CI runs
-        return str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
+        return str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 
     private function mockProcess(bool $isSuccessful, bool $autostart): Process

@@ -91,8 +91,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request = new Request();
         $request->query->set('key', 'lw');
+
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
         $request->request->set('separator', 'comma');
+
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
         $requestStack = new RequestStack();
@@ -144,8 +146,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request = new Request();
         $request->query->set('key', 'tw');
+
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_tw');
         $request->request->set('separator', 'comma');
+
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
         $requestStack = new RequestStack();
@@ -201,8 +205,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request = new Request();
         $request->query->set('key', 'ow');
+
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_ow');
         $request->request->set('separator', 'comma');
+
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
         $requestStack = new RequestStack();

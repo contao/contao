@@ -153,7 +153,7 @@ final class Figure
 
         // Add rel attribute "noreferrer noopener" to external links
         if (
-            !empty($this->linkAttributes['href'])
+            isset($this->linkAttributes['href'])
             && !\array_key_exists('rel', $this->linkAttributes)
             && preg_match('#^https?://#', (string) $this->linkAttributes['href'])
         ) {
@@ -278,7 +278,7 @@ final class Figure
             $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
         }
 
-        if (!empty($linkAttributes)) {
+        if ($linkAttributes) {
             $htmlAttributes = array_map(
                 static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),

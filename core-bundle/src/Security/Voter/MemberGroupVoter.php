@@ -30,7 +30,7 @@ class MemberGroupVoter extends Voter
         // Filter non-numeric values
         $subject = array_filter((array) $subject, static fn ($val) => (string) (int) $val === (string) $val);
 
-        if (empty($subject)) {
+        if (!$subject) {
             return false;
         }
 
@@ -47,6 +47,6 @@ class MemberGroupVoter extends Voter
             return false;
         }
 
-        return \count(array_intersect($subject, $groups)) > 0;
+        return [] !== array_intersect($subject, $groups);
     }
 }
