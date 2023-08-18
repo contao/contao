@@ -42,11 +42,7 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__.'/../../../*/tests',
         __DIR__.'/../../../tools/*/bin',
         __DIR__.'/../../../tools/*/config',
-
-        // Using ../tools/*/src leads to a "class was not found while trying to analyse
-        // it" error, so add the paths to the /src directories explicitly.
-        __DIR__.'/../../../tools/isolated-tests/src',
-        __DIR__.'/../../../tools/servlice-linter/src',
+        __DIR__.'/../../../tools/*/src',
     ]);
 
     $rectorConfig->skip([
