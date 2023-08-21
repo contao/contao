@@ -54,7 +54,10 @@ class TableControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
         $this->assertEmpty($responseContextData);
     }
 
@@ -104,7 +107,10 @@ class TableControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
 
         $additionalHeadCode = $responseContextData[DocumentLocation::head->value];
 

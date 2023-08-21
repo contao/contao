@@ -44,7 +44,10 @@ class ImagesControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testOutputsGallery(): void
@@ -86,7 +89,10 @@ class ImagesControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testIgnoresInvalidTypes(): void
@@ -122,7 +128,10 @@ class ImagesControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testDoesNotOutputAnythingWithoutImages(): void
@@ -151,6 +160,9 @@ class ImagesControllerTest extends ContentElementTestCase
             ],
         );
 
-        $this->assertSame('', $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSame('', $html);
     }
 }

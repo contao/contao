@@ -28,7 +28,10 @@ class HtmlControllerTest extends ContentElementTestCase
 
         $expectedOutput = '<p>Hello<br><b>world</b>!</p>';
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testOutputsSummary(): void
@@ -44,6 +47,9 @@ class HtmlControllerTest extends ContentElementTestCase
 
         $expectedOutput = '<pre>&lt;p&gt;Hello{{br}}&lt;b&gt;world&lt;/b&gt;!&lt;/p&gt;</pre>';
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 }

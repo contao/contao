@@ -30,9 +30,9 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        $backupCodes = json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
-
-        if (null === $backupCodes) {
+        try {
+            $backupCodes = json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
             return false;
         }
 

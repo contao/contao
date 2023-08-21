@@ -28,7 +28,10 @@ class HeadlineControllerTest extends ContentElementTestCase
 
         $expectedOutput = '<h2 class="content-headline">My Headline</h2>';
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testOutputsHeadlineWithDefaultLevel(): void
@@ -43,7 +46,10 @@ class HeadlineControllerTest extends ContentElementTestCase
 
         $expectedOutput = '<h1 class="content-headline">My Headline</h1>';
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     public function testOutputsHeadlineWithCustomIdAndClass(): void
@@ -59,6 +65,9 @@ class HeadlineControllerTest extends ContentElementTestCase
 
         $expectedOutput = '<h2 id="custom-id" class="custom-class content-headline">My Headline</h2>';
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 }

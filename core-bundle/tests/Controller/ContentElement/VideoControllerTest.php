@@ -56,7 +56,10 @@ class VideoControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
         $this->assertEmpty($responseContextData);
     }
 
@@ -102,7 +105,10 @@ class VideoControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
 
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 

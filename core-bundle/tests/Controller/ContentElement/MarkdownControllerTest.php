@@ -159,7 +159,10 @@ class MarkdownControllerTest extends ContentElementTestCase
                 </div>
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
     }
 
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container

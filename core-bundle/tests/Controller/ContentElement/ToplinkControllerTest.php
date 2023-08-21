@@ -41,7 +41,10 @@ class ToplinkControllerTest extends ContentElementTestCase
             <!-- indexer::continue -->
             HTML;
 
-        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $html = $response->getContent();
+
+        $this->assertNotFalse($html);
+        $this->assertSameHtml($expectedOutput, $html);
 
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 

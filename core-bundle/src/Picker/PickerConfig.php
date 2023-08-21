@@ -111,9 +111,9 @@ class PickerConfig implements \JsonSerializable
             $decoded = $uncompressed;
         }
 
-        $json = @json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
-
-        if (null === $json) {
+        try {
+            $json = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
             throw new \InvalidArgumentException('Invalid JSON data');
         }
 
