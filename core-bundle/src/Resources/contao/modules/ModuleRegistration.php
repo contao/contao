@@ -419,7 +419,7 @@ class ModuleRegistration extends Module
 			if ($objHomeDir !== null)
 			{
 				$this->import(Files::class, 'Files');
-				$strUserDir = StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
+				$strUserDir = StringUtil::standardize($arrData['username'] ?? '') ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
 				while (is_dir(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objHomeDir->path . '/' . $strUserDir))
