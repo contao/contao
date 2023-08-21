@@ -164,7 +164,7 @@ class DownloadsController extends AbstractContentElementController
         $path = $filesystemItem->getPath();
         $inline = $model->inline;
 
-        if (null !== ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline)))) {
+        if ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline))) {
             return (string) $publicUri;
         }
 
@@ -199,7 +199,7 @@ class DownloadsController extends AbstractContentElementController
         $getLightboxSize = function (): string|null {
             $this->initializeContaoFramework();
 
-            if (null === ($page = $this->getPageModel()) || null === $page->layout) {
+            if (!$page = $this->getPageModel() || null === $page->layout) {
                 return null;
             }
 

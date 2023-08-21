@@ -357,7 +357,7 @@ class MountManager
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         foreach ($this->publicUriProviders as $provider) {
-            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+            if ($uri = $provider->getUri($adapter, $adapterPath, $options)) {
                 return $uri;
             }
         }

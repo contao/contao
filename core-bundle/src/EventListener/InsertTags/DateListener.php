@@ -126,7 +126,7 @@ class DateListener
 
         $key = $dateFormat.'Format';
 
-        if (null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if ($request = $this->requestStack->getCurrentRequest()) {
             $attributes = $request->attributes;
 
             if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
