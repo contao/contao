@@ -112,8 +112,12 @@ class DownloadsController extends AbstractContentElementController
     {
         $homeDir = null;
 
-        if ($model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir) {
-            $homeDir = $user->homeDir;
+        if ($model->useHomeDir) {
+            $user = $this->security->getUser();
+
+            if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir) {
+                $homeDir = $user->homeDir;
+            }
         }
 
         $sources = match (true) {

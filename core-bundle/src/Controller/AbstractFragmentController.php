@@ -57,9 +57,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): PageModel|null
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
 
-        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 

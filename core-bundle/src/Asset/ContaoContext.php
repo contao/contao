@@ -71,9 +71,13 @@ class ContaoContext implements ContextInterface
 
     private function getPageModel(): PageModel|null
     {
-        $request = $this->requestStack->getCurrentRequest();
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return null;
+        }
 
-        if ($request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 

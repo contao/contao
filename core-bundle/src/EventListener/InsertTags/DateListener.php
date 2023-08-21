@@ -129,8 +129,12 @@ class DateListener
         if ($request = $this->requestStack->getCurrentRequest()) {
             $attributes = $request->attributes;
 
-            if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
-                return $page->{$key};
+            if ($attributes->has('pageModel')) {
+                $page = $attributes->get('pageModel');
+
+                if ($page instanceof PageModel) {
+                    return $page->{$key};
+                }
             }
         }
 
