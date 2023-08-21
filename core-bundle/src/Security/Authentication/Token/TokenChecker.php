@@ -90,13 +90,17 @@ class TokenChecker
      */
     public function getFrontendUsername(): string|null
     {
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof FrontendUser) {
+        if (!$token = $this->getToken(self::FRONTEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**
@@ -104,13 +108,17 @@ class TokenChecker
      */
     public function getBackendUsername(): string|null
     {
-        $token = $this->getToken(self::BACKEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof BackendUser) {
+        if (!$token = $this->getToken(self::BACKEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**

@@ -104,12 +104,15 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     private function getCalendarId(int|string $id): int|null
     {
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
+        $calendarEventsModel = $eventAdapter->findById($id);
 
-        if (!($calendarEventsModel = $eventAdapter->findById($id)) instanceof CalendarEventsModel) {
+        if (!$calendarEventsModel instanceof CalendarEventsModel) {
             return null;
         }
 
-        if (!($calendar = $calendarEventsModel->getRelated('pid')) instanceof CalendarModel) {
+        $calendar = $calendarEventsModel->getRelated('pid');
+
+        if (!$calendar instanceof CalendarModel) {
             return null;
         }
 

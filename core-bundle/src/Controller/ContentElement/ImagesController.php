@@ -100,13 +100,12 @@ class ImagesController extends AbstractContentElementController
             return [$model->singleSRC];
         }
 
-        if (
-            $model->useHomeDir
-            && ($user = $this->security->getUser()) instanceof FrontendUser
-            && $user->assignDir
-            && $user->homeDir
-        ) {
-            return $user->homeDir;
+        if ($model->useHomeDir) {
+            $user = $this->security->getUser();
+
+            if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir) {
+                return $user->homeDir;
+            }
         }
 
         return $model->multiSRC ?? [];
