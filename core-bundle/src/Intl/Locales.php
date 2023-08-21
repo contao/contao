@@ -65,7 +65,7 @@ class Locales
      */
     public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
@@ -117,7 +117,7 @@ class Locales
      */
     public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 

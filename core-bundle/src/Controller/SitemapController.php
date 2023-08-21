@@ -126,7 +126,7 @@ class SitemapController extends AbstractController
                     $urls = [$pageModel->getAbsoluteUrl()];
 
                     // Get articles with teaser
-                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
                         foreach ($articleModels as $articleModel) {
                             $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
                         }

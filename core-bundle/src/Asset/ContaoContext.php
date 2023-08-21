@@ -30,7 +30,7 @@ class ContaoContext implements ContextInterface
 
     public function getBasePath(): string
     {
-        if (null === ($request = $this->requestStack->getCurrentRequest())) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return '';
         }
 

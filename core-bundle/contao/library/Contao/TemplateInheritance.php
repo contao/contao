@@ -363,7 +363,7 @@ trait TemplateInheritance
 	{
 		$container = System::getContainer();
 
-		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (!$twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE))
 		{
 			return null;
 		}

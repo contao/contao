@@ -115,7 +115,7 @@ class DbafsManager
         if (
             null !== ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getLastModified();
         }
@@ -134,7 +134,7 @@ class DbafsManager
         if (
             null !== ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getFileSize();
         }
@@ -153,7 +153,7 @@ class DbafsManager
         if (
             null !== ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getMimeType();
         }
@@ -173,7 +173,7 @@ class DbafsManager
         $metadataKeys = [];
 
         foreach ($this->getDbafsForPath($path) as $prefix => $dbafs) {
-            if (null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix)))) {
+            if ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix))) {
                 $chunk = $record->getExtraMetadata();
                 $keys = array_keys($chunk);
 

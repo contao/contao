@@ -105,7 +105,7 @@ class FileDownloadHelper
             return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);
         }
 
-        if (null === ($file = $this->getFile($request, $storage))) {
+        if (!$file = $this->getFile($request, $storage)) {
             return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
         }
 

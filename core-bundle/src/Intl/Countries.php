@@ -41,7 +41,7 @@ class Countries
      */
     public function getCountries(string|null $displayLocale = null): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 

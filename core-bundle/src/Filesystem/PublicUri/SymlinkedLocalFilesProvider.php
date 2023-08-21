@@ -41,7 +41,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 
     private function getSchemeAndHost(): string
     {
-        if (null === ($request = $this->requestStack->getCurrentRequest())) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return '';
         }
 

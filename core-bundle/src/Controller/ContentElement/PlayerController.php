@@ -197,7 +197,7 @@ class PlayerController extends AbstractContentElementController
                 continue;
             }
 
-            if (null === ($publicUri = $this->filesStorage->generatePublicUri($item->getPath()))) {
+            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
                 continue;
             }
 
