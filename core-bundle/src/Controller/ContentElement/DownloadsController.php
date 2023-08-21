@@ -199,7 +199,7 @@ class DownloadsController extends AbstractContentElementController
         $getLightboxSize = function (): string|null {
             $this->initializeContaoFramework();
 
-            if (!$page = $this->getPageModel() || null === $page->layout) {
+            if ((!$page = $this->getPageModel()) || null === $page->layout) {
                 return null;
             }
 
