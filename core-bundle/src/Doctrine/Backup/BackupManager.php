@@ -234,7 +234,7 @@ class BackupManager
         $currentQuery = '';
         $checkedForHeader = $config->ignoreOriginCheck();
 
-        while ($line = gzgets($handle)) {
+        while (false !== ($line = gzgets($handle))) {
             $line = trim($line);
 
             if (!$checkedForHeader) {

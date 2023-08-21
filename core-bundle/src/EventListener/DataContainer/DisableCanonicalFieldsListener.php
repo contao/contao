@@ -38,7 +38,7 @@ class DisableCanonicalFieldsListener
 
         $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (!($page = $adapter->findWithDetails($dc->id)) || $page->enableCanonical) {
+        if ((!$page = $adapter->findWithDetails($dc->id)) || $page->enableCanonical) {
             return $value;
         }
 

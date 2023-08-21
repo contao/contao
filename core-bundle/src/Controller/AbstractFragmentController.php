@@ -281,8 +281,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
             : $exists($variantTemplate);
 
         // Prefer using a custom variant template if defined and applicable
-        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
-            return $variantTemplate;
+        if ($model->customTpl && $shouldUseVariantTemplate($model->customTpl)) {
+            return $model->customTpl;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;
