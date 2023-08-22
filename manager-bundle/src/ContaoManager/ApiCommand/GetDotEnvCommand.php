@@ -63,7 +63,7 @@ class GetDotEnvCommand extends Command
         $key = $input->getArgument('key');
 
         if (!$key) {
-            $output->write(json_encode($vars));
+            $output->write(json_encode($vars, JSON_THROW_ON_ERROR));
         }
 
         if (isset($vars[$key])) {

@@ -89,7 +89,7 @@ class PickerConfig implements \JsonSerializable
      */
     public function urlEncode(): string
     {
-        $data = json_encode($this);
+        $data = json_encode($this, JSON_THROW_ON_ERROR);
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
@@ -111,9 +111,9 @@ class PickerConfig implements \JsonSerializable
             $decoded = $uncompressed;
         }
 
-        $json = @json_decode($decoded, true);
-
-        if (null === $json) {
+        try {
+            $json = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
             throw new \InvalidArgumentException('Invalid JSON data');
         }
 
