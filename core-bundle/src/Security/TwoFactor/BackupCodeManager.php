@@ -55,7 +55,12 @@ class BackupCodeManager implements BackupCodeManagerInterface
         }
 
         $codeToInvalidate = false;
-        $backupCodes = array_values(json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+
+        try {
+            $backupCodes = array_values(json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+        } catch (\JsonException) {
+            return;
+        }
 
         foreach ($backupCodes as $backupCode) {
             if (password_verify($code, $backupCode)) {

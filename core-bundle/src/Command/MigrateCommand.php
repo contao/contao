@@ -439,17 +439,8 @@ class MigrateCommand extends Command
 
     private function writeNdjson(string $type, array $data): void
     {
-        $this->io->writeln(
-            json_encode(
-                // make sure $type is the first in array but always wins
-                ['type' => $type] + $data,
-                JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
-            )
-        );
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \JsonException(json_last_error_msg());
-        }
+        // Make sure $type is the first in array but always wins
+        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 
     /**
