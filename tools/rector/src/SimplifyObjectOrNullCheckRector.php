@@ -17,6 +17,7 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BinaryOp\NotIdentical;
 use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Stmt\Return_;
 use Rector\Core\Rector\AbstractRector;
 use Rector\TypeDeclaration\TypeAnalyzer\NullableTypeAnalyzer;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -74,6 +75,11 @@ final class SimplifyObjectOrNullCheckRector extends AbstractRector
         $nullableObjectType = $this->nullableTypeAnalyzer->resolveNullableObjectType($expr);
 
         if (!$nullableObjectType) {
+            return null;
+        }
+
+        // Allow null compare in boolean return statements
+        if ($node->getAttribute('parent') instanceof Return_) {
             return null;
         }
 
