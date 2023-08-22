@@ -154,7 +154,7 @@ class PictureFactory implements PictureFactoryInterface
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 
-                if (null !== $imageSizes) {
+                if ($imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
                     if ('delete' === $imageSizes->preserveMetadata) {

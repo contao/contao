@@ -35,7 +35,7 @@ class ControllerResolver implements ControllerResolverInterface
         ) {
             $fragmentConfig = $this->registry->get($controller);
 
-            if (null !== $fragmentConfig) {
+            if ($fragmentConfig) {
                 $request->attributes->set('_controller', $fragmentConfig->getController());
             }
         }

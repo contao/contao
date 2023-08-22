@@ -174,7 +174,7 @@ class CountriesTest extends TestCase
 
     private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

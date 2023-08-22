@@ -182,7 +182,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (null === $this->logger) {
+        if (!$this->logger) {
             return;
         }
 

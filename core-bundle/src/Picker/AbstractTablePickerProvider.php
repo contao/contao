@@ -129,7 +129,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function getDcaTable(PickerConfig|null $config = null): string
     {
-        if (null === $config) {
+        if (!$config) {
             return '';
         }
 

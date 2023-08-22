@@ -138,7 +138,7 @@ class PageRegistry
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeEnhancer) {
+        if ($routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 

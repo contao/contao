@@ -40,7 +40,7 @@ class PageAccessListener
         $request = $event->getRequest();
         $pageModel = $this->getPageModel($request);
 
-        if (null === $pageModel) {
+        if (!$pageModel) {
             return;
         }
 

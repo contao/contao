@@ -159,7 +159,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     public function setExtraMetadata(string $path, array $metadata): void
     {
-        if (null === $this->getRecord($path)) {
+        if (!$this->getRecord($path)) {
             throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
         }
 

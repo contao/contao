@@ -142,7 +142,7 @@ class PrettyErrorScreenListener
             $request = $event->getRequest();
             $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_'.$type);
 
-            if (null === $errorPage) {
+            if (!$errorPage) {
                 return;
             }
 

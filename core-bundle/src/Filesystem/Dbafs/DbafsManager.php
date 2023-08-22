@@ -52,7 +52,7 @@ class DbafsManager
      */
     public function match(string $path): bool
     {
-        return null !== $this->getDbafsForPath($path)->current();
+        return $this->getDbafsForPath($path)->current();
     }
 
     /**
@@ -60,7 +60,7 @@ class DbafsManager
      */
     public function has(string $path): bool
     {
-        return null !== $this->getRecord($path);
+        return $this->getRecord($path);
     }
 
     /**
@@ -68,7 +68,7 @@ class DbafsManager
      */
     public function fileExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && $record->isFile();
+        return ($record = $this->getRecord($path)) && $record->isFile();
     }
 
     /**
@@ -76,7 +76,7 @@ class DbafsManager
      */
     public function directoryExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && !$record->isFile();
+        return ($record = $this->getRecord($path)) && !$record->isFile();
     }
 
     /**
@@ -113,7 +113,7 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
             && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -132,7 +132,7 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
             && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -151,7 +151,7 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
             && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
@@ -280,7 +280,7 @@ class DbafsManager
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
-        if (null === ($dbafs = $dbafsIterator->current())) {
+        if (!($dbafs = $dbafsIterator->current())) {
             return null;
         }
 

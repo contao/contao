@@ -93,7 +93,7 @@ class OptIn implements OptInInterface
                     /** @var Adapter<Model> $model */
                     $model = $this->framework->getAdapter($class);
 
-                    if (null !== $model->findMultipleByIds($id)) {
+                    if ($model->findMultipleByIds($id)) {
                         $delete = false;
                         break;
                     }

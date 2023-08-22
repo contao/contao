@@ -40,7 +40,7 @@ class PreviewUrlCreateListener
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
@@ -56,7 +56,7 @@ class PreviewUrlCreateListener
 
         $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (null !== $adapter->findByPk($id)) {
+        if ($adapter->findByPk($id)) {
             $event->setQuery('page='.$id);
         }
     }

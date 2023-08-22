@@ -69,7 +69,7 @@ class XliffFileLoader extends Loader
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node->item(0)) {
+            if (!$node->item(0)) {
                 continue;
             }
 

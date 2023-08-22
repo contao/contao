@@ -51,7 +51,7 @@ class BackendMenuListener
      */
     private function addDebugButton(MenuEvent $event): void
     {
-        if (null === $this->jwtManager) {
+        if (!$this->jwtManager) {
             return;
         }
 
@@ -104,7 +104,7 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
+        if (!$categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 

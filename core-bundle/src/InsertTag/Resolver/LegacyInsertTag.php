@@ -341,7 +341,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article_teaser':
                 $objTeaser = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
 
-                if (null !== $objTeaser) {
+                if ($objTeaser) {
                     $result = $objTeaser->teaser;
                 }
                 break;
@@ -561,7 +561,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     // Handle UUIDs
                     $objFile = FilesModel::findByUuid($strFile);
 
-                    if (null === $objFile) {
+                    if (!$objFile) {
                         break;
                     }
 
@@ -570,7 +570,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     // Handle numeric IDs (see #4805)
                     $objFile = FilesModel::findByPk($strFile);
 
-                    if (null === $objFile) {
+                    if (!$objFile) {
                         break;
                     }
 
@@ -632,7 +632,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if (Validator::isUuid($insertTag->getParameters()->get(0))) {
                     $objFile = FilesModel::findByUuid($insertTag->getParameters()->get(0));
 
-                    if (null !== $objFile) {
+                    if ($objFile) {
                         $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
                         break;
                     }

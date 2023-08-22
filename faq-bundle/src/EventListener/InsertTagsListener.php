@@ -50,7 +50,7 @@ class InsertTagsListener
 
         $faq = $this->framework->getAdapter(FaqModel::class)->findByIdOrAlias($elements[1]);
 
-        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
+        if (!$faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
             return '';
         }
 

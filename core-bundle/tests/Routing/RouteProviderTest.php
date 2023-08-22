@@ -881,7 +881,7 @@ class RouteProviderTest extends TestCase
 
         $framework ??= $this->mockContaoFramework();
 
-        if (null === $pageRegistry) {
+        if (!$pageRegistry) {
             $pageRegistry = $this->createMock(PageRegistry::class);
             $pageRegistry
                 ->method('isRoutable')

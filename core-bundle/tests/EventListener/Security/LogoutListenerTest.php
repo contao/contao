@@ -348,15 +348,15 @@ class LogoutListenerTest extends TestCase
 
     private function mockLogoutListener(HttpUtils|null $httpUtils = null, ScopeMatcher|null $scopeMatcher = null, Security|null $security = null, LoggerInterface|null $logger = null): LogoutListener
     {
-        if (null === $httpUtils) {
+        if (!$httpUtils) {
             $httpUtils = $this->createMock(HttpUtils::class);
         }
 
-        if (null === $scopeMatcher) {
+        if (!$scopeMatcher) {
             $scopeMatcher = $this->createMock(ScopeMatcher::class);
         }
 
-        if (null === $security) {
+        if (!$security) {
             $security = $this->createMock(Security::class);
             $security
                 ->expects($this->once())

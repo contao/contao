@@ -68,7 +68,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
 
     private function getRepository(): RememberMeRepository
     {
-        if (null === $this->repository) {
+        if (!$this->repository) {
             $this->repository = ($this->repositoryClosure)();
         }
 

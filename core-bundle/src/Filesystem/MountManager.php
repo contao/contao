@@ -375,14 +375,14 @@ class MountManager
 
             // Find the adapter with the longest (= most specific) matching prefix
             do {
-                if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
+                if ($adapter = $this->mounts[$prefix] ?? null) {
                     return [$adapter, Path::makeRelative($path, $prefix), $prefix];
                 }
             } while ('.' !== ($prefix = \dirname($prefix)));
         }
 
         // Root adapter
-        if (null !== ($adapter = $this->mounts[''] ?? null)) {
+        if ($adapter = $this->mounts[''] ?? null) {
             return [$adapter, $path, ''];
         }
 

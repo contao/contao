@@ -46,7 +46,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         $moduleModel = $framework->getAdapter(ModuleModel::class);
         $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
 
-        if (null === $module) {
+        if (!$module) {
             return new Response();
         }
 

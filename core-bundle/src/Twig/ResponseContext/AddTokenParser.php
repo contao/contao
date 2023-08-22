@@ -39,7 +39,7 @@ class AddTokenParser extends AbstractTokenParser
         $locationToken = $stream->expect(Token::NAME_TYPE, null, '');
         $locationString = $locationToken->getValue();
 
-        if (null === ($location = DocumentLocation::tryFrom($locationString))) {
+        if (!($location = DocumentLocation::tryFrom($locationString))) {
             $validLocations = array_map(
                 static fn (DocumentLocation $location): string => $location->value,
                 DocumentLocation::cases()

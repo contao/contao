@@ -38,7 +38,7 @@ class RobotsTxtController
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        if (null === $rootPage) {
+        if (!$rootPage) {
             throw new NotFoundHttpException();
         }
 

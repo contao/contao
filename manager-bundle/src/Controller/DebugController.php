@@ -48,7 +48,7 @@ class DebugController
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 

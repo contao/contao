@@ -84,7 +84,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
 
-        if (null === $this->container) {
+        if (!$this->container) {
             throw new \LogicException('The service container has not been set.');
         }
 
@@ -190,7 +190,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     {
         $language = 'en';
 
-        if (null !== $this->request) {
+        if ($this->request) {
             $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 

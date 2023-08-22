@@ -110,7 +110,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
                     throw $e;
                 }
 
-                if (null !== $preBuiltResponse) {
+                if ($preBuiltResponse) {
                     return $preBuiltResponse->setContent($response->getContent());
                 }
 
@@ -239,7 +239,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        if (null === $response) {
+        if (!$response) {
             $response = new Response();
 
             $this->markResponseForInternalCaching($response);

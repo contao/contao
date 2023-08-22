@@ -263,7 +263,7 @@ class ToggleNodesLabelListenerTest extends TestCase
     {
         $requestStack = $this->mockRequestStack('backend');
 
-        if (null === $session) {
+        if (!$session) {
             $requestStack
                 ->expects($this->once())
                 ->method('getSession')

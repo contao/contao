@@ -47,7 +47,7 @@ class DocumentTest extends TestCase
             $body
         );
 
-        if (null === $expectedCanonicalUri) {
+        if (!$expectedCanonicalUri) {
             $this->assertNull($document->extractCanonicalUri());
         } else {
             $this->assertSame((string) $expectedCanonicalUri, (string) $document->extractCanonicalUri());

@@ -140,7 +140,7 @@ class Cron
                 $lastRunDate = null;
                 $lastRunEntity = $repository->findOneByName($name);
 
-                if (null !== $lastRunEntity) {
+                if ($lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
@@ -150,7 +150,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
@@ -218,7 +218,7 @@ class Cron
                 // Catch any exceptions so that other cronjobs are still executed
                 $this->logger?->error((string) $e);
 
-                if (null === $exception) {
+                if (!$exception) {
                     $exception = $e;
                 }
             }
@@ -229,7 +229,7 @@ class Cron
         }
 
         // Throw the first exception
-        if (null !== $exception) {
+        if ($exception) {
             throw $exception;
         }
     }
