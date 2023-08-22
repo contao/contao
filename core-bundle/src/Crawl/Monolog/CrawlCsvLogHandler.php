@@ -45,7 +45,7 @@ class CrawlCsvLogHandler extends StreamHandler
 
         $crawlUri = null;
 
-        if (isset($record['context']['crawlUri']) && $record['context']['crawlUri'] instanceof CrawlUri) {
+        if (($record['context']['crawlUri'] ?? null) instanceof CrawlUri) {
             $crawlUri = $record['context']['crawlUri'];
         }
 
