@@ -46,14 +46,11 @@ class TwoFactorController extends AbstractFrontendModuleController
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
-        $this->pageModel = $pageModel;
-
-        if (
-            $this->pageModel instanceof PageModel
-            && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)
-        ) {
-            $this->pageModel->loadDetails();
+        if ($pageModel && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+            $pageModel->loadDetails();
         }
+
+        $this->pageModel = $pageModel;
 
         return parent::__invoke($request, $model, $section, $classes);
     }
@@ -96,30 +93,30 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
-        if ((!$user->useTwoFactor && $this->pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
-            $response = $this->enableTwoFactor($template, $request, $user, $return);
+        $enable = 'enable' === $request->get('2fa');
 
-            if ($response) {
-                return $response;
-            }
+        if (!$user->useTwoFactor && $this->pageModel->enforceTwoFactor) {
+            $enable = true;
         }
 
-        if ('tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
-            $response = $this->disableTwoFactor($user);
+        if ($enable && ($response = $this->enableTwoFactor($template, $request, $user, $return))) {
+            return $response;
+        }
 
-            if ($response) {
-                return $response;
-            }
+        $formId = $request->request->get('FORM_SUBMIT');
+
+        if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user))) {
+            return $response;
         }
 
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
-        if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+        if ('tl_two_factor_generate_backup_codes' === $formId) {
             $template->showBackupCodes = true;
             $template->backupCodes = $this->container->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
         }
 
-        if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
+        if ('tl_two_factor_clear_trusted_devices' === $formId) {
             $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
         }
 

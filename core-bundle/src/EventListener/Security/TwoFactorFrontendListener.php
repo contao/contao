@@ -45,9 +45,7 @@ class TwoFactorFrontendListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
-
-        if (!$token) {
+        if (!$token = $this->tokenStorage->getToken()) {
             return;
         }
 

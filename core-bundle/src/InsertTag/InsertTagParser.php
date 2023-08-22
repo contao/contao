@@ -188,12 +188,8 @@ class InsertTagParser implements ResetInterface
             }
         }
 
-        if ($tag) {
-            $result = $this->renderSubscription($tag, false);
-
-            if ($result) {
-                return $result;
-            }
+        if ($tag && ($result = $this->renderSubscription($tag, false))) {
+            return $result;
         }
 
         // Fallback to old implementation

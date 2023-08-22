@@ -51,9 +51,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
@@ -88,9 +86,8 @@ final class ContaoMailer implements MailerInterface
         }
 
         $transportName = $message->getHeaders()->get('X-Transport')->getBodyAsString();
-        $transport = $this->transports->getTransport($transportName);
 
-        if (!$transport) {
+        if (!$transport = $this->transports->getTransport($transportName)) {
             return;
         }
 

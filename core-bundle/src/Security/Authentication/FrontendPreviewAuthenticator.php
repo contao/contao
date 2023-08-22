@@ -45,9 +45,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        $user = $this->loadFrontendUser($username);
-
-        if (!$user) {
+        if (!$user = $this->loadFrontendUser($username)) {
             return false;
         }
 

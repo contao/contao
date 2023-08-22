@@ -51,9 +51,8 @@ class PageUrlListener
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pageModel = $pageAdapter->findWithDetails($dc->id);
 
-        if (!$pageModel) {
+        if (!$pageModel = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -119,9 +118,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (!$rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -146,9 +144,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (!$rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 

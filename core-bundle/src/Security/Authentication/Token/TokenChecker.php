@@ -197,7 +197,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || !$request) {
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
             return null;
         }
 

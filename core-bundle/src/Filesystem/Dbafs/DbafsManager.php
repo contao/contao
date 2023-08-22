@@ -52,7 +52,7 @@ class DbafsManager
      */
     public function match(string $path): bool
     {
-        return $this->getDbafsForPath($path)->current();
+        return null !== $this->getDbafsForPath($path)->current();
     }
 
     /**
@@ -60,7 +60,7 @@ class DbafsManager
      */
     public function has(string $path): bool
     {
-        return $this->getRecord($path);
+        return null !== $this->getRecord($path);
     }
 
     /**
@@ -280,7 +280,7 @@ class DbafsManager
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
-        if (!($dbafs = $dbafsIterator->current())) {
+        if (!$dbafs = $dbafsIterator->current()) {
             return null;
         }
 

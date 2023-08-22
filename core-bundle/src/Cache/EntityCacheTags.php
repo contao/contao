@@ -48,9 +48,7 @@ class EntityCacheTags
      */
     public function getTagForEntityClass(string $className): string
     {
-        $metadata = $this->getClassMetadata($className);
-
-        if (!$metadata) {
+        if (!$metadata = $this->getClassMetadata($className)) {
             throw new \InvalidArgumentException(sprintf('The given class name "%s" is no valid entity class.', $className));
         }
 
@@ -62,9 +60,7 @@ class EntityCacheTags
      */
     public function getTagForEntityInstance(object $instance): string
     {
-        $metadata = $this->getClassMetadata($instance::class);
-
-        if (!$metadata) {
+        if (!$metadata = $this->getClassMetadata($instance::class)) {
             throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
         }
 

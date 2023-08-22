@@ -111,8 +111,9 @@ class FileDownloadHelper
 
         if (null !== $onProcess) {
             $context = StringUtil::deserialize($request->query->get(self::PARAM_CONTEXT, ''), true);
+            $response = $onProcess($file, $context);
 
-            if ($response = $onProcess($file, $context)) {
+            if ($response instanceof Response) {
                 return $response;
             }
         }

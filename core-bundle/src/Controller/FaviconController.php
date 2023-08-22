@@ -48,9 +48,8 @@ class FaviconController
         $this->framework->initialize();
 
         $filesModel = $this->framework->getAdapter(FilesModel::class);
-        $faviconModel = $filesModel->findByUuid($favicon);
 
-        if (!$faviconModel) {
+        if (!$faviconModel = $filesModel->findByUuid($favicon)) {
             throw new NotFoundHttpException();
         }
 

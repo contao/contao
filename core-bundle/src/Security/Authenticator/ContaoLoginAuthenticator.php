@@ -168,9 +168,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 

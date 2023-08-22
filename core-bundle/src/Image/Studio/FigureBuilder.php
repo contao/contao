@@ -176,9 +176,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
-
-        if (!$filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByUuid($uuid)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
@@ -194,9 +192,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
-
-        if (!$filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;

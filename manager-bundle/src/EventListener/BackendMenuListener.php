@@ -104,7 +104,7 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (!$categoryNode || !$request = $this->requestStack->getCurrentRequest()) {
+        if (!$categoryNode || (!$request = $this->requestStack->getCurrentRequest())) {
             return;
         }
 

@@ -47,7 +47,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         // their own firewall in Symfony
         $request = $this->requestStack->getMainRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || !$request) {
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
             return false;
         }
 

@@ -182,11 +182,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (!$this->logger) {
-            return;
-        }
-
-        $this->logger->log(
+        $this->logger?->log(
             LogLevel::INFO,
             sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
         );

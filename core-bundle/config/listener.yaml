@@ -475,7 +475,6 @@ services:
     contao.listener.preview_url_create:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
         tags:
             - kernel.event_listener

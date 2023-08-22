@@ -52,9 +52,8 @@ class PageRoutingListener
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $currentPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (!$currentPage) {
+        if (!$currentPage = $pageAdapter->findWithDetails($dc->id)) {
             return '';
         }
 

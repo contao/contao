@@ -53,9 +53,7 @@ class BackupManager
 
     public function createRestoreConfig(): RestoreConfig
     {
-        $latestBackup = $this->getLatestBackup();
-
-        if (!$latestBackup) {
+        if (!$latestBackup = $this->getLatestBackup()) {
             throw new BackupManagerException('No backups found.');
         }
 

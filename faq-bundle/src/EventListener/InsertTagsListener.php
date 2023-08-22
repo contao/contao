@@ -48,9 +48,13 @@ class InsertTagsListener
 
         $this->framework->initialize();
 
-        $faq = $this->framework->getAdapter(FaqModel::class)->findByIdOrAlias($elements[1]);
+        if (!$faq = $this->framework->getAdapter(FaqModel::class)->findByIdOrAlias($elements[1])) {
+            return '';
+        }
 
-        if (!$faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
+        $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+
+        if (false === ($url = $this->generateUrl($faq, $absolute))) {
             return '';
         }
 

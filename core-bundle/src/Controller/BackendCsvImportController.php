@@ -95,9 +95,7 @@ class BackendCsvImportController
 
     private function importFromTemplate(callable $callback, string $table, string $field, int $id, string|null $submitLabel = null, bool $allowLinebreak = false): Response
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new InternalServerErrorException('No request object given.');
         }
 

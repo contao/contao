@@ -57,7 +57,7 @@ class LightboxResult
      */
     public function hasImage(): bool
     {
-        return $this->image;
+        return null !== $this->image;
     }
 
     /**
