@@ -475,7 +475,7 @@ class MigrateCommand extends Command
         $options = $this->connection->getParams()['defaultTableOptions'] ?? [];
 
         // Check the collation if the user has configured it
-        if (null !== $collate = ($options['collate'] ?? null)) {
+        if (null !== $collate = $options['collate'] ?? null) {
             $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
@@ -495,7 +495,7 @@ class MigrateCommand extends Command
         }
 
         // Check the engine if the user has configured it
-        if (null !== $engine = ($options['engine'] ?? null)) {
+        if (null !== $engine = $options['engine'] ?? null) {
             $engineFound = false;
             $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
 
@@ -579,9 +579,9 @@ class MigrateCommand extends Command
 
             if (
                 // The InnoDB file format is not Barracuda
-                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting)) ||
+                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting))
                 // The innodb_file_per_table option is disabled
-                (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
+                || (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
             ) {
                 $errors[] =
                     <<<'EOF'

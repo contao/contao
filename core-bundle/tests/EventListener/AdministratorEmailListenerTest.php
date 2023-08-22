@@ -86,7 +86,7 @@ class AdministratorEmailListenerTest extends TestCase
 
     private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
-        if (null === $framework) {
+        if (!$framework) {
             $configAdapter = $this->mockAdapter(['get']);
             $configAdapter
                 ->method('get')
@@ -118,7 +118,7 @@ class AdministratorEmailListenerTest extends TestCase
             ->willReturn(new Request())
         ;
 
-        if (null === $security) {
+        if (!$security) {
             $security = $this->createMock(Security::class);
             $security
                 ->method('isGranted')

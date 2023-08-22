@@ -114,7 +114,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
             $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
-        if (null === $this->filesystem) {
+        if (!$this->filesystem) {
             $this->filesystem = new Filesystem();
         }
 

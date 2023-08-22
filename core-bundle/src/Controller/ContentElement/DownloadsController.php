@@ -65,7 +65,7 @@ class DownloadsController extends AbstractContentElementController
         $filesystemItems = $this->getFilesystemItems($model);
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($model->sortBy))) {
+        if ($sortMode = SortMode::tryFrom($model->sortBy)) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 

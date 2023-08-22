@@ -84,7 +84,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getPluginLoader(): PluginLoader
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader) {
             $this->pluginLoader = new PluginLoader();
 
             $config = $this->getManagerConfig()->all();
@@ -107,7 +107,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getBundleLoader(): BundleLoader
     {
-        if (null === $this->bundleLoader) {
+        if (!$this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
             $parser->addParser(new IniParser(Path::join($this->getProjectDir(), 'system/modules')));
@@ -184,7 +184,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getHttpCache(): ContaoCache
     {
-        if (null !== $this->httpCache) {
+        if ($this->httpCache) {
             return $this->httpCache;
         }
 

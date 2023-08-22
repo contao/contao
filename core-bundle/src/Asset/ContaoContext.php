@@ -46,15 +46,11 @@ class ContaoContext implements ContextInterface
 
     public function isSecure(): bool
     {
-        $page = $this->getPageModel();
-
-        if (null !== $page) {
+        if ($page = $this->getPageModel()) {
             return $page->loadDetails()->rootUseSSL;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 

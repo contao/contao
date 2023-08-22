@@ -38,9 +38,8 @@ class PageAccessListener
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $pageModel = $this->getPageModel($request);
 
-        if (null === $pageModel) {
+        if (!$pageModel = $this->getPageModel($request)) {
             return;
         }
 

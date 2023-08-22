@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Tools\Rector\SimplifyObjectOrNullCheckRector;
 use Rector\CodeQuality\Rector\BooleanNot\SimplifyDeMorganBinaryRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
@@ -76,6 +77,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(SimplifyDeMorganBinaryRector::class);
     $rectorConfig->rule(SimplifyEmptyCheckOnEmptyArrayRector::class);
     $rectorConfig->rule(SimplifyIfReturnBoolRector::class);
+    $rectorConfig->rule(SimplifyObjectOrNullCheckRector::class);
     $rectorConfig->rule(SymplifyQuoteEscapeRector::class);
     $rectorConfig->rule(SimplifyUselessVariableRector::class);
 };

@@ -70,7 +70,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     public function isTrustedDevice($user, string $firewallName): bool
     {
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return false;
         }
 

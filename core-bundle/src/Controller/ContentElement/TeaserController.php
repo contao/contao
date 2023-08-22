@@ -66,6 +66,6 @@ class TeaserController extends AbstractContentElementController
         $pageModel = $this->getContaoAdapter(PageModel::class);
         $page = $pageModel->findPublishedById($article->pid);
 
-        return null !== $page ? [$article, $page] : null;
+        return $page ? [$article, $page] : null;
     }
 }
