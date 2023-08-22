@@ -267,8 +267,8 @@ class Dbafs implements DbafsInterface, ResetInterface
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
-            isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
-            isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
+            isset($record['lastModified']) ? (int) $record['lastModified'] : null,
+            isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
             [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
         );

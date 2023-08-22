@@ -538,7 +538,7 @@ class HtmlAttributesTest extends TestCase
 
     public function testStripsLeadingWhitespaceIfEmpty(): void
     {
-        $this->assertSame('', (string) (new HtmlAttributes()));
+        $this->assertSame('', (string) new HtmlAttributes());
         $this->assertSame('', (new HtmlAttributes())->toString());
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }

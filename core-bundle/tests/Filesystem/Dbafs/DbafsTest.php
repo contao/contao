@@ -558,7 +558,7 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection, $filesystem);
-        $changeSet = $dbafs->computeChangeSet(...((array) $paths));
+        $changeSet = $dbafs->computeChangeSet(...(array) $paths);
 
         $this->assertSameChangeSet($expected, $changeSet);
     }

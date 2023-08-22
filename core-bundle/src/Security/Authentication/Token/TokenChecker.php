@@ -212,7 +212,9 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request || !$request->hasSession()) {
             return null;
         }
 
