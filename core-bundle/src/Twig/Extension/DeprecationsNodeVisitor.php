@@ -45,13 +45,17 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
      */
     private function handleDeprecatedInsertTagUsage(Node $node): Node
     {
-        $insertTagMisusePattern = '/{{([^}]+)}}/';
+        if (!$node instanceof PrintNode) {
+            return $node;
+        }
 
-        if (
-            !$node instanceof PrintNode
-            || !($expression = $node->getNode('expr')) instanceof ConstantExpression
-            || 1 !== preg_match($insertTagMisusePattern, (string) $expression->getAttribute('value'), $matches)
-        ) {
+        $expression = $node->getNode('expr');
+
+        if (!$expression instanceof ConstantExpression) {
+            return $node;
+        }
+
+        if (1 !== preg_match('/{{([^}]+)}}/', (string) $expression->getAttribute('value'), $matches)) {
             return $node;
         }
 

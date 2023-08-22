@@ -247,7 +247,7 @@ class ResizeImagesCommand extends Command
                 }
 
                 foreach ($processes as $index => $process) {
-                    if (null !== $process) {
+                    if ($process) {
                         if ($process->isRunning()) {
                             continue;
                         }
@@ -288,7 +288,7 @@ class ResizeImagesCommand extends Command
         }
 
         foreach ($processes as $index => $process) {
-            if (null === $process) {
+            if (!$process) {
                 continue;
             }
 

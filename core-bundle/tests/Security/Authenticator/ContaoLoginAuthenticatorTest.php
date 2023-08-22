@@ -403,7 +403,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             ->willReturn($errorPage)
         ;
 
-        if (null === $errorPage) {
+        if (!$errorPage) {
             $this->expectException(PageNotFoundException::class);
         }
 

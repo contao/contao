@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'loadTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endTime' => array
 		(
@@ -225,19 +225,19 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'setEmptyEndTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'startDate' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endDate' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'pageTitle' => array
 		(

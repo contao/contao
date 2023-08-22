@@ -198,7 +198,7 @@ class ImageFactory implements ImageFactoryInterface
             if (is_numeric($size[2])) {
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
-                if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
+                if ($imageSize = $imageModel->findByPk($size[2])) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
@@ -326,7 +326,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file || !$file->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 

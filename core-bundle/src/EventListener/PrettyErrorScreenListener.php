@@ -142,7 +142,7 @@ class PrettyErrorScreenListener
             $request = $event->getRequest();
             $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_'.$type);
 
-            if (null === $errorPage) {
+            if (!$errorPage) {
                 return;
             }
 
@@ -179,7 +179,7 @@ class PrettyErrorScreenListener
             if ($exception instanceof InvalidRequestTokenException) {
                 $template = 'invalid_request_token';
             }
-        } while (null === $template && null !== ($exception = $exception->getPrevious()));
+        } while (null === $template && ($exception = $exception->getPrevious()));
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }

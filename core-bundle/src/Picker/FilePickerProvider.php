@@ -105,9 +105,14 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function convertValueToPath(string $value): string
     {
-        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        if (!Validator::isUuid($value)) {
+            return $value;
+        }
 
-        if (Validator::isUuid($value) && ($filesModel = $filesAdapter->findByUuid($value)) instanceof FilesModel) {
+        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        $filesModel = $filesAdapter->findByUuid($value);
+
+        if ($filesModel instanceof FilesModel) {
             return $filesModel->path;
         }
 

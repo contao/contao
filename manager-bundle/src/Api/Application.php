@@ -47,7 +47,7 @@ class Application extends BaseApplication
 
     public function getPluginLoader(): PluginLoader
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader) {
             $this->pluginLoader = new PluginLoader();
 
             $config = $this->getManagerConfig()->all();

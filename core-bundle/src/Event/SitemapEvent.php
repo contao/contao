@@ -34,7 +34,7 @@ class SitemapEvent extends Event
         $sitemap = $this->getDocument();
         $urlSet = $sitemap->getElementsByTagNameNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
 
-        if (null === $urlSet) {
+        if (!$urlSet) {
             return $this;
         }
 

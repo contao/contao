@@ -253,7 +253,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $indexer = $this->createMock(IndexerInterface::class);
 
-        if (null === $indexerException) {
+        if (!$indexerException) {
             $indexer
                 ->expects(['ok' => 0, 'warning' => 0, 'error' => 0] === $expectedStats ? $this->never() : $this->once())
                 ->method('index')

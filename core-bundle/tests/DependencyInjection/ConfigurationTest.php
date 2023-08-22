@@ -427,9 +427,12 @@ class ConfigurationTest extends TestCase
                 $this->checkKeys($value->getChildren());
             }
 
-            /** @var ArrayNode $prototype */
-            if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
-                $this->checkKeys($prototype->getChildren());
+            if ($value instanceof PrototypedArrayNode) {
+                $prototype = $value->getPrototype();
+
+                if ($prototype instanceof ArrayNode) {
+                    $this->checkKeys($prototype->getChildren());
+                }
             }
 
             if (\is_string($key) && !$value->isDeprecated()) {

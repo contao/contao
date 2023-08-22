@@ -168,9 +168,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 
@@ -220,11 +218,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $page->protected = false;
 
-        if (null === $this->tokenStorage->getToken()) {
+        if (!$this->tokenStorage->getToken()) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
 
-            if (null === $errorPage) {
+            if (!$errorPage) {
                 throw new PageNotFoundException('No error page found.');
             }
 

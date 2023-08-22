@@ -40,7 +40,7 @@ class PageTypeOptionsListener
             return array_values($options);
         }
 
-        if (null !== $this->eventDispatcher) {
+        if ($this->eventDispatcher) {
             $options = $this->eventDispatcher
                 ->dispatch(new FilterPageTypeEvent($options, $dc))
                 ->getOptions()

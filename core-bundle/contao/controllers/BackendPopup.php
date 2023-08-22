@@ -154,31 +154,20 @@ class BackendPopup extends Backend
 					$pictureSize = (new PictureConfiguration())
 						->setSize(
 							(new PictureConfigurationItem())
-								->setResizeConfig((new ResizeConfiguration())->setWidth(864 / 4))
+								->setResizeConfig((new ResizeConfiguration())->setWidth(864))
 								->setDensities('1x, 2x')
 						)
 					;
 
-					$previewPictures = array();
-					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
-
-					if (($previewCount = \count(is_countable($pictures) ? $pictures : iterator_to_array($pictures))) < 4)
-					{
-						$pictureSize->getSize()->getResizeConfig()->setWidth((int) floor(864 / ($previewCount ?: 1)));
-						$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
-					}
-
+					$picture = $container->get('contao.image.preview_factory')->createPreviewPicture($projectDir . '/' . $this->strFile, $pictureSize);
 					$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
-					foreach ($pictures as $picture)
-					{
-						$previewPictures[] = array(
+					$objTemplate->previewPictures = array(
+						array(
 							'img' => $picture->getImg($projectDir, $staticUrl),
 							'sources' => $picture->getSources($projectDir, $staticUrl),
-						);
-					}
-
-					$objTemplate->previewPictures = $previewPictures;
+						)
+					);
 				}
 				catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
 				{

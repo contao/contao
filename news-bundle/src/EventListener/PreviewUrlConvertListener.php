@@ -36,7 +36,7 @@ class PreviewUrlConvertListener
             return;
         }
 
-        if (null === ($news = $this->getNewsModel($event->getRequest()))) {
+        if (!$news = $this->getNewsModel($event->getRequest())) {
             return;
         }
 

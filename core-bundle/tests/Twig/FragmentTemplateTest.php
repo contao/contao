@@ -91,7 +91,9 @@ class FragmentTemplateTest extends TestCase
 
             $args = array_map(
                 function (\ReflectionParameter $parameter) {
-                    if (!($type = $parameter->getType()) instanceof \ReflectionNamedType) {
+                    $type = $parameter->getType();
+
+                    if (!$type instanceof \ReflectionNamedType) {
                         return null;
                     }
 
@@ -112,7 +114,7 @@ class FragmentTemplateTest extends TestCase
 
     private function getFragmentTemplate(\Closure|null $callback = null): FragmentTemplate
     {
-        $callback ??= (static fn () => new Response());
+        $callback ??= static fn () => new Response();
 
         return new FragmentTemplate('content_element/text', $callback);
     }

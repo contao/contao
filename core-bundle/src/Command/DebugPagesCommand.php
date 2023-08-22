@@ -56,7 +56,7 @@ class DebugPagesCommand extends Command
     {
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeEnhancer) {
+        if ($routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 

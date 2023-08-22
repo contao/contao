@@ -38,7 +38,7 @@ class Slug
         if (!is_iterable($options)) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-            if (null !== ($page = $pageAdapter->findWithDetails((int) $options))) {
+            if ($page = $pageAdapter->findWithDetails((int) $options)) {
                 $options = $page->getSlugOptions();
             } else {
                 $options = [];

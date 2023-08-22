@@ -45,9 +45,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        $user = $this->loadFrontendUser($username);
-
-        if (null === $user) {
+        if (!$user = $this->loadFrontendUser($username)) {
             return false;
         }
 
@@ -103,7 +101,7 @@ class FrontendPreviewAuthenticator
     {
         if ($this->tokenChecker->isFrontendFirewall()) {
             $this->tokenStorage->setToken($token);
-        } elseif (null === $token) {
+        } elseif (!$token) {
             $this->getSession()?->remove('_security_contao_frontend');
         } else {
             $this->getSession()?->set('_security_contao_frontend', serialize($token));

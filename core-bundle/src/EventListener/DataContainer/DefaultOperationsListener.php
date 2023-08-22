@@ -195,7 +195,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }
