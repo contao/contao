@@ -113,8 +113,8 @@ class PickerConfig implements \JsonSerializable
 
         try {
             $json = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            throw new \InvalidArgumentException('Invalid JSON data');
+        } catch (\JsonException $e) {
+            throw new \InvalidArgumentException('Invalid JSON data', 0, $e);
         }
 
         return new self($json['context'], $json['extras'], $json['value'], $json['current']);
