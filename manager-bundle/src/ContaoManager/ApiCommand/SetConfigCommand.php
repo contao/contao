@@ -42,11 +42,7 @@ class SetConfigCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        try {
-            $data = json_decode($input->getArgument('json'), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw new \RuntimeException('Invalid JSON: '.$e->getMessage());
-        }
+        $data = json_decode($input->getArgument('json'), true, 512, JSON_THROW_ON_ERROR);
 
         $this->managerConfig->write($data);
 
