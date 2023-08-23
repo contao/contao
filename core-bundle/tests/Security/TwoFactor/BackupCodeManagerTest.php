@@ -82,10 +82,13 @@ class BackupCodeManagerTest extends TestCase
 
     public function testInvalidatesBackupCode(): void
     {
-        $backupCodes = json_encode([
-            '$2y$10$vY0fVrqfUmzzHSQpT6ZMPOGwrYLq.9s/Y1M9cV9/0K0SlGH/kMotC', // 4ead45-4ea70a
-            '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
-        ]);
+        $backupCodes = json_encode(
+            [
+                '$2y$10$vY0fVrqfUmzzHSQpT6ZMPOGwrYLq.9s/Y1M9cV9/0K0SlGH/kMotC', // 4ead45-4ea70a
+                '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->backupCodes = $backupCodes;
