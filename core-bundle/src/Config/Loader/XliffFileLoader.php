@@ -86,13 +86,19 @@ class XliffFileLoader extends Loader
 
     private function getDomDocumentFromFile(string $name): \DOMDocument
     {
+        $content = file_get_contents($name);
+
+        if (false === $content) {
+            throw new \InvalidArgumentException(sprintf('Cannot read file "%s".', $name));
+        }
+
         $xml = new \DOMDocument();
 
         // Strip white space
         $xml->preserveWhiteSpace = false;
 
         // Use loadXML() instead of load() (see contao/core#7192)
-        $xml->loadXML((string) file_get_contents($name));
+        $xml->loadXML($content);
 
         return $xml;
     }

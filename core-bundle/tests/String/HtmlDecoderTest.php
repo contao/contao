@@ -74,10 +74,9 @@ class HtmlDecoderTest extends TestCase
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request(['value' => $expected]));
 
-        $inputEncoded = Input::get('value');
+        $this->assertIsString($inputEncoded = Input::get('value'));
 
         // Test input encoding round trip
-        $this->assertIsString($inputEncoded);
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, true));
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded));
     }
@@ -114,9 +113,7 @@ class HtmlDecoderTest extends TestCase
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
 
-        $html = Input::postHtml('value', true);
-
-        $this->assertIsString($html);
+        $this->assertIsString($html = Input::postHtml('value', true));
 
         $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], $html);
 

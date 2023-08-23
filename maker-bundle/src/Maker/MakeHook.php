@@ -112,7 +112,6 @@ class MakeHook extends AbstractMaker
      */
     private function getAvailableHooks(): array
     {
-        /** @var array<string, array<string, mixed>> $yaml */
         $yaml = Yaml::parseFile(__DIR__.'/../../config/hooks.yaml');
         $hooks = [];
 

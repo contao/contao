@@ -72,6 +72,12 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
             return null;
         }
 
-        return $loader->load(__DIR__.'/../../config/routes.yaml');
+        $routes = $loader->load(__DIR__.'/../../config/routes.yaml');
+
+        if (!$routes instanceof RouteCollection) {
+            return null;
+        }
+
+        return $routes;
     }
 }
