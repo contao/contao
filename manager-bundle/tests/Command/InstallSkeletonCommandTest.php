@@ -106,7 +106,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/public/.htaccess',
-            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../skeleton/public/.htaccess')
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../skeleton/public/.htaccess'),
         );
     }
 

@@ -202,7 +202,7 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(
                 static function (string $key) use (&$properties) {
                     return $properties[$key] ?? null;
-                }
+                },
             )
         ;
 
@@ -212,7 +212,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (string $key, $value) use (&$properties): void {
                         $properties[$key] = $value;
-                    }
+                    },
                 )
             ;
         }
@@ -223,7 +223,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
-                    }
+                    },
                 )
             ;
         }
@@ -234,7 +234,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function () use (&$properties) {
                         return $properties;
-                    }
+                    },
                 )
             ;
         }
@@ -245,7 +245,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (array $data) use (&$properties): void {
                         $properties = $data;
-                    }
+                    },
                 )
             ;
         }

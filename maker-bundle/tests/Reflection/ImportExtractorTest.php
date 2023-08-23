@@ -52,7 +52,7 @@ class ImportExtractorTest extends TestCase
                 ClassOne::class,
                 [
                     'arg1' => ClassTwo::class,
-                ]
+                ],
             ),
         ];
 
@@ -67,7 +67,7 @@ class ImportExtractorTest extends TestCase
                 [
                     'arg1' => ClassTwo::class,
                     'arg2' => ClassThree::class,
-                ]
+                ],
             ),
         ];
 
@@ -80,7 +80,7 @@ class ImportExtractorTest extends TestCase
                 [
                     'arg1' => ClassOne::class,
                     'arg2' => ClassOne::class,
-                ]
+                ],
             ),
         ];
 
@@ -92,7 +92,7 @@ class ImportExtractorTest extends TestCase
                 ClassOne::class,
                 [
                     'arg1' => ClassOne::class,
-                ]
+                ],
             ),
         ];
     }

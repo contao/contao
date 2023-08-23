@@ -62,7 +62,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             [
                 'headline' => '&amp; is the HTML entity for &',
                 'content' => 'This is <i>raw HTML</i>.',
-            ]
+            ],
         );
 
         $this->assertSame('<h1>&amp;amp; is the HTML entity for &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
@@ -77,7 +77,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             [
                 'headline' => '&amp; will look like &',
                 'content' => 'This is <i>raw HTML</i>.',
-            ]
+            ],
         );
 
         $this->assertSame('<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
@@ -103,7 +103,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig',
             [
                 'content' => '&quot;a&quot; &amp; &lt;b&gt;',
-            ]
+            ],
         );
 
         $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
@@ -131,7 +131,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig',
             [
                 'title' => '{{flavor}} _is_ a flavor',
-            ]
+            ],
         );
 
         $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
@@ -156,7 +156,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $contaoExtension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
@@ -168,7 +168,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
-            ])
+            ]),
         );
 
         return $environment;

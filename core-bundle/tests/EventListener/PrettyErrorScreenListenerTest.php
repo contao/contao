@@ -319,7 +319,7 @@ class PrettyErrorScreenListenerTest extends TestCase
                     }
 
                     return '';
-                }
+                },
             )
         ;
 

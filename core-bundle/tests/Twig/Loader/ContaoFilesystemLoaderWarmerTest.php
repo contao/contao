@@ -185,8 +185,8 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
                         $this->assertSame($expectedData, json_decode($json, true, 512, JSON_THROW_ON_ERROR));
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 

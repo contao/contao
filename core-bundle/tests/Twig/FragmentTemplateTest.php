@@ -34,7 +34,7 @@ class FragmentTemplateTest extends TestCase
 
         $this->assertSame(
             ['foobar' => 'foobar', 'foo' => 'f', 'bar' => 42, 'baz' => true],
-            $template->getData()
+            $template->getData(),
         );
 
         $this->assertSame('f', $template->get('foo'));
@@ -99,10 +99,10 @@ class FragmentTemplateTest extends TestCase
                         'string' => '',
                         'array' => [],
                         /** @phpstan-ignore-next-line because mocked type cannot be inferred */
-                        default => $this->createMock($name)
+                        default => $this->createMock($name),
                     };
                 },
-                $method->getParameters()
+                $method->getParameters(),
             );
 
             yield "accessing $name()" => [$name, $args];

@@ -82,7 +82,7 @@ class FeedMigration extends AbstractMigration
                     'maxFeedItems' => $feed['maxItems'],
                     'feedDescription' => $feed['description'],
                     'imgSize' => $feed['imgSize'],
-                ]
+                ],
             );
 
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
@@ -97,7 +97,7 @@ class FeedMigration extends AbstractMigration
 
         $page = $this->connection->fetchOne(
             "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
-            ['dns' => $feedBase, 'language' => $feed['language']]
+            ['dns' => $feedBase, 'language' => $feed['language']],
         );
 
         // Find first root page, if none matches by dns and language

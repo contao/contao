@@ -176,7 +176,7 @@ class PageAccessListenerTest extends TestCase
                 'id' => 42,
                 'protected' => true,
                 'groups' => [1, 2, 3],
-            ]
+            ],
         );
 
         $request = new Request();
@@ -214,7 +214,7 @@ class PageAccessListenerTest extends TestCase
                 'id' => 42,
                 'protected' => true,
                 'groups' => [1, 2, 3],
-            ]
+            ],
         );
 
         $request = new Request();
@@ -252,7 +252,7 @@ class PageAccessListenerTest extends TestCase
                 'id' => 42,
                 'protected' => true,
                 'groups' => [-1, 1],
-            ]
+            ],
         );
 
         $request = new Request();
@@ -290,7 +290,7 @@ class PageAccessListenerTest extends TestCase
                 'id' => 42,
                 'protected' => true,
                 'groups' => [1, 2, 3],
-            ]
+            ],
         );
 
         $request = new Request();
@@ -325,7 +325,7 @@ class PageAccessListenerTest extends TestCase
                 'id' => 42,
                 'protected' => true,
                 'groups' => [-1, 1],
-            ]
+            ],
         );
 
         $request = new Request();

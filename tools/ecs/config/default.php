@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
@@ -27,6 +28,11 @@ return static function (ECSConfig $ecsConfig): void {
         UnusedVariableSniff::class => [
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',
         ],
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(TrailingCommaInMultilineFixer::class, [
+        'after_heredoc' => true,
+        'elements' => ['arrays', 'arguments', 'match', 'parameters'],
     ]);
 
     $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [

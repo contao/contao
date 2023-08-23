@@ -70,7 +70,7 @@ class JsonLdManagerTest extends TestCase
                 ]
                 </script>
                 JSONLD,
-            $schemaManager->collectFinalScriptFromGraphs()
+            $schemaManager->collectFinalScriptFromGraphs(),
         );
     }
 

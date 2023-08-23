@@ -68,7 +68,7 @@ class TemplateOptionsListenerTest extends TestCase
                 '' => 'content_element/foo [App]',
                 'content_element/foo/variant' => 'content_element/foo/variant [Global]',
             ],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type']))
+            $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type'])),
         );
 
         $this->assertSame(
@@ -76,7 +76,7 @@ class TemplateOptionsListenerTest extends TestCase
                 '' => 'ce_legacy_fragment_element',
                 'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
             ],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_fragment_element']))
+            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_fragment_element'])),
         );
     }
 
@@ -86,12 +86,12 @@ class TemplateOptionsListenerTest extends TestCase
 
         $this->assertSame(
             ['' => 'frontend_module/foo [App]'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'foo_module_type']))
+            $callback($this->mockDataContainer('tl_module', ['type' => 'foo_module_type'])),
         );
 
         $this->assertSame(
             ['' => 'mod_legacy_fragment_module'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_fragment_module']))
+            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_fragment_module'])),
         );
     }
 
@@ -133,7 +133,7 @@ class TemplateOptionsListenerTest extends TestCase
             ->with(
                 sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_foo'),
                 [[1, 2, 3]],
-                [Connection::PARAM_INT_ARRAY]
+                [Connection::PARAM_INT_ARRAY],
             )
             ->willReturn($result)
         ;
@@ -185,7 +185,7 @@ class TemplateOptionsListenerTest extends TestCase
 
         $this->assertSame(
             ['' => '[result from legacy class]'],
-            $listener($this->mockDataContainer('tl_content', ['type' => 'text']))
+            $listener($this->mockDataContainer('tl_content', ['type' => 'text'])),
         );
     }
 
@@ -205,7 +205,7 @@ class TemplateOptionsListenerTest extends TestCase
 
         $this->assertSame(
             ['' => '[result from legacy class]'],
-            $listener($this->mockDataContainer('tl_content', ['type' => 'example']))
+            $listener($this->mockDataContainer('tl_content', ['type' => 'example'])),
         );
     }
 
@@ -263,7 +263,7 @@ class TemplateOptionsListenerTest extends TestCase
             $requestStack,
             $hierarchy,
             $legacyTemplatePrefix,
-            $legacyProxyClass
+            $legacyProxyClass,
         );
     }
 

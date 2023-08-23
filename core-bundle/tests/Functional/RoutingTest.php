@@ -1035,7 +1035,7 @@ class RoutingTest extends FunctionalTestCase
 
         static::loadFixtures(array_map(
             static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yaml',
-            $fileNames
+            $fileNames,
         ));
     }
 }

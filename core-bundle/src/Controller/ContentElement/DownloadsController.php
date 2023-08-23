@@ -90,7 +90,7 @@ class DownloadsController extends AbstractContentElementController
                 'show_file_previews' => $showPreviews,
                 'file_previews' => $this->getPreviews($filesystemItem, $model),
             ],
-            iterator_to_array($filesystemItems)
+            iterator_to_array($filesystemItems),
         );
 
         // Explicitly define title/text metadata for a single file
@@ -134,7 +134,7 @@ class DownloadsController extends AbstractContentElementController
                 static fn (FilesystemItem $item): bool =>
                     /** @var MetadataBag|null $metadata */
                     null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
-                    && null !== $metadata->getDefault()
+                    && null !== $metadata->getDefault(),
             );
         }
 
@@ -153,8 +153,8 @@ class DownloadsController extends AbstractContentElementController
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
                 array_map('strtolower', $getAllowedFileExtensions()),
-                true
-            )
+                true,
+            ),
         );
     }
 
@@ -214,14 +214,14 @@ class DownloadsController extends AbstractContentElementController
 
         try {
             $previewSize = $this->previewFactory->getPreviewSizeFromImageSize(
-                $fullsize ? $getLightboxSize() ?? $size : $size
+                $fullsize ? $getLightboxSize() ?? $size : $size,
             );
 
             $previews = $this->previewFactory->createPreviews(
                 // TODO: As soon as our image libraries support this case, read from the public path instead.
                 Path::join($this->projectDir, $this->filesStorage->getPrefix(), $path),
                 $previewSize,
-                $model->numberOfItems ?: PHP_INT_MAX
+                $model->numberOfItems ?: PHP_INT_MAX,
             );
 
             foreach ($previews as $image) {
@@ -249,7 +249,7 @@ class DownloadsController extends AbstractContentElementController
                 }
 
                 return null;
-            }
+            },
         );
 
         if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {

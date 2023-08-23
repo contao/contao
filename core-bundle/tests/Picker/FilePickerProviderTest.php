@@ -117,7 +117,7 @@ class FilePickerProviderTest extends TestCase
                 'files' => true,
                 'value' => ['/foobar'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('file', $extra, $uuid))
+            $picker->getDcaAttributes(new PickerConfig('file', $extra, $uuid)),
         );
 
         $this->assertSame(
@@ -126,7 +126,7 @@ class FilePickerProviderTest extends TestCase
                 'fieldType' => 'radio',
                 'value' => ['/foobar'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('file', ['files' => true], $uuid))
+            $picker->getDcaAttributes(new PickerConfig('file', ['files' => true], $uuid)),
         );
 
         $this->assertSame(
@@ -136,7 +136,7 @@ class FilePickerProviderTest extends TestCase
                 'value' => '/foobar',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'|urlattr}}')),
         );
 
         $this->assertSame(
@@ -145,7 +145,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => 'foo/bar.jpg',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, 'foo/bar.jpg'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, 'foo/bar.jpg')),
         );
 
         $this->assertSame(
@@ -154,7 +154,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => '/foobar',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], '/foobar'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], '/foobar')),
         );
 
         $this->assertSame(
@@ -163,7 +163,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => str_replace('%2F', '/', rawurlencode('foo/bär baz.jpg')),
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], 'foo/bär baz.jpg'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], 'foo/bär baz.jpg')),
         );
 
         $this->assertSame(
@@ -172,7 +172,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => str_replace('%2F', '/', rawurlencode(__DIR__.'/foobar.jpg')),
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], __DIR__.'/foobar.jpg'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], __DIR__.'/foobar.jpg')),
         );
     }
 
@@ -182,17 +182,17 @@ class FilePickerProviderTest extends TestCase
 
         $this->assertSame(
             '/foobar',
-            $picker->convertDcaValue(new PickerConfig('file'), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('file'), '/foobar'),
         );
 
         $this->assertSame(
             '{{file::82243f46-a4c3-11e3-8e29-000c29e44aea}}',
-            $picker->convertDcaValue(new PickerConfig('link'), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('link'), '/foobar'),
         );
 
         $this->assertSame(
             '/foobar',
-            $picker->convertDcaValue(new PickerConfig('link'), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('link'), '/foobar'),
         );
     }
 
@@ -202,17 +202,17 @@ class FilePickerProviderTest extends TestCase
 
         $this->assertSame(
             '/foobar',
-            $picker->convertDcaValue(new PickerConfig('file', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('file', ['insertTag' => '{{file_name::%s}}']), '/foobar'),
         );
 
         $this->assertSame(
             '{{file_name::82243f46-a4c3-11e3-8e29-000c29e44aea}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar'),
         );
 
         $this->assertSame(
             '/foobar',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar'),
         );
     }
 
@@ -237,7 +237,7 @@ class FilePickerProviderTest extends TestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

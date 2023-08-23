@@ -56,7 +56,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadModuleWithoutPreviewScript();
@@ -78,7 +78,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadTableWithoutPreviewScript('tl_preview_link');
@@ -98,7 +98,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadTableWithoutPreviewScript('tl_member');
@@ -134,7 +134,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
@@ -184,7 +184,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
@@ -210,7 +210,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);

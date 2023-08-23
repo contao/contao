@@ -178,7 +178,7 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -194,7 +194,7 @@ class ContaoExtensionTest extends TestCase
 
         $traverser = new NodeTraverser(
             $this->createMock(Environment::class),
-            [$escaperNodeVisitor]
+            [$escaperNodeVisitor],
         );
 
         $node = new ModuleNode(
@@ -206,14 +206,14 @@ class ContaoExtensionTest extends TestCase
                     new ConstantExpression(null, 1),
                     new ConstantExpression(true, 1),
                 ]),
-                1
+                1,
             ),
             null,
             new Node(),
             new Node(),
             new Node(),
             null,
-            new Source('<code>', 'foo.html.twig')
+            new Source('<code>', 'foo.html.twig'),
         );
 
         $original = (string) $node;
@@ -241,7 +241,7 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
@@ -251,7 +251,7 @@ class ContaoExtensionTest extends TestCase
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
             ['B' => ['overwritten B block']],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
@@ -262,7 +262,7 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
@@ -275,7 +275,7 @@ class ContaoExtensionTest extends TestCase
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
             ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame(
@@ -292,7 +292,7 @@ class ContaoExtensionTest extends TestCase
                 'baz after B',
                 'root after B',
             ]),
-            $output
+            $output,
         );
     }
 

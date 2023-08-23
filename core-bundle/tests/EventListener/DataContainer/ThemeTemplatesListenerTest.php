@@ -63,7 +63,7 @@ class ThemeTemplatesListenerTest extends TestCase
         return new ThemeTemplatesListener(
             $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
             $themeNamespace ?? $this->createMock(ThemeNamespace::class),
-            $translator ?? $this->createMock(TranslatorInterface::class)
+            $translator ?? $this->createMock(TranslatorInterface::class),
         );
     }
 }

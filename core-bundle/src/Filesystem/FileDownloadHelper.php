@@ -61,7 +61,7 @@ class FileDownloadHelper
             [
                 self::PARAM_PATH => $path,
                 self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
-            ]
+            ],
         );
     }
 
@@ -85,7 +85,7 @@ class FileDownloadHelper
                 self::PARAM_DISPOSITION => HeaderUtils::DISPOSITION_ATTACHMENT,
                 self::PARAM_FILE_NAME => $fileName,
                 self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
-            ]
+            ],
         );
     }
 
@@ -128,7 +128,7 @@ class FileDownloadHelper
             $response = new StreamedResponse(
                 static function () use ($stream): void {
                     stream_copy_to_stream($stream, fopen('php://output', 'w'));
-                }
+                },
             );
         }
 

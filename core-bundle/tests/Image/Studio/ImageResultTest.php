@@ -122,7 +122,7 @@ class ImageResultTest extends TestCase
             'src' => new Image(
                 $filePathOrImage,
                 $this->createMock(ImagineInterface::class),
-                $filesystem
+                $filesystem,
             ),
         ];
 
@@ -262,7 +262,7 @@ class ImageResultTest extends TestCase
                     }
 
                     return true;
-                }
+                },
             ))
         ;
 

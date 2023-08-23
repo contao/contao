@@ -38,7 +38,7 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $session->set(Security::AUTHENTICATION_ERROR, 'error');
@@ -63,19 +63,19 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $nonExpired = new AutoExpiringAttribute(
             20,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $expired = new AutoExpiringAttribute(
             5,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $session->set('non-expired-attribute', $nonExpired);

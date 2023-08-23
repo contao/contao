@@ -551,8 +551,8 @@ class DefaultOperationsListenerTest extends TestCase
                         }
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn(true)
         ;

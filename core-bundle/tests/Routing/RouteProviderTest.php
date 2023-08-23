@@ -339,8 +339,8 @@ class RouteProviderTest extends TestCase
                     $pages[$i]->rootLanguage,
                     $pages[$i]->alias,
                     $routedPage->rootLanguage,
-                    $routedPage->alias
-                )
+                    $routedPage->alias,
+                ),
             );
 
             ++$i;
@@ -553,8 +553,8 @@ class RouteProviderTest extends TestCase
                     $page->rootLanguage,
                     $page->alias,
                     $routedPage->rootLanguage,
-                    $routedPage->alias
-                )
+                    $routedPage->alias,
+                ),
             );
 
             ++$i;

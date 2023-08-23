@@ -91,7 +91,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->logger?->info(
             sprintf('User "%s" has logged in', $this->user->username),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)],
         );
 
         if ($request->hasSession() && method_exists($token, 'getFirewallName')) {

@@ -82,13 +82,13 @@ class InsertTagsListener
                 $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->title),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                $model->title
+                $model->title,
             ),
             'event_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
                 $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->title),
-                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
             'event_url' => $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
             'event_title' => StringUtil::specialcharsAttribute($model->title),

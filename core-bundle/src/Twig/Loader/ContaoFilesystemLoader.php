@@ -209,7 +209,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
                 (string) file_get_contents($source->getPath()),
-                $match
+                $match,
             )
             && '@Contao/'.$match[1].'.html5' !== $name
         ) {
@@ -219,7 +219,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             (string) file_get_contents($source->getPath()),
-            $matches
+            $matches,
         );
 
         return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());

@@ -51,7 +51,7 @@ class RouteLoaderTest extends ContaoTestCase
             $loader,
             $pluginLoader,
             $this->createMock(ContaoKernel::class),
-            $this->getTempDir()
+            $this->getTempDir(),
         );
 
         $collection = $routeLoader->loadFromPlugins();
@@ -91,7 +91,7 @@ class RouteLoaderTest extends ContaoTestCase
             $loader,
             $pluginLoader,
             $this->createMock(ContaoKernel::class),
-            $this->getTempDir()
+            $this->getTempDir(),
         );
 
         $routes = $routeLoader->loadFromPlugins()->all();

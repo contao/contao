@@ -80,7 +80,7 @@ class MessengerCron
         $process = $this->processUtil->createSymfonyConsoleProcess(
             'messenger:consume',
             ...$worker['options'],
-            ...$worker['transports']
+            ...$worker['transports'],
         );
 
         return $this->processUtil->createPromise($process);

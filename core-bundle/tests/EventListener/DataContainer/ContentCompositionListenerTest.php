@@ -122,7 +122,7 @@ class ContentCompositionListenerTest extends TestCase
             $this->pageRegistry,
             $this->createMock(TranslatorInterface::class),
             $this->connection,
-            $this->requestStack
+            $this->requestStack,
         );
     }
 
@@ -172,7 +172,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="foo--disabled.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -203,7 +203,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="foo--disabled.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -287,7 +287,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
@@ -320,7 +320,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
@@ -747,7 +747,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteinto--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true),
         );
     }
 
@@ -779,7 +779,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteinto--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false),
         );
     }
 
@@ -817,7 +817,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -852,7 +852,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -880,7 +880,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -908,7 +908,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -938,7 +938,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2]),
         );
     }
 
@@ -968,7 +968,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]]),
         );
     }
 
@@ -998,7 +998,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1030,7 +1030,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1068,7 +1068,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteafter.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1148,7 +1148,7 @@ class ContentCompositionListenerTest extends TestCase
                     LayoutModel::class,
                     [
                         'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
+                    ],
                 );
             }
 
@@ -1187,7 +1187,7 @@ class ContentCompositionListenerTest extends TestCase
                     LayoutModel::class,
                     [
                         'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
+                    ],
                 );
             }
 

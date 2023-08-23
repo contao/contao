@@ -215,7 +215,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry($route),
-            $uriSigner
+            $uriSigner,
         );
 
         $listener($event);
@@ -237,7 +237,7 @@ class PreviewUrlConverterListenerTest extends TestCase
                 'id' => 42,
                 'rootLanguage' => 'en',
                 'requireItem' => '1',
-            ]
+            ],
         );
 
         $route = new PageRoute($pageModel);
@@ -250,8 +250,8 @@ class PreviewUrlConverterListenerTest extends TestCase
                     $route,
                     [],
                     UrlGeneratorInterface::ABSOLUTE_URL,
-                    new MissingMandatoryParametersException()
-                )
+                    new MissingMandatoryParametersException(),
+                ),
             )
         ;
 
@@ -274,7 +274,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $uriSigner
+            $uriSigner,
         );
 
         $listener($event);

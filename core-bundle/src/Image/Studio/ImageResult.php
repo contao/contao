@@ -153,7 +153,7 @@ class ImageResult
 
         $deferredImages = array_filter(
             $candidates,
-            static fn ($image): bool => $image instanceof DeferredImageInterface
+            static fn ($image): bool => $image instanceof DeferredImageInterface,
         );
 
         if (!$deferredImages) {

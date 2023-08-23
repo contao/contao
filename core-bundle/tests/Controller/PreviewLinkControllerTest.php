@@ -34,7 +34,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator($showUnpublished),
             $this->mockUriSigner(true),
-            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished])
+            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished]),
         );
 
         $response = $listener($request, 42);
@@ -55,7 +55,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator(null),
             $this->mockUriSigner(false),
-            $this->mockConnection(null)
+            $this->mockConnection(null),
         );
 
         $this->expectException(AccessDeniedException::class);
@@ -70,7 +70,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator(null),
             $this->mockUriSigner(true),
-            $this->mockConnection(false)
+            $this->mockConnection(false),
         );
 
         $this->expectException(NotFoundHttpException::class);
@@ -121,7 +121,7 @@ class PreviewLinkControllerTest extends TestCase
             ->method('fetchAssociative')
             ->with(
                 'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
-                $this->isType('array')
+                $this->isType('array'),
             )
             ->willReturn($link)
         ;

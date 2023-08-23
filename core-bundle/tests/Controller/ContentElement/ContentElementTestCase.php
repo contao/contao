@@ -145,7 +145,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new Metadata(array_intersect_key($data, array_flip(['title', 'alt', 'link', 'caption', 'license'])));
-                }
+                },
             )
         ;
 
@@ -206,7 +206,7 @@ class ContentElementTestCase extends TestCase
         $this->assertSame(
             $this->normalizeWhiteSpaces($expected),
             $this->normalizeWhiteSpaces($actual),
-            $message
+            $message,
         );
     }
 
@@ -219,7 +219,7 @@ class ContentElementTestCase extends TestCase
             ['ContaoCore' => ContaoCoreBundle::class],
             ['ContaoCore' => ['path' => $resourceBasePath]],
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
@@ -246,8 +246,8 @@ class ContentElementTestCase extends TestCase
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
-                    $parameters ? '['.implode(', ', $parameters).']' : ''
-                )
+                    $parameters ? '['.implode(', ', $parameters).']' : '',
+                ),
             )
         ;
 
@@ -265,8 +265,8 @@ class ContentElementTestCase extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         // Runtime loaders
@@ -280,7 +280,7 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-            ])
+            ]),
         );
 
         $environment->enableStrictVariables();
@@ -310,7 +310,7 @@ class ContentElementTestCase extends TestCase
                             [
                                 'metadata' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
-                                    ['en']
+                                    ['en'],
                                 ),
                             ],
                         ),
@@ -321,7 +321,7 @@ class ContentElementTestCase extends TestCase
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
-                }
+                },
             )
         ;
 
@@ -338,7 +338,7 @@ class ContentElementTestCase extends TestCase
                     ];
 
                     return $publicUriMap[$path] ?? null;
-                }
+                },
             )
         ;
 
@@ -366,7 +366,7 @@ class ContentElementTestCase extends TestCase
                     self::FILE_IMAGE1 => 'files/image1.jpg',
                     self::FILE_IMAGE2 => 'files/image2.jpg',
                     self::FILE_IMAGE3 => 'files/image3.jpg',
-                ]
+                ],
             ))
         ;
 
@@ -378,7 +378,7 @@ class ContentElementTestCase extends TestCase
         $replaceDemo = static fn (string $input): string => str_replace(
             ['{{demo}}', '{{br}}'],
             ['demo', '<br>'],
-            $input
+            $input,
         );
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
@@ -401,7 +401,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new ChunkedText([$replaceDemo($input)]);
-                }
+                },
             )
         ;
 
@@ -428,7 +428,7 @@ class ContentElementTestCase extends TestCase
                         ['key' => '*', 'value' => 'data-*,id,class'],
                         ['key' => 'a', 'value' => 'href,rel,target'],
                     ]),
-                ][$key] ?? null
+                ][$key] ?? null,
             )
         ;
 

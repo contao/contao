@@ -47,7 +47,7 @@ class RunTestsIsolatedCommand extends Command
                 a new PHPUnit process for each test class, method, or data set. This gives us
                 "real" isolation rather than shared state, unlike the PHPUnit option
                 --process-isolation does.
-                EOT
+                EOT,
         );
     }
 

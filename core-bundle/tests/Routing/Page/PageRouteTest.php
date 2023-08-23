@@ -124,7 +124,7 @@ class PageRouteTest extends TestCase
                 'urlPrefix' => 'foo',
                 'urlSuffix' => '.baz',
                 ...$properties,
-            ]
+            ],
         );
     }
 }

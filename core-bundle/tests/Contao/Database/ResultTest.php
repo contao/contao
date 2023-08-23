@@ -215,7 +215,7 @@ class ResultTest extends TestCase
         return [
             new Result(
                 new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
-                'SELECT * FROM test'
+                'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),
         ];

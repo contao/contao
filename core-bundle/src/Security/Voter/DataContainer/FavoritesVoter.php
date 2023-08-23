@@ -74,7 +74,7 @@ class FavoritesVoter implements CacheableVoterInterface
 
         $createdBy = (int) $this->connection->fetchOne(
             'SELECT user FROM tl_favorites WHERE id = :id',
-            ['id' => $subject->getCurrentId()]
+            ['id' => $subject->getCurrentId()],
         );
 
         return $createdBy === $userId;

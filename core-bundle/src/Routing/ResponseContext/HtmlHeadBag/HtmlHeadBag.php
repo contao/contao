@@ -111,7 +111,7 @@ final class HtmlHeadBag
         $request = Request::create(
             $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
             $request->getMethod(),
-            $params
+            $params,
         );
 
         return $request->getUri();

@@ -50,7 +50,7 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -137,7 +137,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -176,7 +176,7 @@ class BackendFavoritesListenerTest extends TestCase
                 'class' => 'navigation',
                 'title' => 'Edit page 3',
             ],
-            $grandChildren[0]->getLinkAttributes()
+            $grandChildren[0]->getLinkAttributes(),
         );
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
@@ -188,7 +188,7 @@ class BackendFavoritesListenerTest extends TestCase
                 'class' => 'navigation',
                 'title' => 'Edit fe_page',
             ],
-            $grandChildren[1]->getLinkAttributes()
+            $grandChildren[1]->getLinkAttributes(),
         );
 
         $this->assertSame('content', $children[1]->getName());
@@ -231,7 +231,7 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -291,7 +291,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -363,7 +363,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $tokenManager
+            $tokenManager,
         );
 
         $listener($event);
@@ -437,7 +437,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);

@@ -334,7 +334,7 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX,
             (float) $file->importantPartY,
             (float) $file->importantPartWidth,
-            (float) $file->importantPartHeight
+            (float) $file->importantPartHeight,
         );
     }
 }

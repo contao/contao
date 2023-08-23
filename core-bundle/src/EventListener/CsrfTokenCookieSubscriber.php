@@ -130,7 +130,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             $expires = null === $value ? 1 : 0;
 
             $response->headers->setCookie(
-                new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
+                new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX),
             );
         }
     }

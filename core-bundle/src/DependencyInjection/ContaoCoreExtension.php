@@ -162,14 +162,14 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsContentElement::class,
             static function (ChildDefinition $definition, AsContentElement $attribute): void {
                 $definition->addTag(ContentElementReference::TAG_NAME, $attribute->attributes);
-            }
+            },
         );
 
         $container->registerAttributeForAutoconfiguration(
             AsFrontendModule::class,
             static function (ChildDefinition $definition, AsFrontendModule $attribute): void {
                 $definition->addTag(FrontendModuleReference::TAG_NAME, $attribute->attributes);
-            }
+            },
         );
 
         $attributesForAutoconfiguration = [
@@ -198,7 +198,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                     }
 
                     $definition->addTag($tag, $tagAttributes);
-                }
+                },
             );
         }
 

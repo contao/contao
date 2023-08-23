@@ -64,7 +64,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => $format,
-            ]
+            ],
         );
 
         $route = new PageRoute($pageModel);
@@ -84,7 +84,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => 'foo',
-            ]
+            ],
         );
 
         $route = new PageRoute($pageModel);
@@ -106,7 +106,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'feedDescription' => 'Get latest news',
                 'feedFormat' => 'rss',
                 'language' => 'en',
-            ]
+            ],
         );
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -136,7 +136,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'feedDescription' => 'Get latest news &lt;/channel&gt;',
                 'feedFormat' => $format,
                 'language' => 'en',
-            ]
+            ],
         );
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -171,7 +171,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                 'title' => 'Latest News',
                 'alias' => 'latest-news',
                 'feedFormat' => $format,
-            ]
+            ],
         );
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -196,7 +196,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                     }
 
                     $this->fail('Unexpected event: '.$event::class);
-                }
+                },
             )
         ;
 
@@ -241,7 +241,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                     'id' => 1 + $i,
                     'pid' => 1 + $i,
                     'title' => 'Example title',
-                ]
+                ],
             );
         }
 

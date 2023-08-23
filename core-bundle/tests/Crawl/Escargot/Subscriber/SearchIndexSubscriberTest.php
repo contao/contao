@@ -65,8 +65,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -164,8 +164,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -185,7 +185,7 @@ class SearchIndexSubscriberTest extends TestCase
         $decision = $subscriber->needsContent(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $response,
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $this->assertSame($expectedDecision, $decision);
@@ -246,8 +246,8 @@ class SearchIndexSubscriberTest extends TestCase
                         $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -276,7 +276,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $this->mockResponse(true),
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $previousResult = null;
@@ -367,8 +367,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -435,8 +435,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -518,7 +518,7 @@ class SearchIndexSubscriberTest extends TestCase
                         'response_headers' => [],
                         default => null,
                     };
-                }
+                },
             )
         ;
 

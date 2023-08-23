@@ -51,7 +51,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -106,7 +106,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -137,7 +137,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -166,7 +166,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -198,7 +198,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -230,7 +230,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -262,7 +262,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -291,7 +291,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -305,7 +305,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'table' => 'tl_page',
                 'target' => 'config.onload',
                 'method' => 'loadFirst',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -314,7 +314,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'table' => 'tl_page',
                 'target' => 'config.onload',
                 'method' => 'loadSecond',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -322,7 +322,7 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'table' => 'tl_article',
                 'target' => 'fields.title.load',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -330,7 +330,7 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'table' => 'tl_article',
                 'target' => 'fields.title.save',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -338,7 +338,7 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'table' => 'tl_content',
                 'target' => 'list.sorting.child_record_callback',
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -369,7 +369,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -383,7 +383,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'table' => 'tl_page',
                 'target' => 'config.onload',
                 'priority' => 10,
-            ]
+            ],
         );
 
         $definitionB = new Definition(TestListener::class);
@@ -395,7 +395,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'target' => 'config.onload',
                 'method' => 'onLoadFirst',
                 'priority' => 10,
-            ]
+            ],
         );
 
         $definitionB->addTag(
@@ -405,7 +405,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'target' => 'config.onload',
                 'method' => 'onLoadSecond',
                 'priority' => 100,
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -429,7 +429,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -503,7 +503,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'table' => 'tl_page',
                 'target' => 'tl_page.config.foo',
                 'method' => 'onFooCallback',
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -527,7 +527,7 @@ class DataContainerCallbackPassTest extends TestCase
                 'table' => 'tl_page',
                 'target' => 'tl_page.config.foo',
                 'method' => 'onPrivateCallback',
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -599,7 +599,7 @@ class DataContainerCallbackPassTest extends TestCase
 
         $container->setDefinition(
             'contao.listener.data_container_callback',
-            new Definition(DataContainerCallbackListener::class, [])
+            new Definition(DataContainerCallbackListener::class, []),
         );
 
         return $container;

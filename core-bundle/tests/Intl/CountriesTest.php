@@ -70,7 +70,7 @@ class CountriesTest extends TestCase
                     $this->assertSame('contao_countries', $domain);
 
                     return 'CNT.de' === $label;
-                }
+                },
             )
         ;
 
@@ -93,7 +93,7 @@ class CountriesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 

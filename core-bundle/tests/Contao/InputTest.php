@@ -755,17 +755,17 @@ class InputTest extends TestCase
 
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
-            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>')
+            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); --></script>foo &#62; bar',
-            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>')
+            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); </script>foo &#62; bar',
-            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>')
+            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>'),
         );
     }
 

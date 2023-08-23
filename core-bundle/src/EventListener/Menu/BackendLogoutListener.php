@@ -67,7 +67,7 @@ class BackendLogoutListener
             return $this->translator->trans(
                 'MSC.switchBT',
                 [$token->getOriginalToken()->getUserIdentifier()],
-                'contao_default'
+                'contao_default',
             );
         }
 

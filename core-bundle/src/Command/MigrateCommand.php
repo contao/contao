@@ -32,7 +32,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:migrate',
-    description: 'Executes migrations and updates the database schema.'
+    description: 'Executes migrations and updates the database schema.',
 )]
 class MigrateCommand extends Command
 {
@@ -125,7 +125,7 @@ class MigrateCommand extends Command
         if (!$asJson) {
             $this->io->info(sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilename()
+                $config->getBackup()->getFilename(),
             ));
         }
 
@@ -443,8 +443,8 @@ class MigrateCommand extends Command
             json_encode(
                 // make sure $type is the first in array but always wins
                 ['type' => $type] + $data,
-                JSON_INVALID_UTF8_SUBSTITUTE
-            )
+                JSON_INVALID_UTF8_SUBSTITUTE,
+            ),
         );
 
         if (JSON_ERROR_NONE !== json_last_error()) {

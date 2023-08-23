@@ -163,7 +163,7 @@ class LintServiceIdsCommand extends Command
                         $config['class'],
                         $file->getRelativePathname(),
                         $id,
-                        $serviceId
+                        $serviceId,
                     ));
                 }
             }

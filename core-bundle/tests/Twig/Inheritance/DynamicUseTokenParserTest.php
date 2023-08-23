@@ -46,7 +46,7 @@ class DynamicUseTokenParserTest extends TestCase
             ['FooBundle' => ContaoModuleBundle::class],
             ['FooBundle' => ['path' => Path::join($projectDir, 'bundle')]],
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
@@ -57,7 +57,7 @@ class DynamicUseTokenParserTest extends TestCase
             $projectDir,
             'cache',
             'prod',
-            $this->createMock(Filesystem::class)
+            $this->createMock(Filesystem::class),
         );
 
         $warmer->warmUp('');
@@ -68,8 +68,8 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         // A component is adjusted by overwriting the component's template
@@ -87,7 +87,7 @@ class DynamicUseTokenParserTest extends TestCase
                         <li>ice</li>
                     </ul>
                 HTML,
-            trim($environment->render('@Contao/element/menu.html.twig'))
+            trim($environment->render('@Contao/element/menu.html.twig')),
         );
 
         // The rendered template overwrites blocks of a component used by the
@@ -111,7 +111,7 @@ class DynamicUseTokenParserTest extends TestCase
 
                 <p>Put everything in a blender and mix for 30 seconds.</p>
                 HTML,
-            trim($environment->render('@Contao/element/recipe.html.twig'))
+            trim($environment->render('@Contao/element/recipe.html.twig')),
         );
     }
 }

@@ -62,8 +62,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -141,8 +141,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -253,8 +253,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -315,8 +315,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -395,7 +395,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                     }
 
                     throw new \InvalidArgumentException('Invalid key: '.$key);
-                }
+                },
             )
         ;
 

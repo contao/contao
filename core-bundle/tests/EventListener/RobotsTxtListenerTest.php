@@ -121,7 +121,7 @@ class RobotsTxtListenerTest extends TestCase
             ->method('add')
             ->withConsecutive(
                 [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/']
+                ['disallow:/_contao/'],
             )
         ;
 

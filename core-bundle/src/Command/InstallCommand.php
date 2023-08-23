@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'contao:install',
-    description: 'Installs the required Contao directories.'
+    description: 'Installs the required Contao directories.',
 )]
 class InstallCommand extends Command
 {

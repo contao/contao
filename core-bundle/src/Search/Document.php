@@ -133,7 +133,7 @@ class Document
                     }
 
                     return $data;
-                }
+                },
             )
         ;
 
@@ -164,7 +164,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            (string) $response->getContent()
+            (string) $response->getContent(),
         );
     }
 

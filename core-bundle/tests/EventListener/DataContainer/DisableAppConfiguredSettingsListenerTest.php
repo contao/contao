@@ -70,7 +70,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'adminEmail' => 'admin@example.org',
                 'dateFormat' => 'd.M.Y',
                 'fooBar' => false,
-            ]
+            ],
         );
         $listener->onLoadCallback();
 
@@ -103,7 +103,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_settings']['fields']
+            $GLOBALS['TL_DCA']['tl_settings']['fields'],
         );
     }
 
@@ -127,7 +127,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="system/themes/icons/show.svg" alt="" title="title">',
-            $listener->renderHelpIcon()
+            $listener->renderHelpIcon(),
         );
     }
 

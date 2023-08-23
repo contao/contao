@@ -53,7 +53,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.'
+                'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -70,7 +70,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not check because it is not part of the base URI collection or was not found on one of that is.'
+                'Did not check because it is not part of the base URI collection or was not found on one of that is.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -124,7 +124,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default')
+            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default'),
         );
 
         $result->addInfo('stats', $stats);

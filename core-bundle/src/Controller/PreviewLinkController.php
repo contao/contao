@@ -43,7 +43,7 @@ class PreviewLinkController
 
         $link = $this->connection->fetchAssociative(
             'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
-            [$id]
+            [$id],
         );
 
         if (false === $link) {

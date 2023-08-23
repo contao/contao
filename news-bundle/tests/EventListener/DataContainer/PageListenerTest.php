@@ -99,7 +99,7 @@ class PageListenerTest extends ContaoTestCase
                 42 => 'The answer to life, the universe and everything',
                 84 => 'Example news archive',
             ],
-            $listener->getAllowedArchives()
+            $listener->getAllowedArchives(),
         );
     }
 

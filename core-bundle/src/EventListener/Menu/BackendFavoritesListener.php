@@ -133,7 +133,7 @@ class BackendFavoritesListener
             [
                 'url' => $url,
                 'user' => $user->id,
-            ]
+            ],
         );
 
         $factory = $event->getFactory();
@@ -157,7 +157,7 @@ class BackendFavoritesListener
             [
                 'pid' => $pid,
                 'user' => $user,
-            ]
+            ],
         );
 
         foreach ($nodes as $node) {

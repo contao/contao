@@ -122,7 +122,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $passport = new Passport(
             new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
-            [new RememberMeBadge()]
+            [new RememberMeBadge()],
         );
 
         if ($this->options['enable_csrf']) {
@@ -205,7 +205,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         return new RedirectResponse($this->uriSigner->sign($url));

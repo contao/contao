@@ -86,7 +86,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                     'linkAttributes' => ['class' => $name],
                     'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
-                ]
+                ],
             ));
         }
     }

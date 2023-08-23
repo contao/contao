@@ -136,7 +136,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     {
         $attributes = array_intersect_key(
             $config->getExtras(),
-            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
         if (!isset($attributes['fieldType'])) {

@@ -96,7 +96,7 @@ abstract class DoctrineTestCase extends TestCase
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca),
-            $this->mockDoctrineRegistry($connection)
+            $this->mockDoctrineRegistry($connection),
         );
     }
 
@@ -126,9 +126,9 @@ abstract class DoctrineTestCase extends TestCase
         $driverChain->addDriver(
             new AnnotationDriver(
                 new AnnotationReader(),
-                __DIR__.'/../Fixtures/Entity'
+                __DIR__.'/../Fixtures/Entity',
             ),
-            'Contao\\CoreBundle\\Tests\\Fixtures\\Entity'
+            'Contao\\CoreBundle\\Tests\\Fixtures\\Entity',
         );
 
         $config = new Configuration();

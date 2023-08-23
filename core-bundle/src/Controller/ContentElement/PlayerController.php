@@ -113,7 +113,7 @@ class PlayerController extends AbstractContentElementController
                     ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -153,7 +153,7 @@ class PlayerController extends AbstractContentElementController
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [

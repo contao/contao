@@ -43,7 +43,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
                 'linkAttributes' => ['class' => $name],
                 'current' => $this->isCurrent($config),
                 'uri' => $this->generateUrl($config, true),
-            ]
+            ],
         );
     }
 

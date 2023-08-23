@@ -87,13 +87,13 @@ class PageCandidates extends AbstractCandidates
 
         $prefixes = array_map(
             static fn ($prefix) => $prefix ? preg_quote('/'.$prefix, '#') : '',
-            $this->urlPrefixes
+            $this->urlPrefixes,
         );
 
         preg_match_all(
             '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
             $pathInfo,
-            $matches
+            $matches,
         );
 
         $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));

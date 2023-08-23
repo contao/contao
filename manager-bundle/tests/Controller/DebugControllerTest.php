@@ -28,7 +28,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
-            $this->mockJwtManager(true, true)
+            $this->mockJwtManager(true, true),
         );
 
         $listener->enableAction();
@@ -39,7 +39,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
-            $this->mockJwtManager(true, false)
+            $this->mockJwtManager(true, false),
         );
 
         $listener->disableAction();
@@ -50,7 +50,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack('https://example.com/foo/bar.html', 'foo=bar'),
-            $this->mockJwtManager(true, true)
+            $this->mockJwtManager(true, true),
         );
 
         $response = $listener->enableAction();
@@ -63,7 +63,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener = new DebugController(
             $this->mockSecurityHelper(false),
             new RequestStack(),
-            $this->mockJwtManager(false)
+            $this->mockJwtManager(false),
         );
 
         $this->expectException(AccessDeniedException::class);
@@ -76,7 +76,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener = new DebugController(
             $this->mockSecurityHelper(),
             new RequestStack(),
-            $this->mockJwtManager(false)
+            $this->mockJwtManager(false),
         );
 
         $this->expectException('RuntimeException');

@@ -99,10 +99,10 @@ class Locales
                     array_intersect_key(
                         \Locale::parseLocale($localeId),
                         [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
-                    )
+                    ),
                 );
             },
-            $this->locales
+            $this->locales,
         );
 
         $localeIds = array_values(array_unique(array_filter($localeIds)));

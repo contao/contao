@@ -139,7 +139,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $this->getControllerName($reference, $attributes),
                 $attributes['renderer'] ?? 'forward',
                 ['ignore_errors' => false, ...$attributes['options'] ?? []],
-            ]
+            ],
         );
 
         $serviceId = 'contao.fragment._config_'.ContainerBuilder::hash($definition);

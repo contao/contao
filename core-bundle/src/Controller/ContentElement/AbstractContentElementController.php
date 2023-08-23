@@ -31,7 +31,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $section,
             $classes ?? [],
             $request->attributes->get('templateProperties', []),
-            $this->isBackendScope($request)
+            $this->isBackendScope($request),
         );
 
         $this->tagResponse($model);

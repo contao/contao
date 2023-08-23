@@ -75,7 +75,7 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
-            $node->getNodeTag()
+            $node->getNodeTag(),
         );
 
         // Set the source context, so that the template name can be inserted

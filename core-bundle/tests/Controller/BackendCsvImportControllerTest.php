@@ -105,7 +105,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
@@ -160,7 +160,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importTableWizardAction($this->mockDataContainer());
@@ -199,7 +199,7 @@ class BackendCsvImportControllerTest extends TestCase
             ->with(
                 'tl_content',
                 ['options' => serialize([['value' => 'foo', 'label' => 'bar', 'default' => '', 'group' => '']])],
-                ['id' => 1]
+                ['id' => 1],
             )
         ;
 
@@ -219,7 +219,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importOptionWizardAction($this->mockDataContainer());
@@ -250,7 +250,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
@@ -268,7 +268,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $this->expectException(InternalServerErrorException::class);
@@ -298,7 +298,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
@@ -329,7 +329,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
@@ -380,7 +380,7 @@ class BackendCsvImportControllerTest extends TestCase
             $this->createMock(Connection::class),
             $requestStack,
             $translator,
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
     }
 

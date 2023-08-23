@@ -73,7 +73,7 @@ class PickerConfigTest extends TestCase
                 'current' => 'alias',
                 'value' => 'foo',
             ],
-            $this->config->jsonSerialize()
+            $this->config->jsonSerialize(),
         );
     }
 

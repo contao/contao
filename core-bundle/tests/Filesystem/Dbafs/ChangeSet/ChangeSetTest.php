@@ -44,7 +44,7 @@ class ChangeSetTest extends TestCase
                 'baz' => ChangeSet::TYPE_DIRECTORY,
                 'baz/deleted1' => ChangeSet::TYPE_FILE,
                 'baz/deleted2' => ChangeSet::TYPE_FILE,
-            ]
+            ],
         );
 
         // Items to create
@@ -99,7 +99,7 @@ class ChangeSetTest extends TestCase
             [
                 'bar/file_that_changes' => 123450,
                 'foo/touched' => 234560,
-            ]
+            ],
         );
 
         $itemsToUpdate = $changeSet->getItemsToUpdate(true);
@@ -152,13 +152,13 @@ class ChangeSetTest extends TestCase
             [
                 'foo/touched1' => 234560,
                 'foo/touched2' => 345678,
-            ]
+            ],
         );
 
         $this->assertNotSame(
             $changeSet,
             $changeSet->withOther(ChangeSet::createEmpty()),
-            'should create a new instance'
+            'should create a new instance',
         );
 
         $newChangeSet = $changeSet->withOther(
@@ -180,9 +180,9 @@ class ChangeSetTest extends TestCase
                 [
                     'touched2' => 111111,
                     'touched3' => 456789,
-                ]
+                ],
             ),
-            'foo'
+            'foo',
         );
 
         // Items to create
@@ -288,7 +288,7 @@ class ChangeSetTest extends TestCase
             ],
             [
                 3 => 111111,
-            ]
+            ],
         );
 
         $newChangeSet = $changeSet->withOther(
@@ -302,9 +302,9 @@ class ChangeSetTest extends TestCase
                 ],
                 [
                     6 => 111111,
-                ]
+                ],
             ),
-            'foo'
+            'foo',
         );
 
         $this->assertCount(0, $newChangeSet->getItemsToCreate());

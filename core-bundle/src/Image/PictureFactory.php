@@ -213,7 +213,7 @@ class PictureFactory implements PictureFactoryInterface
 
                             usort(
                                 $formats[$source],
-                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b)
+                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b),
                             );
                         }
                     }

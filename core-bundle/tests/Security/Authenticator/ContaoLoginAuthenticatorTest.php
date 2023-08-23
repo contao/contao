@@ -139,7 +139,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             PostAuthenticationToken::class,
-            $authenticator->createToken($this->createMock(Passport::class), 'firewall')
+            $authenticator->createToken($this->createMock(Passport::class), 'firewall'),
         );
 
         $badge = $this->createMock(TwoFactorCodeCredentials::class);
@@ -158,7 +158,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             TwoFactorToken::class,
-            $authenticator->createToken($passport, 'firewall')
+            $authenticator->createToken($passport, 'firewall'),
         );
 
         $twoFactorToken = $this->createMock(TwoFactorToken::class);
@@ -190,7 +190,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             PostAuthenticationToken::class,
-            $authenticator->createToken($passport, 'firewall')
+            $authenticator->createToken($passport, 'firewall'),
         );
     }
 
@@ -215,7 +215,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $authenticator = $this->mockContaoLoginAuthenticator(
             tokenStorage: $tokenStorage,
-            twoFactorAuthenticator: $twoFactorAuthenticator
+            twoFactorAuthenticator: $twoFactorAuthenticator,
         );
 
         $authenticator->authenticate($request);
@@ -250,7 +250,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator = $this->mockContaoLoginAuthenticator(
             userProvider: $this->createMock(ContaoUserProvider::class),
             tokenStorage: $tokenStorage,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         if (null !== $exception) {
@@ -295,7 +295,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator = $this->mockContaoLoginAuthenticator(
             scopeMatcher: $scopeMatcher,
             router: $router,
-            uriSigner: $uriSigner
+            uriSigner: $uriSigner,
         );
 
         $response = $authenticator->start(new Request());
@@ -360,7 +360,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             tokenStorage: $tokenStorage,
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         $authenticator->start($request);
@@ -443,7 +443,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             tokenStorage: $tokenStorage,
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         $authenticator->start($request);

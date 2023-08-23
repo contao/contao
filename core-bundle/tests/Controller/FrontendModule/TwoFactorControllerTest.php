@@ -50,7 +50,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper()
+            $this->mockSecurityHelper(),
         );
 
         $controller = new TwoFactorController();
@@ -72,7 +72,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -95,7 +95,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -120,7 +120,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -146,7 +146,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
@@ -190,7 +190,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -221,7 +221,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -251,7 +251,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -288,7 +288,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -322,7 +322,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -348,7 +348,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');

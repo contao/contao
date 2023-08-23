@@ -178,7 +178,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
                     $loader->load(__DIR__.'/../../skeleton/config/services.php');
                 }
-            }
+            },
         );
     }
 
@@ -320,7 +320,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $configs = $this->getBundleLoader()->getBundleConfigs(
             'dev' === $this->getEnvironment(),
-            $this->debug ? null : Path::join($this->getCacheDir(), 'bundles.map')
+            $this->debug ? null : Path::join($this->getCacheDir(), 'bundles.map'),
         );
 
         foreach ($configs as $config) {

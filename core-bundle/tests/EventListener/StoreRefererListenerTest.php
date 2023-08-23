@@ -150,7 +150,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();
@@ -166,7 +166,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();

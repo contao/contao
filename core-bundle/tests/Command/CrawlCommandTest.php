@@ -118,7 +118,7 @@ class CrawlCommandTest extends TestCase
                     $jobId = $escargot->getJobId();
 
                     return $escargot;
-                }
+                },
             )
         ;
 

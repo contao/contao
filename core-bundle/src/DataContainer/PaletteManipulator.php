@@ -333,7 +333,7 @@ class PaletteManipulator
                     'name' => $fallback,
                     'position' => self::POSITION_APPEND,
                     'hide' => false,
-                ]
+                ],
             );
         }
 

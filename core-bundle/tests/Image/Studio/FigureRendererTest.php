@@ -139,7 +139,7 @@ class FigureRendererTest extends TestCase
 
         $filesystem->symlink(
             Path::canonicalize(__DIR__.'/../../Fixtures/files'),
-            Path::join($this->getTempDir(), 'files')
+            Path::join($this->getTempDir(), 'files'),
         );
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);

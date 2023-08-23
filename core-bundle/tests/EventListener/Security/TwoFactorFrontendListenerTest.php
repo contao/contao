@@ -44,7 +44,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(false, $event),
             $this->createMock(TokenStorage::class),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -60,7 +60,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken(),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -77,7 +77,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -94,7 +94,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -111,7 +111,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -142,7 +142,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $this->expectException(PageNotFoundException::class);
@@ -175,7 +175,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -217,7 +217,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -249,7 +249,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class, $token::class]
+            [UsernamePasswordToken::class, $token::class],
         );
 
         $listener($event);
@@ -296,7 +296,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -336,7 +336,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -368,7 +368,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $this->expectException(UnauthorizedHttpException::class);
@@ -411,7 +411,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -454,7 +454,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);

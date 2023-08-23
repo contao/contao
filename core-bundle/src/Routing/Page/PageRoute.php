@@ -72,7 +72,7 @@ class PageRoute extends Route implements RouteObjectInterface
             $options,
             $pageModel->domain,
             $pageModel->rootUseSSL ? 'https' : 'http',
-            $methods
+            $methods,
         );
 
         $this->pageModel = $pageModel;

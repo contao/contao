@@ -322,7 +322,7 @@ class PageModelTest extends TestCase
             ->willReturnCallback(
                 static function () use (&$parents) {
                     return $parents ? new Result(array_shift($parents), '') : new Result([], '');
-                }
+                },
             )
         ;
 

@@ -36,9 +36,9 @@ class ValidCharactersTest extends TestCase
                         $this->assertArrayHasKey('0-9a-zA-Z', $event->getOptions());
 
                         return true;
-                    }
+                    },
                 ),
-                ContaoCoreEvents::SLUG_VALID_CHARACTERS
+                ContaoCoreEvents::SLUG_VALID_CHARACTERS,
             )
         ;
 
