@@ -125,6 +125,11 @@ class InputTest extends TestCase
             '<a href="{{email_url::javascript:alert(1)|urlattr}}">',
         ];
 
+        yield 'Does allow colon in URL anchors after insert tags' => [
+            '<a href="{{link_url::1|urlattr}}#foo:bar">',
+            '<a href="{{link_url::1|urlattr}}#foo%3Abar">',
+        ];
+
         yield 'Does not get tricked by stripping null escapes' => [
             '<img src="foo{{bar}\\0}baz">',
             '<img src="foo{{bar&#125;&#92;0&#125;baz">',

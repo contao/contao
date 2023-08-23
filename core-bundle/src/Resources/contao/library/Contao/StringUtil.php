@@ -940,7 +940,13 @@ class StringUtil
 			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
-			$strString = preg_replace($colonRegEx, '%3A', $strString);
+			$arrChunks = preg_split('/({{[^{}]*}})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE);
+			$strString = '';
+
+			foreach ($arrChunks as $index => $strChunk)
+			{
+				$strString .= ($index % 2) ? $strChunk : preg_replace($colonRegEx, '%3A', $strChunk);
+			}
 		}
 
 		return $strString;
