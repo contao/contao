@@ -275,8 +275,8 @@ class DumperTest extends ContaoTestCase
     }
 
     /**
-     * @param array $tables<Table>
-     * @param array $views<View>
+     * @param array<Table> $tables
+     * @param array<View>  $views
      *
      * @return Connection&MockObject
      */
