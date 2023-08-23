@@ -40,10 +40,7 @@ class CodeControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
 
         $expectedHeadCode = <<<'HTML'
             <link rel="preload" href="/foundation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -81,10 +78,7 @@ class CodeControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
         $this->assertEmpty($responseContextData);
     }
 }

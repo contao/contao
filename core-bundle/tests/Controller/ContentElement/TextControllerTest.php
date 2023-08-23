@@ -36,10 +36,7 @@ class TextControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     /**
@@ -71,10 +68,7 @@ class TextControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function provideMediaPositions(): \Generator

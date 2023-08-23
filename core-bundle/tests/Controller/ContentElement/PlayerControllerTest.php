@@ -45,10 +45,7 @@ class PlayerControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testOutputsEmptyResponse(): void
@@ -60,10 +57,7 @@ class PlayerControllerTest extends ContentElementTestCase
             ]
         );
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertEmpty($html);
+        $this->assertEmpty($response->getContent());
     }
 
     public function testOutputsSummary(): void
@@ -93,9 +87,6 @@ class PlayerControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 }

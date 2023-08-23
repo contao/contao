@@ -40,10 +40,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testOutputsLinkWithBeforeAndAfterText(): void
@@ -71,10 +68,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testOutputsImageLink(): void
@@ -106,10 +100,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testOutputsEmptyLinkIfUrlIsNull(): void
@@ -135,9 +126,6 @@ class HyperlinkControllerTest extends ContentElementTestCase
             </div>
             HTML;
 
-        $html = $response->getContent();
-
-        $this->assertNotFalse($html);
-        $this->assertSameHtml($expectedOutput, $html);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 }

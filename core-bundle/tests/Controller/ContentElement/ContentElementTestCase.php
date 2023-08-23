@@ -201,13 +201,10 @@ class ContentElementTestCase extends TestCase
         return trim(preg_replace($minifyRegex, ' ', $string));
     }
 
-    protected function assertSameHtml(string $expected, string $actual, string $message = ''): void
+    protected function assertSameHtml(string $expected, string|false $actual, string $message = ''): void
     {
-        $this->assertSame(
-            $this->normalizeWhiteSpaces($expected),
-            $this->normalizeWhiteSpaces($actual),
-            $message
-        );
+        $this->assertIsString($actual);
+        $this->assertSame($this->normalizeWhiteSpaces($expected), $this->normalizeWhiteSpaces($actual), $message);
     }
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
