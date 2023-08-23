@@ -150,7 +150,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $response = $controller($request, $pageModel);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertNotFalse($xml = $response->getContent());
+        $this->assertIsString($xml = $response->getContent());
 
         $document = new \DOMDocument('1.0', 'utf-8');
         $document->loadXML($xml);
