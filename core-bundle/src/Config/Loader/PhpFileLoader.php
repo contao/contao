@@ -56,13 +56,19 @@ class PhpFileLoader extends Loader
     /**
      * Parses a file and returns the code and namespace.
      *
-     * @return array<string|false>
+     * @return array{0: string, 1: string}
      */
     private function parseFile(string $file): array
     {
+        $content = file_get_contents($file);
+
+        if (false === $content) {
+            throw new \InvalidArgumentException(sprintf('Cannot read file "%s".', $file));
+        }
+
         $ast = (new ParserFactory())
             ->create(ParserFactory::PREFER_PHP7)
-            ->parse(trim(file_get_contents($file)))
+            ->parse(trim($content))
         ;
 
         $namespaceResolver = new NameResolver();

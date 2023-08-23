@@ -70,7 +70,13 @@ class FrontendController extends AbstractController
     {
         static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
-        $response = new Response(base64_decode($image, true));
+        $content = base64_decode($image, true);
+
+        if (false === $content) {
+            throw new \RuntimeException('Could not decode the data');
+        }
+
+        $response = new Response($content);
         $response->setPrivate();
 
         $response->headers->set('Content-Type', 'image/png');

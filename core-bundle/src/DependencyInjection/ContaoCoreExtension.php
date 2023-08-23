@@ -500,7 +500,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return null;
         }
 
-        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
+        $content = file_get_contents($composerJsonFilePath);
+
+        if (false === $content) {
+            throw new \RuntimeException(sprintf('Cannot read file "%s".', $composerJsonFilePath));
+        }
+
+        $composerConfig = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
         if (null === ($publicDir = $composerConfig['extra']['public-dir'] ?? null)) {
             return null;

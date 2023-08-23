@@ -107,6 +107,10 @@ class PickerConfig implements \JsonSerializable
     {
         $decoded = base64_decode(strtr($data, '-_,', '+/='), true);
 
+        if (false === $decoded) {
+            throw new \InvalidArgumentException('Could not decode the data.');
+        }
+
         if (\function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($decoded))) {
             $decoded = $uncompressed;
         }

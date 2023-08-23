@@ -264,6 +264,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $uuid = array_search($record['path'], $this->pathByUuid, true);
 
+        if (!\is_string($uuid)) {
+            throw new \InvalidArgumentException(sprintf('Could not find the UUID for "%s".', $record['path']));
+        }
+
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],

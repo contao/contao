@@ -137,13 +137,17 @@ class RegisterPagesPass implements CompilerPassInterface
         return FrontendIndex::class.'::renderPage';
     }
 
-    private function getPageType(string $className, array $attributes): string
+    private function getPageType(string $fqcn, array $attributes): string
     {
         if (isset($attributes['type'])) {
             return (string) $attributes['type'];
         }
 
-        $className = ltrim(strrchr($className, '\\'), '\\');
+        if (!$className = strrchr($fqcn, '\\')) {
+            return $fqcn;
+        }
+
+        $className = ltrim($className, '\\');
 
         if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);

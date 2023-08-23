@@ -217,7 +217,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
             return $this->options['type'];
         }
 
-        $className = ltrim(strrchr(static::class, '\\'), '\\');
+        $className = strrchr(static::class, '\\');
+
+        if (false === $className) {
+            return static::class;
+        }
+
+        $className = ltrim($className, '\\');
 
         if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);

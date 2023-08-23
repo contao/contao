@@ -119,6 +119,11 @@ class DcaSchemaProvider
         [$dbType, $def] = explode(' ', $sql, 2) + [null, null];
 
         $type = strtok(strtolower($dbType), '(), ');
+
+        if (false === $type) {
+            throw new \RuntimeException(sprintf('Could not get the type from "%s".', $dbType));
+        }
+
         $length = (int) strtok('(), ');
 
         $fixed = false;

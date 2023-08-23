@@ -403,7 +403,17 @@ class PreviewFactory
             $size = max($size, $provider->getFileHeaderSize());
         }
 
-        return $size > 0 ? file_get_contents($path, false, null, 0, $size) : '';
+        if (0 === $size) {
+            return '';
+        }
+
+        $content = file_get_contents($path, false, null, 0, $size);
+
+        if (false === $content) {
+            return '';
+        }
+
+        return $content;
     }
 
     private function getPreviewSizeFromWidthHeightDensities(int $width, int $height, string $densities): int

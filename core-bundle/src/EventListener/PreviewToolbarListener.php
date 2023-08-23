@@ -75,6 +75,11 @@ class PreviewToolbarListener
     private function injectToolbar(Response $response, Request $request): void
     {
         $content = $response->getContent();
+
+        if (false === $content) {
+            return;
+        }
+
         $pos = strripos($content, '</body>');
 
         if (false === $pos) {

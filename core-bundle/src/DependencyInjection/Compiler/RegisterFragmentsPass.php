@@ -182,8 +182,15 @@ class RegisterFragmentsPass implements CompilerPassInterface
             return (string) $attributes['type'];
         }
 
-        $className = $definition->getClass();
-        $className = ltrim(strrchr($className, '\\'), '\\');
+        if (!$fqcn = $definition->getClass()) {
+            throw new \LogicException('The definition does not have a service class.');
+        }
+
+        if (!$className = strrchr($fqcn, '\\')) {
+            return $fqcn;
+        }
+
+        $className = ltrim($className, '\\');
 
         if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);

@@ -293,7 +293,13 @@ class PaletteManipulator
             $legend = $this->findLegendForField($config, $parent);
 
             if (false !== $legend) {
-                $offset += array_search($parent, $config[$legend]['fields'], true);
+                $index = array_search($parent, $config[$legend]['fields'], true);
+
+                if (!\is_int($index)) {
+                    throw new \RuntimeException(sprintf('Cannot find "%s" in the fields array.', $parent));
+                }
+
+                $offset += $index;
                 array_splice($config[$legend]['fields'], $offset, 0, $action['fields']);
 
                 return;
