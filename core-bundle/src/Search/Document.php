@@ -126,14 +126,12 @@ class Document
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
-                    $data = json_decode($node->text(), true);
-
-                    if (JSON_ERROR_NONE !== json_last_error()) {
+                    try {
+                        return json_decode($node->text(), true, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException) {
                         return null;
                     }
-
-                    return $data;
-                },
+                }
             )
         ;
 

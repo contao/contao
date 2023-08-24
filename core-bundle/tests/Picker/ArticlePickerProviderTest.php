@@ -43,12 +43,15 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'articlePicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'articlePicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;

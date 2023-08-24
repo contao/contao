@@ -57,7 +57,7 @@ class CronListCommand extends Command
                 ];
             }
 
-            $io->writeln(json_encode($list));
+            $io->writeln(json_encode($list, JSON_THROW_ON_ERROR));
 
             return 0;
         }

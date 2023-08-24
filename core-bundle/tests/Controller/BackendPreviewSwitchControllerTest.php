@@ -242,7 +242,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame(json_encode([]), $response->getContent());
+        $this->assertSame(json_encode([], JSON_THROW_ON_ERROR), $response->getContent());
     }
 
     public function testExitsAsUnauthenticatedUser(): void

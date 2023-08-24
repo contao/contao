@@ -83,9 +83,9 @@ class MaintenanceModeCommand extends Command
                     'statusCode' => 503,
                     'language' => 'en',
                     'template' => $templateName,
-                    ...json_decode($templateVars, true),
+                    ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
                 ],
-            ),
+            )
         );
     }
 

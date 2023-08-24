@@ -23,6 +23,7 @@ use Rector\CodingStyle\Rector\String_\SymplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -69,6 +70,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(CompactToVariablesRector::class);
     $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);
     $rectorConfig->rule(DisallowedEmptyRuleFixerRector::class);
+    $rectorConfig->rule(JsonThrowOnErrorRector::class);
     $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
     $rectorConfig->rule(RemoveConcatAutocastRector::class);
     $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);

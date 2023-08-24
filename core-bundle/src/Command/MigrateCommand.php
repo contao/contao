@@ -239,7 +239,7 @@ class MigrateCommand extends Command
                 }
             }
 
-            $actualHash = hash('sha256', json_encode($migrationLabels));
+            $actualHash = hash('sha256', json_encode($migrationLabels, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
@@ -322,7 +322,7 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            $commandsHash = hash('sha256', json_encode($commands));
+            $commandsHash = hash('sha256', json_encode($commands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
@@ -439,17 +439,8 @@ class MigrateCommand extends Command
 
     private function writeNdjson(string $type, array $data): void
     {
-        $this->io->writeln(
-            json_encode(
-                // make sure $type is the first in array but always wins
-                ['type' => $type] + $data,
-                JSON_INVALID_UTF8_SUBSTITUTE,
-            ),
-        );
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \JsonException(json_last_error_msg());
-        }
+        // Make sure $type is the first in array but always wins
+        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 
     /**

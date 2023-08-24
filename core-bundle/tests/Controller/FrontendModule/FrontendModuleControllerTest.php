@@ -56,7 +56,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->mockClassWithProperties(ModuleModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_test', $template['templateName']);
     }
@@ -66,7 +66,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = $this->getTestController(['type' => 'foo']);
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_foo', $template['templateName']);
     }
@@ -76,7 +76,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = $this->getTestController(['template' => 'mod_bar']);
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_bar', $template['templateName']);
     }
@@ -98,7 +98,7 @@ class FrontendModuleControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class, ['customTpl' => 'mod_bar']);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_bar', $template['templateName']);
     }
@@ -108,7 +108,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('', $template['cssID']);
         $this->assertSame('mod_test', $template['class']);
@@ -121,7 +121,7 @@ class FrontendModuleControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('foobar', $template['headline']);
         $this->assertSame('h6', $template['hl']);
@@ -134,7 +134,7 @@ class FrontendModuleControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(' id="foo"', $template['cssID']);
         $this->assertSame('mod_test bar', $template['class']);
@@ -145,7 +145,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'left');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('left', $template['inColumn']);
     }
@@ -184,7 +184,7 @@ class FrontendModuleControllerTest extends TestCase
         ]);
 
         $response = $controller(new Request(), $model, 'main', ['bar-class', 'baz-class']);
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('html', $template['type']);
         $this->assertSame('frontend_module/html', $template['template']);
