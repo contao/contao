@@ -62,7 +62,7 @@ class PreviewToolbarListener
             return;
         }
 
-        // Do not inject toolbar in the back end
+        // Do not inject the toolbar in the back end
         if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
