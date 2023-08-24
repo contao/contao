@@ -68,16 +68,15 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
-        if (!$loader = $resolver->resolve(__DIR__.'/../../config/routes.yaml')) {
-            return null;
+        $routes = $resolver
+            ->resolve(__DIR__.'/../../config/routes.yaml')
+            ?->load(__DIR__.'/../../config/routes.yaml')
+        ;
+
+        if ($routes instanceof RouteCollection) {
+            return $routes;
         }
 
-        $routes = $loader->load(__DIR__.'/../../config/routes.yaml');
-
-        if (!$routes instanceof RouteCollection) {
-            return null;
-        }
-
-        return $routes;
+        return null;
     }
 }

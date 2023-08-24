@@ -203,7 +203,11 @@ class ContentElementTestCase extends TestCase
 
     protected function assertSameHtml(string $expected, string $actual, string $message = ''): void
     {
-        $this->assertSame($this->normalizeWhiteSpaces($expected), $this->normalizeWhiteSpaces($actual), $message);
+        $this->assertSame(
+            $this->normalizeWhiteSpaces($expected),
+            $this->normalizeWhiteSpaces($actual),
+            $message
+        );
     }
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
