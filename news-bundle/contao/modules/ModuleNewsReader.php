@@ -55,7 +55,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Return an empty string if "auto_item" is not set to combine list and reader on same page
-		if (Input::get('auto_item') === null)
+		if (!$request->attributes->get('_content') instanceof NewsModel && Input::get('auto_item') === null)
 		{
 			return '';
 		}
@@ -75,6 +75,8 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	protected function compile()
 	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		$this->Template->articles = '';
 
 		if ($this->overviewPage)
@@ -83,44 +85,47 @@ class ModuleNewsReader extends ModuleNews
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
 		}
 
-		// Get the news item
-		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->news_archives);
-
-		// The news item does not exist (see #33)
-		if ($objArticle === null)
+		if (!$request || !($objArticle = $request->attributes->get('_content') instanceof NewsModel))
 		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-		}
+			// Get the news item
+			$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->news_archives);
 
-		// Redirect if the news item has a target URL (see #1498)
-		switch ($objArticle->source)
-		{
-			case 'internal':
-				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
-				}
+			// The news item does not exist (see #33)
+			if ($objArticle === null)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+			}
 
-				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
+			// Redirect if the news item has a target URL (see #1498)
+			switch ($objArticle->source)
+			{
+				case 'internal':
+					if ($page = PageModel::findPublishedById($objArticle->jumpTo))
+					{
+						throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
+					}
 
-			case 'article':
-				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
-				}
+					throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
 
-				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
+				case 'article':
+					if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
+					{
+						throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
+					}
 
-			case 'external':
-				if ($objArticle->url)
-				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+					throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
 
-					throw new RedirectResponseException($url, 301);
-				}
+				case 'external':
+					if ($objArticle->url)
+					{
+						$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
+						$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
 
-				throw new InternalServerErrorException('Empty target URL');
+						throw new RedirectResponseException($url, 301);
+					}
+
+					throw new InternalServerErrorException('Empty target URL');
+			}
 		}
 
 		// Set the default template
