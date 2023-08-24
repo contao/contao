@@ -124,7 +124,7 @@ class PreviewFactory
 
                     // We reached the last page if the number of returned
                     // previews was less than the number of pages requested
-                    if (\count($previews) > 0 && \count($previews) <= $lastPage - $firstPage) {
+                    if ($previews && \count($previews) <= $lastPage - $firstPage) {
                         $lastPreview = $previews[array_key_last($previews)];
                         $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
                         $this->symlink($lastPreview, "$targetPath-last.$fileExtension");
@@ -295,7 +295,7 @@ class PreviewFactory
         if (is_numeric($size[2])) {
             $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
 
-            if (null === $imageSize) {
+            if (!$imageSize) {
                 return 0;
             }
 
@@ -436,6 +436,7 @@ class PreviewFactory
 
         $hash = hash_hmac('sha256', implode('|', $hashData), $this->secret, true);
         $hash = strtolower(substr(StringUtil::encodeBase32($hash), 0, 16));
+
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         return $hash[0]."/$name-".substr($hash, 1);

@@ -85,7 +85,7 @@ class FilesystemConfiguration
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
-        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
+        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)

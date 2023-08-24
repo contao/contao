@@ -83,7 +83,7 @@ abstract class FunctionalTestCase extends WebTestCase
             }
         }
 
-        if (!empty(self::$tableColumns)) {
+        if (self::$tableColumns) {
             if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
                 $allColumns = $connection->fetchAllNumeric('
                     SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME

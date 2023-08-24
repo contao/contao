@@ -55,6 +55,7 @@ class SitemapControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('event_dispatcher', $eventDispatcher);
+
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $this->expectException(NotFoundHttpException::class);
@@ -87,6 +88,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $pageFinder);
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -115,6 +117,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -162,6 +165,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -215,6 +219,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -263,6 +268,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -324,6 +330,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -382,6 +389,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -446,6 +454,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -505,6 +514,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -549,6 +559,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -587,6 +598,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -633,6 +645,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -680,6 +693,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -699,11 +713,9 @@ class SitemapControllerTest extends TestCase
   </url>";
         }
 
-        $result .= '
+        return $result.'
 </urlset>
 ';
-
-        return $result;
     }
 
     /**
@@ -803,7 +815,7 @@ class SitemapControllerTest extends TestCase
                     function (string $attribute, array $pageGroups) use ($allowedPageIds) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
 
-                        return \count(array_intersect(array_map('intval', $pageGroups), $allowedPageIds)) > 0;
+                        return [] !== array_intersect(array_map('intval', $pageGroups), $allowedPageIds);
                     }
                 )
             ;

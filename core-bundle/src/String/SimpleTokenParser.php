@@ -118,7 +118,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $unmatchedVariables = array_diff($this->getVariables($expression), array_keys($data));
 
-        if (!empty($unmatchedVariables)) {
+        if ($unmatchedVariables) {
             $this->logUnmatchedVariables(...$unmatchedVariables);
 
             // Define variables that weren't provided with the value 'null'
@@ -182,11 +182,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (null === $this->logger) {
-            return;
-        }
-
-        $this->logger->log(
+        $this->logger?->log(
             LogLevel::INFO,
             sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
         );

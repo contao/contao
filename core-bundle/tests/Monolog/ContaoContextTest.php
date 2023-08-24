@@ -38,14 +38,17 @@ class ContaoContextTest extends TestCase
         $context->setUri('https://www.contao.org');
         $context->setPageId(42);
 
-        $json = json_encode([
-            'func' => 'foo',
-            'action' => 'action',
-            'username' => 'username',
-            'browser' => 'Mozilla',
-            'uri' => 'https://www.contao.org',
-            'pageId' => 42,
-        ]);
+        $json = json_encode(
+            [
+                'func' => 'foo',
+                'action' => 'action',
+                'username' => 'username',
+                'browser' => 'Mozilla',
+                'uri' => 'https://www.contao.org',
+                'pageId' => 42,
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         $this->assertSame($json, (string) $context);
     }

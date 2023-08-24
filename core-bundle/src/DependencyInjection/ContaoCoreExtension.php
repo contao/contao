@@ -327,7 +327,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
                 $value = [
                     ...$config['image']['sizes']['_defaults'],
-                    ...array_filter($value, static fn ($v) => !\is_array($v) || !empty($v)),
+                    ...array_filter($value, static fn ($v) => [] !== $v),
                 ];
             }
 

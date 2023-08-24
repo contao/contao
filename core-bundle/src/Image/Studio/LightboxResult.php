@@ -106,7 +106,7 @@ class LightboxResult
         $framework = $this->locator->get('contao.framework');
         $layoutModel = $framework->getAdapter(LayoutModel::class)->findByPk($page->layout);
 
-        if (null === $layoutModel || empty($layoutModel->lightboxSize)) {
+        if (!$layoutModel || empty($layoutModel->lightboxSize)) {
             return null;
         }
 

@@ -60,7 +60,7 @@ class SymlinksCommand extends Command
 
         $this->generateSymlinks();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->table(['', 'Symlink', 'Target / Error'], $this->rows);

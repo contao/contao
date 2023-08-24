@@ -155,7 +155,7 @@ class ImageSizes implements ResetInterface
      */
     private function filterOptions(array $allowedSizes): array
     {
-        if (empty($allowedSizes)) {
+        if (!$allowedSizes) {
             return [];
         }
 

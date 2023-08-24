@@ -194,7 +194,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
     {
-        if (empty($globals)) {
+        if (!$globals) {
             return;
         }
 

@@ -46,11 +46,7 @@ class Provider implements TwoFactorProviderInterface
             return false;
         }
 
-        if (!$this->authenticator->validateCode($user, $authenticationCode)) {
-            return false;
-        }
-
-        return true;
+        return $this->authenticator->validateCode($user, $authenticationCode);
     }
 
     public function getFormRenderer(): TwoFactorFormRendererInterface

@@ -28,12 +28,15 @@ class EventPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'eventPicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'eventPicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;

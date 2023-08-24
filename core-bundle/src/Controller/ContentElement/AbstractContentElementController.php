@@ -52,7 +52,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $min[] = (int) $model->stop - $time;
         }
 
-        if (empty($min)) {
+        if (!$min) {
             return;
         }
 

@@ -46,20 +46,20 @@ class ImagesController extends AbstractContentElementController
         ;
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
+        if ($sortMode = SortMode::tryFrom($model->sortBy)) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 
         $template->set('sort_mode', $sortMode);
-        $template->set('randomize_order', $randomize = ('random' === $sortBy));
+        $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
-            $filesystemItems = $filesystemItems->limit($limit);
+        if ($model->numberOfItems > 0 && !$randomize) {
+            $filesystemItems = $filesystemItems->limit($model->numberOfItems);
         }
 
-        $template->set('limit', $limit > 0 && $randomize ? $limit : null);
+        $template->set('limit', $model->numberOfItems > 0 && $randomize ? $model->numberOfItems : null);
 
         // Compile list of images
         $figureBuilder = $this->studio
@@ -80,7 +80,7 @@ class ImagesController extends AbstractContentElementController
             iterator_to_array($filesystemItems)
         );
 
-        if (empty($imageList)) {
+        if (!$imageList) {
             return new Response();
         }
 
@@ -100,13 +100,12 @@ class ImagesController extends AbstractContentElementController
             return [$model->singleSRC];
         }
 
-        if (
-            $model->useHomeDir
-            && ($user = $this->security->getUser()) instanceof FrontendUser
-            && $user->assignDir
-            && $user->homeDir
-        ) {
-            return $user->homeDir;
+        if ($model->useHomeDir) {
+            $user = $this->security->getUser();
+
+            if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir) {
+                return $user->homeDir;
+            }
         }
 
         return $model->multiSRC ?? [];

@@ -53,9 +53,7 @@ class BackupManager
 
     public function createRestoreConfig(): RestoreConfig
     {
-        $latestBackup = $this->getLatestBackup();
-
-        if (null === $latestBackup) {
+        if (!$latestBackup = $this->getLatestBackup()) {
             throw new BackupManagerException('No backups found.');
         }
 
@@ -115,7 +113,7 @@ class BackupManager
      */
     public function readStream(Backup $backup)
     {
-        if (null === $this->getBackupByName($backup->getFilename())) {
+        if (!$this->getBackupByName($backup->getFilename())) {
             throw new BackupManagerException('Cannot read stream of a non-existent backup.');
         }
 
@@ -234,7 +232,7 @@ class BackupManager
         $currentQuery = '';
         $checkedForHeader = $config->ignoreOriginCheck();
 
-        while ($line = gzgets($handle)) {
+        while (false !== ($line = gzgets($handle))) {
             $line = trim($line);
 
             if (!$checkedForHeader) {

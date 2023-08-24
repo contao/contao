@@ -69,7 +69,7 @@ class XliffFileLoader extends Loader
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node->item(0)) {
+            if (!$node->item(0)) {
                 continue;
             }
 
@@ -156,7 +156,7 @@ class XliffFileLoader extends Loader
      */
     private function addGlobal(array $chunks, string $value): void
     {
-        if (false === $this->addToGlobals) {
+        if (!$this->addToGlobals) {
             return;
         }
 

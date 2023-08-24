@@ -102,13 +102,13 @@ class ChangeSet
      */
     public function isEmpty(bool $includeLastModified = false): bool
     {
-        $empty = empty($this->itemsToCreate) && empty($this->itemsToUpdate) && empty($this->itemsToDelete);
+        $empty = !$this->itemsToCreate && !$this->itemsToUpdate && !$this->itemsToDelete;
 
         if (!$includeLastModified) {
             return $empty;
         }
 
-        return $empty && empty($this->lastModifiedUpdates);
+        return $empty && !$this->lastModifiedUpdates;
     }
 
     /**

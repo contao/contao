@@ -28,12 +28,15 @@ class NewsPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'newsPicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'newsPicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;

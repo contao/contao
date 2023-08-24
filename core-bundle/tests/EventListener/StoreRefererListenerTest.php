@@ -50,14 +50,17 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_route', 'contao_backend');
         $request->attributes->set('_contao_referer_id', 'newRefererId');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
         $requestWithRefInUrl = new Request();
+        $requestWithRefInUrl->query->set('ref', 'existingRefererId');
+
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'newRefererId');
         $requestWithRefInUrl->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
-        $requestWithRefInUrl->query->set('ref', 'existingRefererId');
 
         yield 'Test current referer null returns correct new referer' => [
             $request,
@@ -183,6 +186,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($user, true);
@@ -220,6 +224,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -239,6 +244,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($this->createMock(User::class));
@@ -263,7 +269,7 @@ class StoreRefererListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
+            ->expects($expectsSecurityCall || $user ? $this->once() : $this->never())
             ->method('getUser')
             ->willReturn($user)
         ;

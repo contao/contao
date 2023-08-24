@@ -202,7 +202,7 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'Flag addslashes' => [
-            '{{plain::f\'oo|addslashes}}',
+            "{{plain::f'oo|addslashes}}",
             'f\\\'oo',
         ];
 
@@ -535,11 +535,12 @@ class InsertTagsTest extends TestCase
     public function testEncodeHtmlAttributes(string $source, string $expected): void
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
-
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
         $insertTagParser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
         $insertTagParser->addFlagCallback('urlattr', new StringUtilFlag(), 'urlattr');
+
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
@@ -569,7 +570,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Quote in attribute' => [
             '<span title=\'{{plain::"}}\'>',
-            '<span title=\'&quot;\'>',
+            "<span title='&quot;'>",
         ];
 
         yield 'Quote in unquoted attribute' => [

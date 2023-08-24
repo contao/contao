@@ -81,7 +81,7 @@ class RunTestsIsolatedCommand extends Command
         $tests = [[], [], []];
 
         foreach (preg_split('/\r?\n/', $listOutput->fetch()) as $line) {
-            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', (string) $line, $matches)) {
+            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', $line, $matches)) {
                 $tests[0][] = $matches[1];
 
                 if ($depth > 1) {

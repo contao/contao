@@ -478,7 +478,7 @@ class SimpleTokenParserTest extends TestCase
         yield '(<?)' => ['This <? var_dump() ?> is a test.'];
         yield '(<%)' => ['This <% var_dump() ?> is a test.'];
         yield '(<script language="php">)' => ['This <script language="php"> var_dump() </script> is a test.'];
-        yield '(<script language=\'php\'>)' => ['This <script language=\'php\'> var_dump() </script> is a test.'];
+        yield "(<script language='php'>)" => ["This <script language='php'> var_dump() </script> is a test."];
     }
 
     /**
@@ -496,7 +496,7 @@ class SimpleTokenParserTest extends TestCase
         yield '(<?)' => [['foo' => 'This <? var_dump() ?> is a test.']];
         yield '(<%)' => [['foo' => 'This <% var_dump() ?> is a test.']];
         yield '(<script language="php">)' => [['foo' => 'This <script language="php"> var_dump() </script> is a test.']];
-        yield '(<script language=\'php\'>)' => [['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.']];
+        yield "(<script language='php'>)" => [['foo' => "This <script language='php'> var_dump() </script> is a test."]];
     }
 
     public function testDoesNotExecutePhpCodeInCombinedTokens(): void
@@ -534,11 +534,11 @@ class SimpleTokenParserTest extends TestCase
     public function parseSimpleTokensInvalidComparison(): \Generator
     {
         yield 'Not closed string (")' => ['{if foo=="bar}{endif}'];
-        yield 'Not closed string (\')' => ['{if foo==\'bar}{endif}'];
+        yield "Not closed string (')" => ["{if foo=='bar}{endif}"];
         yield 'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'];
-        yield 'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'];
+        yield "Additional chars after string ('/)" => ["{if foo=='bar'/}{endif}"];
         yield 'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'];
-        yield 'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'];
+        yield "Additional chars after string ('*)" => ["{if foo=='bar'*}{endif}"];
         yield 'Unknown operator (=)' => ['{if foo="bar"}{endif}'];
         yield 'Unknown operator (====)' => ['{if foo===="bar"}{endif}'];
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];

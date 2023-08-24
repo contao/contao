@@ -253,7 +253,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $indexer = $this->createMock(IndexerInterface::class);
 
-        if (null === $indexerException) {
+        if (!$indexerException) {
             $indexer
                 ->expects(['ok' => 0, 'warning' => 0, 'error' => 0] === $expectedStats ? $this->never() : $this->once())
                 ->method('index')
@@ -281,7 +281,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -394,7 +394,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -462,7 +462,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }

@@ -39,6 +39,7 @@ class PageControllerTest extends FunctionalTestCase
 
         $pageController = new TestPageController();
         $pageController->setContainer($container);
+
         $container->set(TestPageController::class, $pageController);
 
         $pathRegex = null;

@@ -57,8 +57,10 @@ class Cron
             throw new CronExecutionSkippedException();
         }
 
+        // 70 instead of 60 seconds to give some time for stale caches
         $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-        $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
+        $cacheItem->expiresAfter(70);
+
         $this->cachePool->saveDeferred($cacheItem);
 
         // Using a promise here not because the cache file takes forever to create but in order to make sure
@@ -138,7 +140,7 @@ class Cron
                 $lastRunDate = null;
                 $lastRunEntity = $repository->findOneByName($name);
 
-                if (null !== $lastRunEntity) {
+                if ($lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
@@ -148,7 +150,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
@@ -171,6 +173,7 @@ class Cron
         $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
             $lastRunEntity = $repository->findOneByName($cron->getName());
             $lastRunEntity->setLastRun($cron->getPreviousRun());
+
             $entityManager->flush();
         };
 
@@ -215,18 +218,18 @@ class Cron
                 // Catch any exceptions so that other cronjobs are still executed
                 $this->logger?->error((string) $e);
 
-                if (null === $exception) {
+                if (!$exception) {
                     $exception = $e;
                 }
             }
         }
 
-        if (0 !== \count($promises)) {
+        if ($promises) {
             Utils::settle($promises)->wait();
         }
 
         // Throw the first exception
-        if (null !== $exception) {
+        if ($exception) {
             throw $exception;
         }
     }

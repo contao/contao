@@ -67,10 +67,11 @@ class ContaoFrameworkTest extends TestCase
     public function testInitializesTheFrameworkWithABackEndRequest(): void
     {
         $request = Request::create('/contao/login');
+        $request->setLocale('de');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
         $request->attributes->set('_contao_referer_id', 'foobar');
-        $request->setLocale('de');
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -128,11 +129,13 @@ class ContaoFrameworkTest extends TestCase
         $session->registerBag($feBag);
 
         $request = Request::create('index.html');
+        $request->setSession($session);
+
         $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->cookies->set($session->getName(), 'foobar');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
-        $request->cookies->set($session->getName(), 'foobar');
-        $request->setSession($session);
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -217,10 +220,11 @@ class ContaoFrameworkTest extends TestCase
     public function testRegistersTheHookServices(): void
     {
         $request = Request::create('/index.html');
+        $request->setLocale('de');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
         $request->attributes->set('_contao_referer_id', 'foobar');
-        $request->setLocale('de');
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('test.listener', new \stdClass());
@@ -404,7 +408,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $requestStack = new RequestStack();
 
-        if (null !== $request) {
+        if ($request) {
             $requestStack->push($request);
         }
 

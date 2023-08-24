@@ -110,7 +110,7 @@ class PlayerController extends AbstractContentElementController
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
-                    ->set('src', ((string) $this->publicUriByStoragePath[$item->getPath()]).$range)
+                    ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
             },
             $sourceFiles
@@ -197,7 +197,7 @@ class PlayerController extends AbstractContentElementController
                 continue;
             }
 
-            if (null === ($publicUri = $this->filesStorage->generatePublicUri($item->getPath()))) {
+            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
                 continue;
             }
 

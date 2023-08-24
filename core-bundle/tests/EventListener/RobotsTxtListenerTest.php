@@ -44,6 +44,7 @@ class RobotsTxtListenerTest extends TestCase
 
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
+
         $file = $parser->getFile();
 
         $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
@@ -119,7 +120,7 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('add')
             ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/')],
+                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
                 ['disallow:/_contao/']
             )
         ;

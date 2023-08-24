@@ -100,7 +100,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'inline svg single quotes' => [
             'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
-            ['style' => 'background:url(\'data:image/svg+xml;utf8,<svg/>\')'],
+            ['style' => "background:url('data:image/svg+xml;utf8,<svg/>')"],
         ];
 
         yield 'inline svg double quotes' => [
@@ -538,7 +538,7 @@ class HtmlAttributesTest extends TestCase
 
     public function testStripsLeadingWhitespaceIfEmpty(): void
     {
-        $this->assertSame('', (string) (new HtmlAttributes()));
+        $this->assertSame('', (string) new HtmlAttributes());
         $this->assertSame('', (new HtmlAttributes())->toString());
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }

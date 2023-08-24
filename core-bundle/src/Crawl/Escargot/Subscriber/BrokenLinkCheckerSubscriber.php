@@ -62,7 +62,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         // Only check URIs that are part of our base collection or were found on one
         $fromBaseUriCollection = $this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost());
 
-        $foundOnBaseUriCollection = null !== $crawlUri->getFoundOn()
+        $foundOnBaseUriCollection = $crawlUri->getFoundOn()
             && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
             && $this->escargot->getBaseUris()->containsHost($originalCrawlUri->getUri()->getHost());
 
@@ -117,7 +117,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     {
         $stats = $this->stats;
 
-        if (null !== $previousResult) {
+        if ($previousResult) {
             $stats['ok'] += $previousResult->getInfo('stats')['ok'];
             $stats['error'] += $previousResult->getInfo('stats')['error'];
         }

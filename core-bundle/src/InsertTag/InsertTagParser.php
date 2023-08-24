@@ -188,12 +188,8 @@ class InsertTagParser implements ResetInterface
             }
         }
 
-        if (null !== $tag) {
-            $result = $this->renderSubscription($tag, false);
-
-            if (null !== $result) {
-                return $result;
-            }
+        if ($tag && ($result = $this->renderSubscription($tag, false))) {
+            return $result;
         }
 
         // Fallback to old implementation
@@ -228,7 +224,7 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -366,7 +362,7 @@ class InsertTagParser implements ResetInterface
 
                 // Reprocess non-empty end tags to enable chaining block insert tags
                 // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
-                if (!\count($item->getParameters()->all())) {
+                if (!$item->getParameters()->all()) {
                     continue;
                 }
             }
@@ -550,7 +546,7 @@ class InsertTagParser implements ResetInterface
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }

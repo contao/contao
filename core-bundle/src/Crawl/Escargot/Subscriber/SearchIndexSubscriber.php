@@ -220,7 +220,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     {
         $stats = $this->stats;
 
-        if (null !== $previousResult) {
+        if ($previousResult) {
             $stats['ok'] += $previousResult->getInfo('stats')['ok'];
             $stats['warning'] += $previousResult->getInfo('stats')['warning'];
             $stats['error'] += $previousResult->getInfo('stats')['error'];

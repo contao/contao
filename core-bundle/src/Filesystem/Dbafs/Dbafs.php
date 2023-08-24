@@ -159,7 +159,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     public function setExtraMetadata(string $path, array $metadata): void
     {
-        if (null === $this->getRecord($path)) {
+        if (!$this->getRecord($path)) {
             throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
         }
 
@@ -267,8 +267,8 @@ class Dbafs implements DbafsInterface, ResetInterface
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
-            isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
-            isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
+            isset($record['lastModified']) ? (int) $record['lastModified'] : null,
+            isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
             [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
         );
@@ -385,7 +385,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2)
         );
 
-        if (!empty($shallowDirectories)) {
+        if ($shallowDirectories) {
             foreach (array_keys($itemsToDelete) as $item) {
                 if ($this->inPath((string) $item, $shallowDirectories)) {
                     unset($itemsToDelete[$item]);
@@ -408,7 +408,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // identify them by their name.
                 $candidates = array_filter(
                     $candidates,
-                    static fn (string $candidatePath): bool => basename((string) $path) === basename((string) $candidatePath)
+                    static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath)
                 );
             }
 
@@ -583,7 +583,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $inserts[] = $dataToInsert;
         }
 
-        if (!empty($inserts)) {
+        if ($inserts) {
             $table = $this->connection->quoteIdentifier($this->table);
             $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
@@ -871,7 +871,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $paths
         );
 
-        if (0 === \count($paths) || \in_array('', $paths, true)) {
+        if (!$paths || \in_array('', $paths, true)) {
             return [[''], []];
         }
 

@@ -61,13 +61,13 @@ class JsonLdManager
         // Reset graphs
         $this->graphs = [];
 
-        if (0 === \count($data)) {
+        if (!$data) {
             return '';
         }
 
         ArrayUtil::recursiveKeySort($data);
 
-        return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
+        return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)."\n".'</script>';
     }
 
     /**

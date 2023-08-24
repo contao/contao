@@ -68,6 +68,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', $scope);
 
         $listener = $this->getListener(null, $security, $eventDispatcher);
@@ -112,6 +113,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($this->mockSession());
+
         $request->attributes->set('_scope', $scope);
 
         $listener = $this->getListener($connection, $security);
@@ -140,6 +142,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener(null, $security);
@@ -168,6 +171,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($connection, $security);
@@ -184,6 +188,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -209,6 +214,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -285,6 +291,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($this->mockSession());
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $listener->write($this->getResponseEvent($request));

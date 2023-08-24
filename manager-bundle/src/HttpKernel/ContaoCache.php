@@ -80,8 +80,10 @@ class ContaoCache extends HttpCache implements CacheInvalidation
             return;
         }
 
-        if ($this->getKernel() instanceof TerminableInterface) {
-            $this->getKernel()->terminate($request, $response);
+        $kernel = $this->getKernel();
+
+        if ($kernel instanceof TerminableInterface) {
+            $kernel->terminate($request, $response);
         }
     }
 

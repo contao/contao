@@ -35,7 +35,7 @@ class TranslationListenerTest extends TestCase
 
         if (null === $domain) {
             $insertTag = sprintf('trans::%s', $id);
-        } elseif (empty($parameters)) {
+        } elseif (!$parameters) {
             $insertTag = sprintf('trans::%s::%s', $id, $domain);
         } else {
             $insertTag = sprintf('trans::%s::%s::%s', $id, $domain, implode(':', $parameters));

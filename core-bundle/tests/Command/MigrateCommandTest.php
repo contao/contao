@@ -561,10 +561,10 @@ class MigrateCommandTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnCallback(
                 static fn (string $query): array|false => match ($query) {
-                    sprintf('SHOW COLLATION LIKE \'%s\'', $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_large_prefix\'' => $configuration['innodb_large_prefix'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_per_table\'' => $configuration['innodb_file_per_table'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_format\'' => $configuration['innodb_file_format'] ?? false,
+                    sprintf("SHOW COLLATION LIKE '%s'", $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $configuration['innodb_large_prefix'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $configuration['innodb_file_per_table'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_format'" => $configuration['innodb_file_format'] ?? false,
                     default => false,
                 }
             )
@@ -876,6 +876,6 @@ class MigrateCommandTest extends TestCase
 
     private function jsonArrayFromNdjson(string $ndjson): array
     {
-        return array_map(static fn (string $line) => json_decode($line, true), explode("\n", trim($ndjson)));
+        return array_map(static fn (string $line) => json_decode($line, true, 512, JSON_THROW_ON_ERROR), explode("\n", trim($ndjson)));
     }
 }

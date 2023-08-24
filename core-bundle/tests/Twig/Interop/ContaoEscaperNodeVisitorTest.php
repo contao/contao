@@ -125,7 +125,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         System::setContainer($container);
 
-        $templateContent = '<span title={{ title|insert_tag|e(\'html_attr\') }}></span>';
+        $templateContent = "<span title={{ title|insert_tag|e('html_attr') }}></span>";
 
         $output = $this->getEnvironment($templateContent)->render(
             'legacy.html.twig',

@@ -54,7 +54,7 @@ class ImageResult
      */
     public function getPicture(): PictureInterface
     {
-        if (null === $this->picture) {
+        if (!$this->picture) {
             $this->picture = $this
                 ->pictureFactory()
                 ->create($this->filePathOrImageInterface, $this->sizeConfiguration, $this->resizeOptions)
@@ -101,7 +101,7 @@ class ImageResult
      */
     public function getOriginalDimensions(): ImageDimensions
     {
-        if (null !== $this->originalDimensions) {
+        if ($this->originalDimensions) {
             return $this->originalDimensions;
         }
 
@@ -156,7 +156,7 @@ class ImageResult
             static fn ($image): bool => $image instanceof DeferredImageInterface
         );
 
-        if (empty($deferredImages)) {
+        if (!$deferredImages) {
             return;
         }
 

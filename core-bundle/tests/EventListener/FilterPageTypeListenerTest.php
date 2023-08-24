@@ -130,7 +130,7 @@ class FilterPageTypeListenerTest extends TestCase
         $mock
             ->expects($this->once())
             ->method('getCurrentRecord')
-            ->willReturn(!empty($currentRecord) ? $currentRecord : null)
+            ->willReturn($currentRecord ?: null)
         ;
 
         return $mock;

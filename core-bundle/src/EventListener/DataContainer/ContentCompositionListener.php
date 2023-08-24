@@ -88,7 +88,7 @@ class ContentCompositionListener
         $currentRecord = $dc->getCurrentRecord();
 
         // Return if there is no current record (override all)
-        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        if (null === $currentRecord || !$request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
@@ -179,7 +179,7 @@ class ContentCompositionListener
 
         // Do not show paste button for pages without content composition or articles in layout
         if (
-            null === $pageModel
+            !$pageModel
             || !$this->pageRegistry->supportsContentComposition($pageModel)
             || !$this->hasArticlesInLayout($pageModel)
         ) {

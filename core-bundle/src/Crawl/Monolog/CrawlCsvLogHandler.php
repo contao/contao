@@ -43,8 +43,11 @@ class CrawlCsvLogHandler extends StreamHandler
             return;
         }
 
-        /** @var CrawlUri|null $crawlUri */
-        $crawlUri = $record['context']['crawlUri'] ?? null;
+        $crawlUri = null;
+
+        if (($record['context']['crawlUri'] ?? null) instanceof CrawlUri) {
+            $crawlUri = $record['context']['crawlUri'];
+        }
 
         $stat = fstat($stream);
         $size = $stat['size'];
@@ -64,10 +67,10 @@ class CrawlCsvLogHandler extends StreamHandler
         $columns = [
             $record['datetime']->format(self::DATETIME_FORMAT),
             $record['context']['source'],
-            null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
-            null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
-            null === $crawlUri ? '---' : $crawlUri->getLevel(),
-            null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
+            !$crawlUri ? '---' : (string) $crawlUri->getUri(),
+            !$crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
+            !$crawlUri ? '---' : $crawlUri->getLevel(),
+            !$crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 

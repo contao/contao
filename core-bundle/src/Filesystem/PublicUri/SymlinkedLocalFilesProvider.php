@@ -32,7 +32,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      */
     public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null
     {
-        if ($adapter !== $this->localFilesAdapter || null !== $options) {
+        if ($options || $adapter !== $this->localFilesAdapter) {
             return null;
         }
 
@@ -41,7 +41,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 
     private function getSchemeAndHost(): string
     {
-        if (null === ($request = $this->requestStack->getCurrentRequest())) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return '';
         }
 
