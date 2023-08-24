@@ -124,12 +124,17 @@ class ModuleFaq extends Frontend
 	 *
 	 * @return array
 	 */
-	public static function getSchemaOrgData(iterable $arrFaqs): array
+	public static function getSchemaOrgData(iterable $arrFaqs, string $identifier = null): array
 	{
 		$jsonLd = array(
 			'@type' => 'FAQPage',
 			'mainEntity' => array(),
 		);
+
+		if (null !== $identifier)
+		{
+			$jsonLd['identifier'] = $identifier;
+		}
 
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 

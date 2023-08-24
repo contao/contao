@@ -170,9 +170,9 @@ class ModuleFaqPage extends Module
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
-		$this->Template->getSchemaOrgData = static function () use ($objFaqs)
+		$this->Template->getSchemaOrgData = function () use ($objFaqs)
 		{
-			return ModuleFaq::getSchemaOrgData($objFaqs);
+			return ModuleFaq::getSchemaOrgData($objFaqs, '#/schema/faq/' . $this->id);
 		};
 	}
 }
