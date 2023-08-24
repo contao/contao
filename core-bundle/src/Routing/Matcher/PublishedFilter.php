@@ -25,19 +25,10 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PublishedFilter implements RouteFilterInterface
 {
-    private TokenChecker $tokenChecker;
-
-    /**
-     * @internal
-     */
-    public function __construct(TokenChecker $tokenChecker)
-    {
-        $this->tokenChecker = $tokenChecker;
-    }
-
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        if ($this->tokenChecker->isPreviewMode()) {
+        // Route all pages in the preview entry point
+        if ($request->attributes->get('_preview', false)) {
             return $collection;
         }
 
