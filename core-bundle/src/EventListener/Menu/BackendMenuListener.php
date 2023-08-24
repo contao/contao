@@ -149,7 +149,7 @@ class BackendMenuListener
                         'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
                     ],
                     JSON_THROW_ON_ERROR,
-                )
+                ),
             )
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)

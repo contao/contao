@@ -131,7 +131,7 @@ class Document
                     } catch (\JsonException) {
                         return null;
                     }
-                }
+                },
             )
         ;
 

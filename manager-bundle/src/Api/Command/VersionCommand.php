@@ -38,7 +38,7 @@ class VersionCommand extends Command
                 'commands' => $this->getCommandNames(),
                 'features' => $this->getFeatures(),
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         ));
 
         return 0;

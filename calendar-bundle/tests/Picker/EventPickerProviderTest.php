@@ -35,7 +35,7 @@ class EventPickerProviderTest extends ContaoTestCase
                 'current' => 'eventPicker',
                 'value' => '',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {

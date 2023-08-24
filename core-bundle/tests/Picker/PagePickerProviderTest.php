@@ -33,7 +33,7 @@ class PagePickerProviderTest extends ContaoTestCase
                 'current' => 'pagePicker',
                 'value' => '',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
