@@ -29,14 +29,14 @@
     "require": {
         "php": "^8.1",
         "contao/core-bundle": "self.version",
-        "symfony/http-kernel": "^6.2"
+        "symfony/http-kernel": "^6.3"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
         "phpunit/phpunit": "^9.5",
-        "symfony/http-client": "^6.2",
-        "symfony/phpunit-bridge": "^6.2"
+        "symfony/http-client": "^6.3",
+        "symfony/phpunit-bridge": "^6.3"
     },
     "conflict": {
         "contao/core": "*",
