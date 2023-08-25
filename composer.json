@@ -124,7 +124,7 @@
         "symfony/framework-bundle": "^6.3",
         "symfony/html-sanitizer": "^6.3",
         "symfony/http-client": "^6.3",
-        "symfony/http-client-contracts": "^2.4 || ^3.1",
+        "symfony/http-client-contracts": "^3.1",
         "symfony/http-foundation": "^6.3",
         "symfony/http-kernel": "^6.3",
         "symfony/intl": "^6.3",
