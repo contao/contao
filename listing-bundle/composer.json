@@ -29,11 +29,11 @@
     "require": {
         "php": "^8.1",
         "contao/core-bundle": "self.version",
-        "symfony/http-kernel": "^5.4 || ^6.0"
+        "symfony/http-kernel": "^6.2"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "symfony/http-client": "^5.4 || ^6.0"
+        "symfony/http-client": "^6.2"
     },
     "conflict": {
         "contao/core": "*",

@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal

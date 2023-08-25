@@ -20,9 +20,9 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 class NewsArchiveAccessVoterTest extends WebTestCase
 {

@@ -250,7 +250,7 @@ class PreviewUrlConverterListenerTest extends TestCase
                     $route,
                     [],
                     UrlGeneratorInterface::ABSOLUTE_URL,
-                    new MissingMandatoryParametersException(),
+                    new MissingMandatoryParametersException('tl_page.42', ['requireItem']),
                 ),
             )
         ;
