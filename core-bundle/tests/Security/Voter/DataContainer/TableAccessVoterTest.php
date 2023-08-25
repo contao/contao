@@ -75,12 +75,12 @@ class TableAccessVoterTest extends TestCase
     {
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('foobar'), ['foobar'])
+            $this->voter->vote($this->token, new CreateAction('foobar'), ['foobar']),
         );
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new UpdateAction('foobar', []), ['foobar'])
+            $this->voter->vote($this->token, new UpdateAction('foobar', []), ['foobar']),
         );
     }
 
@@ -102,7 +102,7 @@ class TableAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -123,7 +123,7 @@ class TableAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -147,7 +147,7 @@ class TableAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -173,7 +173,7 @@ class TableAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
-            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -198,7 +198,7 @@ class TableAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
-            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 }

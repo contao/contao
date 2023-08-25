@@ -68,7 +68,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true)
+            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true),
         );
     }
 
@@ -79,7 +79,7 @@ class Factory
     {
         return array_map(
             static fn (EscargotSubscriberInterface $subscriber): string => $subscriber->getName(),
-            $this->subscribers
+            $this->subscribers,
         );
     }
 
@@ -87,7 +87,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue')
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
         );
     }
 
@@ -166,8 +166,8 @@ class Factory
                     ],
                     'max_duration' => 10, // Ignore requests that take longer than 10 seconds
                 ],
-                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
-            )
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options),
+            ),
         );
     }
 

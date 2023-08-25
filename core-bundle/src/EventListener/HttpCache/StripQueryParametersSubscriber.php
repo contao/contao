@@ -94,7 +94,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         // Remove params that match the deny list or all if no deny list was set
         $removeParams = preg_grep(
             '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
-            array_keys($request->query->all())
+            array_keys($request->query->all()),
         );
 
         // Do not remove params that match the allow list

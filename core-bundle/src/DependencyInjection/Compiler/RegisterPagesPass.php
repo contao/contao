@@ -106,7 +106,7 @@ class RegisterPagesPass implements CompilerPassInterface
                 $attributes['options'] ?? [],
                 $defaults,
                 $attributes['methods'] ?? [],
-            ]
+            ],
         );
     }
 

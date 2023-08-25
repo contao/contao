@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'config:set',
-    description: 'Sets the Contao Manager configuration from a JSON string.'
+    description: 'Sets the Contao Manager configuration from a JSON string.',
 )]
 class SetConfigCommand extends Command
 {

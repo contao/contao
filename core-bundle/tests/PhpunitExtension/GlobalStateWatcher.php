@@ -105,7 +105,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'http_response_code' => http_response_code(),
                 'headers_list' => headers_list(),
             ],
-            true
+            true,
         );
     }
 
@@ -136,7 +136,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 static fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
                 ARRAY_FILTER_USE_KEY,
             ),
-            true
+            true,
         );
     }
 

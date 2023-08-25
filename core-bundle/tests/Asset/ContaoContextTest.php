@@ -66,7 +66,7 @@ class ContaoContextTest extends TestCase
             [
                 'SCRIPT_FILENAME' => '/foobar/index.php',
                 'SCRIPT_NAME' => '/foobar/index.php',
-            ]
+            ],
         );
 
         $request->attributes->set('pageModel', $page);

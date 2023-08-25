@@ -104,7 +104,7 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'pragma',
                 'cache-control',
             ],
-            $listener->getMultiHeaders()
+            $listener->getMultiHeaders(),
         );
 
         $listener->removeMultiHeader('cache-control');
@@ -116,7 +116,7 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'vary',
                 'pragma',
             ],
-            $listener->getMultiHeaders()
+            $listener->getMultiHeaders(),
         );
 
         $listener->addMultiHeader('dummy');
@@ -129,7 +129,7 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'pragma',
                 'dummy',
             ],
-            $listener->getMultiHeaders()
+            $listener->getMultiHeaders(),
         );
 
         $listener->setMultiHeader(['set-cookie', 'link', 'vary', 'pragma', 'cache-control']);
@@ -142,7 +142,7 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'pragma',
                 'cache-control',
             ],
-            $listener->getMultiHeaders()
+            $listener->getMultiHeaders(),
         );
     }
 

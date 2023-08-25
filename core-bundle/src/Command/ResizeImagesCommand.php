@@ -38,7 +38,7 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:resize-images',
-    description: 'Resizes deferred images that have not been processed yet.'
+    description: 'Resizes deferred images that have not been processed yet.',
 )]
 class ResizeImagesCommand extends Command
 {
@@ -159,7 +159,7 @@ class ResizeImagesCommand extends Command
 
         $this->io->warning(
             "Running this command without sub processes.\n"
-            .'This can lead to memory leaks and eventually let the execution fail.'
+            .'This can lead to memory leaks and eventually let the execution fail.',
         );
 
         return $this->executeInCurrentProcess($timeLimit, $concurrent, $preserveMissing);

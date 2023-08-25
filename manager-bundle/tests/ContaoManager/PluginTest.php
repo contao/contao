@@ -183,7 +183,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -211,7 +211,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -248,7 +248,7 @@ class PluginTest extends ContaoTestCase
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 
                     return $collection;
-                }
+                },
             )
         ;
 
@@ -285,7 +285,7 @@ class PluginTest extends ContaoTestCase
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands()
+                (new Plugin())->getApiCommands(),
             );
         }
     }
@@ -312,7 +312,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures()
+            (new Plugin())->getApiFeatures(),
         );
     }
 

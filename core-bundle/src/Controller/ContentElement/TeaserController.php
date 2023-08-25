@@ -39,8 +39,8 @@ class TeaserController extends AbstractContentElementController
             sprintf(
                 '/articles/%s%s',
                 'main' !== $article->inColumn ? "$article->inColumn:" : '',
-                $article->alias ?: $article->id
-            )
+                $article->alias ?: $article->id,
+            ),
         );
 
         $template->set('article', $article);

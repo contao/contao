@@ -73,7 +73,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s">%s</a> ',
             $this->backend->addToUrl($href.'&amp;pn='.$row['id']),
             StringUtil::specialchars($title),
-            $this->image->getHtml($icon, $label)
+            $this->image->getHtml($icon, $label),
         );
     }
 
@@ -168,7 +168,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 
@@ -199,7 +199,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 

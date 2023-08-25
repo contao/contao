@@ -177,7 +177,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
 
         if (!$urlPrefix || $page->loadDetails()->disableLanguageRedirect) {
@@ -196,7 +196,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
     }
 
@@ -241,7 +241,7 @@ class RouteProvider extends AbstractPageRouteProvider
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
-            }
+            },
         );
     }
 

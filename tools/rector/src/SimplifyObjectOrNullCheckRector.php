@@ -48,7 +48,7 @@ final class SimplifyObjectOrNullCheckRector extends AbstractRector
                             return;
                         }
                     }
-                    CODE_SAMPLE
+                    CODE_SAMPLE,
             ),
         ]);
     }

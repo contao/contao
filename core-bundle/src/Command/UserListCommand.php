@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:user:list',
-    description: 'Lists Contao back end users.'
+    description: 'Lists Contao back end users.',
 )]
 class UserListCommand extends Command
 {
@@ -121,7 +121,7 @@ class UserListCommand extends Command
 
                     return $user->{$field} ?? '';
                 },
-                $columns
+                $columns,
             );
         }
 
@@ -147,7 +147,7 @@ class UserListCommand extends Command
             $data[] = array_filter(
                 $user,
                 static fn ($key) => \in_array($key, $columns, true),
-                ARRAY_FILTER_USE_KEY
+                ARRAY_FILTER_USE_KEY,
             );
         }
 

@@ -211,7 +211,7 @@ class InputEnhancerTest extends TestCase
             [
                 'rootLanguage' => $language,
                 'urlPrefix' => $urlPrefix,
-            ]
+            ],
         );
     }
 }

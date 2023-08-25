@@ -77,7 +77,7 @@ class ImagesController extends AbstractContentElementController
             fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->build(),
-            iterator_to_array($filesystemItems)
+            iterator_to_array($filesystemItems),
         );
 
         if (!$imageList) {

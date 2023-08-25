@@ -88,13 +88,13 @@ class InsertTagsListener
                 $url ?: './',
                 StringUtil::specialcharsAttribute($faq->question),
                 $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
-                $faq->question
+                $faq->question,
             ),
             'faq_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
                 $url ?: './',
                 StringUtil::specialcharsAttribute($faq->question),
-                $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
+                $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
             'faq_url' => $url ?: './',
             'faq_title' => StringUtil::specialcharsAttribute($faq->question),

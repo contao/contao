@@ -49,7 +49,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -96,7 +96,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onGeneratePage'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -121,7 +121,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', '__invoke'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -147,7 +147,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onInitializeSystem'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -160,7 +160,7 @@ class RegisterHookListenersPassTest extends TestCase
             [
                 'hook' => 'initializeSystem',
                 'method' => 'onInitializeSystemFirst',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -168,7 +168,7 @@ class RegisterHookListenersPassTest extends TestCase
             [
                 'hook' => 'generatePage',
                 'method' => 'onGeneratePage',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -176,7 +176,7 @@ class RegisterHookListenersPassTest extends TestCase
             [
                 'hook' => 'initializeSystem',
                 'method' => 'onInitializeSystemSecond',
-            ]
+            ],
         );
 
         $definition->addTag(
@@ -184,7 +184,7 @@ class RegisterHookListenersPassTest extends TestCase
             [
                 'hook' => 'parseTemplate',
                 'method' => 'onParseTemplate',
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -206,7 +206,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onParseTemplate'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -220,7 +220,7 @@ class RegisterHookListenersPassTest extends TestCase
                 'hook' => 'initializeSystem',
                 'method' => 'onInitializeSystem',
                 'priority' => 10,
-            ]
+            ],
         );
 
         $definitionB = new Definition(TestListener::class);
@@ -231,7 +231,7 @@ class RegisterHookListenersPassTest extends TestCase
                 'hook' => 'initializeSystem',
                 'method' => 'onInitializeSystemLow',
                 'priority' => 10,
-            ]
+            ],
         );
 
         $definitionB->addTag(
@@ -240,7 +240,7 @@ class RegisterHookListenersPassTest extends TestCase
                 'hook' => 'initializeSystem',
                 'method' => 'onInitializeSystemHigh',
                 'priority' => 100,
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();
@@ -262,7 +262,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 

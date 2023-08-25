@@ -637,17 +637,17 @@ class FigureBuilder
 
                     return $event->getMetadata();
                 },
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): array => $this->onDefineLinkAttributes($figure),
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
-                $settings
+                $settings,
             ),
-            $settings->options
+            $settings->options,
         );
     }
 
@@ -783,7 +783,7 @@ class FigureBuilder
                 $url,
                 $this->lightboxSizeConfiguration,
                 $this->lightboxGroupIdentifier,
-                $this->lightboxResizeOptions
+                $this->lightboxResizeOptions,
             )
         ;
     }

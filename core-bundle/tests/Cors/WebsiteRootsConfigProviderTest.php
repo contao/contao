@@ -58,7 +58,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
                 'allow_methods' => ['HEAD', 'GET'],
                 'allow_headers' => ['x-requested-with'],
             ],
-            $result
+            $result,
         );
     }
 

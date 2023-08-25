@@ -50,7 +50,7 @@ class BackendMenuListenerTest extends TestCase
             $this->createMock(RouterInterface::class),
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -79,7 +79,7 @@ class BackendMenuListenerTest extends TestCase
                 'aria-controls' => 'category1',
                 'aria-expanded' => 'true',
             ],
-            $children['category1']->getLinkAttributes()
+            $children['category1']->getLinkAttributes(),
         );
 
         $grandChildren = $children['category1']->getChildren();
@@ -114,7 +114,7 @@ class BackendMenuListenerTest extends TestCase
                 'aria-controls' => 'category2',
                 'aria-expanded' => 'false',
             ],
-            $children['category2']->getLinkAttributes()
+            $children['category2']->getLinkAttributes(),
         );
     }
 
@@ -140,7 +140,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -172,7 +172,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -206,7 +206,7 @@ class BackendMenuListenerTest extends TestCase
                     }
 
                     return '/contao?'.http_build_query($options);
-                }
+                },
             )
         ;
 
@@ -231,7 +231,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages])
+            $this->mockContaoFramework([Backend::class => $systemMessages]),
         );
 
         $listener($event);
@@ -255,7 +255,7 @@ class BackendMenuListenerTest extends TestCase
                 'title' => 'MSC.manual',
                 'target' => '_blank',
             ],
-            $children['manual']->getLinkAttributes()
+            $children['manual']->getLinkAttributes(),
         );
 
         // Alerts
@@ -275,7 +275,7 @@ class BackendMenuListenerTest extends TestCase
                 'data-contao--color-scheme-target' => 'label',
                 'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
             ],
-            $children['color-scheme']->getLinkAttributes()
+            $children['color-scheme']->getLinkAttributes(),
         );
 
         // Submenu
@@ -340,7 +340,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -372,7 +372,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);

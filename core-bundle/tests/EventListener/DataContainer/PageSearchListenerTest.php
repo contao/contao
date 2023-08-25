@@ -45,7 +45,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveAlias('bar', $dc);
@@ -73,7 +73,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveAlias('foo', $dc);
@@ -104,7 +104,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveNoSearch('1', $dc);
@@ -132,7 +132,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveNoSearch('', $dc);
@@ -160,7 +160,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveNoSearch('1', $dc);
@@ -191,7 +191,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
@@ -219,7 +219,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -247,7 +247,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
@@ -274,7 +274,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onDelete($dc);
@@ -298,7 +298,7 @@ class PageSearchListenerTest extends TestCase
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
-            $connection
+            $connection,
         );
 
         $listener->onDelete($dc);

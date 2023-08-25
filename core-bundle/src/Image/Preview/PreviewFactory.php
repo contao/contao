@@ -115,7 +115,7 @@ class PreviewFactory
                         $targetPathCallback,
                         $lastPage,
                         $firstPage,
-                        $previewOptions
+                        $previewOptions,
                     );
 
                     if ($previews instanceof \Traversable) {
@@ -168,7 +168,7 @@ class PreviewFactory
 
         return array_map(
             fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
@@ -337,7 +337,7 @@ class PreviewFactory
     {
         return array_map(
             fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 

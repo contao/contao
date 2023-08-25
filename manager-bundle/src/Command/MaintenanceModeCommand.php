@@ -24,7 +24,7 @@ use Twig\Environment;
 
 #[AsCommand(
     name: 'contao:maintenance-mode',
-    description: 'Changes the state of the system maintenance mode.'
+    description: 'Changes the state of the system maintenance mode.',
 )]
 class MaintenanceModeCommand extends Command
 {
@@ -84,8 +84,8 @@ class MaintenanceModeCommand extends Command
                     'language' => 'en',
                     'template' => $templateName,
                     ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -102,7 +102,7 @@ class MaintenanceModeCommand extends Command
                     'enabled' => $enabled,
                     'maintenanceFilePath' => $this->maintenanceFilePath,
                 ],
-                JSON_THROW_ON_ERROR
+                JSON_THROW_ON_ERROR,
             ));
 
             return;

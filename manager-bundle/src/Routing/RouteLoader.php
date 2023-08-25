@@ -61,7 +61,7 @@ class RouteLoader implements RouteLoaderInterface
 
                 return $collection;
             },
-            $collection
+            $collection,
         );
 
         // Make sure the Contao frontend routes are always loaded last

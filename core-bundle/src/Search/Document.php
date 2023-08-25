@@ -131,7 +131,7 @@ class Document
                     } catch (\JsonException) {
                         return null;
                     }
-                }
+                },
             )
         ;
 
@@ -162,7 +162,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            (string) $response->getContent()
+            (string) $response->getContent(),
         );
     }
 

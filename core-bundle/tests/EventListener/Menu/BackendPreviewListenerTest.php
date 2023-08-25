@@ -63,7 +63,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                     $this->assertSame($id, $e->getId());
 
                     return true;
-                }
+                },
             ))
         ;
 
@@ -80,7 +80,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $eventDispatcher
+            $eventDispatcher,
         );
 
         $listener($event);
@@ -100,7 +100,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                 'target' => '_blank',
                 'accesskey' => 'f',
             ],
-            $children['preview']->getLinkAttributes()
+            $children['preview']->getLinkAttributes(),
         );
     }
 
@@ -136,7 +136,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class)
+            $this->createMock(EventDispatcher::class),
         );
 
         $listener($event);
@@ -170,7 +170,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class)
+            $this->createMock(EventDispatcher::class),
         );
 
         $listener($event);

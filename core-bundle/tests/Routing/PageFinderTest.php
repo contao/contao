@@ -199,7 +199,7 @@ class PageFinderTest extends TestCase
                         $this->assertSame($requestUri ?? 'http://www.example.org', $request->getSchemeAndHttpHost());
 
                         return true;
-                    }
+                    },
                 ))
                 ->willReturn($pageModel ? ['pageModel' => $pageModel] : [])
             ;

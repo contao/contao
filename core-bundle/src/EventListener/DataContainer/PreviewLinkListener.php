@@ -89,7 +89,7 @@ class PreviewLinkListener
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
                         'SELECT id FROM tl_preview_link WHERE createdBy=?',
-                        [$userId]
+                        [$userId],
                     );
 
                     $session = $this->requestStack->getSession();
@@ -148,7 +148,7 @@ class PreviewLinkListener
             $message->addInfo(sprintf(
                 '%s: %s',
                 $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
-                $this->generateClipboardLink((int) $row['id'])
+                $this->generateClipboardLink((int) $row['id']),
             ));
         }
     }
@@ -189,7 +189,7 @@ class PreviewLinkListener
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
-            $label ?? $url
+            $label ?? $url,
         );
     }
 }

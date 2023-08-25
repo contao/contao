@@ -116,7 +116,7 @@ class CommandCompiler
 
             $tableOptions = $this->connection->fetchAssociative(
                 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
-                [$tableName]
+                [$tableName],
             );
 
             if (false === $tableOptions) {

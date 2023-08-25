@@ -261,7 +261,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection()
+            $this->mockUnusedConnection(),
         );
 
         $provider->getUrl($config);
@@ -283,7 +283,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection()
+            $this->mockUnusedConnection(),
         );
 
         $provider->getUrl($config);
@@ -305,7 +305,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -329,7 +329,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 42, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', 42, ['pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -361,7 +361,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true)
+            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true),
         );
 
         $provider->getUrl($config);
@@ -386,7 +386,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true)
+            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true),
         );
 
         $provider->getUrl($config);
@@ -408,7 +408,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 42, false)
+            $this->mockConnectionForQuery('tl_article', 42, false),
         );
 
         $provider->getUrl($config);
@@ -430,7 +430,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection()
+            $this->mockUnusedConnection(),
         );
 
         $provider->getUrl($config);
@@ -453,7 +453,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $this->createMock(FactoryInterface::class),
             $router ?: $this->createMock(RouterInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $connection ?: $this->createMock(Connection::class)
+            $connection ?: $this->createMock(Connection::class),
         );
     }
 
@@ -499,7 +499,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $menuFactory,
             $this->mockRouterWithExpectedParams(...$expectedParams),
             $this->mockTranslatorWithExpectedCalls($modules),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
     }
 

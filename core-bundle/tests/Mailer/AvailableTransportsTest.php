@@ -38,7 +38,7 @@ class AvailableTransportsTest extends TestCase
                 'foobar' => 'foobar',
                 'lorem' => 'lorem (Lorem Ipsum &lt;lorem.ipsum@example.org&gt;)',
             ],
-            $availableTransports->getTransportOptions()
+            $availableTransports->getTransportOptions(),
         );
 
         $this->assertCount(2, $availableTransports->getTransports());

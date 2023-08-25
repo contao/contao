@@ -59,7 +59,7 @@ class LocalesTest extends TestCase
         $this->assertSame(['en', 'de'], $this->getLocalesService()->getEnabledLocaleIds());
         $this->assertSame(
             ['gsw', 'de', 'en'],
-            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocaleIds()
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocaleIds(),
         );
     }
 
@@ -97,7 +97,7 @@ class LocalesTest extends TestCase
                 'en' => 'English',
                 'de' => 'German',
             ],
-            $this->getLocalesService()->getEnabledLocales()
+            $this->getLocalesService()->getEnabledLocales(),
         );
 
         $this->assertSame(
@@ -105,7 +105,7 @@ class LocalesTest extends TestCase
                 'de' => 'Deutsch',
                 'en' => 'Englisch - English',
             ],
-            $this->getLocalesService()->getEnabledLocales('de', true)
+            $this->getLocalesService()->getEnabledLocales('de', true),
         );
 
         $this->assertSame(
@@ -114,7 +114,7 @@ class LocalesTest extends TestCase
                 'en' => 'Englisch - English',
                 'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
             ],
-            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocales('de', true)
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocales('de', true),
         );
     }
 
@@ -143,7 +143,7 @@ class LocalesTest extends TestCase
                 'de_at' => 'Deutsch (Österreich)',
                 'en' => 'Englisch - English',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'de', true)
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'de', true),
         );
 
         $this->assertSame(
@@ -152,7 +152,7 @@ class LocalesTest extends TestCase
                 'de' => 'German',
                 'de_at' => 'German (Austria)',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en')
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en'),
         );
 
         $this->assertSame(
@@ -160,7 +160,7 @@ class LocalesTest extends TestCase
                 'gsw_Latn_AT' => 'Schwiizertüütsch (Latiinisch, Ööschtriich)',
                 'de_CH' => 'Tüütsch (Schwiiz) - Deutsch (Schweiz)',
             ],
-            $this->getLocalesService()->getDisplayNames(['gsw_Latn_AT', 'de_CH'], 'gsw', true)
+            $this->getLocalesService()->getDisplayNames(['gsw_Latn_AT', 'de_CH'], 'gsw', true),
         );
     }
 
@@ -174,7 +174,7 @@ class LocalesTest extends TestCase
                     $this->assertSame('contao_languages', $domain);
 
                     return 'LNG.de' === $label;
-                }
+                },
             )
         ;
 
@@ -197,7 +197,7 @@ class LocalesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -277,7 +277,7 @@ class LocalesTest extends TestCase
         // Remove regions
         $expected = array_values(array_unique(array_map(
             static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3}|POSIX)(?=_|$)/', '', $localeId),
-            $expected
+            $expected,
         )));
 
         $this->assertSame($expected, $localeIds);

@@ -41,7 +41,7 @@ class LocaleSubscriberTest extends TestCase
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            $this->mockLocales(['en'])
+            $this->mockLocales(['en']),
         );
 
         $listener->onKernelRequest($event);
@@ -71,13 +71,13 @@ class LocaleSubscriberTest extends TestCase
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            $this->mockLocales($available)
+            $this->mockLocales($available),
         );
 
         $listener->onKernelRequest($event);
@@ -107,13 +107,13 @@ class LocaleSubscriberTest extends TestCase
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             Request::create('/', Request::METHOD_GET, [$attributes]),
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            $this->mockLocales(['en'])
+            $this->mockLocales(['en']),
         );
 
         $listener->onKernelRequest($event);
@@ -127,7 +127,7 @@ class LocaleSubscriberTest extends TestCase
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $translator = $this->createMock(LocaleAwareInterface::class);

@@ -121,7 +121,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         try {
             $this->filesystem->dumpFile(
                 Path::join($targetDir, 'ide-twig.json'),
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
             );
         } catch (IOException) {
             // ignore

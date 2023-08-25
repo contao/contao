@@ -56,57 +56,57 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2', false, null, [])
+            $listener->onReplaceInsertTags('faq::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
-            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::blank::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::absolute::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::absolute::blank', false, null, []),
         );
 
         $this->assertSame(
             'faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, ['absolute'])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, ['absolute']),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2::blank::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             'What does &quot;foobar&quot; mean?',
-            $listener->onReplaceInsertTags('faq_title::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_title::2', false, null, []),
         );
     }
 
@@ -141,17 +141,17 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="./" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2', false, null, [])
+            $listener->onReplaceInsertTags('faq::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="./" title="What does &quot;foobar&quot; mean?">',
-            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2', false, null, []),
         );
 
         $this->assertSame(
             './',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, []),
         );
     }
 

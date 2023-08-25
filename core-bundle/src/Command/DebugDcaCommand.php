@@ -25,7 +25,7 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 #[AsCommand(
     name: 'debug:dca',
-    description: 'Dumps the DCA configuration for a table.'
+    description: 'Dumps the DCA configuration for a table.',
 )]
 class DebugDcaCommand extends Command
 {

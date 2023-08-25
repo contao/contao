@@ -172,12 +172,12 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes($properties))
+            iterator_to_array(new HtmlAttributes($properties)),
         );
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties)))
+            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties))),
         );
     }
 

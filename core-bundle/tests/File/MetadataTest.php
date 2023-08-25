@@ -81,7 +81,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
                 'foo' => 'bar',
             ],
-            $metadata->all()
+            $metadata->all(),
         );
     }
 
@@ -138,7 +138,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_TITLE => 'foo title',
                 Metadata::VALUE_URL => 'foo://bar',
             ],
-            $model->getOverwriteMetadata()->all()
+            $model->getOverwriteMetadata()->all(),
         );
     }
 
@@ -188,7 +188,7 @@ class MetadataTest extends TestCase
                 'custom' => 'foobar',
             ],
             $model->getMetadata('en')->all(),
-            'get all meta from single locale'
+            'get all meta from single locale',
         );
 
         $this->assertSame(
@@ -199,7 +199,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_CAPTION => 'foo caption',
             ],
             $model->getMetadata('es', 'de', 'en')->all(),
-            'get all metadata of first matching locale'
+            'get all metadata of first matching locale',
         );
 
         $this->assertNull($model->getMetadata('es'), 'return null if no metadata is available for a locale');
@@ -218,7 +218,7 @@ class MetadataTest extends TestCase
                 'bar' => 'BAZ',
                 'foobar' => 'FOOBAR',
             ],
-            $newMetadata->all()
+            $newMetadata->all(),
         );
     }
 
@@ -260,7 +260,7 @@ class MetadataTest extends TestCase
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
             ],
-            $metadata->getSchemaOrgData()
+            $metadata->getSchemaOrgData(),
         );
 
         $this->assertSame(
@@ -269,7 +269,7 @@ class MetadataTest extends TestCase
                 'caption' => 'caption',
                 'license' => 'https://creativecommons.org/licenses/by/4.0/',
             ],
-            $metadata->getSchemaOrgData('ImageObject')
+            $metadata->getSchemaOrgData('ImageObject'),
         );
 
         $this->assertSame([], $metadata->getSchemaOrgData('WhateverNonsense'));
@@ -294,7 +294,7 @@ class MetadataTest extends TestCase
                 'name' => 'title',
                 'foobar' => 'baz',
             ],
-            $metadata->getSchemaOrgData('ImageObject')
+            $metadata->getSchemaOrgData('ImageObject'),
         );
     }
 }

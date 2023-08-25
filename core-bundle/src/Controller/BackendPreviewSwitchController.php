@@ -96,7 +96,7 @@ class BackendPreviewSwitchController
                     'showUnpublished' => $showUnpublished,
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
                     'nb' => '1', // Do not show the "Save & Close" button
-                ]
+                ],
             );
         }
 
@@ -112,7 +112,7 @@ class BackendPreviewSwitchController
                     'attributes' => $this->backendAttributes,
                     'badgeTitle' => $this->backendBadgeTitle,
                     'share' => $shareLink,
-                ]
+                ],
             );
         } catch (TwigError $e) {
             return 'Error while rendering twig template: '.$e->getMessage();

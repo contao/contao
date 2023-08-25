@@ -282,7 +282,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         $routes = array_map(
             fn ($language) => new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]),
-            $pageLanguages
+            $pageLanguages,
         );
 
         usort($routes, static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages));

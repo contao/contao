@@ -50,7 +50,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
                 'current' => 'articlePicker',
                 'value' => '',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
@@ -131,14 +131,14 @@ class ArticlePickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -155,7 +155,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{article_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5),
         );
     }
 
@@ -180,7 +180,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

@@ -279,7 +279,7 @@ class FrontendModuleControllerTest extends TestCase
                     $this->assertSame('mod_test', $params[0]);
 
                     return new FragmentTemplate(...$params);
-                }
+                },
             )
         ;
 

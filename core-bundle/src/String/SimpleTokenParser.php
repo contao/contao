@@ -51,7 +51,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 : '/({[^{}]+})\n?/',
             $subject,
             -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY,
         );
 
         // Parse the tokens
@@ -110,7 +110,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
                 return $data[$matches[1]];
             },
-            $subject
+            $subject,
         );
     }
 
@@ -184,7 +184,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
+            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

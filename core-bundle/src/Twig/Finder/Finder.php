@@ -131,14 +131,14 @@ final class Finder implements \IteratorAggregate, \Countable
                 '%s [%s • %s]',
                 $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
-                implode(', ', $sourceLabels)
+                implode(', ', $sourceLabels),
             );
         };
 
         $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
             '%s [%s]',
             $identifier,
-            implode(', ', $sourceLabels)
+            implode(', ', $sourceLabels),
         );
 
         $options = [];
@@ -172,7 +172,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 }
 
                 return false;
-            }
+            },
         );
 
         $this->sources = [];

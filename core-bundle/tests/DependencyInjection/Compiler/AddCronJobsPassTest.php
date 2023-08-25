@@ -144,7 +144,7 @@ class AddCronJobsPassTest extends TestCase
             [
                 'interval' => 'minutely',
                 'method' => 'customMethod',
-            ]
+            ],
         );
 
         $container = $this->getContainerBuilder();

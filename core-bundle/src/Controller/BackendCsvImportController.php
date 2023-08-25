@@ -54,7 +54,7 @@ class BackendCsvImportController
             'listitems',
             (int) $dc->id,
             $this->translator->trans('MSC.lw_import.0', [], 'contao_default'),
-            true
+            true,
         );
     }
 
@@ -69,7 +69,7 @@ class BackendCsvImportController
             $dc->table,
             'tableitems',
             (int) $dc->id,
-            $this->translator->trans('MSC.tw_import.0', [], 'contao_default')
+            $this->translator->trans('MSC.tw_import.0', [], 'contao_default'),
         );
     }
 
@@ -89,7 +89,7 @@ class BackendCsvImportController
             $dc->table,
             'options',
             (int) $dc->id,
-            $this->translator->trans('MSC.ow_import.0', [], 'contao_default')
+            $this->translator->trans('MSC.ow_import.0', [], 'contao_default'),
         );
     }
 

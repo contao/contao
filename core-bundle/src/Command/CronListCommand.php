@@ -23,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:cron:list',
-    description: 'Lists all available cron jobs and their intervals.'
+    description: 'Lists all available cron jobs and their intervals.',
 )]
 class CronListCommand extends Command
 {

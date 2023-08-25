@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:backup:list',
-    description: 'Lists the existing database backups.'
+    description: 'Lists the existing database backups.',
 )]
 class BackupListCommand extends AbstractBackupCommand
 {
@@ -47,7 +47,7 @@ class BackupListCommand extends AbstractBackupCommand
 
         $io->table(
             [sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
-            $this->formatForTable($this->backupManager->listBackups(), $timeZone)
+            $this->formatForTable($this->backupManager->listBackups(), $timeZone),
         );
 
         return Command::SUCCESS;

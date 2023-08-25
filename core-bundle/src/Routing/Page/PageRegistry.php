@@ -212,7 +212,7 @@ class PageRegistry
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
                 static fn (RouteConfig $config) => $config->getUrlSuffix(),
-                $this->routeConfigs
+                $this->routeConfigs,
             )),
         ];
 

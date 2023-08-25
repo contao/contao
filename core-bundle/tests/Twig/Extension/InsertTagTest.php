@@ -93,7 +93,7 @@ class InsertTagTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
+                $this->createMock(ContaoCsrfTokenManager::class),
             ),
         ]);
 
@@ -115,7 +115,7 @@ class InsertTagTest extends TestCase
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
-            ])
+            ]),
         );
 
         return $environment->render('@Contao/test.html.twig', $context);

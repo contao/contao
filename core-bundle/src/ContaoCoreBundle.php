@@ -79,7 +79,7 @@ class ContaoCoreBundle extends Bundle
                 RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                 SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                 SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
-            ])
+            ]),
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
@@ -94,8 +94,8 @@ class ContaoCoreBundle extends Bundle
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
                 FrontendModuleReference::PROXY_CLASS,
-                'contao.listener.module_template_options'
-            )
+                'contao.listener.module_template_options',
+            ),
         );
 
         $container->addCompilerPass(
@@ -103,8 +103,8 @@ class ContaoCoreBundle extends Bundle
                 ContentElementReference::TAG_NAME,
                 ContentElementReference::GLOBALS_KEY,
                 ContentElementReference::PROXY_CLASS,
-                'contao.listener.element_template_options'
-            )
+                'contao.listener.element_template_options',
+            ),
         );
 
         $container->addCompilerPass(new DataContainerCallbackPass());

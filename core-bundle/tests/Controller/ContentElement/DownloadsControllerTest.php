@@ -135,7 +135,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             $this->createMock(PreviewFactory::class),
             $this->getDefaultStudio(),
             'project/dir',
-            ['jpg', 'txt']
+            ['jpg', 'txt'],
         );
     }
 }

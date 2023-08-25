@@ -44,7 +44,7 @@ class PageRoutingListener
             '@ContaoCore/Backend/be_route_path.html.twig',
             [
                 'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
-            ]
+            ],
         );
     }
 
@@ -95,7 +95,7 @@ class PageRoutingListener
             '@ContaoCore/Backend/be_route_conflicts.html.twig',
             [
                 'conflicts' => $conflicts,
-            ]
+            ],
         );
     }
 

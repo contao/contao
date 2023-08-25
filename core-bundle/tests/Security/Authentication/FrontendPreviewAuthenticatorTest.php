@@ -96,7 +96,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
                 static function (UsernamePasswordToken $token) use ($user): bool {
                     return $user === $token->getUser()
                         && ['ROLE_MEMBER'] === $token->getRoleNames();
-                }
+                },
             ))
         ;
 

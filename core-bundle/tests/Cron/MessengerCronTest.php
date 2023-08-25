@@ -57,9 +57,9 @@ class MessengerCronTest extends TestCase
                     return $promise = new Promise(
                         static function () use (&$promise, $process): void {
                             $promise->resolve($process);
-                        }
+                        },
                     );
-                }
+                },
             )
         ;
 
@@ -71,7 +71,7 @@ class MessengerCronTest extends TestCase
         $promise->then(
             static function (array $realProcesses) use (&$processes): void {
                 $processes = $realProcesses;
-            }
+            },
         );
 
         $promise->wait();

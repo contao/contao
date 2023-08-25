@@ -25,7 +25,7 @@ use Symfony\Component\Finder\Finder;
 #[AsCommand(
     name: 'skeleton:install',
     description: 'Installs the skeleton files of the manager bundle.',
-    aliases: ['contao:install-web-dir'] // Backwards compatibility
+    aliases: ['contao:install-web-dir'], // Backwards compatibility
 )]
 class InstallSkeletonCommand extends Command
 {

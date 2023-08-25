@@ -54,7 +54,7 @@ class ContaoContext implements \Stringable
                 'uri' => $this->uri,
                 'pageId' => $this->pageId,
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
     }
 

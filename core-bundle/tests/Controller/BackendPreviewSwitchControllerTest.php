@@ -151,7 +151,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             [],
             [],
             [],
-            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
         );
 
         $response = $controller($request);
@@ -235,7 +235,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             [],
             [],
             [],
-            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
         );
 
         $response = $controller($request);
@@ -309,7 +309,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                         'contao_backend',
                         ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'],
                     ],
-                    ['contao_backend_switch']
+                    ['contao_backend_switch'],
                 )
                 ->willReturn('/_contao/preview/1', '/contao/preview_switch')
             ;
@@ -368,7 +368,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ->method('isGranted')
                 ->withConsecutive(
                     ['ROLE_ALLOWED_TO_SWITCH_MEMBER'],
-                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link']
+                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link'],
                 )
                 ->willReturn(true, $canShare)
             ;

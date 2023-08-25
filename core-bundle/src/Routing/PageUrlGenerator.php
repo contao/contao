@@ -76,7 +76,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             $route instanceof PageRoute
             && !array_intersect_key(
                 array_filter([...$route->getDefaults(), ...$parameters]),
-                array_flip($compiledRoute->getVariables())
+                array_flip($compiledRoute->getVariables()),
             )
         ) {
             $staticPrefix = $compiledRoute->getStaticPrefix();
@@ -99,7 +99,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
                 $route->getDefault('_canonical_route') ?: $name,
                 $referenceType,
                 $compiledRoute->getHostTokens(),
-                $route->getSchemes()
+                $route->getSchemes(),
             );
         } catch (ExceptionInterface $exception) {
             throw new RouteParametersException($route, $parameters, $referenceType, $exception);

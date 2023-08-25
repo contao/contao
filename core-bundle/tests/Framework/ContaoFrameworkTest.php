@@ -302,7 +302,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onGetPageLayout'],
                 ['test.listener.b', 'onGetPageLayout'],
             ],
-            $getPageLayout
+            $getPageLayout,
         );
 
         // Test hooks with negative priority are added at the end
@@ -312,7 +312,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.b', 'onGeneratePage'],
                 ['test.listener.a', 'onGeneratePage'],
             ],
-            $generatePage
+            $generatePage,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with high priority.
@@ -321,7 +321,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.a', 'onParseTemplate'],
                 ['test.listener.c', 'onParseTemplate'],
             ],
-            $parseTemplate
+            $parseTemplate,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with low priority.
@@ -330,7 +330,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onIsVisibleElement'],
                 ['test.listener.a', 'onIsVisibleElement'],
             ],
-            $isVisibleElement
+            $isVisibleElement,
         );
     }
 
@@ -415,7 +415,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
         );
 
         $adapters = [

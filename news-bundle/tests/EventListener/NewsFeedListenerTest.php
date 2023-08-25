@@ -82,7 +82,7 @@ class NewsFeedListenerTest extends ContaoTestCase
                 'newsArchives' => serialize([1]),
                 'feedFeatured' => $feedFeatured,
                 'maxFeedItems' => 0,
-            ]
+            ],
         );
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
@@ -204,8 +204,8 @@ class NewsFeedListenerTest extends ContaoTestCase
                         $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
                         $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
                     ],
-                    'tl_files'
-                )
+                    'tl_files',
+                ),
             )
         ;
 
@@ -230,7 +230,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             [
                 'feedSource' => $feedSource,
                 'imgSize' => serialize([100, 100, 'crop']),
-            ]
+            ],
         );
 
         $request = $this->createMock(Request::class);

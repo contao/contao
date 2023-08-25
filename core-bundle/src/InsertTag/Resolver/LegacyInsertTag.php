@@ -701,7 +701,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $value = StringUtil::specialcharsAttribute($value);
-            }
+            },
         );
 
         return [$base, $attributes];

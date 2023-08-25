@@ -73,7 +73,7 @@ class PickerConfigTest extends TestCase
                 'current' => 'alias',
                 'value' => 'foo',
             ],
-            $this->config->jsonSerialize()
+            $this->config->jsonSerialize(),
         );
     }
 
@@ -86,7 +86,7 @@ class PickerConfigTest extends TestCase
                 'current' => 'alias',
                 'value' => 'foo',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
@@ -105,7 +105,7 @@ class PickerConfigTest extends TestCase
                 'current' => 'alias',
                 'value' => 'foo',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {

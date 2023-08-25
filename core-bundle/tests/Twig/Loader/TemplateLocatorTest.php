@@ -38,7 +38,7 @@ class TemplateLocatorTest extends TestCase
                 'templates/my/theme',
                 'themes/foo',
                 'templates/non-existing',
-            ]
+            ],
         );
 
         $expectedThemeDirectories = [
@@ -76,7 +76,7 @@ class TemplateLocatorTest extends TestCase
             [],
             [],
             $this->createMock(ThemeNamespace::class),
-            $connection
+            $connection,
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
@@ -150,7 +150,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame(
             ['App' => [Path::join($projectDir, 'contao/templates')]],
             $locator->findResourcesPaths(),
-            'should not contain the "content_element" sub-directory'
+            'should not contain the "content_element" sub-directory',
         );
     }
 
@@ -194,19 +194,19 @@ class TemplateLocatorTest extends TestCase
 
         $this->assertEmpty(
             $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
-            'expect single depth without implicit root'
+            'expect single depth without implicit root',
         );
 
         $this->assertSame(
             $expectedTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates')),
-            'expect templates with directory structure but no theme templates'
+            'expect templates with directory structure but no theme templates',
         );
 
         $this->assertSame(
             $expectedThemeTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
-            'expect theme templates with directory structure'
+            'expect theme templates with directory structure',
         );
     }
 
@@ -230,7 +230,7 @@ class TemplateLocatorTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $connection
+            $connection,
         );
     }
 }

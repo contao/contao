@@ -90,7 +90,7 @@ class LogoutListener
 
             $this->logger?->info(
                 sprintf('User "%s" has logged out', $user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)],
             );
         }
     }

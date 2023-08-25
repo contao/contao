@@ -126,7 +126,7 @@ abstract class FunctionalTestCase extends WebTestCase
         if ($tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables)
+                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables),
             ));
         }
 

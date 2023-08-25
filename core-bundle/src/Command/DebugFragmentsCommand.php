@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'debug:fragments',
-    description: 'Displays the fragment controller configuration.'
+    description: 'Displays the fragment controller configuration.',
 )]
 class DebugFragmentsCommand extends Command
 {
@@ -76,7 +76,7 @@ class DebugFragmentsCommand extends Command
 
                 return max($carry, $length);
             },
-            0
+            0,
         );
 
         $return = [];

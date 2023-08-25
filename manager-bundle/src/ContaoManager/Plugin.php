@@ -124,7 +124,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
-            }
+            },
         );
     }
 
@@ -156,7 +156,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 return $carry;
             },
-            new RouteCollection()
+            new RouteCollection(),
         );
     }
 
@@ -569,7 +569,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $userPassword,
             $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
             $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
-            $dbName
+            $dbName,
         );
     }
 
@@ -606,7 +606,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $transport,
             $credentials,
             $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
-            $portSuffix
+            $portSuffix,
         );
     }
 

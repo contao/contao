@@ -70,7 +70,7 @@ class Cron
             function () use (&$promise): void {
                 $this->cachePool->commit();
                 $promise->resolve('Saved cache item.');
-            }
+            },
         );
     }
 
@@ -208,7 +208,7 @@ class Cron
                         } else {
                             $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
-                    }
+                    },
                 );
 
                 $promises[] = $promise;

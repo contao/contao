@@ -25,7 +25,7 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.'
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
 )]
 class ContaoSetupCommand extends Command
 {
@@ -133,7 +133,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {

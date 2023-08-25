@@ -573,7 +573,7 @@ class StringUtilTest extends TestCase
                     ],
                 ],
             ],
-            $dereferenced
+            $dereferenced,
         );
     }
 
@@ -618,12 +618,12 @@ class StringUtilTest extends TestCase
 
         $this->assertSame(
             'Foo <img src="files/test.jpg" /> Bar',
-            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar')
+            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar'),
         );
 
         $this->assertSame(
             'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
-            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar')
+            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
     }
 }

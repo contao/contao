@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:set',
-    description: 'Writes a parameter to the .env file.'
+    description: 'Writes a parameter to the .env file.',
 )]
 class SetDotEnvCommand extends Command
 {

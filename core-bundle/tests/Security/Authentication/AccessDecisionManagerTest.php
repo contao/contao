@@ -73,7 +73,7 @@ class AccessDecisionManagerTest extends TestCase
             $this->mockAccessDecisionManager(false),
             $this->mockAccessDecisionManager(true),
             $requestStack,
-            $this->mockFirewallMap('contao_frontend')
+            $this->mockFirewallMap('contao_frontend'),
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
@@ -88,7 +88,7 @@ class AccessDecisionManagerTest extends TestCase
             $this->mockAccessDecisionManager(false),
             $this->mockAccessDecisionManager(true),
             $requestStack,
-            $this->mockFirewallMap('contao_backend')
+            $this->mockFirewallMap('contao_backend'),
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);

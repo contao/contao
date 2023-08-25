@@ -58,7 +58,7 @@ class PageRoutingListenerTest extends TestCase
                 '@ContaoCore/Backend/be_route_path.html.twig',
                 [
                     'path' => $expected,
-                ]
+                ],
             )
             ->willReturn('foobar')
         ;
@@ -245,7 +245,7 @@ class PageRoutingListenerTest extends TestCase
                             'editUrl' => 'editUrl',
                         ],
                     ],
-                ]
+                ],
             )
             ->willReturn('foobar')
         ;

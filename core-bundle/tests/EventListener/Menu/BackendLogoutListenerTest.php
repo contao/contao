@@ -88,7 +88,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $router,
             $urlGenerator,
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -107,7 +107,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
                 'class' => 'icon-logout',
                 'accesskey' => 'q',
             ],
-            $children['logout']->getLinkAttributes()
+            $children['logout']->getLinkAttributes(),
         );
     }
 
@@ -144,7 +144,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -175,7 +175,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -203,7 +203,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);

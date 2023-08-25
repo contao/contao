@@ -87,7 +87,7 @@ class PreviewToolbarListener
                 'action' => $this->router->generate('contao_backend_switch'),
                 'request' => $request,
                 'preview_script' => $this->previewScript,
-            ]
+            ],
         );
 
         $response->setContent(substr($content, 0, $pos)."\n".$toolbar."\n".substr($content, $pos));

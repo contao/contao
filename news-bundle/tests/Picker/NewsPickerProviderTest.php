@@ -35,7 +35,7 @@ class NewsPickerProviderTest extends ContaoTestCase
                 'current' => 'newsPicker',
                 'value' => '',
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
@@ -108,14 +108,14 @@ class NewsPickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{news_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{news_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -132,7 +132,7 @@ class NewsPickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{news_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5),
         );
     }
 
@@ -233,7 +233,7 @@ class NewsPickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

@@ -46,7 +46,7 @@ class LightboxResult
                 ->createImage(
                     $filePathOrImage,
                     $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration(),
-                    $resizeOptions
+                    $resizeOptions,
                 )
             ;
         }

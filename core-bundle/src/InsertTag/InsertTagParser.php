@@ -278,7 +278,7 @@ class InsertTagParser implements ResetInterface
         $tag = new ParsedInsertTag(
             $name,
             new ParsedParameters($parameters),
-            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags)
+            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags),
         );
 
         if ($tag->getParameters()->hasInsertTags()) {
@@ -461,7 +461,7 @@ class InsertTagParser implements ResetInterface
         $esiTag = $this->fragmentHandler->render(
             new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
             'esi',
-            ['ignore_errors' => false] // see #48
+            ['ignore_errors' => false], // see #48
         );
 
         return new InsertTagResult($esiTag, OutputType::html);

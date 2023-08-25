@@ -130,14 +130,14 @@ class XliffFileLoader extends Loader
                 "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",
                 $chunks[0],
                 $this->quoteKey($chunks[1]),
-                $this->quoteValue($value)
+                $this->quoteValue($value),
             ),
             3 => sprintf(
                 "\$GLOBALS['TL_LANG']['%s'][%s][%s] = %s;\n",
                 $chunks[0],
                 $this->quoteKey($chunks[1]),
                 $this->quoteKey($chunks[2]),
-                $this->quoteValue($value)
+                $this->quoteValue($value),
             ),
             4 => sprintf(
                 "\$GLOBALS['TL_LANG']['%s'][%s][%s][%s] = %s;\n",
@@ -145,7 +145,7 @@ class XliffFileLoader extends Loader
                 $this->quoteKey($chunks[1]),
                 $this->quoteKey($chunks[2]),
                 $this->quoteKey($chunks[3]),
-                $this->quoteValue($value)
+                $this->quoteValue($value),
             ),
             default => throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.'),
         };

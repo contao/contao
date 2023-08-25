@@ -93,8 +93,8 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return new ImageDimensions(
             new Box(
                 (int) round($width * $scaleFactor),
-                (int) round($height * $scaleFactor)
-            )
+                (int) round($height * $scaleFactor),
+            ),
         );
     }
 
