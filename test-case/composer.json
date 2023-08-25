@@ -16,7 +16,7 @@
     "require-dev": {
         "ext-pdo": "*",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^3.3",
+        "doctrine/dbal": "^3.6",
         "doctrine/orm": "^2.10",
         "symfony/http-client": "^5.4 || ^6.0"
     },
