@@ -78,7 +78,7 @@ class VersionCommandTest extends TestCase
                 'commands' => [],
                 'features' => [],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());
@@ -109,7 +109,7 @@ class VersionCommandTest extends TestCase
                 'commands' => ['foo:bar'],
                 'features' => [],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());
@@ -155,7 +155,7 @@ class VersionCommandTest extends TestCase
                     ],
                 ],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());
