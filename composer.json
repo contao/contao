@@ -117,7 +117,7 @@
         "symfony/dotenv": "^6.3",
         "symfony/error-handler": "^6.3",
         "symfony/event-dispatcher": "^6.3",
-        "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
+        "symfony/event-dispatcher-contracts": "^3.0",
         "symfony/expression-language": "^6.3",
         "symfony/filesystem": "^6.3",
         "symfony/finder": "^6.3",
