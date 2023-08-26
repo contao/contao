@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Event\MenuEvent;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator as BaseLogoutUrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;

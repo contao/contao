@@ -18,7 +18,7 @@
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^3.3",
         "doctrine/orm": "^2.10",
-        "symfony/http-client": "^5.4 || ^6.0"
+        "symfony/http-client": "^6.3"
     },
     "conflict": {
         "phpunit/phpunit": "<8.0",
