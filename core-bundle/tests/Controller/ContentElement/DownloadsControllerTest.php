@@ -16,7 +16,7 @@ use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\StringUtil;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DownloadsControllerTest extends ContentElementTestCase
 {

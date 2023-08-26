@@ -15,9 +15,9 @@ namespace Contao\ManagerBundle\EventListener;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

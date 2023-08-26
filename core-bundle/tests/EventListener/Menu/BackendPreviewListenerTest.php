@@ -17,11 +17,11 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendPreviewListenerTest extends ContaoTestCase
