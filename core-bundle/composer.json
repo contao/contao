@@ -62,7 +62,7 @@
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0",
         "doctrine/collections": "^2.1",
-        "doctrine/dbal": "^3.3",
+        "doctrine/dbal": "^3.6",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.10",
         "doctrine/persistence": "^3.2",
@@ -172,7 +172,6 @@
         "contao/manager-bundle": "^4.5 <4.5.2",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
-        "doctrine/dbal": "3.3.0",
         "friendsofsymfony/http-cache": "2.14.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
