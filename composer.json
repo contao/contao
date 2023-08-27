@@ -173,7 +173,6 @@
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
         "league/flysystem-memory": "^3.0",
-        "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^6.3",
         "symfony/phpunit-bridge": "^6.3"
     },
@@ -195,7 +194,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/annotations": "<1.9",
         "doctrine/cache": "<1.10",
-        "roave/better-reflection": "<4.12.2 || >=6.0",
+        "nikic/php-parser": "4.7.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"

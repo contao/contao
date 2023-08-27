@@ -162,7 +162,6 @@
         "contao/test-case": "self.version",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5.19",
-        "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^6.3",
         "symfony/phpunit-bridge": "^6.3"
     },
