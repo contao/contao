@@ -20,9 +20,6 @@
         "doctrine/orm": "^2.10",
         "symfony/http-client": "^6.3"
     },
-    "conflict": {
-        "phpunit/phpunit": "<8.0"
-    },
     "autoload": {
         "psr-4": {
             "Contao\\TestCase\\": "src/"
