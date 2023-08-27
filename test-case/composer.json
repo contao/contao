@@ -21,7 +21,6 @@
         "symfony/http-client": "^6.3"
     },
     "conflict": {
-        "phpunit/phpunit": "<8.0",
         "roave/better-reflection": "<4.12.2 || >=6.0"
     },
     "autoload": {
