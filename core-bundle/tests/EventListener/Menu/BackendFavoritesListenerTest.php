@@ -19,11 +19,11 @@ use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

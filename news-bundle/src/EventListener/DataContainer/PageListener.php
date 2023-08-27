@@ -18,7 +18,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class PageListener
 {

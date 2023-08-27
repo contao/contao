@@ -28,6 +28,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -39,7 +40,6 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 

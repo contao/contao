@@ -20,8 +20,8 @@ use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
