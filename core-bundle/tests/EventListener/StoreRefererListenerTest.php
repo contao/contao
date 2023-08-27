@@ -16,13 +16,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class StoreRefererListenerTest extends TestCase

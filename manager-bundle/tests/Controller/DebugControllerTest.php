@@ -16,10 +16,10 @@ use Contao\ManagerBundle\Controller\DebugController;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 
 class DebugControllerTest extends ContaoTestCase
 {

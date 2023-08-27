@@ -17,8 +17,8 @@ use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security;
 
 #[AsCallback(table: 'tl_page', target: 'fields.type.options')]
 #[AsCallback(table: 'tl_user', target: 'fields.alpty.options')]
