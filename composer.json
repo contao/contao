@@ -153,7 +153,7 @@
         "symfony/translation": "^6.3",
         "symfony/translation-contracts": "^3.0",
         "symfony/twig-bridge": "^6.3",
-        "symfony/twig-bundle": "^6.3,
+        "symfony/twig-bundle": "^6.3",
         "symfony/uid": "^6.3",
         "symfony/var-dumper": "^6.3",
         "symfony/web-profiler-bundle": "^6.3",
