@@ -189,11 +189,17 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $page = $route->getPageModel();
 
+        // Only create "root" routes for root pages or pages with root alias
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
         $urlPrefix = $route->getUrlPrefix();
+
+        // Do not create a ".root" route for root pages without prefix if `disableLanguageRedirect` is enabled
+        if ('root' === $page->type && !$urlPrefix && !$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect) {
+            return;
+        }
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
             $urlPrefix ? '/'.$urlPrefix.'/' : '/',
@@ -205,6 +211,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods()
         );
 
+        // Do not create ".fallback" route if `disableLanguageRedirect` is enabled
         if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect)) {
             return;
         }
