@@ -1330,6 +1330,28 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Domain1', $title);
     }
 
+    public function testCorrectRedirectsIfLanguageRedirectsAreDisabled(): void
+    {
+        $request = 'https://example.local/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['issue-6328']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/meta')->last()->attr('content'));
+        $response = $client->getResponse();
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('https://example.local/en/', $response->headers->get('Location'));
+    }
+
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
         $request = 'https://protected-root.local/';
