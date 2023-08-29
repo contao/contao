@@ -31,6 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
+
     private array $preserveMetadataFields;
 
     /**

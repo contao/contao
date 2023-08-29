@@ -37,10 +37,13 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     use ContainerAwareTrait;
 
     private static bool $initialized = false;
+
     private static string $nonce = '';
 
     private Request|null $request = null;
+
     private array $adapterCache = [];
+
     private array $hookListeners = [];
 
     public function __construct(

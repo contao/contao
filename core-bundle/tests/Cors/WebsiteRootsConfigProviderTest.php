@@ -157,10 +157,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(Statement $statement): Connection
+    private function mockConnection(Statement $statement): Connection&MockObject
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager

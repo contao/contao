@@ -72,10 +72,7 @@ class BackupListCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function mockBackupManager(): BackupManager
+    private function mockBackupManager(): BackupManager&MockObject
     {
         $backups = [
             $this->createBackup('test__20211101141254.sql.gz', 50000),

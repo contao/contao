@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PlayerController extends AbstractContentElementController
 {
     private const VIDEO_TYPES = ['webm', 'mp4', 'm4v', 'mov', 'wmv', 'ogv'];
+
     private const AUDIO_TYPES = ['m4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'];
 
     /**

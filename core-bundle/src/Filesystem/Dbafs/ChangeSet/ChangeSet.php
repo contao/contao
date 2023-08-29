@@ -24,11 +24,15 @@ use Symfony\Component\Filesystem\Path;
 class ChangeSet
 {
     final public const ATTR_HASH = 'hash';
+
     final public const ATTR_PATH = 'path';
+
     final public const ATTR_TYPE = 'type';
+
     final public const ATTR_LAST_MODIFIED = 'lastModified';
 
     final public const TYPE_FILE = 0;
+
     final public const TYPE_DIRECTORY = 1;
 
     /**

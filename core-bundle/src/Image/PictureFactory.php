@@ -41,8 +41,11 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
+
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
+
     private array $preserveMetadataFields;
 
     /**

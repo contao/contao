@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ImageSizes implements ResetInterface
 {
     private array $predefinedSizes = [];
+
     private array|null $options = null;
 
     /**

@@ -367,10 +367,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @return ResponseInterface&MockObject
-     */
-    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&MockObject
     {
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -402,10 +399,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(): TranslatorInterface
+    private function mockTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

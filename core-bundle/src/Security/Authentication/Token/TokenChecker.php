@@ -30,6 +30,7 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 class TokenChecker
 {
     private const FRONTEND_FIREWALL = 'contao_frontend';
+
     private const BACKEND_FIREWALL = 'contao_backend';
 
     private array $previewLinks = [];

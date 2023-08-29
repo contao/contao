@@ -26,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DebugFragmentsCommand extends Command
 {
     private array $identifiers = [];
+
     private array $attributes = [];
 
     /**

@@ -15,14 +15,23 @@ namespace Contao\CoreBundle\Monolog;
 class ContaoContext implements \Stringable
 {
     final public const ERROR = 'ERROR';
+
     final public const ACCESS = 'ACCESS';
+
     final public const GENERAL = 'GENERAL';
+
     final public const FILES = 'FILES';
+
     final public const CRON = 'CRON';
+
     final public const FORMS = 'FORMS';
+
     final public const EMAIL = 'EMAIL';
+
     final public const CONFIGURATION = 'CONFIGURATION';
+
     final public const NEWSLETTER = 'NEWSLETTER';
+
     final public const REPOSITORY = 'REPOSITORY';
 
     public function __construct(

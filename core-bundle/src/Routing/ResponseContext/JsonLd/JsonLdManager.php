@@ -21,6 +21,7 @@ use Spatie\SchemaOrg\Type;
 class JsonLdManager
 {
     final public const SCHEMA_ORG = 'https://schema.org';
+
     final public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
     /**

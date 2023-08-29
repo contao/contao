@@ -26,25 +26,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentButtonListenerTest extends TestCase
 {
+    private TranslatorInterface&MockObject $translator;
+
+    private ContaoFramework&MockObject $framework;
+
+    private Connection&MockObject $connection;
+
     /**
      * @var Adapter<Image>&MockObject
      */
-    private Adapter $imageAdapter;
-
-    /**
-     * @var TranslatorInterface&MockObject
-     */
-    private TranslatorInterface $translator;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Adapter&MockObject $imageAdapter;
 
     protected function setUp(): void
     {

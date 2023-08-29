@@ -22,8 +22,11 @@ use Symfony\Component\Yaml\Yaml;
 abstract class FunctionalTestCase extends WebTestCase
 {
     private static array $tableColumns = [];
+
     private static array $tableSchemas = [];
+
     private static int $alterCount = -1;
+
     private static bool $supportsAlterCount;
 
     protected static function loadFixtures(array $yamlFiles): void

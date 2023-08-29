@@ -28,7 +28,9 @@ use Symfony\Component\Filesystem\Path;
 class InstallCommand extends Command
 {
     private Filesystem|null $fs = null;
+
     private array $rows = [];
+
     private string|null $webDir = null;
 
     public function __construct(

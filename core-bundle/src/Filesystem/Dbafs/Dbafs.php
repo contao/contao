@@ -39,15 +39,21 @@ use Symfony\Contracts\Service\ResetInterface;
 class Dbafs implements DbafsInterface, ResetInterface
 {
     final public const FILE_MARKER_EXCLUDED = '.nosync';
+
     final public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
+
     private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;
+
     private const RESOURCE_DOES_NOT_EXIST = -1;
+
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
     private string $dbPathPrefix = '';
+
     private int $bulkInsertSize = 100;
+
     private bool $useLastModified = true;
 
     /**

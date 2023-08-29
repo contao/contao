@@ -119,10 +119,7 @@ class FilterPageTypeListenerTest extends TestCase
         $this->assertSame(['foo', 'error_404'], $event->getOptions());
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(int|null $pid, int|null $id = null): DataContainer
+    private function mockDataContainer(int|null $pid, int|null $id = null): DataContainer&MockObject
     {
         $currentRecord = array_filter(['id' => $id, 'pid' => $pid], static fn ($v): bool => null !== $v);
 

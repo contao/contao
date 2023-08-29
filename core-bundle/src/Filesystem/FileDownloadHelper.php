@@ -40,8 +40,11 @@ use Symfony\Component\HttpKernel\UriSigner;
 class FileDownloadHelper
 {
     private const PARAM_PATH = 'p';
+
     private const PARAM_CONTEXT = 'ctx';
+
     private const PARAM_DISPOSITION = 'd';
+
     private const PARAM_FILE_NAME = 'f';
 
     public function __construct(private readonly UriSigner $signer)

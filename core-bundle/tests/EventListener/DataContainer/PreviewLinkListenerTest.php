@@ -220,10 +220,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurity(int $userId = 42): Security
+    private function mockSecurity(int $userId = 42): Security&MockObject
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
 
@@ -247,7 +244,7 @@ class PreviewLinkListenerTest extends TestCase
     /**
      * @return Adapter<Input>&MockObject
      */
-    private function mockInputAdapter(array $inputData): Adapter
+    private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
         $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter

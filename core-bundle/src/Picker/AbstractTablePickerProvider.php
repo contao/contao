@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
+
     private const PREFIX_LENGTH = 3;
 
     public function __construct(

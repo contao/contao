@@ -354,10 +354,7 @@ class BackupManagerTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @return DumperInterface&MockObject
-     */
-    private function mockDumper(Connection $connection): DumperInterface
+    private function mockDumper(Connection $connection): DumperInterface&MockObject
     {
         $dumper = $this->createMock(DumperInterface::class);
         $dumper
@@ -375,10 +372,7 @@ class BackupManagerTest extends ContaoTestCase
         return $dumper;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(): Connection
+    private function mockConnection(): Connection&MockObject
     {
         return $this
             ->getMockBuilder(Connection::class)

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Search\Document;
 class SearchIndexMessage implements LowPriorityMessageInterface
 {
     final public const ACTION_INDEX = 'index';
+
     final public const ACTION_DELETE = 'delete';
 
     private function __construct(

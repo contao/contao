@@ -22,15 +22,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class VersionCommandTest extends TestCase
 {
-    /**
-     * @var Application&MockObject
-     */
-    private Application $application;
+    private Application&MockObject $application;
 
-    /**
-     * @var PluginLoader&MockObject
-     */
-    private PluginLoader $pluginLoader;
+    private PluginLoader&MockObject $pluginLoader;
 
     private VersionCommand $command;
 

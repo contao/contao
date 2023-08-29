@@ -55,6 +55,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class ContaoCoreBundle extends Bundle
 {
     final public const SCOPE_BACKEND = 'backend';
+
     final public const SCOPE_FRONTEND = 'frontend';
 
     public function getContainerExtension(): ContaoCoreExtension

@@ -267,10 +267,7 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(): ContaoFramework
+    private function mockFramework(): ContaoFramework&MockObject
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
         $controllerAdapter
@@ -293,10 +290,7 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer
+    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer&MockObject
     {
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;

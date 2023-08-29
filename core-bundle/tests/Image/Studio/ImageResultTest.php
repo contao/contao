@@ -437,10 +437,7 @@ class ImageResultTest extends TestCase
         $imageResult->createIfDeferred();
     }
 
-    /**
-     * @return PictureFactoryInterface&MockObject
-     */
-    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface&MockObject
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory
@@ -453,10 +450,7 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    /**
-     * @return ContainerInterface&MockObject
-     */
-    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null): ContainerInterface
+    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null): ContainerInterface&MockObject
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;

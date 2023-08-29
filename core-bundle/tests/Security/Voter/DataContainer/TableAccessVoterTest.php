@@ -28,15 +28,9 @@ class TableAccessVoterTest extends TestCase
 {
     private TableAccessVoter $voter;
 
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
 
-    /**
-     * @var TokenInterface&MockObject
-     */
-    private TokenInterface $token;
+    private TokenInterface&MockObject $token;
 
     protected function setUp(): void
     {

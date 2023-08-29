@@ -43,9 +43,13 @@ use Symfony\Component\Process\Process;
 class ResizeImagesCommand extends Command
 {
     private readonly DeferredResizerInterface|null $resizer;
+
     private readonly int $terminalWidth;
+
     private SymfonyStyle|null $io = null;
+
     private ConsoleSectionOutput|null $tableOutput = null;
+
     private Table|null $table = null;
 
     public function __construct(

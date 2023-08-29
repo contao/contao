@@ -386,10 +386,7 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('translator', $services);
     }
 
-    /**
-     * @return Authenticator&MockObject
-     */
-    private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator
+    private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator&MockObject
     {
         $authenticator = $this->createMock(Authenticator::class);
 
@@ -405,10 +402,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    /**
-     * @return AuthenticationUtils&MockObject
-     */
-    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils
+    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils&MockObject
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
 
@@ -423,10 +417,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticationUtils;
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurityHelper(UserInterface|null $user = null, bool $isFullyAuthenticated = false): Security
+    private function mockSecurityHelper(UserInterface|null $user = null, bool $isFullyAuthenticated = false): Security&MockObject
     {
         $security = $this->createMock(Security::class);
         $security
@@ -443,10 +434,7 @@ class TwoFactorControllerTest extends TestCase
         return $security;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(): PageModel
+    private function mockPageModel(): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->enforceTwoFactor = false;

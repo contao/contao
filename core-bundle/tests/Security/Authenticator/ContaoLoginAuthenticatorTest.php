@@ -44,6 +44,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
@@ -262,7 +263,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
     public function getUserData(): \Generator
     {
-        $veryLongUsername = str_repeat('k.jones', (int) ceil(Security::MAX_USERNAME_LENGTH / \strlen('k.jones')));
+        $veryLongUsername = str_repeat('k.jones', (int) ceil(UserBadge::MAX_USERNAME_LENGTH / \strlen('k.jones')));
 
         yield [null, BadRequestHttpException::class];
         yield [$veryLongUsername, BadCredentialsException::class];

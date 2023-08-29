@@ -177,10 +177,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @return Filesystem&MockObject
-     */
-    private function mockFilesystem(): Filesystem
+    private function mockFilesystem(): Filesystem&MockObject
     {
         return $this
             ->getMockBuilder(Filesystem::class)
@@ -189,10 +186,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         ;
     }
 
-    /**
-     * @return Environment&MockObject
-     */
-    private function mockEnvironment(): Environment
+    private function mockEnvironment(): Environment&MockObject
     {
         return $this
             ->getMockBuilder(Environment::class)

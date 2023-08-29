@@ -459,10 +459,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithProperties(array $properties = []): PageModel
+    private function mockPageWithProperties(array $properties = []): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $properties);
         $page

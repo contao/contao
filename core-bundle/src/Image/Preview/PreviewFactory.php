@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Path;
 class PreviewFactory
 {
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
 
     /**

@@ -153,10 +153,7 @@ class PublishedFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    /**
-     * @return TokenChecker&MockObject
-     */
-    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
+    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker&MockObject
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker

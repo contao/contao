@@ -141,10 +141,7 @@ class LocaleSubscriberTest extends TestCase
         $listener->setTranslatorLocale($event);
     }
 
-    /**
-     * @return Locales&MockObject
-     */
-    private function mockLocales(array $locales): Locales
+    private function mockLocales(array $locales): Locales&MockObject
     {
         $localesService = $this->createMock(Locales::class);
         $localesService

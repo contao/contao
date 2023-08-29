@@ -30,8 +30,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendCsvImportController
 {
     final public const SEPARATOR_COMMA = 'comma';
+
     final public const SEPARATOR_LINEBREAK = 'linebreak';
+
     final public const SEPARATOR_SEMICOLON = 'semicolon';
+
     final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**

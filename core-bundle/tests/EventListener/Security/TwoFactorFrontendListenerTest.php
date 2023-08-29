@@ -510,10 +510,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return TokenStorageInterface&MockObject
-     */
-    private function mockTokenStorageWithToken(TokenInterface|null $token = null): TokenStorageInterface
+    private function mockTokenStorageWithToken(TokenInterface|null $token = null): TokenStorageInterface&MockObject
     {
         $tokenStorage = $this->createMock(TokenStorage::class);
         $tokenStorage
@@ -525,10 +522,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $tokenStorage;
     }
 
-    /**
-     * @return ScopeMatcher&MockObject
-     */
-    private function mockScopeMatcherWithEvent(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher
+    private function mockScopeMatcherWithEvent(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher&MockObject
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher

@@ -148,10 +148,7 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    /**
-     * @return AuthorizationCheckerInterface&MockObject
-     */
-    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface
+    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface&MockObject
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker

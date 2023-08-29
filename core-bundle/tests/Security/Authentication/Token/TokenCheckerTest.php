@@ -554,10 +554,7 @@ class TokenCheckerTest extends TestCase
         return $requestStack;
     }
 
-    /**
-     * @return FirewallMap&MockObject
-     */
-    private function mockFirewallMapWithConfigContext(string $context): FirewallMap
+    private function mockFirewallMapWithConfigContext(string $context): FirewallMap&MockObject
     {
         $config = new FirewallConfig('', '', null, true, false, null, $context);
 
@@ -570,10 +567,7 @@ class TokenCheckerTest extends TestCase
         return $map;
     }
 
-    /**
-     * @return SessionInterface&MockObject
-     */
-    private function mockSessionWithToken(TokenInterface $token): SessionInterface
+    private function mockSessionWithToken(TokenInterface $token): SessionInterface&MockObject
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -597,10 +591,7 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    /**
-     * @return SessionInterface&MockObject
-     */
-    private function mockSessionWithPreview(bool $isPreview): SessionInterface
+    private function mockSessionWithPreview(bool $isPreview): SessionInterface&MockObject
     {
         $session = $this->createMock(SessionInterface::class);
         $session

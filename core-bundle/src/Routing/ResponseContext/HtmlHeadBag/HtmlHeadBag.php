@@ -17,9 +17,13 @@ use Symfony\Component\HttpFoundation\Request;
 final class HtmlHeadBag
 {
     private string $title = '';
+
     private string $metaDescription = '';
+
     private string $metaRobots = 'index,follow';
+
     private string $canonicalUri = '';
+
     private array $keepParamsForCanonical = [];
 
     public function getTitle(): string

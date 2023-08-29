@@ -256,10 +256,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         $this->assertSame('Collapse all', $GLOBALS['TL_DCA']['tl_foobar']['list']['global_operations']['toggleNodes']['label']);
     }
 
-    /**
-     * @return RequestStack&MockObject
-     */
-    private function mockRequestStackWithSession(Session|null $session = null): RequestStack
+    private function mockRequestStackWithSession(Session|null $session = null): RequestStack&MockObject
     {
         $requestStack = $this->mockRequestStack('backend');
 
@@ -280,10 +277,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         return $requestStack;
     }
 
-    /**
-     * @return RequestStack&MockObject
-     */
-    private function mockRequestStack(string|null $scope = null): RequestStack
+    private function mockRequestStack(string|null $scope = null): RequestStack&MockObject
     {
         $attributes = [];
 
@@ -300,10 +294,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         return $requestStack;
     }
 
-    /**
-     * @return Session&MockObject
-     */
-    private function mockSessionWithData(array $data): Session
+    private function mockSessionWithData(array $data): Session&MockObject
     {
         $sessionBag = $this->createMock(AttributeBagInterface::class);
         $sessionBag

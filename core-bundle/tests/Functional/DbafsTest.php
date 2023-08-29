@@ -26,7 +26,9 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 class DbafsTest extends FunctionalTestCase
 {
     private VirtualFilesystem $filesystem;
+
     private Dbafs $dbafs;
+
     private FilesystemAdapter $adapter;
 
     protected function setUp(): void

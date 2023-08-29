@@ -30,7 +30,9 @@ use Symfony\Component\Process\Process;
 class ContaoSetupCommand extends Command
 {
     private readonly string $webDir;
+
     private readonly string $consolePath;
+
     private readonly string|false $phpPath;
 
     /**

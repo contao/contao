@@ -27,15 +27,9 @@ class ImageSizesTest extends TestCase
 {
     private ImageSizes $imageSizes;
 
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
-    private EventDispatcherInterface $eventDispatcher;
+    private EventDispatcherInterface&MockObject $eventDispatcher;
 
     protected function setUp(): void
     {
