@@ -66,6 +66,8 @@ return static function (RectorConfig $rectorConfig): void {
         ],
     ]);
 
+    $rectorConfig->phpstanConfig(__DIR__.'/phpstan.neon');
+
     $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
     $rectorConfig->rule(CompactToVariablesRector::class);
     $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);

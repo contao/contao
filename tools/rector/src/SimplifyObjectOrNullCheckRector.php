@@ -79,7 +79,7 @@ final class SimplifyObjectOrNullCheckRector extends AbstractRector
         }
 
         // Allow null compare in boolean return statements
-        if ($node->getAttribute('parent') instanceof Return_) {
+        if ($node->getAttribute(ReturnTypeVisitor::ATTRIBUTE_NAME)) {
             return null;
         }
 
