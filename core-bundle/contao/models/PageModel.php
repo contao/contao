@@ -1072,7 +1072,7 @@ class PageModel extends Model
 	/**
 	 * Generate a front end URL
 	 *
-	 * @param string $strParams An optional string of URL parameters
+	 * @param string|array $strParams An optional array or string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
 	 * @throws ResourceNotFoundException
@@ -1087,9 +1087,18 @@ class PageModel extends Model
 		$objRouter = System::getContainer()->get('router');
 		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
+		if (\is_array($strParams))
+		{
+			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $page));
+		}
+		else
+		{
+			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams);
+		}
+
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams), $referenceType);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, $referenceType);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1109,7 +1118,7 @@ class PageModel extends Model
 	/**
 	 * Generate an absolute URL depending on the current rewriteURL setting
 	 *
-	 * @param string $strParams An optional string of URL parameters
+	 * @param string|array $strParams An optional array or string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
 	 * @throws ResourceNotFoundException
@@ -1122,9 +1131,18 @@ class PageModel extends Model
 
 		$objRouter = System::getContainer()->get('router');
 
+		if (\is_array($strParams))
+		{
+			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+		}
+		else
+		{
+			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+		}
+
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1144,7 +1162,7 @@ class PageModel extends Model
 	/**
 	 * Generate the front end preview URL
 	 *
-	 * @param string $strParams An optional string of URL parameters
+	 * @param string|array $strParams An optional array or string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
 	 * @throws ResourceNotFoundException
@@ -1170,9 +1188,18 @@ class PageModel extends Model
 
 		$objRouter = System::getContainer()->get('router');
 
+		if (\is_array($strParams))
+		{
+			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+		}
+		else
+		{
+			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+		}
+
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
