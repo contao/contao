@@ -17,7 +17,6 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BinaryOp\NotIdentical;
 use PhpParser\Node\Expr\BooleanNot;
-use PhpParser\Node\Stmt\Return_;
 use Rector\Core\Rector\AbstractRector;
 use Rector\TypeDeclaration\TypeAnalyzer\NullableTypeAnalyzer;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
