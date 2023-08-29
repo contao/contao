@@ -829,10 +829,7 @@ class MigrateCommandTest extends TestCase
         );
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -854,10 +851,7 @@ class MigrateCommandTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function createBackupManager(bool $backupsEnabled): BackupManager
+    private function createBackupManager(bool $backupsEnabled): BackupManager&MockObject
     {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager

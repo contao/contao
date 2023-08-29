@@ -718,10 +718,7 @@ class SitemapControllerTest extends TestCase
 ';
     }
 
-    /**
-     * @return PageFinder&MockObject
-     */
-    private function mockPageFinder(Request $request): PageFinder
+    private function mockPageFinder(Request $request): PageFinder&MockObject
     {
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
         $rootPage1->id = 42;
@@ -748,10 +745,7 @@ class SitemapControllerTest extends TestCase
         return $pageFinder;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework
+    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&MockObject
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
 

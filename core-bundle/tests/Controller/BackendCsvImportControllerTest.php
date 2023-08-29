@@ -338,10 +338,7 @@ class BackendCsvImportControllerTest extends TestCase
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework&MockObject
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader
@@ -384,10 +381,7 @@ class BackendCsvImportControllerTest extends TestCase
         );
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(): DataContainer
+    private function mockDataContainer(): DataContainer&MockObject
     {
         $mock = $this->mockClassWithProperties(DataContainer::class);
         $mock->id = 1;
@@ -396,10 +390,7 @@ class BackendCsvImportControllerTest extends TestCase
         return $mock;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithUploader(): ContaoFramework
+    private function mockFrameworkWithUploader(): ContaoFramework&MockObject
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader

@@ -44,6 +44,7 @@ use Twig\Source;
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
+
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
     private string|false|null $currentThemeSlug = null;

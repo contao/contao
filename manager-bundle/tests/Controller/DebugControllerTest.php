@@ -85,10 +85,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener->enableAction();
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurityHelper(bool $isAdmin = true): Security
+    private function mockSecurityHelper(bool $isAdmin = true): Security&MockObject
     {
         $security = $this->createMock(Security::class);
         $security
@@ -100,10 +97,7 @@ class DebugControllerTest extends ContaoTestCase
         return $security;
     }
 
-    /**
-     * @return RequestStack&MockObject
-     */
-    private function mockRequestStack(string $path = '', string|null $referer = null): RequestStack
+    private function mockRequestStack(string $path = '', string|null $referer = null): RequestStack&MockObject
     {
         $request = Request::create($path);
 
@@ -121,10 +115,7 @@ class DebugControllerTest extends ContaoTestCase
         return $requestStack;
     }
 
-    /**
-     * @return JwtManager&MockObject
-     */
-    private function mockJwtManager(bool $expectAddsCookie, bool|null $debug = null): JwtManager
+    private function mockJwtManager(bool $expectAddsCookie, bool|null $debug = null): JwtManager&MockObject
     {
         $jwtManager = $this->createMock(JwtManager::class);
         $jwtManager

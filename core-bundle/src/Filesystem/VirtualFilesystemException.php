@@ -18,16 +18,27 @@ namespace Contao\CoreBundle\Filesystem;
 class VirtualFilesystemException extends \RuntimeException
 {
     final public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
+
     final public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
+
     final public const UNABLE_TO_READ = 2;
+
     final public const UNABLE_TO_WRITE = 3;
+
     final public const UNABLE_TO_DELETE = 4;
+
     final public const UNABLE_TO_DELETE_DIRECTORY = 5;
+
     final public const UNABLE_TO_CREATE_DIRECTORY = 6;
+
     final public const UNABLE_TO_COPY = 7;
+
     final public const UNABLE_TO_MOVE = 8;
+
     final public const UNABLE_TO_LIST_CONTENTS = 9;
+
     final public const UNABLE_TO_RETRIEVE_METADATA = 10;
+
     final public const ENCOUNTERED_INVALID_PATH = 11;
 
     private function __construct(

@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class SearchIndexListener
 {
     final public const FEATURE_INDEX = 0b01;
+
     final public const FEATURE_DELETE = 0b10;
 
     public function __construct(

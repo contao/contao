@@ -191,7 +191,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $credentials['username'] = trim($credentials['username']);
 
-        if (\strlen($credentials['username']) > Security::MAX_USERNAME_LENGTH) {
+        if (\strlen($credentials['username']) > UserBadge::MAX_USERNAME_LENGTH) {
             throw new BadCredentialsException('Invalid username.');
         }
 

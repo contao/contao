@@ -79,10 +79,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener($request, 42);
     }
 
-    /**
-     * @return FrontendPreviewAuthenticator&MockObject
-     */
-    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator
+    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator&MockObject
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $authenticator
@@ -94,10 +91,7 @@ class PreviewLinkControllerTest extends TestCase
         return $authenticator;
     }
 
-    /**
-     * @return UriSigner&MockObject
-     */
-    private function mockUriSigner(bool $checkSuccessful): UriSigner
+    private function mockUriSigner(bool $checkSuccessful): UriSigner&MockObject
     {
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
@@ -110,10 +104,7 @@ class PreviewLinkControllerTest extends TestCase
         return $uriSigner;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(array|bool|null $link): Connection
+    private function mockConnection(array|bool|null $link): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection

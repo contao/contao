@@ -27,9 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class Finder implements \IteratorAggregate, \Countable
 {
     private string|null $identifier = null;
+
     private string|null $themeSlug = null;
+
     private string|null $extension = null;
+
     private bool $variantsExclusive = false;
+
     private bool $variants = false;
 
     /**

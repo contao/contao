@@ -44,6 +44,7 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilder
 {
     private readonly Filesystem $filesystem;
+
     private InvalidResourceException|null $lastException = null;
 
     /**

@@ -226,16 +226,16 @@
         },
         {
             "name": "contao/easy-coding-standard",
-            "version": "6.5.0",
+            "version": "6.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "5366b34fdc3dcf4b0c85f41dc494d9433a339179"
+                "reference": "a968833a51087cdf13afe47c7561c5d9fa0f654b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/5366b34fdc3dcf4b0c85f41dc494d9433a339179",
-                "reference": "5366b34fdc3dcf4b0c85f41dc494d9433a339179",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/a968833a51087cdf13afe47c7561c5d9fa0f654b",
+                "reference": "a968833a51087cdf13afe47c7561c5d9fa0f654b",
                 "shasum": ""
             },
             "require": {
@@ -266,7 +266,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/6.5.0"
+                "source": "https://github.com/contao/easy-coding-standard/tree/6.5.1"
             },
             "funding": [
                 {
@@ -274,7 +274,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-08-25T07:50:00+00:00"
+            "time": "2023-08-29T16:23:06+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",

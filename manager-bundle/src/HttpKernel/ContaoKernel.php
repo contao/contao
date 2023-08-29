@@ -38,10 +38,15 @@ use Symfony\Component\HttpKernel\Kernel;
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
     protected static string|null $projectDir = null;
+
     private PluginLoader|null $pluginLoader = null;
+
     private BundleLoader|null $bundleLoader = null;
+
     private JwtManager|null $jwtManager = null;
+
     private ManagerConfig|null $managerConfig = null;
+
     private ContaoCache|null $httpCache = null;
 
     public function shutdown(): void

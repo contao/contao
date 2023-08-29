@@ -24,10 +24,15 @@ namespace Contao\CoreBundle\File;
 class Metadata
 {
     final public const VALUE_ALT = 'alt';
+
     final public const VALUE_CAPTION = 'caption';
+
     final public const VALUE_TITLE = 'title';
+
     final public const VALUE_URL = 'link';
+
     final public const VALUE_UUID = 'uuid';
+
     final public const VALUE_LICENSE = 'license';
 
     /**

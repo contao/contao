@@ -505,10 +505,7 @@ class DbafsManagerTest extends TestCase
         return $dbafs;
     }
 
-    /**
-     * @return DbafsInterface&MockObject
-     */
-    private function getDbafsWithProperties(int $featureFlags): DbafsInterface
+    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&MockObject
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs

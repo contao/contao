@@ -27,7 +27,9 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilderStub extends FigureBuilder
 {
     private string|null $path = null;
+
     private Metadata|null $metadata = null;
+
     private array $linkAttributes = [];
 
     /**

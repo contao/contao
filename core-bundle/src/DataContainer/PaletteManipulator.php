@@ -17,12 +17,17 @@ use Contao\StringUtil;
 class PaletteManipulator
 {
     final public const POSITION_BEFORE = 'before';
+
     final public const POSITION_AFTER = 'after';
+
     final public const POSITION_PREPEND = 'prepend';
+
     final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
+
     private array $fields = [];
+
     private array $removes = [];
 
     public static function create(): self

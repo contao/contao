@@ -28,7 +28,9 @@ class TemplateLocator
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
     private readonly Filesystem $filesystem;
+
     private array|null $themeDirectories = null;
+
     private readonly string $globalTemplateDirectory;
 
     /**

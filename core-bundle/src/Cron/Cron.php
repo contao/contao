@@ -26,7 +26,9 @@ use Psr\Log\LoggerInterface;
 class Cron
 {
     final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
+
     final public const SCOPE_WEB = 'web';
+
     final public const SCOPE_CLI = 'cli';
 
     /**

@@ -108,10 +108,7 @@ class PageRouteTest extends TestCase
         $this->assertSame(['https'], $route->getSchemes());
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(array $properties = []): PageModel
+    private function mockPageModel(array $properties = []): PageModel&MockObject
     {
         return $this->mockClassWithProperties(
             PageModel::class,

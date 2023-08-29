@@ -1698,10 +1698,7 @@ class PageUrlListenerTest extends TestCase
         return $return;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(bool $prefixCheck = false): Connection
+    private function mockConnection(bool $prefixCheck = false): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
 
@@ -1720,7 +1717,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return Adapter<Input>&MockObject
      */
-    private function mockInputAdapter(array $inputData): Adapter
+    private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
         $inputAdapter = $this->mockAdapter(['post']);
         $inputAdapter
@@ -1731,10 +1728,7 @@ class PageUrlListenerTest extends TestCase
         return $inputAdapter;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface
+    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1760,10 +1754,7 @@ class PageUrlListenerTest extends TestCase
         return $translator;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnectionWithStatement(): Connection
+    private function mockConnectionWithStatement(): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -1774,10 +1765,7 @@ class PageUrlListenerTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry
+    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -1793,10 +1781,7 @@ class PageUrlListenerTest extends TestCase
         return $pageRegistry;
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface
+    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface&MockObject
     {
         $router = $this->createMock(RouterInterface::class);
 

@@ -20,6 +20,7 @@ class PageRegistry
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
     private array|null $urlPrefixes = null;
+
     private array|null $urlSuffixes = null;
 
     /**

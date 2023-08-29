@@ -656,10 +656,7 @@ class FigureTest extends TestCase
         );
     }
 
-    /**
-     * @return ImageResult&MockObject
-     */
-    private function mockImage(): ImageResult
+    private function mockImage(): ImageResult&MockObject
     {
         $img = ['img foo'];
         $sources = ['sources foo'];

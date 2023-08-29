@@ -27,10 +27,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
 
     private DefaultOperationsListener $listener;
 

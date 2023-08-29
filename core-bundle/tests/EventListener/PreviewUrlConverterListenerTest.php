@@ -283,10 +283,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(PageRoute|null $route = null): PageRegistry
+    private function mockPageRegistry(PageRoute|null $route = null): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
 

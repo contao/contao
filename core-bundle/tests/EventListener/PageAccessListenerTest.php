@@ -344,10 +344,7 @@ class PageAccessListenerTest extends TestCase
         $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(int|null $id = null, PageModel|null $pageModel = null): ContaoFramework
+    private function mockFramework(int|null $id = null, PageModel|null $pageModel = null): ContaoFramework&MockObject
     {
         $framework = $this->createMock(ContaoFramework::class);
 

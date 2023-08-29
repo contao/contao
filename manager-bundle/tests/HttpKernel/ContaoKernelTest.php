@@ -467,10 +467,7 @@ class ContaoKernelTest extends ContaoTestCase
         return $kernel;
     }
 
-    /**
-     * @return ConfigPluginInterface&MockObject
-     */
-    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
+    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface&MockObject
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
         $plugin

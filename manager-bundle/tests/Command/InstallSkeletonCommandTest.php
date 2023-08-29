@@ -25,7 +25,9 @@ use Symfony\Component\Finder\Finder;
 class InstallSkeletonCommandTest extends ContaoTestCase
 {
     private InstallSkeletonCommand $command;
+
     private Filesystem $filesystem;
+
     private Finder $webFiles;
 
     protected function setUp(): void

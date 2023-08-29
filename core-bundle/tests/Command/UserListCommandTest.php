@@ -128,10 +128,7 @@ class UserListCommandTest extends TestCase
         return $command;
     }
 
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockContaoUser(): UserModel
+    private function mockContaoUser(): UserModel&MockObject
     {
         $userModel = $this->mockClassWithProperties(UserModel::class);
         $userModel->id = 2;
@@ -146,10 +143,7 @@ class UserListCommandTest extends TestCase
         return $userModel;
     }
 
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockAdminUser(): UserModel
+    private function mockAdminUser(): UserModel&MockObject
     {
         $userModel = $this->mockClassWithProperties(UserModel::class);
         $userModel->id = 1;

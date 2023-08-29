@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Document
 {
     private Crawler|null $crawler = null;
+
     private array|null $jsonLds = null;
 
     /**

@@ -30,12 +30,19 @@ use Symfony\Component\Mime\MimeTypes;
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
     private string $globalKeys;
+
     private string $globals;
+
     private string $staticMembers;
+
     private string $phpIni;
+
     private string $setFunctions;
+
     private string $fileSystem;
+
     private string $constants;
+
     private string $env;
 
     public function executeBeforeTest(string $test): void

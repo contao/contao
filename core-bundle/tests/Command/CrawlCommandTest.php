@@ -171,10 +171,7 @@ class CrawlCommandTest extends TestCase
         return new BaseUriCollection([new Uri('https://contao.org')]);
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockEscargotFactory(BaseUriCollection|null $baseUriCollection = null): Factory
+    private function mockEscargotFactory(BaseUriCollection|null $baseUriCollection = null): Factory&MockObject
     {
         $baseUriCollection ??= $this->getBaseUriCollection();
 
@@ -188,10 +185,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection|null $baseUriCollection = null): Factory
+    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection|null $baseUriCollection = null): Factory&MockObject
     {
         $escargotFactory = $this->mockEscargotFactory($baseUriCollection);
         $escargotFactory
@@ -208,10 +202,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory
+    private function mockInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory&MockObject
     {
         $escargotFactory = $this->mockEscargotFactory();
 

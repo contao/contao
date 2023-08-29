@@ -178,10 +178,7 @@ class PageFinderTest extends TestCase
         $this->assertSame($pageModel, $result);
     }
 
-    /**
-     * @return RequestMatcherInterface&MockObject
-     */
-    private function mockRequestMatcher(PageModel|false|null $pageModel, string|null $requestUri = null): RequestMatcherInterface
+    private function mockRequestMatcher(PageModel|false|null $pageModel, string|null $requestUri = null): RequestMatcherInterface&MockObject
     {
         $requestMatcher = $this->createMock(RequestMatcherInterface::class);
 

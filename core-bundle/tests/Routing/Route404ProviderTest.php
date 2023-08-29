@@ -446,10 +446,7 @@ class Route404ProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&MockObject
     {
         $request = $this->createMock(Request::class);
         $request

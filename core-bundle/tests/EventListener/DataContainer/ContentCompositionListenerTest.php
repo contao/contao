@@ -39,45 +39,30 @@ class ContentCompositionListenerTest extends TestCase
 {
     private ContentCompositionListener $listener;
 
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
+
+    private ContaoFramework&MockObject $framework;
+
+    private PageRegistry&MockObject $pageRegistry;
+
+    private Connection&MockObject $connection;
+
+    private RequestStack&MockObject $requestStack;
 
     /**
      * @var Adapter<Image>&MockObject
      */
-    private Adapter $imageAdapter;
+    private Adapter&MockObject $imageAdapter;
 
     /**
      * @var Adapter<Backend>&MockObject
      */
-    private Adapter $backendAdapter;
+    private Adapter&MockObject $backendAdapter;
 
     /**
      * @var Adapter<PageModel>&MockObject
      */
-    private Adapter $pageModelAdapter;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var PageRegistry&MockObject
-     */
-    private PageRegistry $pageRegistry;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
-
-    /**
-     * @var RequestStack&MockObject
-     */
-    private RequestStack $requestStack;
+    private Adapter&MockObject $pageModelAdapter;
 
     private array $pageRecord = [
         'id' => 17,
@@ -1124,10 +1109,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
+    private function mockPageWithRow(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1170,10 +1152,7 @@ class ContentCompositionListenerTest extends TestCase
         return $page;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
+    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page

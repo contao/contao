@@ -94,10 +94,7 @@ class AccessDecisionManagerTest extends TestCase
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    /**
-     * @return AccessDecisionManagerInterface&MockObject
-     */
-    private function mockAccessDecisionManager(bool $shouldBeCalled): AccessDecisionManagerInterface
+    private function mockAccessDecisionManager(bool $shouldBeCalled): AccessDecisionManagerInterface&MockObject
     {
         $manager = $this->createMock(AccessDecisionManagerInterface::class);
         $manager
@@ -109,10 +106,7 @@ class AccessDecisionManagerTest extends TestCase
         return $manager;
     }
 
-    /**
-     * @return FirewallMap&MockObject
-     */
-    private function mockFirewallMap(string|null $context): FirewallMap
+    private function mockFirewallMap(string|null $context): FirewallMap&MockObject
     {
         $map = $this->createMock(FirewallMap::class);
 

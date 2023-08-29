@@ -525,10 +525,7 @@ class SearchIndexSubscriberTest extends TestCase
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function getTranslator(): TranslatorInterface
+    private function getTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

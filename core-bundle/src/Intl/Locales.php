@@ -28,11 +28,8 @@ class Locales
      */
     private readonly array $enabledLocales;
 
-    /**
-     * @param TranslatorInterface&TranslatorBagInterface $translator
-     */
     public function __construct(
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
         private readonly RequestStack $requestStack,
         array $defaultLocales,
         array $defaultEnabledLocales,

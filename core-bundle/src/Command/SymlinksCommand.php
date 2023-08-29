@@ -36,7 +36,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class SymlinksCommand extends Command
 {
     private array $rows = [];
+
     private string|null $webDir = null;
+
     private int $statusCode = Command::SUCCESS;
 
     public function __construct(

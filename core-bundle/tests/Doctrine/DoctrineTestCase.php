@@ -34,10 +34,8 @@ abstract class DoctrineTestCase extends TestCase
      * Mocks a Doctrine registry with database connection.
      *
      * @param Connection&MockObject $connection
-     *
-     * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry(Connection|null $connection = null): Registry
+    protected function mockDoctrineRegistry(Connection|null $connection = null): Registry&MockObject
     {
         $connection ??= $this->createMock(Connection::class);
 
@@ -69,10 +67,8 @@ abstract class DoctrineTestCase extends TestCase
 
     /**
      * Mocks the Contao framework with the database installer.
-     *
-     * @return ContaoFramework&MockObject
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework
+    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&MockObject
     {
         $installer = $this->createMock(Installer::class);
         $installer

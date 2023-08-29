@@ -313,6 +313,7 @@ class PageModel extends Model
 	protected $blnDetailsLoaded = false;
 
 	private static array|null $prefixes = null;
+
 	private static array|null $suffixes = null;
 
 	public static function reset()
