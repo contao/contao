@@ -203,39 +203,39 @@
       </trans-unit>
       <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
-        <target>نمایش جزئیات مقاله شناسه‌ی %s</target>
+        <target>نمایش جزئیات مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
-        <target>ویرایش مقاله شناسه‌ی %s</target>
+        <target>ویرایش مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.editheader">
         <source>Edit the settings of article ID %s</source>
-        <target>ویرایش تنظیمات مقاله شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
-        <target>تکثیر مقاله شناسه‌ی %s</target>
+        <target>تکثیر مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
-        <target>جابجایی مقاله شناسه‌ی %s</target>
+        <target>جابجایی مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
-        <target>حذف مقاله شناسه‌ی %s</target>
+        <target>حذف مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
-        <target>انتشار/لغو انتشار مقاله شناسه‌ی %s</target>
+        <target>انتشار/لغو انتشار مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
-        <target>افزودن بعد از مقاله شناسه‌ی %s</target>
+        <target>افزودن بعد از مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
-        <target>افزودن در برگه شناسه‌ی %s</target>
+        <target>افزودن در برگه شناسه %s</target>
       </trans-unit>
     </body>
   </file>

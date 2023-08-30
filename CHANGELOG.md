@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.30] (2023-08-30)
+
+**Fixed issues:**
+
+- [#6343] Fix warning if reference page of navigation module gets deleted ([fritzmg])
+- [#6333] Correctly add the schema.org data of multiple FAQ archives on the same page ([Toflar])
+- [#6348] URL-encode file paths for edit multiple ([ausi])
+- [#6332] Always allow unpublished pages in preview entry point ([aschempp])
+- [#6331] Check the preview script before the firewall ([aschempp])
+- [#6325] Do not URL-encode insert tags in `specialcharsUrl()` ([ausi])
+- [#6317] Use primary language for slug generation ([fritzmg])
+- [#6279] Fix bug with huge PDF files in the back end preview ([ausi])
+- [#6311] Remove another left-over `errorInfo()` call ([leofeyer])
+- [#6309] Fix warnings when using `Image::get` ([fritzmg])
+- [#6310] Allow storing large integers in the calendar bundle ([leofeyer])
+- [#6308] Encode the form data when sending it as XML file ([leofeyer])
+- [#6307] Fix the .htaccess rewrite rules ([leofeyer])
+- [#6306] Correctly handle users without username in the registration module ([e-spin])
+- [#6302] Generate the file manager preview images with a 1x, 2x source set ([leofeyer])
+- [#6297] Remove the left-over `errorInfo()` call ([leofeyer])
+- [#6296] Allow to set `field` and `inputName` on DataContainer ([aschempp])
+- [#6293] Add redirect for app.php to prevent duplicate content ([bennyborn])
+- [#6276] Use PDF TrimBox when generating previews ([ausi])
+
 ## [4.13.29] (2023-08-01)
 
 **Fixed issues:**
@@ -783,6 +807,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.30]: https://github.com/contao/contao/releases/tag/4.13.30
 [4.13.29]: https://github.com/contao/contao/releases/tag/4.13.29
 [4.13.28]: https://github.com/contao/contao/releases/tag/4.13.28
 [4.13.27]: https://github.com/contao/contao/releases/tag/4.13.27
@@ -825,6 +850,7 @@ This project adheres to [Semantic Versioning].
 [ameotoko]: https://github.com/ameotoko
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[bennyborn]: https://github.com/bennyborn
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [christianbarkowsky]: https://github.com/christianbarkowsky
@@ -835,6 +861,7 @@ This project adheres to [Semantic Versioning].
 [dennisbohn]: https://github.com/dennisbohn
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
+[e-spin]: https://github.com/e-spin
 [fritzmg]: https://github.com/fritzmg
 [JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
@@ -1443,3 +1470,22 @@ This project adheres to [Semantic Versioning].
 [#6251]: https://github.com/contao/contao/pull/6251
 [#6252]: https://github.com/contao/contao/pull/6252
 [#6261]: https://github.com/contao/contao/pull/6261
+[#6276]: https://github.com/contao/contao/pull/6276
+[#6279]: https://github.com/contao/contao/pull/6279
+[#6293]: https://github.com/contao/contao/pull/6293
+[#6296]: https://github.com/contao/contao/pull/6296
+[#6297]: https://github.com/contao/contao/pull/6297
+[#6302]: https://github.com/contao/contao/pull/6302
+[#6306]: https://github.com/contao/contao/pull/6306
+[#6307]: https://github.com/contao/contao/pull/6307
+[#6308]: https://github.com/contao/contao/pull/6308
+[#6309]: https://github.com/contao/contao/pull/6309
+[#6310]: https://github.com/contao/contao/pull/6310
+[#6311]: https://github.com/contao/contao/pull/6311
+[#6317]: https://github.com/contao/contao/pull/6317
+[#6325]: https://github.com/contao/contao/pull/6325
+[#6331]: https://github.com/contao/contao/pull/6331
+[#6332]: https://github.com/contao/contao/pull/6332
+[#6333]: https://github.com/contao/contao/pull/6333
+[#6343]: https://github.com/contao/contao/pull/6343
+[#6348]: https://github.com/contao/contao/pull/6348

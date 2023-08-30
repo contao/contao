@@ -10,6 +10,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.showUnpublished.0">
         <source>Show unpublished</source>
+        <target>نمایش منتشرنشده</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.showUnpublished.1">
         <source>Show unpublished pages and elements when sharing this link.</source>

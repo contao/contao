@@ -439,23 +439,23 @@
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
-        <target>مشاهده‌ی جزئیات فیلد فرم شناسه‌ی %s</target>
+        <target>مشاهده‌ی جزئیات فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
-        <target>ویرایش فلید فرم شناسه‌ی %s</target>
+        <target>ویرایش فلید فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
-        <target>جابجایی فیلد فرم شناسه‌ی %s</target>
+        <target>جابجایی فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
-        <target>دو نسخه کردن فیلد فرم شناسه‌ی %s</target>
+        <target>دو نسخه کردن فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
-        <target>حذف فیلد فرم شناسه‌ی %s</target>
+        <target>حذف فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -463,7 +463,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
-        <target>پنهان/آشکار کردن فیلد فرم شناسه‌ی %s</target>
+        <target>پنهان/آشکار کردن فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -471,7 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
-        <target>جاگذاری بعد از فیلد فرم شناسه‌ی %s</target>
+        <target>جاگذاری بعد از فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
@@ -479,7 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
-        <target>ایجاد یک فیلد فرم جدید بعد از فیلد فرم شناسه‌ی %s</target>
+        <target>ایجاد یک فیلد فرم جدید بعد از فیلد فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

@@ -71,23 +71,23 @@
       </trans-unit>
       <trans-unit id="tl_member_group.show">
         <source>Show the details of member group ID %s</source>
-        <target>نمایش جزئیات گروه اعضاء شناسه‌ی %s</target>
+        <target>نمایش جزئیات گروه اعضاء شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit">
         <source>Edit member group ID %s</source>
-        <target>ویرایش گروه اعضاء شناسه‌ی %s</target>
+        <target>ویرایش گروه اعضاء شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy">
         <source>Duplicate member group ID %s</source>
-        <target>تکثیر گروه اعضاء شناسه‌ی %s</target>
+        <target>تکثیر گروه اعضاء شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete">
         <source>Delete member group ID %s</source>
-        <target>حذف گروه اعضاء شناسه‌ی %s</target>
+        <target>حذف گروه اعضاء شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle">
         <source>Activate/deactivate member group ID %s</source>
-        <target>فعال/غیرفعال کردن گروه اعضاء شناسه‌ی %s</target>
+        <target>فعال/غیرفعال کردن گروه اعضاء شناسه %s</target>
       </trans-unit>
     </body>
   </file>

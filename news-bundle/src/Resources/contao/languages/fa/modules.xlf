@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="MOD.news.1">
         <source>Manage news and export them as RSS or Atom feed</source>
-        <target>مدیریت اخبار و خروجی خوراک آراس‌اس و اتم</target>
+        <target>مدیریت اخبار و خروجی فید آراس‌اس و اتم</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news_feed">
         <source>News feeds</source>
-        <target>خوراک‌های اخبار</target>
+        <target>فید‌های اخبار</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>

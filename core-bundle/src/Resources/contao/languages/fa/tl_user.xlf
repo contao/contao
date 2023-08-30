@@ -374,27 +374,27 @@
       </trans-unit>
       <trans-unit id="tl_user.show">
         <source>Show the details of user ID %s</source>
-        <target>نمایش جزئیات کاربر شناسه‌ی %s</target>
+        <target>نمایش جزئیات کاربر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user.edit">
         <source>Edit user ID %s</source>
-        <target>ویرایش کاربر شناسه‌ی %s</target>
+        <target>ویرایش کاربر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user.copy">
         <source>Duplicate user ID %s</source>
-        <target>تکثیر کاربر شناسه‌ی %s</target>
+        <target>تکثیر کاربر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user.delete">
         <source>Delete user ID %s</source>
-        <target>حذف کاربر شناسه‌ی %s</target>
+        <target>حذف کاربر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user.toggle">
         <source>Activate/deactivate user ID %s</source>
-        <target>فعال/غیرفعال کردن کاربر شناسه‌ی %s</target>
+        <target>فعال/غیرفعال کردن کاربر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>
-        <target>تعویض کاربر شناسه‌ی %s</target>
+        <target>تعویض کاربر شناسه %s</target>
       </trans-unit>
     </body>
   </file>
