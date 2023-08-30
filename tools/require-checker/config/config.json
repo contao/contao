@@ -17,6 +17,7 @@
         "AppBundle\\AppBundle",
         "Composer\\Script\\Event",
         "Composer\\Util\\Filesystem",
+        "Contao\\LocaleUtil",
         "Contao\\ManagerPlugin\\Bundle\\BundlePluginInterface",
         "Contao\\ManagerPlugin\\Bundle\\Config\\BundleConfig",
         "Contao\\ManagerPlugin\\Bundle\\Parser\\ParserInterface",
