@@ -75,7 +75,7 @@ class ModuleQuicknav extends Module
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
+			if ($objRootPage && $objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
 			{
 				$host = $objRootPage->domain;
 			}
