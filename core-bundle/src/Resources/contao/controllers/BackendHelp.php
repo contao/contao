@@ -107,7 +107,7 @@ class BackendHelp extends Backend
 						{
 							// Allow using the ID (e.g. "_video_placeholder") as well as the generated
 							// name (e.g. "video_placeholder (1280x)") as key (see #5239)
-							$rows[] = $arrData['reference'][$opt] ?? $arrData['reference'][$id] ?? [$opt, ''];
+							$rows[] = $arrData['reference'][$opt] ?? $arrData['reference'][$id] ?? array($opt, '');
 						}
 						else
 						{
