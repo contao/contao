@@ -131,7 +131,7 @@ class ModuleFaq extends Frontend
 			'mainEntity' => array(),
 		);
 
-		if (null !== $identifier)
+		if ($identifier)
 		{
 			$jsonLd['identifier'] = $identifier;
 		}
