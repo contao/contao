@@ -34,17 +34,17 @@
  * Arndt von Lucadou ([a-v-l](https://github.com/a-v-l))
  * Volker Richert ([volkerrichert](https://github.com/volkerrichert))
  * gmpf ([gmpf](https://github.com/gmpf))
- * Markus Nestmann
+ * Markus Nestmann ([MarkejN](https://github.com/MarkejN))
  * de-es ([de-es](https://github.com/de-es))
  * Daniel Schwiperich ([DanielSchwiperich](https://github.com/DanielSchwiperich))
  * Glen Langer ([BugBuster1701](https://github.com/BugBuster1701))
  * zonky2 ([zonky2](https://github.com/zonky2))
  * Andreas Burg ([Aybee](https://github.com/Aybee))
- * Benjamin Hummel
+ * Benjamin Hummel ([xprojects-de](https://github.com/xprojects-de))
  * Blair Winans ([blairwinans](https://github.com/blairwinans))
  * CMSworker ([CMSworker](https://github.com/CMSworker))
  * Christian Eggeling ([amisso](https://github.com/amisso))
- * Daniele Sciannimanica
+ * Daniele Sciannimanica ([doishub](https://github.com/doishub))
  * David Enke ([davidenke](https://github.com/davidenke))
  * Fabian Laule ([fabianlaule](https://github.com/fabianlaule))
  * Hendrik Obermayer ([henobi](https://github.com/henobi))
@@ -61,27 +61,27 @@
  * Torsten Baldes ([tobaco](https://github.com/tobaco))
  * kroka ([kroka](https://github.com/kroka))
  * Alex ([Alex](https://github.com/Alex))
+ * Benny Born ([bennyborn](https://github.com/bennyborn))
  * Mathias Arzberger ([MDevster](https://github.com/MDevster))
- * Arndt H. Ziegler
+ * Arndt H. Ziegler ([ArndtZiegler](https://github.com/ArndtZiegler))
  * Christian Romeni ([christianromeni](https://github.com/christianromeni))
  * Defcon0 ([Defcon0](https://github.com/Defcon0))
- * Florian Otto
+ * Florian Otto ([mindbird](https://github.com/mindbird))
  * Joe Ray Gregory ([may17](https://github.com/may17))
  * Leopold Seckendorff ([poddus](https://github.com/poddus))
  * Patrick Landolt ([scuben](https://github.com/scuben))
- * Sebastian Zoglowek
+ * Sebastian Zoglowek ([zoglo](https://github.com/zoglo))
  * Bjarke Amann ([netzarbeiter](https://github.com/netzarbeiter))
- * Benny Born ([bennyborn](https://github.com/bennyborn))
  * Patrick Froch ([eS-IT](https://github.com/eS-IT))
  * Simon Reitinger ([simonreitinger](https://github.com/simonreitinger))
  * Adrián Granado ([playmono](https://github.com/playmono))
- * Alexej Kossmann
+ * Alexej Kossmann ([AlexejKossmann](https://github.com/AlexejKossmann))
  * Andreas Allacher ([AndreasA](https://github.com/AndreasA))
  * Andreas Fieger ([fiedsch](https://github.com/fiedsch))
- * Anthony Clark
+ * Anthony Clark ([driftingly](https://github.com/driftingly))
  * Benedict Steele ([Benedict](https://github.com/Benedict))
- * Christian Barkowsky
- * Christian Berger
+ * Christian Barkowsky ([christianbarkowsky](https://github.com/christianbarkowsky))
+ * Christian Berger ([chrberger](https://github.com/chrberger))
  * Christian Kolb ([christian-kolb](https://github.com/christian-kolb))
  * Cédric Morin ([Cerdic](https://github.com/Cerdic))
  * Daniel Nemeth ([daniel-nemeth](https://github.com/daniel-nemeth))
@@ -89,10 +89,11 @@
  * Florian Krohmer ([Floxn](https://github.com/Floxn))
  * Florian Reuschel ([loilo](https://github.com/loilo))
  * Andreas ([Glumanda](https://github.com/Glumanda))
- * Janosch Oltmanns
+ * Ingolf Steinhardt ([e-spin](https://github.com/e-spin))
+ * Janosch Oltmanns ([JanoschOltmanns](https://github.com/JanoschOltmanns))
  * Jens Dutzi ([Blog404DE](https://github.com/Blog404DE))
  * Marc Reimann ([MacKP](https://github.com/MacKP))
- * Marko Cupic
+ * Marko Cupic ([markocupic](https://github.com/markocupic))
  * Niels ([Niels](https://github.com/Niels))
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
  * Stefan Schleich ([stefanschleich](https://github.com/stefanschleich))

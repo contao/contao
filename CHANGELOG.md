@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.1] (2023-08-30)
+
+**Fixed issues:**
+
+- [#6329] Add the missing autowiring alias for the new `ProcessUtil` service ([Toflar])
+
 ## [5.2.0] (2023-08-15)
 
 ## [5.2.0-RC6] (2023-08-11)
@@ -77,6 +83,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.1]: https://github.com/contao/contao/releases/tag/5.2.1
 [5.2.0]: https://github.com/contao/contao/releases/tag/5.2.0
 [5.2.0-RC6]: https://github.com/contao/contao/releases/tag/5.2.0-RC6
 [5.2.0-RC5]: https://github.com/contao/contao/releases/tag/5.2.0-RC5
@@ -129,3 +136,4 @@ This project adheres to [Semantic Versioning].
 [#6267]: https://github.com/contao/contao/pull/6267
 [#6274]: https://github.com/contao/contao/pull/6274
 [#6282]: https://github.com/contao/contao/pull/6282
+[#6329]: https://github.com/contao/contao/pull/6329
