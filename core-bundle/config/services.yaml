@@ -1189,3 +1189,4 @@ services:
     Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
+    Contao\CoreBundle\Util\ProcessUtil: '@contao.util.process_util'

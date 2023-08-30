@@ -1226,7 +1226,8 @@ class PageModel extends Model
 	 */
 	public function getSlugOptions()
 	{
-		$slugOptions = array('locale'=>$this->language);
+		// Use primary language for slug generation, until fixed in ICU or ausi/slug-generator (see #2413)
+		$slugOptions = array('locale'=>LocaleUtil::getPrimaryLanguage($this->language));
 
 		if ($this->validAliasCharacters)
 		{

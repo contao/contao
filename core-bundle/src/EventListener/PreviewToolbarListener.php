@@ -44,10 +44,6 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
-            return;
-        }
-
         $request = $event->getRequest();
         $response = $event->getResponse();
 
@@ -57,6 +53,11 @@ class PreviewToolbarListener
             || $request->isXmlHttpRequest()
             || !$response->isSuccessful() && !$response->isClientError()
         ) {
+            return;
+        }
+
+        // Do not inject the toolbar in the back end
+        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
 
