@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.2] (2023-08-31)
+
+**Fixed issues:**
+
+- [#6351] Add autowiring alias for PageFinder ([aschempp])
+
 ## [5.2.1] (2023-08-30)
 
 **Fixed issues:**
@@ -83,6 +89,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.2]: https://github.com/contao/contao/releases/tag/5.2.2
 [5.2.1]: https://github.com/contao/contao/releases/tag/5.2.1
 [5.2.0]: https://github.com/contao/contao/releases/tag/5.2.0
 [5.2.0-RC6]: https://github.com/contao/contao/releases/tag/5.2.0-RC6
@@ -137,3 +144,4 @@ This project adheres to [Semantic Versioning].
 [#6274]: https://github.com/contao/contao/pull/6274
 [#6282]: https://github.com/contao/contao/pull/6282
 [#6329]: https://github.com/contao/contao/pull/6329
+[#6351]: https://github.com/contao/contao/pull/6351
