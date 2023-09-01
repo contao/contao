@@ -194,8 +194,8 @@ class LegacyMatcher implements RequestMatcherInterface
     {
         $server = $request->server->all();
 
-        if ($request->getBaseUrl()) {
-            $pathinfo = $request->getBaseUrl().$pathinfo;
+        if ($baseUrl = $request->getBaseUrl()) {
+            $pathinfo = $baseUrl.$pathinfo;
         }
 
         if ($qs = $request->getQueryString()) {
