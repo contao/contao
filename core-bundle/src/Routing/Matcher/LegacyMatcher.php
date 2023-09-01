@@ -192,19 +192,14 @@ class LegacyMatcher implements RequestMatcherInterface
      */
     private function rebuildRequest(string $pathinfo, Request $request): Request
     {
-        $uri = $pathinfo;
-        $server = [];
+        $server = $request->server->all();
 
         if ($request->getBaseUrl()) {
-            $uri = $request->getBaseUrl().$pathinfo;
-            $server['SCRIPT_FILENAME'] = $request->getBaseUrl();
-            $server['PHP_SELF'] = $request->getBaseUrl();
+            $pathinfo = $request->getBaseUrl().$pathinfo;
         }
 
-        $host = $request->getHttpHost() ?: 'localhost';
-        $scheme = $request->getScheme() ?: 'http';
-        $uri = $scheme.'://'.$host.$uri.'?'.$request->getQueryString();
+        $server['REQUEST_URI'] = $pathinfo;
 
-        return Request::create($uri, $request->getMethod(), [], [], [], $server);
+        return $request->duplicate(null, null, null, null, null, $server);
     }
 }
