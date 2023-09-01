@@ -198,8 +198,8 @@ class LegacyMatcher implements RequestMatcherInterface
             $pathinfo = $request->getBaseUrl().$pathinfo;
         }
 
-        if ($request->getQueryString()) {
-            $pathinfo .= '?'.$request->getQueryString();
+        if ($qs = $request->getQueryString()) {
+            $pathinfo .= '?'.$qs;
         }
 
         $server['REQUEST_URI'] = $pathinfo;
