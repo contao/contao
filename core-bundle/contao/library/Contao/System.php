@@ -562,6 +562,8 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" has been deprecated and will no longer work in Contao 6. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+
 		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
@@ -590,6 +592,8 @@ abstract class System
 		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use kernel.response events instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{
 				$objCookie = static::importStatic($callback[0])->{$callback[1]}($objCookie);
