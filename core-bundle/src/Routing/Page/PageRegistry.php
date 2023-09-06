@@ -64,7 +64,7 @@ class PageRegistry
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            if ('forward' === $pageModel->type && $pageModel->forwardParams) {
+            if ('forward' === $pageModel->type && !$pageModel->forwardParams) {
                 $path = '/'.($pageModel->alias ?: $pageModel->id);
             } else {
                 $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
