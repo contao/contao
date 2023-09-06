@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
-        <target>Ögeyi öne çıkar</target>
+        <target>Ögeyi öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_news.featured.1">
         <source>Show the news item in a featured news list.</source>

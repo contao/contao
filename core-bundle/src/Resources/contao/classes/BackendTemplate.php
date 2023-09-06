@@ -198,7 +198,7 @@ class BackendTemplate extends Template
 					$css[$k] = $packages->getUrl($v);
 				}
 
-				if (!\is_array($GLOBALS['TL_CSS']))
+				if (!\is_array($GLOBALS['TL_CSS'] ?? null))
 				{
 					$GLOBALS['TL_CSS'] = array();
 				}
@@ -220,7 +220,7 @@ class BackendTemplate extends Template
 					$js[$k] = $packages->getUrl($v);
 				}
 
-				if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+				if (!\is_array($GLOBALS['TL_JAVASCRIPT'] ?? null))
 				{
 					$GLOBALS['TL_JAVASCRIPT'] = array();
 				}

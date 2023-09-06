@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>خوراک RSS/Atom</target>
+        <target>فید RSS/Atom</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
@@ -135,11 +135,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
-        <target>خوراک‌های اخبار</target>
+        <target>فید‌های اخبار</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
-        <target>مدیریت خوراک اخبار</target>
+        <target>مدیریت فید اخبار</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -151,15 +151,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>نمایش جزئیات بایگانی خبری شناسه‌ی %s</target>
+        <target>نمایش جزئیات بایگانی خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
-        <target>ویرایش بایگانی خبری شناسه‌ی %s</target>
+        <target>ویرایش بایگانی خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
-        <target>ویرایش تنظیمات بایگانی خبری شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات بایگانی خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -167,15 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>تکثیر بایگانی خبری شناسه‌ی %s</target>
+        <target>تکثیر بایگانی خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>حذف بایگانی خبری شناسه‌ی %s</target>
+        <target>حذف بایگانی خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>نمایش دیدگاه‌های بایگانی خبری شناسه‌ی %s</target>
+        <target>نمایش دیدگاه‌های بایگانی خبری شناسه %s</target>
       </trans-unit>
     </body>
   </file>

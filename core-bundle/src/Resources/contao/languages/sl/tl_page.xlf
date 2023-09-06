@@ -479,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Usmerjanje (routing)</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -573,6 +574,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Podeduj postavitev strani</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>

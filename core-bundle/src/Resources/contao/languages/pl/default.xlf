@@ -26,12 +26,10 @@
         <target>Pole &quot;%s&quot; powinno zawierać nie więcej niż %d znaki!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Pole &quot;%s&quot; powinno zawierać co najmniej %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Pole &quot;%s&quot; nie może być większe niż %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
         <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
-        <target>نام مستعار یک مرجع یکتا به آیتم خبری است که می‌تواند به جای شناسه‌ی عددی فراخوانده شود.</target>
+        <target>نام مستعار یک مرجع یکتا به آیتم خبری است که می‌تواند به جای شناسه عددی فراخوانده شود.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -275,35 +275,35 @@
       </trans-unit>
       <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
-        <target>نمایش جزئیات آیتم خبر شناسه‌ی %s</target>
+        <target>نمایش جزئیات آیتم خبر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
-        <target>ویرایش آیتم خبر شناسه‌ی %s</target>
+        <target>ویرایش آیتم خبر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
-        <target>تکثیر آیتم خبر شناسه‌ی %s</target>
+        <target>تکثیر آیتم خبر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
-        <target>جابجایی آیتم خبری شناسه‌ی %s</target>
+        <target>جابجایی آیتم خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
-        <target>حذف آیتم خبری شناسه‌ی %s</target>
+        <target>حذف آیتم خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
-        <target>انتشار/عدم‌انتشار آیتم شناسه‌ی %s</target>
+        <target>انتشار/عدم‌انتشار آیتم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
-        <target>ویژه/غیرویژه کردن آیتم شناسه‌ی %s</target>
+        <target>ویژه/غیرویژه کردن آیتم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.editheader">
         <source>Edit the settings of news item ID %s</source>
-        <target>ویرایش تنظیمات آیتم خبری شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات آیتم خبری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

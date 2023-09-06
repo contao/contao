@@ -430,15 +430,15 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
-        <target>لطفا شناسه‌ی ویدیو YouTube را وارد کنید (مانند &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
+        <target>لطفا شناسه ویدیو YouTube را وارد کنید (مانند &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
-        <target>شناسه‌ی ویمو</target>
+        <target>شناسه ویمو</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
-        <target>لطفا یک شناسه‌ی ویدیو Vimeo (مثلا &lt;em&gt;275028611&lt;/em&gt;) وارد کنید.</target>
+        <target>لطفا یک شناسه ویدیو Vimeo (مثلا &lt;em&gt;275028611&lt;/em&gt;) وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -882,23 +882,23 @@
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>نمایش جزئیات المان شناسه‌ی %s</target>
+        <target>نمایش جزئیات المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
-        <target>جابجایی المان شناسه‌ی %s</target>
+        <target>جابجایی المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>تکثیر المان شناسه‌ی %s</target>
+        <target>تکثیر المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
-        <target>حذف المان شناسه‌ی %s</target>
+        <target>حذف المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
-        <target>ویرایش المان شناسه‌ی %s</target>
+        <target>ویرایش المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
@@ -906,7 +906,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
-        <target>پنهان/آشکار کردن المان شناسه‌ی %s</target>
+        <target>پنهان/آشکار کردن المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -914,7 +914,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
-        <target>افزودن بعد از المان شناسه‌ی %s</target>
+        <target>افزودن بعد از المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
@@ -922,15 +922,15 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
-        <target>ایجاد یک المان محتوایی بعد از المان محتوایی شناسه‌ی %s</target>
+        <target>ایجاد یک المان محتوایی بعد از المان محتوایی شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-        <target>ویرایش المان منبع شناسه‌ی %s</target>
+        <target>ویرایش المان منبع شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
-        <target>ویرایش مقاله شناسه‌ی %s</target>
+        <target>ویرایش مقاله شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

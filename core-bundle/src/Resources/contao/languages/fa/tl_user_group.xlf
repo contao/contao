@@ -91,23 +91,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
-        <target>نمایش جزئیات گروه کاربری شناسه‌ی %s</target>
+        <target>نمایش جزئیات گروه کاربری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
-        <target>ویرایش گروه کاربری شناسه‌ی %s</target>
+        <target>ویرایش گروه کاربری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
-        <target>تکثیر گروه کاربری شناسه‌ی %s</target>
+        <target>تکثیر گروه کاربری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
-        <target>حذف گروه کاربری شناسه‌ی %s</target>
+        <target>حذف گروه کاربری شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
-        <target>فعال/غیرفعال کردن گروه کاربری شناسه‌ی %s</target>
+        <target>فعال/غیرفعال کردن گروه کاربری شناسه %s</target>
       </trans-unit>
     </body>
   </file>
