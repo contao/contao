@@ -70,7 +70,7 @@ class PageRegistryTest extends TestCase
             'alias' => 'bar',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
-            'requireItem' => '1',
+            'requireItem' => '',
             'language' => 'en',
             'rootLanguage' => 'en',
         ]);
