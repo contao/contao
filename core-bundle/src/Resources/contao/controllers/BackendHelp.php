@@ -101,18 +101,9 @@ class BackendHelp extends Backend
 						$rows[] = array('headspan', $arrData['reference'][$key]);
 					}
 
-					foreach ($option as $id=>$opt)
+					foreach ($option as $opt)
 					{
-						if ($key == 'image_sizes')
-						{
-							// Allow using the ID (e.g. "_video_placeholder") as well as the generated
-							// name (e.g. "video_placeholder (1280x)") as key (see #5239)
-							$rows[] = $arrData['reference'][$opt] ?? $arrData['reference'][$id] ?? array($opt, '');
-						}
-						else
-						{
-							$rows[] = $arrData['reference'][$opt] ?? null;
-						}
+						$rows[] = $arrData['reference'][$opt] ?? array($opt, '');
 					}
 				}
 				elseif (isset($arrData['reference'][$key]))
