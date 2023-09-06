@@ -13,13 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RedirectPageController;
-use Contao\CoreBundle\Controller\Page\RootPageController;
-use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\System;
-use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
