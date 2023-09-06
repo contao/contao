@@ -64,9 +64,13 @@ class PageRegistry
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
-            $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            if ('forward' === $pageModel->type && $pageModel->forwardParams) {
+                $path = '/'.($pageModel->alias ?: $pageModel->id);
+            } else {
+                $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
+                $defaults['parameters'] = '';
+                $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            }
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
