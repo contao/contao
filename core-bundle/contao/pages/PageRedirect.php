@@ -21,7 +21,7 @@ class PageRedirect extends Frontend
 {
 	public function __construct()
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using the "%s" class has been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', PageRedirect::class, RedirectPageController::class);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using the "%s" class has been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', self::class, RedirectPageController::class);
 
 		parent::__construct();
 	}
