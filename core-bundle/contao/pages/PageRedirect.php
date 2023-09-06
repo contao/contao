@@ -14,13 +14,18 @@ use Contao\CoreBundle\Controller\Page\RedirectPageController;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s" has been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', PageRedirect::class, RedirectPageController::class);
-
 /**
  * Provide methods to handle a redirect page.
  */
 class PageRedirect extends Frontend
 {
+	public function __construct()
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using the "%s" class has been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', PageRedirect::class, RedirectPageController::class);
+
+		parent::__construct();
+	}
+
 	/**
 	 * Return a response object
 	 *
