@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $robots
  * @property string|null            $description
  * @property string                 $redirect
+ * @property string|boolean         $alwaysForward
  * @property string|integer         $jumpTo
  * @property string|boolean         $redirectBack
  * @property string                 $url
@@ -136,6 +137,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
  * @method static PageModel|null findOneByRedirect($val, array $opt=array())
+ * @method static PageModel|null findOneByAlwaysForward($val, array $opt=array())
  * @method static PageModel|null findOneByJumpTo($val, array $opt=array())
  * @method static PageModel|null findOneByRedirectBack($val, array $opt=array())
  * @method static PageModel|null findOneByUrl($val, array $opt=array())
@@ -197,6 +199,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAllwaysForward($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
@@ -262,6 +265,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByRedirect($val, array $opt=array())
+ * @method static integer countByAlwaysForward($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countByRedirectBack($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
