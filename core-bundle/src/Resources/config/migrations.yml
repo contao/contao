@@ -114,8 +114,8 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_413.forward_params:
-        class: Contao\CoreBundle\Migration\Version413\ForwardParamsMigration
+    contao.migration.version_413.always_forward:
+        class: Contao\CoreBundle\Migration\Version413\AlwaysForwardMigration
         arguments:
             - '@database_connection'
 

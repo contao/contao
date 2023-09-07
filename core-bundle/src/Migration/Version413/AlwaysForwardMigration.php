@@ -19,7 +19,7 @@ use Doctrine\DBAL\Connection;
 /**
  * @internal
  */
-class ForwardParamsMigration extends AbstractMigration
+class AlwaysForwardMigration extends AbstractMigration
 {
     private Connection $connection;
 
@@ -38,7 +38,7 @@ class ForwardParamsMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_page');
 
-        return !isset($columns['forwardparams']);
+        return !isset($columns['alwaysforward']);
     }
 
     public function run(): MigrationResult
@@ -47,14 +47,14 @@ class ForwardParamsMigration extends AbstractMigration
             ALTER TABLE
                 tl_page
             ADD
-                forwardParams char(1) NOT NULL default ''
+                alwaysForward char(1) NOT NULL default ''
         ");
 
         $this->connection->executeStatement("
             UPDATE
                 tl_page
             SET
-                forwardParams = '1'
+                alwaysForward = '1'
             WHERE
                 type = 'forward'
         ");
