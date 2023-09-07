@@ -29,20 +29,29 @@ class RedirectPageControllerTest extends TestCase
             'url' => 'lorem/ipsum',
         ]);
 
-        $request = Request::create('https://example.com/foobar');
+        $request = Request::create(
+            'https://example.com/foobar/index.php/foobar',
+            'GET',
+            [],
+            [],
+            [],
+            [
+                'SCRIPT_FILENAME' => '/foobar/index.php',
+                'SCRIPT_NAME' => '/foobar/index.php',
+            ],
+        );
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
             ->method('replaceInline')
-            ->with('lorem/ipsum')
-            ->willReturn('lorem/ipsum')
+            ->willReturnCallback(static fn (string $value) => $value)
         ;
 
         $controller = new RedirectPageController($insertTagParser);
         $response = $controller($request, $pageModel);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/lorem/ipsum', $response->getTargetUrl());
+        $this->assertSame('https://example.com/foobar/index.php/lorem/ipsum', $response->getTargetUrl());
         $this->assertSame(Response::HTTP_MOVED_PERMANENTLY, $response->getStatusCode());
     }
 
@@ -53,20 +62,29 @@ class RedirectPageControllerTest extends TestCase
             'url' => 'lorem/ipsum',
         ]);
 
-        $request = Request::create('https://example.com/foobar');
+        $request = Request::create(
+            'https://example.com/foobar/index.php/foobar',
+            'GET',
+            [],
+            [],
+            [],
+            [
+                'SCRIPT_FILENAME' => '/foobar/index.php',
+                'SCRIPT_NAME' => '/foobar/index.php',
+            ],
+        );
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
             ->method('replaceInline')
-            ->with('lorem/ipsum')
-            ->willReturn('lorem/ipsum')
+            ->willReturnCallback(static fn (string $value) => $value)
         ;
 
         $controller = new RedirectPageController($insertTagParser);
         $response = $controller($request, $pageModel);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/lorem/ipsum', $response->getTargetUrl());
+        $this->assertSame('https://example.com/foobar/index.php/lorem/ipsum', $response->getTargetUrl());
         $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
     }
 }
