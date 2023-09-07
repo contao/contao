@@ -199,7 +199,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByAllwaysForward($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAlwaysForward($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
