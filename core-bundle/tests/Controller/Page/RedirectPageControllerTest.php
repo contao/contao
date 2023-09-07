@@ -22,11 +22,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectPageControllerTest extends TestCase
 {
-    public function testCreatesPermanentRedirectToUrl(): void
+    /**
+     * @dataProvider getRedirectPages
+     */
+    public function testRedirectsToUrl(string $redirect, string $url, string $redirectUrl, string|null $insertTagResult = null): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'redirect' => 'permanent',
-            'url' => 'lorem/ipsum',
+            'redirect' => $redirect,
+            'url' => $url,
         ]);
 
         $request = Request::create(
@@ -44,47 +47,35 @@ class RedirectPageControllerTest extends TestCase
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
             ->method('replaceInline')
-            ->willReturnCallback(static fn (string $value) => $value)
+            ->willReturnCallback(
+                static function (string $value) use ($insertTagResult) {
+                    if (null !== $insertTagResult) {
+                        return $insertTagResult;
+                    }
+
+                    return $value;
+                }
+            )
         ;
 
         $controller = new RedirectPageController($insertTagParser);
         $response = $controller($request, $pageModel);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('https://example.com/foobar/index.php/lorem/ipsum', $response->getTargetUrl());
-        $this->assertSame(Response::HTTP_MOVED_PERMANENTLY, $response->getStatusCode());
+        $this->assertSame($redirectUrl, $response->getTargetUrl());
+
+        if ('permanent' === $redirect) {
+            $this->assertSame(Response::HTTP_MOVED_PERMANENTLY, $response->getStatusCode());
+        } else {
+            $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
+        }
     }
 
-    public function testCreatesTemporaryRedirectToUrl(): void
+    public function getRedirectPages(): \Generator
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'redirect' => 'temporary',
-            'url' => 'lorem/ipsum',
-        ]);
-
-        $request = Request::create(
-            'https://example.com/foobar/index.php/foobar',
-            'GET',
-            [],
-            [],
-            [],
-            [
-                'SCRIPT_FILENAME' => '/foobar/index.php',
-                'SCRIPT_NAME' => '/foobar/index.php',
-            ],
-        );
-
-        $insertTagParser = $this->createMock(InsertTagParser::class);
-        $insertTagParser
-            ->method('replaceInline')
-            ->willReturnCallback(static fn (string $value) => $value)
-        ;
-
-        $controller = new RedirectPageController($insertTagParser);
-        $response = $controller($request, $pageModel);
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('https://example.com/foobar/index.php/lorem/ipsum', $response->getTargetUrl());
-        $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
+        yield ['permanent', 'lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
+        yield ['temporary', 'lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
+        yield ['permanent', '/foobar/index.php/lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
+        yield ['permanent', '{{link_url::123}}', 'https://example.com/foobar/index.php/lorem/ipsum', '/foobar/index.php/lorem/ipsum'];
     }
 }
