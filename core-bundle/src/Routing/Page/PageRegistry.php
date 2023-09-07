@@ -63,9 +63,13 @@ class PageRegistry
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
-            $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            if ($this->isParameterless($pageModel)) {
+                $path = '/'.($pageModel->alias ?: $pageModel->id);
+            } else {
+                $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
+                $defaults['parameters'] = '';
+                $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            }
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -229,5 +233,14 @@ class PageRegistry
 
         $this->urlSuffixes = array_values(array_unique(array_merge(...$urlSuffixes)));
         $this->urlPrefixes = array_values(array_unique(array_column($results, 'urlPrefix')));
+    }
+
+    private function isParameterless(PageModel $pageModel): bool
+    {
+        if ('redirect' === $pageModel->type) {
+            return true;
+        }
+
+        return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }
