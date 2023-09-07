@@ -46,6 +46,7 @@ class RedirectPageControllerTest extends TestCase
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
+            ->expects($this->once())
             ->method('replaceInline')
             ->willReturnCallback(
                 static function (string $value) use ($insertTagResult) {
