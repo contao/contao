@@ -88,21 +88,6 @@ class PageRegistryTest extends TestCase
         $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
     }
 
-    public function testReturnsUnparameteredPageRouteForRedirectPages(): void
-    {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'redirect';
-        $pageModel->alias = 'bar';
-        $pageModel->urlPrefix = 'foo';
-        $pageModel->urlSuffix = '.baz';
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $route = $registry->getRoute($pageModel);
-
-        $this->assertSame('/foo/bar.baz', $route->getPath());
-        $this->assertNull($route->getDefault('parameters'));
-    }
-
     /**
      * @dataProvider pageRouteWithPathProvider
      */

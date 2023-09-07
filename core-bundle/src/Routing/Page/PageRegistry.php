@@ -237,10 +237,6 @@ class PageRegistry
 
     private function isParameterless(PageModel $pageModel): bool
     {
-        if ('redirect' === $pageModel->type) {
-            return true;
-        }
-
         return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }
