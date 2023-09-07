@@ -50,3 +50,8 @@ services:
         class: Contao\CoreBundle\Migration\Version500\OrderFieldMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_502.always_forward:
+        class: Contao\CoreBundle\Migration\Version502\AlwaysForwardMigration
+        arguments:
+            - '@database_connection'
