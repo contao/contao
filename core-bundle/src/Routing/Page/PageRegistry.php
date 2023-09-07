@@ -64,9 +64,7 @@ class PageRegistry
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            if ('redirect' === $pageModel->type) {
-                $path = '/'.($pageModel->alias ?: $pageModel->id);
-            } elseif ('forward' === $pageModel->type && !$pageModel->forwardParams) {
+            if ($this->isParameterless($pageModel)) {
                 $path = '/'.($pageModel->alias ?: $pageModel->id);
             } else {
                 $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
@@ -241,5 +239,14 @@ class PageRegistry
 
         $this->urlSuffixes = array_values(array_unique(array_merge(...$urlSuffixes)));
         $this->urlPrefixes = array_values(array_unique(array_column($results, 'urlPrefix')));
+    }
+
+    private function isParameterless(PageModel $pageModel): bool
+    {
+        if ('redirect' === $pageModel->type) {
+            return true;
+        }
+
+        return 'forward' === $pageModel->type && !$pageModel->forwardParams;
     }
 }
