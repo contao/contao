@@ -55,7 +55,7 @@ class RedirectPageControllerTest extends TestCase
                     }
 
                     return $value;
-                }
+                },
             )
         ;
 
