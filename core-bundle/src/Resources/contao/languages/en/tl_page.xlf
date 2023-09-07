@@ -75,10 +75,10 @@
         <source>Please choose the redirect type.</source>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
-        <source>Always forward</source>
+        <source>Always redirect</source>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
-        <source>Forward to the target page even if there are query or path parameters.</source>
+        <source>Redirect to the target page even if there are query or path parameters.</source>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
