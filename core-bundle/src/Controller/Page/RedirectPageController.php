@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsPage('redirect', '')]
+#[AsPage('redirect', '', contentComposition: false)]
 class RedirectPageController
 {
     public function __construct(private readonly InsertTagParser $insertTagParser)
