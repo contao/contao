@@ -590,6 +590,12 @@
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
+      <trans-unit id="PTY.forward_params.0">
+        <source>Internal redirect (including parameters)</source>
+      </trans-unit>
+      <trans-unit id="PTY.forward_params.1">
+        <source>This type of page automatically forwards visitors to another page. Query and path parameters will also be forwarded.</source>
+      </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
       </trans-unit>

@@ -340,7 +340,6 @@ $GLOBALS['TL_FFL'] = array
 $GLOBALS['TL_PTY'] = array
 (
 	'regular'   => PageRegular::class,
-	'forward'   => PageForward::class,
 	'redirect'  => PageRedirect::class,
 	'logout'    => PageLogout::class,
 	'error_401' => PageError401::class,

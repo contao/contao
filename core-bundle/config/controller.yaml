@@ -167,6 +167,12 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\Page\ForwardPageController:
+        arguments:
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:
             - '@?logger'
