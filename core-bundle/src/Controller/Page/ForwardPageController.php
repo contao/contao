@@ -50,7 +50,7 @@ class ForwardPageController
             throw new ForwardPageNotFoundException('Forward page not found');
         }
 
-        if (!$request->attributes->get('_forward_params', false)) {
+        if (true !== $request->attributes->get('_forward_params', false)) {
             return $nextPage->getAbsoluteUrl();
         }
 
