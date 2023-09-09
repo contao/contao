@@ -83,7 +83,6 @@ use Contao\OptionWizard;
 use Contao\PageError401;
 use Contao\PageError403;
 use Contao\PageError404;
-use Contao\PageForward;
 use Contao\PageLogout;
 use Contao\PageModel;
 use Contao\PageRedirect;

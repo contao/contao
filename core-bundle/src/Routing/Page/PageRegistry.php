@@ -241,6 +241,6 @@ class PageRegistry
             return true;
         }
 
-        return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
+        return false;
     }
 }
