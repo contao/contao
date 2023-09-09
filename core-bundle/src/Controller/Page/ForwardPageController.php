@@ -54,6 +54,8 @@ class ForwardPageController
             return $nextPage->getAbsoluteUrl();
         }
 
-        return $nextPage->getAbsoluteUrl('/'.$pathParams).$request->getQueryString();
+        $qs = $request->getQueryString();
+
+        return $nextPage->getAbsoluteUrl($pathParams ? '/'.$pathParams : null).($qs ? '?'.$qs : '');
     }
 }
