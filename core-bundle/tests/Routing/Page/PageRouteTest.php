@@ -110,18 +110,15 @@ class PageRouteTest extends TestCase
 
     private function mockPageModel(array $properties = []): PageModel&MockObject
     {
-        return $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 17,
-                'alias' => 'bar',
-                'domain' => 'www.example.com',
-                'rootLanguage' => 'xx',
-                'rootUseSSL' => true,
-                'urlPrefix' => 'foo',
-                'urlSuffix' => '.baz',
-                ...$properties,
-            ],
-        );
+        return $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'alias' => 'bar',
+            'domain' => 'www.example.com',
+            'rootLanguage' => 'xx',
+            'rootUseSSL' => true,
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            ...$properties,
+        ]);
     }
 }
