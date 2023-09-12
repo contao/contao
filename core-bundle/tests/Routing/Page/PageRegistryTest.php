@@ -25,11 +25,15 @@ class PageRegistryTest extends TestCase
 {
     public function testReturnsParameteredPageRouteIfPathIsNullWithoutRequireItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
-        $pageModel->alias = 'bar';
-        $pageModel->urlPrefix = 'foo';
-        $pageModel->urlSuffix = '.baz';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $route = $registry->getRoute($pageModel);
@@ -41,12 +45,15 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsParameteredPageRouteIfPathIsNullWithRequireItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
-        $pageModel->alias = 'bar';
-        $pageModel->urlPrefix = 'foo';
-        $pageModel->urlSuffix = '.baz';
-        $pageModel->requireItem = '1';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '1',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $route = $registry->getRoute($pageModel);
@@ -90,11 +97,15 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsUnparameteredPageRouteForRedirectPages(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'redirect';
-        $pageModel->alias = 'bar';
-        $pageModel->urlPrefix = 'foo';
-        $pageModel->urlSuffix = '.baz';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'redirect',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $route = $registry->getRoute($pageModel);
@@ -108,11 +119,14 @@ class PageRegistryTest extends TestCase
      */
     public function testReturnsPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
-        $pageModel->alias = $alias;
-        $pageModel->urlPrefix = $urlPrefix;
-        $pageModel->urlSuffix = $urlSuffix;
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => $alias,
+            'urlPrefix' => $urlPrefix,
+            'urlSuffix' => $urlSuffix,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foo', $config);
@@ -191,8 +205,11 @@ class PageRegistryTest extends TestCase
 
     public function testConfiguresTheRoute(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
@@ -271,9 +288,7 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionReturnsTrueForUnknownType(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
-
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $this->assertTrue($registry->supportsContentComposition($pageModel));
@@ -285,11 +300,8 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionWithBoolean(): void
     {
-        $fooModel = $this->mockClassWithProperties(PageModel::class);
-        $fooModel->type = 'foo';
-
-        $barModel = $this->mockClassWithProperties(PageModel::class);
-        $barModel->type = 'bar';
+        $fooModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $barModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'bar']);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foo', new RouteConfig(), null, false);
@@ -301,8 +313,7 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionFromPage(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
 
         $page = $this->createMock(ContentCompositionInterface::class);
         $page
@@ -320,8 +331,11 @@ class PageRegistryTest extends TestCase
 
     public function testOverwritesExistingTypes(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $config1 = new RouteConfig();
         $config2 = new RouteConfig();
@@ -363,11 +377,17 @@ class PageRegistryTest extends TestCase
 
     public function testRemovesType(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foo';
-        $pageModel->alias = 'baz';
-        $pageModel->urlPrefix = 'bar';
-        $pageModel->urlSuffix = '.html';
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => 'foo',
+                'alias' => 'baz',
+                'urlPrefix' => 'bar',
+                'urlSuffix' => '.html',
+                'language' => 'en',
+                'rootLanguage' => 'en',
+            ]
+        );
 
         $enhancer = $this->createMock(DynamicRouteInterface::class);
         $enhancer
@@ -395,8 +415,13 @@ class PageRegistryTest extends TestCase
 
     public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->type = 'foobar';
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => 'foobar',
+                'rootLanguage' => 'en',
+            ]
+        );
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foobar', new RouteConfig(false, null, null, []));
