@@ -230,12 +230,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "17be1b3fcf4da9efe9099d3718da963832b72754"
+                "reference": "c5310c68bd0c49018c3c94151ceeb57f5d4ad161"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/17be1b3fcf4da9efe9099d3718da963832b72754",
-                "reference": "17be1b3fcf4da9efe9099d3718da963832b72754",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/c5310c68bd0c49018c3c94151ceeb57f5d4ad161",
+                "reference": "c5310c68bd0c49018c3c94151ceeb57f5d4ad161",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +274,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-09-13T09:30:16+00:00"
+            "time": "2023-09-13T17:35:58+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
