@@ -44,6 +44,7 @@ class DebugDcaCommand extends Command
         $table = $input->getArgument('table');
 
         $this->framework->initialize();
+
         $dcaLoader = $this->framework->createInstance(DcaLoader::class, [$table]);
         $dcaLoader->load();
 
