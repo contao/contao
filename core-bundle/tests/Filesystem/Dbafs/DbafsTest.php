@@ -312,14 +312,11 @@ class DbafsTest extends TestCase
 
         $dbafs = $this->getDbafs($connection, null, $eventDispatcher);
 
-        $dbafs->setExtraMetadata(
-            'some/path',
-            [
-                'foo' => 'complex a',
-                'bar' => 'complex b',
-                'baz' => 'complex c',
-            ],
-        );
+        $dbafs->setExtraMetadata('some/path', [
+            'foo' => 'complex a',
+            'bar' => 'complex b',
+            'baz' => 'complex c',
+        ]);
 
         // Assert internal cache is cleared and file item correctly contains new metadata
         $item = $dbafs->getRecord('some/path');

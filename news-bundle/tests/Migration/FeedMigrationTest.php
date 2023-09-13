@@ -124,27 +124,28 @@ class FeedMigrationTest extends ContaoTestCase
         $connection
             ->expects($this->once())
             ->method('insert')
-            ->with('tl_page', [
-                'pid' => 1,
-                'type' => 'news_feed',
-                'title' => 'Latest news',
-                'alias' => 'share/latest-news',
-                'feedSource' => 'source_teaser',
-                'feedFormat' => 'rss',
-                'newsArchives' => serialize([42]),
-                'maxFeedItems' => 0,
-                'feedDescription' => 'This is an example newsfeed',
-                'imgSize' => null,
-                'tstamp' => 16000000,
-            ])
+            ->with(
+                'tl_page',
+                [
+                    'pid' => 1,
+                    'type' => 'news_feed',
+                    'title' => 'Latest news',
+                    'alias' => 'share/latest-news',
+                    'feedSource' => 'source_teaser',
+                    'feedFormat' => 'rss',
+                    'newsArchives' => serialize([42]),
+                    'maxFeedItems' => 0,
+                    'feedDescription' => 'This is an example newsfeed',
+                    'imgSize' => null,
+                    'tstamp' => 16000000,
+                ],
+            )
         ;
 
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with('tl_news_feed', [
-                'id' => 1,
-            ])
+            ->with('tl_news_feed', ['id' => 1])
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());
@@ -207,27 +208,33 @@ class FeedMigrationTest extends ContaoTestCase
         $connection
             ->expects($this->once())
             ->method('insert')
-            ->with('tl_page', [
-                'pid' => 2,
-                'type' => 'news_feed',
-                'title' => 'Latest news',
-                'alias' => 'share/latest-news',
-                'feedSource' => 'source_teaser',
-                'feedFormat' => 'rss',
-                'newsArchives' => serialize([42]),
-                'maxFeedItems' => 0,
-                'feedDescription' => 'This is an example newsfeed',
-                'imgSize' => null,
-                'tstamp' => 16000000,
-            ])
+            ->with(
+                'tl_page',
+                [
+                    'pid' => 2,
+                    'type' => 'news_feed',
+                    'title' => 'Latest news',
+                    'alias' => 'share/latest-news',
+                    'feedSource' => 'source_teaser',
+                    'feedFormat' => 'rss',
+                    'newsArchives' => serialize([42]),
+                    'maxFeedItems' => 0,
+                    'feedDescription' => 'This is an example newsfeed',
+                    'imgSize' => null,
+                    'tstamp' => 16000000,
+                ],
+            )
         ;
 
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with('tl_news_feed', [
-                'id' => 1,
-            ])
+            ->with(
+                'tl_news_feed',
+                [
+                    'id' => 1,
+                ],
+            )
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());

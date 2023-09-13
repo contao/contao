@@ -140,13 +140,10 @@ class ImageSizes implements ResetInterface
             );
         }
 
-        $this->options = array_merge_recursive(
-            $options,
-            [
-                'image_sizes' => [],
-                'custom' => ['crop', 'proportional', 'box'],
-            ],
-        );
+        $this->options = array_merge_recursive($options, [
+            'image_sizes' => [],
+            'custom' => ['crop', 'proportional', 'box'],
+        ]);
     }
 
     /**

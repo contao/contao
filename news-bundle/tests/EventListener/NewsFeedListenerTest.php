@@ -76,14 +76,11 @@ class NewsFeedListenerTest extends ContaoTestCase
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'newsArchives' => serialize([1]),
-                'feedFeatured' => $feedFeatured,
-                'maxFeedItems' => 0,
-            ],
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'newsArchives' => serialize([1]),
+            'feedFeatured' => $feedFeatured,
+            'maxFeedItems' => 0,
+        ]);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
@@ -225,13 +222,10 @@ class NewsFeedListenerTest extends ContaoTestCase
         $feed = $this->createMock(Feed::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'feedSource' => $feedSource,
-                'imgSize' => serialize([100, 100, 'crop']),
-            ],
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'feedSource' => $feedSource,
+            'imgSize' => serialize([100, 100, 'crop']),
+        ]);
 
         $request = $this->createMock(Request::class);
         $baseUrl = 'example.org';

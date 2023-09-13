@@ -17,10 +17,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
-    /**
-     * @param mixed $user
-     */
-    public function isBackupCode($user, string $code): bool
+    public function isBackupCode(object $user, string $code): bool
     {
         if (!$user instanceof User) {
             return false;
@@ -45,10 +42,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
         return false;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function invalidateBackupCode($user, string $code): void
+    public function invalidateBackupCode(object $user, string $code): void
     {
         if (!$user instanceof User) {
             return;

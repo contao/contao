@@ -30,26 +30,29 @@ final class SimplifyObjectOrNullCheckRector extends AbstractRector
 
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Do not use null compare to check for an object or null', [
-            new CodeSample(
-                <<<'CODE_SAMPLE'
-                    function process(DateTime|null $dateTime)
-                    {
-                        if (null === $dateTime) {
-                            return;
+        return new RuleDefinition(
+            'Do not use null compare to check for an object or null',
+            [
+                new CodeSample(
+                    <<<'CODE_SAMPLE'
+                        function process(DateTime|null $dateTime)
+                        {
+                            if (null === $dateTime) {
+                                return;
+                            }
                         }
-                    }
-                    CODE_SAMPLE,
-                <<<'CODE_SAMPLE'
-                    function process(DateTime|null $dateTime)
-                    {
-                        if (!$dateTime) {
-                            return;
+                        CODE_SAMPLE,
+                    <<<'CODE_SAMPLE'
+                        function process(DateTime|null $dateTime)
+                        {
+                            if (!$dateTime) {
+                                return;
+                            }
                         }
-                    }
-                    CODE_SAMPLE,
-            ),
-        ]);
+                        CODE_SAMPLE,
+                ),
+            ],
+        );
     }
 
     /**

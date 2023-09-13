@@ -58,9 +58,7 @@ class SitemapListenerTest extends ContaoTestCase
         $adapters = [
             NewsArchiveModel::class => $this->mockConfiguredAdapter([
                 'findByProtected' => [
-                    $this->mockClassWithProperties(NewsArchiveModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsArchiveModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
@@ -68,9 +66,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             NewsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(NewsModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsModel::class, ['jumpTo' => 42]),
                 ],
             ]),
         ];

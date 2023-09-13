@@ -337,28 +337,40 @@ class LocalesTest extends TestCase
 
         $localesService = $this->getLocalesService(null, $requestStack, null, ['de', 'de_AT', 'de_CH', 'en_US']);
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'de_AT' => 'Deutsch (Österreich)',
-            'de_CH' => 'Deutsch (Schweiz)',
-            'en_US' => 'Englisch (Vereinigte Staaten) - English (United States)',
-        ], $localesService->getLocales(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'de_AT' => 'Deutsch (Österreich)',
+                'de_CH' => 'Deutsch (Schweiz)',
+                'en_US' => 'Englisch (Vereinigte Staaten) - English (United States)',
+            ],
+            $localesService->getLocales(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-        ], $localesService->getEnabledLocales(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+            ],
+            $localesService->getEnabledLocales(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-        ], $localesService->getLanguages(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+            ],
+            $localesService->getLanguages(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-            'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
-        ], $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+                'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
+            ],
+            $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true),
+        );
     }
 
     private function getLocalesService(Translator|null $translator = null, RequestStack|null $requestStack = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales

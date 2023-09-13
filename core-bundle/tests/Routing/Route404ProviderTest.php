@@ -65,32 +65,26 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithoutValueReturnsAllRoutes(): void
     {
-        $notFoundPage = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 2,
-                'type' => 'error_404',
-                'urlPrefix' => '',
-                'urlSuffix' => '.html',
-                'rootId' => 1,
-                'language' => 'en',
-                'rootLanguage' => 'en',
-            ],
-        );
+        $notFoundPage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 2,
+            'type' => 'error_404',
+            'urlPrefix' => '',
+            'urlSuffix' => '.html',
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
-        $otherPage = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 3,
-                'type' => 'regular',
-                'alias' => 'foo',
-                'urlPrefix' => 'en',
-                'urlSuffix' => '.html',
-                'rootId' => 1,
-                'language' => 'en',
-                'rootLanguage' => 'en',
-            ],
-        );
+        $otherPage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 3,
+            'type' => 'regular',
+            'alias' => 'foo',
+            'urlPrefix' => 'en',
+            'urlSuffix' => '.html',
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
@@ -190,17 +184,14 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesOneRouteWithoutLocale(): void
     {
-        $page = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 17,
-                'rootId' => 1,
-                'type' => 'error_404',
-                'domain' => 'example.com',
-                'rootUseSSL' => true,
-                'rootLanguage' => 'en',
-            ],
-        );
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'type' => 'error_404',
+            'domain' => 'example.com',
+            'rootUseSSL' => true,
+            'rootLanguage' => 'en',
+        ]);
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -237,18 +228,15 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesTwoRoutesWithLocale(): void
     {
-        $page = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 17,
-                'rootId' => 1,
-                'type' => 'error_404',
-                'domain' => 'example.com',
-                'rootUseSSL' => true,
-                'rootLanguage' => 'de',
-                'urlPrefix' => 'de',
-            ],
-        );
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'type' => 'error_404',
+            'domain' => 'example.com',
+            'rootUseSSL' => true,
+            'rootLanguage' => 'de',
+            'urlPrefix' => 'de',
+        ]);
 
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
@@ -299,18 +287,15 @@ class Route404ProviderTest extends TestCase
         $pages = [];
 
         foreach ($pagesData as $row) {
-            $pages[] = $this->mockClassWithProperties(
-                PageModel::class,
-                [
-                    'domain' => '',
-                    'rootId' => 1,
-                    'rootUseSSL' => false,
-                    'rootLanguage' => 'de',
-                    'rootIsFallback' => true,
-                    'rootSorting' => 0,
-                    ...$row,
-                ],
-            );
+            $pages[] = $this->mockClassWithProperties(PageModel::class, [
+                'domain' => '',
+                'rootId' => 1,
+                'rootUseSSL' => false,
+                'rootLanguage' => 'de',
+                'rootIsFallback' => true,
+                'rootSorting' => 0,
+                ...$row,
+            ]);
         }
 
         $pageAdapter = $this->mockAdapter(['findByType']);

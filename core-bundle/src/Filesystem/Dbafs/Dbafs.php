@@ -635,13 +635,10 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         // Deletes
         foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
-            $this->connection->delete(
-                $this->table,
-                [
-                    'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
-                    'type' => $itemToDelete->isFile() ? 'file' : 'folder',
-                ],
-            );
+            $this->connection->delete($this->table, [
+                'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
+                'type' => $itemToDelete->isFile() ? 'file' : 'folder',
+            ]);
         }
 
         $this->connection->commit();

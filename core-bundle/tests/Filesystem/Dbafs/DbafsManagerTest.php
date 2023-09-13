@@ -255,20 +255,14 @@ class DbafsManagerTest extends TestCase
 
     public function testGetExtraMetadata(): void
     {
-        $filesDbafs = $this->getDbafsWithExtraMetadata(
-            'media/hilarious-cat.mov',
-            [
-                'foo' => 'foobar',
-                'bar' => 42,
-            ],
-        );
+        $filesDbafs = $this->getDbafsWithExtraMetadata('media/hilarious-cat.mov', [
+            'foo' => 'foobar',
+            'bar' => 42,
+        ]);
 
-        $filesMediaDbafs = $this->getDbafsWithExtraMetadata(
-            'hilarious-cat.mov',
-            [
-                'baz' => true,
-            ],
-        );
+        $filesMediaDbafs = $this->getDbafsWithExtraMetadata('hilarious-cat.mov', [
+            'baz' => true,
+        ]);
 
         $manager = new DbafsManager();
         $manager->register($filesDbafs, 'files');
@@ -286,23 +280,17 @@ class DbafsManagerTest extends TestCase
 
     public function testValidatesExtraMetadata(): void
     {
-        $assetsDbafs = $this->getDbafsWithExtraMetadata(
-            'images/a.jpg',
-            [
-                'accessed' => 123,
-                'compressed' => true,
-                'quality' => 'high',
-            ],
-        );
+        $assetsDbafs = $this->getDbafsWithExtraMetadata('images/a.jpg', [
+            'accessed' => 123,
+            'compressed' => true,
+            'quality' => 'high',
+        ]);
 
-        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata(
-            'a.jpg',
-            [
-                'aspectRatio' => 1.5,
-                'quality' => '50',
-                'compressed' => true,
-            ],
-        );
+        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata('a.jpg', [
+            'aspectRatio' => 1.5,
+            'quality' => '50',
+            'compressed' => true,
+        ]);
 
         $manager = new DbafsManager();
         $manager->register($assetsDbafs, 'assets');
