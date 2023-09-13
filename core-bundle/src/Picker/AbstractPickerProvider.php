@@ -36,15 +36,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $name = $this->getName();
         $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
 
-        return $this->menuFactory->createItem(
-            $name,
-            [
-                'label' => $label ?: $name,
-                'linkAttributes' => ['class' => $name],
-                'current' => $this->isCurrent($config),
-                'uri' => $this->generateUrl($config, true),
-            ],
-        );
+        return $this->menuFactory->createItem($name, [
+            'label' => $label ?: $name,
+            'linkAttributes' => ['class' => $name],
+            'current' => $this->isCurrent($config),
+            'uri' => $this->generateUrl($config, true),
+        ]);
     }
 
     public function isCurrent(PickerConfig $config): bool

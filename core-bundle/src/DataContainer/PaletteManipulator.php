@@ -332,14 +332,11 @@ class PaletteManipulator
             // If the fallback palette was not found, create a new one
             $fallback = reset($action['fallback']);
 
-            $this->applyLegend(
-                $config,
-                [
-                    'name' => $fallback,
-                    'position' => self::POSITION_APPEND,
-                    'hide' => false,
-                ],
-            );
+            $this->applyLegend($config, [
+                'name' => $fallback,
+                'position' => self::POSITION_APPEND,
+                'hide' => false,
+            ]);
         }
 
         // If everything fails, add to the last legend

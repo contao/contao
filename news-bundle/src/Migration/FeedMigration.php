@@ -68,22 +68,19 @@ class FeedMigration extends AbstractMigration
                 continue;
             }
 
-            $this->connection->insert(
-                'tl_page',
-                [
-                    'type' => 'news_feed',
-                    'pid' => $rootPage,
-                    'tstamp' => $feed['tstamp'],
-                    'title' => $feed['title'],
-                    'alias' => 'share/'.$feed['alias'],
-                    'feedSource' => $feed['source'],
-                    'feedFormat' => $feed['format'],
-                    'newsArchives' => $feed['archives'],
-                    'maxFeedItems' => $feed['maxItems'],
-                    'feedDescription' => $feed['description'],
-                    'imgSize' => $feed['imgSize'],
-                ],
-            );
+            $this->connection->insert('tl_page', [
+                'type' => 'news_feed',
+                'pid' => $rootPage,
+                'tstamp' => $feed['tstamp'],
+                'title' => $feed['title'],
+                'alias' => 'share/'.$feed['alias'],
+                'feedSource' => $feed['source'],
+                'feedFormat' => $feed['format'],
+                'newsArchives' => $feed['archives'],
+                'maxFeedItems' => $feed['maxItems'],
+                'feedDescription' => $feed['description'],
+                'imgSize' => $feed['imgSize'],
+            ]);
 
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
         }

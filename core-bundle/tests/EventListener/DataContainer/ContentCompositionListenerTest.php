@@ -1126,12 +1126,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ],
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page
@@ -1162,12 +1159,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ],
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page

@@ -58,9 +58,7 @@ class SitemapListenerTest extends ContaoTestCase
         $adapters = [
             CalendarModel::class => $this->mockConfiguredAdapter([
                 'findByProtected' => [
-                    $this->mockClassWithProperties(CalendarModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([

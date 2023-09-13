@@ -32,14 +32,11 @@ class TemplateLocatorTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = $this->getTemplateLocator(
-            $projectDir,
-            [
-                'templates/my/theme',
-                'themes/foo',
-                'templates/non-existing',
-            ],
-        );
+        $locator = $this->getTemplateLocator($projectDir, [
+            'templates/my/theme',
+            'themes/foo',
+            'templates/non-existing',
+        ]);
 
         $expectedThemeDirectories = [
             'my_theme' => Path::join($projectDir, 'templates/my/theme'),

@@ -124,17 +124,14 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
-        $output = $environment->render(
-            'test.html.twig',
-            [
-                'attributes' => ['class' => 'block', 'data-thing' => 42],
-                'cssId' => ' id="my-id"',
-                'paragraph_attributes' => ' class="rte"',
-                'style' => '',
-                'headline' => 'Test headline',
-                'text' => 'Some text',
-            ],
-        );
+        $output = $environment->render('test.html.twig', [
+            'attributes' => ['class' => 'block', 'data-thing' => 42],
+            'cssId' => ' id="my-id"',
+            'paragraph_attributes' => ' class="rte"',
+            'style' => '',
+            'headline' => 'Test headline',
+            'text' => 'Some text',
+        ]);
 
         $this->assertSame($expectedOutput, $output);
     }
@@ -177,12 +174,9 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
-        $output = $environment->render(
-            'test.html.twig',
-            [
-                'code' => 'function foo() { return "<b>ar"; };',
-            ],
-        );
+        $output = $environment->render('test.html.twig', [
+            'code' => 'function foo() { return "<b>ar"; };',
+        ]);
 
         $this->assertSame($expectedOutput, $output);
 
