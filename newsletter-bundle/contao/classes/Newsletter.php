@@ -215,14 +215,14 @@ class Newsletter extends Backend
 				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
-				if ($objSession->has('rejected_recipients'))
+				if ($arrRejected = $objSession->get('rejected_recipients', array()))
 				{
-					$intRejected = \count($objSession->get('rejected_recipients', array()));
+					$intRejected = \count($arrRejected);
 
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
-					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
+					foreach ($arrRejected as $strRecipient)
 					{
 						$db
 							->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
