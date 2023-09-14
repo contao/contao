@@ -17,5 +17,5 @@
     <p class="error"><?= $this->getErrorAsString() ?></p>
   <?php endif; ?>
 
-  <input type="<?= $this->type ?>" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput): ?> password<?php endif; ?><?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" value="<?= Contao\StringUtil::specialchars($this->value) ?>"<?= $this->getAttributes() ?>>
+  <input type="<?= $this->type ?>" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput): ?> password<?php endif; ?><?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" value="<?= Contao\StringUtil::specialchars($this->convertDate($this->value)) ?>"<?= $this->getAttributes() ?>>
 <?php $this->endblock(); ?>
