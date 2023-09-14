@@ -72,6 +72,7 @@ class JsonLdManager
 
         $return = [];
 
+        // Create one <script> block per JSON-LD context (see #6401)
         foreach ($data as $context) {
             $return[] = sprintf(
                 "<script type=\"application/ld+json\">\n%s\n</script>",
