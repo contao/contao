@@ -1,0 +1,23 @@
+{#
+    This component outputs a style tag.
+    It will automatically add a nonce if applicable.
+
+        <style>…</style>
+        <style nonce="…">…</style>
+
+    Optional variables:
+        @var \Contao\CoreBundle\String\HtmlAttributes attributes
+#}
+
+{% block style_component %}
+    {% set nonce = contao_csp_nonce('script-src') %}
+    {% set style_attributes = attrs(style_attributes|default)
+        .set('nonce', nonce, nonce)
+    %}
+
+    <script{{ style_attributes }}>
+        {% block style_content %}
+            {# Output inline styles here. #}
+        {% endblock %}
+    </script>
+{% endblock %}
