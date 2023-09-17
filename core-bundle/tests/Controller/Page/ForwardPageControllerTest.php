@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\ForwardPageController;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Component\Filesystem\Path;
@@ -27,6 +28,10 @@ class ForwardPageControllerTest extends TestCase
      */
     public function testRedirectsToUrl(string $redirectType, string $requestUrl, string $jumpToUrl, string $expectedRedirectUrl, string $pathParams = '', bool $forwardParams = false): void
     {
+        if ($pathParams && !$forwardParams) {
+            $this->expectException(PageNotFoundException::class);
+        }
+
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'redirect' => $redirectType,
             'jumpTo' => 42,
@@ -78,6 +83,10 @@ class ForwardPageControllerTest extends TestCase
         } else {
             $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
         }
+
+        if (!$forwardParams) {
+            $this->assertNull(parse_url($response->getTargetUrl(), PHP_URL_QUERY));
+        }
     }
 
     public function getRedirectPages(): \Generator
@@ -85,7 +94,7 @@ class ForwardPageControllerTest extends TestCase
         yield ['permanent', 'https://example.com/internal-redirect', 'https://example.com/redirect-target', 'https://example.com/redirect-target'];
         yield ['temporary', 'https://example.com/internal-redirect', 'https://example.com/redirect-target', 'https://example.com/redirect-target'];
         yield ['permanent', 'https://example.com/internal-redirect?foobar=1', 'https://example.com/redirect-target', 'https://example.com/redirect-target'];
-        yield ['permanent', 'https://example.com/internal-redirect/foobar', 'https://example.com/redirect-target', 'https://example.com/redirect-target'];
+        yield ['permanent', 'https://example.com/internal-redirect/foobar', 'https://example.com/redirect-target', 'https://example.com/redirect-target', 'foobar'];
         yield ['permanent', 'https://example.com/internal-redirect?foobar=1', 'https://example.com/redirect-target', 'https://example.com/redirect-target?foobar=1', '', true];
         yield ['permanent', 'https://example.com/internal-redirect/foobar', 'https://example.com/redirect-target', 'https://example.com/redirect-target/foobar', 'foobar', true];
     }

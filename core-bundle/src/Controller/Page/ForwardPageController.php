@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
@@ -56,6 +57,11 @@ class ForwardPageController
         }
 
         if (true !== $request->attributes->get('_forward_params', false)) {
+            // Fail safe for testing
+            if ($pathParams) {
+                throw new PageNotFoundException('Cannot forward with path parameters present.');
+            }
+
             return $nextPage->getAbsoluteUrl();
         }
 
