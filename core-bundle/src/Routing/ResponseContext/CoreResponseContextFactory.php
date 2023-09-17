@@ -33,8 +33,7 @@ class CoreResponseContextFactory
         private readonly TokenChecker $tokenChecker,
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
-        private readonly InsertTagParser $insertTagParser,
-        private readonly CspParser $cspParser,
+        private readonly InsertTagParser $insertTagParser
     ) {
     }
 
@@ -117,10 +116,8 @@ class CoreResponseContextFactory
         ;
 
         if ($pageModel->enableCsp) {
-            $csp = new CSPBuilder();
-
             if ($cspHeader = trim((string) $pageModel->csp)) {
-                $csp = $this->cspParser->parse($csp, $cspHeader);
+                $csp = CSPBuilder::fromHeader($cspHeader);
             } else {
                 $csp = new CSPBuilder();
                 $csp->setSelfAllowed('default-src', true);
