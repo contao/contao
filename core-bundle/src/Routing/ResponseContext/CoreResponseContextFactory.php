@@ -33,7 +33,7 @@ class CoreResponseContextFactory
         private readonly TokenChecker $tokenChecker,
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
-        private readonly InsertTagParser $insertTagParser
+        private readonly InsertTagParser $insertTagParser,
     ) {
     }
 

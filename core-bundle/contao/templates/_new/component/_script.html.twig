@@ -17,6 +17,7 @@
     {% set script_attributes = attrs(script_attributes|default)
         .set('nonce', nonce, nonce)
     %}
+
     <script{{ script_attributes }}>
         {% block script_content %}
             {# Output inline scripts here. #}

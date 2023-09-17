@@ -47,9 +47,6 @@ class PageRegular extends Frontend
 
 		$response = $this->Template->getResponse($blnCheckRequest);
 
-		// Finalize the response context so it cannot be used anymore
-		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
-
 		return $response;
 	}
 
