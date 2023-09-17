@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'version',
-    description: 'Gets the Contao Manager API version and features.'
+    description: 'Gets the Contao Manager API version and features.',
 )]
 class VersionCommand extends Command
 {
@@ -32,11 +32,14 @@ class VersionCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->write(json_encode([
-            'version' => Application::VERSION,
-            'commands' => $this->getCommandNames(),
-            'features' => $this->getFeatures(),
-        ]));
+        $output->write(json_encode(
+            [
+                'version' => Application::VERSION,
+                'commands' => $this->getCommandNames(),
+                'features' => $this->getFeatures(),
+            ],
+            JSON_THROW_ON_ERROR,
+        ));
 
         return 0;
     }
@@ -54,9 +57,7 @@ class VersionCommand extends Command
      */
     private function getFeatures(): array
     {
-        /** @var array<ApiPluginInterface> $plugins */
         $plugins = $this->application->getPluginLoader()->getInstancesOf(ApiPluginInterface::class);
-
         $features = [];
 
         foreach ($plugins as $packageName => $plugin) {

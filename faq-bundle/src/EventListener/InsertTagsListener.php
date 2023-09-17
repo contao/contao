@@ -37,7 +37,7 @@ class InsertTagsListener
     /**
      * Replaces the FAQ insert tags.
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags): string|false
+    public function onReplaceInsertTags(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -48,9 +48,13 @@ class InsertTagsListener
 
         $this->framework->initialize();
 
-        $faq = $this->framework->getAdapter(FaqModel::class)->findByIdOrAlias($elements[1]);
+        if (!$faq = $this->framework->getAdapter(FaqModel::class)->findByIdOrAlias($elements[1])) {
+            return '';
+        }
 
-        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
+        $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+
+        if (false === ($url = $this->generateUrl($faq, $absolute))) {
             return '';
         }
 
@@ -59,11 +63,15 @@ class InsertTagsListener
 
     private function generateUrl(FaqModel $faq, bool $absolute): string|false
     {
-        /** @var PageModel $jumpTo */
-        if (
-            !($category = $faq->getRelated('pid')) instanceof FaqCategoryModel
-            || !($jumpTo = $category->getRelated('jumpTo')) instanceof PageModel
-        ) {
+        $category = $faq->getRelated('pid');
+
+        if (!$category instanceof FaqCategoryModel) {
+            return false;
+        }
+
+        $jumpTo = $category->getRelated('jumpTo');
+
+        if (!$jumpTo instanceof PageModel) {
             return false;
         }
 
@@ -80,13 +88,13 @@ class InsertTagsListener
                 $url ?: './',
                 StringUtil::specialcharsAttribute($faq->question),
                 $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
-                $faq->question
+                $faq->question,
             ),
             'faq_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
                 $url ?: './',
                 StringUtil::specialcharsAttribute($faq->question),
-                $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
+                $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
             'faq_url' => $url ?: './',
             'faq_title' => StringUtil::specialcharsAttribute($faq->question),

@@ -13,10 +13,23 @@ parameters:
     level: 6
 
     paths:
+        - %currentWorkingDirectory%/calendar-bundle/src
+        - %currentWorkingDirectory%/calendar-bundle/tests
+        - %currentWorkingDirectory%/comments-bundle/src
         - %currentWorkingDirectory%/core-bundle/src
         - %currentWorkingDirectory%/core-bundle/tests
+        - %currentWorkingDirectory%/faq-bundle/src
+        - %currentWorkingDirectory%/faq-bundle/tests
+        - %currentWorkingDirectory%/listing-bundle/src
+        - %currentWorkingDirectory%/maker-bundle/src
+        - %currentWorkingDirectory%/maker-bundle/tests
+        - %currentWorkingDirectory%/news-bundle/src
+        - %currentWorkingDirectory%/news-bundle/tests
+        - %currentWorkingDirectory%/newsletter-bundle/src
+        - %currentWorkingDirectory%/newsletter-bundle/tests
 
     universalObjectCratesClasses:
+        - Contao\BackendUser
         - Contao\Model
         - Contao\Template
 

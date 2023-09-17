@@ -40,8 +40,8 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
 Replace `<directory>` with the directory you want to install the Managed Edition in (use `.` for the current one).
-Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently `4.9.x-dev`)
-if you want to fix a bug.
+Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently
+`4.13.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
 bundles:
@@ -62,7 +62,7 @@ composer update
 ```
 
 Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
-running `contao:setup` on the command line.
+running `vendor/bin/contao-setup` on the command line.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
 from within your application.
@@ -84,13 +84,14 @@ composer run all
 You can also run the scripts separately:
 
 ```bash
-composer run unit-tests
-composer run functional-tests
+composer run rector
 composer run cs-fixer
 composer run service-linter
+composer run monorepo-tools
+composer run unit-tests
+composer run functional-tests
 composer run phpstan
 composer run require-checker
-composer run monorepo-tools
 ```
 
 If you want to pass additional flags to the underlying commands, you can use the `--` argument:
@@ -123,14 +124,30 @@ Then run the functional tests via the `run` command:
 composer run functional-tests
 ```
 
+## End-to-end tests
+
+Before you can run the end-to-end tests, you have to install the [Symfony Local Web Server][3] with TLS support. Then
+install the required Node packages:
+
+```bash
+yarn install
+```
+
+Then run the end-to-end tests:
+
+```bash
+yarn run e2e-tests
+```
+
 ## License
 
 Contao is licensed under the terms of the LGPLv3.
 
 ## Getting support
 
-Visit the [support page][3] to learn about the available support options.
+Visit the [support page][4] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://to.contao.org/support
+[3]: https://symfony.com/doc/current/setup/symfony_server.html
+[4]: https://to.contao.org/support

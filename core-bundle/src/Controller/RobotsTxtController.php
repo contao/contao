@@ -38,12 +38,13 @@ class RobotsTxtController
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        if (null === $rootPage) {
+        if (!$rootPage) {
             throw new NotFoundHttpException();
         }
 
         $parser = new Parser();
         $parser->setSource((string) $rootPage->robotsTxt);
+
         $file = $parser->getFile();
 
         $this->eventDispatcher->dispatch(new RobotsTxtEvent($file, $request, $rootPage), ContaoCoreEvents::ROBOTS_TXT);

@@ -29,7 +29,6 @@ class BackendPassword extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
@@ -53,9 +52,11 @@ class BackendPassword extends Backend
 
 		Controller::loadDataContainer('tl_user');
 
+		$user = BackendUser::getInstance();
+
 		$dc = new DC_Table('tl_user');
-		$dc->id = $this->User->id;
-		$dc->activeRecord = $this->User;
+		$dc->id = $user->id;
+		$dc->activeRecord = $user;
 
 		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->template = 'be_widget_chpw';
@@ -63,7 +64,7 @@ class BackendPassword extends Backend
 		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 		$widget->wizard = Backend::getTogglePasswordWizard('password');
-		$widget->currentRecord = $this->User->id;
+		$widget->currentRecord = $user->id;
 
 		$objTemplate = new BackendTemplate('be_password');
 		$objTemplate->widget = $widget->parse();
@@ -80,7 +81,7 @@ class BackendPassword extends Backend
 				Message::addError($widget->getErrorAsString());
 			}
 			// Password and username are the same
-			elseif ($pw == $this->User->username)
+			elseif ($pw == $user->username)
 			{
 				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 			}
@@ -90,7 +91,7 @@ class BackendPassword extends Backend
 				$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
 				// Make sure the password has been changed
-				if ($passwordHasher->verify($this->User->password, $pw))
+				if ($passwordHasher->verify($user->password, $pw))
 				{
 					Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
 				}
@@ -100,7 +101,7 @@ class BackendPassword extends Backend
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] ?? null))
 					{
 						$dc = new DC_Table('tl_user');
-						$dc->id = $this->User->id;
+						$dc->id = $user->id;
 
 						foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] as $callback)
 						{
@@ -115,7 +116,7 @@ class BackendPassword extends Backend
 						}
 					}
 
-					$objUser = UserModel::findByPk($this->User->id);
+					$objUser = UserModel::findByPk($user->id);
 					$objUser->pwChange = false;
 					$objUser->password = $passwordHasher->hash($pw);
 					$objUser->save();

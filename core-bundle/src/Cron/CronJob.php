@@ -17,6 +17,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 class CronJob
 {
     private readonly string $name;
+
     private \DateTimeInterface $previousRun;
 
     public function __construct(

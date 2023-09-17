@@ -53,9 +53,7 @@ class ResponseContextAccessor
      */
     public function finalizeCurrentContext(Response $response): self
     {
-        $responseContext = $this->getResponseContext();
-
-        if (null === $responseContext) {
+        if (!$responseContext = $this->getResponseContext()) {
             return $this;
         }
 

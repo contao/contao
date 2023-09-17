@@ -20,9 +20,9 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 class NewsArchiveAccessVoterTest extends WebTestCase
 {
@@ -35,7 +35,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             ->with(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42)
             ->willReturnOnConsecutiveCalls(
                 true,
-                false
+                false,
             )
         ;
 
@@ -56,8 +56,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                ['whatever']
-            )
+                ['whatever'],
+            ),
         );
 
         $this->assertSame(
@@ -65,8 +65,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+            ),
         );
 
         $this->assertSame(
@@ -74,8 +74,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+            ),
         );
     }
 }

@@ -29,9 +29,7 @@ class CaptchaController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/_contao/captcha/{_locale}", name="contao_frontend_captcha", defaults={"_scope" = "frontend"})
-     */
+    #[Route('/_contao/captcha/{_locale}', name: 'contao_frontend_captcha', defaults: ['_scope' => 'frontend'])]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();

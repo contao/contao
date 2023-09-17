@@ -25,7 +25,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
      * @internal Do not instantiate this class; use Translator::getCatalogue() instead
      */
     public function __construct(
-        private readonly MessageCatalogueInterface $parent,
+        private readonly MessageCatalogueInterface $inner,
         private readonly ContaoFramework $framework,
         private readonly ResourceFinder $resourceFinder,
     ) {
@@ -33,7 +33,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
 
     public function getLocale(): string
     {
-        return $this->parent->getLocale();
+        return $this->inner->getLocale();
     }
 
     public function getDomains(): array
@@ -48,7 +48,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return [...$this->parent->getDomains(), ...$domains];
+        return [...$this->inner->getDomains(), ...$domains];
     }
 
     public function all(string|null $domain = null): array
@@ -57,7 +57,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
             throw new LogicException(sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        return $this->parent->all($domain);
+        return $this->inner->all($domain);
     }
 
     public function set(string $id, string $translation, string $domain = 'messages'): void
@@ -66,13 +66,13 @@ final class MessageCatalogue implements MessageCatalogueInterface
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->set($id, $translation, $domain);
+        $this->inner->set($id, $translation, $domain);
     }
 
     public function has(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->has($id, $domain);
+            return $this->inner->has($id, $domain);
         }
 
         return null !== $this->loadMessage($id, $domain);
@@ -81,7 +81,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function defines(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->defines($id, $domain);
+            return $this->inner->defines($id, $domain);
         }
 
         return null !== $this->loadMessage($id, $domain);
@@ -90,7 +90,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function get(string $id, string $domain = 'messages'): string
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->get($id, $domain);
+            return $this->inner->get($id, $domain);
         }
 
         return $this->loadMessage($id, $domain) ?? $id;
@@ -102,7 +102,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->replace($messages, $domain);
+        $this->inner->replace($messages, $domain);
     }
 
     public function add(array $messages, string $domain = 'messages'): void
@@ -111,32 +111,32 @@ final class MessageCatalogue implements MessageCatalogueInterface
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->add($messages, $domain);
+        $this->inner->add($messages, $domain);
     }
 
     public function addCatalogue(MessageCatalogueInterface $catalogue): void
     {
-        $this->parent->addCatalogue($catalogue);
+        $this->inner->addCatalogue($catalogue);
     }
 
     public function addFallbackCatalogue(MessageCatalogueInterface $catalogue): void
     {
-        $this->parent->addFallbackCatalogue($catalogue);
+        $this->inner->addFallbackCatalogue($catalogue);
     }
 
     public function getFallbackCatalogue(): MessageCatalogueInterface|null
     {
-        return $this->parent->getFallbackCatalogue();
+        return $this->inner->getFallbackCatalogue();
     }
 
     public function getResources(): array
     {
-        return $this->parent->getResources();
+        return $this->inner->getResources();
     }
 
     public function addResource(ResourceInterface $resource): void
     {
-        $this->parent->addResource($resource);
+        $this->inner->addResource($resource);
     }
 
     private function isContaoDomain(string|null $domain): bool
@@ -162,7 +162,6 @@ final class MessageCatalogue implements MessageCatalogueInterface
         // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
         preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);
 
-        /** @var array<string> $parts */
         $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
         $item = &$GLOBALS['TL_LANG'];
 

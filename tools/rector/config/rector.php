@@ -10,15 +10,27 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Tools\Rector\SimplifyObjectOrNullCheckRector;
+use Rector\CodeQuality\Rector\BooleanNot\SimplifyDeMorganBinaryRector;
+use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
+use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
+use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
+use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
+use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
+use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
+use Rector\CodingStyle\Rector\String_\SymplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
+use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\SetList;
+use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
@@ -32,11 +44,7 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__.'/../../../*/tests',
         __DIR__.'/../../../tools/*/bin',
         __DIR__.'/../../../tools/*/config',
-
-        // Using ../tools/*/src leads to a "class was not found while trying to analyse
-        // it" error, so add the paths to the /src directories explicitly.
-        __DIR__.'/../../../tools/isolated-tests/src',
-        __DIR__.'/../../../tools/servlice-linter/src',
+        __DIR__.'/../../../tools/*/src',
     ]);
 
     $rectorConfig->skip([
@@ -52,11 +60,28 @@ return static function (RectorConfig $rectorConfig): void {
             'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
         ],
         NullToStrictStringFuncCallArgRector::class,
+        SimplifyIfReturnBoolRector::class => [
+            'core-bundle/src/EventListener/CommandSchedulerListener.php',
+            'core-bundle/src/HttpKernel/ModelArgumentResolver.php',
+        ],
     ]);
 
-    $services = $rectorConfig->services();
-    $services->set(ArraySpreadInsteadOfArrayMergeRector::class);
-    $services->set(CompactToVariablesRector::class);
-    $services->set(RemoveUnusedPrivateMethodParameterRector::class);
-    $services->set(RestoreDefaultNullToNullableTypePropertyRector::class);
+    $rectorConfig->phpstanConfig(__DIR__.'/phpstan.neon');
+
+    $rectorConfig->rule(ArraySpreadInsteadOfArrayMergeRector::class);
+    $rectorConfig->rule(CompactToVariablesRector::class);
+    $rectorConfig->rule(CountArrayToEmptyArrayComparisonRector::class);
+    $rectorConfig->rule(DisallowedEmptyRuleFixerRector::class);
+    $rectorConfig->rule(JsonThrowOnErrorRector::class);
+    $rectorConfig->rule(NewlineBeforeNewAssignSetRector::class);
+    $rectorConfig->rule(RemoveConcatAutocastRector::class);
+    $rectorConfig->rule(RemoveUnusedPrivateMethodParameterRector::class);
+    $rectorConfig->rule(RestoreDefaultNullToNullableTypePropertyRector::class);
+    $rectorConfig->rule(SimplifyBoolIdenticalTrueRector::class);
+    $rectorConfig->rule(SimplifyDeMorganBinaryRector::class);
+    $rectorConfig->rule(SimplifyEmptyCheckOnEmptyArrayRector::class);
+    $rectorConfig->rule(SimplifyIfReturnBoolRector::class);
+    $rectorConfig->rule(SimplifyObjectOrNullCheckRector::class);
+    $rectorConfig->rule(SymplifyQuoteEscapeRector::class);
+    $rectorConfig->rule(SimplifyUselessVariableRector::class);
 };

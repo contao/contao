@@ -25,9 +25,9 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
@@ -73,7 +73,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s">%s</a> ',
             $this->backend->addToUrl($href.'&amp;pn='.$row['id']),
             StringUtil::specialchars($title),
-            $this->image->getHtml($icon, $label)
+            $this->image->getHtml($icon, $label),
         );
     }
 
@@ -88,7 +88,7 @@ class ContentCompositionListener
         $currentRecord = $dc->getCurrentRecord();
 
         // Return if there is no current record (override all)
-        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        if (null === $currentRecord || !$request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
@@ -168,7 +168,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 
@@ -179,7 +179,7 @@ class ContentCompositionListener
 
         // Do not show paste button for pages without content composition or articles in layout
         if (
-            null === $pageModel
+            !$pageModel
             || !$this->pageRegistry->supportsContentComposition($pageModel)
             || !$this->hasArticlesInLayout($pageModel)
         ) {
@@ -199,7 +199,7 @@ class ContentCompositionListener
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 
@@ -212,10 +212,9 @@ class ContentCompositionListener
     {
         $pageModel->loadDetails();
 
-        /** @var LayoutModel|null $layout */
         $layout = $pageModel->getRelated('layout');
 
-        if (null === $layout) {
+        if (!$layout instanceof LayoutModel) {
             return 'main';
         }
 

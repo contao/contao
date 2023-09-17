@@ -26,6 +26,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class MergeHttpHeadersListener implements ResetInterface
 {
     private readonly HeaderStorageInterface $headerStorage;
+
     private array $headers = [];
 
     private array $multiHeaders = [

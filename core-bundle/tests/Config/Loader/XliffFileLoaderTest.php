@@ -37,14 +37,14 @@ class XliffFileLoaderTest extends TestCase
     {
         $this->assertTrue(
             $this->loader->supports(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+            ),
         );
 
         $this->assertFalse(
             $this->loader->supports(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
+            ),
         );
     }
 
@@ -84,16 +84,16 @@ class XliffFileLoaderTest extends TestCase
             $source,
             $this->loader->load(
                 $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-                'en'
-            )
+                'en',
+            ),
         );
 
         $this->assertSame(
             $target,
             $this->loader->load(
                 $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-                'de'
-            )
+                'de',
+            ),
         );
     }
 
@@ -102,7 +102,7 @@ class XliffFileLoaderTest extends TestCase
         $loader = new XliffFileLoader($this->getFixturesDir().'/app', true);
         $loader->load(
             $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-            'en'
+            'en',
         );
 
         $this->assertSame('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
@@ -111,7 +111,7 @@ class XliffFileLoaderTest extends TestCase
 
         $loader->load(
             $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
-            'de'
+            'de',
         );
 
         $this->assertSame('This is the first target', $GLOBALS['TL_LANG']['MSC']['first']);
@@ -125,7 +125,7 @@ class XliffFileLoaderTest extends TestCase
 
         $this->loader->load(
             $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',
-            'en'
+            'en',
         );
     }
 

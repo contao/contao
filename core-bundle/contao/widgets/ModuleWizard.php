@@ -52,13 +52,13 @@ class ModuleWizard extends Widget
 	 */
 	public function generate()
 	{
-		$this->import(Database::class, 'Database');
-
+		$db = Database::getInstance();
 		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
-		$objModules = $this->Database->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
-									 ->execute($this->currentRecord);
+		$objModules = $db
+			->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
+			->execute($this->currentRecord);
 
 		// Add the articles module
 		$modules[] = array('id'=>0, 'name'=>$GLOBALS['TL_LANG']['MOD']['article'][0], 'type'=>'article');
@@ -81,9 +81,10 @@ class ModuleWizard extends Widget
 			$modules[$k] = $v;
 		}
 
-		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-								 ->limit(1)
-								 ->execute($this->currentRecord);
+		$objRow = $db
+			->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+			->limit(1)
+			->execute($this->currentRecord);
 
 		$cols = array('main');
 

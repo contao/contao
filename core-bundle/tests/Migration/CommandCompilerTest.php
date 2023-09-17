@@ -48,12 +48,12 @@ class CommandCompilerTest extends TestCase
 
         $this->assertContains(
             'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
-            $commands
+            $commands,
         );
 
         $this->assertContains(
             'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
-            $commands
+            $commands,
         );
     }
 
@@ -458,7 +458,7 @@ class CommandCompilerTest extends TestCase
                 'ADD foo2 INT NOT NULL, '.
                 'ADD foo3 NUMERIC(9, 2) NOT NULL, '.
                 "ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL",
-            $commands
+            $commands,
         );
     }
 
@@ -495,8 +495,7 @@ class CommandCompilerTest extends TestCase
 
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn($fromSchema)
         ;
 
@@ -547,7 +546,7 @@ class CommandCompilerTest extends TestCase
                     }
 
                     return null;
-                }
+                },
             )
         ;
 

@@ -103,7 +103,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             }
         }
 
-        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
+        if ($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
             return true;
         }
 
@@ -111,11 +111,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        if ($request->hasSession() && $request->getSession()->isStarted()) {
-            return true;
-        }
-
-        return false;
+        return $request->hasSession() && $request->getSession()->isStarted();
     }
 
     private function setCookies(Request $request, Response $response): void
@@ -131,11 +127,19 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $expires = null === $value ? 1 : 0;
-
-            $response->headers->setCookie(
-                new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
+            $cookie = new Cookie(
+                $cookieKey,
+                $value,
+                null === $value ? 1 : 0,
+                $basePath,
+                null,
+                $isSecure,
+                true,
+                false,
+                Cookie::SAMESITE_LAX,
             );
+
+            $response->headers->setCookie($cookie);
         }
     }
 
@@ -149,7 +153,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $content = $response->getContent();
         $tokens = $this->tokenManager->getUsedTokenValues();
 
-        if (!\is_string($content) || empty($tokens)) {
+        if (!$tokens || !\is_string($content)) {
             return;
         }
 

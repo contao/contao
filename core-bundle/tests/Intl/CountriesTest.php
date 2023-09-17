@@ -70,7 +70,7 @@ class CountriesTest extends TestCase
                     $this->assertSame('contao_countries', $domain);
 
                     return 'CNT.de' === $label;
-                }
+                },
             )
         ;
 
@@ -93,7 +93,7 @@ class CountriesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -174,7 +174,7 @@ class CountriesTest extends TestCase
 
     private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

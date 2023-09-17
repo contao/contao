@@ -42,7 +42,7 @@ class ProcessUtil implements ResetInterface
                 } else {
                     $promise->reject($process->getErrorOutput() ?: $process->getOutput());
                 }
-            }
+            },
         );
 
         if ($start) {

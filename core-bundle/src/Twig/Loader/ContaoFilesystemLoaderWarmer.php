@@ -114,14 +114,14 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
             $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
-        if (null === $this->filesystem) {
+        if (!$this->filesystem) {
             $this->filesystem = new Filesystem();
         }
 
         try {
             $this->filesystem->dumpFile(
                 Path::join($targetDir, 'ide-twig.json'),
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
             );
         } catch (IOException) {
             // ignore

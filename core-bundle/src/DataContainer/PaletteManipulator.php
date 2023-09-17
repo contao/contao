@@ -17,12 +17,17 @@ use Contao\StringUtil;
 class PaletteManipulator
 {
     final public const POSITION_BEFORE = 'before';
+
     final public const POSITION_AFTER = 'after';
+
     final public const POSITION_PREPEND = 'prepend';
+
     final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
+
     private array $fields = [];
+
     private array $removes = [];
 
     public static function create(): self
@@ -327,14 +332,11 @@ class PaletteManipulator
             // If the fallback palette was not found, create a new one
             $fallback = reset($action['fallback']);
 
-            $this->applyLegend(
-                $config,
-                [
-                    'name' => $fallback,
-                    'position' => self::POSITION_APPEND,
-                    'hide' => false,
-                ]
-            );
+            $this->applyLegend($config, [
+                'name' => $fallback,
+                'position' => self::POSITION_APPEND,
+                'hide' => false,
+            ]);
         }
 
         // If everything fails, add to the last legend

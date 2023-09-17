@@ -110,7 +110,7 @@ class ContextFactoryTest extends TestCase
     public function testCreateContextFromClass(): void
     {
         if (\PHP_VERSION_ID >= 80200) {
-            $this->expectDeprecation('Unsilenced deprecation: Creation of dynamic property %s is deprecated');
+            $this->expectDeprecation('%sCreation of dynamic property %s is deprecated');
         }
 
         $object = new ChildClassWithMembersStub();
@@ -180,7 +180,7 @@ class ContextFactoryTest extends TestCase
         $this->expectExceptionMessage(
             'An exception has been thrown during the rendering of a template ("'.
             'Error evaluating "lazy": Object of class stdClass could not be converted to string'.
-            '") in "test.html.twig" at line 1.'
+            '") in "test.html.twig" at line 1.',
         );
 
         $environment->render('test.html.twig', $context);

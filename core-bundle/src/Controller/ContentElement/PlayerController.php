@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PlayerController extends AbstractContentElementController
 {
     private const VIDEO_TYPES = ['webm', 'mp4', 'm4v', 'mov', 'wmv', 'ogv'];
+
     private const AUDIO_TYPES = ['m4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'];
 
     /**
@@ -110,10 +111,10 @@ class PlayerController extends AbstractContentElementController
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
-                    ->set('src', ((string) $this->publicUriByStoragePath[$item->getPath()]).$range)
+                    ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -153,7 +154,7 @@ class PlayerController extends AbstractContentElementController
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -197,7 +198,7 @@ class PlayerController extends AbstractContentElementController
                 continue;
             }
 
-            if (null === ($publicUri = $this->filesStorage->generatePublicUri($item->getPath()))) {
+            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
                 continue;
             }
 

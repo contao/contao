@@ -40,7 +40,7 @@ class FilesystemUtilTest extends TestCase
                         '1fc6c283-c0c8-420e-b1c7-712d388a6b3a' => new FilesystemItem(false, 'directory'),
                         default => null,
                     };
-                }
+                },
             )
         ;
 
@@ -52,7 +52,7 @@ class FilesystemUtilTest extends TestCase
                     new FilesystemItem(true, 'directory/file3'),
                     new FilesystemItem(true, 'directory/file4'),
                     new FilesystemItem(false, 'directory/subdirectory'),
-                ])
+                ]),
             )
         ;
 
@@ -62,7 +62,7 @@ class FilesystemUtilTest extends TestCase
 
                 return $item->getPath();
             },
-            FilesystemUtil::listContentsFromSerialized($storage, $sources)->toArray()
+            FilesystemUtil::listContentsFromSerialized($storage, $sources)->toArray(),
         );
 
         $this->assertSame($expectedPaths, $paths);

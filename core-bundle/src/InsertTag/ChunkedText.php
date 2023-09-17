@@ -18,6 +18,7 @@ namespace Contao\CoreBundle\InsertTag;
 final class ChunkedText implements \IteratorAggregate, \Stringable
 {
     public const TYPE_TEXT = 0;
+
     public const TYPE_RAW = 1;
 
     /**
@@ -35,7 +36,7 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
     }
 
     /**
-     * @return \Generator<array{0:int, 1:string}>
+     * @return \Generator<array{0:self::TYPE_*, 1:string}>
      */
     public function getIterator(): \Generator
     {

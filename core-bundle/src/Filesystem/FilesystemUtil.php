@@ -48,7 +48,7 @@ class FilesystemUtil
      */
     public static function assertIsResource(mixed $contents): void
     {
-        if (false === \is_resource($contents)) {
+        if (!\is_resource($contents)) {
             $type = \gettype($contents);
 
             throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
@@ -103,7 +103,7 @@ class FilesystemUtil
             try {
                 $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
 
-                if (null === ($item = $storage->get($uuidObject))) {
+                if (!$item = $storage->get($uuidObject)) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {

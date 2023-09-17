@@ -20,6 +20,7 @@ use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,6 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class UserSessionListenerTest extends TestCase
@@ -68,14 +68,15 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', $scope);
 
         $listener = $this->getListener(null, $security, $eventDispatcher);
         $listener($this->getRequestEvent($request));
 
-        /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
+        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
         $this->assertSame($sessionValues, $bag->all());
     }
 
@@ -112,6 +113,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($this->mockSession());
+
         $request->attributes->set('_scope', $scope);
 
         $listener = $this->getListener($connection, $security);
@@ -140,6 +142,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener(null, $security);
@@ -168,6 +171,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($connection, $security);
@@ -184,6 +188,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -209,6 +214,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -285,6 +291,7 @@ class UserSessionListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($this->mockSession());
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $listener->write($this->getResponseEvent($request));

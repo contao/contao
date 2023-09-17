@@ -25,7 +25,9 @@ use Symfony\Component\Finder\Finder;
 class InstallSkeletonCommandTest extends ContaoTestCase
 {
     private InstallSkeletonCommand $command;
+
     private Filesystem $filesystem;
+
     private Finder $webFiles;
 
     protected function setUp(): void
@@ -34,6 +36,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
 
         $this->command = new InstallSkeletonCommand($this->getTempDir());
         $this->command->setApplication($this->getApplication());
+
         $this->filesystem = new Filesystem();
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../skeleton/public');
     }
@@ -105,7 +108,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/public/.htaccess',
-            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../skeleton/public/.htaccess')
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../skeleton/public/.htaccess'),
         );
     }
 

@@ -69,7 +69,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer(
             $renderingStrategy,
-            [$uri, $request, ['ignore_errors' => false]]
+            [$uri, $request, ['ignore_errors' => false]],
         );
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
@@ -96,7 +96,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer(
             'inline',
-            [$uri, $request, $options + ['ignore_errors' => false]]
+            [$uri, $request, $options + ['ignore_errors' => false]],
         );
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
@@ -124,7 +124,7 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer(
             $expectedRenderer,
-            [$uri, $request, ['ignore_errors' => false]]
+            [$uri, $request, ['ignore_errors' => false]],
         );
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
@@ -147,7 +147,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            static fn () => isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel']
+            static fn () => isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel'],
         );
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
@@ -168,7 +168,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            static fn () => isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel']
+            static fn () => isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel'],
         );
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
@@ -262,7 +262,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator<mixed>&MockObject
      */
-    private function mockServiceLocatorWithRenderer(string $name, array|null $with = null, Response|null $response = null): ServiceLocator
+    private function mockServiceLocatorWithRenderer(string $name, array|null $with = null, Response|null $response = null): ServiceLocator&MockObject
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer
@@ -287,7 +287,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator<mixed>&MockObject
      */
-    private function mockServiceLocator(string $name, object $service): ServiceLocator
+    private function mockServiceLocator(string $name, object $service): ServiceLocator&MockObject
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator

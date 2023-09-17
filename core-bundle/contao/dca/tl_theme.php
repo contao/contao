@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
@@ -58,10 +57,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
-			'label_callback'          => array
-			(
-				array('tl_theme', 'addPreviewImage')
-			)
+			'label_callback'          => array('tl_theme', 'addPreviewImage')
 		),
 		'global_operations' => array
 		(
@@ -181,26 +177,12 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 class tl_theme extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit the table
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
 		// Check the theme import and export permissions (see #5835)
 		switch (Input::get('key'))
 		{

@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'config:set',
-    description: 'Sets the Contao Manager configuration from a JSON string.'
+    description: 'Sets the Contao Manager configuration from a JSON string.',
 )]
 class SetConfigCommand extends Command
 {
@@ -42,11 +42,7 @@ class SetConfigCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $data = @json_decode($input->getArgument('json'), true);
-
-        if (null === $data) {
-            throw new \RuntimeException('Invalid JSON: '.json_last_error_msg());
-        }
+        $data = json_decode($input->getArgument('json'), true, 512, JSON_THROW_ON_ERROR);
 
         $this->managerConfig->write($data);
 

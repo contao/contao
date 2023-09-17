@@ -55,7 +55,7 @@ class JumpToParentButtonListener
         $newTitle = sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $table,
-            $originalRow['id']
+            $originalRow['id'],
         );
 
         $backend = $this->framework->getAdapter(Backend::class);
@@ -65,13 +65,13 @@ class JumpToParentButtonListener
             $backend->addToUrl($parentLinkParameters.'&popup=1'),
             StringUtil::specialchars($newTitle),
             StringUtil::specialchars($newTitle),
-            $image->getHtml($icon, $label)
+            $image->getHtml($icon, $label),
         );
     }
 
     private function getParentLinkParameters(array $parent, string $table): string
     {
-        if (empty($parent)) {
+        if (!$parent) {
             return '';
         }
 
@@ -131,7 +131,7 @@ class JumpToParentButtonListener
             'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
             [
                 'id' => $parent['id'],
-            ]
+            ],
         );
 
         return (int) $count > 0;

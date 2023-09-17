@@ -15,7 +15,7 @@
       <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
       <div class="tl_tbox">
         <fieldset class="tl_checkbox_container">
-          <table class="zebra-table zebra-table--with-padding">
+          <table class="with-border with-padding">
           <thead>
             <tr>
               <th><input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this, 'purge')"></th>

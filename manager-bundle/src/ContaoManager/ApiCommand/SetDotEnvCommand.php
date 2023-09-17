@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:set',
-    description: 'Writes a parameter to the .env file.'
+    description: 'Writes a parameter to the .env file.',
 )]
 class SetDotEnvCommand extends Command
 {
@@ -47,21 +47,14 @@ class SetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $filesystem = new Filesystem();
         $path = Path::join($this->projectDir, '.env');
-        $localPath = $path.'.local';
 
-        // Get the realpath in case it is a symlink (see #6066)
-        if ($realpath = realpath($localPath)) {
-            $localPath = $realpath;
-        }
-
-        $dumper = new DotenvDumper($localPath, $filesystem);
+        $dumper = new DotenvDumper($path.'.local');
         $dumper->setParameter($input->getArgument('key'), $input->getArgument('value'));
         $dumper->dump();
 
         if (!file_exists($path)) {
-            $filesystem->touch($path);
+            (new Filesystem())->touch($path);
         }
 
         return 0;

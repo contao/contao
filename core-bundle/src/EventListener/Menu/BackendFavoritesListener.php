@@ -19,11 +19,11 @@ use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -72,8 +72,12 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        /** @var AttributeBagInterface $bag */
         $bag = $this->requestStack->getSession()->getBag('contao_backend');
+
+        if (!$bag instanceof AttributeBagInterface) {
+            return;
+        }
+
         $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
 
         $tree = $factory
@@ -129,7 +133,7 @@ class BackendFavoritesListener
             [
                 'url' => $url,
                 'user' => $user->id,
-            ]
+            ],
         );
 
         $factory = $event->getFactory();
@@ -153,7 +157,7 @@ class BackendFavoritesListener
             [
                 'pid' => $pid,
                 'user' => $user,
-            ]
+            ],
         );
 
         foreach ($nodes as $node) {
@@ -174,7 +178,7 @@ class BackendFavoritesListener
 
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $requestUri, $ref, $user, $node['id']);
+            $this->buildTree($item, $factory, $requestUri, $ref, $user, (int) $node['id']);
         }
     }
 

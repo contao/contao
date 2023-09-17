@@ -23,14 +23,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
 
     private DefaultOperationsListener $listener;
 
@@ -551,8 +548,8 @@ class DefaultOperationsListenerTest extends TestCase
                         }
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn(true)
         ;
@@ -572,9 +569,9 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
             [],
-            ['foo' => 'bar', 'tstamp' => 0],
+            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
         ];
 
         yield 'delete operation' => [
@@ -586,7 +583,7 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation in tree mode' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 0, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
@@ -594,7 +591,7 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation with parent table' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['config' => ['ptable' => 'tl_bar']],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
@@ -602,9 +599,9 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copyChilds operation in tree mode' => [
             'copyChilds',
             CreateAction::class,
-            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
-            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+            ['foo' => 'bar', 'tstamp' => 0],
         ];
 
         yield 'cut operation in tree mode' => [

@@ -45,7 +45,7 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 #[AsCommand(
     name: 'contao:crawl',
-    description: 'Crawls the Contao root pages with the desired subscribers.'
+    description: 'Crawls the Contao root pages with the desired subscribers.',
 )]
 class CrawlCommand extends Command
 {
@@ -145,8 +145,8 @@ class CrawlCommand extends Command
         $io->comment(
             sprintf(
                 '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
-                $this->escargot->getJobId()
-            )
+                $this->escargot->getJobId(),
+            ),
         );
 
         $errored = false;

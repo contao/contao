@@ -100,7 +100,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'inline svg single quotes' => [
             'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
-            ['style' => 'background:url(\'data:image/svg+xml;utf8,<svg/>\')'],
+            ['style' => "background:url('data:image/svg+xml;utf8,<svg/>')"],
         ];
 
         yield 'inline svg double quotes' => [
@@ -126,6 +126,16 @@ class HtmlAttributesTest extends TestCase
         yield 'escaped string' => [
             "style=\"color: 'r\\'ed'\"",
             ['style' => "color:'r\\'ed'"],
+        ];
+
+        yield 'escaped string hacking' => [
+            "style=\"color: 'r\\'; eval : foo '\"",
+            ['style' => "color:'r\\'; eval : foo '"],
+        ];
+
+        yield 'escaped string hacking double quotes' => [
+            "style='color: \"r\\\"; eval : foo \"'",
+            ['style' => 'color:"r\\"; eval : foo "'],
         ];
 
         yield 'newline' => [
@@ -162,12 +172,12 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes($properties))
+            iterator_to_array(new HtmlAttributes($properties)),
         );
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties)))
+            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties))),
         );
     }
 
@@ -528,7 +538,7 @@ class HtmlAttributesTest extends TestCase
 
     public function testStripsLeadingWhitespaceIfEmpty(): void
     {
-        $this->assertSame('', (string) (new HtmlAttributes()));
+        $this->assertSame('', (string) new HtmlAttributes());
         $this->assertSame('', (new HtmlAttributes())->toString());
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }

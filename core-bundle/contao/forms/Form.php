@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -493,6 +494,9 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
+				// Encode the values (see #6053)
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
@@ -544,10 +548,11 @@ class Form extends Hybrid
 		// Store the values in the database
 		if ($this->storeValues && $this->targetTable)
 		{
+			$db = Database::getInstance();
 			$arrSet = array();
 
 			// Add the timestamp
-			if ($this->Database->fieldExists('tstamp', $this->targetTable))
+			if ($db->fieldExists('tstamp', $this->targetTable))
 			{
 				$arrSet['tstamp'] = time();
 			}
@@ -602,7 +607,7 @@ class Form extends Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
-			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
+			$db->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
 		// HOOK: process form data callback
@@ -617,9 +622,7 @@ class Form extends Hybrid
 		// Add a log entry
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-
-			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . FrontendUser::getInstance()->username . '".');
 		}
 		else
 		{

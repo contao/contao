@@ -106,7 +106,7 @@ final class ContaoEscaper
                 // characters where a named entity does not exist.
                 return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
             },
-            $string
+            $string,
         );
     }
 }

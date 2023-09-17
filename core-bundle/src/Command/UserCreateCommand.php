@@ -33,7 +33,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsCommand(
     name: 'contao:user:create',
-    description: 'Create a new Contao back end user.'
+    description: 'Create a new Contao back end user.',
 )]
 class UserCreateCommand extends Command
 {
@@ -144,13 +144,8 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
-            $answer = $this->askMultipleChoice(
-                'Assign which groups to the user (select multiple comma-separated)?',
-                $options,
-                $input,
-                $output
-            );
+        if (false === $input->getOption('admin') && ($options = $this->getGroups())) {
+            $answer = $this->askForUserGroups($options, $input, $output);
 
             $input->setOption('group', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
         }
@@ -181,7 +176,7 @@ class UserCreateCommand extends Command
             $input->getOption('language') ?? 'en',
             $isAdmin,
             $input->getOption('group'),
-            $input->getOption('change-password')
+            $input->getOption('change-password'),
         );
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
@@ -225,9 +220,9 @@ class UserCreateCommand extends Command
         return $helper->ask($input, $output, $question);
     }
 
-    private function askMultipleChoice(string $label, array $options, InputInterface $input, OutputInterface $output): array
+    private function askForUserGroups(array $options, InputInterface $input, OutputInterface $output): array
     {
-        $question = new ChoiceQuestion($label, $options);
+        $question = new ChoiceQuestion('Assign which groups to the user (select multiple comma-separated)?', $options);
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 
@@ -269,7 +264,7 @@ class UserCreateCommand extends Command
             'dateAdded' => $time,
         ];
 
-        if (!$isAdmin && !empty($groups)) {
+        if (!$isAdmin && $groups) {
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 

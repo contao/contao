@@ -95,14 +95,19 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
      */
     private function isEscaperFilterExpression(Node $node, string|null &$type = null): bool
     {
-        if (
-            !$node instanceof FilterExpression
-            || !$node->getNode('arguments')->hasNode('0')
-            || !($argument = $node->getNode('arguments')->getNode('0')) instanceof ConstantExpression
-            || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
-        ) {
-            $type = '';
+        $type = '';
 
+        if (!$node instanceof FilterExpression || !$node->getNode('arguments')->hasNode('0')) {
+            return false;
+        }
+
+        $argument = $node->getNode('arguments')->getNode('0');
+
+        if (!$argument instanceof ConstantExpression) {
+            return false;
+        }
+
+        if (!\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)) {
             return false;
         }
 

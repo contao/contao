@@ -185,7 +185,7 @@ class BackendUser extends User
 		}
 		elseif ($array == 'pagemounts')
 		{
-			$childIds = $this->Database->getChildRecords($this->pagemounts, 'tl_page');
+			$childIds = Database::getInstance()->getChildRecords($this->pagemounts, 'tl_page');
 
 			if (!empty($childIds) && array_intersect($field, $childIds))
 			{
@@ -259,12 +259,14 @@ class BackendUser extends User
 		// Merge permissions
 		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = Date::floorToMinute();
+		$db = Database::getInstance();
 
 		foreach ($this->groups as $id)
 		{
-			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
-									   ->limit(1)
-									   ->execute($id);
+			$objGroup = $db
+				->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
+				->limit(1)
+				->execute($id);
 
 			if ($objGroup->numRows > 0)
 			{

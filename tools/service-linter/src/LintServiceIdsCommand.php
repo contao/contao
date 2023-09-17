@@ -25,6 +25,7 @@ use Symfony\Component\Yaml\Yaml;
 class LintServiceIdsCommand extends Command
 {
     protected static $defaultName = 'contao:lint-service-ids';
+
     protected static $defaultDescription = 'Checks the Contao service IDs.';
 
     /**
@@ -163,7 +164,7 @@ class LintServiceIdsCommand extends Command
                         $config['class'],
                         $file->getRelativePathname(),
                         $id,
-                        $serviceId
+                        $serviceId,
                     ));
                 }
             }

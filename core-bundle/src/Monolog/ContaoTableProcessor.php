@@ -77,7 +77,7 @@ class ContaoTableProcessor implements ProcessorInterface
             return;
         }
 
-        $context->setBrowser(null === $request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
+        $context->setBrowser($request ? (string) $request->server->get('HTTP_USER_AGENT') : 'N/A');
     }
 
     private function updateUsername(ContaoContext $context): void
@@ -88,7 +88,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
+        $context->setUsername($token ? $token->getUserIdentifier() : 'N/A');
     }
 
     private function updateSource(ContaoContext $context, Request|null $request = null): void
@@ -97,12 +97,12 @@ class ContaoTableProcessor implements ProcessorInterface
             return;
         }
 
-        $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
+        $context->setSource($request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
     }
 
     private function updateUri(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request) {
+        if (!$request) {
             return;
         }
 
@@ -111,7 +111,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
     private function updatePageId(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request || !$request->attributes->has('pageModel')) {
+        if (!$request || !$request->attributes->has('pageModel')) {
             return;
         }
 

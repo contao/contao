@@ -184,7 +184,7 @@ class FilesystemItemIteratorTest extends TestCase
             new \ArrayIterator([
                 $first = new FilesystemItem(true, 'foo'),
                 new FilesystemItem(true, 'bar'),
-            ])
+            ]),
         );
 
         $this->assertSame($first, $iterator->first());

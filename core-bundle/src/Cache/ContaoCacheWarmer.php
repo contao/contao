@@ -111,7 +111,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
-            Path::join($cacheDir, 'contao')
+            Path::join($cacheDir, 'contao'),
         );
 
         $dumper->setHeader("<?php\n");
@@ -139,7 +139,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     $dumper->dump(
                         iterator_to_array($subfiles),
                         Path::join('languages', $language, "$name.php"),
-                        ['type' => $language]
+                        ['type' => $language],
                     );
                 } catch (\OutOfBoundsException) {
                     continue;
@@ -175,8 +175,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     sprintf('$this->arrFields = %s;', var_export($extract->getFields(), true)),
                     sprintf('$this->arrUniqueFields = %s;', var_export($extract->getUniqueFields(), true)),
                     sprintf('$this->arrKeys = %s;', var_export($extract->getKeys(), true)),
-                    sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true))
-                )
+                    sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true)),
+                ),
             );
         }
     }
@@ -197,7 +197,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/templates.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
+            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true)),
         );
     }
 
@@ -205,7 +205,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/column-types.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true))
+            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true)),
         );
     }
 

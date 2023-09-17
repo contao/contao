@@ -24,11 +24,15 @@ use Symfony\Component\Filesystem\Path;
 class ChangeSet
 {
     final public const ATTR_HASH = 'hash';
+
     final public const ATTR_PATH = 'path';
+
     final public const ATTR_TYPE = 'type';
+
     final public const ATTR_LAST_MODIFIED = 'lastModified';
 
     final public const TYPE_FILE = 0;
+
     final public const TYPE_DIRECTORY = 1;
 
     /**
@@ -102,13 +106,13 @@ class ChangeSet
      */
     public function isEmpty(bool $includeLastModified = false): bool
     {
-        $empty = empty($this->itemsToCreate) && empty($this->itemsToUpdate) && empty($this->itemsToDelete);
+        $empty = !$this->itemsToCreate && !$this->itemsToUpdate && !$this->itemsToDelete;
 
         if (!$includeLastModified) {
             return $empty;
         }
 
-        return $empty && empty($this->lastModifiedUpdates);
+        return $empty && !$this->lastModifiedUpdates;
     }
 
     /**
@@ -122,9 +126,9 @@ class ChangeSet
             static fn (array $item): ItemToCreate => new ItemToCreate(
                 $item['hash'],
                 $item['path'],
-                self::TYPE_FILE === $item['type']
+                self::TYPE_FILE === $item['type'],
             ),
-            $this->itemsToCreate
+            $this->itemsToCreate,
         );
     }
 
@@ -168,7 +172,7 @@ class ChangeSet
                 (string) $existingPath,
                 null,
                 null,
-                $lastModified
+                $lastModified,
             ),
             array_keys($lastModifiedUpdates),
             array_values($lastModifiedUpdates),
@@ -185,10 +189,10 @@ class ChangeSet
         return array_map(
             static fn (string|int $path, int $type): ItemToDelete => new ItemToDelete(
                 (string) $path,
-                self::TYPE_FILE === $type
+                self::TYPE_FILE === $type,
             ),
             array_keys($this->itemsToDelete),
-            array_values($this->itemsToDelete)
+            array_values($this->itemsToDelete),
         );
     }
 }

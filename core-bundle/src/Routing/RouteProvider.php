@@ -42,9 +42,7 @@ class RouteProvider extends AbstractPageRouteProvider
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
-        $pages = $this->findCandidatePages($request);
-
-        if (empty($pages)) {
+        if (!$pages = $this->findCandidatePages($request)) {
             return new RouteCollection();
         }
 
@@ -53,23 +51,18 @@ class RouteProvider extends AbstractPageRouteProvider
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
-    /**
-     * @param string $name
-     */
-    public function getRouteByName($name): Route
+    public function getRouteByName(string $name): Route
     {
         $this->framework->initialize();
 
-        $ids = $this->getPageIdsFromNames([$name]);
-
-        if (empty($ids)) {
+        if (!$ids = $this->getPageIdsFromNames([$name])) {
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
-        if (null === $page || !$this->pageRegistry->isRoutable($page)) {
+        if (!$page || !$this->pageRegistry->isRoutable($page)) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
@@ -93,9 +86,7 @@ class RouteProvider extends AbstractPageRouteProvider
         if (null === $names) {
             $pages = $pageModel->findAll();
         } else {
-            $ids = $this->getPageIdsFromNames($names);
-
-            if (empty($ids)) {
+            if (!$ids = $this->getPageIdsFromNames($names)) {
                 return [];
             }
 
@@ -108,7 +99,6 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $routes = [];
 
-        /** @var array<PageModel> $models */
         $models = $pages->getModels();
         $models = array_filter($models, fn (PageModel $page): bool => $this->pageRegistry->isRoutable($page));
 
@@ -187,7 +177,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
 
         if (!$urlPrefix || $page->loadDetails()->disableLanguageRedirect) {
@@ -206,7 +196,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
     }
 
@@ -251,7 +241,7 @@ class RouteProvider extends AbstractPageRouteProvider
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
-            }
+            },
         );
     }
 
@@ -269,7 +259,6 @@ class RouteProvider extends AbstractPageRouteProvider
             $models = $pages->getModels();
         }
 
-        /** @var Collection|array<PageModel> $pages */
         $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {

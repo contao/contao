@@ -36,13 +36,7 @@ class CommandCompiler
     {
         $schemaManager = $this->connection->createSchemaManager();
         $toSchema = $this->schemaProvider->createSchema();
-
-        // Backwards compatibility with doctrine/dbal < 3.5
-        if (method_exists($schemaManager, 'introspectSchema')) {
-            $fromSchema = $schemaManager->introspectSchema();
-        } else {
-            $fromSchema = $schemaManager->createSchema();
-        }
+        $fromSchema = $schemaManager->introspectSchema();
 
         // If tables or columns should be preserved, we copy the missing
         // definitions over to the $toSchema, so that no DROP commands
@@ -116,7 +110,7 @@ class CommandCompiler
 
             $tableOptions = $this->connection->fetchAssociative(
                 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
-                [$tableName]
+                [$tableName],
             );
 
             if (false === $tableOptions) {

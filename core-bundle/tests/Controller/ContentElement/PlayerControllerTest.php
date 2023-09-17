@@ -30,7 +30,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     'player_autoplay', 'player_loop',
                 ]),
                 'playerCaption' => 'Caption',
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
@@ -54,7 +54,7 @@ class PlayerControllerTest extends ContentElementTestCase
             new PlayerController($this->getDefaultStorage()),
             [
                 'type' => 'player',
-            ]
+            ],
         );
 
         $this->assertEmpty($response->getContent());
@@ -71,7 +71,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_OGV,
                 ]),
             ],
-            asEditorView: true
+            asEditorView: true,
         );
 
         $expectedOutput = <<<'HTML'

@@ -51,25 +51,22 @@ window.AjaxRequest =
 	toggleStructure: function(el, id, level, mode) {
 		el.blur();
 
-		var item = $(id),
-			images = $(el).getElements('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
-				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
-
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
+
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 
-				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
-				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
-
+				$(el).removeClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.expand);
+
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -122,10 +119,8 @@ window.AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
-
-				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
-				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
@@ -151,25 +146,22 @@ window.AjaxRequest =
 	toggleFileManager: function(el, id, folder, level) {
 		el.blur();
 
-		var item = $(id),
-			images = $(el).getElements('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 
-				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
-				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
-
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
+
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 
-				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
-				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
-
+				$(el).removeClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.expand);
+
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -202,10 +194,8 @@ window.AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
-
-				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
-				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
 
 				AjaxRequest.hideBox();
 
@@ -419,22 +409,17 @@ window.AjaxRequest =
 	toggleCheckboxGroup: function(el, id) {
 		el.blur();
 
-		var item = $(id),
-			images = $(el).getElements('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-
-				images[0].src = images[0].src.replace('folPlus--dark.svg', 'folMinus--dark.svg');
-				images[1].src = images[1].src.replace('folPlus.svg', 'folMinus.svg');
+				$(el).addClass('foldable--open');
 
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-
-				images[0].src = images[0].src.replace('folMinus--dark.svg', 'folPlus--dark.svg');
-				images[1].src = images[1].src.replace('folMinus.svg', 'folPlus.svg');
+				$(el).removeClass('foldable--open');
 
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -1013,7 +998,7 @@ window.Backend =
 				clone = cloneBase.clone(true)
 					.inject(ul)
 					.addClass('tl_left_dragging'),
-				currentHover, currentHoverTime;
+				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
 				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
@@ -1037,11 +1022,9 @@ window.Backend =
 					if (droppable.hasClass('tl_folder') && currentHover !== droppable) {
 						currentHover = droppable;
 						currentHoverTime = new Date().getTime();
+						expandLink = droppable.getElement('a.foldable');
 
-						var expandLink = droppable.getElement('img[src$="/icons/folPlus.svg"]');
-						expandLink = expandLink && expandLink.getParent('a');
-
-						if (expandLink) {
+						if (expandLink && !expandLink.hasClass('foldable--open')) {
 							// Expand the folder after one second hover time
 							setTimeout(function() {
 								if (currentHover === droppable && currentHoverTime + 900 < new Date().getTime()) {
@@ -1937,7 +1920,7 @@ window.Backend =
 				'class': 'dropzone dropzone-filetree',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
-			currentHover, currentHoverTime;
+			currentHover, currentHoverTime, expandLink;
 
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
@@ -1977,11 +1960,9 @@ window.Backend =
 				if (currentHover !== folder) {
 					currentHover = folder;
 					currentHoverTime = new Date().getTime();
+					expandLink = folder.getElement('a.foldable');
 
-					var expandLink = folder.getElement('img[src$="/icons/folPlus.svg"]');
-					expandLink = expandLink && expandLink.getParent('a');
-
-					if (expandLink) {
+					if (expandLink && !expandLink.hasClass('foldable--open')) {
 						// Expand the folder after one second hover time
 						setTimeout(function() {
 							if (currentHover === folder && currentHoverTime + 900 < new Date().getTime()) {

@@ -52,6 +52,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
@@ -59,6 +60,7 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -67,12 +69,19 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
+
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
+
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
+
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
+
     final public const ARTICLE1 = 123;
+
     final public const ARTICLE2 = 456;
+
     final public const PAGE1 = 5;
 
     protected function tearDown(): void
@@ -116,6 +125,8 @@ class ContentElementTestCase extends TestCase
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $environment);
         $container->set('contao.framework', $this->getDefaultFramework());
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         $controller->setContainer($container);
         System::setContainer($container);
@@ -141,7 +152,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new Metadata(array_intersect_key($data, array_flip(['title', 'alt', 'link', 'caption', 'license'])));
-                }
+                },
             )
         ;
 
@@ -173,28 +184,26 @@ class ContentElementTestCase extends TestCase
     protected function normalizeWhiteSpaces(string $string): string
     {
         // see https://stackoverflow.com/questions/5312349/minifying-final-html-output-using-regular-expressions-with-codeigniter
-        $minifyRegex = <<<'EOD'
-            (                                         # Collapse ws everywhere but in blacklisted elements
-                (?>                                   # Match all whitespans other than single space
-                    [^\S ]\s*                         # Either one [\t\r\n\f\v] and zero or more ws,
-                    | \s{2,}                          # or two or more consecutive-any-whitespace
-                )                                     # Note: The remaining regex consumes no text at all
-                (?=                                   # Ensure we are not in a blacklist tag
-                    (?:                               # Begin (unnecessary) group.
-                        (?:                           # Zero or more of...
-                            [^<]++                    # Either one or more non-"<"
-                            | <                       # or a < starting a non-blacklist tag
-                            (?!/?(?:textarea|pre)\b)
-                        )*+                           # (This could be "unroll-the-loop"ified)
-                    )                                 # End (unnecessary) group
-                    (?:                               # Begin alternation group
-                        <                             # Either a blacklist start tag
-                        (?>textarea|pre)\b
-                        | \z                          # or end of file
-                    )                                 # End alternation group
-                )                                     # If we made it here, we are not in a blacklist tag
-            )ix
-            EOD;
+        $minifyRegex = '(                         # Collapse ws everywhere but in blacklisted elements
+            (?>                                   # Match all whitespans other than single space
+                [^\S ]\s*                         # Either one [\t\r\n\f\v] and zero or more ws,
+                | \s{2,}                          # or two or more consecutive-any-whitespace
+            )                                     # Note: The remaining regex consumes no text at all
+            (?=                                   # Ensure we are not in a blacklist tag
+                (?:                               # Begin (unnecessary) group.
+                    (?:                           # Zero or more of...
+                        [^<]++                    # Either one or more non-"<"
+                        | <                       # or a < starting a non-blacklist tag
+                        (?!/?(?:textarea|pre)\b)
+                    )*+                           # (This could be "unroll-the-loop"ified)
+                )                                 # End (unnecessary) group
+                (?:                               # Begin alternation group
+                    <                             # Either a blacklist start tag
+                    (?>textarea|pre)\b
+                    | \z                          # or end of file
+                )                                 # End alternation group
+            )                                     # If we made it here, we are not in a blacklist tag
+        )ix';
 
         return trim(preg_replace($minifyRegex, ' ', $string));
     }
@@ -204,7 +213,7 @@ class ContentElementTestCase extends TestCase
         $this->assertSame(
             $this->normalizeWhiteSpaces($expected),
             $this->normalizeWhiteSpaces($actual),
-            $message
+            $message,
         );
     }
 
@@ -217,7 +226,7 @@ class ContentElementTestCase extends TestCase
             ['ContaoCore' => ContaoCoreBundle::class],
             ['ContaoCore' => ['path' => $resourceBasePath]],
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
@@ -244,8 +253,8 @@ class ContentElementTestCase extends TestCase
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
-                    !empty($parameters) ? '['.implode(', ', $parameters).']' : ''
-                )
+                    $parameters ? '['.implode(', ', $parameters).']' : '',
+                ),
             )
         ;
 
@@ -263,8 +272,8 @@ class ContentElementTestCase extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         // Runtime loaders
@@ -278,7 +287,7 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-            ])
+            ]),
         );
 
         $environment->enableStrictVariables();
@@ -308,7 +317,7 @@ class ContentElementTestCase extends TestCase
                             [
                                 'metadata' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
-                                    ['en']
+                                    ['en'],
                                 ),
                             ],
                         ),
@@ -319,7 +328,7 @@ class ContentElementTestCase extends TestCase
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
-                }
+                },
             )
         ;
 
@@ -336,7 +345,7 @@ class ContentElementTestCase extends TestCase
                     ];
 
                     return $publicUriMap[$path] ?? null;
-                }
+                },
             )
         ;
 
@@ -364,7 +373,7 @@ class ContentElementTestCase extends TestCase
                     self::FILE_IMAGE1 => 'files/image1.jpg',
                     self::FILE_IMAGE2 => 'files/image2.jpg',
                     self::FILE_IMAGE3 => 'files/image3.jpg',
-                ]
+                ],
             ))
         ;
 
@@ -376,7 +385,7 @@ class ContentElementTestCase extends TestCase
         $replaceDemo = static fn (string $input): string => str_replace(
             ['{{demo}}', '{{br}}'],
             ['demo', '<br>'],
-            $input
+            $input,
         );
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
@@ -399,7 +408,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new ChunkedText([$replaceDemo($input)]);
-                }
+                },
             )
         ;
 
@@ -426,7 +435,7 @@ class ContentElementTestCase extends TestCase
                         ['key' => '*', 'value' => 'data-*,id,class'],
                         ['key' => 'a', 'value' => 'href,rel,target'],
                     ]),
-                ][$key] ?? null
+                ][$key] ?? null,
             )
         ;
 

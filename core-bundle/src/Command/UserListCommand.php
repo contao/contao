@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:user:list',
-    description: 'Lists Contao back end users.'
+    description: 'Lists Contao back end users.',
 )]
 class UserListCommand extends Command
 {
@@ -79,6 +79,9 @@ class UserListCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @return Collection<UserModel>|null
+     */
     private function getUsers(bool $onlyAdmins = false): Collection|null
     {
         $this->framework->initialize();
@@ -92,9 +95,12 @@ class UserListCommand extends Command
         return $userModel->findAll();
     }
 
+    /**
+     * @param Collection<UserModel> $users
+     */
     private function formatTableRows(Collection $users, array &$columns): array
     {
-        if ([] === $columns) {
+        if (!$columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
@@ -115,20 +121,23 @@ class UserListCommand extends Command
 
                     return $user->{$field} ?? '';
                 },
-                $columns
+                $columns,
             );
         }
 
         return $rows;
     }
 
+    /**
+     * @param Collection<UserModel>|null $users
+     */
     private function formatJson(Collection|null $users, array $columns): array
     {
         if (!$users) {
             return [];
         }
 
-        if ([] === $columns) {
+        if (!$columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
@@ -138,7 +147,7 @@ class UserListCommand extends Command
             $data[] = array_filter(
                 $user,
                 static fn ($key) => \in_array($key, $columns, true),
-                ARRAY_FILTER_USE_KEY
+                ARRAY_FILTER_USE_KEY,
             );
         }
 

@@ -17,6 +17,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -443,7 +444,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'overwriteLink' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -803,33 +803,28 @@ if (Input::get('do') == 'article')
 class tl_content extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_content
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Get the pagemounts
 		$pagemounts = array();
 
-		foreach ($this->User->pagemounts as $root)
+		foreach ($user->pagemounts as $root)
 		{
 			$pagemounts[] = array($root);
-			$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+			$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 		}
 
 		if (!empty($pagemounts))
@@ -861,8 +856,9 @@ class tl_content extends Backend
 					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
-										 ->execute($dc->currentPid);
+				$objCes = $db
+					->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
+					->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -897,15 +893,17 @@ class tl_content extends Backend
 	{
 		if ($blnIsPid)
 		{
-			$objPage = $this->Database->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-									  ->limit(1)
-									  ->execute($id);
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+				->limit(1)
+				->execute($id);
 		}
 		else
 		{
-			$objPage = $this->Database->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_content c, tl_article a, tl_page p WHERE c.id=? AND c.pid=a.id AND a.pid=p.id")
-									  ->limit(1)
-									  ->execute($id);
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_content c, tl_article a, tl_page p WHERE c.id=? AND c.pid=a.id AND a.pid=p.id")
+				->limit(1)
+				->execute($id);
 		}
 
 		// Invalid ID
@@ -1008,10 +1006,13 @@ class tl_content extends Backend
 	 */
 	public function preserveReferenced()
 	{
+		$db = Database::getInstance();
+
 		if (Input::get('act') == 'delete')
 		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
-									 ->execute(Input::get('id'));
+			$objCes = $db
+				->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
+				->execute(Input::get('id'));
 
 			if ($objCes->cnt > 0)
 			{
@@ -1021,8 +1022,9 @@ class tl_content extends Backend
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
-									 ->execute();
+			$objCes = $db
+				->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
+				->execute();
 
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
@@ -1036,30 +1038,34 @@ class tl_content extends Backend
 	 */
 	public function filterContentElements()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		if (empty($this->User->elements))
+		if (empty($user->elements))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $this->User->elements))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
 		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0];
 		}
 
+		$db = Database::getInstance();
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Prevent editing content elements with not allowed types
 		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
-			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
-									 ->execute(Input::get('id'));
+			$objCes = $db
+				->prepare("SELECT type FROM tl_content WHERE id=?")
+				->execute(Input::get('id'));
 
-			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
+			if ($objCes->numRows && !in_array($objCes->type, $user->elements))
 			{
 				throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
 			}
@@ -1072,14 +1078,15 @@ class tl_content extends Backend
 
 			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $db
+						->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+						->execute(...$user->elements);
 
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				}
@@ -1095,14 +1102,15 @@ class tl_content extends Backend
 
 			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CLIPBOARD']['tl_content']['id'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $db
+						->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+						->execute(...$user->elements);
 
 					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
 				}
@@ -1323,13 +1331,15 @@ class tl_content extends Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->forms))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->forms))
 		{
 			return array();
 		}
 
 		$arrForms = array();
-		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
@@ -1371,7 +1381,7 @@ class tl_content extends Backend
 	public function getModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{
@@ -1497,9 +1507,10 @@ class tl_content extends Backend
 			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
-		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
-									 ->limit(1)
-									 ->execute($row['id']);
+		$objElement = Database::getInstance()
+			->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
+			->limit(1)
+			->execute($row['id']);
 
 		return $objElement->numRows ? Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}

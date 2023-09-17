@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 
 /**
@@ -41,17 +43,6 @@ class FileTree extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
-	/**
-	 * Load the database object
-	 *
-	 * @param array $arrAttributes
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		$this->import(Database::class, 'Database');
-		parent::__construct($arrAttributes);
-	}
 
 	public function __set($strKey, $varValue)
 	{
@@ -404,28 +395,31 @@ class FileTree extends Widget
 
 		if ($objFile->viewWidth && $objFile->viewHeight)
 		{
-			// Inline the image if no preview image will be generated (see #636)
-			if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
-			{
-				$image = $objFile->dataUri;
-			}
-			else
-			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-				$image = System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
-			}
-		}
-		else
-		{
-			$image = Image::getPath('placeholder.svg');
+			$container = System::getContainer();
+			$projectDir = $container->getParameter('kernel.project_dir');
+
+			$resizeConfig = (new ResizeConfiguration())
+				->setWidth(100)
+				->setHeight(75)
+				->setMode(ResizeConfiguration::MODE_BOX);
+
+			$pictureConfig = (new PictureConfiguration())
+				->setSize(
+					(new PictureConfigurationItem())
+						->setResizeConfig($resizeConfig)
+						->setDensities('1x, 2x')
+				);
+
+			$picture = $container
+				->get('contao.image.preview_factory')
+				->createPreviewPicture($projectDir . '/' . $objFile->path, $pictureConfig);
+
+			$img = $picture->getImg($projectDir);
+
+			return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" title="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strClass, StringUtil::specialchars($strInfo));
 		}
 
-		if (strncmp($image, 'data:', 5) === 0)
-		{
-			return '<img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '">';
-		}
-
-		return Image::getHtml($image, '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
+		return Image::getHtml('placeholder.svg', '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
 	}
 
 	private function getFilePreviewPath(string $path): string|null

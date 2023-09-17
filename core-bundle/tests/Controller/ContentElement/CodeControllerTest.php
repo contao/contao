@@ -30,7 +30,7 @@ class CodeControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -68,7 +68,7 @@ class CodeControllerTest extends ContentElementTestCase
             ],
             null,
             true,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'

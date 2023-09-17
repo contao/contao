@@ -57,7 +57,7 @@ class FilesystemItem implements \Stringable
                 $attributes->lastModified(),
                 $attributes->fileSize(),
                 $attributes->mimeType(),
-                $attributes->extraMetadata()
+                $attributes->extraMetadata(),
             );
         }
 

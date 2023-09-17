@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,7 +41,6 @@ class PageCandidates extends AbstractCandidates
         $hasRegex = $this->addRegexQuery($qb, $request->getPathInfo());
 
         if ($hasRoot || $hasRegex) {
-            /** @var Result $result */
             $result = $qb->executeQuery();
 
             return array_unique([...$candidates, ...$result->fetchFirstColumn()]);
@@ -67,9 +65,7 @@ class PageCandidates extends AbstractCandidates
 
     private function addRegexQuery(QueryBuilder $queryBuilder, string $pathInfo): bool
     {
-        $pathMap = $this->pageRegistry->getPathRegex();
-
-        if (empty($pathMap)) {
+        if (!$pathMap = $this->pageRegistry->getPathRegex()) {
             return false;
         }
 
@@ -91,18 +87,18 @@ class PageCandidates extends AbstractCandidates
 
         $prefixes = array_map(
             static fn ($prefix) => $prefix ? preg_quote('/'.$prefix, '#') : '',
-            $this->urlPrefixes
+            $this->urlPrefixes,
         );
 
         preg_match_all(
             '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
             $pathInfo,
-            $matches
+            $matches,
         );
 
         $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));
 
-        if (empty($types)) {
+        if (!$types) {
             return false;
         }
 

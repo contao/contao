@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
+
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
@@ -38,9 +39,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     public function getUrl(PickerConfig $config): string
     {
         $table = $this->getTableFromContext($config->getContext());
-        $modules = $this->getModulesForTable($table);
 
-        if (0 === \count($modules)) {
+        if (!$modules = $this->getModulesForTable($table)) {
             throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
@@ -87,7 +87,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                     'linkAttributes' => ['class' => $name],
                     'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
-                ]
+                ],
             ));
         }
     }
@@ -115,7 +115,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $dcName = $this->getDataContainer();
 
         return ($dcName === DataContainer::getDriverForTable($table) || $dcName === $GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
-            && 0 !== \count($this->getModulesForTable($table));
+            && [] !== $this->getModulesForTable($table);
     }
 
     public function supportsValue(PickerConfig $config): bool
@@ -130,7 +130,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function getDcaTable(PickerConfig|null $config = null): string
     {
-        if (null === $config) {
+        if (!$config) {
             return '';
         }
 

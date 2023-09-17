@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 
@@ -24,9 +25,9 @@ class InsertTagRuntimeTest extends TestCase
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('render')
+            ->method('renderTag')
             ->with('tag')
-            ->willReturn('replaced-tag')
+            ->willReturn(new InsertTagResult('replaced-tag'))
         ;
 
         $runtime = new InsertTagRuntime($insertTags);

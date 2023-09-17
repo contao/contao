@@ -29,7 +29,6 @@ class BackendHelp extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
@@ -102,7 +101,7 @@ class BackendHelp extends Backend
 
 					foreach ($option as $opt)
 					{
-						$rows[] = $arrData['reference'][$opt] ?? null;
+						$rows[] = $arrData['reference'][$opt] ?? array($opt, '');
 					}
 				}
 				elseif (isset($arrData['reference'][$key]))

@@ -89,13 +89,6 @@ class Database
 	{
 		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, $strKey);
 
-		if ($strKey == 'error')
-		{
-			$info = $this->resConnection->errorInfo();
-
-			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-		}
-
 		return null;
 	}
 

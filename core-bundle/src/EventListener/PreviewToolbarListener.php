@@ -24,7 +24,7 @@ use Twig\Environment as TwigEnvironment;
  * Injects the back end preview toolbar on any response within the /preview.php
  * entry point.
  *
- * The onKernelResponse method must be connected to the kernel.response event.
+ * The onKernelResponse method must be connected to the "kernel.response" event.
  *
  * The toolbar is only injected on well-formed HTML with a proper </body> tag,
  * so is never included in sub-requests or ESI requests.
@@ -44,10 +44,6 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
-            return;
-        }
-
         $request = $event->getRequest();
         $response = $event->getResponse();
 
@@ -55,8 +51,13 @@ class PreviewToolbarListener
         if (
             !$request->attributes->get('_preview', false)
             || $request->isXmlHttpRequest()
-            || !($response->isSuccessful() || $response->isClientError())
+            || !$response->isSuccessful() && !$response->isClientError()
         ) {
+            return;
+        }
+
+        // Do not inject the toolbar in the back end
+        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
 
@@ -81,14 +82,11 @@ class PreviewToolbarListener
             return;
         }
 
-        $toolbar = $this->twig->render(
-            '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
-            [
-                'action' => $this->router->generate('contao_backend_switch'),
-                'request' => $request,
-                'preview_script' => $this->previewScript,
-            ]
-        );
+        $toolbar = $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig', [
+            'action' => $this->router->generate('contao_backend_switch'),
+            'request' => $request,
+            'preview_script' => $this->previewScript,
+        ]);
 
         $response->setContent(substr($content, 0, $pos)."\n".$toolbar."\n".substr($content, $pos));
     }

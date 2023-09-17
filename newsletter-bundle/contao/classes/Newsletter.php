@@ -32,9 +32,12 @@ class Newsletter extends Backend
 	 */
 	public function send(DataContainer $dc)
 	{
-		$objNewsletter = $this->Database->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName, c.mailerTransport AS channelMailerTransport FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
-										->limit(1)
-										->execute($dc->id);
+		$db = Database::getInstance();
+
+		$objNewsletter = $db
+			->prepare("SELECT n.*, c.template AS channelTemplate, c.sender AS channelSender, c.senderName as channelSenderName, c.mailerTransport AS channelMailerTransport FROM tl_newsletter n LEFT JOIN tl_newsletter_channel c ON n.pid=c.id WHERE n.id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		// Return if there is no newsletter
 		if ($objNewsletter->numRows < 1)
@@ -134,8 +137,9 @@ class Newsletter extends Backend
 			}
 
 			// Get the total number of recipients
-			$objTotal = $this->Database->prepare("SELECT COUNT(DISTINCT email) AS count FROM tl_newsletter_recipients WHERE pid=? AND active=1")
-									   ->execute($objNewsletter->pid);
+			$objTotal = $db
+				->prepare("SELECT COUNT(DISTINCT email) AS count FROM tl_newsletter_recipients WHERE pid=? AND active=1")
+				->execute($objNewsletter->pid);
 
 			// Return if there are no recipients
 			if ($objTotal->count < 1)
@@ -153,9 +157,10 @@ class Newsletter extends Backend
 			$intPages = Input::get('mpc') ?: 10;
 
 			// Get recipients
-			$objRecipients = $this->Database->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
-											->limit($intPages, $intStart)
-											->execute($objNewsletter->pid);
+			$objRecipients = $db
+				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
+				->limit($intPages, $intStart)
+				->execute($objNewsletter->pid);
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
@@ -165,8 +170,9 @@ class Newsletter extends Backend
 				// Update status
 				if ($intStart == 0)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
-								   ->execute(time(), $objNewsletter->id);
+					$db
+						->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
+						->execute(time(), $objNewsletter->id);
 
 					$objSession->set('rejected_recipients', array());
 					$objSession->set('skipped_recipients', array());
@@ -218,8 +224,9 @@ class Newsletter extends Backend
 
 					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
 					{
-						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
-									   ->execute($strRecipient);
+						$db
+							->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
+							->execute($strRecipient);
 
 						System::getContainer()->get('monolog.logger.contao.general')->info('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
 					}
@@ -259,7 +266,6 @@ class Newsletter extends Backend
 		$strToken = md5(uniqid(mt_rand(), true));
 		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
-		$this->import(BackendUser::class, 'User');
 
 		// Preview newsletter
 		$return = Message::generate() . '
@@ -316,7 +322,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -399,7 +405,10 @@ class Newsletter extends Backend
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+		if (isset($arrRecipient['recipient']))
+		{
+			$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+		}
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
@@ -488,6 +497,7 @@ class Newsletter extends Backend
 			$time = time();
 			$intTotal = 0;
 			$intInvalid = 0;
+			$db = Database::getInstance();
 
 			foreach ($arrUploaded as $strCsvFile)
 			{
@@ -545,8 +555,9 @@ class Newsletter extends Backend
 					}
 
 					// Check whether the e-mail address exists
-					$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
-												   ->execute(Input::get('id'), $strRecipient);
+					$objRecipient = $db
+						->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
+						->execute(Input::get('id'), $strRecipient);
 
 					if ($objRecipient->count > 0)
 					{
@@ -554,8 +565,9 @@ class Newsletter extends Backend
 					}
 
 					// Check whether the e-mail address has been added to the deny list
-					$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE pid=? AND hash=?")
-												   ->execute(Input::get('id'), md5($strRecipient));
+					$objDenyList = $db
+						->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE pid=? AND hash=?")
+						->execute(Input::get('id'), md5($strRecipient));
 
 					if ($objDenyList->count > 0)
 					{
@@ -563,8 +575,9 @@ class Newsletter extends Backend
 						continue;
 					}
 
-					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
-								   ->execute(Input::get('id'), $strRecipient);
+					$db
+						->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
+						->execute(Input::get('id'), $strRecipient);
 
 					++$intTotal;
 				}
@@ -637,13 +650,15 @@ class Newsletter extends Backend
 		// Delete or deactivate
 		if ($strMode == 'close_delete')
 		{
-			$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE email=(SELECT email FROM tl_member WHERE id=?)")
-						   ->execute($intUser);
+			Database::getInstance()
+				->prepare("DELETE FROM tl_newsletter_recipients WHERE email=(SELECT email FROM tl_member WHERE id=?)")
+				->execute($intUser);
 		}
 		else
 		{
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=(SELECT email FROM tl_member WHERE id=?)")
-						   ->execute($intUser);
+			Database::getInstance()
+				->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=(SELECT email FROM tl_member WHERE id=?)")
+				->execute($intUser);
 		}
 	}
 
@@ -664,6 +679,7 @@ class Newsletter extends Backend
 		}
 
 		$time = time();
+		$db = Database::getInstance();
 
 		// Add recipients
 		foreach ($arrNewsletters as $intNewsletter)
@@ -675,13 +691,15 @@ class Newsletter extends Backend
 				continue;
 			}
 
-			$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
-										   ->execute($intNewsletter, $arrData['email']);
+			$objRecipient = $db
+				->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
+				->execute($intNewsletter, $arrData['email']);
 
 			if ($objRecipient->count < 1)
 			{
-				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, addedOn=$time")
-							   ->execute($intNewsletter, $arrData['email']);
+				$db
+					->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, addedOn=$time")
+					->execute($intNewsletter, $arrData['email']);
 			}
 		}
 	}
@@ -701,6 +719,8 @@ class Newsletter extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Activate e-mail addresses
 		foreach ($arrNewsletters as $intNewsletter)
 		{
@@ -711,8 +731,9 @@ class Newsletter extends Backend
 				continue;
 			}
 
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
-						   ->execute($intNewsletter, $objUser->email);
+			$db
+				->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
+				->execute($intNewsletter, $objUser->email);
 		}
 	}
 
@@ -731,14 +752,18 @@ class Newsletter extends Backend
 			return $blnDisabled;
 		}
 
-		$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
-								  ->limit(1)
-								  ->execute($dc->id);
+		$db = Database::getInstance();
+
+		$objUser = $db
+			->prepare("SELECT email FROM tl_member WHERE id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		if ($objUser->numRows)
 		{
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), $blnDisabled ? 0 : 1, $objUser->email);
+			$db
+				->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
+				->execute(time(), $blnDisabled ? 0 : 1, $objUser->email);
 		}
 
 		return $blnDisabled;
@@ -761,14 +786,16 @@ class Newsletter extends Backend
 			return $varValue;
 		}
 
+		$db = Database::getInstance();
 		$blnIsFrontend = true;
 
 		// If called from the back end, the second argument is a DataContainer object
 		if ($objUser instanceof DataContainer)
 		{
-			$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($objUser->id);
+			$objUser = $db
+				->prepare("SELECT * FROM tl_member WHERE id=?")
+				->limit(1)
+				->execute($objUser->id);
 
 			if ($objUser->numRows < 1)
 			{
@@ -794,7 +821,7 @@ class Newsletter extends Backend
 		}
 		else
 		{
-			$arrChannel = $this->Database->query("SELECT id FROM tl_newsletter_channel")->fetchEach('id');
+			$arrChannel = $db->query("SELECT id FROM tl_newsletter_channel")->fetchEach('id');
 		}
 
 		$arrDelete = array_values(array_diff($arrChannel, $varValue));
@@ -802,8 +829,9 @@ class Newsletter extends Backend
 		// Delete existing recipients
 		if (!empty($arrDelete) && \is_array($arrDelete))
 		{
-			$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
-						   ->execute($objUser->email);
+			$db
+				->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
+				->execute($objUser->email);
 		}
 
 		// Add recipients
@@ -816,13 +844,15 @@ class Newsletter extends Backend
 				continue;
 			}
 
-			$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
-										   ->execute($intId, $objUser->email);
+			$objRecipient = $db
+				->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
+				->execute($intId, $objUser->email);
 
 			if ($objRecipient->count < 1)
 			{
-				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-							   ->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
+				$db
+					->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
+					->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
@@ -841,8 +871,7 @@ class Newsletter extends Backend
 		// Front end call
 		if ($isFrontend)
 		{
-			$this->import(FrontendUser::class, 'User');
-			$intUser = $this->User->id;
+			$intUser = FrontendUser::getInstance()->id;
 		}
 
 		// Return if there is no user (e.g. upon registration)
@@ -851,12 +880,15 @@ class Newsletter extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Edit account
 		if ($isFrontend || Input::get('act') == 'edit')
 		{
-			$objUser = $this->Database->prepare("SELECT email, disable FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($intUser);
+			$objUser = $db
+				->prepare("SELECT email, disable FROM tl_member WHERE id=?")
+				->limit(1)
+				->execute($intUser);
 
 			if ($objUser->numRows)
 			{
@@ -865,26 +897,30 @@ class Newsletter extends Backend
 				// E-mail address has changed
 				if (Input::isPost() && $strEmail && $strEmail != $objUser->email)
 				{
-					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
-											   ->execute($strEmail);
+					$objCount = $db
+						->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
+						->execute($strEmail);
 
 					// Delete the old subscription if the new e-mail address exists (see #19)
 					if ($objCount->count > 0)
 					{
-						$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE email=?")
-									   ->execute($objUser->email);
+						$db
+							->prepare("DELETE FROM tl_newsletter_recipients WHERE email=?")
+							->execute($objUser->email);
 					}
 					else
 					{
-						$this->Database->prepare("UPDATE tl_newsletter_recipients SET email=? WHERE email=?")
-									   ->execute($strEmail, $objUser->email);
+						$db
+							->prepare("UPDATE tl_newsletter_recipients SET email=? WHERE email=?")
+							->execute($strEmail, $objUser->email);
 					}
 
 					$objUser->email = $strEmail;
 				}
 
-				$objSubscriptions = $this->Database->prepare("SELECT pid FROM tl_newsletter_recipients WHERE email=?")
-												   ->execute($objUser->email);
+				$objSubscriptions = $db
+					->prepare("SELECT pid FROM tl_newsletter_recipients WHERE email=?")
+					->execute($objUser->email);
 
 				if ($objSubscriptions->numRows)
 				{
@@ -895,20 +931,22 @@ class Newsletter extends Backend
 					$strNewsletters = '';
 				}
 
-				$this->Database->prepare("UPDATE tl_member SET newsletter=? WHERE id=?")
-							   ->execute($strNewsletters, $intUser);
+				$db
+					->prepare("UPDATE tl_member SET newsletter=? WHERE id=?")
+					->execute($strNewsletters, $intUser);
 
 				// Update the front end user object
 				if ($isFrontend)
 				{
-					$this->User->newsletter = $strNewsletters;
+					FrontendUser::getInstance()->newsletter = $strNewsletters;
 				}
 
 				// Check activation status
 				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-								   ->execute(Input::post('disable') ? '' : 1, $objUser->email);
+					$db
+						->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
+						->execute(Input::post('disable') ? '' : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}
@@ -918,14 +956,16 @@ class Newsletter extends Backend
 		// Delete account
 		elseif (Input::get('act') == 'delete')
 		{
-			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
-									  ->limit(1)
-									  ->execute($intUser);
+			$objUser = $db
+				->prepare("SELECT email FROM tl_member WHERE id=?")
+				->limit(1)
+				->execute($intUser);
 
 			if ($objUser->numRows)
 			{
-				$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE email=?")
-							   ->execute($objUser->email);
+				$db
+					->prepare("DELETE FROM tl_newsletter_recipients WHERE email=?")
+					->execute($objUser->email);
 			}
 		}
 	}

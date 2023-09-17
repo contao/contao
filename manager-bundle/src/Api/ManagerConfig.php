@@ -22,13 +22,15 @@ use Symfony\Component\Yaml\Yaml;
 class ManagerConfig
 {
     private string $configFile;
+
     private readonly Filesystem $filesystem;
+
     private array|null $config = null;
 
     public function __construct(string $projectDir, Filesystem|null $filesystem = null)
     {
         if (false !== ($realpath = realpath($projectDir))) {
-            $projectDir = (string) $realpath;
+            $projectDir = $realpath;
         }
 
         $this->filesystem = $filesystem ?: new Filesystem();

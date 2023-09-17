@@ -42,8 +42,11 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class FigureBuilderTest extends TestCase
 {
@@ -651,7 +654,7 @@ class FigureBuilderTest extends TestCase
 
             $this->assertNull(
                 $figureBuilder->getLastException(),
-                'setting a valid resource clears the last exception'
+                'setting a valid resource clears the last exception',
             );
         }
 
@@ -703,7 +706,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($metadata): void {
                 $builder->setMetadata($metadata);
-            }
+            },
         );
 
         $this->assertSame($metadata, $figure->getMetadata());
@@ -717,7 +720,7 @@ class FigureBuilderTest extends TestCase
                     ->setMetadata(new Metadata(['foo' => 'bar']))
                     ->disableMetadata()
                 ;
-            }
+            },
         );
 
         $this->assertFalse($figure->hasMetadata());
@@ -729,7 +732,7 @@ class FigureBuilderTest extends TestCase
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
@@ -1036,7 +1039,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttribute('foo', 'bar');
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar'], iterator_to_array($figure->getLinkAttributes()));
@@ -1049,7 +1052,7 @@ class FigureBuilderTest extends TestCase
                 $builder->setLinkAttribute('foo', 'bar');
                 $builder->setLinkAttribute('foobar', 'test');
                 $builder->setLinkAttribute('foo', null);
-            }
+            },
         );
 
         $this->assertSame(['foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -1060,7 +1063,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttributes(['foo' => 'bar', 'foobar' => 'test']);
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -1071,7 +1074,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttributes(new HtmlAttributes(['foo' => 'bar', 'foobar' => 'test']));
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -1101,7 +1104,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkHref('https://example.com');
-            }
+            },
         );
 
         $this->assertSame('https://example.com', $figure->getLinkHref());
@@ -1115,7 +1118,7 @@ class FigureBuilderTest extends TestCase
                     ->setLightboxResourceOrUrl('https://exampe.com/this-is-no-image')
                     ->enableLightbox()
                 ;
-            }
+            },
         );
 
         $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
@@ -1146,7 +1149,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertSame($hasLightbox, $figure->hasLightbox());
@@ -1232,7 +1235,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1271,7 +1274,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1291,7 +1294,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1311,7 +1314,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1322,7 +1325,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setOptions(['foo' => 'bar']);
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar'], $figure->getOptions());
@@ -1400,7 +1403,7 @@ class FigureBuilderTest extends TestCase
                 $this->assertSame([Metadata::VALUE_TITLE => 'foo'], $event->getMetadata()->all());
 
                 $event->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'bar']));
-            }
+            },
         );
 
         $figure = $this->getFigureBuilder($studio, null, $eventDispatcher)
@@ -1419,17 +1422,14 @@ class FigureBuilderTest extends TestCase
         $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
 
-        if (null !== $configureBuilderCallback) {
+        if ($configureBuilderCallback) {
             $configureBuilderCallback($builder);
         }
 
         return $builder->build();
     }
 
-    /**
-     * @return Studio&MockObject
-     */
-    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio
+    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1444,10 +1444,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    /**
-     * @return Studio&MockObject
-     */
-    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

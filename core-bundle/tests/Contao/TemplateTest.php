@@ -21,9 +21,12 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
@@ -35,7 +38,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
     }
@@ -55,7 +58,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -70,7 +73,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            'test<?php throw new Exception ?>'
+            'test<?php throw new Exception ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -103,7 +106,7 @@ class TemplateTest extends TestCase
                     $this->block('c');
                     echo 'test4';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -144,7 +147,7 @@ class TemplateTest extends TestCase
                     $this->block('e');
                     echo 'test6';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $filesystem->dumpFile(
@@ -164,7 +167,7 @@ class TemplateTest extends TestCase
                     echo 'test6';
                     $this->endblock('b');
                     echo 'test7';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -203,7 +206,7 @@ class TemplateTest extends TestCase
                     echo 'test5';
                     $this->endblock('a');
                     echo 'test6';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -253,7 +256,7 @@ class TemplateTest extends TestCase
         VarDumper::setHandler(
             static function ($var) use (&$dump): void {
                 $dump = $var;
-            }
+            },
         );
 
         $template->dumpTemplateVars();
@@ -265,7 +268,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');

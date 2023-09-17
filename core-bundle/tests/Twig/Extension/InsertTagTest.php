@@ -16,6 +16,8 @@ use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -23,6 +25,9 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -88,7 +93,7 @@ class InsertTagTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
+                $this->createMock(ContaoCsrfTokenManager::class),
             ),
         ]);
 
@@ -100,15 +105,17 @@ class InsertTagTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         System::setContainer($container);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
-            ])
+            ]),
         );
 
         return $environment->render('@Contao/test.html.twig', $context);

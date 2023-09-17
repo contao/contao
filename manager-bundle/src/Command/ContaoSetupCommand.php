@@ -25,12 +25,14 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.'
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
 )]
 class ContaoSetupCommand extends Command
 {
     private readonly string $webDir;
+
     private readonly string $consolePath;
+
     private readonly string|false $phpPath;
 
     /**
@@ -66,16 +68,10 @@ class ContaoSetupCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // Auto-generate a kernel secret if none was set
-        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+        if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
-            $localPath = Path::join($this->projectDir, '.env.local');
 
-            // Get the realpath in case it is a symlink (see #6066)
-            if ($realpath = realpath($localPath)) {
-                $localPath = $realpath;
-            }
-
-            $dotenv = new DotenvDumper($localPath, $filesystem);
+            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
@@ -131,7 +127,6 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        /** @var Process $process */
         $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
@@ -140,7 +135,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {
