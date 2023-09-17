@@ -1,5 +1,6 @@
 {% trans_default_domain "contao_default" %}
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_script.html.twig" %}
 
 {% block content %}
     {% block link %}
@@ -18,13 +19,17 @@
     {% block script %}
         {% if not as_editor_view %}
             {% add "toplink_script" to body %}
-                <script nonce="{{ contao_csp_nonce('script-src') }}">
-                    document.querySelectorAll('*[data-toplink]').forEach(link => {
-                        link.href = location.href;
-                        link.hash = '#top';
-                    });
-                </script>
+                {{ block('script_component') }}
             {% endadd %}
         {% endif %}
     {% endblock %}
+{% endblock %}
+
+{% block script_content %}
+    {
+        document.querySelectorAll('*[data-toplink]').forEach(link => {
+            link.href = location.href;
+            link.hash = '#top';
+        });
+    }
 {% endblock %}

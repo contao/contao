@@ -1,0 +1,25 @@
+{#
+    This component outputs a script tag.
+    It can have an optional content or a source via attributes.
+    It will automatically add a nonce if applicable.
+
+        <script>…</script>
+        <script nonce="…">…</script>
+        <script nonce="…" src="…"></script>
+
+    Optional variables:
+        @var string script
+        @var \Contao\CoreBundle\String\HtmlAttributes attributes
+#}
+
+{% block script_component %}
+    {% set nonce = contao_csp_nonce('script-src') %}
+    {% set script_attributes = attrs(script_attributes|default)
+        .set('nonce', nonce, nonce)
+    %}
+    <script{{ script_attributes }}>
+        {% block script_content %}
+            {# Output inline scripts here. #}
+        {% endblock %}
+    </script>
+{% endblock %}
