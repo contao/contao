@@ -102,54 +102,52 @@
 {% endblock %}
 
 {% block script_content %}
-    {
-        {# Shuffle lists #}
-        document.querySelectorAll('*[data-list-random]').forEach(list => {
-            {# Shuffle order of children by appending them at a random position. #}
-            for (let i = list.children.length; i >= 0; i--) {
-                list.appendChild(list.children[Math.floor(Math.random() * i)]);
-            }
+    {# Shuffle lists #}
+    document.querySelectorAll('*[data-list-random]').forEach(list => {
+        {# Shuffle order of children by appending them at a random position. #}
+        for (let i = list.children.length; i >= 0; i--) {
+            list.appendChild(list.children[Math.floor(Math.random() * i)]);
+        }
 
-            list.dataset.listRandom = 'ready';
-        })
+        list.dataset.listRandom = 'ready';
+    })
 
-        {# Apply pagination #}
-        document.querySelectorAll('*[data-list-paginate]').forEach(list => {
-            const [items_per_page, max_items] = list.dataset.listPaginate.split(',').map(v => Number(v));
-            const list_elements = list.querySelectorAll('li');
-            const pagination = list.parentElement.querySelector('*[data-pagination]');
-            const pagination_elements = pagination ? pagination.querySelectorAll('*[data-page]') : [];
+    {# Apply pagination #}
+    document.querySelectorAll('*[data-list-paginate]').forEach(list => {
+        const [items_per_page, max_items] = list.dataset.listPaginate.split(',').map(v => Number(v));
+        const list_elements = list.querySelectorAll('li');
+        const pagination = list.parentElement.querySelector('*[data-pagination]');
+        const pagination_elements = pagination ? pagination.querySelectorAll('*[data-page]') : [];
 
-            const show_list_element = (element, active) => {
-                {% block pagination_script_show_element %}
-                    element.style.display = active ? 'revert' : 'none';
-                {% endblock %}
-            };
+        const show_list_element = (element, active) => {
+            {% block pagination_script_show_element %}
+                element.style.display = active ? 'revert' : 'none';
+            {% endblock %}
+        };
 
-            const select_nav_element = (element, active) => {
-                {% block pagination_script_activate_selector %}
-                    element.classList.toggle('active', active);
-                {% endblock %}
-            };
+        const select_nav_element = (element, active) => {
+            {% block pagination_script_activate_selector %}
+                element.classList.toggle('active', active);
+            {% endblock %}
+        };
 
-            const paginate = page => {
-                list_elements.forEach((element, index) => {
-                    show_list_element(element, index >= ((page - 1) * items_per_page) && index < page * items_per_page && index < max_items);
-                });
-                pagination_elements.forEach(element => {
-                    select_nav_element(element, Number(element.dataset.page) === page)
-                });
-            };
-
-            pagination_elements.forEach(pagination_element => {
-                pagination_element.addEventListener('click', e => {
-                    e.preventDefault();
-                    paginate(Number(pagination_element.dataset.page));
-                });
+        const paginate = page => {
+            list_elements.forEach((element, index) => {
+                show_list_element(element, index >= ((page - 1) * items_per_page) && index < page * items_per_page && index < max_items);
             });
+            pagination_elements.forEach(element => {
+                select_nav_element(element, Number(element.dataset.page) === page)
+            });
+        };
 
-            paginate(1);
-            list.dataset.listPaginate = 'ready';
+        pagination_elements.forEach(pagination_element => {
+            pagination_element.addEventListener('click', e => {
+                e.preventDefault();
+                paginate(Number(pagination_element.dataset.page));
+            });
         });
-    }
+
+        paginate(1);
+        list.dataset.listPaginate = 'ready';
+    });
 {% endblock %}

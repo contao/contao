@@ -48,12 +48,10 @@
 {% endblock %}
 
 {% block script_content %}
-    {
-        document.querySelectorAll('*[data-splash-screen]').forEach(button => {
-            button.addEventListener('click', () => {
-                button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);
-                button.remove();
-            })
+    document.querySelectorAll('*[data-splash-screen]').forEach(button => {
+        button.addEventListener('click', () => {
+            button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);
+            button.remove();
         })
-    }
+    });
 {% endblock %}

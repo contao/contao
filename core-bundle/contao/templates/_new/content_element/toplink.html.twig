@@ -26,10 +26,8 @@
 {% endblock %}
 
 {% block script_content %}
-    {
-        document.querySelectorAll('*[data-toplink]').forEach(link => {
-            link.href = location.href;
-            link.hash = '#top';
-        });
-    }
+    document.querySelectorAll('*[data-toplink]').forEach(link => {
+        link.href = location.href;
+        link.hash = '#top';
+    });
 {% endblock %}
