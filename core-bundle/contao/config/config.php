@@ -86,7 +86,6 @@ use Contao\PageError404;
 use Contao\PageForward;
 use Contao\PageLogout;
 use Contao\PageModel;
-use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageTree;
 use Contao\Password;
