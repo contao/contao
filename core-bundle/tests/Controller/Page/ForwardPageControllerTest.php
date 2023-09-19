@@ -64,6 +64,7 @@ class ForwardPageControllerTest extends TestCase
             ->with(42)
             ->willReturn($jumpTo)
         ;
+
         $adapter
             ->method('findFirstPublishedRegularByPid')
             ->with(42)
