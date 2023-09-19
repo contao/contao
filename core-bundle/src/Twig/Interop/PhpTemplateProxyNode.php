@@ -22,9 +22,7 @@ final class PhpTemplateProxyNode extends Node
 {
     public function __construct(string $extensionName)
     {
-        parent::__construct([], [
-            'extension_name' => $extensionName,
-        ]);
+        parent::__construct([], ['extension_name' => $extensionName]);
     }
 
     public function compile(Compiler $compiler): void
