@@ -24,6 +24,8 @@ use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
@@ -45,6 +47,11 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
+    }
+
+    public function fetch(Request $request, $catch = false): Response
+    {
+        return parent::fetch($request, $catch);
     }
 
     protected function getOptions(): array
