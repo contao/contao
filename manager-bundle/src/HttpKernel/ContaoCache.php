@@ -63,7 +63,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
         /**
          * symfony/http-kernel ^6.2 still executes terminate by default, which is deprecated however.
-         * It will be default to false in Symfony 7.
+         * It will default to false in Symfony 7.
          * 
          * @todo Remove once symfony/http-kernel is required in at least ^7.0
          */
