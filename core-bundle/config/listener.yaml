@@ -595,7 +595,9 @@ services:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
         tags:
             # The priority must be higher than the exception converter listener (defaults to 96)
-            - { name: kernel.event_listener, priority: 128 }
+            # For better integration with the popular error tracking sentry.io we use 256 as their own error listener
+            # defaults to 128
+            - { name: kernel.event_listener, priority: 256 }
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
