@@ -1,105 +1,105 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" target-language="it">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoInstallationBundle.en.xlf" target-language="de">
     <body>
       <trans-unit id="1" resname="install_tool">
         <source>Contao install tool</source>
-        <target>Strumento di installazione Contao</target>
+        <target>Contao-Installtool</target>
       </trans-unit>
       <trans-unit id="2" resname="an_error_occurred">
         <source>An error occurred</source>
-        <target>Si è verificato un errore</target>
+        <target>Es ist ein Fehler aufgetreten</target>
       </trans-unit>
       <trans-unit id="3" resname="locked_headline">
         <source>The install tool has been locked!</source>
-        <target>Lo strumento di installazione è stato bloccato</target>
+        <target>Das Installtool wurde gesperrt!</target>
       </trans-unit>
       <trans-unit id="4" resname="locked_explanation">
         <source>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; on the command line.</source>
-        <target>Per motivi di sicurezza, il install tool è stato bloccato dopo che una password errata è stata inserita più di tre volte di seguito. Per sbloccarlo, eseguire &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; sulla riga di comando.</target>
+        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Sie können es entweder im Contao Manager entsperren oder den Befehl &lt;code&gt;contao:install:unlock&lt;/code&gt; auf der Konsole ausführen.</target>
       </trans-unit>
       <trans-unit id="5" resname="file_permissions_headline">
         <source>PHP is not allowed to write files!</source>
-        <target>PHP non ha i permessi per la creazione di file.</target>
+        <target>PHP kann keine Dateien schreiben!</target>
       </trans-unit>
       <trans-unit id="6" resname="file_permissions_explanation">
         <source>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem.</source>
-        <target>Il server non supporta l'accesso ai file tramite PHP; molto probabilmente PHP viene eseguito come modulo Apache con un utente diverso. Si prega di contattare l'amministratore del server e chiedergli di risolvere il problema. </target>
+        <target>Ihr Server unterstützt den Dateizugriff per PHP nicht; vermutlich läuft PHP als Apache-Modul unter einem anderen Benutzer. Bitte wenden Sie sich an Ihren Server-Administrator, damit dieser das Problem behebt.</target>
       </trans-unit>
       <trans-unit id="7" resname="file_permissions_warning">
         <source>&lt;strong&gt;Do not attempt to fix this yourself by making files and folders writable for everyone!&lt;/strong&gt;</source>
-        <target>&lt;strong&gt; Suggeriamo di non tentare in modo autonomo, dando i privilegi di lettura e scrittura a tutti!&lt;/ strong&gt;</target>
+        <target> &lt;strong&gt;Versuchen Sie keinesfalls, das Problem selbst zu beheben, indem Sie die Dateien und Ordner für jedermann beschreibbar machen!&lt;/strong&gt;</target>
       </trans-unit>
       <trans-unit id="8" resname="accept_license">
         <source>Accept license</source>
-        <target>Accetta la licenza</target>
+        <target>Lizenz akzeptieren</target>
       </trans-unit>
       <trans-unit id="9" resname="set_password">
         <source>Install tool password</source>
-        <target>Password strumento di installazione</target>
+        <target>Installtool-Passwort</target>
       </trans-unit>
       <trans-unit id="10" resname="set_password_hint">
         <source>Please enter a password to prevent unauthorized access.</source>
-        <target>Inserire una password per evitare accessi non autorizzati!</target>
+        <target>Bitte vergeben Sie ein Passwort, um unberechtigte Zugriffe zu vermeiden.</target>
       </trans-unit>
       <trans-unit id="11" resname="password">
         <source>Password</source>
-        <target>Password</target>
+        <target>Passwort</target>
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
-        <target>Mostrare la password</target>
+        <target>Passwort anzeigen</target>
       </trans-unit>
       <trans-unit id="13" resname="hide_password">
         <source>Hide password</source>
-        <target>Nascondere la password</target>
+        <target>Passwort ausblenden</target>
       </trans-unit>
       <trans-unit id="14" resname="save_password">
         <source>Save password</source>
-        <target>Salva la password</target>
+        <target>Passwort speichern</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
-        <target>La password deve essere lunga almeno %d caratteri!</target>
+        <target>Das Passwort muss mindestens %d Zeichen lang sein!</target>
       </trans-unit>
       <trans-unit id="16" resname="login">
         <source>Install tool login</source>
-        <target>Login strumento di installazione</target>
+        <target>Installtool-Anmeldung</target>
       </trans-unit>
       <trans-unit id="17" resname="login_explanation">
         <source>Please enter the install tool password. The install tool password is not the same as the Contao back end password.</source>
-        <target>Inserire la password per lo strumento di installazione. Ricorda che la password non è la stessa del pannello di controllo di Contao.</target>
+        <target>Bitte geben Sie das Installtool-Passwort ein. Das Installtool-Passwort ist nicht gleich dem Contao Backend-Passwort.</target>
       </trans-unit>
       <trans-unit id="18" resname="allow_cookies">
         <source>You have to allow cookies to use Contao.</source>
-        <target>Occorre abilitare i cookie per poter utilizzare Contao.</target>
+        <target>Für die Nutzung von Contao müssen Cookies erlaubt sein.</target>
       </trans-unit>
       <trans-unit id="19" resname="login">
         <source>Login</source>
-        <target>Login</target>
+        <target>Anmelden</target>
       </trans-unit>
       <trans-unit id="20" resname="invalid_password">
         <source>Invalid password!</source>
-        <target>Password non valida!</target>
+        <target>Ungültiges Passwort!</target>
       </trans-unit>
       <trans-unit id="21" resname="database_connection">
         <source>Database connection</source>
-        <target>Connessione al database</target>
+        <target>Datenbankverbindung</target>
       </trans-unit>
       <trans-unit id="22" resname="database_connected">
         <source>Database connection established.</source>
-        <target>Connessione al database eseguita correttamente.</target>
+        <target>Datenbankverbindung hergestellt.</target>
       </trans-unit>
       <trans-unit id="23" resname="database_dot_in_dbname">
         <source>The database name must not contain dots!</source>
-        <target>Il nome del database non deve contenere punti!</target>
+        <target>Der Datenbankname darf keine Punkte enthalten!</target>
       </trans-unit>
       <trans-unit id="24" resname="database_could_not_connect">
         <source>Could not connect to the database!</source>
-        <target>Non è possibile effettuare la connessione al database!</target>
+        <target>Datenbankverbindung fehlgeschlagen!</target>
       </trans-unit>
       <trans-unit id="25" resname="database_connection_explain">
         <source>Please enter your database connection parameters.</source>
-        <target>Inserire i parametri per la connessione al database.</target>
+        <target>Bitte geben Sie Ihre Datenbank-Zugangsdaten ein.</target>
       </trans-unit>
       <trans-unit id="26" resname="database_host">
         <source>Host</source>
@@ -107,91 +107,91 @@
       </trans-unit>
       <trans-unit id="27" resname="database_port">
         <source>Port number</source>
-        <target>Numero porta</target>
+        <target>Portnummer</target>
       </trans-unit>
       <trans-unit id="28" resname="database_user">
         <source>Username</source>
-        <target>Nome utente</target>
+        <target>Benutzername</target>
       </trans-unit>
       <trans-unit id="29" resname="database_password">
         <source>Password</source>
-        <target>Password</target>
+        <target>Passwort</target>
       </trans-unit>
       <trans-unit id="30" resname="database_name">
         <source>Database name</source>
-        <target>Nome Database</target>
+        <target>Datenbankname</target>
       </trans-unit>
       <trans-unit id="31" resname="save_settings">
         <source>Save settings</source>
-        <target>Salva la configurazione</target>
+        <target>Einstellungen speichern</target>
       </trans-unit>
       <trans-unit id="32" resname="update_tables">
         <source>Update the database</source>
-        <target>Aggiorna il database</target>
+        <target>Datenbank aktualisieren</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
         <source>Here you can update the database schema.</source>
-        <target>Qui puoi aggiornare lo schema del database.</target>
+        <target>Hier können Sie das Datenbank-Schema aktualisieren.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
-        <target>Il database è aggiornato.</target>
+        <target>Die Datenbank ist aktuell.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
-        <target>Aggiorna il database</target>
+        <target>Datenbank aktualisieren</target>
       </trans-unit>
       <trans-unit id="36" resname="CREATE">
         <source>Create tables</source>
-        <target>Tabelle create</target>
+        <target>Tabellen anlegen</target>
       </trans-unit>
       <trans-unit id="37" resname="ALTER_TABLE">
         <source>Change tables</source>
-        <target>Cambia tabelle</target>
+        <target>Tabellen ändern</target>
       </trans-unit>
       <trans-unit id="38" resname="ALTER_ADD">
         <source>Add columns</source>
-        <target>Aggiungi colonne</target>
+        <target>Spalten anlegen</target>
       </trans-unit>
       <trans-unit id="39" resname="ALTER_CHANGE">
         <source>Change columns</source>
-        <target>Modifica colonne </target>
+        <target>Spalten ändern</target>
       </trans-unit>
       <trans-unit id="40" resname="ALTER_DROP">
         <source>Drop columns</source>
-        <target>Elimina colonne </target>
+        <target>Spalten löschen</target>
       </trans-unit>
       <trans-unit id="41" resname="DROP">
         <source>Drop tables</source>
-        <target>Elimina tabelle</target>
+        <target>Tabellen löschen</target>
       </trans-unit>
       <trans-unit id="42" resname="select_all">
         <source>Select all</source>
-        <target>Seleziona tutto</target>
+        <target>Alle auswählen</target>
       </trans-unit>
       <trans-unit id="43" resname="template_import">
         <source>Import a template</source>
-        <target>Importa un template</target>
+        <target>Ein Template importieren</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
-        <target>Qui puoi importare un file &lt;code&gt;.sql&lt;/code&gt; dalla directory dei &lt;code&gt;templates&lt;/code&gt;. Tutti i dati esistenti saranno cancellati! Se vuoi importare solo un tema, usa invece il gestore di temi nel back end di Contao.</target>
+        <target>Hier können Sie eine &lt;code&gt;.sql&lt;/code&gt;-Datei aus dem &lt;code&gt;templates&lt;/code&gt;-Verzeichnis importieren. Dabei werden alle bestehenden Daten gelöscht! Wenn Sie stattdessen lediglich ein Theme importieren wollen, nutzen Sie bitte den Theme-Manager im Contao-Backend.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
-        <target>L'importazione non è riuscita! E' la struttura della banca dati aggiornata ed è il file della template compatibile con la tua versione Contao?</target>
+        <target>Der Import konnte nicht abgeschlossen werden! Ist die Datenbank aktuell und die Template-Datei kompatibel mit Ihrer Contao-Version?</target>
       </trans-unit>
       <trans-unit id="46" resname="import_empty_source">
         <source>Please choose a template file!</source>
-        <target>Selezionare un file template</target>
+        <target>Bitte wählen Sie eine Template-Datei!</target>
       </trans-unit>
       <trans-unit id="47" resname="import_data_will_be_deleted">
         <source>Any existing data will be deleted!</source>
-        <target>ATTENZIONE, ogni informazione esistente sarà cancellata!</target>
+        <target>Alle bestehenden Daten werden gelöscht!</target>
       </trans-unit>
       <trans-unit id="48" resname="imported_on">
         <source>Template imported on %s.</source>
-        <target>Template importato il %s</target>
+        <target>Template importiert am %s.</target>
       </trans-unit>
       <trans-unit id="49" resname="templates">
         <source>Templates</source>
@@ -199,167 +199,167 @@
       </trans-unit>
       <trans-unit id="50" resname="do_not_truncate">
         <source>Do not truncate the tables</source>
-        <target>Non troncare le tabelle</target>
+        <target>Tabellen nicht leeren</target>
       </trans-unit>
       <trans-unit id="51" resname="import_confirm">
         <source>Any existing data will be deleted! Do you really want to continue?</source>
-        <target>Ogni informazione esistente sarà cancellata. Vuoi procedere?</target>
+        <target>Alle bestehenden Daten werden gelöscht. Möchten Sie trotzdem fortfahren?</target>
       </trans-unit>
       <trans-unit id="52" resname="template_save">
         <source>Import template</source>
-        <target>Importa templates</target>
+        <target>Ein Template importieren</target>
       </trans-unit>
       <trans-unit id="53" resname="admin_create">
         <source>Create an admin user</source>
-        <target>Crea un utente amministratore</target>
+        <target>Ein Administratorkonto anlegen</target>
       </trans-unit>
       <trans-unit id="54" resname="admin_create_explain">
         <source>Here you can create an admin user to log into the Contao back end.</source>
-        <target>Qui è possibile creare un utente amministratore per il back end di Contao</target>
+        <target>Hier können Sie ein Administratorkonto für die Anmeldung im Contao-Backend erstellen.</target>
       </trans-unit>
       <trans-unit id="55" resname="admin_confirm">
         <source>An admin user has been created.</source>
-        <target>L'utente amministratore è stato creato.</target>
+        <target>Ein Administratorkonto wurde erstellt.</target>
       </trans-unit>
       <trans-unit id="56" resname="admin_username">
         <source>Username</source>
-        <target>Nome utente</target>
+        <target>Benutzername</target>
       </trans-unit>
       <trans-unit id="57" resname="admin_name">
         <source>Name</source>
-        <target>Nome</target>
+        <target>Name</target>
       </trans-unit>
       <trans-unit id="58" resname="admin_email">
         <source>E-mail</source>
-        <target>E-mail</target>
+        <target>E-Mail</target>
       </trans-unit>
       <trans-unit id="59" resname="admin_save">
         <source>Create admin user</source>
-        <target>Crea un utente amministratore</target>
+        <target>Administratorkonto anlegen</target>
       </trans-unit>
       <trans-unit id="60" resname="admin_error_extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
-        <target>Per motivi di sicurezza non puoi utilizzare i seguenti caratteri: =&lt;&gt;&amp;/()#</target>
+        <target>Aus Sicherheitsgründen können Sie folgende Zeichen hier nicht verwenden: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="61" resname="admin_error_no_space">
         <source>The username must not contain any whitespace characters!</source>
-        <target>Il nome utente non può contenere degli spazi!</target>
+        <target>Der Benutzername darf keine Leerzeichen enthalten!</target>
       </trans-unit>
       <trans-unit id="62" resname="admin_error_email">
         <source>Please enter a valid e-mail address!</source>
-        <target>Inserisci un indirizzo e-mail valido!</target>
+        <target>Bitte geben Sie eine gültige E-Mail-Adresse ein!</target>
       </trans-unit>
       <trans-unit id="63" resname="admin_error_password_match">
         <source>The passwords did not match!</source>
-        <target>Le password non coincidono!</target>
+        <target>Die eingegebenen Passwörter stimmen nicht überein!</target>
       </trans-unit>
       <trans-unit id="64" resname="admin_error_password_user">
         <source>Your username and password must not be the same!</source>
-        <target>Username e password non possono essere uguali!</target>
+        <target>Der Benutzername und das Passwort dürfen nicht gleich sein!</target>
       </trans-unit>
       <trans-unit id="65" resname="admin_error">
         <source>Please fill in all fields to create an admin user!</source>
-        <target>Indicare tutte le informazioni per creare un utente amministratore</target>
+        <target>Bitte füllen Sie alle Felder aus, um ein Administratorkonto zu erstellen!</target>
       </trans-unit>
       <trans-unit id="66" resname="congratulations">
         <source>Congratulations!</source>
-        <target>Contao è stato configurato correttamente!</target>
+        <target>Gratulation!</target>
       </trans-unit>
       <trans-unit id="67" resname="congratulations_explain">
         <source>You have successfully installed Contao.</source>
-        <target>L'installazione di Contao è avvenuta con successo</target>
+        <target>Sie haben Contao erfolgreich installiert.</target>
       </trans-unit>
       <trans-unit id="68" resname="installation_complete">
         <source>Installation complete</source>
-        <target>Installazione completa</target>
+        <target>Installation abgeschlossen</target>
       </trans-unit>
       <trans-unit id="69" resname="installation_complete_explain">
         <source>Now please go to the Contao back end and check the system settings.</source>
-        <target>Ora è possibile accedere al back end di Contao e verificare le impostazioni di sistema</target>
+        <target>Rufen Sie nun das Contao-Backend auf und überprüfen Sie die Systemeinstellungen.</target>
       </trans-unit>
       <trans-unit id="70" resname="back_end">
         <source>Contao back end</source>
-        <target>Backend di Contao </target>
+        <target>Contao-Backend</target>
       </trans-unit>
       <trans-unit id="71" resname="old_database">
         <source>The database is too old!</source>
-        <target>Il database non è aggiornato!</target>
+        <target>Die Datenbank ist zu alt!</target>
       </trans-unit>
       <trans-unit id="72" resname="old_database_explanation">
         <source>You need at least Contao 3.2 to upgrade to Contao 4.</source>
-        <target>E' necessario almeno Contao 3.2 per eseguire l'aggiornamento a Contao 4.</target>
+        <target>Sie benötigen mindestens Contao 3.2, um das Update auf Contao 4 durchzuführen.</target>
       </trans-unit>
       <trans-unit id="73" resname="console_explanation">
         <source>A post installation task could not be completed!</source>
-        <target>Il task post installazione non è stato completato!</target>
+        <target>Eine Installationsaufgabe konnte nicht abgeschlossen werden!</target>
       </trans-unit>
       <trans-unit id="74" resname="duplicate_subscriptions">
         <source>Duplicate newsletter subscriptions found:</source>
-        <target>Trovati iscritti alla newsletter duplicati:</target>
+        <target>Es wurden doppelte Newsletter-Abonnements gefunden:</target>
       </trans-unit>
       <trans-unit id="75" resname="duplicates_purged">
         <source>The duplicate entries have been purged automatically. A backup of the original subscriptions has been stored in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</source>
-        <target>Le voci duplicate sono state eliminate automaticamente. Un backup degli iscritti originali è stato archiviato in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        <target>Die doppelten Einträge wurden automatisch bereinigt. Eine Kopie der originalen Abonnements wurde in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt; gespeichert.</target>
       </trans-unit>
       <trans-unit id="76" resname="unsupported_version">
         <source>Your database version is not supported!</source>
-        <target>La versione del tuo database non è supportata!</target>
+        <target>Ihre Datenbank-Version wird nicht unterstützt!</target>
       </trans-unit>
       <trans-unit id="77" resname="unsupported_version_explain">
         <source>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</source>
-        <target>Contao richiede almeno MySQL 5.1.1.0 ma tu hai la versione %s. Si prega di aggiornare la versione del database.</target>
+        <target>Contao benötigt mindestens MySQL 5.1.0, aber Sie haben Version %s. Bitte aktualisieren Sie Ihre Datenbank-Version.</target>
       </trans-unit>
       <trans-unit id="78" resname="unsupported_collation">
         <source>The configured collation is not supported!</source>
-        <target>La codifica dei caratteri configurata non è supportata!</target>
+        <target>Die konfigurierte Kollation wird nicht unterstützt!</target>
       </trans-unit>
       <trans-unit id="79" resname="unsupported_collation_explain">
         <source>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>La configurazione del set dei caratteri &lt;code&gt;%s&lt;/code&gt; non è disponibilenel tuo server. Devi installarlo oppure configurare un diverso set di caratteri nel file &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Die konfigurierte Kollation &lt;code&gt;%s&lt;/code&gt; ist auf Ihrem Server nicht verfügbar. Bitte installieren Sie sie (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="80" resname="unsupported_engine">
         <source>The configured database engine is not supported!</source>
-        <target>Il database configurato non è supportato.</target>
+        <target>Die konfigurierte Datenbank-Engine wird nicht unterstützt!</target>
       </trans-unit>
       <trans-unit id="81" resname="unsupported_engine_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>La configurazione del database &lt;code&gt;%s&lt;/code&gt; non è disponibile nel tuo server. Devi installarlo oppure configurare diversamente il database nel file&lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Die konfigurierte Datenbank-Engine &lt;code&gt;%s&lt;/code&gt; ist auf Ihrem Server nicht verfügbar. Bitte installieren Sie sie (empfohlen) oder konfigurieren Sie eine andere Datenbank-Engine in der Datei &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
-        <target>Combinazione non valida tra database engine e collation!</target>
+        <target>Ungültige Kombination aus Datenbank-Engine und Kollation!</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>La configurazione del database engine &lt;code&gt;%s&lt;/code&gt; non supporta utf8mb4. Si prega di usare InnoDB o configurare un diverso set di caratteri e ordinamento nel file &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Die konfigurierte Datenbank-Engine &lt;code&gt;%s&lt;/code&gt; unterstützt kein utf8mb4. Bitte verwenden Sie stattdessen InnoDB (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
-        <target>L'opzione innodb_large_prefix non è abilitata!</target>
+        <target>Die innodb_large_prefix-Option ist nicht aktiv!</target>
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>L'opzione &lt;code&gt;innodb_large_prefix&lt;/code&gt; non è abilitata sul server. Si prega di attivarla (consigliata) o configurare un diverso set di caratteri e ordinamento nel file &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Die &lt;code&gt;innodb_large_prefix&lt;/code&gt;-Option ist auf Ihrem Server nicht aktiv. Bitte aktivieren Sie sie (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>
-        <target>InnoDB non è configurato correttamente!</target>
+        <target>InnoDB ist nicht richtig konfiguriert!</target>
       </trans-unit>
       <trans-unit id="87" resname="innodb_additional_explain">
         <source>Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the Barracuda file format and the &lt;code&gt;innodb_file_per_table&lt;/code&gt; option.</source>
-        <target>L'uso di prefissi di grandi dimensioni nelle versioni di MySQL anteriori alla versione 5.7.7.7 e MariaDB anteriori alla 10.2.2.2 richiede il formato di file Barracuda e l'opzione &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
+        <target>Die Verwendung von &quot;Large Prefixes&quot; in MySQL-Versionen vor 5.7.7 bzw. MariaDB-Versionen vor 10.2 erfordert das Barracuda-Dateiformat und die Option &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
-        <target>Impossibile connettersi al database utilizzando l'URL di connessione presente nella variabile d'ambiente &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
+        <target>Die Datenbankverbindung mit der Verbindungs-URL aus der Environment-Variable &lt;code&gt;DATABASE_URL&lt;/code&gt; ist fehlgeschlagen.</target>
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
-        <target>Il server del database non sta funzionando in modalità strict!</target>
+        <target>Ihr Datenbank-Server läuft nicht im Strict-Mode!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
-        <target>L'esecuzione di MySQL in modalità non strict può causare dati corrotti o troncati. Abilita la modalità strict o nel tuo file &lt;code&gt;my.cnf&lt;/code&gt; o configura le opzioni di connessione nel file &lt;code&gt;config/config.yml&lt;/code&gt; come segue:</target>
+        <target>Wenn MySQL nicht im Strict-Mode läuft, können Daten beschädigt oder abgeschnitten werden. Bitte aktivieren Sie den Strict-Mode entweder in Ihrer &lt;code&gt;my.cnf&lt;/code&gt;-Datei oder konfigurieren Sie die Verbindungsoptionen in der Datei &lt;code&gt;config/config.yml&lt;/code&gt; wie folgt:</target>
       </trans-unit>
     </body>
   </file>

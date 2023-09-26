@@ -1,365 +1,365 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" target-language="es">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoInstallationBundle.en.xlf" target-language="nl">
     <body>
       <trans-unit id="1" resname="install_tool">
         <source>Contao install tool</source>
-        <target>Herramienta de instalación Contao</target>
+        <target>Contao installatie programma</target>
       </trans-unit>
       <trans-unit id="2" resname="an_error_occurred">
         <source>An error occurred</source>
-        <target>Ha ocurrido un error</target>
+        <target>Er is een fout opgetreden</target>
       </trans-unit>
       <trans-unit id="3" resname="locked_headline">
         <source>The install tool has been locked!</source>
-        <target>¡La herramienta de instalación ha sido bloqueada!</target>
+        <target>Het installatie programma is geblokkeerd</target>
       </trans-unit>
       <trans-unit id="4" resname="locked_explanation">
         <source>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; on the command line.</source>
-        <target>Por razones de seguridad, la herramienta de instalación se ha bloqueado después de haber ingresado una contraseña incorrecta más de tres veces seguidas. Para desbloquearlo, ejecuta &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;en la línea de comando.</target>
+        <target>Om veiligheidsredenen is het installatietool vergrendeld nadat een verkeerd wachtwoord meer dan drie keer achter elkaar is ingevoerd. Je kunt het ontgrendelen in de Contao Manager of door &lt;code&gt;contao:install:unlock&lt;/code&gt; uit te voeren op de opdrachtregel.</target>
       </trans-unit>
       <trans-unit id="5" resname="file_permissions_headline">
         <source>PHP is not allowed to write files!</source>
-        <target>PHP no está permitido de escribir ficheros!</target>
+        <target>Het is PHP niet toegestaan om bestanden te beschrijven!</target>
       </trans-unit>
       <trans-unit id="6" resname="file_permissions_explanation">
         <source>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem.</source>
-        <target>Su servidor no soporta el acceso a archivos a través de PHP; más probable es que PHP se ejecuta como módulo de Apache bajo un usuario diferente. Por favor, póngase en contacto con el administrador de su servidor y pídale de solucionar el problema.</target>
+        <target>Uw server ondersteunt geen toegang tot bestanden via PHP; hoogstwaarschijnlijk draait PHP als Apache module onder een andere gebruiker. Neem contact op met uw serverbeheerder en vraag hem om dit probleem op te lossen.</target>
       </trans-unit>
       <trans-unit id="7" resname="file_permissions_warning">
         <source>&lt;strong&gt;Do not attempt to fix this yourself by making files and folders writable for everyone!&lt;/strong&gt;</source>
-        <target>&lt;strong&gt;¡No intente repararlo usted mismo, haciendo que los archivos y carpetas sean modificables para todo el mundo!</target>
+        <target>&lt;strong&gt;Ga dit niet oplossen door bestanden en mappen beschrijfbaar te maken voor iedereen!&lt;/strong&gt;</target>
       </trans-unit>
       <trans-unit id="8" resname="accept_license">
         <source>Accept license</source>
-        <target>Aceptar licencia</target>
+        <target>Accepteer licentie</target>
       </trans-unit>
       <trans-unit id="9" resname="set_password">
         <source>Install tool password</source>
-        <target>Contraseña de herramienta de instalación</target>
+        <target>Installatie programma wachtwoord</target>
       </trans-unit>
       <trans-unit id="10" resname="set_password_hint">
         <source>Please enter a password to prevent unauthorized access.</source>
-        <target>Por favor introduzca una contraseña para prevenir accesos no autorizados.</target>
+        <target>Voer een wachtwoord in om onbevoegde toegang te voorkomen!</target>
       </trans-unit>
       <trans-unit id="11" resname="password">
         <source>Password</source>
-        <target>Contraseña</target>
+        <target>Wachtwoord</target>
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
-        <target>Mostrar contraseña </target>
+        <target>Toon wachtwoord</target>
       </trans-unit>
       <trans-unit id="13" resname="hide_password">
         <source>Hide password</source>
-        <target>Ocultar contraseña</target>
+        <target>Verberg wachtwoord</target>
       </trans-unit>
       <trans-unit id="14" resname="save_password">
         <source>Save password</source>
-        <target>Guardar contraseña</target>
+        <target>Wachtwoord opslaan</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
-        <target>¡La contraseña tiene que tener como mínimo %d carßacteres!</target>
+        <target>Het wachtwoord dient minstens %d karakters lang te zijn!</target>
       </trans-unit>
       <trans-unit id="16" resname="login">
         <source>Install tool login</source>
-        <target>Inicio de sesión de herramienta de instalación</target>
+        <target>Installatie programma login</target>
       </trans-unit>
       <trans-unit id="17" resname="login_explanation">
         <source>Please enter the install tool password. The install tool password is not the same as the Contao back end password.</source>
-        <target>Por favor introduzca la contraseña para la herramienta de instalación. La contraseña de la herramienta de instalación no es la misma que la contraseña del módulo de gestión de Contao.</target>
+        <target>Geef het installatie programma wachtwoord op. Dit is niet hetzelfde als het Contao backend wachtwoord.</target>
       </trans-unit>
       <trans-unit id="18" resname="allow_cookies">
         <source>You have to allow cookies to use Contao.</source>
-        <target>Debe permitir el uso de cookies para utilizar Contao.</target>
+        <target>U dient cookies toe te staan om Contao te kunnen gebruiken.</target>
       </trans-unit>
       <trans-unit id="19" resname="login">
         <source>Login</source>
-        <target>Login</target>
+        <target>Inloggen</target>
       </trans-unit>
       <trans-unit id="20" resname="invalid_password">
         <source>Invalid password!</source>
-        <target>¡Contraseña no válida!</target>
+        <target>Ongeldig wachtwoord!</target>
       </trans-unit>
       <trans-unit id="21" resname="database_connection">
         <source>Database connection</source>
-        <target>Conexión base de datos</target>
+        <target>Database verbinding</target>
       </trans-unit>
       <trans-unit id="22" resname="database_connected">
         <source>Database connection established.</source>
-        <target>Conexión a base de datos exitosa.</target>
+        <target>Database verbinding tot stand gebracht.</target>
       </trans-unit>
       <trans-unit id="23" resname="database_dot_in_dbname">
         <source>The database name must not contain dots!</source>
-        <target>¡El nombre de la base de datos no debe contener puntos!</target>
+        <target>De databasenaam mag geen punten bevatten!</target>
       </trans-unit>
       <trans-unit id="24" resname="database_could_not_connect">
         <source>Could not connect to the database!</source>
-        <target>¡No se pudo conectar a la base de datos!</target>
+        <target>Geen verbinding met een database!</target>
       </trans-unit>
       <trans-unit id="25" resname="database_connection_explain">
         <source>Please enter your database connection parameters.</source>
-        <target>Introduzca los parámetros de conexión a su base de datos.</target>
+        <target>Controleer uw gegevens om met de database te verbinden.</target>
       </trans-unit>
       <trans-unit id="26" resname="database_host">
         <source>Host</source>
-        <target>Servidor</target>
+        <target>Host</target>
       </trans-unit>
       <trans-unit id="27" resname="database_port">
         <source>Port number</source>
-        <target>Número de puerto</target>
+        <target>Poortnummer</target>
       </trans-unit>
       <trans-unit id="28" resname="database_user">
         <source>Username</source>
-        <target>Usuario</target>
+        <target>Gebruikersnaam</target>
       </trans-unit>
       <trans-unit id="29" resname="database_password">
         <source>Password</source>
-        <target>Contraseña</target>
+        <target>Wachtwoord</target>
       </trans-unit>
       <trans-unit id="30" resname="database_name">
         <source>Database name</source>
-        <target>Nombre de la base de datos</target>
+        <target>Naam database</target>
       </trans-unit>
       <trans-unit id="31" resname="save_settings">
         <source>Save settings</source>
-        <target>Guardar ajustes</target>
+        <target>Bewaar instellingen</target>
       </trans-unit>
       <trans-unit id="32" resname="update_tables">
         <source>Update the database</source>
-        <target>Actualizar la base de datos</target>
+        <target>Update de database</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
         <source>Here you can update the database schema.</source>
-        <target>Aquí puede actualizar el esquema de la base de datos.</target>
+        <target>Hier kunt u het databaseschema bijwerken.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
-        <target>La base de datos está actualizada. </target>
+        <target>De database is up-to-date.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
-        <target>Actualizar base de datos</target>
+        <target>Update database</target>
       </trans-unit>
       <trans-unit id="36" resname="CREATE">
         <source>Create tables</source>
-        <target>Crear tablas</target>
+        <target>Maak tabellen</target>
       </trans-unit>
       <trans-unit id="37" resname="ALTER_TABLE">
         <source>Change tables</source>
-        <target>Cambiar tablas</target>
+        <target>Tabellen wijzigen</target>
       </trans-unit>
       <trans-unit id="38" resname="ALTER_ADD">
         <source>Add columns</source>
-        <target>Añadir columnas</target>
+        <target>Voeg kolommen toe</target>
       </trans-unit>
       <trans-unit id="39" resname="ALTER_CHANGE">
         <source>Change columns</source>
-        <target>Cambiar columnas</target>
+        <target>Wijzig kolommen</target>
       </trans-unit>
       <trans-unit id="40" resname="ALTER_DROP">
         <source>Drop columns</source>
-        <target>Soltar columnas</target>
+        <target>Dump kolommen</target>
       </trans-unit>
       <trans-unit id="41" resname="DROP">
         <source>Drop tables</source>
-        <target>Soltar tablas</target>
+        <target>Dump tabellen</target>
       </trans-unit>
       <trans-unit id="42" resname="select_all">
         <source>Select all</source>
-        <target>Seleccionar todos</target>
+        <target>Selecteer alles</target>
       </trans-unit>
       <trans-unit id="43" resname="template_import">
         <source>Import a template</source>
-        <target>Importar una plantilla</target>
+        <target>Importeer een template</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
-        <target>Aquí puede importar un archivo &lt;code&gt;.sql&lt;/code&gt; desde el directorio de plantillas &lt;code&gt;templates&lt;/code&gt;. ¡Cualquier dato existente será eliminado! Si solo desea importar un tema, utilice el administrador de temas en el back-end de Contao. </target>
+        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren uit de &lt;code&gt;templates&lt;/code&gt; map. Alle bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruikt u in plaats daarvan de themamanager in de Contao back -end.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
-        <target>La importación falló! Compruebe si la base de datos está actualizada y si la versión de Contao es compatible con la suya.</target>
+        <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
       </trans-unit>
       <trans-unit id="46" resname="import_empty_source">
         <source>Please choose a template file!</source>
-        <target>Seleccione un archivo de plantilla</target>
+        <target>Kies een template bestand!</target>
       </trans-unit>
       <trans-unit id="47" resname="import_data_will_be_deleted">
         <source>Any existing data will be deleted!</source>
-        <target>¡Los datos existentes serán eliminados!</target>
+        <target>Alle bestaande gegevens worden verwijderd!</target>
       </trans-unit>
       <trans-unit id="48" resname="imported_on">
         <source>Template imported on %s.</source>
-        <target>Template importada en %s.</target>
+        <target>Template geïmporteerd bij %s</target>
       </trans-unit>
       <trans-unit id="49" resname="templates">
         <source>Templates</source>
-        <target>Plantillas</target>
+        <target>Templates</target>
       </trans-unit>
       <trans-unit id="50" resname="do_not_truncate">
         <source>Do not truncate the tables</source>
-        <target>No corte las tablas</target>
+        <target>Maak tabellen niet leeg</target>
       </trans-unit>
       <trans-unit id="51" resname="import_confirm">
         <source>Any existing data will be deleted! Do you really want to continue?</source>
-        <target>¡Los datos existentes serán eliminados! ¿Desea continuar?</target>
+        <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
       </trans-unit>
       <trans-unit id="52" resname="template_save">
         <source>Import template</source>
-        <target>Importar plantilla</target>
+        <target>Importeer template</target>
       </trans-unit>
       <trans-unit id="53" resname="admin_create">
         <source>Create an admin user</source>
-        <target>Crear usuario administrador</target>
+        <target>Maak een admin gebruiker aan</target>
       </trans-unit>
       <trans-unit id="54" resname="admin_create_explain">
         <source>Here you can create an admin user to log into the Contao back end.</source>
-        <target>Aquí puede crear un usuario administrador para acceder al backend de Contao.</target>
+        <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
       </trans-unit>
       <trans-unit id="55" resname="admin_confirm">
         <source>An admin user has been created.</source>
-        <target>Se ha creado un usuario administrador.</target>
+        <target>Een admin gebruiker is aangemaakt.</target>
       </trans-unit>
       <trans-unit id="56" resname="admin_username">
         <source>Username</source>
-        <target>Usuario</target>
+        <target>Gebruikersnaam</target>
       </trans-unit>
       <trans-unit id="57" resname="admin_name">
         <source>Name</source>
-        <target>Nombre</target>
+        <target>Naam</target>
       </trans-unit>
       <trans-unit id="58" resname="admin_email">
         <source>E-mail</source>
-        <target>Formato e-mail</target>
+        <target>E-mail</target>
       </trans-unit>
       <trans-unit id="59" resname="admin_save">
         <source>Create admin user</source>
-        <target>Crear un usuario administrador</target>
+        <target>Maak een admin gebruiker aan</target>
       </trans-unit>
       <trans-unit id="60" resname="admin_error_extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
-        <target>Por razones de seguridad, no puede usar los siguientes caracteres aquí: # &lt;&gt; () \ =</target>
+        <target>Om veiligheidsredenen kunt u de volgende karakters hier niet gebruiken: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="61" resname="admin_error_no_space">
         <source>The username must not contain any whitespace characters!</source>
-        <target>¡El nombre de usuario no puede contener caracteres de espacios en blanco!</target>
+        <target>De gebruikersnaam mag geen spaties bevatten!</target>
       </trans-unit>
       <trans-unit id="62" resname="admin_error_email">
         <source>Please enter a valid e-mail address!</source>
-        <target>¡Por favor, introduce un e-mail válido!</target>
+        <target>Geef een geldig e-mail adres op!</target>
       </trans-unit>
       <trans-unit id="63" resname="admin_error_password_match">
         <source>The passwords did not match!</source>
-        <target>¡Las contraseñas no coinciden!</target>
+        <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
       </trans-unit>
       <trans-unit id="64" resname="admin_error_password_user">
         <source>Your username and password must not be the same!</source>
-        <target>¡El usuario y la contraseña no pueden ser iguales!</target>
+        <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
       </trans-unit>
       <trans-unit id="65" resname="admin_error">
         <source>Please fill in all fields to create an admin user!</source>
-        <target>Indique todos los campos para crear un usuario administrador</target>
+        <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
       </trans-unit>
       <trans-unit id="66" resname="congratulations">
         <source>Congratulations!</source>
-        <target>¡Enhorabuena!</target>
+        <target>Gefeliciteerd!</target>
       </trans-unit>
       <trans-unit id="67" resname="congratulations_explain">
         <source>You have successfully installed Contao.</source>
-        <target>Ha instalado Contao con éxito.</target>
+        <target>Contao is met succes geïnstalleerd.</target>
       </trans-unit>
       <trans-unit id="68" resname="installation_complete">
         <source>Installation complete</source>
-        <target>Instalación completada</target>
+        <target>Installatie compleet</target>
       </trans-unit>
       <trans-unit id="69" resname="installation_complete_explain">
         <source>Now please go to the Contao back end and check the system settings.</source>
-        <target>Ahora por favor vaya al backend de Contao y compruebe la configuración del sistema.</target>
+        <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
       </trans-unit>
       <trans-unit id="70" resname="back_end">
         <source>Contao back end</source>
-        <target>Backend de Contao</target>
+        <target>Contao backend</target>
       </trans-unit>
       <trans-unit id="71" resname="old_database">
         <source>The database is too old!</source>
-        <target>¡La base de datos es demasiado vieja!</target>
+        <target>De database is te oud!</target>
       </trans-unit>
       <trans-unit id="72" resname="old_database_explanation">
         <source>You need at least Contao 3.2 to upgrade to Contao 4.</source>
-        <target>Necesita al menos Contao 3.2 para actualizar a Contao 4.</target>
+        <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
       </trans-unit>
       <trans-unit id="73" resname="console_explanation">
         <source>A post installation task could not be completed!</source>
-        <target>¡No se pudo completar una tarea posterior a la instalación!</target>
+        <target>Een installatie opdracht kan niet worden voltooid!</target>
       </trans-unit>
       <trans-unit id="74" resname="duplicate_subscriptions">
         <source>Duplicate newsletter subscriptions found:</source>
-        <target>Se encontraron suscripciones a boletines duplicados:</target>
+        <target>Er werden dubbele inschrijvingen voor de nieuwsbrief gevonden:</target>
       </trans-unit>
       <trans-unit id="75" resname="duplicates_purged">
         <source>The duplicate entries have been purged automatically. A backup of the original subscriptions has been stored in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</source>
-        <target>Las entradas duplicadas se han purgado automáticamente. Se ha almacenado una copia de seguridad de las suscripciones originales en &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="76" resname="unsupported_version">
         <source>Your database version is not supported!</source>
-        <target>¡Su versión de base de datos no es compatible!</target>
+        <target>Database versie wordt niet ondersteund!</target>
       </trans-unit>
       <trans-unit id="77" resname="unsupported_version_explain">
         <source>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</source>
-        <target>Contao requiere al menos MySQL 5.1.0 pero tiene versión %s. Actualice la versión de su base de datos.</target>
+        <target>Contao vereist tenminste MySQL 5.1.0 u heeft versie %s. Werk uw database versie bij.</target>
       </trans-unit>
       <trans-unit id="78" resname="unsupported_collation">
         <source>The configured collation is not supported!</source>
-        <target>¡La intercalación configurada no es compatible!</target>
+        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
       </trans-unit>
       <trans-unit id="79" resname="unsupported_collation_explain">
         <source>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>La intercalación configurada &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. Instálelo (recomendado) o configure un conjunto de caracteres y una clasificación diferentes en el archivo &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;config/config.yml&lt;/code&gt;bestand.</target>
       </trans-unit>
       <trans-unit id="80" resname="unsupported_engine">
         <source>The configured database engine is not supported!</source>
-        <target>¡El motor de base de datos configurado no es compatible!</target>
+        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
       </trans-unit>
       <trans-unit id="81" resname="unsupported_engine_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>El motor de base de datos configurado &lt;code&gt;%s&lt;/code&gt; no está disponible en su servidor. Instálelo (recomendado) o configure un motor de base de datos diferente en el archivo &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;config/config.yml&lt;/code&gt;bestand.</target>
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
-        <target>¡Combinación no válida de motor de base de datos y colación!</target>
+        <target>Ongeldige combinatie van database-engine en sortering!</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>El motor de base de datos configurado &lt;code&gt;%s&lt;/code&gt; no es compatible con utf8mb4. En su lugar, use InnoDB (recomendado) o configure un conjunto de caracteres y una clasificación diferentes en el archivo &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>De geconfigureerde database-engine &lt;code&gt;%s&lt;/code&gt; ondersteunt geen utf8mb4. Gebruik in plaats hiervan InnoDB (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt; config/config.yml&lt;/code&gt; bestand.</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
-        <target>¡La opción innodb_large_prefix no está habilitada!</target>
+        <target>De innodb_large_prefix option is niet ingeschakeld!</target>
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>La opción &lt;code&gt;innodb_large_prefix&lt;/code&gt; no está habilitada en su servidor. Habilítelo (recomendado) o configure un conjunto de caracteres y una clasificación diferentes en el archivo &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>De &lt;code&gt;innodb_large_prefix&lt;/code&gt; optie is niet ingeschakeld op uw server. Schakel dit in (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt;config/config.yml&lt;/code&gt; bestand.</target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>
-        <target>¡InnoDB no está configurado correctamente!</target>
+        <target>InnoDB is niet correct geconfigureerd!</target>
       </trans-unit>
       <trans-unit id="87" resname="innodb_additional_explain">
         <source>Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the Barracuda file format and the &lt;code&gt;innodb_file_per_table&lt;/code&gt; option.</source>
-        <target>El uso de prefijos grandes en las versiones de MySQL anteriores a 5.7.7 y las versiones de MariaDB anteriores a la 10.2 requiere el formato de archivo Barracuda y la opción &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
+        <target>Gebruik van grote prefixen in MySQL-versies voorafgaand aan 5.7.7 en MariaDB-versies vóór 10.2 vereisen het Barracuda-bestandsformaat en de &lt;code&gt;innodb_file_per_table&lt;/code&gt; optie.</target>
       </trans-unit>
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
-        <target>No se pudo conectar a la base de datos utilizando la URL de conexión que se encuentra en la variable de entorno &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
+        <target>Kon geen verbinding maken met de database via de URL in de &lt;code&gt;DATABASE_URL&lt;/code&gt;omgevingsvariabele.</target>
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
-        <target>¡Su servidor de base de datos no se está ejecutando en modo estricto! </target>
+        <target>Uw databaseserver wordt niet uitgevoerd in de strikte modus!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
-        <target>Ejecutar MySQL en modo no estricto puede causar datos corruptos o truncados. Habilite el modo estricto en su archivo&lt;code&gt;my.cnf&lt;/code&gt; configure las opciones de conexión en el archivo&lt;code&gt;config/config.yml&lt;/code&gt; de la siguiente manera:</target>
+        <target>Het uitvoeren van MySQL in de niet-strikte modus kan corrupte of afgekapte gegevens veroorzaken. Schakel de strikte modus in uw &lt;code&gt;my.cnf&lt;/code&gt; bestand in of configureer de verbindingsopties in het bestand &lt;code&gt;config/config.yml&lt;/code&gt; als volgt:</target>
       </trans-unit>
     </body>
   </file>

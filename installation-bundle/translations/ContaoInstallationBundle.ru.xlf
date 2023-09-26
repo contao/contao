@@ -1,365 +1,365 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" target-language="cs">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoInstallationBundle.en.xlf" target-language="ru">
     <body>
       <trans-unit id="1" resname="install_tool">
         <source>Contao install tool</source>
-        <target>Instalační nástroj Contaa</target>
+        <target>Мастер установки Contao</target>
       </trans-unit>
       <trans-unit id="2" resname="an_error_occurred">
         <source>An error occurred</source>
-        <target>Došlo k chybě</target>
+        <target>Произошла ошибка</target>
       </trans-unit>
       <trans-unit id="3" resname="locked_headline">
         <source>The install tool has been locked!</source>
-        <target>Instalační nástroj byl zamčen!</target>
+        <target>Мастер установки заблокирован!</target>
       </trans-unit>
       <trans-unit id="4" resname="locked_explanation">
         <source>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; on the command line.</source>
-        <target>Z bezpečnostních důvodů byl Instalační nástroj uzamčen, protože bylo třikrát po sobě zadáno špatné heslo. Instalační nástroj můžete odemknout přes Správce Contaa nebo použitím příkazu &lt;code&gt;contao:install:unlock&lt;/code&gt;na Příkazovém řádku. </target>
+        <target>В целях безопасности, мастер установки Contao заблокирован после ввода неправильного пароля, более чем трех раз подряд. Вы можете разблокировать его в Contao Manager или запустив &lt;code&gt;contao:install:unlock&lt;/code&gt; в командной строке.</target>
       </trans-unit>
       <trans-unit id="5" resname="file_permissions_headline">
         <source>PHP is not allowed to write files!</source>
-        <target>PHP není dovolené zapisovat soubory!</target>
+        <target>PHP процессу не разрешено записывать файлы.</target>
       </trans-unit>
       <trans-unit id="6" resname="file_permissions_explanation">
         <source>Your server does not support file access via PHP; most likely PHP runs as Apache module under a different user. Please contact your server administrator and ask him to fix the problem.</source>
-        <target>Váš server nepodporuje přístup k souborům pomocí PHP; nejspíš běží PHP jako modul Apache pod jiným uživatelem. Prosím kontaktujte správce serveru a požádejte ho o odstranění tohoto problému.</target>
+        <target>Сервер не поддерживает доступ к файлам с через PHP; скорее всего, PHP работает как модуль Apache под другим пользователем. Обратитесь к администратору сервера и попросите его решить эту проблему</target>
       </trans-unit>
       <trans-unit id="7" resname="file_permissions_warning">
         <source>&lt;strong&gt;Do not attempt to fix this yourself by making files and folders writable for everyone!&lt;/strong&gt;</source>
-        <target>&lt;strong&gt;Nepokoušejte se to opravit sami tím, že povolíte všem zpracovávat soubory a složky!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Не пытайтесь исправить это самостоятельно, предоставляя файлам и каталогам права доступа на запись 'для всех'!&lt;/strong&gt;</target>
       </trans-unit>
       <trans-unit id="8" resname="accept_license">
         <source>Accept license</source>
-        <target>Souhlasím s licencí</target>
+        <target>Принять лицензию</target>
       </trans-unit>
       <trans-unit id="9" resname="set_password">
         <source>Install tool password</source>
-        <target>Heslo k instalačnímu modulu</target>
+        <target>Пароль для входа в мастер установки</target>
       </trans-unit>
       <trans-unit id="10" resname="set_password_hint">
         <source>Please enter a password to prevent unauthorized access.</source>
-        <target>Změňte prosím výchozí heslo, abyste zabránili neautorizovanému přístupu!</target>
+        <target>Введите пароль для предотвращения несанкционированного доступа.</target>
       </trans-unit>
       <trans-unit id="11" resname="password">
         <source>Password</source>
-        <target>Heslo</target>
+        <target>Пароль</target>
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
-        <target>Zobrazit heslo</target>
+        <target>Показать пароль</target>
       </trans-unit>
       <trans-unit id="13" resname="hide_password">
         <source>Hide password</source>
-        <target>Skrýt heslo</target>
+        <target>Скрыть пароль</target>
       </trans-unit>
       <trans-unit id="14" resname="save_password">
         <source>Save password</source>
-        <target>Uložit heslo</target>
+        <target>Сохранить пароль</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
-        <target>Heslo musí mít nejméně %d znaků!</target>
+        <target>Пароль должен содержать минимум %d символов!</target>
       </trans-unit>
       <trans-unit id="16" resname="login">
         <source>Install tool login</source>
-        <target>Přihlášení k instalačnímu nástroji</target>
+        <target>Вход в мастер установки</target>
       </trans-unit>
       <trans-unit id="17" resname="login_explanation">
         <source>Please enter the install tool password. The install tool password is not the same as the Contao back end password.</source>
-        <target>Vložte prosím heslo pro instalační nástroj. Heslo pro instalační nástroj je totožné s heslem pro vstup do administrace Contao.</target>
+        <target>Введите пароль для входа в мастер установки. Пароль для входа в мастер установки не связан с паролем для входа в панель управления Contao.</target>
       </trans-unit>
       <trans-unit id="18" resname="allow_cookies">
         <source>You have to allow cookies to use Contao.</source>
-        <target>Musíte povolit cookies, abyste mohli používat Contao.</target>
+        <target>Разрешите cookies для использования Contao.</target>
       </trans-unit>
       <trans-unit id="19" resname="login">
         <source>Login</source>
-        <target>Přihlásit se</target>
+        <target>Вход</target>
       </trans-unit>
       <trans-unit id="20" resname="invalid_password">
         <source>Invalid password!</source>
-        <target>Neplatné heslo!</target>
+        <target>Неверный пароль!</target>
       </trans-unit>
       <trans-unit id="21" resname="database_connection">
         <source>Database connection</source>
-        <target>Připojení k databázi</target>
+        <target>Соединение с базой данных</target>
       </trans-unit>
       <trans-unit id="22" resname="database_connected">
         <source>Database connection established.</source>
-        <target>Spojení s databází navázáno.</target>
+        <target>Подключение к базе данных установлено.</target>
       </trans-unit>
       <trans-unit id="23" resname="database_dot_in_dbname">
         <source>The database name must not contain dots!</source>
-        <target>Jméno databáze nesmí obsahovat tečky!</target>
+        <target>Имя базы данных не должно содержать точек!</target>
       </trans-unit>
       <trans-unit id="24" resname="database_could_not_connect">
         <source>Could not connect to the database!</source>
-        <target>Nepodařilo se navázat spojení s databází!</target>
+        <target>Не удалось подключиться к базе данных!</target>
       </trans-unit>
       <trans-unit id="25" resname="database_connection_explain">
         <source>Please enter your database connection parameters.</source>
-        <target>Zadejte prosím nastavení připojení k databázi.</target>
+        <target>Введите настройки соединения с базой данных.</target>
       </trans-unit>
       <trans-unit id="26" resname="database_host">
         <source>Host</source>
-        <target>Poskytovatel</target>
+        <target>Хост</target>
       </trans-unit>
       <trans-unit id="27" resname="database_port">
         <source>Port number</source>
-        <target>Číslo portu</target>
+        <target>Порт</target>
       </trans-unit>
       <trans-unit id="28" resname="database_user">
         <source>Username</source>
-        <target>Uživatelské jméno</target>
+        <target>Имя пользователя</target>
       </trans-unit>
       <trans-unit id="29" resname="database_password">
         <source>Password</source>
-        <target>Heslo</target>
+        <target>Пароль</target>
       </trans-unit>
       <trans-unit id="30" resname="database_name">
         <source>Database name</source>
-        <target>Název databáze</target>
+        <target>Имя базы данных</target>
       </trans-unit>
       <trans-unit id="31" resname="save_settings">
         <source>Save settings</source>
-        <target>Uložit nastavení</target>
+        <target>Сохранить настройки</target>
       </trans-unit>
       <trans-unit id="32" resname="update_tables">
         <source>Update the database</source>
-        <target>Zaktualizovat databázi</target>
+        <target>Обновить базу данных</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
         <source>Here you can update the database schema.</source>
-        <target>Zde můžete vybrat typ databázového schématu.</target>
+        <target>Вы можете обновить схему базы данных.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
-        <target>Databáze je aktuální.</target>
+        <target>База данных обновлена.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
-        <target>Zaktualizovat databázi</target>
+        <target>Обновление базы данных</target>
       </trans-unit>
       <trans-unit id="36" resname="CREATE">
         <source>Create tables</source>
-        <target>Vytvořit nové tabulky</target>
+        <target>Создание таблиц</target>
       </trans-unit>
       <trans-unit id="37" resname="ALTER_TABLE">
         <source>Change tables</source>
-        <target>Změnit tabulky</target>
+        <target>Изменение таблиц</target>
       </trans-unit>
       <trans-unit id="38" resname="ALTER_ADD">
         <source>Add columns</source>
-        <target>Přidat sloupce</target>
+        <target>Добавление колонок</target>
       </trans-unit>
       <trans-unit id="39" resname="ALTER_CHANGE">
         <source>Change columns</source>
-        <target>Změnit sloupce</target>
+        <target>Изменение колонок</target>
       </trans-unit>
       <trans-unit id="40" resname="ALTER_DROP">
         <source>Drop columns</source>
-        <target>Smazat existující sloupce</target>
+        <target>Удаление колонок</target>
       </trans-unit>
       <trans-unit id="41" resname="DROP">
         <source>Drop tables</source>
-        <target>Smazat existující tabulky</target>
+        <target>Удаление таблиц</target>
       </trans-unit>
       <trans-unit id="42" resname="select_all">
         <source>Select all</source>
-        <target>Vybrat vše</target>
+        <target>Выбрать всё</target>
       </trans-unit>
       <trans-unit id="43" resname="template_import">
         <source>Import a template</source>
-        <target>Import předlohy</target>
+        <target>Импорт шаблона</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
-        <target>Vyberte prosím soubor končící na &lt;code&gt;.sql&lt;/code&gt; z adresáře &lt;code&gt;templates&lt;/code&gt;. Všechny stávající data budou smazána! Pokud pouze chcete importovat vzhled, prosím použijte Správce témat v backendu Contaa.</target>
+        <target>Вы можете импортировать файл &lt;code&gt;.sql&lt;/code&gt; из каталога &lt;code&gt;templates&lt;/code&gt;. Все существующие данные будут удалены! Если хотите импортировать только тему веб-сайта, используйте менеджер тем в панели управления Contao.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
-        <target>Import selhal! Je databáze aktuální a soubor předlohy kompatabilní s touto verzí Contaa?</target>
+        <target>Ошибка импорта! Убедитесь в совместимости базы данных и текущего шаблона с используемой версией Contao.</target>
       </trans-unit>
       <trans-unit id="46" resname="import_empty_source">
         <source>Please choose a template file!</source>
-        <target>Vyberte prosím předlohu!</target>
+        <target>Выберите файл шаблона веб-сайта!</target>
       </trans-unit>
       <trans-unit id="47" resname="import_data_will_be_deleted">
         <source>Any existing data will be deleted!</source>
-        <target>Všechna stávající data budou smazána.</target>
+        <target>Все существующие данные будут удалены!</target>
       </trans-unit>
       <trans-unit id="48" resname="imported_on">
         <source>Template imported on %s.</source>
-        <target>Předloha importována %s</target>
+        <target>Шаблон веб-сайта импортирован %s</target>
       </trans-unit>
       <trans-unit id="49" resname="templates">
         <source>Templates</source>
-        <target>Předlohy</target>
+        <target>Шаблоны</target>
       </trans-unit>
       <trans-unit id="50" resname="do_not_truncate">
         <source>Do not truncate the tables</source>
-        <target>Nevymazat tabulky</target>
+        <target>Не очищать таблицы в базе данных</target>
       </trans-unit>
       <trans-unit id="51" resname="import_confirm">
         <source>Any existing data will be deleted! Do you really want to continue?</source>
-        <target>Všechny stávající data budou smazána! Chcete přesto pokračovat?</target>
+        <target>Все существующие данные будут удалены! Вы хотите продолжить?</target>
       </trans-unit>
       <trans-unit id="52" resname="template_save">
         <source>Import template</source>
-        <target>Importovat předlohu</target>
+        <target>Импорт шаблона веб-сайта</target>
       </trans-unit>
       <trans-unit id="53" resname="admin_create">
         <source>Create an admin user</source>
-        <target>Vytvoření účtu administrátora</target>
+        <target>Создание учетной записи администратора</target>
       </trans-unit>
       <trans-unit id="54" resname="admin_create_explain">
         <source>Here you can create an admin user to log into the Contao back end.</source>
-        <target>Zde můžete vytvořit účet administrátora, s nímž se pak můžete přihlásit do backendu Contaa.</target>
+        <target>Вы можете создать пользователя с правами администратора для входа в панель управления Contao.</target>
       </trans-unit>
       <trans-unit id="55" resname="admin_confirm">
         <source>An admin user has been created.</source>
-        <target>Byl vytvořen účet administrátora.</target>
+        <target>Учетная запись администратора создана.</target>
       </trans-unit>
       <trans-unit id="56" resname="admin_username">
         <source>Username</source>
-        <target>Uživatelské jméno</target>
+        <target>Имя пользователя</target>
       </trans-unit>
       <trans-unit id="57" resname="admin_name">
         <source>Name</source>
-        <target>Jméno</target>
+        <target>Имя</target>
       </trans-unit>
       <trans-unit id="58" resname="admin_email">
         <source>E-mail</source>
-        <target>E-Mail</target>
+        <target>E-mail</target>
       </trans-unit>
       <trans-unit id="59" resname="admin_save">
         <source>Create admin user</source>
-        <target>Vytvořit účet administrátora</target>
+        <target>Создать учетную запись администратора</target>
       </trans-unit>
       <trans-unit id="60" resname="admin_error_extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
-        <target>Z bezpečnostních důvodů nemůžete použít následující znaky: #&lt;&gt;()\=</target>
+        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="61" resname="admin_error_no_space">
         <source>The username must not contain any whitespace characters!</source>
-        <target>Uživatelské jméno nesmí obsah žádné mezery!</target>
+        <target>Имя пользователя не должно содержать пробелов!</target>
       </trans-unit>
       <trans-unit id="62" resname="admin_error_email">
         <source>Please enter a valid e-mail address!</source>
-        <target>Prosím zadejte platnou emailovou adresu!</target>
+        <target>Введите действующий e-mail адрес!</target>
       </trans-unit>
       <trans-unit id="63" resname="admin_error_password_match">
         <source>The passwords did not match!</source>
-        <target>Hesla nesouhlasí!</target>
+        <target>Пароли не совпадают!</target>
       </trans-unit>
       <trans-unit id="64" resname="admin_error_password_user">
         <source>Your username and password must not be the same!</source>
-        <target>Vaše uživatelské jméno a heslo se nesmí shodovat!</target>
+        <target>Логин не должен совпадать с паролем!</target>
       </trans-unit>
       <trans-unit id="65" resname="admin_error">
         <source>Please fill in all fields to create an admin user!</source>
-        <target>Pro vytvoření účtu administrátora je třeba vyplnit všechna pole!</target>
+        <target>Заполните все поля для создания учетной записи администратора!</target>
       </trans-unit>
       <trans-unit id="66" resname="congratulations">
         <source>Congratulations!</source>
-        <target>Blahopřejeme Vám!</target>
+        <target>Поздравляем!</target>
       </trans-unit>
       <trans-unit id="67" resname="congratulations_explain">
         <source>You have successfully installed Contao.</source>
-        <target>Úspěšně jste nainstalovali Contao.</target>
+        <target>Вы успешно установили Contao.</target>
       </trans-unit>
       <trans-unit id="68" resname="installation_complete">
         <source>Installation complete</source>
-        <target>Instalace je dokončená</target>
+        <target>Установка завершена</target>
       </trans-unit>
       <trans-unit id="69" resname="installation_complete_explain">
         <source>Now please go to the Contao back end and check the system settings.</source>
-        <target>Nyní prosím přejděte do backendu Contaa a zkontrolujte nastavení systému.</target>
+        <target>Теперь перейдите к панели управления Contao и проверьте настройки системы.</target>
       </trans-unit>
       <trans-unit id="70" resname="back_end">
         <source>Contao back end</source>
-        <target>Backend Contaa</target>
+        <target>Панель управления Contao</target>
       </trans-unit>
       <trans-unit id="71" resname="old_database">
         <source>The database is too old!</source>
-        <target>Vaše databáze je zastaralá!</target>
+        <target>База данных устарела!</target>
       </trans-unit>
       <trans-unit id="72" resname="old_database_explanation">
         <source>You need at least Contao 3.2 to upgrade to Contao 4.</source>
-        <target>Musíte mít přinejmenším Contao 3.2, abyste mohli aktualizovat na Contao 4.</target>
+        <target>Вам необходима как минимум Contao версии 3.2 для обновления до Contao 4.</target>
       </trans-unit>
       <trans-unit id="73" resname="console_explanation">
         <source>A post installation task could not be completed!</source>
-        <target>Bohužel nemohla být provedena jedna z instalačních úloh!</target>
+        <target>Заключительная задача установки не может быть завершена!</target>
       </trans-unit>
       <trans-unit id="74" resname="duplicate_subscriptions">
         <source>Duplicate newsletter subscriptions found:</source>
-        <target>Byly nalezeny následující duplikáty objednávek zpravodaje:</target>
+        <target>Найдены дублирующие подписки на рассылку новостей:</target>
       </trans-unit>
       <trans-unit id="75" resname="duplicates_purged">
         <source>The duplicate entries have been purged automatically. A backup of the original subscriptions has been stored in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</source>
-        <target>Duplikované položky byly automaticky odstraněné. Původní stav byl uložen jako záloha do &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        <target>Дублирующие записи были автоматически очищены. Резервная копия исходных подписок была сохранена в  &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="76" resname="unsupported_version">
         <source>Your database version is not supported!</source>
-        <target>Verze Vaší databáze není podporovaná!</target>
+        <target>Версия базы данных не поддерживается!</target>
       </trans-unit>
       <trans-unit id="77" resname="unsupported_version_explain">
         <source>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</source>
-        <target>Contaa vyžaduje přinejmenším MySQL 5.1.0, Vaše verze je ale %s. Prosím zaktualizujte na vyšší verzi.</target>
+        <target>Contao требует как минимум MySQL 5.1.0 ваша версия %s. Обновите версию вашей базы данных.</target>
       </trans-unit>
       <trans-unit id="78" resname="unsupported_collation">
         <source>The configured collation is not supported!</source>
-        <target>Nastavená koalace není podporovaná!</target>
+        <target>Настроенный параметр сортировки (Collation) не поддерживается!</target>
       </trans-unit>
       <trans-unit id="79" resname="unsupported_collation_explain">
         <source>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Nastavenou koalaci &lt;code&gt;%s&lt;/code&gt;nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Настроенный параметр сортировки (Collation) &lt;code&gt;%s&lt;/code&gt; недоступен на этом сервере. Установите его (рекомендуется) или настройте другой набор символов и параметр сортировки в файле &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="80" resname="unsupported_engine">
         <source>The configured database engine is not supported!</source>
-        <target>Nastavená databáze není podporovaná!</target>
+        <target>Настроенная подсистема хранения (database engine) не поддерживается!</target>
       </trans-unit>
       <trans-unit id="81" resname="unsupported_engine_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Nastavenou databázi &lt;code&gt;%s&lt;/code&gt; nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou databázi v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Настроенная подсистема хранения (database engine) &lt;code&gt;%s&lt;/code&gt; недоступна на этом сервере. Установите её (рекомендуется) или настройте другую в файле &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
-        <target>Neplatná kombinace formy databáze a koalace!</target>
+        <target>Недопустимое сочетание подсистемы хранения (database engine) и параметров сортировки!</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Nastavená databanka &lt;code&gt;%s&lt;/code&gt; nepodporouje utf8mb4. Použijte místo toho InnoDB a nastavte použití jiného kódování znaků a koalic v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Настроенная подсистема хранения (database engine) &lt;code&gt;%s&lt;/code&gt; не поддерживает utf8mb4. Используйте вместо этого InnoDB (рекомендуется) или настройте другой набор символов и сопоставление в файле &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
-        <target>Funkce innodb_large_prefix není povolená!</target>
+        <target>Параметр innodb_large_prefix не включен!</target>
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
-        <target>Funkce &lt;code&gt;innodb_large_prefix&lt;/code&gt;Prosím povolte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
+        <target>Параметр &lt;code&gt;innodb_large_prefix&lt;/code&gt; не включен на сервере. Включите его (рекомендуется) или настройте другой набор символов и сопоставление в файле &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>
-        <target>InnoDB není správně nastavená!</target>
+        <target>InnoDB не настроен правильно!</target>
       </trans-unit>
       <trans-unit id="87" resname="innodb_additional_explain">
         <source>Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the Barracuda file format and the &lt;code&gt;innodb_file_per_table&lt;/code&gt; option.</source>
-        <target>Používání dlouhých předpon v MySQL počínaje verzí 5.7.7 a MariaDB počínaje verzí 10.2 vyžaduje souborový formát barracudy a funkci &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
+        <target>Использование больших префиксов в MySQL до версий 5.7.7 и MariaDB до версий 10.2 требует формат файла Barracuda и опции &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
-        <target>Nelze se přihlásit k databance použitím cesty &lt;code&gt;DATABASE_URL&lt;/code&gt; uvedené v nastavovacím souboru.</target>
+        <target>Не удалось подключиться к базе данных с помощью URL-адреса подключения, найденного в переменной окружения &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
-        <target>Váš server databáze neběží v přísném režimu!</target>
+        <target>Ваш сервер базы данных не запущен в строгом режиме!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
-        <target>Běh MySQL bez přísného režimu může způsobit poničení nebo ztrátu dat. Aktivujte přísný režim ve Vaší &lt;code&gt;my.cnf &lt;/code&gt;a nastavte možnosti připojení následujícím kódem v &lt;code&gt;config/config.yml&lt;/code&gt;:</target>
+        <target>Запуск MySQL в нестрогом режиме может привести к повреждению или усечению данных. Включите строгий режим в файле &lt;code&gt;my.cnf&lt;/code&gt; или настройте параметры подключения в файле &lt;code&gt;config/config.yml&lt;/code&gt; следующим образом:</target>
       </trans-unit>
     </body>
   </file>

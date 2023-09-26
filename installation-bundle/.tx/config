@@ -2,7 +2,7 @@
 host = https://www.transifex.com
 
 [o:contao:p:installation-bundle:r:v4_13-ContaoInstallationBundle]
-file_filter = src/Resources/translations/ContaoInstallationBundle.<lang>.xlf
-source_file = src/Resources/translations/ContaoInstallationBundle.en.xlf
+file_filter = translations/ContaoInstallationBundle.<lang>.xlf
+source_file = translations/ContaoInstallationBundle.en.xlf
 source_lang = en
 
