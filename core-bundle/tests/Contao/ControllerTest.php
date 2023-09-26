@@ -512,7 +512,7 @@ class ControllerTest extends TestCase
     public function testPageStatusIcon(PageModel $pageModel, string $expected): void
     {
         $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
-        $this->assertFileExists(__DIR__.'/../../src/Resources/contao/themes/flexible/icons/'.$expected);
+        $this->assertFileExists(__DIR__.'/../../contao/themes/flexible/icons/'.$expected);
     }
 
     public function pageStatusIconProvider(): \Generator

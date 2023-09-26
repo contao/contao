@@ -95,7 +95,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('commands.yml');
         $loader->load('controller.yml');
         $loader->load('listener.yml');

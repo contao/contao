@@ -1,0 +1,54 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_undo.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_undo.pid.0">
+        <source>User</source>
+        <target>Benutzer</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.pid.1">
+        <source>Name of the associated user</source>
+        <target>Name des zugehörigen Benutzers</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.fromTable.0">
+        <source>Source</source>
+        <target>Quelle</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.fromTable.1">
+        <source>Name of the original table</source>
+        <target>Name der ursprünglichen Tabelle</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.affectedRows.0">
+        <source>Affected rows</source>
+        <target>Enthaltene Datensätze</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.affectedRows.1">
+        <source>Number of records included in the undo step</source>
+        <target>Anzahl der im Undo-Schritt enthaltenen Datensätze</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.query.0">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.query.1">
+        <source>Details of the undo step</source>
+        <target>Details des Undo-Schritts</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.data.0">
+        <source>Data</source>
+        <target>Daten</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.data.1">
+        <source>Raw data of the undo step</source>
+        <target>Rohdaten des Undo-Schritts</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
+        <target>Element ID %s wiederherstellen</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
+        <target>Den Ursprung von %s ID %s anzeigen</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -11,8 +11,6 @@
       <directory>./newsletter-bundle/src</directory>
     </include>
     <exclude>
-      <directory>./core-bundle/src/Resources</directory>
-      <directory>./manager-bundle/src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>

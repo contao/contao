@@ -81,7 +81,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $container->set('translator', $translator);
         $container->setParameter('kernel.project_dir', \dirname(__DIR__, 3));
 
-        TemplateLoader::addFile('be_wildcard', 'src/Resources/contao/templates/backend');
+        TemplateLoader::addFile('be_wildcard', 'contao/templates/backend');
 
         $controller = new RootPageDependentModulesController();
         $controller->setContainer($container);

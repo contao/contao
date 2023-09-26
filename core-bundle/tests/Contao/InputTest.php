@@ -30,7 +30,7 @@ class InputTest extends TestCase
     {
         parent::setUp();
 
-        include __DIR__.'/../../src/Resources/contao/config/default.php';
+        include __DIR__.'/../../contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 

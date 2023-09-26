@@ -1,0 +1,222 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_settings.adminEmail.0">
+        <source>E-mail address of the system administrator</source>
+        <target>E-Mail-Adresse des Systemadministrators</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.adminEmail.1">
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Diese E-Mail-Adresse wird benutzt, um Systemnachrichten zu senden und zu empfangen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.0">
+        <source>Date format</source>
+        <target>Datumsformat</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>Der Datumsformat-String wird mit der PHP-Funktion date() geparst.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.0">
+        <source>Time format</source>
+        <target>Zeitformat</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>Der Zeitformat-String wird mit der PHP-Funktion date() geparst.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Datums- und Zeitformat</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>Der Datums- und Zeitformat-String wird mit der PHP-Funktion date() geparst.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.0">
+        <source>Time zone</source>
+        <target>Zeitzone</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.1">
+        <source>Please select the server time zone.</source>
+        <target>Bitte wählen Sie die Zeitzone des Servers aus.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableCron.0">
+        <source>Disable the command scheduler</source>
+        <target>Den Command-Scheduler deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableCron.1">
+        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>Den Periodic Command Scheduler deaktivieren und die &lt;em&gt;_contao/cron&lt;/em&gt;-Route mittels eines echten Cronjobs (den Sie selbst einrichten müssen) ausführen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.0">
+        <source>Items per page</source>
+        <target>Elemente pro Seite</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.1">
+        <source>Here you can define the number of items per page in the back end.</source>
+        <target>Hier können Sie die Anzahl der Datensätze pro Seite im Backend festlegen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.0">
+        <source>Maximum items per page</source>
+        <target>Maximum Datensätze pro Seite</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.1">
+        <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
+        <target>Hier legen Sie fest, wie viele Datensätze maximal angezeigt werden, wenn ein Benutzer die Option &quot;alle Datensätze anzeigen&quot; auswählt.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotCollapse.0">
+        <source>Do not collapse elements</source>
+        <target>Elemente nicht verkürzen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotCollapse.1">
+        <source>Do not collapse elements in the back end preview.</source>
+        <target>Elemente in der Backend-Vorschau nicht verkürzen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.0">
+        <source>Allowed HTML tags</source>
+        <target>Erlaubte HTML-Tags</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.1">
+        <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
+        <target>Hier können Sie eine Liste erlaubter HTML-Tags eingeben, die nicht entfernt werden sollen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+        <target>Erlaubte HTML-Attribute</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Liste der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>&lt;code&gt;*&lt;/code&gt;-Attribute können für XSS-Angriffe missbraucht werden. Erlauben Sie diese nur, wenn alle Backend-Benutzer vertrauenswürdig sind!</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableRefererCheck.0">
+        <source>Disable request tokens</source>
+        <target>Anfrage-Tokens deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableRefererCheck.1">
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>Das Anfrage-Token beim Absenden eines Formulars nicht prüfen (unsicher!).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.0">
+        <source>Download file types</source>
+        <target>Erlaubte Download-Dateitypen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.1">
+        <source>Here you can enter a comma separated list of downloadable file types.</source>
+        <target>Hier können Sie eine kommagetrennte Liste von Dateitypen eingeben, die über Contao heruntergeladen werden dürfen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgWidth.0">
+        <source>Maximum GD image width</source>
+        <target>Maximale GD-Bildbreite</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgWidth.1">
+        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
+        <target>Hier können Sie die maximale Bildbreite eingeben, die die GD Library zu verarbeiten versuchen soll.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgHeight.0">
+        <source>Maximum GD image height</source>
+        <target>Maximale GD-Bildhöhe</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgHeight.1">
+        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
+        <target>Hier können Sie die maximale Bildhöhe eingeben, die die GD Library zu verarbeiten versuchen soll.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.0">
+        <source>Upload file types</source>
+        <target>Erlaubte Upload-Dateitypen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.1">
+        <source>Here you can enter a comma separated list of uploadable file types.</source>
+        <target>Hier können Sie eine kommagetrennte Liste von Dateitypen eingeben, die über Contao hochgeladen werden dürfen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.0">
+        <source>Maximum upload file size</source>
+        <target>Maximale Upload-Dateigröße</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.1">
+        <source>Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).</source>
+        <target>Hier können Sie die maximale Upload-Dateigröße in Bytes eingeben (1 MB = 1000 kB = 1000000 Byte).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.0">
+        <source>Maximum image width</source>
+        <target>Maximale Bildbreite</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels.</source>
+        <target>Hier können Sie die maximale Breite für Bild-Uploads in Pixeln festlegen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.0">
+        <source>Maximum image height</source>
+        <target>Maximale Bildhöhe</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels.</source>
+        <target>Hier können Sie die maximale Höhe für Bild-Uploads in Pixeln festlegen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.0">
+        <source>Default page owner</source>
+        <target>Standardbesitzer</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.1">
+        <source>Here you can select a user as the default owner of a page.</source>
+        <target>Bitte wählen Sie einen Benutzer als Standardbesitzer einer Seite aus.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.0">
+        <source>Default page group</source>
+        <target>Standardgruppe</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.1">
+        <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Hier können Sie eine Benutzergruppe als Standardbesitzer einer Seite auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.0">
+        <source>Default access rights</source>
+        <target>Standard-Zugriffsrechte</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.1">
+        <source>Please assign the default access rights for pages and articles.</source>
+        <target>Bitte legen Sie die Standardzugriffsrechte für Seiten und Artikel fest.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.date_legend">
+        <source>Date and time</source>
+        <target>Datum und Zeit</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.global_legend">
+        <source>Global configuration</source>
+        <target>Globale Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.backend_legend">
+        <source>Back end configuration</source>
+        <target>Backend-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.security_legend">
+        <source>Security settings</source>
+        <target>Sicherheitseinstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.files_legend">
+        <source>Files and images</source>
+        <target>Dateien und Bilder</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploads_legend">
+        <source>Upload settings</source>
+        <target>Datei-Uploads</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+        <target>Cronjob-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.chmod_legend">
+        <source>Default access rights</source>
+        <target>Standard-Zugriffsrechte</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Diese Einstellung wurde in der App-Konfiguration definiert und kann daher hier nicht mehr geändert werden.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

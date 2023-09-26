@@ -274,7 +274,7 @@ class RoutingTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.7: Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated %s.');
 
-        include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
+        include_once __DIR__.'/../../contao/helper/functions.php';
 
         $_SERVER['REQUEST_URI'] = 'home/foo.html';
 
