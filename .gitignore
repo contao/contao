@@ -25,6 +25,3 @@
 
 # CS fixer
 /.php_cs.cache
-
-# Ignore the symlinks required for upstream merging
-/*-bundle/src/Resources/

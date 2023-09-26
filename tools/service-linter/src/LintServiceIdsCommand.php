@@ -39,6 +39,7 @@ class LintServiceIdsCommand extends Command
         'contao_core' => 'contao',
         'event_listener' => 'listener',
         'http_kernel' => '',
+        'util' => '',
     ];
 
     /**
@@ -74,7 +75,8 @@ class LintServiceIdsCommand extends Command
             ->files()
             ->name('*.yaml')
             ->name('*.yml')
-            ->path('src/Resources/config')
+            ->path('config')
+            ->exclude('vendor')
             ->in($this->projectDir)
         ;
 
