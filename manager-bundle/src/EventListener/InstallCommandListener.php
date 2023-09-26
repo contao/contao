@@ -40,7 +40,7 @@ class InstallCommandListener
 
         (new Filesystem())
             ->copy(
-                __DIR__.'/../Resources/skeleton/system/initialize.php',
+                __DIR__.'/../../skeleton/system/initialize.php',
                 Path::join($this->projectDir, 'system/initialize.php'),
                 true
             )

@@ -1,13 +1,13 @@
 <?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoManagerBundle.en.xlf" target-language="sv">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoManagerBundle.en.xlf" target-language="nl">
     <body>
       <trans-unit id="1" resname="debug_mode">
         <source>Debug mode</source>
-        <target>Felsökningsläge</target>
+        <target>Debug modus</target>
       </trans-unit>
       <trans-unit id="2" resname="contao_manager_title">
         <source>Manage updates and extensions and maintain the application</source>
-        <target>Hantera uppdateringar och tillägg och underhåll applikationen</target>
+        <target>Beheer updates en extensies, en onderhoud de applicatie</target>
       </trans-unit>
     </body>
   </file>
