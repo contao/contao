@@ -13,7 +13,6 @@
     <exclude>
       <directory>./core-bundle/src/Resources</directory>
       <directory>./manager-bundle/src/Resources</directory>
-      <directory>./newsletter-bundle/src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>
