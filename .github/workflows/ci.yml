@@ -49,8 +49,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
 
     phpstan:
         name: PHPStan

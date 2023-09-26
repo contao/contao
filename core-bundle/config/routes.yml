@@ -1,5 +1,5 @@
 contao:
-    resource: '@ContaoCoreBundle/Controller'
+    resource: '@ContaoCoreBundle/src/Controller'
     type: annotation
 
 contao_images:

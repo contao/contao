@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\Tools\ServiceIdLinter;
+namespace Contao\Tools\ServiceLinter;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
@@ -41,6 +41,7 @@ class LintServiceIdsCommand extends Command
         'contao_core' => 'contao',
         'event_listener' => 'listener',
         'http_kernel' => '',
+        'util' => '',
     ];
 
     /**
@@ -78,7 +79,8 @@ class LintServiceIdsCommand extends Command
             ->files()
             ->name('*.yaml')
             ->name('*.yml')
-            ->path('src/Resources/config')
+            ->path('config')
+            ->exclude('vendor')
             ->in($this->projectDir)
         ;
 

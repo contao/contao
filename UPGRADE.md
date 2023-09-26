@@ -315,7 +315,7 @@ More information: https://github.com/contao/core-bundle/issues/118
 ### system/runonce.php
 
 The `system/runonce.php` file is no longer supported. If you need to set up a
-`runonce.php` file, put it in the `src/Resources/contao/config/` directory.
+`runonce.php` file, put it in the `contao/config/` directory.
 
 ### DcaExtractor
 

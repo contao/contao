@@ -13,17 +13,13 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
 
     $ecsConfig->skip([
-        '*/Fixtures/system/*',
-        '*/Resources/contao/*',
-        'maker-bundle/src/Resources/skeleton/*',
+        '*-bundle/contao/*',
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
-            '*/Resources/config/*.php',
         ],
         TypeHintOrderFixer::class,
         UnusedVariableSniff::class => [
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',
-            'manager-bundle/src/Resources/skeleton/*.php',
         ],
     ]);
 
