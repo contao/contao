@@ -47,6 +47,6 @@ class ClassGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__, '../../skeleton', $path);
     }
 }

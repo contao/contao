@@ -208,7 +208,7 @@ class MakeDcaCallback extends AbstractMaker
      */
     private function getTargets(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/callbacks.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/callbacks.yaml');
         $targets = [];
 
         foreach ($yaml['callbacks'] as $key => $config) {
