@@ -573,7 +573,7 @@ class TwigMacrosTest extends TestCase
     {
         $templates = [
             '_macros.html.twig' => file_get_contents(
-                Path::canonicalize(__DIR__.'/../../../views/Image/Studio/_macros.html.twig')
+                Path::canonicalize(__DIR__.'/../../../templates/Image/Studio/_macros.html.twig')
             ),
             'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
