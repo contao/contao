@@ -211,7 +211,7 @@
             "core-bundle/src/Resources/contao/",
             "faq-bundle/src/Resources/contao/",
             "listing-bundle/src/Resources/contao/",
-            "news-bundle/src/Resources/contao/",
+            "news-bundle/contao/",
             "newsletter-bundle/src/Resources/contao/"
         ],
         "exclude-from-classmap": [
@@ -237,10 +237,10 @@
             "listing-bundle/src/Resources/contao/dca/",
             "listing-bundle/src/Resources/contao/languages/",
             "listing-bundle/src/Resources/contao/templates/",
-            "news-bundle/src/Resources/contao/config/",
-            "news-bundle/src/Resources/contao/dca/",
-            "news-bundle/src/Resources/contao/languages/",
-            "news-bundle/src/Resources/contao/templates/",
+            "news-bundle/contao/config/",
+            "news-bundle/contao/dca/",
+            "news-bundle/contao/languages/",
+            "news-bundle/contao/templates/",
             "newsletter-bundle/src/Resources/contao/config/",
             "newsletter-bundle/src/Resources/contao/dca/",
             "newsletter-bundle/src/Resources/contao/languages/",

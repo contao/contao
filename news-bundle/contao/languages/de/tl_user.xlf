@@ -1,33 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en">
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_user.news.0">
         <source>Allowed archives</source>
+        <target>Erlaubte Archive</target>
       </trans-unit>
       <trans-unit id="tl_user.news.1">
         <source>Here you can grant access to one or more news archives.</source>
+        <target>Hier können Sie den Zugriff auf ein oder mehrere Nachrichten-Archive erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News archive permissions</source>
+        <target>Archivrechte</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news archive permissions.</source>
+        <target>Hier können Sie die Berechtigungen für das Nachrichtenarchiv festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
+        <target>Erlaubte News-Feeds</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
+        <target>Hier können Sie den Zugriff auf einen oder mehrere News-Feeds erlauben.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>News feed permissions</source>
+        <target>News-Feed-Rechte</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>
+        <target>Hier können Sie die News-Feed-Rechte festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
+        <target>Archivrechte</target>
       </trans-unit>
     </body>
   </file>
