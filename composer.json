@@ -206,7 +206,7 @@
             "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
-            "calendar-bundle/src/Resources/contao/",
+            "calendar-bundle/contao/",
             "comments-bundle/src/Resources/contao/",
             "core-bundle/src/Resources/contao/",
             "faq-bundle/src/Resources/contao/",
@@ -215,10 +215,10 @@
             "newsletter-bundle/src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "calendar-bundle/src/Resources/contao/config/",
-            "calendar-bundle/src/Resources/contao/dca/",
-            "calendar-bundle/src/Resources/contao/languages/",
-            "calendar-bundle/src/Resources/contao/templates/",
+            "calendar-bundle/contao/config/",
+            "calendar-bundle/contao/dca/",
+            "calendar-bundle/contao/languages/",
+            "calendar-bundle/contao/templates/",
             "comments-bundle/src/Resources/contao/config/",
             "comments-bundle/src/Resources/contao/dca/",
             "comments-bundle/src/Resources/contao/languages/",
