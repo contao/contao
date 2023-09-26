@@ -2,27 +2,27 @@
 host = https://www.transifex.com
 
 [o:contao:p:comments-bundle:r:v4_13-default]
-file_filter = src/Resources/contao/languages/<lang>/default.xlf
-source_file = src/Resources/contao/languages/en/default.xlf
+file_filter = contao/languages/<lang>/default.xlf
+source_file = contao/languages/en/default.xlf
 source_lang = en
 
 [o:contao:p:comments-bundle:r:v4_13-modules]
-file_filter = src/Resources/contao/languages/<lang>/modules.xlf
-source_file = src/Resources/contao/languages/en/modules.xlf
+file_filter = contao/languages/<lang>/modules.xlf
+source_file = contao/languages/en/modules.xlf
 source_lang = en
 
 [o:contao:p:comments-bundle:r:v4_13-tl_comments]
-file_filter = src/Resources/contao/languages/<lang>/tl_comments.xlf
-source_file = src/Resources/contao/languages/en/tl_comments.xlf
+file_filter = contao/languages/<lang>/tl_comments.xlf
+source_file = contao/languages/en/tl_comments.xlf
 source_lang = en
 
 [o:contao:p:comments-bundle:r:v4_13-tl_content]
-file_filter = src/Resources/contao/languages/<lang>/tl_content.xlf
-source_file = src/Resources/contao/languages/en/tl_content.xlf
+file_filter = contao/languages/<lang>/tl_content.xlf
+source_file = contao/languages/en/tl_content.xlf
 source_lang = en
 
 [o:contao:p:comments-bundle:r:v4_13-tl_module]
-file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
-source_file = src/Resources/contao/languages/en/tl_module.xlf
+file_filter = contao/languages/<lang>/tl_module.xlf
+source_file = contao/languages/en/tl_module.xlf
 source_lang = en
 
