@@ -106,7 +106,7 @@ class FileDownloadHelper
             return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
         }
 
-        if (null !== $onProcess) {
+        if ($onProcess) {
             $context = StringUtil::deserialize($request->query->get(self::PARAM_CONTEXT, ''), true);
             $response = $onProcess($file, $context);
 
