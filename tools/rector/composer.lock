@@ -4,8 +4,55 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "797153aba7d1111e0c5d748525f64d77",
+    "content-hash": "94f9921d24a41c45381dd416dc240a0f",
     "packages": [
+        {
+            "name": "contao/rector",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contao/rector.git",
+                "reference": "bca1236795d25c15be9aa106c75ddb4d6a8a870c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contao/rector/zipball/bca1236795d25c15be9aa106c75ddb4d6a8a870c",
+                "reference": "bca1236795d25c15be9aa106c75ddb4d6a8a870c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "rector/rector": "^0.18"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Contao\\Rector\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Leo Feyer",
+                    "homepage": "https://github.com/leofeyer"
+                }
+            ],
+            "description": "Rector configurations for Contao",
+            "support": {
+                "issues": "https://github.com/contao/rector/issues",
+                "source": "https://github.com/contao/rector/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://to.contao.org/donate",
+                    "type": "custom"
+                }
+            ],
+            "time": "2023-09-27T14:18:08+00:00"
+        },
         {
             "name": "phpstan/phpstan",
             "version": "1.10.35",
