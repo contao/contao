@@ -17,6 +17,7 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BinaryOp\NotIdentical;
 use PhpParser\Node\Expr\BooleanNot;
+use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Core\Rector\AbstractRector;
 use Rector\TypeDeclaration\TypeAnalyzer\NullableTypeAnalyzer;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -24,8 +25,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 final class SimplifyObjectOrNullCheckRector extends AbstractRector
 {
-    public function __construct(private readonly NullableTypeAnalyzer $nullableTypeAnalyzer)
-    {
+    public function __construct(
+        private readonly NullableTypeAnalyzer $nullableTypeAnalyzer,
+        private readonly ValueResolver $valueResolver,
+    ) {
     }
 
     public function getRuleDefinition(): RuleDefinition
