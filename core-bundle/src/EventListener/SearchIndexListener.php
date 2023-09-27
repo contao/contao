@@ -94,10 +94,6 @@ class SearchIndexListener
         }
 
         // If there are no json ld scripts at all, this should not be handled by our indexer
-        if (!$document->extractJsonLdScripts()) {
-            return false;
-        }
-
-        return true;
+        return [] !== $document->extractJsonLdScripts();
     }
 }

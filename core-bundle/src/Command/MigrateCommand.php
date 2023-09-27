@@ -579,9 +579,9 @@ class MigrateCommand extends Command
 
             if (
                 // The InnoDB file format is not Barracuda
-                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting)) ||
+                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting))
                 // The innodb_file_per_table option is disabled
-                (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
+                || (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
             ) {
                 $errors[] =
                     <<<'EOF'

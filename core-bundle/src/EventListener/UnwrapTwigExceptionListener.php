@@ -27,8 +27,8 @@ class UnwrapTwigExceptionListener
     public function __invoke(ExceptionEvent $event): void
     {
         if (
-            !($throwable = $event->getThrowable()) instanceof RuntimeError ||
-            !($previous = $throwable->getPrevious()) instanceof ResponseException
+            !($throwable = $event->getThrowable()) instanceof RuntimeError
+            || !($previous = $throwable->getPrevious()) instanceof ResponseException
         ) {
             return;
         }
