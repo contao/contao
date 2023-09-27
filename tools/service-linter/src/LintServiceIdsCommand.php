@@ -75,9 +75,16 @@ class LintServiceIdsCommand extends Command
             ->files()
             ->name('*.yaml')
             ->name('*.yml')
-            ->path('config')
-            ->exclude('vendor')
-            ->in($this->projectDir)
+            ->in([
+                $this->projectDir.'/calendar-bundle/config',
+                $this->projectDir.'/comments-bundle/config',
+                $this->projectDir.'/core-bundle/config',
+                $this->projectDir.'/faq-bundle/config',
+                $this->projectDir.'/maker-bundle/config',
+                $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/news-bundle/config',
+                $this->projectDir.'/newsletter-bundle/config',
+            ])
         ;
 
         $hasError = false;

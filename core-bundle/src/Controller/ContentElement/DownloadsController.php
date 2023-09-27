@@ -129,8 +129,8 @@ class DownloadsController extends AbstractContentElementController
             $filesystemItems = $filesystemItems->filter(
                 static fn (FilesystemItem $item): bool =>
                     /** @var MetadataBag|null $metadata */
-                    null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null) &&
-                    null !== $metadata->getDefault()
+                    null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
+                    && null !== $metadata->getDefault()
             );
         }
 
