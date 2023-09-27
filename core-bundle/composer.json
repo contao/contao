@@ -160,6 +160,7 @@
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
         "symfony/dependency-injection": "5.4.16 || 6.0.16 || 6.1.8 || 6.2.0 || 6.2.1",
+        "symfony/doctrine-bridge": "<5.4.3",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },
