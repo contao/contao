@@ -36,6 +36,11 @@ class DefaultOperationsListener
 
     public function __invoke(string $table): void
     {
+        // Do not add default operations if a DCA was "loaded" that does not exist
+        if (!isset($GLOBALS['TL_DCA'][$table])) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
     }
 
