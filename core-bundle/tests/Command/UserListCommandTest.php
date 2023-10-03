@@ -16,6 +16,8 @@ use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\UserModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\Table;
@@ -106,62 +108,21 @@ class UserListCommandTest extends TestCase
 
     private function getCommand(): UserListCommand
     {
-        $collection = new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user');
-
-        $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
-        $userModelAdapter
-            ->method('findAll')
-            ->willReturn($collection, null)
+        $qb = $this->createMock(QueryBuilder::class);
+        $qb
+            ->method('select')
+            ->willReturnSelf()
         ;
 
-        $collection = new Collection([$this->mockAdminUser()], 'tl_user');
-
-        $userModelAdapter
-            ->method('findBy')
-            ->with('admin', '1')
-            ->willReturn($collection, null)
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createQueryBuilder')
+            ->willReturn($qb)
         ;
 
-        $command = new UserListCommand($this->mockContaoFramework([UserModel::class => $userModelAdapter]));
+        $command = new UserListCommand($connection);
         $command->setApplication(new Application());
 
         return $command;
-    }
-
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockContaoUser(): UserModel
-    {
-        $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = 2;
-        $userModel->username = 'j.doe';
-        $userModel->name = 'John Doe';
-
-        $userModel
-            ->method('row')
-            ->willReturn((array) $userModel)
-        ;
-
-        return $userModel;
-    }
-
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockAdminUser(): UserModel
-    {
-        $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = 1;
-        $userModel->username = 'j.doe';
-        $userModel->name = 'John Doe';
-        $userModel->admin = '1';
-
-        $userModel
-            ->method('row')
-            ->willReturn((array) $userModel)
-        ;
-
-        return $userModel;
     }
 }
