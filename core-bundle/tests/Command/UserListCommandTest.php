@@ -14,11 +14,8 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Model\Collection;
-use Contao\UserModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
