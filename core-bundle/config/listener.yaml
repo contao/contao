@@ -579,8 +579,9 @@ services:
     contao.listener.unwrap_twig_exception:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
         tags:
-            # The priority must be higher than the exception converter listener (defaults to 96)
-            - { name: kernel.event_listener, priority: 128 }
+            # The priority must be higher than the Symfony exception converter listener (defaults to 96)
+            # and higher than the Sentry error listener (defaults to 128)
+            - { name: kernel.event_listener, priority: 256 }
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
