@@ -188,6 +188,8 @@ class Form extends Hybrid
 					$arrFields[] = $objFields->current();
 				}
 			}
+
+			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields

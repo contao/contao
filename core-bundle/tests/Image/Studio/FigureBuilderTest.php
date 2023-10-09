@@ -1115,6 +1115,17 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder
+                    ->setLinkHref('https://exampe.com/this-is-no-image')
+                    ->enableLightbox()
+                ;
+            },
+        );
+
+        $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
+
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder
                     ->setLightboxResourceOrUrl('https://exampe.com/this-is-no-image')
                     ->enableLightbox()
                 ;
