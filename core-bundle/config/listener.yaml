@@ -594,9 +594,8 @@ services:
     contao.listener.unwrap_twig_exception:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
         tags:
-            # The priority must be higher than the exception converter listener (defaults to 96)
-            # For better integration with the popular error tracking sentry.io we use 256 as their own error listener
-            # defaults to 128
+            # The priority must be higher than the Symfony exception converter listener (defaults to 96)
+            # and higher than the Sentry error listener (defaults to 128)
             - { name: kernel.event_listener, priority: 256 }
 
     contao.listener.widget.custom_rgxp:
