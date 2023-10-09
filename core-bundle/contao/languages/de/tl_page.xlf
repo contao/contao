@@ -97,6 +97,14 @@
         <source>Please choose the redirect type.</source>
         <target>Bitte wählen Sie den Typ der Weiterleitung.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Immer weiterleiten</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Weiterleitung zur Zielseite, auch wenn Query- oder Pfadparameter vorhanden sind.</target>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Weiterleitungsseite</target>

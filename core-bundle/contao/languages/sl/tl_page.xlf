@@ -94,6 +94,12 @@
         <source>Please choose the redirect type.</source>
         <target>Prosimo, izberite tip preusmeritve.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Pojdi na stran</target>

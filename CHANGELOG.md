@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.3] (2023-10-09)
+
+**Fixed issues:**
+
+- [#6405] Increase the `UnwrapTwigExceptionListener` priority ([Toflar])
+- [#6416] Fix the newsletter "delete" permission constant ([aschempp])
+- [#6400] Convert dates into the HTML5 format in the FormText widget ([leofeyer])
+- [#6414] Do not add default operations when loading a non-existent DCA ([aschempp])
+- [#6399] Only notify about rejected recipients if there are any ([leofeyer])
+
 ## [5.2.2] (2023-08-31)
 
 **Fixed issues:**
@@ -89,6 +99,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.3]: https://github.com/contao/contao/releases/tag/5.2.3
 [5.2.2]: https://github.com/contao/contao/releases/tag/5.2.2
 [5.2.1]: https://github.com/contao/contao/releases/tag/5.2.1
 [5.2.0]: https://github.com/contao/contao/releases/tag/5.2.0
@@ -145,3 +156,8 @@ This project adheres to [Semantic Versioning].
 [#6282]: https://github.com/contao/contao/pull/6282
 [#6329]: https://github.com/contao/contao/pull/6329
 [#6351]: https://github.com/contao/contao/pull/6351
+[#6399]: https://github.com/contao/contao/pull/6399
+[#6400]: https://github.com/contao/contao/pull/6400
+[#6405]: https://github.com/contao/contao/pull/6405
+[#6414]: https://github.com/contao/contao/pull/6414
+[#6416]: https://github.com/contao/contao/pull/6416

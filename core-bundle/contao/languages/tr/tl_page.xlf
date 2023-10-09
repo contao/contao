@@ -97,6 +97,14 @@
         <source>Please choose the redirect type.</source>
         <target>Lütfen yönlendirme türünü seçin.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Her zaman yönlendirilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Bu seçenek etkinleştirildiğinde, adreste sorgu ya da yol parametreleri olsa bile hedef sayfaya yönlendirme yapılır.</target>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Yönlendirilecek sayfa</target>

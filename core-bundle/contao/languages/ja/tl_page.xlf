@@ -97,6 +97,14 @@
         <source>Please choose the redirect type.</source>
         <target>リダイレクトの方法を選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>常にリダイレクト</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>問い合わせやパスのパラメーターがある場合でも、目的のページに移動します。</target>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>リダイレクト先のページ</target>
