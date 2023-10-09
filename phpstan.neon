@@ -34,7 +34,6 @@ parameters:
         - Contao\Template
 
     excludePaths:
-        - %currentWorkingDirectory%/*-bundle/src/Resources/*
         - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*
         - %currentWorkingDirectory%/core-bundle/tests/Functional/app/*
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*

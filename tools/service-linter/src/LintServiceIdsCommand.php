@@ -39,6 +39,7 @@ class LintServiceIdsCommand extends Command
         'contao_core' => 'contao',
         'event_listener' => 'listener',
         'http_kernel' => '',
+        'util' => '',
     ];
 
     /**
@@ -74,8 +75,16 @@ class LintServiceIdsCommand extends Command
             ->files()
             ->name('*.yaml')
             ->name('*.yml')
-            ->path('src/Resources/config')
-            ->in($this->projectDir)
+            ->in([
+                $this->projectDir.'/calendar-bundle/config',
+                $this->projectDir.'/comments-bundle/config',
+                $this->projectDir.'/core-bundle/config',
+                $this->projectDir.'/faq-bundle/config',
+                $this->projectDir.'/maker-bundle/config',
+                $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/news-bundle/config',
+                $this->projectDir.'/newsletter-bundle/config',
+            ])
         ;
 
         $hasError = false;

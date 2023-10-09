@@ -13,12 +13,6 @@ services:
         tags:
             - { name: contao.hook, hook: getSystemMessages }
 
-    contao.listener.data_container.backend_favorites:
-        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -68,6 +62,12 @@ services:
             - '%contao.csrf_cookie_prefix%'
         tags:
             - kernel.event_subscriber
+
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
 
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
@@ -382,11 +382,6 @@ services:
         tags:
             - { name: kernel.event_listener, priority: -48 }
 
-    contao.listener.messenger.worker:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
@@ -581,6 +576,13 @@ services:
             - kernel.event_subscriber
             - { name: kernel.reset, method: reset }
 
+    contao.listener.unwrap_twig_exception:
+        class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
+        tags:
+            # The priority must be higher than the Symfony exception converter listener (defaults to 96)
+            # and higher than the Sentry error listener (defaults to 128)
+            - { name: kernel.event_listener, priority: 256 }
+
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:
@@ -590,13 +592,6 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
-
-    contao.listener.unwrap_twig_exception:
-        class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
-        tags:
-            # The priority must be higher than the Symfony exception converter listener (defaults to 96)
-            # and higher than the Sentry error listener (defaults to 128)
-            - { name: kernel.event_listener, priority: 256 }
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
@@ -614,3 +609,8 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.messenger.worker_listener:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'
