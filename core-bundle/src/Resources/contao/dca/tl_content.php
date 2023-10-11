@@ -897,7 +897,7 @@ if (Input::get('do') == 'article')
  */
 class tl_content extends Backend
 {
-	private static $cteAliasCache = null;
+	private static $cteAliasCache;
 
 	/**
 	 * Import the back end user object
@@ -2037,7 +2037,8 @@ class tl_content extends Backend
 
 	private function getAliasReferences(): array
 	{
-		if (null === self::$cteAliasCache) {
+		if (null === self::$cteAliasCache)
+		{
 			$connection = System::getContainer()->get('database_connection');
 			self::$cteAliasCache = array_flip($connection->fetchFirstColumn("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias"));
 		}
