@@ -542,6 +542,7 @@ class Email
 		// Sender
 		if ($this->objMessage instanceof EmailMessage)
 		{
+			$this->objMessage->sender(new Address($this->strSender, $this->strSenderName ?? ''));
 			$this->objMessage->from(new Address($this->strSender, $this->strSenderName ?? ''));
 		}
 		elseif ($this->strSenderName)
