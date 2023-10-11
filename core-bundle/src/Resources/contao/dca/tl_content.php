@@ -897,6 +897,8 @@ if (Input::get('do') == 'article')
  */
 class tl_content extends Backend
 {
+	private static $cteAliasCache = null;
+
 	/**
 	 * Import the back end user object
 	 */
@@ -1100,25 +1102,19 @@ class tl_content extends Backend
 	 */
 	public function preserveReferenced()
 	{
-		if (Input::get('act') == 'delete')
-		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND (ptable='tl_article' OR ptable='')")
-									 ->execute(Input::get('id'));
+		$aliasRefs = $this->getAliasReferences();
+		$id = Contao\Input::get('id');
 
-			if ($objCes->cnt > 0)
-			{
-				throw new InternalServerErrorException('Content element ID ' . Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
-			}
+		if (Contao\Input::get('act') == 'delete' && isset($aliasRefs[$id]))
+		{
+			throw new InternalServerErrorException('Content element ID ' . Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
 		}
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='')")
-									 ->execute();
-
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
+			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], array_map('intval', array_keys($aliasRefs)));
 			$objSession->replace($session);
 		}
 	}
@@ -1876,11 +1872,9 @@ class tl_content extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
-									 ->limit(1)
-									 ->execute($row['id']);
+		$aliasRefs = $this->getAliasReferences();
 
-		return $objElement->numRows ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+		return isset($aliasRefs[(int) $row['id']]) ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -2039,5 +2033,16 @@ class tl_content extends Backend
 		}
 
 		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+	}
+
+	private function getAliasReferences(): array
+	{
+		if (null === self::$cteAliasCache) {
+			/** @var Connection $connection */
+			$connection = System::getContainer()->get('database_connection');
+			self::$cteAliasCache = array_flip($connection->fetchFirstColumn("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias"));
+		}
+
+		return self::$cteAliasCache;
 	}
 }
