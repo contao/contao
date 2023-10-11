@@ -1103,11 +1103,11 @@ class tl_content extends Backend
 	public function preserveReferenced()
 	{
 		$aliasRefs = $this->getAliasReferences();
-		$id = Contao\Input::get('id');
+		$id = Input::get('id');
 
-		if (Contao\Input::get('act') == 'delete' && isset($aliasRefs[$id]))
+		if (Input::get('act') == 'delete' && isset($aliasRefs[$id]))
 		{
-			throw new InternalServerErrorException('Content element ID ' . Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
+			throw new InternalServerErrorException('Content element ID ' . $id . ' is used in an alias element and can therefore not be deleted.');
 		}
 
 		if (Input::get('act') == 'deleteAll')
@@ -2038,7 +2038,6 @@ class tl_content extends Backend
 	private function getAliasReferences(): array
 	{
 		if (null === self::$cteAliasCache) {
-			/** @var Connection $connection */
 			$connection = System::getContainer()->get('database_connection');
 			self::$cteAliasCache = array_flip($connection->fetchFirstColumn("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias"));
 		}
