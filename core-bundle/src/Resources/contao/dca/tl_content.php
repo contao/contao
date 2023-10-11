@@ -2040,7 +2040,8 @@ class tl_content extends Backend
 		if (null === self::$cteAliasCache)
 		{
 			$connection = System::getContainer()->get('database_connection');
-			self::$cteAliasCache = array_flip($connection->fetchFirstColumn("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias"));
+			$refs = $connection->fetchFirstColumn("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias");
+			self::$cteAliasCache = array_map(static function () { return true; }, array_flip($refs));
 		}
 
 		return self::$cteAliasCache;
