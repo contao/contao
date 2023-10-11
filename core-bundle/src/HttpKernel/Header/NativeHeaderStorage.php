@@ -17,9 +17,14 @@ namespace Contao\CoreBundle\HttpKernel\Header;
  */
 class NativeHeaderStorage implements HeaderStorageInterface
 {
+    /**
+     * @var array<string>
+     */
+    private array $clearedHeaders = [];
+
     public function all(): array
     {
-        return headers_list();
+        return array_diff(headers_list(), $this->clearedHeaders);
     }
 
     public function add(string $header): void
@@ -29,6 +34,10 @@ class NativeHeaderStorage implements HeaderStorageInterface
 
     public function clear(): void
     {
+        // Keep cleared headers because header_remove() does not reliably clear all the headers depending on the
+        // SAPI
+        $this->clearedHeaders = array_merge($this->clearedHeaders, headers_list());
+
         if ('cli' !== \PHP_SAPI && !headers_sent()) {
             header_remove();
         }
