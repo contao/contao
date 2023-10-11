@@ -87,11 +87,6 @@ class Statement
 			case 'query':
 				return $this->strQuery;
 
-			case 'error':
-				$info = $this->statement->errorInfo();
-
-				return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-
 			case 'affectedRows':
 				return $this->statement->rowCount();
 

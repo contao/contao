@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.0">
         <source>Moderate comments</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yorumların sitede yayınlanmadan önce onaylanması gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.0">
         <source>Allow BBCode</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
-        <target>Spam koruması devre dışı bırakılsın</target>
+        <target>Spam koruması etkisizleştirilsin</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -151,15 +151,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>%s kodlu haber arşivinin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli haber arşivinin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
-        <target>%s kodlu haber arşivini düzenle</target>
+        <target>%s kimlikli haber arşivini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
-        <target>%s kodlu haber arşivinin ayarlarını düzenle</target>
+        <target>%s kimlikli haber arşivinin ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -167,15 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>%s kodlu haber arşivini kopyala</target>
+        <target>%s kimlikli haber arşivini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>%s kodlu haber arşivini sil</target>
+        <target>%s kimlikli haber arşivini sil</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>%s kodlu haber arşivinin yorumlarını görüntüle</target>
+        <target>%s kimlikli haber arşivinin yorumlarını görüntüle</target>
       </trans-unit>
     </body>
   </file>

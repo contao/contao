@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -153,7 +154,7 @@ class Newsletter extends Backend
 			$intPages = Input::get('mpc') ?: 10;
 
 			// Get recipients
-			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
+			$objRecipients = $this->Database->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
 											->limit($intPages, $intStart)
 											->execute($objNewsletter->pid);
 
@@ -217,7 +218,7 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
 
-						System::getContainer()->get('monolog.logger.contao.error')->error('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
+						System::getContainer()->get('monolog.logger.contao.general')->info('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
 					}
 				}
 
@@ -371,9 +372,6 @@ class Newsletter extends Backend
 			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
-		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
-
 		return $objEmail;
 	}
 
@@ -392,6 +390,12 @@ class Newsletter extends Backend
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
+
+		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
+		if (isset($arrRecipient['recipient']))
+		{
+			$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+		}
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
@@ -434,9 +438,10 @@ class Newsletter extends Backend
 		{
 			$objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (RfcComplianceException $e)
+		catch (RfcComplianceException|TransportException $e)
 		{
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
+			System::getContainer()->get('monolog.logger.contao.error')->error(sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		// Rejected recipients

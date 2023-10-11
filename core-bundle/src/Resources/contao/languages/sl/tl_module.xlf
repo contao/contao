@@ -130,6 +130,7 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Pregledna stran</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>

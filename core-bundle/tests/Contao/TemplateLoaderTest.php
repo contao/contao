@@ -300,4 +300,20 @@ class TemplateLoaderTest extends TestCase
             Controller::getTemplateGroup('mod_article_')
         );
     }
+
+    public function testThrowsExceptionWhenProvidedWithAModernFragmentTemplate(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Using Contao\Controller::getTemplateGroup() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.');
+
+        Controller::getTemplateGroup('content_element/text');
+    }
+
+    public function testThrowsExceptionWhenProvidedWithAModernFragmentTemplateAsPrefix(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Using Contao\Controller::getTemplateGroup() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.');
+
+        Controller::getTemplateGroup('content_element', [], 'content_element/text');
+    }
 }

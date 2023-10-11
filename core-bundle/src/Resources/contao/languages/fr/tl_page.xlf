@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Une prévisualisation de chemin final (si possible avec placeholders) pour représenter cette page.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Priorité de route</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Configurer optionnellement la priorité afin d'affecter l'ordre des routes. Par défaut : 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -93,6 +96,12 @@
       <trans-unit id="tl_page.redirect.1">
         <source>Please choose the redirect type.</source>
         <target>Choisir un type de redirection.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -188,6 +197,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Ici vous pouvez renseigner une URL canonique personnalisée de type https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -311,9 +321,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Présentation des sous-pages</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Ici vous pouvez sélectionner une présentation de page différente pour les sous-pages.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -481,6 +493,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Routage</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -508,7 +521,7 @@
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
-        <target>Paramètres su site</target>
+        <target>Paramètres du site</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
@@ -576,6 +589,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Hériter le thème de page</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -635,12 +649,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Conflits de route</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Les pages suivantes ont un alias similaire qui pourrait entrer en conflit avec cette page. Si l'URL n'est pas correctement résolue, essayez de changer la priorité des routes.</target>
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Autoriser les URLs canoniques dans la page racine du site pour activer cette configuration.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

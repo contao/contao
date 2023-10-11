@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
-        <target>بازگردانی المان شناسه‌ی %s</target>
+        <target>بازگردانی المان شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>

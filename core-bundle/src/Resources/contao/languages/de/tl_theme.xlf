@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.screenshot.1">
         <source>Here you can choose a screenshot of the theme.</source>
-        <target>Hier können Sie ein Bildschirmfoto des Theme auswählen.</target>
+        <target>Hier können Sie ein Bildschirmfoto des Themes auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars.0">
         <source>Global variables</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.vars.1">
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Hier können Sie globale Variablen für die Stylesheets des Theme definieren (z. B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
+        <target>Hier können Sie globale Variablen für die Stylesheets des Themes definieren (z. B. &lt;em&gt;$rot&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; oder &lt;em&gt;$abstand&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
-        <target>Details des Theme ID %s anzeigen</target>
+        <target>Details des Themes ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
@@ -155,19 +155,19 @@
       </trans-unit>
       <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
-        <target>Stylesheets des Theme ID %s bearbeiten</target>
+        <target>Stylesheets des Themes ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
-        <target>Frontend-Module des Theme ID %s bearbeiten</target>
+        <target>Frontend-Module des Themes ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
-        <target>Seitenlayouts des Theme ID %s bearbeiten</target>
+        <target>Seitenlayouts des Themes ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
-        <target>Bildgrößen des Theme ID %s bearbeiten</target>
+        <target>Bildgrößen des Themes ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>

@@ -115,11 +115,11 @@
       </trans-unit>
       <trans-unit id="tl_member.website.0">
         <source>Website</source>
-        <target>Web sitesi</target>
+        <target>Site</target>
       </trans-unit>
       <trans-unit id="tl_member.website.1">
         <source>Here you can enter a web address.</source>
-        <target>Buraya bir web sitesi adresi yazabilirsiniz.</target>
+        <target>Buraya bir site adresi yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_member.language.0">
         <source>Language</source>
@@ -171,11 +171,11 @@
       </trans-unit>
       <trans-unit id="tl_member.disable.0">
         <source>Deactivate</source>
-        <target>Devre dışı bırak</target>
+        <target>Etkisizleştir</target>
       </trans-unit>
       <trans-unit id="tl_member.disable.1">
         <source>Temporarily disable the account.</source>
-        <target>Hesabı geçici olarak devre dışı bırakır.</target>
+        <target>Hesabı geçici olarak etkisizleştirir.</target>
       </trans-unit>
       <trans-unit id="tl_member.start.0">
         <source>Activate on</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
-        <target>Devre dışı bırakılma zamanı</target>
+        <target>Etkisizleştirilme zamanı</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -251,27 +251,27 @@
       </trans-unit>
       <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
-        <target>%s kodlu üyenin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli üyenin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
-        <target>%s kodlu üyeyi düzenle</target>
+        <target>%s kimlikli üyeyi düzenle</target>
       </trans-unit>
       <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
-        <target>%s kodlu üyeyi kopyala</target>
+        <target>%s kimlikli üyeyi kopyala</target>
       </trans-unit>
       <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
-        <target>%s kodlu üyeyi sil</target>
+        <target>%s kimlikli üyeyi sil</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle">
         <source>Activate/deactivate member ID %s</source>
-        <target>%s kodlu üyeyi etkinleştir/devre dışı bırak</target>
+        <target>%s kimlikli üyeyi etkinleştir/etkisizleştir</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
-        <target>Ön yüzü %s kodlu üye olarak görüntüle</target>
+        <target>Ön yüzü %s kimlikli üye olarak görüntüle</target>
       </trans-unit>
     </body>
   </file>

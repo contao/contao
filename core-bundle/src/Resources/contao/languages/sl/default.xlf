@@ -26,12 +26,12 @@
         <target>Polje &quot;%s&quot; ne sme biti daljše od %d črk!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Polje &quot;%s&quot; mora biti najmanj %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Polje &quot;%s&quot; mora biti najmanj %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Polje &quot;%s&quot; mora biti večje kot %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Polje &quot;%s&quot; mora biti večje kot %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -354,9 +354,11 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Neznano uporabniško ime: %s</target>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Različice %d ni mogoče obnoviti, ker ni skladna s trenutno strukturo v podatkovni bazi. Prosimo, da ročno obnovite podatke.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1321,6 +1323,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License URL</source>
+        <target>URL naslov licence</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1584,6 +1587,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Za več informacij o načinu pohitritve dela preberite članek o &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1943,6 +1947,7 @@
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Upravljanje različic</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1983,6 +1988,18 @@
       <trans-unit id="MSC.collapseNode">
         <source>Collapse node</source>
         <target>Skrči</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Javno dostopna mapa</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Zaščitena mapa</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s datoteka</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2753,6 +2770,7 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Ročno</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2887,6 +2905,22 @@
         <source>Expand or collapse all nodes</source>
         <target>Razširi ali skrči vse</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>Razširi vse</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>Razširi vsa vozlišča</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>Skrči vse</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>Skrči vsa vozlišča</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nov</target>
@@ -2961,6 +2995,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>%d URI(jev) je bilo izvzetih.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

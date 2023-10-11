@@ -377,6 +377,7 @@ services:
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
+            - '%contao.web_dir%'
             - '%contao.image.valid_extensions%'
 
     contao.image.studio.figure_renderer:
@@ -790,6 +791,8 @@ services:
         public: true
         arguments:
             - '@security.helper'
+            - '@security.token_storage'
+            - '@contao.security.token_checker'
             - '@session'
             - '@contao.security.frontend_user_provider'
             - '@?logger'
@@ -843,6 +846,7 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~
+            - '@database_connection'
 
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
@@ -988,6 +992,13 @@ services:
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.finder_factory:
+        class: Contao\CoreBundle\Twig\Finder\FinderFactory
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.loader.theme_namespace'
+            - '@translator'
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime

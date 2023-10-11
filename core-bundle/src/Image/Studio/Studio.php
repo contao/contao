@@ -22,23 +22,25 @@ class Studio
     private ContainerInterface $locator;
     private string $projectDir;
     private string $uploadPath;
+    private string $webDir;
 
     /**
      * @var array<string>
      */
     private array $validExtensions;
 
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
+    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, string $webDir, array $validExtensions)
     {
         $this->locator = $locator;
         $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
+        $this->webDir = $webDir;
         $this->validExtensions = $validExtensions;
     }
 
     public function createFigureBuilder(): FigureBuilder
     {
-        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
+        return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->webDir, $this->validExtensions);
     }
 
     /**

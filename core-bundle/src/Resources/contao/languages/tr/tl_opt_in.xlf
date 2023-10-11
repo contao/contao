@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.show">
         <source>Show the details of token ID %s</source>
-        <target>%s kodlu belirtecin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli belirtecin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.resend">
         <source>Resend token ID %s</source>
-        <target>%s kodlu belirteci yeniden gönder</target>
+        <target>%s kimlikli belirteci yeniden gönder</target>
       </trans-unit>
     </body>
   </file>

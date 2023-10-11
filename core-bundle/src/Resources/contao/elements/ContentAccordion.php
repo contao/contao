@@ -26,7 +26,7 @@ class ContentAccordion extends ContentElement
 	 */
 	protected function compile()
 	{
-		$this->Template->text = StringUtil::encodeEmail($this->text);
+		$this->Template->text = StringUtil::encodeEmail((string) $this->text);
 		$this->Template->addImage = false;
 		$this->Template->addBefore = false;
 
@@ -38,7 +38,7 @@ class ContentAccordion extends ContentElement
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
-				->setMetadata($this->objModel->getOverwriteMetadata())
+				->setOverwriteMetadata($this->objModel->getOverwriteMetadata())
 				->enableLightbox((bool) $this->fullsize)
 				->buildIfResourceExists();
 

@@ -129,10 +129,10 @@ class InsertTags extends Controller
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
 			. '('                        // Match the contents of the tag
 				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
+				. '(?>[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
 
-		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+		$strRegExpEnd = ')*+)}}';        // Ends with two closing curly braces
 
 		$tags = preg_split(
 			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
@@ -140,6 +140,11 @@ class InsertTags extends Controller
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
 		);
+
+		if ($tags === false)
+		{
+			throw new \RuntimeException(sprintf('PCRE: %s', preg_last_error_msg()), preg_last_error());
+		}
 
 		if (\count($tags) < 2)
 		{
@@ -393,11 +398,11 @@ class InsertTags extends Controller
 
 					if (\count($keys) == 2)
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]] ?? '';
 					}
 					else
 					{
-						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]];
+						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]][$keys[2]] ?? '';
 					}
 					break;
 
@@ -584,7 +589,7 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strTarget = ($objNextPage->target && 'redirect' === $objNextPage->type) ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
@@ -1071,16 +1076,17 @@ class InsertTags extends Controller
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 							$picture = $container->get('contao.image.picture_factory')->create($container->getParameter('kernel.project_dir') . '/' . $strFile, $size);
 
-							$picture = array
+							$data = array
 							(
 								'img' => $picture->getImg($container->getParameter('kernel.project_dir'), $staticUrl),
-								'sources' => $picture->getSources($container->getParameter('kernel.project_dir'), $staticUrl)
+								'sources' => $picture->getSources($container->getParameter('kernel.project_dir'), $staticUrl),
+								'alt' => StringUtil::specialcharsAttribute($alt),
+								'class' => StringUtil::specialcharsAttribute($class)
 							);
 
-							$picture['alt'] = StringUtil::specialcharsAttribute($alt);
-							$picture['class'] = StringUtil::specialcharsAttribute($class);
 							$pictureTemplate = new FrontendTemplate($strTemplate);
-							$pictureTemplate->setData($picture);
+							$pictureTemplate->setData($data);
+
 							$arrCache[$strTag] = $pictureTemplate->parse();
 						}
 
@@ -1527,7 +1533,14 @@ class InsertTags extends Controller
 	 */
 	private function languageMatches($language)
 	{
-		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		$pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
 
 		foreach (StringUtil::trimsplit(',', $language) as $lang)
 		{

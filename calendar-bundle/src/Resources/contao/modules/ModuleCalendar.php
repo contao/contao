@@ -93,14 +93,17 @@ class ModuleCalendar extends Events
 	 */
 	protected function compile()
 	{
+		$month = Input::get('month');
+		$day = Input::get('day');
+
 		// Create the date object
 		try
 		{
-			if (($month = Input::get('month')) && \is_string($month))
+			if (\is_string($month))
 			{
 				$this->Date = new Date($month, 'Ym');
 			}
-			elseif (($day = Input::get('day')) && \is_string($day))
+			elseif (\is_string($day))
 			{
 				$this->Date = new Date($day, 'Ymd');
 			}
@@ -118,7 +121,7 @@ class ModuleCalendar extends Events
 
 		// Find the boundaries
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published='1' AND (start='' OR start<=$time) AND (stop='' OR stop>$time)" : ""));
 		$dateFrom = $objMinMax->dateFrom;
 		$dateTo = $objMinMax->dateTo;
 		$repeatUntil = $objMinMax->repeatUntil;
@@ -130,6 +133,21 @@ class ModuleCalendar extends Events
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($dateFrom, $dateTo, $repeatUntil, $this);
 			}
+		}
+
+		$firstMonth = date('Ym', min($dateFrom, $time));
+		$lastMonth = date('Ym', max($dateTo, $repeatUntil, $time));
+
+		// The given month is out of scope
+		if ($month && ($month < $firstMonth || $month > $lastMonth))
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// The given day is out of scope
+		if ($day && ($day < date('Ymd', min($dateFrom, $time)) || $day > date('Ymd', max($dateTo, $repeatUntil, $time))))
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Store year and month
@@ -147,7 +165,7 @@ class ModuleCalendar extends Events
 		$intPrevYm = (int) ($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
 
 		// Only generate a link if there are events (see #4160)
-		if (($dateFrom !== null && $intPrevYm >= date('Ym', $dateFrom)) || $intPrevYm >= date('Ym'))
+		if ($intPrevYm >= $firstMonth)
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
 			$objTemplate->prevTitle = StringUtil::specialchars($lblPrevious);
@@ -165,7 +183,7 @@ class ModuleCalendar extends Events
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)
-		if ($intNextYm <= date('Ym') || ($dateTo !== null && $intNextYm <= date('Ym', max($dateTo, $repeatUntil))))
+		if ($intNextYm <= $lastMonth)
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);

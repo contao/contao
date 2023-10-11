@@ -159,6 +159,14 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.toggle_nodes_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
+        arguments:
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
@@ -204,6 +212,8 @@ services:
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
             - ce_
@@ -238,6 +248,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
+            - '%kernel.secret%'
             - '%contao.web_dir%'
         tags:
             - kernel.event_listener
@@ -280,7 +291,9 @@ services:
             - '@contao.framework'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
-            - { name: kernel.event_listener, priority: 7 }
+            - { name: kernel.event_listener, event: kernel.request, priority: 7 }
+            # The priority must be higher than the one of the PrettyErrorScreenListener (defaults to -96)
+            - { name: kernel.event_listener, event: kernel.exception, priority: 96 }
 
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
@@ -345,6 +358,8 @@ services:
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
             - '@contao.framework'
             - '@request_stack'
             - mod_
@@ -380,7 +395,6 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
-            - '@security.helper'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }

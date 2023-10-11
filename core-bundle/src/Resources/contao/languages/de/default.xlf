@@ -26,12 +26,12 @@
         <target>Das Feld &quot;%s&quot; darf höchstens %d Zeichen lang sein!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Das Feld &quot;%s&quot; muss mindestens %d sein!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Das Feld &quot;%s&quot; muss mindestens %s sein!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Das Feld &quot;%s&quot; darf nicht größer als %d sein!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Das Feld &quot;%s&quot; darf nicht größer als %s sein!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1997,6 +1997,18 @@
         <source>Collapse node</source>
         <target>Bereich schließen</target>
       </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>Öffentlicher Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>Geschützter Ordner</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s-Datei</target>
+      </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
         <target>Die Daten werden geladen</target>
@@ -2543,7 +2555,7 @@
       </trans-unit>
       <trans-unit id="MSC.versionConflict2">
         <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
-        <target>Ihre Änderungen wurden nun als Version %s gespeichert und haben die Änderungen der Version %s potentiell überschrieben, daher sollten Sie die nachstehenden Versionen vergleichen:</target>
+        <target>Ihre Änderungen wurden nun als Version %s gespeichert und haben die Änderungen der Version %s potenziell überschrieben, daher sollten Sie die nachstehenden Versionen vergleichen:</target>
       </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
@@ -2827,7 +2839,7 @@
       </trans-unit>
       <trans-unit id="DP.use_mouse_wheel">
         <source>Use the mouse wheel to quickly change value</source>
-        <target>Ändern Sie die Werte mit Hilfe des Mausrads</target>
+        <target>Ändern Sie die Werte mithilfe des Mausrads</target>
       </trans-unit>
       <trans-unit id="DP.time_confirm_button">
         <source>OK</source>
@@ -2904,6 +2916,22 @@
       <trans-unit id="DCA.toggleNodes.1">
         <source>Expand or collapse all nodes</source>
         <target>Alle Knoten öffnen bzw. schließen</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>Alle öffnen</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>Alle Knoten öffnen</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>Alle schließen</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>Alle Knoten schließen</target>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>

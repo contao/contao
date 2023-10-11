@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>Form kısaltması form sayısal kodu olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_form.storeValues.1">
         <source>Store the submitted data in the database.</source>
-        <target>Gönderilen verileri veritabanına kaydeder.</target>
+        <target>Gönderilen verileri veri tabanına kaydeder.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
         <source>Form template</source>
@@ -163,19 +163,19 @@
       </trans-unit>
       <trans-unit id="tl_form.attributes.0">
         <source>CSS ID/class</source>
-        <target>CSS kodu/sınıfı</target>
+        <target>CSS kimliği/sınıfı</target>
       </trans-unit>
       <trans-unit id="tl_form.attributes.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Buradan bir kod ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form.formID.0">
         <source>Form ID</source>
-        <target>Form kodu</target>
+        <target>Form kimliği</target>
       </trans-unit>
       <trans-unit id="tl_form.formID.1">
         <source>The form ID is required to trigger a Contao module.</source>
-        <target>Form kodu bir Contao modülünü tetiklemek için gereklidir.</target>
+        <target>Form kimliği bir Contao modülünü tetiklemek için gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_form.allowTags.0">
         <source>Allow HTML tags</source>
@@ -227,23 +227,23 @@
       </trans-unit>
       <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
-        <target>%s kodlu formun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli formun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
-        <target>%s kodlu formu düzenle</target>
+        <target>%s kimlikli formu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader">
         <source>Edit the settings of form ID %s</source>
-        <target>%s kodlu formun ayarlarını düzenle</target>
+        <target>%s kimlikli formun ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
-        <target>%s kodlu formu kopyala</target>
+        <target>%s kimlikli formu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
-        <target>%s kodlu formu sil</target>
+        <target>%s kimlikli formu sil</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>

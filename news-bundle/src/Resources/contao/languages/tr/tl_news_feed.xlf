@@ -107,19 +107,19 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
-        <target>%s kodlu akışın ayrıntılarını görüntüle</target>
+        <target>%s kimlikli akışın ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
-        <target>%s kodlu akışı düzenle</target>
+        <target>%s kimlikli akışı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
-        <target>%s kodlu akışı kopyala</target>
+        <target>%s kimlikli akışı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
-        <target>%s kodlu akışı sil</target>
+        <target>%s kimlikli akışı sil</target>
       </trans-unit>
     </body>
   </file>

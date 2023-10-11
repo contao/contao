@@ -52,10 +52,16 @@ class Database
 	protected $blnDisableAutocommit = false;
 
 	/**
-	 * Cache
+	 * listFields Cache
 	 * @var array
 	 */
 	protected $arrCache = array();
+
+	/**
+	 * listTables Cache
+	 * @var array
+	 */
+	protected $arrTablesCache = array();
 
 	/**
 	 * Establish the database connection
@@ -119,13 +125,6 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		if ($strKey == 'error')
-		{
-			$info = $this->resConnection->errorInfo();
-
-			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-		}
-
 		return null;
 	}
 
@@ -256,7 +255,7 @@ class Database
 	 */
 	public function listTables($strDatabase=null, $blnNoCache=false)
 	{
-		if ($blnNoCache || !isset($this->arrCache[$strDatabase]))
+		if ($blnNoCache || !isset($this->arrTablesCache[$strDatabase]))
 		{
 			$strOldDatabase = $this->resConnection->getDatabase();
 
@@ -266,7 +265,7 @@ class Database
 				$this->setDatabase($strDatabase);
 			}
 
-			$this->arrCache[$strDatabase] = $this->resConnection->createSchemaManager()->listTableNames();
+			$this->arrTablesCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
 
 			// Restore the database
 			if ($strDatabase !== null && $strDatabase != $strOldDatabase)
@@ -275,7 +274,7 @@ class Database
 			}
 		}
 
-		return $this->arrCache[$strDatabase];
+		return $this->arrTablesCache[$strDatabase];
 	}
 
 	/**
@@ -523,12 +522,14 @@ class Database
 			$arrParentIds = array($arrParentIds);
 		}
 
+		// Remove zero IDs
+		$arrParentIds = array_filter(array_map('\intval', $arrParentIds));
+
 		if (empty($arrParentIds))
 		{
 			return $arrReturn;
 		}
 
-		$arrParentIds = array_map('\intval', $arrParentIds);
 		$objChilds = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
 		if ($objChilds->numRows > 0)

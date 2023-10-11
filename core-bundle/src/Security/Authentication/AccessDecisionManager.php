@@ -27,7 +27,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
     private FirewallMapInterface $firewallMap;
 
     /**
-     * @internal Do not inherit from this class; decorate the "security.access.decision_manager" service instead
+     * @internal
      */
     public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $contaoAccessDecisionManager, RequestStack $requestStack, FirewallMapInterface $firewallMap)
     {

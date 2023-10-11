@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
@@ -595,7 +595,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
 
         /** @var array<FilesystemItem> $listedContents */
-        $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
+        $listedContents = $filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)->toArray();
 
         $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
@@ -678,7 +678,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
 
         /** @var array<FilesystemItem> $listedContents */
-        $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
+        $listedContents = $filesystem->listContents('foo/bar', $deep)->toArray();
 
         $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());

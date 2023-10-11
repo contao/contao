@@ -84,7 +84,7 @@ class Dbafs
 		}
 
 		$arrPaths    = array();
-		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 		$strPath     = $uploadPath;
 		$arrPids     = array($strPath => null);
 		$arrUpdate   = array($strResource);
@@ -361,16 +361,20 @@ class Dbafs
 
 			if ($objFiles !== null)
 			{
+				$arrMapper = array();
+
 				while ($objFiles->next())
 				{
 					/** @var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
-					$objNew->pid    = $objNewFile->uuid;
+					$objNew->pid    = $arrMapper[$objFiles->pid] ?? $objNewFile->uuid;
 					$objNew->tstamp = time();
 					$objNew->uuid   = $objDatabase->getUuid();
 					$objNew->path   = str_replace($strSource . '/', $strDestination . '/', $objFiles->path);
 					$objNew->save();
+
+					$arrMapper[$objFiles->uuid] = $objNew->uuid;
 				}
 			}
 		}
@@ -445,7 +449,7 @@ class Dbafs
 			self::validateUtf8Path($strResource);
 
 			$strResource = Path::normalize($strResource);
-			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 			$strPath     = $uploadPath;
 
 			// Do not check files
@@ -513,7 +517,7 @@ class Dbafs
 		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
-		$objDatabase->query("UPDATE tl_files SET found=''");
+		$objDatabase->executeStatement("UPDATE tl_files SET found=''");
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -764,7 +768,7 @@ class Dbafs
 		$objLog->close();
 
 		// Reset the found flag
-		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
+		$objDatabase->executeStatement("UPDATE tl_files SET found=1 WHERE found=2");
 
 		// Finalize database access
 		$objDatabase->commitTransaction();

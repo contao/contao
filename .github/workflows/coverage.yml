@@ -1,0 +1,39 @@
+name: Coverage
+
+on:
+    pull_request: ~
+    push:
+        branches:
+            - 4.13
+        tags:
+            - 4.13.*
+
+permissions: read-all
+
+jobs:
+    coverage:
+        name: Codecov
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: pcov
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-progress
+
+            - name: Generate the coverage report
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
+
+            - name: Upload the coverage report
+              uses: codecov/codecov-action@v3
+              with:
+                  files: ./clover.xml
+                  fail_ci_if_error: true
+                  token: 6ec51b7a-f2e6-4310-a60c-d2ee69ecd8ba

@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -35,11 +37,13 @@ class TokenChecker
     private SessionInterface $session;
     private AuthenticationTrustResolverInterface $trustResolver;
     private VoterInterface $roleVoter;
+    private Connection $connection;
+    private array $previewLinks;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
+     * @internal
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter)
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter, Connection $connection)
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
@@ -47,6 +51,7 @@ class TokenChecker
         $this->session = $session;
         $this->trustResolver = $trustResolver;
         $this->roleVoter = $roleVoter;
+        $this->connection = $connection;
     }
 
     /**
@@ -98,19 +103,51 @@ class TokenChecker
     }
 
     /**
+     * Tells whether the front end preview can be accessed.
+     */
+    public function canAccessPreview(): bool
+    {
+        if ($this->hasBackendUser()) {
+            return true;
+        }
+
+        $token = $this->getToken(self::FRONTEND_FIREWALL);
+
+        if (!$token instanceof FrontendPreviewToken) {
+            return false;
+        }
+
+        if (null === $token->getPreviewLinkId()) {
+            return false;
+        }
+
+        return $this->isValidPreviewLink($token);
+    }
+
+    /**
      * Tells whether the front end preview can show unpublished fragments.
      */
     public function isPreviewMode(): bool
     {
         $request = $this->requestStack->getMainRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false)) {
+        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
+    }
+
+    public function isFrontendFirewall(): bool
+    {
+        return self::FRONTEND_FIREWALL === $this->getFirewallContext();
+    }
+
+    public function isBackendFirewall(): bool
+    {
+        return self::BACKEND_FIREWALL === $this->getFirewallContext();
     }
 
     private function getToken(string $context): ?TokenInterface
@@ -134,6 +171,15 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): ?TokenInterface
     {
+        if ($this->getFirewallContext() !== $context) {
+            return null;
+        }
+
+        return $this->tokenStorage->getToken();
+    }
+
+    private function getFirewallContext(): ?string
+    {
         $request = $this->requestStack->getMainRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
@@ -142,11 +188,11 @@ class TokenChecker
 
         $config = $this->firewallMap->getFirewallConfig($request);
 
-        if (!$config instanceof FirewallConfig || $config->getContext() !== $context) {
+        if (!$config instanceof FirewallConfig) {
             return null;
         }
 
-        return $this->tokenStorage->getToken();
+        return $config->getContext();
     }
 
     private function getTokenFromSession(string $sessionKey): ?TokenInterface
@@ -171,5 +217,45 @@ class TokenChecker
         }
 
         return $token;
+    }
+
+    private function isValidPreviewLink(FrontendPreviewToken $token): bool
+    {
+        $id = $token->getPreviewLinkId();
+
+        if (!isset($this->previewLinks[$id])) {
+            $this->previewLinks[$id] = $this->connection->fetchAssociative(
+                "
+                    SELECT
+                        url,
+                        showUnpublished,
+                        restrictToUrl
+                    FROM tl_preview_link
+                    WHERE
+                        id = :id
+                        AND published = '1'
+                        AND expiresAt > UNIX_TIMESTAMP()
+                ",
+                ['id' => $id],
+            );
+        }
+
+        $previewLink = $this->previewLinks[$id];
+
+        if (!$previewLink) {
+            return false;
+        }
+
+        if ((bool) $previewLink['showUnpublished'] !== $token->showUnpublished()) {
+            return false;
+        }
+
+        if (!$previewLink['restrictToUrl']) {
+            return true;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+
+        return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
     }
 }

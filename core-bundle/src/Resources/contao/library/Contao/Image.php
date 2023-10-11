@@ -118,6 +118,9 @@ class Image
 	{
 		trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\Image" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.factory" service instead.');
 
+		// Create deferred images (see #5873)
+		$file->createIfDeferred();
+
 		// Check whether the file exists
 		if (!$file->exists())
 		{
@@ -840,10 +843,10 @@ class Image
 		}
 
 		$imageSize = new \stdClass();
-		$imageSize->width = $predefinedSizes[$size]['width'];
-		$imageSize->height = $predefinedSizes[$size]['height'];
-		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'];
-		$imageSize->zoom = $predefinedSizes[$size]['zoom'];
+		$imageSize->width = $predefinedSizes[$size]['width'] ?? 0;
+		$imageSize->height = $predefinedSizes[$size]['height'] ?? 0;
+		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'] ?? 'crop';
+		$imageSize->zoom = $predefinedSizes[$size]['zoom'] ?? 0;
 
 		return $imageSize;
 	}

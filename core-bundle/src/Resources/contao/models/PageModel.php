@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $robots
  * @property string|null            $description
  * @property string                 $redirect
+ * @property string|boolean         $alwaysForward
  * @property string|integer         $jumpTo
  * @property string|boolean         $redirectBack
  * @property string                 $url
@@ -136,6 +137,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
  * @method static PageModel|null findOneByRedirect($val, array $opt=array())
+ * @method static PageModel|null findOneByAlwaysForward($val, array $opt=array())
  * @method static PageModel|null findOneByJumpTo($val, array $opt=array())
  * @method static PageModel|null findOneByRedirectBack($val, array $opt=array())
  * @method static PageModel|null findOneByUrl($val, array $opt=array())
@@ -197,6 +199,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAlwaysForward($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
@@ -262,6 +265,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByRedirect($val, array $opt=array())
+ * @method static integer countByAlwaysForward($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countByRedirectBack($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
@@ -405,7 +409,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
@@ -427,7 +431,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
@@ -472,7 +476,7 @@ class PageModel extends Model
 			if (!static::isPreviewMode($arrOptions))
 			{
 				$time = Date::floorToMinute();
-				$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+				$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 			}
 
 			return static::findOneBy($arrColumns, $strHost, $arrOptions);
@@ -489,7 +493,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
@@ -512,7 +516,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -539,7 +543,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -567,7 +571,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -594,7 +598,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -621,7 +625,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -648,7 +652,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -690,7 +694,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -737,7 +741,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findBy($arrColumns, $varId, $arrOptions);
@@ -765,7 +769,7 @@ class PageModel extends Model
 		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<=$time) AND (p2.stop='' OR p2.stop>$time)" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<=$time) AND (p1.stop='' OR p1.stop>$time)" : "") . " ORDER BY p1.sorting")
 											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -803,7 +807,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -851,7 +855,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -879,7 +883,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -917,7 +921,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -965,7 +969,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findOneBy($arrColumns, $strHost, $arrOptions);
@@ -991,7 +995,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<=$time) AND ($t.stop='' OR $t.stop>$time)";
 		}
 
 		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
@@ -1040,7 +1044,7 @@ class PageModel extends Model
 		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
-		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'$time') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'$time') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
+		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<=$time) AND (g.stop='' OR g.stop>$time) AND p.published='1' AND (p.start='' OR p.start<=$time) AND (p.stop='' OR p.stop>$time) ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
 								 ->limit(1)
 								 ->execute();
 
@@ -1129,7 +1133,7 @@ class PageModel extends Model
 		// Set some default values
 		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : false;
+		$this->layout = ($this->includeLayout && $this->layout) ? $this->layout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
@@ -1220,6 +1224,9 @@ class PageModel extends Model
 			$this->folderUrl = $folderUrl;
 		}
 
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
 		// Set the root ID and title
 		if ($objParentPage !== null && $objParentPage->type == 'root')
 		{
@@ -1268,17 +1275,17 @@ class PageModel extends Model
 				}
 			}
 
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
+			if ($container->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
-				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+				$this->urlPrefix = $container->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
+				$this->urlSuffix = $container->getParameter('contao.url_suffix');
 			}
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$container->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}
@@ -1360,10 +1367,11 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
+		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams), $referenceType);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1378,7 +1386,7 @@ class PageModel extends Model
 		}
 
 		// Make the URL relative to the base path
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
@@ -1478,7 +1486,8 @@ class PageModel extends Model
 	 */
 	public function getSlugOptions()
 	{
-		$slugOptions = array('locale'=>$this->language);
+		// Use primary language for slug generation, until fixed in ICU or ausi/slug-generator (see #2413)
+		$slugOptions = array('locale'=>LocaleUtil::getPrimaryLanguage($this->language));
 
 		if ($this->validAliasCharacters)
 		{

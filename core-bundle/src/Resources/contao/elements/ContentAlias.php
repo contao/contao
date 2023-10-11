@@ -22,6 +22,11 @@ class ContentAlias extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		$objElement = ContentModel::findByPk($this->cteAlias);
 
 		if ($objElement === null)

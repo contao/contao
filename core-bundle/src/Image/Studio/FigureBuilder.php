@@ -24,6 +24,7 @@ use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Validator;
+use Nyholm\Psr7\Uri;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -40,6 +41,7 @@ class FigureBuilder
     private ContainerInterface $locator;
     private string $projectDir;
     private string $uploadPath;
+    private string $webDir;
     private Filesystem $filesystem;
     private ?InvalidResourceException $lastException = null;
 
@@ -83,6 +85,11 @@ class FigureBuilder
      * User defined metadata. This will overwrite the default if set.
      */
     private ?Metadata $metadata = null;
+
+    /**
+     * User defined metadata. This will be added to the default if set.
+     */
+    private ?Metadata $overwriteMetadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
@@ -137,11 +144,12 @@ class FigureBuilder
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
+    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, string $webDir, array $validExtensions)
     {
         $this->locator = $locator;
         $this->projectDir = $projectDir;
         $this->uploadPath = $uploadPath;
+        $this->webDir = $webDir;
         $this->validExtensions = $validExtensions;
 
         $this->filesystem = new Filesystem();
@@ -195,6 +203,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
+        /** @var FilesModel|null $filesModel */
         $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
@@ -219,8 +228,20 @@ class FigureBuilder
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
         // Only check for a FilesModel if the resource is inside the upload path
-        if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
+        $getDbafsPath = function (string $path): ?string {
+            if (Path::isBasePath(Path::join($this->webDir, $this->uploadPath), $path)) {
+                return Path::makeRelative($path, $this->webDir);
+            }
+
+            if (Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
+                return $path;
+            }
+
+            return null;
+        };
+
+        if ($autoDetectDbafsPaths && null !== ($dbafsPath = $getDbafsPath($path))) {
+            $filesModel = $this->getFilesModelAdapter()->findByPath($dbafsPath);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -235,6 +256,47 @@ class FigureBuilder
         }
 
         return $this;
+    }
+
+    /**
+     * Sets the image resource from an absolute or relative URL.
+     *
+     * @param list<string> $baseUrls a list of allowed base URLs, the first match gets stripped from the resource URL
+     */
+    public function fromUrl(string $url, array $baseUrls = []): self
+    {
+        $this->lastException = null;
+
+        $uri = new Uri($url);
+        $path = null;
+
+        foreach ($baseUrls as $baseUrl) {
+            $baseUri = new Uri($baseUrl);
+
+            if ($baseUri->getHost() === $uri->getHost() && Path::isBasePath($baseUri->getPath(), $uri->getPath())) {
+                $path = Path::makeRelative($uri->getPath(), $baseUri->getPath().'/');
+                break;
+            }
+        }
+
+        if (null === $path) {
+            if ('' !== $uri->getHost()) {
+                $this->lastException = new InvalidResourceException(sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
+
+                return $this;
+            }
+
+            $path = $uri->getPath();
+        }
+
+        if (preg_match('/%2f|%5c/i', $path)) {
+            $this->lastException = new InvalidResourceException(sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
+
+            return $this;
+        }
+
+        // Prepend the web_dir (see #6123)
+        return $this->fromPath(Path::join($this->webDir, urldecode($path)));
     }
 
     /**
@@ -319,6 +381,18 @@ class FigureBuilder
     public function setMetadata(?Metadata $metadata): self
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Sets custom overwrite metadata.
+     *
+     * The metadata will be merged with the default metadata from the FilesModel.
+     */
+    public function setOverwriteMetadata(?Metadata $metadata): self
+    {
+        $this->overwriteMetadata = $metadata;
 
         return $this;
     }
@@ -511,7 +585,18 @@ class FigureBuilder
             return null;
         }
 
-        return $this->doBuild();
+        $figure = $this->doBuild();
+
+        try {
+            // Make sure the resource can be processed
+            $figure->getImage()->getOriginalDimensions();
+        } catch (\Throwable $e) {
+            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+
+            return null;
+        }
+
+        return $figure;
     }
 
     /**
@@ -589,9 +674,13 @@ class FigureBuilder
         // Get fallback locale list or use without fallbacks if explicitly set
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
+        $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
         if (null !== $metadata) {
-            return $metadata->with($fileReferenceData);
+            return $metadata
+                ->with($fileReferenceData)
+                ->with($overwriteMetadata)
+            ;
         }
 
         // If no metadata can be obtained from the model, we create a container
@@ -603,7 +692,7 @@ class FigureBuilder
             $fileReferenceData
         );
 
-        return new Metadata($data);
+        return (new Metadata($data))->with($overwriteMetadata);
     }
 
     /**
@@ -638,6 +727,9 @@ class FigureBuilder
             return $result->getMetadata()->getUrl() ?: null;
         };
 
+        /**
+         * @param ImageInterface|string $target Image object, URL or absolute file path
+         */
         $getResourceOrUrl = function ($target): array {
             if ($target instanceof ImageInterface) {
                 return [$target, null];
@@ -654,11 +746,12 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
-
-            $filePath = Path::isAbsolute($target)
-                ? Path::canonicalize($target)
-                : Path::makeAbsolute($target, $this->projectDir);
+            if (Path::isAbsolute($target)) {
+                $filePath = Path::canonicalize($target);
+            } else {
+                // URL relative to the project directory
+                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            }
 
             if (!is_file($filePath)) {
                 $filePath = null;
@@ -667,8 +760,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set data (1), fall back to using metadata (2) or use the base resource (3) if empty
-        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
 

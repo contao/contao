@@ -17,6 +17,14 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Prikaži neobjavljene strani in elemente pri deljenju te povezave</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+        <target>Onemogoči dostop do določenega naslova URL</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Omogoči dostop samo do navedenega naslova URL namesto do celotne strani.</target>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Ustvarjeno ob</target>
@@ -33,20 +41,13 @@
         <source>The user who created the preview link.</source>
         <target>Uporabnik, ki je ustvaril povezavo za predogled.</target>
       </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Poteče po</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Izberite, koliko časa naj bo veljavna povezava za predogled.</target>
-      </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
         <target>Veljavna do</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.1">
         <source>Preview of the final date until which the link is available.</source>
+        <target>Datum poteka veljavnosti te povezave</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.published.0">
         <source>Enable</source>
@@ -58,9 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.share.0">
         <source>Copy to clipboard</source>
+        <target>Kopiraj v odložišče</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
+        <target>Kopirajte povezavo za predogled z ID %sv vaše odložišče.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>

@@ -13,7 +13,6 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
 
     $ecsConfig->skip([
-        '*/Fixtures/system/*',
         '*/Resources/contao/*',
         'maker-bundle/src/Resources/skeleton/*',
         MethodChainingIndentationFixer::class => [

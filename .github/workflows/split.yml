@@ -1,0 +1,39 @@
+name: Split
+
+on:
+    push:
+        branches:
+            - 4.13
+        tags:
+            - 4.13.*
+
+permissions: read-all
+
+jobs:
+    monorepo-split:
+        name: Monorepo split
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: json, zlib
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Cache the monorepo split
+              uses: actions/cache@v1
+              with:
+                  path: .monorepo-split-cache
+                  key: dev-${GITHUB_REF##*/}
+
+            - name: Install the dependencies
+              run: composer global require contao/monorepo-tools:dev-main
+
+            - name: Split the monorepo
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}

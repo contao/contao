@@ -79,15 +79,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.show">
         <source>Show the details of channel ID %s</source>
-        <target>%s kodlu kanalın ayrıntılarını görüntüle</target>
+        <target>%s kimlikli kanalın ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit">
         <source>Edit channel ID %s</source>
-        <target>%s kodlu kanalı düzenle</target>
+        <target>%s kimlikli kanalı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader">
         <source>Edit the settings of channel ID %s</source>
-        <target>%s kodlu kanalın ayarlarını düzenle</target>
+        <target>%s kimlikli kanalın ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>
@@ -95,15 +95,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>
-        <target>%s kodlu kanalı kopyala</target>
+        <target>%s kimlikli kanalı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.delete">
         <source>Delete channel ID %s</source>
-        <target>%s kodlu kanalı sil</target>
+        <target>%s kimlikli kanalı sil</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.recipients">
         <source>Edit the recipients of channel ID %s</source>
-        <target>%s kodlu kanalın alıcılarını düzenle</target>
+        <target>%s kimlikli kanalın alıcılarını düzenle</target>
       </trans-unit>
     </body>
   </file>

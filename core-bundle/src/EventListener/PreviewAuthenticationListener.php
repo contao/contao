@@ -13,13 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -30,15 +28,13 @@ class PreviewAuthenticationListener
     private TokenChecker $tokenChecker;
     private UrlGeneratorInterface $router;
     private UriSigner $uriSigner;
-    private Security $security;
 
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner, Security $security)
+    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->router = $router;
         $this->uriSigner = $uriSigner;
-        $this->security = $security;
     }
 
     public function __invoke(RequestEvent $event): void
@@ -48,8 +44,7 @@ class PreviewAuthenticationListener
         if (
             !$request->attributes->get('_preview', false)
             || $this->scopeMatcher->isBackendRequest($request)
-            || $this->tokenChecker->hasBackendUser()
-            || $this->security->getToken() instanceof FrontendPreviewToken
+            || $this->tokenChecker->canAccessPreview()
         ) {
             return;
         }

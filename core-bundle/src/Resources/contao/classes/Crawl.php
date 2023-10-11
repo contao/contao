@@ -155,6 +155,36 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 		catch (InvalidJobIdException $e)
 		{
+			if (file_exists($resultCache))
+			{
+				$results = json_decode(file_get_contents($resultCache), true);
+
+				if (Environment::get('isAjaxRequest'))
+				{
+					$response = new JsonResponse(array(
+						'pending' => 0,
+						'total' => 0,
+						'finished' => true,
+						'results' => $results,
+						'hasDebugLog' => file_exists($debugLogPath),
+					));
+
+					throw new ResponseException($response);
+				}
+
+				$subscriberLogHrefs = array();
+
+				foreach (array_keys($results) as $name)
+				{
+					$subscriberLogHrefs[$name] = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=' . $name);
+				}
+
+				$template->subscriberLogHrefs = $subscriberLogHrefs;
+				$template->debugLogHref = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=debug');
+
+				return $template->parse();
+			}
+
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('request')));
 		}
 
@@ -347,7 +377,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
 		{
-			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
 		}
 		else
 		{
@@ -355,7 +385,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
 			}
 		}
 

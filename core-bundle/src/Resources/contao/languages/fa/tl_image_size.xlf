@@ -151,27 +151,27 @@
       </trans-unit>
       <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
-        <target>نمایش جزئیات اندازه تصویر شناسه‌ی %s</target>
+        <target>نمایش جزئیات اندازه تصویر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
-        <target>ویرایش اندازه تصویر شناسه‌ی %s</target>
+        <target>ویرایش اندازه تصویر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader">
         <source>Edit the settings of image size ID %s</source>
-        <target>ویرایش تنظیمات اندازه تصویر شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات اندازه تصویر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
-        <target>جابجایی اندازه تصویر شناسه‌ی %s</target>
+        <target>جابجایی اندازه تصویر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
-        <target>تکثیر اندازه تصویر شناسه‌ی %s</target>
+        <target>تکثیر اندازه تصویر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
-        <target>حذف اندازه تصویر شناسه‌ی %s</target>
+        <target>حذف اندازه تصویر شناسه %s</target>
       </trans-unit>
     </body>
   </file>

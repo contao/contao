@@ -17,6 +17,14 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Bu seçenek etkinleştirildiğinde, bu bağlantı paylaşılırken yayınlanmamış sayfa ve bileşenler görüntülenir.</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+        <target>Erişim belirtilen adres ile kısıtlansın</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Bu seçenek etkinleştirildiğinde, tüm site yerine yalnızca belirtilen adrese erişilmesine izin verilir.</target>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Oluşturulma</target>
@@ -32,14 +40,6 @@
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
         <target>Ön izleme bağlantısını oluşturan kullanıcı.</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Geçerlilik süresi</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Ön izleme bağlantısının ne kadar süreyle geçerli olacağını seçin.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
-        <target>%s kodlu ön izleme bağlantısını panoya kopyalar.</target>
+        <target>%s kimlikli ön izleme bağlantısını panoya kopyalar.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>

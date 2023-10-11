@@ -477,7 +477,7 @@ class StyleSheets extends Backend
 		// Background
 		if ($row['background'])
 		{
-			$bgColor = StringUtil::deserialize($row['bgcolor'], true);
+			$bgColor = StringUtil::deserialize($row['bgcolor'], true) + array('', '');
 
 			// Try to shorten the definition
 			if ($bgColor[0] != '' && $row['bgimage'] != '' && $row['bgposition'] != '' && $row['bgrepeat'] != '')
@@ -1009,7 +1009,7 @@ class StyleSheets extends Backend
 	 */
 	protected function shortenHexColor($color)
 	{
-		if ($color[0] == $color[1] && $color[2] == $color[3] && $color[4] == $color[5])
+		if (\strlen($color) == 6 && $color[0] == $color[1] && $color[2] == $color[3] && $color[4] == $color[5])
 		{
 			return $color[0] . $color[2] . $color[4];
 		}
@@ -2277,7 +2277,7 @@ class StyleSheets extends Backend
 	 */
 	protected function generateBase64Image($strImage, $arrParent)
 	{
-		if ($arrParent['embedImages'] > 0 && file_exists($this->strRootDir . '/' . $strImage))
+		if (($arrParent['embedImages'] ?? 0) > 0 && file_exists($this->strRootDir . '/' . $strImage))
 		{
 			$objImage = new File($strImage);
 			$strMime = $objImage->extension;

@@ -11,25 +11,26 @@
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News archive permissions</source>
+        <target>مجوزهای بایگانی خبر</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news archive permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
-        <target>خوراک اخبار مجاز</target>
+        <target>فید اخبار مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>
-        <target>اینجا می‌توانید دسترسی به یک یا چند خوراک اخبار را واگذار نمایید.</target>
+        <target>اینجا می‌توانید دسترسی به یک یا چند فید اخبار را واگذار نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.0">
         <source>News feed permissions</source>
-        <target>مجوزهای خوراک اخبار</target>
+        <target>مجوزهای فید اخبار</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeedp.1">
         <source>Here you can define the news feed permissions.</source>
-        <target>اینجا می‌توانید مجوزهای خوراک اخبار را تعریف نمایید.</target>
+        <target>اینجا می‌توانید مجوزهای فید اخبار را تعریف نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>

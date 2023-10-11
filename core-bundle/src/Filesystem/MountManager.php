@@ -36,7 +36,7 @@ class MountManager
     private iterable $publicUriProviders;
 
     /**
-     * @var array<string, FilesystemAdapter>
+     * @var array<string|int, FilesystemAdapter>
      */
     private array $mounts = [];
 
@@ -52,13 +52,13 @@ class MountManager
     {
         $this->mounts[$path] = $adapter;
 
-        krsort($this->mounts);
+        krsort($this->mounts, SORT_NATURAL);
 
         return $this;
     }
 
     /**
-     * @return array<string, FilesystemAdapter>
+     * @return array<string|int, FilesystemAdapter>
      */
     public function getMounts(): array
     {
@@ -305,7 +305,7 @@ class MountManager
         $virtualPathsSet = [];
 
         foreach (array_keys($this->mounts) as $mountPath) {
-            $relativeSearchPath = Path::makeRelative($mountPath, $path);
+            $relativeSearchPath = Path::makeRelative((string) $mountPath, $path);
 
             if ('' === $relativeSearchPath || str_starts_with($relativeSearchPath, '..')) {
                 continue;
@@ -318,7 +318,7 @@ class MountManager
             $virtualPathsSet[$mountPath] = true;
         }
 
-        ksort($virtualPathsSet);
+        ksort($virtualPathsSet, SORT_NATURAL);
 
         // Yield items and track all traversed directories
         foreach ($this->doListContents($path, $deep) as $item) {
@@ -331,10 +331,10 @@ class MountManager
 
         // Yield remaining virtual paths
         foreach (array_keys($virtualPathsSet) as $virtualPath) {
-            yield new FilesystemItem(false, $virtualPath);
+            yield new FilesystemItem(false, (string) $virtualPath);
 
             if ($deep) {
-                yield from $this->doListContents($virtualPath, true);
+                yield from $this->doListContents((string) $virtualPath, true);
             }
         }
     }
@@ -400,14 +400,16 @@ class MountManager
 
     private function getAdapterAndPath(string $path): array
     {
-        $prefix = $path;
+        if ('' !== $path) {
+            $prefix = $path;
 
-        // Find adapter with the longest (= most specific) matching prefix
-        do {
-            if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
-                return [$adapter, Path::makeRelative($path, $prefix), $prefix];
-            }
-        } while ('.' !== ($prefix = \dirname($prefix)));
+            // Find the adapter with the longest (= most specific) matching prefix
+            do {
+                if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
+                    return [$adapter, Path::makeRelative($path, $prefix), $prefix];
+                }
+            } while ('.' !== ($prefix = \dirname($prefix)));
+        }
 
         // Root adapter
         if (null !== ($adapter = $this->mounts[''] ?? null)) {
@@ -429,9 +431,22 @@ class MountManager
             // If $deep is true we shallow-read directories recursively, because
             // there could be another adapter mounted further down in the tree.
             foreach ($adapter->listContents($adapterPath, FilesystemReader::LIST_SHALLOW) as $flysystemItem) {
-                yield FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
+                $item = FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
+                $itemPath = $item->getPath();
 
-                if ($deep && $flysystemItem->isDir()) {
+                if ($item->isFile()) {
+                    yield $item->withMetadataIfNotDefined(
+                        fn () => $this->getLastModified($itemPath),
+                        fn () => $this->getFileSize($itemPath),
+                        fn () => $this->getMimeType($itemPath),
+                    );
+
+                    continue;
+                }
+
+                yield $item;
+
+                if ($deep) {
                     yield from $this->doListContents(Path::join($prefix, $flysystemItem->path()), true);
                 }
             }

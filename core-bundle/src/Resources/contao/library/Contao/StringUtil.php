@@ -736,7 +736,7 @@ class StringUtil
 			}
 			else
 			{
-				$return .= $paths[$i+2] . '="' . $paths[$i+3] . $paths[$i+4] . '"';
+				$return .= $paths[$i+1];
 			}
 		}
 
@@ -940,7 +940,13 @@ class StringUtil
 			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
-			$strString = preg_replace($colonRegEx, '%3A', $strString);
+			$arrChunks = preg_split('/({{[^{}]*}})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE);
+			$strString = '';
+
+			foreach ($arrChunks as $index => $strChunk)
+			{
+				$strString .= ($index % 2) ? $strChunk : preg_replace($colonRegEx, '%3A', $strChunk);
+			}
 		}
 
 		return $strString;
@@ -1207,6 +1213,17 @@ class StringUtil
 		if ($precision === null)
 		{
 			$precision = (int) \ini_get('precision');
+		}
+
+		// Special value from PHP ini
+		if ($precision === -1)
+		{
+			$precision = 14;
+		}
+
+		if ($precision <= 1)
+		{
+			throw new \InvalidArgumentException(sprintf('Precision must be greater than 1, "%s" given.', $precision));
 		}
 
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))

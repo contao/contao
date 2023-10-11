@@ -168,6 +168,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testEnablesCreateOperationWithPreviewUrl(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
         ];
@@ -220,34 +221,6 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
 
         unset($GLOBALS['TL_DCA']);
-    }
-
-    public function testUpdatesTheExpiresAtField(): void
-    {
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('executeStatement')
-            ->with(
-                'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-                [$dc->id]
-            )
-        ;
-
-        $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $connection,
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
-            ''
-        );
-
-        $listener->updateExpiresAt($dc);
     }
 
     /**

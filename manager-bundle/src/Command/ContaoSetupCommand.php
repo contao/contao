@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -27,7 +30,9 @@ class ContaoSetupCommand extends Command
     protected static $defaultName = 'contao:setup';
     protected static $defaultDescription = 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.';
 
+    private string $projectDir;
     private string $webDir;
+    private string $kernelSecret;
     private string $consolePath;
 
     /**
@@ -43,9 +48,11 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
+    public function __construct(string $projectDir, string $webDir, ?string $kernelSecret, \Closure $createProcessHandler = null)
     {
+        $this->projectDir = $projectDir;
         $this->webDir = Path::makeRelative($webDir, $projectDir);
+        $this->kernelSecret = $kernelSecret;
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
@@ -61,6 +68,25 @@ class ContaoSetupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
+        // Auto-generate a kernel secret if none was set
+        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+            $filesystem = new Filesystem();
+
+            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
+            $dotenv->dump();
+
+            $io->info('An APP_SECRET was generated and written to your .env.local file.');
+
+            if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
+                $filesystem->touch($envPath);
+
+                $io->info('An empty .env file was created.');
+            }
+        }
+
         if (false === $this->phpPath) {
             throw new \RuntimeException('The php executable could not be found.');
         }
@@ -94,7 +120,7 @@ class ContaoSetupCommand extends Command
             $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
         }
 
-        $output->writeln('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
+        $io->info('Done! Please open the Contao install tool or run the contao:migrate command to make sure the database is up-to-date.');
 
         return 0;
     }

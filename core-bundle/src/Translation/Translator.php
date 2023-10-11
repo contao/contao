@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Translation;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -35,7 +36,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     private $translator;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
+     * @internal
      */
     public function __construct(TranslatorInterface $translator, ContaoFramework $framework, ResourceFinder $resourceFinder)
     {
@@ -62,6 +63,12 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
         if (!empty($parameters)) {
             $translated = vsprintf($translated, $parameters);
+        }
+
+        // Restore previous translations in $GLOBALS['TL_LANG'] (see #5371)
+        if (null !== $locale && $locale !== $this->getLocale()) {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
         }
 
         return $translated;

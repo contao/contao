@@ -35,7 +35,7 @@ th,td {
 	padding:0;
 	text-align:left;
 }
-input,select,button,label,img,a.tl_submit,.tl_select {
+input,select,label,img,a.tl_submit,.tl_select {
 	vertical-align:middle;
 }
 button {
@@ -378,11 +378,6 @@ select[multiple] {
 }
 .tl_select[multiple],.tl_mselect[multiple],.tl_select_column[multiple],.tl_select_unit[multiple],.tl_select_interval[multiple] {
 	background-image:none;
-}
-@-moz-document url-prefix() {
-	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
-		padding-left:2px;
-	}
 }
 @supports (display:-ms-grid) {
 	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {

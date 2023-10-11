@@ -63,6 +63,57 @@ class PageRegistryTest extends TestCase
         $this->assertSame('/.+?', $route->getRequirement('parameters'));
     }
 
+    public function testReturnsUnparameteredPageRouteForForwardPages(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->type = 'forward';
+        $pageModel->alias = 'bar';
+        $pageModel->urlPrefix = 'foo';
+        $pageModel->urlSuffix = '.baz';
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar.baz', $route->getPath());
+        $this->assertNull($route->getDefault('parameters'));
+    }
+
+    public function testReturnsParameteredPageRouteIfTheAlwaysForwardOptionIsSet(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->type = 'forward';
+        $pageModel->alias = 'bar';
+        $pageModel->urlPrefix = 'foo';
+        $pageModel->urlSuffix = '.baz';
+        $pageModel->alwaysForward = '1';
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
+        $this->assertSame('', $route->getDefault('parameters'));
+        $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
+    }
+
+    public function testReturnsUnparameteredPageRouteForRedirectPages(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'redirect',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'requireItem' => '',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar.baz', $route->getPath());
+        $this->assertNull($route->getDefault('parameters'));
+    }
+
     /**
      * @dataProvider pageRouteWithPathProvider
      */

@@ -259,7 +259,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|(?:\b|^).{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}(?:\b|$)|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{
@@ -310,8 +310,10 @@ class ModuleSearch extends Module
 				continue;
 			}
 
+			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,

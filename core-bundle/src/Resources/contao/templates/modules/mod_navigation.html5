@@ -10,7 +10,7 @@
 
   <?= $this->items ?>
 
-  <a id="<?= $this->skipId ?>" class="invisible">&nbsp;</a>
+  <span id="<?= $this->skipId ?>" class="invisible"></span>
 
 </nav>
 <!-- indexer::continue -->

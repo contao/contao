@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.show">
         <source>Show the details of token ID %s</source>
-        <target>نمایش جزئیات توکن شناسه‌ی %s</target>
+        <target>نمایش جزئیات توکن شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.resend">
         <source>Resend token ID %s</source>
-        <target>ارسال مجدد توکن شناسه‌ی %s</target>
+        <target>ارسال مجدد توکن شناسه %s</target>
       </trans-unit>
     </body>
   </file>

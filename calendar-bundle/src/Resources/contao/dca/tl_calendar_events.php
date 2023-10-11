@@ -241,7 +241,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'loadTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endTime' => array
 		(
@@ -257,21 +257,21 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'setEmptyEndTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'startDate' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endDate' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'pageTitle' => array
 		(
@@ -910,7 +910,7 @@ class tl_calendar_events extends Backend
 
 			while ($objAlias->next())
 			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
+				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
 			}
 		}
 
@@ -1104,6 +1104,12 @@ class tl_calendar_events extends Backend
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+
+		if ($calendar === null)
+		{
+			return $tags;
+		}
+
 		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
 
 		if ($pageModel === null)

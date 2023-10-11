@@ -276,6 +276,14 @@ abstract class DataContainer extends Backend
 				$this->intId = $varValue;
 				break;
 
+			case 'field':
+				$this->strField = $varValue;
+				break;
+
+			case 'inputName':
+				$this->strInputName = $varValue;
+				break;
+
 			default:
 				$this->$strKey = $varValue; // backwards compatibility
 				break;
@@ -431,7 +439,6 @@ abstract class DataContainer extends Backend
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
-
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -514,6 +521,12 @@ abstract class DataContainer extends Backend
 					try
 					{
 						$this->save($varValue);
+
+						// Confirm password changes
+						if ($objWidget instanceof Password)
+						{
+							Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+						}
 					}
 					catch (ResponseException $e)
 					{
@@ -692,6 +705,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
+			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = Backend::getTinyMceLanguage();
@@ -963,7 +977,7 @@ abstract class DataContainer extends Backend
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
 						// Hide the toggle icon if the user does not have access to the field
-						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['exclude'] ?? false) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field'])))
 						{
 							continue;
 						}
@@ -1086,7 +1100,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1105,7 +1119,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
-			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
 		}
 
 		return $return;
@@ -1217,7 +1231,7 @@ abstract class DataContainer extends Backend
 				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 				{
 					// Hide the toggle icon if the user does not have access to the field
-					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
+					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['exclude'] ?? false) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field'])))
 					{
 						continue;
 					}
@@ -1727,7 +1741,7 @@ abstract class DataContainer extends Backend
 						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
-					$args[$k] = implode(', ', $args_k);
+					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
 				}
 				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
 				{
@@ -1759,7 +1773,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
@@ -1811,6 +1825,17 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function markAsCopy(string $label, string $value): string
+	{
+		// Do not mark as copy more than once (see #6058)
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		{
+			return $value;
+		}
+
+		return sprintf($label, $value);
 	}
 }
 

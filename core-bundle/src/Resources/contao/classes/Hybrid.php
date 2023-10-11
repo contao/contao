@@ -75,8 +75,8 @@ abstract class Hybrid extends Frontend
 	/**
 	 * Initialize the object
 	 *
-	 * @param ContentModel|ModuleModel $objElement
-	 * @param string                   $strColumn
+	 * @param ContentModel|FormModel|ModuleModel $objElement
+	 * @param string                             $strColumn
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
@@ -85,7 +85,7 @@ abstract class Hybrid extends Frontend
 		// Store the parent element (see #4556)
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
-			/** @var ContentModel|ModuleModel $objModel */
+			/** @var ContentModel|FormModel|ModuleModel $objModel */
 			$objModel = $objElement;
 
 			if ($objModel instanceof Collection)
@@ -248,6 +248,12 @@ abstract class Hybrid extends Frontend
 		if (!empty($this->objParent->classes) && \is_array($this->objParent->classes))
 		{
 			$this->Template->class .= ' ' . implode(' ', $this->objParent->classes);
+		}
+
+		// Tag the hybrid
+		if ($this->objModel !== null)
+		{
+			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
 		}
 
 		return $this->Template->parse();

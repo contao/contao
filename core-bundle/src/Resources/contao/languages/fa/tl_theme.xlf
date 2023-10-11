@@ -143,35 +143,35 @@
       </trans-unit>
       <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
-        <target>نمایش جزئیات پوسته شناسه‌ی %s</target>
+        <target>نمایش جزئیات پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
-        <target>ویرایش پوسته شناسه‌ی %s</target>
+        <target>ویرایش پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
-        <target>حذف پوسته شناسه‌ی %s</target>
+        <target>حذف پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
-        <target>ویرایش شیوه‌نامه‌های پوسته شناسه‌ی %s</target>
+        <target>ویرایش شیوه‌نامه‌های پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
-        <target>ویرایش ماژول‌های بخش کاربری پوسته شناسه‌ی %s</target>
+        <target>ویرایش ماژول‌های بخش کاربری پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
-        <target>ویرایش چیدمان برگه‌ها پوسته شناسه‌ی %s</target>
+        <target>ویرایش چیدمان برگه‌ها پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
-        <target>ویرایش اندازه نصویر پوسته شناسه‌ی %s</target>
+        <target>ویرایش اندازه نصویر پوسته شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
-        <target>خارج کردن پوسته شناسه‌ی %s</target>
+        <target>خارج کردن پوسته شناسه %s</target>
       </trans-unit>
     </body>
   </file>

@@ -563,7 +563,7 @@
       </trans-unit>
       <trans-unit id="tl_style.toggle">
         <source>Activate/deactivate element ID %s</source>
-        <target>فعال/غیرفعال کردن المان شناسه‌ی %s</target>
+        <target>فعال/غیرفعال کردن المان شناسه %s</target>
       </trans-unit>
     </body>
   </file>

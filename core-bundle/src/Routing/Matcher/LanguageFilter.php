@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
 class LanguageFilter implements RouteFilterInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.matcher.language_filter" service instead
+     * @internal
      */
     public function __construct()
     {

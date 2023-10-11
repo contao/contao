@@ -463,8 +463,12 @@ class Versions extends Controller
 				$arrOrderFields = $objDcaExtractor->getOrderFields();
 
 				// Find the changed fields and highlight the changes
-				foreach ($to as $k=>$v)
+				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
+					$deleted = !\array_key_exists($k, $to);
+					$to[$k] ??= null;
+					$from[$k] ??= null;
+
 					if ($from[$k] != $to[$k])
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['hideInput'] ?? null))
@@ -585,6 +589,11 @@ class Versions extends Controller
 						elseif (isset($GLOBALS['TL_LANG']['MSC'][$k]))
 						{
 							$field = \is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k];
+						}
+
+						if ($deleted)
+						{
+							$field = "<del>$field</del>";
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
@@ -822,15 +831,18 @@ class Versions extends Controller
 			return $this->strUsername;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if ($user = System::getContainer()->get('security.helper')->getUser())
+		{
+			return $user->getUserIdentifier();
+		}
 
-		return $this->User->username;
+		throw new \LogicException('No user logged in. Provide the username via "setUsername()" or call "create(true)" to create a version without user.');
 	}
 
 	/**
 	 * Return the user ID
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getUserId()
 	{
@@ -839,9 +851,12 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import(BackendUser::class, 'User');
+		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		{
+			return $user->id;
+		}
 
-		return $this->User->id;
+		return 0;
 	}
 
 	/**

@@ -41,7 +41,7 @@ class BackendCsvImportController
     private string $projectDir;
 
     /**
-     * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
+     * @internal
      */
     public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {

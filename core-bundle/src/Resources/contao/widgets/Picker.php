@@ -147,7 +147,7 @@ class Picker extends Widget
 				}
 
 				$return .= '
-    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) . '</th>';
+    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'] ?? null) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'] ?? '') . '</th>';
 			}
 
 			$return .= '
@@ -297,7 +297,7 @@ class Picker extends Widget
 
 		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
-		return $label ?: $arrRow['id'];
+		return $label ?: $arrRow['id'] ?? '';
 	}
 
 	protected function getRelatedTable(): string
@@ -309,7 +309,7 @@ class Picker extends Widget
 
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
-		return (string) $arrRelations[$this->strField]['table'];
+		return (string) ($arrRelations[$this->strField]['table'] ?? '');
 	}
 
 	/**
@@ -324,6 +324,11 @@ class Picker extends Widget
 		$extras = array();
 		$extras['fieldType'] = $this->multiple ? 'checkbox' : 'radio';
 		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
+
+		if (\is_array($this->rootNodes))
+		{
+			$extras['rootNodes'] = array_values($this->rootNodes);
+		}
 
 		return $extras;
 	}

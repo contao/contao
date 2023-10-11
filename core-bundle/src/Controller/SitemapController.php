@@ -22,6 +22,7 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend"})
@@ -75,7 +76,9 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElement('loc', $url);
+            $loc = $sitemap->createElement('loc');
+            $loc->appendChild($sitemap->createTextNode($url));
+
             $urlEl = $sitemap->createElement('url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);
@@ -132,6 +135,9 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($pageModels as $pageModel) {
+            // Load details in order to inherit permission settings (see #5556)
+            $pageModel->loadDetails();
+
             if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
                 continue;
             }
@@ -146,16 +152,20 @@ class SitemapController extends AbstractController
                 && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
-                $urls = [$pageModel->getAbsoluteUrl()];
+                try {
+                    $urls = [$pageModel->getAbsoluteUrl()];
 
-                // Get articles with teaser
-                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                    foreach ($articleModels as $articleModel) {
-                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    // Get articles with teaser
+                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                        foreach ($articleModels as $articleModel) {
+                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                        }
                     }
-                }
 
-                $result[] = $urls;
+                    $result[] = $urls;
+                } catch (ExceptionInterface $exception) {
+                    // Skip URL for this page but generate child pages
+                }
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);

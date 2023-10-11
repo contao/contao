@@ -563,7 +563,7 @@
       </trans-unit>
       <trans-unit id="tl_style.toggle">
         <source>Activate/deactivate element ID %s</source>
-        <target>%s kodlu bileşeni etkinleştir/devre dışı bırak</target>
+        <target>%s kimlikli bileşeni etkinleştir/etkisizleştir</target>
       </trans-unit>
     </body>
   </file>

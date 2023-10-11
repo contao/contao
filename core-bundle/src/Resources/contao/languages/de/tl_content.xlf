@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Die Datei im Browser anzeigen anstatt den Download-Dialog zu öffnen.</target>
+        <target>Die Datei im Browser anzeigen, anstatt den Download-Dialog zu öffnen.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.1">
         <source>A custom image link target will override the lightbox link, so the image cannot be viewed fullsize anymore.</source>
-        <target>Eine eigene Bildlink-Adresse überschreibt den Lightbox-Link, so dass das Bild nicht mehr in der Großansicht dargestellt werden kann.</target>
+        <target>Eine eigene Bildlink-Adresse überschreibt den Lightbox-Link, sodass das Bild nicht mehr in der Großansicht dargestellt werden kann.</target>
       </trans-unit>
       <trans-unit id="tl_content.fullsize.0">
         <source>Full-size view/new window</source>
@@ -447,7 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.1">
         <source>Show this image instead of the first frame of the video before playback.</source>
-        <target>Das Bild statt des ersten Frame des Videos vor dem Abspielen anzeigen.</target>
+        <target>Das Bild statt des ersten Frames des Videos vor dem Abspielen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.0">
         <source>Player size</source>

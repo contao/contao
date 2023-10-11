@@ -12,16 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\FilesModel;
 use Contao\Input;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Connection;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
@@ -48,7 +59,8 @@ class StringUtilTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, System::class]);
+        $this->resetStaticProperties([Input::class, System::class, Registry::class, Model::class, Config::class, DcaLoader::class, Database::class, DcaExtractor::class]);
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
@@ -453,6 +465,8 @@ class StringUtilTest extends TestCase
         yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
         yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
         yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+        yield [1.23456, '1.23456', -1];
+        yield [1.23456, '1.2', 2];
     }
 
     /**
@@ -460,11 +474,11 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider numberToStringFailsProvider
      */
-    public function testNumberToStringFails($source, string $exception): void
+    public function testNumberToStringFails($source, string $exception, int $precision = null): void
     {
         $this->expectException($exception);
 
-        StringUtil::numberToString($source);
+        StringUtil::numberToString($source, $precision);
     }
 
     public function numberToStringFailsProvider(): \Generator
@@ -473,5 +487,43 @@ class StringUtilTest extends TestCase
         yield [NAN, \InvalidArgumentException::class];
         yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
         yield ['string', \TypeError::class];
+        yield [1.2, \InvalidArgumentException::class, -2];
+        yield [1.2, \InvalidArgumentException::class, 0];
+        yield [1.2, \InvalidArgumentException::class, 1];
+    }
+
+    public function testInsertTagToSrc(): void
+    {
+        $container = System::getContainer();
+        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+
+        $container->set('database_connection', $this->createMock(Connection::class));
+        $container->set('contao.resource_finder', $finder);
+        $container->set('contao.resource_locator', $locator);
+
+        $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
+
+        $file = new FilesModel([
+            'id' => 1,
+            'tstamp' => time(),
+            'uuid' => StringUtil::uuidToBin('9e474bae-ce18-11ec-9465-cadae3e5cf5d'),
+            'type' => 'file',
+            'path' => 'files/test.jpg',
+            'extension' => 'jpg',
+            'name' => 'test.jpg',
+        ]);
+
+        Registry::getInstance()->registerAlias($file, 'uuid', $file->uuid);
+
+        $this->assertSame(
+            'Foo <img src="files/test.jpg" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar')
+        );
+
+        $this->assertSame(
+            'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar')
+        );
     }
 }

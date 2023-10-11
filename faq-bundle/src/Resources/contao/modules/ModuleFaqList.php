@@ -102,9 +102,12 @@ class ModuleFaqList extends Module
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
 
+			if (empty($arrFaq[$objFaq->pid]))
+			{
+				$arrFaq[$objFaq->pid] = $objPid->row();
+			}
+
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
-			$arrFaq[$objFaq->pid]['headline'] = $objPid->headline;
-			$arrFaq[$objFaq->pid]['title'] = $objPid->title;
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}
