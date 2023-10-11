@@ -5,5 +5,5 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <div class="content-slider" data-config="<?= $this->config ?>">
+  <div class="slider-container" data-config="<?= $this->config ?>">
     <div class="slider-wrapper">
