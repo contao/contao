@@ -34,8 +34,8 @@ class NativeHeaderStorage implements HeaderStorageInterface
 
     public function clear(): void
     {
-        // Keep cleared headers because header_remove() does not reliably clear all the headers depending on the
-        // SAPI
+        // Keep cleared headers because header_remove() does not reliably
+        // clear all the headers depending on the SAPI
         $this->clearedHeaders = array_merge($this->clearedHeaders, headers_list());
 
         if ('cli' !== \PHP_SAPI && !headers_sent()) {
