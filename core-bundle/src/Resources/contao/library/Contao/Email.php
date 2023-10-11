@@ -556,7 +556,7 @@ class Email
 		// Set the return path (see #5004)
 		if ($this->objMessage instanceof EmailMessage)
 		{
-			$this->objMessage->returnPath($this->strSender);
+			$this->objMessage->returnPath(new Address($this->strSender, $this->strSenderName ?? ''));
 		}
 		else
 		{
