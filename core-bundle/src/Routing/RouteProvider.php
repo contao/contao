@@ -47,7 +47,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
-        // The request string must start with "/" not contain "auto_item" (see #4012)
+        // The request string must start with "/" and must not contain "auto_item" (see #4012)
         if (!str_starts_with($pathInfo, '/') || false !== strpos($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
