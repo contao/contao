@@ -16,6 +16,7 @@ use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\Twig\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
@@ -44,13 +45,14 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
  * @experimental
  */
-final class ContaoExtension extends AbstractExtension
+final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
@@ -58,6 +60,7 @@ final class ContaoExtension extends AbstractExtension
         private readonly Environment $environment,
         private readonly TemplateHierarchyInterface $hierarchy,
         ContaoCsrfTokenManager $tokenManager,
+        private readonly ContaoVariable $contaoVariable,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
@@ -88,6 +91,11 @@ final class ContaoExtension extends AbstractExtension
                 }
             },
         );
+    }
+
+    public function getGlobals(): array
+    {
+        return [$this->contaoVariable];
     }
 
     /**

@@ -1045,6 +1045,13 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
+    contao.twig.contao_variable:
+        class: Contao\CoreBundle\Twig\ContaoVariable
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@contao.security.token_checker'
+
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
         public: true
@@ -1052,6 +1059,7 @@ services:
             - '@twig'
             - '@contao.twig.filesystem_loader'
             - '@contao.csrf.token_manager'
+            - '@contao.twig.contao_variable'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
