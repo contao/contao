@@ -546,9 +546,11 @@ class ZipReader
 				}
 			}
 
+			$offset = strlen($strRoot);
+
 			foreach ($this->arrFiles as &$file)
 			{
-				$file['file_name'] = substr($file['file_name'], strlen($strRoot));
+				$file['file_name'] = substr($file['file_name'], $offset);
 			}
 		}
 	}
