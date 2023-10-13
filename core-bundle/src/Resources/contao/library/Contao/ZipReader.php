@@ -536,7 +536,7 @@ class ZipReader
 
 		if ($blnSkipRootFolder && !empty($this->arrFiles))
 		{
-			$strRoot = strtok($this->arrFiles[0]['file_name'], '/').'/';
+			$strRoot = strtok($this->arrFiles[0]['file_name'], '/') . '/';
 
 			foreach ($this->arrFiles as $file)
 			{
@@ -546,7 +546,7 @@ class ZipReader
 				}
 			}
 
-			$offset = strlen($strRoot);
+			$offset = \strlen($strRoot);
 
 			foreach ($this->arrFiles as &$file)
 			{
