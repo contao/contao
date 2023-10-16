@@ -107,7 +107,6 @@ class UserListCommandTest extends TestCase
             [['id' => 42, 'username' => 'k.jones']],
         ];
 
-
         yield 'Ignores non-existing columns' => [
             ['--column' => ['id', 'username', 'foobar']],
             [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
