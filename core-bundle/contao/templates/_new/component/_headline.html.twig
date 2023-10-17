@@ -20,10 +20,8 @@
     {% set tag_name = headline.tag_name|default('h1') %}
 
     <{{ tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
-    {%- block headline_inner %}
-        {%- apply spaceless %}
-            {{ headline.text|insert_tag_raw }}
-        {% endapply -%}
-    {% endblock -%}
+    {%- block headline_inner -%}
+        {{ headline.text|insert_tag_raw }}
+    {%- endblock -%}
     </{{ tag_name }}>
 {% endblock %}
