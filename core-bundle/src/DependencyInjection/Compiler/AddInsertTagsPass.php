@@ -130,7 +130,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         $expectedReturnType = 'contao.block_insert_tag' === $serviceTag ? ParsedSequence::class : InsertTagResult::class;
 
         if ($expectedReturnType !== (string) $ref->getReturnType()) {
-            $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, (string) $ref->getReturnType());
+            $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, $ref->getReturnType());
 
             throw new InvalidDefinitionException($invalid);
         }

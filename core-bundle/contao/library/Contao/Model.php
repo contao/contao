@@ -462,8 +462,8 @@ abstract class Model
 			return null;
 		}
 
-		// This method is called thousands of times so the strtolower() calls would amount to a significant performance
-		// loss. Hence, we cache those values statically.
+		// This method is called thousands of times, so the strtolower() calls would amount
+		// to a significant performance loss. Hence, we cache those values statically.
 		static $loweredTables = array();
 		static $loweredKeys = array();
 
