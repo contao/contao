@@ -797,7 +797,7 @@ h2.sub_headline {
 }
 
 .maintenance_inactive:last-child {
-	padding-bottom: 9px;
+	padding-bottom: 14px;
 }
 
 .maintenance_inactive .tl_tbox {
@@ -810,7 +810,7 @@ h2.sub_headline {
 }
 
 .maintenance_inactive h2.sub_headline {
-	margin: 18px 15px 3px;
+	margin: 16px 15px 3px;
 }
 
 .maintenance_inactive .tl_submit_container {
@@ -1879,7 +1879,7 @@ ul.sgallery li {
 }
 
 #tl_soverview > div {
-	padding: 4px 15px;
+	padding: 5px 15px;
 	border-bottom: 1px solid var(--border);
 }
 
@@ -1887,17 +1887,25 @@ ul.sgallery li {
 	border-bottom: 0;
 }
 
-#tl_messages h2, #tl_shortcuts h2, #tl_versions h2 {
-	margin: 14px 0 6px;
+#tl_messages h2, #tl_shortcuts h2 {
+	margin: 14px 0 10px;
 }
 
-#tl_messages p:not([class]) {
-	margin-top: 6px;
+#tl_versions h2 {
+	margin: 14px 0 12px;
+}
+
+#tl_messages p {
+	margin-bottom: .5em;
+}
+
+#tl_messages p:last-child {
+	margin-bottom: 1em;
 }
 
 #tl_messages .tl_error, #tl_messages .tl_confirm, #tl_messages .tl_info, #tl_messages .tl_new {
-	padding: 3px 6px 3px 21px;
-	background-position: left 4px;
+	padding: 0 0 0 21px;
+	background-position: left 1px;
 	background-color: transparent;
 }
 
