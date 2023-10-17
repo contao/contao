@@ -71,8 +71,8 @@ class Theme extends Backend
 
 					$objFile = new File($strFile);
 
-					// Skip anything but .cto and .sql files
-					if ($objFile->extension != 'cto' && $objFile->extension != 'sql')
+					// Skip anything but .cto, .sql and .zip files
+					if ($objFile->extension != 'cto' && $objFile->extension != 'sql' && $objFile->extension != 'zip')
 					{
 						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
@@ -191,7 +191,7 @@ class Theme extends Backend
   <h4>' . $GLOBALS['TL_LANG']['tl_theme']['tables_fields'] . '</h4>';
 
 			// Find the XML file
-			$objArchive = new ZipReader($strFile);
+			$objArchive = new ZipReader($strFile, true);
 
 			// Continue if there is no XML file
 			if ($objArchive->getFile('theme.xml') === false)
@@ -367,7 +367,7 @@ class Theme extends Backend
 			$xml = null;
 
 			// Open the archive
-			$objArchive = new ZipReader($strZipFile);
+			$objArchive = new ZipReader($strZipFile, true);
 
 			// Extract all files
 			while ($objArchive->next())
@@ -384,7 +384,6 @@ class Theme extends Backend
 				// Limit file operations to files and the templates directory
 				if (strncmp($objArchive->file_name, 'files/', 6) !== 0 && strncmp($objArchive->file_name, 'tl_files/', 9) !== 0 && strncmp($objArchive->file_name, 'templates/', 10) !== 0)
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $objArchive->file_name));
 					continue;
 				}
 
