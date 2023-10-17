@@ -796,10 +796,6 @@ h2.sub_headline {
 	border-top: 1px solid var(--border);
 }
 
-.maintenance_inactive:last-child {
-	padding-bottom: 14px;
-}
-
 .maintenance_inactive .tl_tbox {
 	border: 0 !important;
 	padding: 6px 15px 14px;
@@ -817,25 +813,6 @@ h2.sub_headline {
 	background: none;
 	padding: 0 15px 24px;
 	border: 0;
-}
-
-.maintenance_inactive:last-of-type .tl_submit_container {
-	padding-bottom: 10px;
-}
-
-#tl_maintenance_mode .tl_message {
-	margin-bottom: 12px;
-}
-
-#tl_maintenance_mode .tl_message > p {
-	padding-top: 0;
-	padding-bottom: 0;
-	background-color: transparent;
-	background-position-y: center;
-}
-
-#tl_maintenance_index .tl_tbox {
-	margin-top: -12px;
 }
 
 /* Crawler */
