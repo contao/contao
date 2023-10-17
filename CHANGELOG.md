@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.4] (2023-10-17)
+
+**Fixed issues:**
+
+- [#6438] Cache lower key values in `Model::convertToPhpValue()` ([Toflar])
+
 ## [5.2.3] (2023-10-09)
 
 **Fixed issues:**
@@ -99,6 +105,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.4]: https://github.com/contao/contao/releases/tag/5.2.4
 [5.2.3]: https://github.com/contao/contao/releases/tag/5.2.3
 [5.2.2]: https://github.com/contao/contao/releases/tag/5.2.2
 [5.2.1]: https://github.com/contao/contao/releases/tag/5.2.1
@@ -161,3 +168,4 @@ This project adheres to [Semantic Versioning].
 [#6405]: https://github.com/contao/contao/pull/6405
 [#6414]: https://github.com/contao/contao/pull/6414
 [#6416]: https://github.com/contao/contao/pull/6416
+[#6438]: https://github.com/contao/contao/pull/6438
