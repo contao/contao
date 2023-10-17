@@ -462,6 +462,21 @@ abstract class Model
 			return null;
 		}
 
+		// This method is called thousands of times so the strtolower() calls would amount to a significant performance
+		// loss. Hence, we cache those values statically.
+		static $loweredTables = array();
+		static $loweredKeys = array();
+
+		if (!isset($loweredTables[static::$strTable]))
+		{
+			$loweredTables[static::$strTable] = strtolower(static::$strTable);
+		}
+
+		if (!isset($loweredKeys[$strKey]))
+		{
+			$loweredKeys[$strKey] = strtolower($strKey);
+		}
+
 		if (!self::$arrColumnCastTypes)
 		{
 			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
@@ -476,7 +491,7 @@ abstract class Model
 			}
 		}
 
-		return match (self::$arrColumnCastTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		return match (self::$arrColumnCastTypes[$loweredTables[static::$strTable]][$loweredKeys[$strKey]] ?? null)
 		{
 			Types::INTEGER, Types::SMALLINT => (int) $varValue,
 			Types::FLOAT => (float) $varValue,
