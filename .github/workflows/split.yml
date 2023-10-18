@@ -34,6 +34,6 @@ jobs:
               run: composer global require contao/monorepo-tools:dev-main
 
             - name: Split the monorepo
-              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/} ${{ github.event.forced && '--force-push' || '' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}

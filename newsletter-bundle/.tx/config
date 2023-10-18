@@ -1,65 +1,65 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
 [o:contao:p:newsletter-bundle:r:v5_3-default]
 file_filter = contao/languages/<lang>/default.xlf
 source_file = contao/languages/en/default.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-default
+resource_name = v5_3-default
 
 [o:contao:p:newsletter-bundle:r:v5_3-modules]
 file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-modules
+resource_name = v5_3-modules
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_member]
 file_filter = contao/languages/<lang>/tl_member.xlf
 source_file = contao/languages/en/tl_member.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_member
+resource_name = v5_3-tl_member
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_module]
 file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_module
+resource_name = v5_3-tl_module
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_newsletter]
 file_filter = contao/languages/<lang>/tl_newsletter.xlf
 source_file = contao/languages/en/tl_newsletter.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_newsletter
+resource_name = v5_3-tl_newsletter
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_newsletter_channel]
 file_filter = contao/languages/<lang>/tl_newsletter_channel.xlf
 source_file = contao/languages/en/tl_newsletter_channel.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_newsletter_channel
+resource_name = v5_3-tl_newsletter_channel
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_newsletter_recipients]
 file_filter = contao/languages/<lang>/tl_newsletter_recipients.xlf
 source_file = contao/languages/en/tl_newsletter_recipients.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_newsletter_recipients
+resource_name = v5_3-tl_newsletter_recipients
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_user]
 file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user
+resource_name = v5_3-tl_user
 
 [o:contao:p:newsletter-bundle:r:v5_3-tl_user_group]
 file_filter = contao/languages/<lang>/tl_user_group.xlf
 source_file = contao/languages/en/tl_user_group.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user_group
+resource_name = v5_3-tl_user_group
