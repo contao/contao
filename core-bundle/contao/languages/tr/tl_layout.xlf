@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>Bu seçenek etkinleştirildiğinde, farklı web tarayıcılardaki HTML bileşenlerinin tutarsız varsayılan biçimlendirmelerini kaldırılır.</target>
+        <target>Bu seçenek etkinleştirildiğinde, farklı tarayıcılardaki tutarsız varsayılan HTML bileşeni biçimlendirmeleri kaldırılır.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışı bırakılmışsa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Bu seçenek etkinleştirildiğinde, HTML markup kodu web tarayıcıya gönderilmeden önce küçültülür.</target>
+        <target>Bu seçenek etkinleştirildiğinde, HTML markup kodu tarayıcıya gönderilmeden önce küçültülür.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -459,23 +459,23 @@
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
-        <target>%s kodlu sayfa düzeninin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli sayfa düzeninin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
-        <target>%s kodlu sayfa düzenini düzenle</target>
+        <target>%s kimlikli sayfa düzenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
-        <target>%s kodlu sayfa düzenini kopyala</target>
+        <target>%s kimlikli sayfa düzenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
-        <target>%s kodlu sayfa düzenini taşı</target>
+        <target>%s kimlikli sayfa düzenini taşı</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
-        <target>%s kodlu sayfa düzenini sil</target>
+        <target>%s kimlikli sayfa düzenini sil</target>
       </trans-unit>
     </body>
   </file>

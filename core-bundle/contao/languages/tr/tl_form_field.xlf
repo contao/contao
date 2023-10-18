@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.label.1">
         <source>The field label will be visible on the website, typically in front of or above the field.</source>
-        <target>Alan etiketi, web sitesinde genellikle alanın önünde ya da üstünde görüntülenir.</target>
+        <target>Alan etiketi, sitede genellikle alanın önünde ya da üstünde görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.text.0">
         <source>Text</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.options.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışı bırakılmışsa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.mandatory.0">
         <source>Mandatory field</source>
@@ -375,7 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, form alanı web sitesinde görüntülenmez.</target>
+        <target>Bu seçenek etkinleştirildiğinde, form alanı sitede görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
@@ -431,27 +431,35 @@
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
-        <target>%s kodlu form alanının ayrıntılarını görüntüle</target>
+        <target>%s kimlikli form alanının ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
-        <target>%s kodlu form alanını düzenle</target>
+        <target>%s kimlikli form alanını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
-        <target>%s kodlu form alanını taşı</target>
+        <target>%s kimlikli form alanını taşı</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
-        <target>%s kodlu form alanını kopyala</target>
+        <target>%s kimlikli form alanını kopyala</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
-        <target>%s kodlu form alanını sil</target>
+        <target>%s kimlikli form alanını sil</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.toggle">
-        <source>Hide/unhide form field ID %s</source>
-        <target>%s kodlu form alanını gizle/görüntüle</target>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+        <target>Form alanını gizle/görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+        <target>%s kimlikli form alanını gizle</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
+        <target>%s kimlikli form alanını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -459,7 +467,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
-        <target>%s kodlu form alanından sonra yapıştır</target>
+        <target>%s kimlikli form alanından sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
@@ -467,7 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
-        <target>%s kodlu form alanından sonra yeni bir form alanı ekle</target>
+        <target>%s kimlikli form alanından sonra yeni bir form alanı ekle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

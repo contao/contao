@@ -77,6 +77,20 @@
         <source>The following formats are not supported on your server: %s</source>
         <target>De volgende formats worden niet ondersteund op uw server: %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+        <target>Bewaar auteursrecht metagegevens</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
+        <source>Metadata fields</source>
+        <target>Metavelden</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
         <target>Gebruik de originele afbeelding als de afmetingen overeenkomen</target>
@@ -84,6 +98,13 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
         <target>Houd er rekening mee dat in dit geval geen optimalisaties zoals het strippen van metagegevens of JPEG-compressie worden toegepast.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+        <target>Afbeeldingskwaliteit</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -113,6 +134,10 @@
         <source>Loading options</source>
         <target>Laadopties</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+        <target>Matadata instellingen</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
         <target>Expert-instellingen</target>
@@ -140,6 +165,15 @@
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>De afbeelding wordt aangepast aan de opgegeven maten. Indien nodig  wordt dit bijgesneden.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

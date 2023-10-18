@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="MOD.favorites.0">
         <source>Favorites</source>
+        <target>Preferiti</target>
       </trans-unit>
       <trans-unit id="MOD.favorites.1">
         <source>Manage your back end menu favorites</source>

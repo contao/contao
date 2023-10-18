@@ -30,12 +30,10 @@
         <target>Pole &quot;%s&quot; powinno zawierać nie więcej niż %d znaki!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Pole &quot;%s&quot; powinno zawierać co najmniej %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Pole &quot;%s&quot; nie może być większe niż %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1958,6 +1956,9 @@
         <source>Metadata</source>
         <target>Metadane</target>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
         <target>Zarządzanie wersjami</target>
@@ -2798,6 +2799,9 @@
         <source>visible from %s to %s</source>
         <target>widoczne od %s do %s</target>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
       </trans-unit>
@@ -2943,6 +2947,18 @@
         <source>Expand or collapse all nodes</source>
         <target>Rozwiń lub zwiń wszystkie węzły</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nowy</target>
@@ -2979,9 +2995,14 @@
         <source>Edit the child elements of element ID %s</source>
         <target>Edytuj elementy podrzędne elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
-        <target>Publikuj/ukryj element ID %s</target>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

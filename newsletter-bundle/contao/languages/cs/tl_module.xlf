@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Zobrazit tyto zpravodaje ve frontendovém formuláři.</target>
+        <target>Zobrazit tyto distribuce zpravodajů ve frontendovém formuláři.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
@@ -22,7 +22,7 @@
         <target>Vlastní text</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
-        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
         <target>Zde můžete uvést např. text o ochraně osobních údajů, abyste svolili s odběrem zpravodaje podle platných mezinárodních práv (GDPR). </target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Můžete použít následující linky &lt;em&gt;##channels##&lt;/em&gt; (jméno kanálu), &lt;em&gt;##domain##&lt;/em&gt; (název webové stránky) a &lt;em&gt;##link##&lt;/em&gt; (odkaz pro aktivaci).</target>
+        <target>Můžete použít následující linky &lt;em&gt;##channels##&lt;/em&gt; (jméno kanálu), &lt;em&gt;##domain##&lt;/em&gt; (název webové stránky).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -100,7 +100,10 @@ Pokud jste se k odběru nepřihlásili, ignorujte prosím tento mail.
 
 ##channels##
 </source>
-        <target>Odhlásil(a) jste se z odběru následujícího zdroje ##domain##: ##channels##.</target>
+        <target>Odhlásil(a) jste se z odběru následujícího zdroje ##domain##:
+
+ ##channels##
+</target>
       </trans-unit>
     </body>
   </file>
