@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image;
 use Contao\StringUtil;
@@ -27,11 +28,17 @@ class CteAliasListener implements ResetInterface
 {
     private static ?array $cteAliasCache = null;
 
-    public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly Security $security,
-        private readonly Connection $db,
-    ) {
+    private RequestStack $requestStack;
+    private Security $security;
+    private Connection $db;
+    private ContaoFramework $framework;
+
+    public function __construct(RequestStack $requestStack, Security $security, Connection $db, ContaoFramework $framework)
+    {
+        $this->requestStack = $requestStack;
+        $this->security = $security;
+        $this->db = $db;
+        $this->framework = $framework;
     }
 
     /**
@@ -63,13 +70,16 @@ class CteAliasListener implements ResetInterface
     public function deleteElement(array $row, ?string $href, string $label, string $title, ?string $icon, string $attributes): string
     {
         $permission = ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE;
+        $imageAdapter = $this->framework->getAdapter(Image::class);
 
         // Disable the button if the element type is not allowed or the element is referenced
         if (!$this->security->isGranted($permission, $row['type']) || isset($this->getAliasReferences()[(int) $row['id']])) {
-            return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+            return $imageAdapter->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
         }
 
-        return '<a href="'.Backend::addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
+        $backendAdapter = $this->framework->getAdapter(Backend::class);
+
+        return '<a href="'.$backendAdapter->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$imageAdapter->getHtml($icon, $label).'</a> ';
     }
 
     public function reset(): void

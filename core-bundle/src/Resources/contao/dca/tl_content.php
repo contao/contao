@@ -894,8 +894,6 @@ if (Input::get('do') == 'article')
  */
 class tl_content extends Backend
 {
-	private static $cteAliasCache;
-
 	/**
 	 * Import the back end user object
 	 */
