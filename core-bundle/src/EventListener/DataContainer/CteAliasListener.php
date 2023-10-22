@@ -26,7 +26,7 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class CteAliasListener implements ResetInterface
 {
-    private static ?array $cteAliasCache = null;
+    private ?array $cteAliasCache = null;
 
     private RequestStack $requestStack;
     private Security $security;
@@ -84,15 +84,15 @@ class CteAliasListener implements ResetInterface
 
     public function reset(): void
     {
-        self::$cteAliasCache = null;
+        $this->cteAliasCache = null;
     }
 
     private function getAliasReferences(): array
     {
-        if (null === self::$cteAliasCache) {
-            self::$cteAliasCache = $this->db->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type='alias' GROUP BY cteAlias");
+        if (null === $this->cteAliasCache) {
+            $this->cteAliasCache = $this->db->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type='alias' GROUP BY cteAlias");
         }
 
-        return self::$cteAliasCache;
+        return $this->cteAliasCache;
     }
 }
