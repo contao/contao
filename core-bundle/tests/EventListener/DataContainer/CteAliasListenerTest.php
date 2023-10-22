@@ -27,6 +27,13 @@ use Symfony\Component\Security\Core\Security;
 
 class CteAliasListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testDisallowsDeletionOfReferencedElement(): void
     {
         $this->expectException(InternalServerErrorException::class);
