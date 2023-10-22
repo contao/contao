@@ -193,7 +193,9 @@ class Route404Provider extends AbstractPageRouteProvider
 
     private function getLocaleFallbackRoutes(Request $request): array
     {
-        if ('/' === $request->getPathInfo()) {
+        $pathInfo = $request->getPathInfo();
+
+        if ('/' === $pathInfo || !str_starts_with($pathInfo, '/')) {
             return [];
         }
 

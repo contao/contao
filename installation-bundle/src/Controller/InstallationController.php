@@ -333,18 +333,6 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $databaseVersion = null;
-
-        try {
-            $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
-        } catch (\Throwable $exception) {
-            // Ignore server version detection errors
-        }
-
-        if ($databaseVersion) {
-            $parameters['parameters']['database_version'] = $databaseVersion;
-        }
-
         $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();

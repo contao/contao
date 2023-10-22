@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.32] (2023-10-17)
+
+**Fixed issues:**
+
+- [#6437] Support themes from ZIP files ([aschempp])
+- [#6431] Make sure valid URLs start with a slash ([aschempp])
+- [#6425] Do not set `database_version` in the install tool ([aschempp])
+
 ## [4.13.31] (2023-10-09)
 
 **Fixed issues:**
@@ -821,6 +829,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.32]: https://github.com/contao/contao/releases/tag/4.13.32
 [4.13.31]: https://github.com/contao/contao/releases/tag/4.13.31
 [4.13.30]: https://github.com/contao/contao/releases/tag/4.13.30
 [4.13.29]: https://github.com/contao/contao/releases/tag/4.13.29
@@ -1513,3 +1522,6 @@ This project adheres to [Semantic Versioning].
 [#6401]: https://github.com/contao/contao/pull/6401
 [#6419]: https://github.com/contao/contao/pull/6419
 [#6422]: https://github.com/contao/contao/pull/6422
+[#6425]: https://github.com/contao/contao/pull/6425
+[#6431]: https://github.com/contao/contao/pull/6431
+[#6437]: https://github.com/contao/contao/pull/6437

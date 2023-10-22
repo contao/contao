@@ -592,7 +592,7 @@ h2.sub_headline {
 	padding:6px 15px 14px;
 }
 .maintenance_inactive .tl_message {
-	margin-top:0;
+	margin: 0 15px 3px;
 }
 .maintenance_inactive h2.sub_headline {
 	margin:18px 15px 3px;
@@ -2051,7 +2051,7 @@ fieldset.collapsed > legend {
 	white-space:nowrap;
 }
 #tl_maintenance_cache .tl_checkbox_container {
-	margin-top:12px;
+	margin-top:3px;
 }
 #tl_maintenance_cache .tl_checkbox_container label {
 	font-weight:600;
