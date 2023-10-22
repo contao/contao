@@ -63,6 +63,13 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.cte_alias:
+        class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
+        arguments:
+            - '@request_stack'
+            - '@security.helper'
+            - '@database_connection'
+
     contao.listener.data_container.disable_app_configured_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener
         arguments:

@@ -14,7 +14,6 @@ use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -40,7 +39,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
 			array('tl_content', 'filterContentElements'),
-			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
 		(
@@ -99,7 +97,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_content', 'deleteElement')
 			),
 			'toggle' => array
 			(
@@ -1098,28 +1095,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Prevent deleting referenced elements (see #4898)
-	 */
-	public function preserveReferenced()
-	{
-		$aliasRefs = $this->getAliasReferences();
-		$id = Input::get('id');
-
-		if (Input::get('act') == 'delete' && isset($aliasRefs[$id]))
-		{
-			throw new InternalServerErrorException('Content element ID ' . $id . ' is used in an alias element and can therefore not be deleted.');
-		}
-
-		if (Input::get('act') == 'deleteAll')
-		{
-			$objSession = System::getContainer()->get('session');
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], array_map('intval', array_keys($aliasRefs)));
-			$objSession->replace($session);
-		}
-	}
-
-	/**
 	 * Filter the content elements
 	 */
 	public function filterContentElements()
@@ -1854,31 +1829,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the delete content element button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
-	{
-		// Disable the button if the element type is not allowed
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
-		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
-		$aliasRefs = $this->getAliasReferences();
-
-		return isset($aliasRefs[(int) $row['id']]) ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
-	}
-
-	/**
 	 * Dynamically add flags to the "singleSRC" field
 	 *
 	 * @param mixed         $varValue
@@ -2034,16 +1984,5 @@ class tl_content extends Backend
 		}
 
 		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
-	}
-
-	private function getAliasReferences(): array
-	{
-		if (null === self::$cteAliasCache)
-		{
-			$connection = System::getContainer()->get('database_connection');
-			self::$cteAliasCache = $connection->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='') GROUP BY cteAlias");
-		}
-
-		return self::$cteAliasCache;
 	}
 }
