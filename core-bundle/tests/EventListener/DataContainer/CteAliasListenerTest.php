@@ -59,7 +59,6 @@ class CteAliasListenerTest extends TestCase
         ]);
 
         $listener = new CteAliasListener($requestStack, $this->createMock(Security::class), $this->mockConnection(), $framework);
-        $listener->reset();
         $listener->preserveReferenced();
 
         $this->assertSame(array_values($session->all()['CURRENT']['IDS']), [2]);
@@ -87,7 +86,6 @@ class CteAliasListenerTest extends TestCase
         ]);
 
         $listener = new CteAliasListener(new RequestStack(), $security, $this->createMock(Connection::class), $framework);
-        $listener->reset();
         $result = $listener->deleteElement(['type' => 'foo'], null, '', '', 'delete.svg', '');
 
         $this->assertSame('delete_.svg ', $result);
@@ -115,7 +113,6 @@ class CteAliasListenerTest extends TestCase
         ]);
 
         $listener = new CteAliasListener(new RequestStack(), $security, $this->mockConnection(), $framework);
-        $listener->reset();
         $result = $listener->deleteElement(['id' => 1, 'type' => 'foo'], null, '', '', 'delete.svg', '');
 
         $this->assertSame('delete_.svg ', $result);
@@ -144,7 +141,6 @@ class CteAliasListenerTest extends TestCase
         ]);
 
         $listener = new CteAliasListener(new RequestStack(), $security, $this->mockConnection(), $framework);
-        $listener->reset();
         $result = $listener->deleteElement(['id' => 2, 'type' => 'foo'], null, '', '', 'delete.svg', '');
 
         $this->assertSame('<a href="" title="">delete.svg</a> ', $result);
