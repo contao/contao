@@ -43,7 +43,7 @@ class CteAliasListener implements ResetInterface
 
     /**
      * Prevent deleting referenced elements (see #4898).
-     * 
+     *
      * @Callback(table="tl_content", target="config.onload")
      */
     public function preserveReferenced(): void
@@ -66,7 +66,7 @@ class CteAliasListener implements ResetInterface
 
     /**
      * Return the delete content element button.
-     * 
+     *
      * @Callback(table="tl_content", target="list.operations.delete.button")
      */
     public function deleteElement(array $row, ?string $href, string $label, string $title, ?string $icon, string $attributes): string
