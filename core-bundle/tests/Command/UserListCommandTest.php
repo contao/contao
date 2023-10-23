@@ -95,9 +95,9 @@ class UserListCommandTest extends TestCase
 
         yield 'Returns default fields from data' => [
             [],
-            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
             'k.jones    Kevin Jones',
-            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
         ];
 
         yield 'Returns custom columns' => [
@@ -128,9 +128,9 @@ class UserListCommandTest extends TestCase
 
         yield 'Formats checkbox fields on Unix' => [
             [],
-            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
             'k.jones    Kevin Jones   '.$check,
-            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
         ];
     }
 
