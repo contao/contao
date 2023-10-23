@@ -24,6 +24,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Service\ResetInterface;
 
+/**
+ * @internal
+ */
 class CteAliasListener implements ResetInterface
 {
     private ?array $cteAliasCache = null;
