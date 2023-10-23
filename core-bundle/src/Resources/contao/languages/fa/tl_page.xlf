@@ -97,6 +97,12 @@
         <source>Please choose the redirect type.</source>
         <target>لطفا نوع تغییر مسیر را انتخاب نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>برگه‌ی تغییر مسیر</target>

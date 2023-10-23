@@ -103,7 +103,7 @@ class BackendHelp extends Backend
 
 					foreach ($option as $opt)
 					{
-						$rows[] = $arrData['reference'][$opt] ?? null;
+						$rows[] = $arrData['reference'][$opt] ?? array($opt, '');
 					}
 				}
 				elseif (isset($arrData['reference'][$key]))
