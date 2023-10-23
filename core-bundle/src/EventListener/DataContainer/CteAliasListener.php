@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
@@ -43,8 +43,9 @@ class CteAliasListener implements ResetInterface
 
     /**
      * Prevent deleting referenced elements (see #4898).
+     * 
+     * @Callback(table="tl_content", target="config.onload")
      */
-    #[AsCallback('tl_content', 'config.onload')]
     public function preserveReferenced(): void
     {
         $aliasRefs = $this->getAliasReferences();
@@ -65,8 +66,9 @@ class CteAliasListener implements ResetInterface
 
     /**
      * Return the delete content element button.
+     * 
+     * @Callback(table="tl_content", target="list.operations.delete.button")
      */
-    #[AsCallback('tl_content', 'list.operations.delete.button')]
     public function deleteElement(array $row, ?string $href, string $label, string $title, ?string $icon, string $attributes): string
     {
         $permission = ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE;
