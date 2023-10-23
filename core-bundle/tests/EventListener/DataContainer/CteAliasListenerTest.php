@@ -29,17 +29,17 @@ class CteAliasListenerTest extends TestCase
 {
     public function testDisallowsDeletionOfReferencedElement(): void
     {
-        $this->expectException(InternalServerErrorException::class);
-
-        $request = new Request(['act' => 'delete', 'id' => 1]);
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request(['act' => 'delete', 'id' => 1]));
 
         $framework = $this->mockContaoFramework([
             Backend::class => $this->mockAdapter(['addToUrl']),
         ]);
 
         $listener = new CteAliasListener($requestStack, $this->createMock(Security::class), $this->mockConnection(), $framework);
+
+        $this->expectException(InternalServerErrorException::class);
+
         $listener->preserveReferenced();
     }
 
