@@ -314,6 +314,12 @@ class HtmlAttributesTest extends TestCase
         $attributes->setIfExists('f', false); // should not alter the list
 
         $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
+
+        // Uppercase names
+        $attributes->set('E', 'UPPER');
+        $attributes->unset('F');
+
+        $this->assertSame(['e' => 'UPPER'], iterator_to_array($attributes));
     }
 
     public function testSetAndUnsetConditionalProperties(): void

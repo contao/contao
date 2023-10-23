@@ -148,7 +148,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        unset($this->attributes[$name]);
+        unset($this->attributes[strtolower($name)]);
 
         return $this;
     }
