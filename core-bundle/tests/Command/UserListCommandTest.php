@@ -45,10 +45,9 @@ class UserListCommandTest extends TestCase
 
     public function testThrowsExceptionOnInvalidFormat(): void
     {
-        $this->expectException(\LogicException::class);
-
         $command = $this->getCommand($this->mockQueryBuilder([]));
 
+        $this->expectException(\LogicException::class);
         $this->executeCommand($command, ['--format' => 'foo'], 1);
     }
 
@@ -58,7 +57,6 @@ class UserListCommandTest extends TestCase
     public function testListsUsers(array $input, array $data, string $expected): void
     {
         $command = $this->getCommand($this->mockQueryBuilder($data));
-
         $output = $this->executeCommand($command, $input);
 
         $this->assertStringContainsString($expected, $output);
@@ -69,9 +67,9 @@ class UserListCommandTest extends TestCase
      */
     public function testListsUsersAsJson(array $input, array $data, string $expectedTxt, array $expected): void
     {
-        $command = $this->getCommand($this->mockQueryBuilder($data));
         $input['--format'] = 'json';
 
+        $command = $this->getCommand($this->mockQueryBuilder($data));
         $output = json_decode($this->executeCommand($command, $input), true);
 
         $this->assertSame($expected, $output);
@@ -169,7 +167,6 @@ class UserListCommandTest extends TestCase
     private function mockQueryBuilder(array $result): QueryBuilder
     {
         $queryBuilder = $this->createMock(QueryBuilder::class);
-
         $queryBuilder
             ->expects($this->once())
             ->method('select')
@@ -196,7 +193,6 @@ class UserListCommandTest extends TestCase
     private function executeCommand(UserListCommand $command, array $input = [], int $expectedExitCode = 0): string
     {
         $commandTester = new CommandTester($command);
-
         $code = $commandTester->execute($input);
 
         $this->assertSame($expectedExitCode, $code);
