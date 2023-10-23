@@ -65,7 +65,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'Vue.js attributes' => [
             'v-html="raw" v-bind:id="id" :disabled="dis" :[attr]="val" :[\'data-\'+key]="val"',
-            ['v-html' => 'raw', 'v-bind:id' => 'id', ':disabled' => 'dis', ':[attr]' => 'val', ':[\'data-\'+key]' => 'val'],
+            ['v-html' => 'raw', 'v-bind:id' => 'id', ':disabled' => 'dis', ':[attr]' => 'val', ":['data-'+key]" => 'val'],
         ];
 
         yield 'Vue.js events' => [
