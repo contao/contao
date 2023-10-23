@@ -83,7 +83,7 @@ class UserListCommand extends Command
         $qb->select('*')->from('tl_user');
 
         if ($onlyAdmins) {
-            $qb->where("admin='1'");
+            $qb->where('admin = 1');
         }
 
         return $qb->fetchAllAssociative();

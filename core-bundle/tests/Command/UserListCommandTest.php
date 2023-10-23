@@ -138,7 +138,7 @@ class UserListCommandTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with("admin='1'")
+            ->with('admin = 1')
             ->willReturnSelf()
         ;
 
