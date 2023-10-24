@@ -80,8 +80,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
@@ -353,7 +351,6 @@ services:
             - '@contao.framework'
         tags:
             - { name: kernel.event_listener, priority: 256 }
-            - { name: kernel.reset, method: reset }
 
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
@@ -522,7 +519,6 @@ services:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         tags:
             - kernel.event_subscriber
-            - { name: kernel.reset, method: reset }
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
