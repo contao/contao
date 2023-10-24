@@ -1218,8 +1218,10 @@ class PageModel extends Model
 
 			throw $e;
 		}
-
-		$context->setBaseUrl($baseUrl);
+		finally
+		{
+			$context->setBaseUrl($baseUrl);
+		}
 
 		return $strUrl;
 	}

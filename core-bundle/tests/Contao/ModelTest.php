@@ -62,7 +62,7 @@ class ModelTest extends TestCase
     {
         $this->assertSame(
             [
-                'tl_foo' => [
+                'tl_Foo' => [
                     'int_not_null' => Types::INTEGER,
                     'int_null' => Types::INTEGER,
                     'smallint_not_null' => Types::SMALLINT,
@@ -71,6 +71,7 @@ class ModelTest extends TestCase
                     'float_null' => Types::FLOAT,
                     'bool_not_null' => Types::BOOLEAN,
                     'bool_null' => Types::BOOLEAN,
+                    'floatNotNullCamelCase' => Types::FLOAT,
                     'dca_only' => Types::INTEGER,
                 ],
             ],
@@ -82,7 +83,7 @@ class ModelTest extends TestCase
     {
         $this->assertSame(
             [
-                'tl_foo' => [
+                'tl_Foo' => [
                     'int_not_null' => Types::INTEGER,
                     'int_null' => Types::INTEGER,
                     'smallint_not_null' => Types::SMALLINT,
@@ -91,6 +92,7 @@ class ModelTest extends TestCase
                     'float_null' => Types::FLOAT,
                     'bool_not_null' => Types::BOOLEAN,
                     'bool_null' => Types::BOOLEAN,
+                    'floatNotNullCamelCase' => Types::FLOAT,
                     'database_only' => Types::INTEGER,
                 ],
             ],
@@ -104,7 +106,7 @@ class ModelTest extends TestCase
     public function testConvertToPhpValue(string $key, mixed $value, mixed $expected): void
     {
         $fooModel = new class() extends Model {
-            protected static $strTable = 'tl_foo';
+            protected static $strTable = 'tl_Foo';
 
             public function __construct()
             {
@@ -145,12 +147,14 @@ class ModelTest extends TestCase
         yield ['float_null', null, null];
 
         yield ['bool_null', null, null];
+
+        yield ['floatNotNullCamelCase', '12.3', 12.3];
     }
 
     private function createSchema(bool $fromDatabase): Schema
     {
         $schema = new Schema();
-        $table = $schema->createTable('tl_foo');
+        $table = $schema->createTable('tl_Foo');
         $table->addColumn('string_not_null', Types::STRING, ['notnull' => true]);
         $table->addColumn('string_null', Types::STRING, ['notnull' => false]);
         $table->addColumn('int_not_null', Types::INTEGER, ['notnull' => true]);
@@ -161,6 +165,7 @@ class ModelTest extends TestCase
         $table->addColumn('float_null', Types::FLOAT, ['notnull' => false]);
         $table->addColumn('bool_not_null', Types::BOOLEAN, ['notnull' => true]);
         $table->addColumn('bool_null', Types::BOOLEAN, ['notnull' => false]);
+        $table->addColumn('floatNotNullCamelCase', Types::FLOAT, ['notnull' => true]);
 
         if ($fromDatabase) {
             $table->addColumn('database_only', Types::INTEGER, ['notnull' => false]);
