@@ -928,6 +928,8 @@ services:
         autoconfigure: false
         arguments:
             - '@contao.translation.data_collector_translator.inner'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator

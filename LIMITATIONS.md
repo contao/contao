@@ -35,3 +35,5 @@ More information: https://github.com/contao/core/issues/5234
 Logging in as a member discards the preview mode if the authentication happend
 through a preview link. This makes it impossible to use preview links for
 protected pages that require a member login.
+
+More information: https://github.com/contao/contao/issues/6268
