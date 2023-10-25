@@ -61,7 +61,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
         );
 
         $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
+            VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
