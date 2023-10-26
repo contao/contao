@@ -185,8 +185,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $event = new StoreDbafsMetadataEvent(
             $this->table,
             $row,
-            // Remove non-matching columns before dispatching event
-            array_intersect_key($metadata, $columnFilter)
+            $metadata,
         );
 
         $this->eventDispatcher->dispatch($event);
