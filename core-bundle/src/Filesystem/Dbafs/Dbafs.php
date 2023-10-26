@@ -191,12 +191,14 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         $this->eventDispatcher->dispatch($event);
 
-        $this->connection->update(
-            $this->table,
-            // Filter columns again before performing the query
-            array_intersect_key($event->getRow(), $columnFilter),
-            ['uuid' => $uuid]
-        );
+        if ($data = array_intersect_key($event->getRow(), $columnFilter)) {
+            $this->connection->update(
+                $this->table,
+                // Filter columns again before performing the query
+                $data,
+                ['uuid' => $uuid]
+            );
+        }
 
         // Update the cache
         $this->records[$path]['extra'] = $event->getExtraMetadata();
