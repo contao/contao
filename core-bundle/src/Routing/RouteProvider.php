@@ -157,7 +157,6 @@ class RouteProvider extends AbstractPageRouteProvider
     private function createCollectionForRoutes(array $routes, array $languages): RouteCollection
     {
         $this->sortRoutes($routes, $languages);
-        dump(array_keys($routes));
 
         $collection = new RouteCollection();
 
