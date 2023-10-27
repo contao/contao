@@ -296,6 +296,7 @@ class DbafsTest extends TestCase
                     $this->assertSame(
                         [
                             'foo' => 'complex a',
+                            'bar' => 'complex b',
                             'baz' => 'complex c',
                         ],
                         $event->getExtraMetadata()
