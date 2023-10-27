@@ -157,6 +157,7 @@ class RouteProvider extends AbstractPageRouteProvider
     private function createCollectionForRoutes(array $routes, array $languages): RouteCollection
     {
         $this->sortRoutes($routes, $languages);
+        dump(array_keys($routes));
 
         $collection = new RouteCollection();
 
@@ -197,7 +198,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $urlPrefix = $route->getUrlPrefix();
 
         // Do not create a ".root" route for root pages without prefix if `disableLanguageRedirect` is enabled
-        if ('root' === $page->type && !$urlPrefix && !$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect) {
+        if ('root' === $page->type && !$urlPrefix && !$this->legacyRouting && $page->disableLanguageRedirect) {
             return;
         }
 
