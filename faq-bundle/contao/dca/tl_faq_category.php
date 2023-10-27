@@ -10,14 +10,12 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -34,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_faq_category', 'checkPermission')
+			array('tl_faq_category', 'adjustDca')
 		),
 		'oncreate_callback' => array
 		(
@@ -214,11 +212,9 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 class tl_faq_category extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_faq_category
-	 *
-	 * @throws AccessDeniedException
+	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -246,72 +242,6 @@ class tl_faq_category extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_faq_category']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add FAQ categories
-		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
-		{
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete FAQ categories
-		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
-		{
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
-				{
-					throw new AccessDeniedException('Not enough permissions to create FAQ categories.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
-				}
-				break;
-		}
 	}
 
 	/**

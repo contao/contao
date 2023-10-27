@@ -12,13 +12,11 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
-use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -36,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_calendar', 'checkPermission'),
+			array('tl_calendar', 'adjustDca'),
 			array('tl_calendar', 'generateFeed')
 		),
 		'oncreate_callback' => array
@@ -243,11 +241,9 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 class tl_calendar extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_calendar
-	 *
-	 * @throws AccessDeniedException
+	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -275,72 +271,6 @@ class tl_calendar extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_calendar']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add calendars
-		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS))
-		{
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete calendars
-		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS))
-		{
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS))
-				{
-					throw new AccessDeniedException('Not enough permissions to create calendars.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendars.');
-				}
-				break;
-		}
 	}
 
 	/**

@@ -64,3 +64,8 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 96 }
+
+    contao_calendar.security.calendar_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\CalendarAccessVoter
+        arguments:
+            - '@security.helper'

@@ -18,3 +18,8 @@ services:
             - '@contao.framework'
         tags:
             - kernel.event_listener
+
+    contao_newsletter.security.newsletter_channel_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter
+        arguments:
+            - '@security.helper'

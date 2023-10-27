@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -34,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_form', 'checkPermission')
+			array('tl_form', 'adjustDca')
 		),
 		'oncreate_callback' => array
 		(
@@ -281,11 +280,9 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 class tl_form extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_form
-	 *
-	 * @throws AccessDeniedException
+	 *  Set the root IDs.
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$user = BackendUser::getInstance();
 
@@ -305,72 +302,6 @@ class tl_form extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_form']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add forms
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
-		{
-			$GLOBALS['TL_DCA']['tl_form']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_form']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_form']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete forms
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
-		{
-			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
-				{
-					throw new AccessDeniedException('Not enough permissions to create forms.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' forms.');
-				}
-				break;
-		}
 	}
 
 	/**

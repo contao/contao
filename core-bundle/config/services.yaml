@@ -857,6 +857,11 @@ services:
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
+    contao.security.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\FormAccessVoter
+        arguments:
+            - '@security.helper'
+
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         public: true
