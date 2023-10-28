@@ -20,12 +20,14 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
@@ -144,6 +146,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $contaoExtension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
+            new InspectorNodeVisitor(new NullAdapter()),
             $this->createMock(ContaoCsrfTokenManager::class),
         );
 

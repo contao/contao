@@ -19,6 +19,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -26,6 +27,7 @@ use Contao\FormText;
 use Contao\System;
 use Contao\TemplateLoader;
 use Highlight\Highlighter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -77,6 +79,7 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );
@@ -120,6 +123,7 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );
@@ -170,6 +174,7 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );
@@ -223,6 +228,7 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );

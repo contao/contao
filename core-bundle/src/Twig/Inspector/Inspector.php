@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -22,8 +23,15 @@ use Twig\Error\SyntaxError;
  */
 class Inspector
 {
-    public function __construct(private readonly Environment $twig)
-    {
+    /**
+     * @internal
+     */
+    public const CACHE_KEY = 'contao.twig.inspector';
+
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly CacheItemPoolInterface $cachePool,
+    ) {
     }
 
     public function inspectTemplate(string $name): TemplateInformation
@@ -35,6 +43,12 @@ class Inspector
             throw new InspectionException($name, $e);
         }
 
-        return new TemplateInformation($source, $blocks);
+        $data = $this->cachePool->getItem(self::CACHE_KEY)->get()[$name] ?? throw new InspectionException($name, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+
+        return new TemplateInformation(
+            $source,
+            $blocks,
+            $data['slots'] ?? [],
+        );
     }
 }

@@ -76,6 +76,11 @@ final class FragmentTemplate extends Template
         $this->context[$key] = $value;
     }
 
+    public function setSlot(string $name, string $value): void
+    {
+        $this->context['_slots'][$name] = $value;
+    }
+
     public function get(string $key): mixed
     {
         return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));

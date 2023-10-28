@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -68,6 +69,7 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );

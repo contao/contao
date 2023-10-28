@@ -1041,6 +1041,7 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
+            - '@contao.twig.inspector.node_visitor'
             - '@contao.csrf.token_manager'
 
     contao.twig.fail_tolerant_filesystem_loader:
@@ -1109,6 +1110,12 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '@cache.system'
+
+    contao.twig.inspector.node_visitor:
+        class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor
+        arguments:
+            - '@cache.system'
 
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
@@ -1177,6 +1184,7 @@ services:
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
     Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
+    Contao\CoreBundle\Twig\Inspector\Inspector: '@contao.twig.inspector'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'

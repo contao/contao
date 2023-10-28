@@ -17,7 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -53,6 +55,7 @@ class DeprecationsNodeVisitorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
+                new InspectorNodeVisitor(new NullAdapter()),
                 $this->createMock(ContaoCsrfTokenManager::class),
             ),
         );

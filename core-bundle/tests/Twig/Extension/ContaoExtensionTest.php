@@ -24,12 +24,16 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\Slots\SetupSlotSystemNodeVisitor;
+use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -62,23 +66,26 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(3, $nodeVisitors);
+        $this->assertCount(5, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
-        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
-        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[2]);
+        $this->assertInstanceOf(InspectorNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(SetupSlotSystemNodeVisitor::class, $nodeVisitors[2]);
+        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[3]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[4]);
     }
 
     public function testAddsTheTokenParsers(): void
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(4, $tokenParsers);
+        $this->assertCount(5, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
         $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
         $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
+        $this->assertInstanceOf(SlotTokenParser::class, $tokenParsers[4]);
     }
 
     public function testAddsTheFunctions(): void
@@ -178,6 +185,7 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
+            new InspectorNodeVisitor(new NullAdapter()),
             $this->createMock(ContaoCsrfTokenManager::class),
         );
 
@@ -376,6 +384,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension(
+            $environment,
+            $hierarchy,
+            new InspectorNodeVisitor(new NullAdapter()),
+            $this->createMock(ContaoCsrfTokenManager::class),
+        );
     }
 }
