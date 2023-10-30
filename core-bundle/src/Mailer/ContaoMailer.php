@@ -55,19 +55,13 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request) {
             return;
         }
 
-        $attributes = $this->requestStack->getCurrentRequest()->attributes;
-
-        if (!$attributes->has('pageModel')) {
-            return;
-        }
-
-        $page = $attributes->get('pageModel');
+        $page = $request->attributes->get('pageModel');
 
         if (!$page instanceof PageModel) {
             return;
