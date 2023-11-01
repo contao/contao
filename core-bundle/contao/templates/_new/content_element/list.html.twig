@@ -6,5 +6,5 @@
 {% endblock %}
 
 {% block list_item %}
-    {{- item|insert_tag|raw -}}
+    {% if as_editor_view %}{{- item|raw -}}{% else %}{{- item|insert_tag|raw -}}{% endif %}
 {% endblock %}
