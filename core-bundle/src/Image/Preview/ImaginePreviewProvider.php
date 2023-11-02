@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Preview;
 use Contao\Image\ImageDimensions;
 use Imagine\Driver\InfoProvider;
 use Imagine\Factory\ClassFactoryInterface;
+use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
@@ -100,6 +101,18 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
     private function imagineSupportsFormat(string $format): bool
     {
+        if ($this->imagine instanceof ImagickImagine) {
+            return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
+        }
+
+        if ($this->imagine instanceof GmagickImagine) {
+            return \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
+        }
+
+        if ($this->imagine instanceof GdImagine) {
+            return \function_exists('image'.$format);
+        }
+
         if ($this->imagine instanceof InfoProvider) {
             return $this->imagine->getDriverInfo()->isFormatSupported($format);
         }
