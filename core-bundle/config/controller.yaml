@@ -70,10 +70,8 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
-            - '@contao.filesystem.file_download_helper'
-            - '@contao.image.preview_factory'
-            - '@contao.image.studio'
-            - '%kernel.project_dir%'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 

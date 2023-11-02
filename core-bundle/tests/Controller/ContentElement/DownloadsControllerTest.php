@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
-use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DownloadsControllerTest extends ContentElementTestCase
 {
@@ -30,7 +30,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             'showPreview' => '',
             'overwriteLink' => '',
             'inline' => false,
-        ]);
+        ], null, false, $responseContext, $this->getAdjustedContainer());
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -53,7 +53,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             'linkTitle' => 'Download the file',
             'titleText' => 'The file',
             'inline' => false,
-        ]);
+        ], null, false, $responseContext, $this->getAdjustedContainer());
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -70,7 +70,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             'type' => 'download',
             'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
             'sortBy' => '',
-        ]);
+        ], null, false, $responseContext, $this->getAdjustedContainer());
 
         $expectedOutput = <<<'HTML'
             <div class="content-download">
@@ -93,7 +93,7 @@ class DownloadsControllerTest extends ContentElementTestCase
             'numberOfItems' => 2,
             'showPreview' => '',
             'inline' => false,
-        ]);
+        ], null, false, $responseContext, $this->getAdjustedContainer());
 
         $expectedOutput = <<<'HTML'
             <div class="content-downloads">
@@ -114,16 +114,19 @@ class DownloadsControllerTest extends ContentElementTestCase
     private function getDownloadsController(): DownloadsController
     {
         $security = $this->createMock(Security::class);
-        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
 
         return new DownloadsController(
             $security,
-            $this->getDefaultStorage(),
-            $fileDownloadHelper,
-            $this->createMock(PreviewFactory::class),
-            $this->getDefaultStudio(),
-            'project/dir',
-            ['jpg', 'txt'],
+            $this->getDefaultStorage()
         );
+    }
+
+    private function getAdjustedContainer(): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+        $container->set('contao.filesystem.file_download_helper', $this->createMock(FileDownloadHelper::class));
+        $container->setParameter('contao.downloadable_files', ['jpg', 'txt']);
+
+        return $container;
     }
 }
