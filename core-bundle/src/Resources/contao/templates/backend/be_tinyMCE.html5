@@ -36,6 +36,7 @@ window.tinymce && tinymce.init({
         'title': document.getElement('.tox-dialog__title').get('text'),
         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
         'callback': function(table, val) {
+          document.getElement('.tox-dialog input')?.focus();
           callback(val.join(','));
         }
       });
