@@ -932,6 +932,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 							$v = \is_array($default) ? serialize($default) : $default;
 						}
+
+						// Cast boolean to integers (see #6473)
+						if (\is_bool($v))
+						{
+							$v = (int) $v;
+						}
 					}
 
 					$this->set[$k] = $v;
