@@ -27,3 +27,6 @@
 {% if searchable is defined and not searchable -%}
 <!-- indexer::continue -->
 {% endif %}
+
+{# Add metadata #}
+{% block schema_org %}{% endblock %}

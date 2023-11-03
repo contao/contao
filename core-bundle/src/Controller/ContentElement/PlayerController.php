@@ -57,7 +57,7 @@ class PlayerController extends AbstractContentElementController
     {
         // Find and order source files
         $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->playerSRC ?: '');
-        $isVideo = \in_array($filesystemItems->first()?->getExtension(true), self::VIDEO_TYPES, true);
+        $isVideo = $filesystemItems->first()?->isVideo() ?? false;
 
         if (!$sourceFiles = $this->getSourceFiles($filesystemItems, $isVideo)) {
             return new Response();
