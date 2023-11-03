@@ -13,13 +13,12 @@
         <?php foreach ($this->activeSubscribers as $subscriber): ?>
           <h3><?= $this->trans('tl_maintenance.crawlSubscriberNames.'.$subscriber->getName()) ?></h3>
           <div class="result" data-subscriber="<?= $subscriber->getName() ?>">
-            <p class="spinner show-when-running"></p>
             <p class="summary show-when-finished"></p>
             <p class="warning show-when-finished"></p>
             <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadLog') ?></a></p>
           </div>
+          <p class="wait show-when-running"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
         <?php endforeach; ?>
-        <p class="wait show-when-running"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
         <h3><?= $this->trans('tl_maintenance.crawlDebugLog') ?></h3>
         <p><?= $this->trans('tl_maintenance.crawlDebugLogExplain') ?></p>
         <p class="debug-log"><a href="<?= $this->debugLogHref ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadLog') ?></a></p>
