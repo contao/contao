@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "maglnet/composer-require-checker",
-            "version": "4.7.0",
+            "version": "4.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maglnet/ComposerRequireChecker.git",
-                "reference": "a80a012ba94d5423b02754b2816960a74d3d4f3f"
+                "reference": "e49c58b18fef21e37941a642c1a70d3962e86f28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/a80a012ba94d5423b02754b2816960a74d3d4f3f",
-                "reference": "a80a012ba94d5423b02754b2816960a74d3d4f3f",
+                "url": "https://api.github.com/repos/maglnet/ComposerRequireChecker/zipball/e49c58b18fef21e37941a642c1a70d3962e86f28",
+                "reference": "e49c58b18fef21e37941a642c1a70d3962e86f28",
                 "shasum": ""
             },
             "require": {
@@ -82,9 +82,9 @@
             ],
             "support": {
                 "issues": "https://github.com/maglnet/ComposerRequireChecker/issues",
-                "source": "https://github.com/maglnet/ComposerRequireChecker/tree/4.7.0"
+                "source": "https://github.com/maglnet/ComposerRequireChecker/tree/4.7.1"
             },
-            "time": "2023-09-18T21:09:41+00:00"
+            "time": "2023-09-27T14:57:19+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -766,16 +766,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v6.3.2",
+            "version": "v6.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "53d1a83225002635bca3482fcbf963001313fb68"
+                "reference": "13d76d0fb049051ed12a04bef4f9de8715bea339"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/53d1a83225002635bca3482fcbf963001313fb68",
-                "reference": "53d1a83225002635bca3482fcbf963001313fb68",
+                "url": "https://api.github.com/repos/symfony/string/zipball/13d76d0fb049051ed12a04bef4f9de8715bea339",
+                "reference": "13d76d0fb049051ed12a04bef4f9de8715bea339",
                 "shasum": ""
             },
             "require": {
@@ -832,7 +832,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v6.3.2"
+                "source": "https://github.com/symfony/string/tree/v6.3.5"
             },
             "funding": [
                 {
@@ -848,7 +848,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-05T08:41:27+00:00"
+            "time": "2023-09-18T10:38:32+00:00"
         },
         {
             "name": "webmozart/assert",
