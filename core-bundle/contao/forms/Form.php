@@ -310,7 +310,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (!empty($upload['tmp_name']) && is_file($upload['tmp_name']))
+				if (is_file($upload['tmp_name'] ?? null))
 				{
 					unlink($upload['tmp_name']);
 				}
