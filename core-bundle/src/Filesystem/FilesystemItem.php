@@ -122,26 +122,46 @@ class FilesystemItem implements \Stringable
 
     public function isVideo(): bool
     {
+        if (!$this->isFile()) {
+            return false;
+        }
+
         return str_starts_with($this->getMimeType(), 'video/');
     }
 
     public function isAudio(): bool
     {
+        if (!$this->isFile()) {
+            return false;
+        }
+
         return str_starts_with($this->getMimeType(), 'audio/');
     }
 
     public function isImage(): bool
     {
+        if (!$this->isFile()) {
+            return false;
+        }
+
         return str_starts_with($this->getMimeType(), 'image/');
     }
 
     public function isPdf(): bool
     {
+        if (!$this->isFile()) {
+            return false;
+        }
+
         return 'application/pdf' === $this->getMimeType();
     }
 
     public function isSpreadsheet(): bool
     {
+        if (!$this->isFile()) {
+            return false;
+        }
+
         return \in_array(
             $this->getMimeType(),
             [

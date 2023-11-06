@@ -85,6 +85,13 @@ class FilesystemItemTest extends TestCase
         $this->assertFalse($fileItem->isVideo());
         $this->assertFalse($fileItem->isPdf());
         $this->assertTrue($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(false, '/path/to/folder');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
     }
 
     /**
