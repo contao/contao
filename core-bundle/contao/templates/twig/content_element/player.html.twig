@@ -29,8 +29,6 @@
 {# Add metadata #}
 {% block schema_org %}
     {% for source_file in source_files %}
-        {% if source_file.schemaOrgData|default(false) %}
-            {% do add_schema_org(source_file.schemaOrgData) %}
-        {% endif %}
+        {% do add_schema_org(source_file.schemaOrgData|default) %}
     {% endfor %}
 {% endblock %}
