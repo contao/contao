@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
         <source>Sent at %s</source>
+        <target>Invia a %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

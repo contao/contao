@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_favorites.title.1">
         <source>The menu item title.</source>
+        <target>De titel van het menu-item.</target>
       </trans-unit>
       <trans-unit id="tl_favorites.url.0">
         <source>URL</source>
@@ -14,24 +15,31 @@
       </trans-unit>
       <trans-unit id="tl_favorites.url.1">
         <source>The menu item URL.</source>
+        <target>De menu-item URL.</target>
       </trans-unit>
       <trans-unit id="tl_favorites.url_legend">
         <source>Title and URL</source>
+        <target>Titel en URL</target>
       </trans-unit>
       <trans-unit id="tl_favorites.show">
         <source>Show the details of favorite ID %s</source>
+        <target>Toon de details van favoriet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.edit">
         <source>Edit favorite ID %s</source>
+        <target>Bewerk favoriet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.cut">
         <source>Move favorite ID %s</source>
+        <target>Verplaats favoriet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.copy">
         <source>Duplicate favorite ID %s</source>
+        <target>Dupliceer favoriet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.delete">
         <source>Delete favorite ID %s</source>
+        <target>Verwijder favoriet ID %s</target>
       </trans-unit>
     </body>
   </file>

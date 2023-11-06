@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.5] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6479] Do not replace insert tags in the editor view in the back end ([fritzmg])
+- [#6486] Check if `$upload['tmp_name']` is set before using it ([qzminski])
+- [#6478] Fix a type error in `FormInsertTag` ([fritzmg])
+- [#6468] Compare actual row format instead of create options ([ausi])
+- [#6464] Do not grant access in the news archive access voter ([leofeyer])
+- [#6455] Allow special characters in HTML attributes ([ausi])
+- [#6456] Fix unsetting uppercase attributes ([ausi])
+- [#6449] Do not lowercase table and column names in type cache ([ausi])
+- [#6443] Simplify whitespace control in headline component template ([m-vo])
+
 ## [5.2.4] (2023-10-17)
 
 **Fixed issues:**
@@ -105,6 +119,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.5]: https://github.com/contao/contao/releases/tag/5.2.5
 [5.2.4]: https://github.com/contao/contao/releases/tag/5.2.4
 [5.2.3]: https://github.com/contao/contao/releases/tag/5.2.3
 [5.2.2]: https://github.com/contao/contao/releases/tag/5.2.2
@@ -121,6 +136,7 @@ This project adheres to [Semantic Versioning].
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
 [#4779]: https://github.com/contao/contao/pull/4779
 [#5419]: https://github.com/contao/contao/pull/5419
@@ -169,3 +185,12 @@ This project adheres to [Semantic Versioning].
 [#6414]: https://github.com/contao/contao/pull/6414
 [#6416]: https://github.com/contao/contao/pull/6416
 [#6438]: https://github.com/contao/contao/pull/6438
+[#6443]: https://github.com/contao/contao/pull/6443
+[#6449]: https://github.com/contao/contao/pull/6449
+[#6455]: https://github.com/contao/contao/pull/6455
+[#6456]: https://github.com/contao/contao/pull/6456
+[#6464]: https://github.com/contao/contao/pull/6464
+[#6468]: https://github.com/contao/contao/pull/6468
+[#6478]: https://github.com/contao/contao/pull/6478
+[#6479]: https://github.com/contao/contao/pull/6479
+[#6486]: https://github.com/contao/contao/pull/6486
