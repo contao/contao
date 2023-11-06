@@ -8,11 +8,11 @@
 
 {% block content %}
     {% block teaser %}
-        {%- if as_editor_view -%}
+        {% if as_editor_view %}
             {{ article.teaser|default|raw }}
-        {%- else -%}
+        {% else %}
             {{ article.teaser|default|insert_tag|raw }}
-        {%- endif -%}
+        {% endif %}
     {% endblock %}
 
     {% block link %}
