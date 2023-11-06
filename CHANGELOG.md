@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.34] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6492] Fix the arguments of the `contao.command.user_list` service ([xprojects-de])
+
 ## [4.13.33] (2023-11-06)
 
 **Fixed issues:**
@@ -845,6 +851,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.34]: https://github.com/contao/contao/releases/tag/4.13.34
 [4.13.33]: https://github.com/contao/contao/releases/tag/4.13.33
 [4.13.32]: https://github.com/contao/contao/releases/tag/4.13.32
 [4.13.31]: https://github.com/contao/contao/releases/tag/4.13.31
@@ -1553,3 +1560,4 @@ This project adheres to [Semantic Versioning].
 [#6473]: https://github.com/contao/contao/pull/6473
 [#6487]: https://github.com/contao/contao/pull/6487
 [#6490]: https://github.com/contao/contao/pull/6490
+[#6492]: https://github.com/contao/contao/pull/6492
