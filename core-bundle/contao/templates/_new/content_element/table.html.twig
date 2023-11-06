@@ -10,5 +10,9 @@
 {% endblock -%}
 
 {%- block table_cell_content %}
-    {%- if as_editor_view %}{{ cell|trim|replace({'\n': '<br>\n'})|raw }}{% else %}{{ cell|trim|replace({'\n': '<br>\n'})|insert_tag|raw }}{% endif -%}
+    {%- if as_editor_view -%}
+        {{ cell|trim|replace({'\n': '<br>\n'})|raw }}
+    {%- else -%}
+        {{ cell|trim|replace({'\n': '<br>\n'})|insert_tag|raw }}
+    {%- endif -%}
 {% endblock -%}

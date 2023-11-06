@@ -8,7 +8,11 @@
 
 {% block content %}
     {% block teaser %}
-        {% if as_editor_view %}{{ article.teaser|default|raw }}{% else %}{{ article.teaser|default|insert_tag|raw }}{% endif %}
+        {%- if as_editor_view -%}
+            {{ article.teaser|default|raw }}
+        {%- else -%}
+            {{ article.teaser|default|insert_tag|raw }}
+        {%- endif -%}
     {% endblock %}
 
     {% block link %}
