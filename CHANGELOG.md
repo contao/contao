@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.6] (2023-11-06)
+
 ## [5.2.5] (2023-11-06)
 
 **Fixed issues:**
@@ -119,6 +121,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.6]: https://github.com/contao/contao/releases/tag/5.2.6
 [5.2.5]: https://github.com/contao/contao/releases/tag/5.2.5
 [5.2.4]: https://github.com/contao/contao/releases/tag/5.2.4
 [5.2.3]: https://github.com/contao/contao/releases/tag/5.2.3
