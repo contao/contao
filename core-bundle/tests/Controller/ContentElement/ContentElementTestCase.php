@@ -119,7 +119,6 @@ class ContentElementTestCase extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));

@@ -72,6 +72,9 @@ services:
             - '@contao.filesystem.virtual.files'
         tags:
             - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.filesystem.file_download_helper }
+            - { name: container.service_subscriber, id: contao.image.preview_factory }
+            - { name: container.service_subscriber, id: contao.image.studio }
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
