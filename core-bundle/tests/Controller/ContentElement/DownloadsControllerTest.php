@@ -34,7 +34,9 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'inline' => false,
             ],
             null,
-            false, $responseContext, $this->getAdjustedContainer(),
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -62,7 +64,9 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'inline' => false,
             ],
             null,
-            false, $responseContext, $this->getAdjustedContainer(),
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -84,7 +88,9 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'sortBy' => '',
             ],
             null,
-            false, $responseContext, $this->getAdjustedContainer(),
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -112,7 +118,9 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'inline' => false,
             ],
             null,
-            false, $responseContext, $this->getAdjustedContainer(),
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
