@@ -130,7 +130,7 @@ class ContentElementTestCase extends TestCase
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
-        if (null !== $adjustedContainer) {
+        if ($adjustedContainer) {
             $container->merge($adjustedContainer);
 
             foreach ($adjustedContainer->getServiceIds() as $serviceId) {

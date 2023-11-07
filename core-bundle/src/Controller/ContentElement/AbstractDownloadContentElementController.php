@@ -11,6 +11,7 @@ use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -181,13 +182,19 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     protected function getPreviews(FilesystemItem $filesystemItem, FigureBuilder $figureBuilder, PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $numberOfItems = PHP_INT_MAX): \Generator
     {
         $path = $filesystemItem->getPath();
+        $vfs = $this->getVirtualFilesystem();
+
+        // TODO: As soon as our image libraries support this case, read from the public path instead and drop this check
+        if (!method_exists($vfs, 'getPrefix')) {
+            throw new \LogicException('Your virtual file system has to implement the getPrefix() method for now!');
+        }
 
         try {
             $previewSize = $this->container->get('contao.image.preview_factory')->getPreviewSizeFromImageSize($size);
 
             $previews = $this->container->get('contao.image.preview_factory')->createPreviews(
                 // TODO: As soon as our image libraries support this case, read from the public path instead.
-                Path::join($this->getParameter('kernel.project_dir'), $this->getVirtualFilesystem()->getPrefix(), $path),
+                Path::join($this->getParameter('kernel.project_dir'), $vfs->getPrefix(), $path),
                 $previewSize,
                 $numberOfItems,
             );
