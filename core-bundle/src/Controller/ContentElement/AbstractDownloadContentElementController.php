@@ -30,6 +30,30 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
+    public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
+    {
+        // TODO: Remove method and move logic into its own action, once we have
+        // a strategy how to handle permissions for downloads via a real route.
+        // See #4862 for more details.
+        $this->handleDownload($request, $model);
+
+        return parent::__invoke($request, $model, $section, $classes);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.filesystem.file_download_helper'] = FileDownloadHelper::class;
+        $services['contao.image.preview_factory'] = PreviewFactory::class;
+        $services['contao.image.studio'] = Studio::class;
+
+        return $services;
+    }
+
     abstract protected function getVirtualFilesystem(): VirtualFilesystemInterface;
 
     abstract protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator;
@@ -165,7 +189,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
                 // TODO: As soon as our image libraries support this case, read from the public path instead.
                 Path::join($this->getParameter('kernel.project_dir'), $this->getVirtualFilesystem()->getPrefix(), $path),
                 $previewSize,
-                $numberOfItems
+                $numberOfItems,
             );
 
             foreach ($previews as $image) {
@@ -174,19 +198,5 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         } catch (UnableToGeneratePreviewException|MissingPreviewProviderException) {
             // ignore
         }
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function getSubscribedServices(): array
-    {
-        $services = parent::getSubscribedServices();
-
-        $services['contao.filesystem.file_download_helper'] = FileDownloadHelper::class;
-        $services['contao.image.preview_factory'] = PreviewFactory::class;
-        $services['contao.image.studio'] = Studio::class;
-
-        return $services;
     }
 }

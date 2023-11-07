@@ -22,15 +22,19 @@ class DownloadsControllerTest extends ContentElementTestCase
 {
     public function testOutputsSingleDownload(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-            'sortBy' => '',
-            'numberOfItems' => '0',
-            'showPreview' => '',
-            'overwriteLink' => '',
-            'inline' => false,
-        ], null, false, $responseContext, $this->getAdjustedContainer());
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '',
+                'inline' => false,
+            ],
+            null, false, $responseContext, $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -43,17 +47,21 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testOutputsSingleDownloadWithCustomMetadata(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-            'sortBy' => '',
-            'numberOfItems' => '0',
-            'showPreview' => '',
-            'overwriteLink' => '1',
-            'linkTitle' => 'Download the file',
-            'titleText' => 'The file',
-            'inline' => false,
-        ], null, false, $responseContext, $this->getAdjustedContainer());
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '1',
+                'linkTitle' => 'Download the file',
+                'titleText' => 'The file',
+                'inline' => false,
+            ],
+            null, false, $responseContext, $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -66,11 +74,15 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testFiltersFileExtensions(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
-            'sortBy' => '',
-        ], null, false, $responseContext, $this->getAdjustedContainer());
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
+                'sortBy' => '',
+            ],
+            null, false, $responseContext, $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="content-download">
@@ -82,18 +94,22 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testOutputsDownloadsList(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'downloads',
-            'multiSRC' => serialize([
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
-            ]),
-            'sortBy' => '',
-            'numberOfItems' => 2,
-            'showPreview' => '',
-            'inline' => false,
-        ], null, false, $responseContext, $this->getAdjustedContainer());
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'downloads',
+                'multiSRC' => serialize([
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
+                ]),
+                'sortBy' => '',
+                'numberOfItems' => 2,
+                'showPreview' => '',
+                'inline' => false,
+            ],
+            null, false, $responseContext, $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="content-downloads">
@@ -117,7 +133,7 @@ class DownloadsControllerTest extends ContentElementTestCase
 
         return new DownloadsController(
             $security,
-            $this->getDefaultStorage()
+            $this->getDefaultStorage(),
         );
     }
 

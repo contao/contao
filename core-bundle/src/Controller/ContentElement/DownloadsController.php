@@ -39,11 +39,6 @@ class DownloadsController extends AbstractDownloadContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // TODO: Remove method and move logic into its own action, once we have
-        // a strategy how to handle permissions for downloads via a real route.
-        // See #4862 for more details.
-        $this->handleDownload($request, $model);
-
         $filesystemItems = $this->getFilesystemItems($request, $model);
 
         // Sort elements; relay to client-side logic if list should be randomized
