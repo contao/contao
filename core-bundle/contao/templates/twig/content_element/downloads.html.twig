@@ -15,7 +15,7 @@
 {% endblock %}
 
 {# Add metadata #}
-{% block schema_org %}
+{% block metadata %}
     {% for download in downloads %}
         {% do add_schema_org(download.file.schemaOrgData|default) %}
     {% endfor %}
