@@ -4,5 +4,32 @@
     {{ 'XPT.unavailable'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ 'XPT.maintenance'|trans }}</p>
+    <p data-trans="XPT.maintenance">{{ 'XPT.maintenance'|trans }}</p>
+{% endblock %}
+
+{% block body_end %}
+    <script id="maintenance-script" type="text/javascript" data-labels="{{ defaultLabels|json_encode() }}">
+        (function(n,d) {
+            let language = n.language;
+            let data = JSON.parse(d.getElementById('maintenance-script').dataset.labels);
+
+            d.querySelectorAll('[data-trans]').forEach((el) => {
+                if (data[language] === undefined) {
+                    language = new Intl.Locale(language).language;
+
+                    if (data[language] === undefined) {
+                        return;
+                    }
+                }
+
+                if (data[language][el.dataset.trans] === undefined) {
+                    return;
+                }
+
+                el.innerHTML = data[language][el.dataset.trans];
+            });
+
+            d.title = data[language].title;
+        })(navigator,document);
+    </script>
 {% endblock %}

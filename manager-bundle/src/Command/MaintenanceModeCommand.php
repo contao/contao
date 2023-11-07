@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Contao\CoreBundle\Intl\Locales;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 #[AsCommand(
@@ -31,6 +33,8 @@ class MaintenanceModeCommand extends Command
     public function __construct(
         private readonly string $maintenanceFilePath,
         private readonly Environment $twig,
+        private readonly Locales $locales,
+        private readonly TranslatorInterface $translator,
         private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         parent::__construct();
@@ -83,6 +87,7 @@ class MaintenanceModeCommand extends Command
                     'statusCode' => 503,
                     'language' => 'en',
                     'template' => $templateName,
+                    'defaultLabels' => $this->generateDefaultLabels(),
                     ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
                 ],
             ),
@@ -118,5 +123,22 @@ class MaintenanceModeCommand extends Command
         } else {
             $io->info($message);
         }
+    }
+
+    private function generateDefaultLabels(): array
+    {
+        $labels = [];
+
+        foreach (array_keys($this->locales->getEnabledLocales()) as $locale) {
+            $labels[$locale] = [
+                'title' => $this->translator->trans('XPT.unavailable', [], 'contao_exception', $locale),
+                'XPT.maintenance' => $this->translator->trans('XPT.maintenance', [], 'contao_exception', $locale),
+                'XPT.matter' => $this->translator->trans('XPT.matter', [], 'contao_exception', $locale),
+                'XPT.howToFix' => $this->translator->trans('XPT.howToFix', [], 'contao_exception', $locale),
+                'XPT.more' => $this->translator->trans('XPT.more', [], 'contao_exception', $locale),
+            ];
+        }
+
+        return $labels;
     }
 }

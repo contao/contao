@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
+use Contao\CoreBundle\Intl\Locales;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -19,6 +20,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
@@ -62,7 +64,13 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             $params['--templateVars'] = $customTemplateVars;
         }
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
+        $command = new MaintenanceModeCommand(
+            '/path/to/var/maintenance.html',
+            $twig,
+            $this->createMock(Locales::class),
+            $this->createMock(TranslatorInterface::class),
+            $filesystem,
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($params);
@@ -79,7 +87,13 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+        $command = new MaintenanceModeCommand(
+            '/path/to/var/maintenance.html',
+            $this->mockEnvironment(),
+            $this->createMock(Locales::class),
+            $this->createMock(TranslatorInterface::class),
+            $filesystem,
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
@@ -97,7 +111,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(),
+            $this->createMock(Locales::class),
+            $this->createMock(TranslatorInterface::class), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -115,7 +131,13 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+        $command = new MaintenanceModeCommand(
+            '/path/to/var/maintenance.html',
+            $this->mockEnvironment(),
+            $this->createMock(Locales::class),
+            $this->createMock(TranslatorInterface::class),
+            $filesystem,
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -133,7 +155,13 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(), $filesystem);
+        $command = new MaintenanceModeCommand(
+            '/path/to/var/maintenance.html',
+            $this->mockEnvironment(),
+            $this->createMock(Locales::class),
+            $this->createMock(TranslatorInterface::class),
+            $filesystem,
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['--format' => 'json']);
@@ -151,6 +179,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
                 'statusCode' => 503,
                 'language' => 'en',
                 'template' => '@ContaoCore/Error/service_unavailable.html.twig',
+                'defaultLabels' => [],
             ],
         ];
 
@@ -160,6 +189,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
                 'statusCode' => 503,
                 'language' => 'en',
                 'template' => '@CustomBundle/maintenance.html.twig',
+                'defaultLabels' => [],
             ],
             '@CustomBundle/maintenance.html.twig',
         ];
@@ -170,6 +200,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
                 'statusCode' => 503,
                 'language' => 'de',
                 'template' => '@CustomBundle/maintenance.html.twig',
+                'defaultLabels' => [],
                 'foo' => 'bar',
             ],
             '@CustomBundle/maintenance.html.twig',
