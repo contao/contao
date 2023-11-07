@@ -33,7 +33,8 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'overwriteLink' => '',
                 'inline' => false,
             ],
-            null, false, $responseContext, $this->getAdjustedContainer(),
+            null,
+            false, $responseContext, $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -60,7 +61,8 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'titleText' => 'The file',
                 'inline' => false,
             ],
-            null, false, $responseContext, $this->getAdjustedContainer(),
+            null,
+            false, $responseContext, $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -81,7 +83,8 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
                 'sortBy' => '',
             ],
-            null, false, $responseContext, $this->getAdjustedContainer(),
+            null,
+            false, $responseContext, $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
@@ -108,7 +111,8 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'showPreview' => '',
                 'inline' => false,
             ],
-            null, false, $responseContext, $this->getAdjustedContainer(),
+            null,
+            false, $responseContext, $this->getAdjustedContainer(),
         );
 
         $expectedOutput = <<<'HTML'
