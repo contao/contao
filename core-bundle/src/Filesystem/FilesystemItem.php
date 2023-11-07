@@ -265,19 +265,7 @@ class FilesystemItem implements \Stringable
 
     private function getMetaData(): Metadata|null
     {
-        $metadataBag = $this->getExtraMetadata()['metadata'] ?? null;
-
-        if (!$metadataBag instanceof MetadataBag) {
-            return null;
-        }
-
-        $metadata = $metadataBag->getDefault();
-
-        if (!$metadata instanceof Metadata) {
-            return null;
-        }
-
-        return $metadata;
+        return ($this->getExtraMetadata()['metadata'] ?? null)?->getDefault();
     }
 
     private function assertIsFile(string $method): void
